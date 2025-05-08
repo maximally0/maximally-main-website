@@ -17,10 +17,9 @@ const Bootcamps = () => {
             <span className="bg-[#FF5F5F]/20">this summer</span>. Will you?
           </h1>
           <p className="font-jetbrains text-base sm:text-lg md:text-xl mb-4 sm:mb-6 md:mb-8 px-2 sm:px-4 md:px-0">
-            Only <span className="bg-yellow-200">200 students</span> get{" "}
+            <span className="bg-purple-100">Free</span> for the <span className="bg-yellow-200">first 500 students</span>  to get{" "}
             <span className="bg-blue-100">accepted</span> into our{" "}
             <span className="bg-green-100">certificate of excellence</span> program.
-            Once <span className="bg-purple-100">you're in for life</span>.
           </p>
           <TallyFormDialog open={isTallyFormOpen} onOpenChange={setIsTallyFormOpen} />
           <div className="mt-8">
