@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import Footer from '@/components/Footer';
 import BlogCard, { BlogCardProps } from '@/components/BlogCard';
-import { useBlogs, generateExcerpt, calculateReadTime } from '@/hooks/useBlog';
+import { useBlogs, generateExcerpt, calculateReadTime, formatReadingTime } from '@/hooks/useBlog';
 import { format } from 'date-fns';
 
 // Debounce hook
@@ -611,7 +611,7 @@ const Blog = () => {
       title: post.title,
       excerpt: generateExcerpt(post.content),
       date: format(new Date(post.created_at), 'MMMM d, yyyy'),
-      readTime: calculateReadTime(post.content),
+      readTime: formatReadingTime(post.reading_time_minutes, post.content),
       category: post.tags || 'AI Hackathons',
       link: `/blog/${post.slug}`,
       coverImage: post.cover_image,

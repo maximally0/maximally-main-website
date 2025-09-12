@@ -20,4 +20,5 @@ export interface BlogPost {
   created_at: string;
   updated_at: string;
   tags: string;
+  reading_time_minutes: number | null;
 }

@@ -84,3 +84,18 @@ export const calculateReadTime = (content: string): string => {
   const minutes = Math.ceil(words / wordsPerMinute);
   return `${minutes} min read`;
 };
+
+export const formatReadingTime = (databaseMinutes: number | null, fallbackContent?: string): string => {
+  // If we have a value from the database, use it
+  if (databaseMinutes && databaseMinutes > 0) {
+    return `${databaseMinutes} min read`;
+  }
+  
+  // Fallback to calculated reading time if we have content
+  if (fallbackContent) {
+    return calculateReadTime(fallbackContent);
+  }
+  
+  // Last resort fallback
+  return '2 min read';
+};
