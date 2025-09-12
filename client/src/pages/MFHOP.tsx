@@ -399,12 +399,12 @@ const MFHOP = () => {
 
                 <div className="text-gray-400 font-press-start text-sm">OR</div>
 
-                <a
-                  href="mailto:hello@maximally.in"
+                <button
+                  onClick={handleContactUs}
                   className="pixel-button bg-maximally-yellow text-maximally-black flex items-center gap-2 px-8 py-4 font-press-start hover:scale-105 transition-all"
                 >
                   <span>CONTACT_US</span>
-                </a>
+                </button>
               </div>
 
               <div className="pixel-card bg-black border-2 border-maximally-red p-6">
