@@ -118,6 +118,9 @@ import ProjectCodeGenBeyondHackathons from './pages/blog/ProjectCodeGenBeyondHac
 // Partnership Blog Posts
 import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 
+// MFHOP
+import MFHOP from './pages/MFHOP';
+
 const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
@@ -309,6 +312,7 @@ const App = () => {
             <Route path="/community" element={<CommunityRedirect />} />
 
             <Route path="/featured" element={<Featured />} />
+            <Route path="/mfhop" element={<MFHOP />} />
 
             <Route path="/events" element={<Events />} />
             <Route
