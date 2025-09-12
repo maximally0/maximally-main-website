@@ -94,6 +94,14 @@ const Footer = () => {
                   Allies
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/mfhop"
+                  className="hover:text-maximally-yellow transition-colors block"
+                >
+                  MFHOP
+                </Link>
+              </li>
             </ul>
           </div>
 
