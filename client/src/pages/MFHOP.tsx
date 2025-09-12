@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowRight, Users, Globe, Trophy, Target, ExternalLink, MessageCircle, Calendar, FileText, CheckCircle } from 'lucide-react';
+import { ArrowRight, Users, Globe, Trophy, Target, ExternalLink, MessageCircle, Calendar, FileText, CheckCircle, Mail, Copy, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import Footer from '@/components/Footer';
@@ -9,6 +9,22 @@ const MFHOP = () => {
   const [floatingPixels, setFloatingPixels] = useState<
     Array<{ id: number; x: number; y: number; delay: number }>
   >([]);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleContactUs = () => {
+    setShowEmailModal(true);
+    // Auto copy to clipboard
+    navigator.clipboard.writeText('mfhop@maximally.in');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const copyEmail = () => {
+    navigator.clipboard.writeText('mfhop@maximally.in');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   useEffect(() => {
     // Generate floating pixels
@@ -146,15 +162,13 @@ const MFHOP = () => {
                   <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                 </a>
 
-                <a
-                  href="https://discord.gg/MpBnYk8qMX"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={handleContactUs}
                   className="pixel-button bg-maximally-yellow text-maximally-black group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 sm:h-16 px-6 sm:px-8 font-press-start text-xs sm:text-sm"
                 >
-                  <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span>JOIN_DISCORD</span>
-                </a>
+                  <Mail className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>CONTACT_US</span>
+                </button>
               </div>
             </div>
           </div>
@@ -403,6 +417,54 @@ const MFHOP = () => {
         </section>
 
         <Footer />
+
+        {/* Email Modal */}
+        {showEmailModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+            <div className="pixel-card bg-black border-4 border-maximally-red p-8 max-w-md w-full relative">
+              <button
+                onClick={() => setShowEmailModal(false)}
+                className="absolute top-4 right-4 pixel-button bg-maximally-red text-white p-2 hover:scale-105 transition-all"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              
+              <div className="text-center">
+                <div className="minecraft-block bg-maximally-red w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                  <Mail className="h-8 w-8 text-black" />
+                </div>
+                
+                <h3 className="font-press-start text-lg text-maximally-red mb-4">
+                  CONTACT MFHOP
+                </h3>
+                
+                <p className="font-jetbrains text-gray-300 mb-6">
+                  Reach out to us at:
+                </p>
+                
+                <div className="pixel-card bg-gray-900 border-2 border-maximally-yellow p-4 mb-6">
+                  <p className="font-jetbrains text-maximally-yellow text-lg break-all">
+                    mfhop@maximally.in
+                  </p>
+                </div>
+                
+                <button
+                  onClick={copyEmail}
+                  className="pixel-button bg-maximally-yellow text-maximally-black flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:scale-105 transition-all mx-auto"
+                >
+                  <Copy className="h-4 w-4" />
+                  <span>{copied ? 'COPIED!' : 'COPY_EMAIL'}</span>
+                </button>
+                
+                {copied && (
+                  <p className="font-jetbrains text-green-400 text-sm mt-3">
+                    ✓ Email copied to clipboard!
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
