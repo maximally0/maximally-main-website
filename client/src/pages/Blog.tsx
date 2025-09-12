@@ -612,7 +612,7 @@ const Blog = () => {
       excerpt: generateExcerpt(post.content),
       date: format(new Date(post.created_at), 'MMMM d, yyyy'),
       readTime: calculateReadTime(post.content),
-      category: post.category || 'Dynamic',
+      category: post.tags || 'AI Hackathons',
       link: `/blog/${post.slug}`,
       coverImage: post.cover_image,
       authorName: post.author_name,
