@@ -84,8 +84,6 @@ import MaximallyAIShipathonGuide from './pages/blog/MaximallyAIShipathonGuide';
 import TopAIHackathonsStudents2025 from './pages/blog/TopAIHackathonsStudents2025';
 import NoCodeAIShipathon from './pages/blog/NoCodeAIShipathon';
 import FirstAIProject48Hours from './pages/blog/FirstAIProject48Hours';
-import CodeHypothesis from './pages/CodeHypothesis';
-import ProjectCodeGen from './pages/ProjectCodeGen';
 import DynamicHackathon from './pages/DynamicHackathon';
 import AdminHackathons from './pages/AdminHackathons';
 
@@ -391,9 +389,9 @@ const App = () => {
             <Route path="/grand-tech-assembly" element={<Navigate to="/hackathon/grand-tech-assembly" replace />} />
             <Route path="/promptstorm" element={<Navigate to="/hackathon/prompt-storm" replace />} />
             
-            {/* Keep static routes for pages that aren't in database yet */}
-            <Route path="/codehypothesis" element={<CodeHypothesis />} />
-            <Route path="/project-codegen" element={<ProjectCodeGen />} />
+            {/* Redirect static routes to dynamic ones */}
+            <Route path="/codehypothesis" element={<Navigate to="/hackathon/codehypothesis" replace />} />
+            <Route path="/project-codegen" element={<Navigate to="/hackathon/project-codegen" replace />} />
 
             {/* Event Reports */}
             <Route path="/makeathon-report" element={<MakeathonReport />} />
