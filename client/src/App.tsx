@@ -85,13 +85,7 @@ import TopAIHackathonsStudents2025 from './pages/blog/TopAIHackathonsStudents202
 import NoCodeAIShipathon from './pages/blog/NoCodeAIShipathon';
 import FirstAIProject48Hours from './pages/blog/FirstAIProject48Hours';
 import CodeHypothesis from './pages/CodeHypothesis';
-import Protocol404 from './pages/Protocol404';
 import ProjectCodeGen from './pages/ProjectCodeGen';
-import Hacktober from './pages/Hacktober';
-import PromptStorm from './pages/PromptStorm';
-import StealAThon from './pages/StealAThon';
-import Codepocalypse from './pages/Codepocalypse';
-import GrandTechAssembly from './pages/GrandTechAssembly';
 import DynamicHackathon from './pages/DynamicHackathon';
 import AdminHackathons from './pages/AdminHackathons';
 
@@ -389,18 +383,17 @@ const App = () => {
               path="/blog/teamwork-leadership-maximally"
               element={<BuildingTeamworkLeadership />}
             />
-            {/* Removed shipathon route */}
+            {/* Hackathon routes - redirect to dynamic pages */}
+            <Route path="/codepocalypse" element={<Navigate to="/hackathon/codepocalypse" replace />} />
+            <Route path="/protocol-404" element={<Navigate to="/hackathon/protocol-404" replace />} />
+            <Route path="/hacktober" element={<Navigate to="/hackathon/hacktober" replace />} />
+            <Route path="/steal-a-thon" element={<Navigate to="/hackathon/steal-a-thon" replace />} />
+            <Route path="/grand-tech-assembly" element={<Navigate to="/hackathon/grand-tech-assembly" replace />} />
+            <Route path="/promptstorm" element={<Navigate to="/hackathon/prompt-storm" replace />} />
+            
+            {/* Keep static routes for pages that aren't in database yet */}
             <Route path="/codehypothesis" element={<CodeHypothesis />} />
-            <Route path="/protocol-404" element={<Protocol404 />} />
             <Route path="/project-codegen" element={<ProjectCodeGen />} />
-            <Route path="/promptstorm" element={<PromptStorm />} />
-            <Route path="/steal-a-thon" element={<StealAThon />} />
-            <Route path="/codepocalypse" element={<Codepocalypse />} />
-            <Route
-              path="/grand-tech-assembly"
-              element={<GrandTechAssembly />}
-            />
-            <Route path="/hacktober" element={<Hacktober />} />
 
             {/* Event Reports */}
             <Route path="/makeathon-report" element={<MakeathonReport />} />
