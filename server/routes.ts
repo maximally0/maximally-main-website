@@ -36,28 +36,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/hackathons", async (req, res) => {
-    try {
-      // Import the schema for validation
-      const { insertHackathonSchema } = await import("@shared/schema");
-      
-      // Validate request body
-      const validationResult = insertHackathonSchema.safeParse(req.body);
-      
-      if (!validationResult.success) {
-        return res.status(400).json({ 
-          error: "Validation failed", 
-          details: validationResult.error.issues 
-        });
-      }
-      
-      const hackathon = await storage.createHackathon(validationResult.data);
-      res.status(201).json(hackathon);
-    } catch (error) {
-      console.error("Error creating hackathon:", error);
-      res.status(500).json({ error: "Failed to create hackathon" });
-    }
-  });
 
   const httpServer = createServer(app);
 

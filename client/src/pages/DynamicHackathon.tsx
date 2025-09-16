@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import SEO from '@/components/SEO';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { supabase } from '@/lib/supabase';
 import {
   Zap,
   Clock,
@@ -161,11 +162,17 @@ export default function DynamicHackathon() {
       if (!slug) return;
       
       try {
-        const response = await fetch(`/api/hackathons/${slug}`);
-        if (!response.ok) {
+        const { data, error } = await supabase
+          .from('hackathons')
+          .select('*')
+          .eq('slug', slug)
+          .eq('is_active', true)
+          .single();
+
+        if (error) {
           throw new Error('Hackathon not found');
         }
-        const data = await response.json();
+
         setHackathon(data);
         setIsVisible(true);
       } catch (err) {
