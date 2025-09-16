@@ -476,20 +476,58 @@ export default function DynamicHackathon() {
               {hackathon.tagline}
             </h2>
             <div 
-              className="bg-black border-4 p-4 inline-block max-w-2xl relative"
+              className="bg-black border-4 p-6 inline-block max-w-2xl relative"
               style={{
-                borderColor: hackathon.theme_color_primary
+                borderColor: hackathon.theme_color_primary,
+                imageRendering: 'pixelated',
+                clipPath: 'polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px))'
               }}
             >
+              {/* Pixelated corner decorations */}
+              <div 
+                className="absolute -top-2 -left-2 w-6 h-6 border-2"
+                style={{ 
+                  backgroundColor: hackathon.theme_color_accent,
+                  borderColor: hackathon.theme_color_primary,
+                  clipPath: 'polygon(0 0, 100% 0, 100% 50%, 50% 50%, 50% 100%, 0 100%)'
+                }}
+              ></div>
+              <div 
+                className="absolute -top-2 -right-2 w-6 h-6 border-2"
+                style={{ 
+                  backgroundColor: hackathon.theme_color_primary,
+                  borderColor: hackathon.theme_color_accent,
+                  clipPath: 'polygon(50% 0, 100% 0, 100% 100%, 0 100%, 0 50%)'
+                }}
+              ></div>
+              <div 
+                className="absolute -bottom-2 -left-2 w-6 h-6 border-2"
+                style={{ 
+                  backgroundColor: hackathon.theme_color_primary,
+                  borderColor: hackathon.theme_color_accent,
+                  clipPath: 'polygon(0 0, 50% 0, 50% 50%, 100% 50%, 100% 100%, 0 100%)'
+                }}
+              ></div>
+              <div 
+                className="absolute -bottom-2 -right-2 w-6 h-6 border-2"
+                style={{ 
+                  backgroundColor: hackathon.theme_color_accent,
+                  borderColor: hackathon.theme_color_primary,
+                  clipPath: 'polygon(0 50%, 50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%)'
+                }}
+              ></div>
+              
               {theme.svgElements?.heroIcon && (
-                <div className="absolute -top-3 -right-3 w-8 h-8 text-2xl">
+                <div className="absolute -top-4 -right-4 w-8 h-8 text-2xl">
                   {renderSVG(theme.svgElements.heroIcon, 'w-full h-full text-accent')}
                 </div>
               )}
               <p 
-                className="font-press-start text-base md:text-lg leading-relaxed"
+                className="font-press-start text-base md:text-lg leading-relaxed relative z-10"
                 style={{
-                  color: hackathon.theme_color_accent
+                  color: hackathon.theme_color_accent,
+                  textShadow: `2px 2px 0px ${hackathon.theme_color_primary}`,
+                  imageRendering: 'pixelated'
                 }}
               >
                 "{hackathon.description}"
