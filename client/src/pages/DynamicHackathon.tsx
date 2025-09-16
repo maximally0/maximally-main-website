@@ -591,7 +591,7 @@ export default function DynamicHackathon() {
 
         {/* Fast Facts Bar */}
         <section 
-          className="py-8 border-y-4 relative"
+          className="py-8 border-y-4 relative mt-20"
           style={{
             backgroundColor: hackathon.theme_color_primary,
             borderColor: hackathon.theme_color_accent
