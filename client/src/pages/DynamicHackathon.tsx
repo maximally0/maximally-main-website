@@ -338,12 +338,12 @@ export default function DynamicHackathon() {
         {[...Array(12)].map((_, i) => (
           <div
             key={`spark-${i}`}
-            className={`absolute opacity-30 animate-pulse`}
+            className={`absolute opacity-30 animate-float`}
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${1 + Math.random() * 2}s`,
+              animationDuration: `${4 + Math.random() * 3}s`,
             }}
           >
             <Zap className="h-4 w-4" style={{ color: hackathon.theme_color_primary }} />
@@ -354,13 +354,13 @@ export default function DynamicHackathon() {
         {[...Array(8)].map((_, i) => (
           <div
             key={`arrow-${i}`}
-            className="absolute opacity-20 animate-bounce"
+            className="absolute opacity-20 animate-float"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               transform: `rotate(${Math.random() * 360}deg)`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${4 + Math.random() * 3}s`,
+              animationDuration: `${5 + Math.random() * 4}s`,
             }}
           >
             <div 
@@ -382,12 +382,12 @@ export default function DynamicHackathon() {
         {[...Array(6)].map((_, i) => (
           <div
             key={`warning-${i}`}
-            className="absolute opacity-10 animate-pulse"
+            className="absolute opacity-10 animate-float"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${3 + Math.random() * 2}s`,
+              animationDuration: `${6 + Math.random() * 3}s`,
             }}
           >
             <AlertTriangle className="h-12 w-12" style={{ color: hackathon.theme_color_primary }} />
@@ -445,15 +445,14 @@ export default function DynamicHackathon() {
               style={{
                 imageRendering: 'pixelated',
                 textRendering: 'geometricPrecision',
-                filter: `drop-shadow(4px 4px 0px ${hackathon.theme_color_primary})`,
-                letterSpacing: '0.1em'
+                letterSpacing: '0.08em'
               }}
             >
               <span 
-                className="drop-shadow-2xl filter brightness-110 inline-block"
+                className="inline-block"
                 style={{ 
                   color: hackathon.theme_color_primary,
-                  textShadow: `3px 3px 0px ${hackathon.theme_color_accent}`,
+                  textShadow: `2px 2px 0px black, 4px 4px 0px ${hackathon.theme_color_accent}`,
                   imageRendering: 'pixelated'
                 }}
               >
@@ -461,10 +460,10 @@ export default function DynamicHackathon() {
               </span>
               <br />
               <span 
-                className="drop-shadow-2xl relative inline-block"
+                className="relative inline-block"
                 style={{ 
                   color: hackathon.theme_color_accent,
-                  textShadow: `3px 3px 0px ${hackathon.theme_color_primary}`,
+                  textShadow: `2px 2px 0px black, 4px 4px 0px ${hackathon.theme_color_primary}`,
                   imageRendering: 'pixelated',
                   marginTop: '8px',
                   display: 'inline-block'
@@ -474,10 +473,13 @@ export default function DynamicHackathon() {
               </span>
             </h1>
             <h2 
-              className="text-xl md:text-2xl mb-4 font-bold"
+              className="text-xl md:text-2xl mb-4 font-press-start"
               style={{
-                fontFamily: 'var(--font-accent)',
-                color: 'var(--color-text-secondary)'
+                fontFamily: 'var(--font-secondary)',
+                color: 'var(--color-text-secondary)',
+                imageRendering: 'pixelated',
+                textRendering: 'geometricPrecision',
+                letterSpacing: '0.05em'
               }}
             >
               {hackathon.tagline}
