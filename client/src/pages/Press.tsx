@@ -120,10 +120,9 @@ const Press = () => {
                     <h3 className="font-press-start text-xl mb-3">{release.title}</h3>
                     <p className="font-jetbrains text-gray-600 mb-4">{release.excerpt}</p>
                   </div>
-                  <a href={release.link} className="pixel-button bg-maximally-red text-white px-4 py-2 text-sm hover:bg-maximally-yellow hover:text-black transition-all flex items-center gap-2">
-                    <span>Read More</span>
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
+                  <span className="pixel-button bg-gray-400 text-white px-4 py-2 text-sm cursor-not-allowed flex items-center gap-2">
+                    <span>Coming Soon</span>
+                  </span>
                 </div>
               </div>
             ))}
@@ -178,9 +177,9 @@ const Press = () => {
                     <span className="font-jetbrains text-xs text-gray-500">{item.size}</span>
                   </div>
                 </div>
-                <button className="pixel-button bg-maximally-blue text-white px-4 py-2 text-sm hover:bg-maximally-green transition-all">
-                  Download
-                </button>
+                <a href="mailto:press@maximally.in?subject=Media Kit Request" className="pixel-button bg-maximally-blue text-white px-4 py-2 text-sm hover:bg-maximally-green transition-all">
+                  Request
+                </a>
               </div>
             ))}
           </div>

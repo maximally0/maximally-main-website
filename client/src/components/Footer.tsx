@@ -96,7 +96,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/mfhop"
+                  to="/federation"
                   className="hover:text-maximally-yellow transition-colors block"
                 >
                   MFHOP

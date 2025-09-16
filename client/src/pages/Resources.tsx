@@ -17,11 +17,11 @@ const Resources = () => {
   ];
 
   const docs = [
-    { title: "Judge Handbook", desc: "Complete guide for hackathon judges", link: "/docs/judge-handbook" },
-    { title: "Participant Handbook", desc: "Everything participants need to know", link: "/docs/participant-handbook" },
-    { title: "Sponsor/Partner Deck", desc: "Partnership opportunities and benefits", link: "/docs/partner-deck" },
-    { title: "Press Kit", desc: "Media resources and brand assets", link: "/docs/press-kit" },
-    { title: "FAQ", desc: "Frequently asked questions", link: "/docs/faq" },
+    { title: "Judge Handbook", desc: "Complete guide for hackathon judges", link: "/docs#judge-handbook" },
+    { title: "Participant Handbook", desc: "Everything participants need to know", link: "/docs#participant-handbook" },
+    { title: "Sponsor/Partner Deck", desc: "Partnership opportunities and benefits", link: "/docs#sponsor-deck" },
+    { title: "Press Kit", desc: "Media resources and brand assets", link: "/press" },
+    { title: "FAQ", desc: "Frequently asked questions", link: "/docs#faq" },
   ];
 
   return (

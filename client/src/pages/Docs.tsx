@@ -9,9 +9,9 @@ const Docs = () => {
       icon: BookOpen,
       color: "maximally-red",
       docs: [
-        { name: "Platform Overview", desc: "Complete guide to Maximally ecosystem", link: "/docs/overview" },
-        { name: "Quick Start Guide", desc: "Get up and running in 5 minutes", link: "/docs/quickstart" },
-        { name: "Account Setup", desc: "Setting up your builder profile", link: "/docs/account" },
+        { name: "Platform Overview", desc: "Complete guide to Maximally ecosystem", link: "#overview" },
+        { name: "Quick Start Guide", desc: "Get up and running in 5 minutes", link: "#quickstart" },
+        { name: "Account Setup", desc: "Setting up your builder profile", link: "#account" },
       ]
     },
     {
@@ -19,10 +19,10 @@ const Docs = () => {
       icon: Users,
       color: "maximally-blue", 
       docs: [
-        { name: "Participant Handbook", desc: "Everything you need to know about participating", link: "/docs/participant-handbook" },
-        { name: "Hackathon Rules", desc: "Standard rules and guidelines", link: "/docs/rules" },
-        { name: "Team Formation", desc: "How to form and manage teams", link: "/docs/teams" },
-        { name: "Submission Guidelines", desc: "Project submission requirements", link: "/docs/submissions" },
+        { name: "Participant Handbook", desc: "Everything you need to know about participating", link: "#participant-handbook" },
+        { name: "Hackathon Rules", desc: "Standard rules and guidelines", link: "#rules" },
+        { name: "Team Formation", desc: "How to form and manage teams", link: "#teams" },
+        { name: "Submission Guidelines", desc: "Project submission requirements", link: "#submissions" },
       ]
     },
     {
@@ -30,10 +30,10 @@ const Docs = () => {
       icon: Gavel,
       color: "maximally-green",
       docs: [
-        { name: "Judge Handbook", desc: "Complete judging guidelines and criteria", link: "/docs/judge-handbook" },
-        { name: "Scoring Rubric", desc: "How to evaluate projects fairly", link: "/docs/scoring" },
-        { name: "Judge Dashboard", desc: "Using the judging platform", link: "/docs/judge-dashboard" },
-        { name: "Best Practices", desc: "Tips for effective judging", link: "/docs/judge-tips" },
+        { name: "Judge Handbook", desc: "Complete judging guidelines and criteria", link: "#judge-handbook" },
+        { name: "Scoring Rubric", desc: "How to evaluate projects fairly", link: "#scoring" },
+        { name: "Judge Dashboard", desc: "Using the judging platform", link: "#judge-dashboard" },
+        { name: "Best Practices", desc: "Tips for effective judging", link: "#judge-tips" },
       ]
     },
     {
@@ -41,18 +41,18 @@ const Docs = () => {
       icon: FileText,
       color: "maximally-yellow",
       docs: [
-        { name: "Partnership Guide", desc: "How to partner with Maximally", link: "/docs/partnership" },
-        { name: "Sponsor Deck", desc: "Sponsorship opportunities and benefits", link: "/docs/sponsor-deck" },
-        { name: "Brand Guidelines", desc: "Using Maximally brand assets", link: "/docs/brand" },
-        { name: "Press Kit", desc: "Media resources and guidelines", link: "/docs/press-kit" },
+        { name: "Partnership Guide", desc: "How to partner with Maximally", link: "#partnership" },
+        { name: "Sponsor Deck", desc: "Sponsorship opportunities and benefits", link: "#sponsor-deck" },
+        { name: "Brand Guidelines", desc: "Using Maximally brand assets", link: "#brand" },
+        { name: "Press Kit", desc: "Media resources and guidelines", link: "/press" },
       ]
     }
   ];
 
   const quickLinks = [
-    { name: "FAQ", desc: "Frequently asked questions", link: "/docs/faq", color: "bg-maximally-red" },
-    { name: "API Reference", desc: "MaximallyHack API documentation", link: "/docs/api", color: "bg-maximally-blue" },
-    { name: "Changelog", desc: "Platform updates and changes", link: "/docs/changelog", color: "bg-maximally-green" },
+    { name: "FAQ", desc: "Frequently asked questions", link: "#faq", color: "bg-maximally-red" },
+    { name: "API Reference", desc: "MaximallyHack API documentation", link: "#api", color: "bg-maximally-blue" },
+    { name: "Changelog", desc: "Platform updates and changes", link: "#changelog", color: "bg-maximally-green" },
     { name: "Support", desc: "Get help and support", link: "/contact", color: "bg-maximally-yellow" },
   ];
 

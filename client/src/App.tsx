@@ -124,8 +124,7 @@ import ProjectCodeGenBeyondHackathons from './pages/blog/ProjectCodeGenBeyondHac
 // Partnership Blog Posts
 import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 
-// MFHOP
-import MFHOP from './pages/MFHOP';
+// MFHOP - now consolidated into Federation
 
 const queryClient = new QueryClient();
 
@@ -326,7 +325,7 @@ const App = () => {
             <Route path="/community" element={<CommunityRedirect />} />
 
             <Route path="/featured" element={<Featured />} />
-            <Route path="/mfhop" element={<MFHOP />} />
+            <Route path="/mfhop" element={<Navigate to="/federation" replace />} />
 
             <Route path="/events" element={<Events />} />
             <Route
