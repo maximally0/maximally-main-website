@@ -416,6 +416,139 @@ const hackathonData: InsertHackathon[] = [
     theme_color_secondary: "#1e40af",
     theme_color_accent: "#60a5fa",
     is_active: true
+  },
+  {
+    slug: "codehypothesis",
+    title: "Code Hypothesis",
+    tagline: "A 24-hour hackathon for wild ideas",
+    badge_text: "GRAND INDIAN HACKATHON",
+    description: "Test theories instead of pitching. Part of Maximally Grand Indian Hackathon Season. Where code meets graffiti.",
+    registration_url: "https://codehypothesis.devpost.com/",
+    start_date: "Sept 28, 2025",
+    end_date: "Sept 28, 2025",
+    duration: "24 hours",
+    format: "Online",
+    team_size: "Solo or teams",
+    judging_type: "Async submission review",
+    results_date: "Mid November",
+    what_it_is: "Not your average hackathon. Instead of pitching polished ideas, you test theories and challenge assumptions. This is about raw experimentation, fast prototyping, and proving (or disproving) your wildest coding hypotheses in just 24 hours.",
+    the_idea: "Code Hypothesis is where theory meets reality. Build prototypes to test your coding assumptions, challenge conventional wisdom, and prove wild theories through raw experimentation.",
+    who_joins: [
+      "Builders with weird ideas",
+      "Absolute beginners", 
+      "No-code rebels",
+      "Students & dropouts",
+      "Indie hackers",
+      "Theory breakers"
+    ],
+    tech_rules: [
+      "Any stack, any tool",
+      "Test a coding hypothesis",
+      "Must include working prototype",
+      "Code repository required",
+      "Brief documentation needed",
+      "Raw experimentation encouraged"
+    ],
+    fun_awards: [
+      "Most mind-bending hypothesis",
+      "Best theory destroyer",
+      "Wildest assumption challenge",
+      "Creative rebellion award"
+    ],
+    perks: [
+      "Join the hypothesis network",
+      "Featured on theory showcases", 
+      "Connect with experimental builders",
+      "Learn breakthrough thinking"
+    ],
+    cash_pool: "₹5000+ in prizes",
+    prize_pool: [
+      { title: "Hypothesis Master", amount: "₹3000", description: "Best theory test" },
+      { title: "Reality Breaker", amount: "₹2000", description: "Most surprising result" }
+    ],
+    judging_description: "Projects judged on hypothesis creativity, experimental approach, technical execution, and insights gained from testing theories.",
+    judging_criteria: "Hypothesis originality (30%), Experimental approach (25%), Technical execution (25%), Insights gained (20%)",
+    required_submissions: [
+      "Working prototype or demo",
+      "Hypothesis statement",
+      "Test results and findings", 
+      "Source code repository"
+    ],
+    optional_submissions: [
+      "Demo video",
+      "Experimental process documentation",
+      "Future research directions"
+    ],
+    theme_color_primary: "#10b981",
+    theme_color_secondary: "#000000", 
+    theme_color_accent: "#fbbf24",
+    is_active: true
+  },
+  {
+    slug: "project-codegen",
+    title: "Project CodeGen",
+    tagline: "Build like you're 6. Ship like you're 16.",
+    badge_text: "PLAYFUL HACKATHON",
+    description: "A 48-hour hackathon for builders who play. Not about disruption or MVPs. It's about play. Drop the pitch decks, pick up crayons.",
+    registration_url: "https://projectcodegen.devpost.com",
+    start_date: "Oct 11, 2025",
+    end_date: "Oct 12, 2025", 
+    duration: "48 hours",
+    format: "Online",
+    team_size: "Solo or teams (max 4)",
+    judging_type: "Async judging, no live pitch",
+    results_date: "Before Nov ceremony",
+    what_it_is: "Not about disruption or MVPs. It's about play. Drop the pitch decks, pick up crayons. Build like a kid — silly ideas, joyful logic, weird prototypes. Make tech fun again.",
+    the_idea: "Project CodeGen celebrates the joy of building. Inspired by notebooks, toys, science fairs, Lego builds, and Scratch projects. You're building for your younger self.",
+    who_joins: [
+      "Teen builders",
+      "First-timers",
+      "Designers + no-coders", 
+      "Scratch veterans",
+      "Makers who like color, fun, and zero stress"
+    ],
+    tech_rules: [
+      "48-hour online event",
+      "Solo or teams (max 4)",
+      "Open to all ages, worldwide",
+      "Any stack or tool",
+      "No prep, no live calls",
+      "Serious design allowed, serious tone not allowed",
+      "You're building for your younger self"
+    ],
+    fun_awards: [
+      "Most playful build",
+      "Best imagination",
+      "Highest joy factor",
+      "Most useful in disguise"
+    ],
+    perks: [
+      "Join the playful builder community",
+      "Featured on creativity showcases",
+      "Connect with joyful makers", 
+      "Rediscover the fun in coding"
+    ],
+    cash_pool: "₹5000+ in prizes",
+    prize_pool: [
+      { title: "Big Kid Award", amount: "₹3000", description: "Best overall playful project + LOR + feature" },
+      { title: "Most Playful Build", amount: "₹2000", description: "Highest creativity and joy" }
+    ],
+    judging_description: "Projects evaluated on imagination, execution, usefulness in disguise, presentation, and joy factor.",
+    judging_criteria: "Imagination (30%), Execution (25%), Usefulness in Disguise (20%), Presentation (15%), Joy Factor (10%)",
+    required_submissions: [
+      "Prototype link (GitHub, Notion, Figma, no-code, etc.)",
+      "Write-up: what you built, why it's playful, hidden smartness",
+      "Working playful project"
+    ],
+    optional_submissions: [
+      "1-min silly demo video",
+      "Process documentation",
+      "Fun screenshots or demos"
+    ],
+    theme_color_primary: "#f59e0b",
+    theme_color_secondary: "#ec4899",
+    theme_color_accent: "#3b82f6",
+    is_active: true
   }
 ];
 
