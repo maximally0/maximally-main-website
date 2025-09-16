@@ -319,10 +319,9 @@ export default function DynamicHackathon() {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden" 
+      className="min-h-screen bg-gray-900 relative overflow-hidden" 
       style={{
         ...themeStyle,
-        backgroundColor: 'var(--color-background)',
         backgroundImage: 'var(--hero-background-pattern)',
         fontFamily: 'var(--font-body)'
       }}
@@ -360,7 +359,7 @@ export default function DynamicHackathon() {
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               transform: `rotate(${Math.random() * 360}deg)`,
-              animation: `drift ${4 + Math.random() * 3}s infinite`,
+              animation: `float ${4 + Math.random() * 3}s infinite`,
               animationDelay: `${Math.random() * 3}s`,
             }}
           >
