@@ -56,6 +56,12 @@ import YoutubeVsStartup from '@/pages/BlogPost/YoutubeVsStartup';
 import TopCareersForTeens from '@/pages/BlogPost/TopCareersForTeens';
 // Removed WallOfProgressiveSchools import
 import Events from './pages/Events';
+import About from './pages/About';
+import Resources from './pages/Resources';
+import People from './pages/People';
+import Press from './pages/Press';
+import Docs from './pages/Docs';
+import Federation from './pages/Federation';
 import MakeathonForFuture from './pages/BlogPost/MakeathonForFuture';
 import StartupsThroughMaximally from './pages/BlogPost/StartupsThroughMaximally';
 import MaximallyMakeathonsForTeachers from './pages/BlogPost/MaximallyMakeathonsForTeachers';
@@ -172,6 +178,14 @@ const App = () => {
             <Route path="/bootcamps" element={<Navigate to="/" replace />} />
             <Route path="/makeathon" element={<Makeathon />} />
             {/* Team route removed */}
+
+            {/* Main Pages */}
+            <Route path="/about" element={<About />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/people" element={<People />} />
+            <Route path="/press" element={<Press />} />
+            <Route path="/docs" element={<Docs />} />
+            <Route path="/federation" element={<Federation />} />
 
             <Route path="/blog" element={<Blog />} />
 
