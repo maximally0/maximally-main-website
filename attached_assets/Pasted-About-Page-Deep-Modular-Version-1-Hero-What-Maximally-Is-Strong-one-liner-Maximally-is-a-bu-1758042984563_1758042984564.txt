@@ -1,0 +1,102 @@
+About Page (Deep, Modular Version)
+1. Hero / What Maximally Is
+
+Strong one-liner: “Maximally is a builder-first platform for hackathons, competitions, and creative systems.”
+
+Sub-head: short mission (not fluffy).
+
+CTAs: “See Events” / “Our Platform” / “Join Community”.
+
+2. Impact Snapshot
+
+Stats: participants, events, countries, partners, judges.
+
+Add date stamp for credibility.
+
+Can include milestone badges like ₹2L revenue or 1000+ participants in 2 months.
+
+3. What We Do (Core Work)
+
+Events: Hackathons, bootcamps, make-a-thons.
+
+Platform: Building MaximallyHack (hosting + judge dashboards + team formation).
+
+Federation: MFHOP (network of hackathon organizers).
+
+Studios: Content/media vertical (podcasts, reels, blog).
+
+Each with a card: description + link.
+
+4. People Behind It
+
+Short intro to the Task Force culture.
+
+Highlight 3–6 leaders.
+
+Button: “See Core Team” and “See Judges”.
+
+5. Partners & Collabs
+
+Logo wall (Masters’ Union, MakeX, YRI, Calyptus, etc.).
+
+Note what each brought (sponsors, outreach, mentors).
+
+6. Judges & Mentors
+
+Preview 3–5 notable names (with roles).
+
+Button → /people/judges.
+
+7. Press & Mentions
+
+Cards for outlets you’ve been in (or even “coming soon”).
+
+Optional featured quote.
+
+8. Story & Timeline
+
+Chronology:
+
+CodeQuest (biggest school hackathon)
+
+Maximally launch
+
+Startup Make-a-thon
+
+AI Shipathon
+
+Grand Indian Hackathon Season
+
+Keeps narrative clear.
+
+9. Testimonials
+
+Quote cards from judges, partners, or participants.
+
+Optional: video snippets.
+
+10. Future Direction
+
+A short roadmap (what’s next): platform launch, federation scaling, more events.
+
+Could end with: “We’re just getting started.”
+
+11. Media Kit & Resources
+
+Download brand assets (logo, colors).
+
+Link to /resources.
+
+12. Culture / Join Us
+
+A short note on the Maximally Task Force (high-agency, builder-first).
+
+Button: “Apply to join” or “Volunteer”.
+
+Optional Blocks (for later)
+
+Awards / Recognition if you get them.
+
+Advisors / Mentors separate from judges.
+
+Global Footprint Map (where participants are from).
