@@ -264,7 +264,7 @@ const About = () => {
             <div className="border-l-4 border-red-600 pl-8 bg-red-50 p-6 rounded-r-lg">
               <div className="bg-red-600 text-white px-3 py-1 rounded font-press-start text-sm inline-block mb-4">🇮🇳 September - November 2025</div>
               <h3 className="font-press-start text-2xl mb-4 text-red-600">Grand Indian Hackathon Season</h3>
-              <p className="font-jetbrains text-gray-700 mb-6">10 hackathons back-to-back, the biggest innovation challenge series</p>
+              <p className="font-jetbrains text-gray-700 mb-6">8 hackathons back-to-back, the biggest innovation challenge series</p>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div className="font-jetbrains">
