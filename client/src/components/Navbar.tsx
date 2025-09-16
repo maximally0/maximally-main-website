@@ -60,7 +60,7 @@ const Navbar = () => {
               <a
                 key={item.path}
                 href={item.path}
-                {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                {...((item as any).external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
               >
                 {item.label}
@@ -89,7 +89,7 @@ const Navbar = () => {
                   <a
                     key={item.path}
                     href={item.path}
-                    {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    {...((item as any).external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     onClick={() => setIsMenuOpen(false)}
                     className="pixel-button bg-maximally-red text-black font-press-start text-center py-4 px-6 hover:bg-maximally-yellow transition-all duration-300 hover:scale-105"
                   >
