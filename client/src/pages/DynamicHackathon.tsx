@@ -338,12 +338,12 @@ export default function DynamicHackathon() {
         {[...Array(12)].map((_, i) => (
           <div
             key={`spark-${i}`}
-            className="absolute opacity-30"
+            className={`absolute opacity-30 animate-pulse`}
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              animation: `glitch ${1 + Math.random() * 2}s infinite`,
               animationDelay: `${Math.random() * 2}s`,
+              animationDuration: `${1 + Math.random() * 2}s`,
             }}
           >
             <Zap className="h-4 w-4" style={{ color: hackathon.theme_color_primary }} />
@@ -354,13 +354,13 @@ export default function DynamicHackathon() {
         {[...Array(8)].map((_, i) => (
           <div
             key={`arrow-${i}`}
-            className="absolute opacity-20"
+            className="absolute opacity-20 animate-bounce"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               transform: `rotate(${Math.random() * 360}deg)`,
-              animation: `float ${4 + Math.random() * 3}s infinite`,
               animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${4 + Math.random() * 3}s`,
             }}
           >
             <div 
@@ -382,12 +382,12 @@ export default function DynamicHackathon() {
         {[...Array(6)].map((_, i) => (
           <div
             key={`warning-${i}`}
-            className="absolute opacity-10"
+            className="absolute opacity-10 animate-pulse"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              animation: `pulse ${3 + Math.random() * 2}s infinite`,
               animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${3 + Math.random() * 2}s`,
             }}
           >
             <AlertTriangle className="h-12 w-12" style={{ color: hackathon.theme_color_primary }} />
@@ -476,11 +476,9 @@ export default function DynamicHackathon() {
               {hackathon.tagline}
             </h2>
             <div 
-              className="border-4 p-4 inline-block max-w-2xl relative"
+              className="bg-black border-4 p-4 inline-block max-w-2xl relative"
               style={{
-                backgroundColor: 'var(--color-surface)',
-                borderColor: 'var(--color-primary)',
-                borderRadius: 'var(--spacing-element)'
+                borderColor: hackathon.theme_color_primary
               }}
             >
               {theme.svgElements?.heroIcon && (
@@ -489,10 +487,9 @@ export default function DynamicHackathon() {
                 </div>
               )}
               <p 
-                className="text-base md:text-lg leading-relaxed"
+                className="font-press-start text-base md:text-lg leading-relaxed"
                 style={{
-                  ...getFontStyle('secondary'),
-                  color: 'var(--color-accent)'
+                  color: hackathon.theme_color_accent
                 }}
               >
                 "{hackathon.description}"
