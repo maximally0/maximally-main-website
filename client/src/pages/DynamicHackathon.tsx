@@ -441,26 +441,33 @@ export default function DynamicHackathon() {
             }`}
           >
             <h1 
-              className="text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight"
+              className="text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight font-press-start"
               style={{
-                fontFamily: 'var(--font-secondary)',
-                filter: 'drop-shadow(var(--glow-effect))'
+                imageRendering: 'pixelated',
+                textRendering: 'geometricPrecision',
+                filter: `drop-shadow(4px 4px 0px ${hackathon.theme_color_primary})`,
+                letterSpacing: '0.1em'
               }}
             >
               <span 
-                className="drop-shadow-2xl filter brightness-110"
-                style={{ color: 'var(--color-primary)' }}
+                className="drop-shadow-2xl filter brightness-110 inline-block"
+                style={{ 
+                  color: hackathon.theme_color_primary,
+                  textShadow: `3px 3px 0px ${hackathon.theme_color_accent}`,
+                  imageRendering: 'pixelated'
+                }}
               >
                 {hackathon.title.split(' ')[0]}
               </span>
               <br />
               <span 
-                className="drop-shadow-2xl relative"
+                className="drop-shadow-2xl relative inline-block"
                 style={{ 
-                  background: 'var(--text-gradient)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
+                  color: hackathon.theme_color_accent,
+                  textShadow: `3px 3px 0px ${hackathon.theme_color_primary}`,
+                  imageRendering: 'pixelated',
+                  marginTop: '8px',
+                  display: 'inline-block'
                 }}
               >
                 {hackathon.title.split(' ').slice(1).join(' ')}
