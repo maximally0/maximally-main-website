@@ -1,4 +1,4 @@
-import { Star, Users, Code, Heart, GraduationCap, LucideIcon } from 'lucide-react';
+import { Star, Users, Code, GraduationCap, LucideIcon } from 'lucide-react';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
@@ -28,38 +28,17 @@ interface TeamSectionProps {
 const PeopleCore = () => {
   const advisors = [
     {
-      name: "Thilakavathi Sankaran",
-      role: "Data & Analytics Professional",
-      organization: "15+ Years Experience",
-      description: "Great ideas need more than vision — they need data, direction, and people who believe in both.",
-      socials: {}
-    },
-    {
-      name: "Priyanshu Sharma",
-      role: "Founder & CEO",
-      organization: "ByteBrain",
-      description: "Maximally is doing what the world needs more of — empowering young minds to build boldly, think independently, and lead with purpose.",
-      socials: {}
-    },
-    {
-      name: "Anusha Ravi",
-      role: "Product Leader",
-      organization: "Intuit",
-      description: "Big fan of starting small and growing fast!",
-      socials: {}
-    },
-    {
-      name: "Hatim Kagalwala",
-      role: "Applied Scientist",
-      organization: "Amazon",
-      description: "Maximally empowers individuals and organizations to think boldly, solve creatively, and build solutions that truly make an impact.",
-      socials: {}
-    },
-    {
       name: "Milankumar Rana",
       role: "Software Engineer Advisor",
       organization: "FedEx",
       description: "Innovation happens when young minds are given the right platform and mentorship to transform ideas into reality.",
+      socials: {}
+    },
+    {
+      name: "Vikranth Kumar Shivaa",
+      role: "Advisor & Mentor",
+      organization: "Maximally",
+      description: "Vikranth has been central to Maximally's growth — helping us shape the Grand Indian Hackathon season and guiding our organizing efforts with clarity and consistency.",
       socials: {}
     }
   ];
@@ -69,21 +48,58 @@ const PeopleCore = () => {
       name: "Rishul Chanana",
       role: "Founder & CEO",
       organization: "Maximally",
-      description: "Building the future by empowering builders to create meaningful impact through innovation.",
+      description: "Building the future by creating a culture where young builders can thrive through high-stakes competitions.",
+      socials: {}
+    },
+    {
+      name: "Drishti Arora",
+      role: "Chief Operating Officer (COO)",
+      organization: "Maximally",
+      description: "Keeps Maximally's gears running smoothly, balancing scale with execution.",
+      socials: {}
+    },
+    {
+      name: "Raghwender (Raghav) Vasisth",
+      role: "President, Maximally Federation of Hackathon Organizers and Partners (MFHOP)",
+      organization: "Maximally",
+      description: "Spearheading our federation, connecting hackathon leaders across India into one network.",
+      socials: {}
+    },
+    {
+      name: "Pranav Marjara",
+      role: "Operations & Coordination Lead",
+      organization: "Maximally",
+      description: "The glue of the org — manages internal flow, ensures teams stay in sync, and keeps chaos in check.",
       socials: {}
     }
   ];
 
   const developers: TeamMember[] = [
-    // Placeholder for developer team - to be populated with actual data
+    {
+      name: "Gautam Gambhir",
+      role: "Head of Engineering",
+      organization: "Maximally",
+      description: "Architects the tech behind Maximally.in and pushes our platform to new heights.",
+      socials: {}
+    },
+    {
+      name: "Pranati Dubey",
+      role: "Culture & Systems Engineer",
+      organization: "Maximally",
+      description: "Bridges code and culture, shaping both our platform and our community experience.",
+      socials: {}
+    }
   ];
 
-  const activeContributors: TeamMember[] = [
-    // Placeholder for active contributors - to be populated with actual data
-  ];
 
   const alumni: TeamMember[] = [
-    // Placeholder for alumni - to be populated with actual data
+    {
+      name: "Janak Walia",
+      role: "Founding Contributor",
+      organization: "Maximally",
+      description: "Helped shape Maximally during its earliest days and played a key role in launching our first Startup Makeathon.",
+      socials: {}
+    }
   ];
 
   const TeamSection = ({ title, members, icon: Icon, colorTheme, emptyMessage }: TeamSectionProps) => (
@@ -149,7 +165,7 @@ const PeopleCore = () => {
     <>
       <SEO
         title="Core Team | Maximally"
-        description="Meet Maximally's core team - advisors, organizing board, developers, and contributors building the world's premier hackathon league."
+        description="Meet Maximally's core team - advisors, organizing board, developers, and alumni building the world's premier hackathon league."
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -184,7 +200,7 @@ const PeopleCore = () => {
                 </span>
               </h1>
               <p className="text-gray-300 text-lg md:text-xl font-jetbrains max-w-4xl mx-auto leading-relaxed mb-8">
-                The passionate builders, advisors, and contributors making Maximally the world's premier hackathon league.
+                The builders, mentors, and organizers making Maximally the world's premier hackathon league.
               </p>
               
               {/* Back to People Button */}
@@ -230,19 +246,7 @@ const PeopleCore = () => {
                 text: "text-green-500",
                 border: "border-green-500"
               }}
-              emptyMessage="The technical team building our platform - profiles coming soon!"
-            />
-
-            <TeamSection
-              title="Active Contributors"
-              members={activeContributors}
-              icon={Heart}
-              colorTheme={{
-                bg: "bg-purple-500",
-                text: "text-purple-500",
-                border: "border-purple-500"
-              }}
-              emptyMessage="Community members actively contributing to our mission - profiles coming soon!"
+              emptyMessage="The technical team building our platform."
             />
 
             <TeamSection
@@ -254,7 +258,7 @@ const PeopleCore = () => {
                 text: "text-blue-500",
                 border: "border-blue-500"
               }}
-              emptyMessage="Past core members who helped build our foundation - profiles coming soon!"
+              emptyMessage="Past core members who helped build our foundation."
             />
           </div>
         </main>

@@ -51,9 +51,6 @@ const Contact = () => {
               <div className="minecraft-block bg-maximally-red text-black px-6 py-3 inline-block mb-6">
                 <span className="font-press-start text-sm">📞 GET IN TOUCH</span>
               </div>
-              <h2 className="font-press-start text-2xl md:text-3xl mb-4 text-maximally-red">
-                PHONE NUMBERS
-              </h2>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               {[
