@@ -1,4 +1,4 @@
-import { ExternalLink, Book, Video, Users, Target, FileText, Mail, Search, Share2 } from 'lucide-react';
+import { ExternalLink, Book, Video, Users, Target, Mail, Share2 } from 'lucide-react';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
@@ -230,31 +230,6 @@ const Resources = () => {
               </div>
             </ResourceSection>
 
-            {/* Research & Reports Section */}
-            <ResourceSection title="Research & Reports" icon={Search}>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="pixel-card bg-black border-2 border-pink-500 p-6">
-                  <div className="minecraft-block bg-pink-500 w-10 h-10 mb-4 flex items-center justify-center">
-                    <Search className="h-5 w-5 text-black" />
-                  </div>
-                  <h3 className="font-press-start text-sm mb-3 text-pink-500">WHITEPAPERS</h3>
-                  <p className="font-jetbrains text-gray-300 text-sm mb-3">
-                    In-depth research on hackathon ecosystems and innovation patterns.
-                  </p>
-                  <span className="font-jetbrains text-xs text-gray-500">Coming soon</span>
-                </div>
-                <div className="pixel-card bg-black border-2 border-teal-500 p-6">
-                  <div className="minecraft-block bg-teal-500 w-10 h-10 mb-4 flex items-center justify-center">
-                    <Search className="h-5 w-5 text-black" />
-                  </div>
-                  <h3 className="font-press-start text-sm mb-3 text-teal-500">CASE STUDIES</h3>
-                  <p className="font-jetbrains text-gray-300 text-sm mb-3">
-                    Project SYMBIONT and other impact studies from our hackathons.
-                  </p>
-                  <span className="font-jetbrains text-xs text-gray-500">Coming soon</span>
-                </div>
-              </div>
-            </ResourceSection>
 
             {/* Social Media Section */}
             <ResourceSection title="Social Media" icon={Share2}>
