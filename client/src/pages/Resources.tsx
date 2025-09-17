@@ -13,12 +13,9 @@ const Resources = () => {
   ];
 
   const initiatives = [
-    { title: "Code Hypothesis", link: "/codehypothesis", description: "Science meets wild ideas" },
-    { title: "Protocol 404", link: "/protocol-404", description: "When systems break, build anyway" },
-    { title: "Project CodeGen", link: "/project-codegen", description: "Play might be the future of building" },
-    { title: "MFHOP", link: "/mfhop", description: "Maximally Federation of Hackathon Platforms" },
-    { title: "PromptStorm", link: "/promptstorm", description: "AI prompt engineering challenge" },
-    { title: "Steal-A-Thon", link: "/steal-a-thon", description: "Build by learning from the best" }
+    { title: "MFHOP", link: "/mfhop", description: "Our federation for hackathon organizers and partners" },
+    { title: "Events", link: "/events", description: "Our hackathon events and competitions" },
+    { title: "Community", link: "https://discord.gg/MpBnYk8qMX", description: "Join our Discord community" }
   ];
 
   const socialLinks = [
@@ -171,7 +168,7 @@ const Resources = () => {
 
             {/* Community Section */}
             <ResourceSection title="Community" icon={Users}>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-1 gap-6">
                 <a
                   href="https://discord.gg/MpBnYk8qMX"
                   target="_blank"
@@ -188,20 +185,6 @@ const Resources = () => {
                     Join our main community server for real-time discussions and updates.
                   </p>
                 </a>
-                <div className="pixel-card bg-black border-2 border-gray-700 p-6">
-                  <div className="minecraft-block bg-gray-700 w-10 h-10 mb-4 flex items-center justify-center">
-                    <Users className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="font-press-start text-sm mb-3 text-gray-300">TELEGRAM</h3>
-                  <p className="font-jetbrains text-gray-500 text-xs">Coming soon</p>
-                </div>
-                <div className="pixel-card bg-black border-2 border-gray-700 p-6">
-                  <div className="minecraft-block bg-gray-700 w-10 h-10 mb-4 flex items-center justify-center">
-                    <Users className="h-5 w-5 text-white" />
-                  </div>
-                  <h3 className="font-press-start text-sm mb-3 text-gray-300">WHATSAPP</h3>
-                  <p className="font-jetbrains text-gray-500 text-xs">Coming soon</p>
-                </div>
               </div>
             </ResourceSection>
 
