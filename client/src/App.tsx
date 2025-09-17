@@ -124,6 +124,7 @@ import MFHOP from './pages/MFHOP';
 import People from './pages/People';
 import PeopleCore from './pages/PeopleCore';
 import PeopleJudges from './pages/PeopleJudges';
+import Resources from './pages/Resources';
 
 const queryClient = new QueryClient();
 
@@ -318,6 +319,7 @@ const App = () => {
             <Route path="/people" element={<People />} />
             <Route path="/people/core" element={<PeopleCore />} />
             <Route path="/people/judges" element={<PeopleJudges />} />
+            <Route path="/resources" element={<Resources />} />
             {/* Legacy redirect */}
             <Route path="/featured" element={<Navigate to="/people" replace />} />
             <Route path="/mfhop" element={<MFHOP />} />
