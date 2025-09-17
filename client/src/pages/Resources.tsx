@@ -211,33 +211,6 @@ const Resources = () => {
               </div>
             </ResourceSection>
 
-            {/* Docs & Guides Section */}
-            <ResourceSection title="Docs & Guides" icon={FileText}>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  { title: "Judge Handbook", desc: "Guidelines for hackathon judges" },
-                  { title: "Participant Handbook", desc: "How to participate in our events" },
-                  { title: "Sponsor Deck", desc: "Partnership opportunities" },
-                  { title: "Press Kit", desc: "Media resources and brand assets" },
-                  { title: "FAQs", desc: "Frequently asked questions" },
-                  { title: "Getting Started", desc: "New to Maximally? Start here" }
-                ].map((doc, index) => (
-                  <div
-                    key={index}
-                    className="pixel-card bg-black border-2 border-orange-500 p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow group cursor-pointer"
-                  >
-                    <div className="minecraft-block bg-orange-500 w-10 h-10 mb-4 flex items-center justify-center group-hover:bg-maximally-yellow transition-colors">
-                      <FileText className="h-5 w-5 text-black" />
-                    </div>
-                    <h3 className="font-press-start text-xs mb-2 text-orange-500 group-hover:text-maximally-yellow transition-colors">
-                      {doc.title}
-                    </h3>
-                    <p className="font-jetbrains text-gray-300 text-xs">{doc.desc}</p>
-                    <span className="font-jetbrains text-xs text-gray-500 mt-2 block">Coming soon</span>
-                  </div>
-                ))}
-              </div>
-            </ResourceSection>
 
             {/* Newsletter Section */}
             <ResourceSection title="Newsletter & Updates" icon={Mail}>
