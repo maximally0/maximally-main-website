@@ -21,7 +21,6 @@ import Privacy from './pages/Privacy';
 import Story from './pages/Story';
 
 import ThankYou from './pages/ThankYou';
-import Featured from './pages/Featured';
 import Bootcamps from '@/pages/Bootcamps';
 import Blog from './pages/Blog';
 // Removed Community and Collaborate imports
@@ -316,10 +315,11 @@ const App = () => {
             {/* Community redirect to Discord */}
             <Route path="/community" element={<CommunityRedirect />} />
 
-            <Route path="/featured" element={<Featured />} />
             <Route path="/people" element={<People />} />
             <Route path="/people/core" element={<PeopleCore />} />
             <Route path="/people/judges" element={<PeopleJudges />} />
+            {/* Legacy redirect */}
+            <Route path="/featured" element={<Navigate to="/people" replace />} />
             <Route path="/mfhop" element={<MFHOP />} />
 
             <Route path="/events" element={<Events />} />

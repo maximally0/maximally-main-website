@@ -53,10 +53,10 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/featured"
+                  to="/people"
                   className="hover:text-maximally-red transition-colors block"
                 >
-                  Featured Heroes
+                  People
                 </Link>
               </li>
             </ul>
@@ -105,10 +105,10 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/featured"
+                  to="/people"
                   className="hover:text-green-400 transition-colors block"
                 >
-                  Featured Heroes
+                  People
                 </Link>
               </li>
             </ul>
