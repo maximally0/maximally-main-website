@@ -2,15 +2,34 @@ import { ExternalLink, Book, Video, Users, Target, Mail, Share2 } from 'lucide-r
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
+import { useBlogs } from '@/hooks/useBlog';
+import { isStaticBlogPost } from '@/lib/staticBlogs';
 
 const Resources = () => {
-  const blogPosts = [
+  // Fetch dynamic blog posts from database
+  const { data: blogData, isLoading: isBlogsLoading } = useBlogs(1, 5); // Get latest 5 posts
+  
+  // Static blog posts for fallback/combination
+  const staticBlogPosts = [
     { title: "Maximally AI Shipathon Guide", slug: "/blog/maximally-ai-shipathon-guide" },
     { title: "Top AI Hackathons for Students 2025", slug: "/blog/top-ai-hackathons-students-2025" },
     { title: "No-Code AI Shipathon", slug: "/blog/no-code-ai-shipathon" },
     { title: "First AI Project in 48 Hours", slug: "/blog/first-ai-project-48-hours" },
     { title: "Why Hackathons Got Boring", slug: "/blog/why-hackathons-got-boring-code-hypothesis" }
   ];
+  
+  // Combine dynamic and static posts, prioritizing dynamic posts
+  const allBlogPosts = [
+    // Dynamic posts from database
+    ...(blogData?.data || []).map(post => ({
+      title: post.title,
+      slug: `/blog/${post.slug}`
+    })),
+    // Add static posts that aren't already in dynamic posts
+    ...staticBlogPosts.filter(staticPost => 
+      !(blogData?.data || []).some(dynamicPost => dynamicPost.slug === staticPost.slug.replace('/blog/', ''))
+    )
+  ].slice(0, 5); // Show only 5 posts total
 
   const initiatives = [
     { title: "MFHOP", link: "/mfhop", description: "Our federation for hackathon organizers and partners" },
@@ -87,7 +106,7 @@ const Resources = () => {
             {/* Blog Section */}
             <ResourceSection title="Blog" icon={Book}>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                {blogPosts.map((post, index) => (
+                {(isBlogsLoading ? staticBlogPosts : allBlogPosts).map((post: {title: string, slug: string}, index: number) => (
                   <Link
                     key={index}
                     to={post.slug}
