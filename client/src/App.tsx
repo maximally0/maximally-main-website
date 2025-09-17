@@ -121,6 +121,11 @@ import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 // MFHOP
 import MFHOP from './pages/MFHOP';
 
+// People pages
+import People from './pages/People';
+import PeopleCore from './pages/PeopleCore';
+import PeopleJudges from './pages/PeopleJudges';
+
 const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
@@ -312,6 +317,9 @@ const App = () => {
             <Route path="/community" element={<CommunityRedirect />} />
 
             <Route path="/featured" element={<Featured />} />
+            <Route path="/people" element={<People />} />
+            <Route path="/people/core" element={<PeopleCore />} />
+            <Route path="/people/judges" element={<PeopleJudges />} />
             <Route path="/mfhop" element={<MFHOP />} />
 
             <Route path="/events" element={<Events />} />
