@@ -55,19 +55,32 @@ const Contact = () => {
                 PHONE NUMBERS
               </h2>
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               {[
-                "+91 90412 60790",
-                "+91 88375 12713", 
-                "+91 76784 66133"
-              ].map((phone, index) => (
+                {
+                  name: "Rishul Chanana",
+                  phone: "+91 90412 60790",
+                  email: "rishul@maximally.in"
+                },
+                {
+                  name: "Drishti Arora",
+                  phone: "+91 88375 12713",
+                  email: "drishti@maximally.in"
+                }
+              ].map((contact, index) => (
                 <div key={index} className="pixel-card bg-black border-2 border-maximally-red p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow">
                   <div className="text-center">
                     <div className="minecraft-block bg-maximally-red w-12 h-12 mx-auto mb-4 flex items-center justify-center">
                       <Phone className="h-6 w-6 text-black" />
                     </div>
-                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="font-jetbrains text-white hover:text-maximally-red transition-colors text-lg block">
-                      {phone}
+                    <h3 className="font-press-start text-sm mb-2 text-maximally-red">
+                      {contact.name.toUpperCase()}
+                    </h3>
+                    <a href={`tel:${contact.phone.replaceAll(' ', '')}`} className="font-jetbrains text-white hover:text-maximally-red transition-colors text-lg block mb-2">
+                      {contact.phone}
+                    </a>
+                    <a href={`mailto:${contact.email}`} className="font-jetbrains text-gray-300 hover:text-maximally-yellow transition-colors text-sm block">
+                      {contact.email}
                     </a>
                   </div>
                 </div>
