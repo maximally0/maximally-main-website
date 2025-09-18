@@ -73,6 +73,34 @@ const HeroSection = () => {
 
 // What We're Building Component
 const WhatWereBuilding = () => {
+  const colorClasses = {
+    'maximally-red': {
+      border: 'border-maximally-red',
+      bg: 'bg-maximally-red',
+      text: 'text-maximally-red'
+    },
+    'maximally-yellow': {
+      border: 'border-maximally-yellow',
+      bg: 'bg-maximally-yellow', 
+      text: 'text-maximally-yellow'
+    },
+    'green-500': {
+      border: 'border-green-500',
+      bg: 'bg-green-500',
+      text: 'text-green-500'
+    },
+    'blue-500': {
+      border: 'border-blue-500',
+      bg: 'bg-blue-500',
+      text: 'text-blue-500'
+    },
+    'purple-500': {
+      border: 'border-purple-500',
+      bg: 'bg-purple-500',
+      text: 'text-purple-500'
+    }
+  };
+
   const buildingBlocks = [
     {
       title: "HACKATHONS (EVENTS)",
@@ -123,39 +151,42 @@ const WhatWereBuilding = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {buildingBlocks.map((block, index) => (
-            <div key={index} className={`pixel-card bg-black border-2 border-${block.color} p-6 hover:scale-105 transition-all duration-300 group`}>
-              <div className={`minecraft-block bg-${block.color} p-3 inline-block mb-4 group-hover:animate-pulse`}>
-                <block.icon className="h-6 w-6 text-black" />
+          {buildingBlocks.map((block, index) => {
+            const colors = colorClasses[block.color as keyof typeof colorClasses];
+            return (
+              <div key={index} className={`pixel-card bg-black border-2 ${colors.border} p-6 hover:scale-105 transition-all duration-300 group`}>
+                <div className={`minecraft-block ${colors.bg} p-3 inline-block mb-4 group-hover:animate-pulse`}>
+                  <block.icon className="h-6 w-6 text-black" />
+                </div>
+                
+                <h3 className="font-press-start text-sm md:text-base mb-4 text-white">
+                  {block.title}
+                </h3>
+                
+                <p className="font-jetbrains text-gray-300 text-sm leading-relaxed mb-4">
+                  {block.description}
+                </p>
+                
+                {block.link.startsWith('http') ? (
+                  <a 
+                    href={block.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className={`inline-flex items-center font-press-start text-xs ${colors.text} hover:text-white transition-colors`}
+                  >
+                    EXPLORE <ExternalLink className="h-3 w-3 ml-2" />
+                  </a>
+                ) : (
+                  <Link 
+                    to={block.link}
+                    className={`inline-flex items-center font-press-start text-xs ${colors.text} hover:text-white transition-colors`}
+                  >
+                    EXPLORE <ArrowRight className="h-3 w-3 ml-2" />
+                  </Link>
+                )}
               </div>
-              
-              <h3 className="font-press-start text-sm md:text-base mb-4 text-white">
-                {block.title}
-              </h3>
-              
-              <p className="font-jetbrains text-gray-300 text-sm leading-relaxed mb-4">
-                {block.description}
-              </p>
-              
-              {block.link.startsWith('http') ? (
-                <a 
-                  href={block.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={`inline-flex items-center font-press-start text-xs text-${block.color} hover:text-white transition-colors`}
-                >
-                  EXPLORE <ExternalLink className="h-3 w-3 ml-2" />
-                </a>
-              ) : (
-                <Link 
-                  to={block.link}
-                  className={`inline-flex items-center font-press-start text-xs text-${block.color} hover:text-white transition-colors`}
-                >
-                  EXPLORE <ArrowRight className="h-3 w-3 ml-2" />
-                </Link>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -204,6 +235,24 @@ const PeoplePreview = () => {
 
 // Partners Component
 const Partners = () => {
+  const colorClasses = {
+    'maximally-red': {
+      border: 'border-maximally-red',
+      bg: 'bg-maximally-red',
+      text: 'text-maximally-red'
+    },
+    'maximally-yellow': {
+      border: 'border-maximally-yellow',
+      bg: 'bg-maximally-yellow', 
+      text: 'text-maximally-yellow'
+    },
+    'green-500': {
+      border: 'border-green-500',
+      bg: 'bg-green-500',
+      text: 'text-green-500'
+    }
+  };
+
   const partnerCategories = [
     {
       title: "SPONSORS",
@@ -232,22 +281,25 @@ const Partners = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {partnerCategories.map((category, index) => (
-            <div key={index} className={`pixel-card bg-black border-2 border-${category.color} p-6`}>
-              <h3 className={`font-press-start text-sm md:text-base mb-4 text-${category.color}`}>
-                {category.title}
-              </h3>
-              
-              <ul className="space-y-2 font-jetbrains text-gray-300 text-sm">
-                {category.partners.map((partner, pIndex) => (
-                  <li key={pIndex} className="flex items-center">
-                    <div className={`w-2 h-2 bg-${category.color} pixel-border mr-3`} />
-                    {partner}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {partnerCategories.map((category, index) => {
+            const colors = colorClasses[category.color as keyof typeof colorClasses];
+            return (
+              <div key={index} className={`pixel-card bg-black border-2 ${colors.border} p-6`}>
+                <h3 className={`font-press-start text-sm md:text-base mb-4 ${colors.text}`}>
+                  {category.title}
+                </h3>
+                
+                <ul className="space-y-2 font-jetbrains text-gray-300 text-sm">
+                  {category.partners.map((partner, pIndex) => (
+                    <li key={pIndex} className="flex items-center">
+                      <div className={`w-2 h-2 ${colors.bg} pixel-border mr-3`} />
+                      {partner}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
