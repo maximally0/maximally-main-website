@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowRight, 
@@ -8,8 +7,6 @@ import {
   Trophy, 
   Calendar, 
   ExternalLink,
-  ChevronDown,
-  ChevronUp,
   Target,
   Zap,
   Heart,
@@ -195,36 +192,143 @@ const WhatWereBuilding = () => {
 
 // People Preview Component
 const PeoplePreview = () => {
+  // Core team data
+  const coreTeam = [
+    {
+      name: "Rishul Chanana",
+      role: "Founder & CEO",
+      organization: "Maximally",
+      description: "Building the future by creating a culture where young builders can thrive through high-stakes competitions."
+    },
+    {
+      name: "Drishti Arora", 
+      role: "Chief Operating Officer",
+      organization: "Maximally",
+      description: "Keeps Maximally's gears running smoothly, balancing scale with execution."
+    },
+    {
+      name: "Gautam Gambhir",
+      role: "Head of Engineering", 
+      organization: "Maximally",
+      description: "Architects the tech behind Maximally.in and pushes our platform to new heights."
+    }
+  ];
+
+  // Featured judges
+  const featuredJudges = [
+    {
+      name: "Rahul Chandra",
+      role: "Software Engineer",
+      company: "DeepMind"
+    },
+    {
+      name: "Krishna Ganeriwal", 
+      role: "Senior Software Engineer",
+      company: "Meta"
+    },
+    {
+      name: "Nidhi Mahajan",
+      role: "Director of Business Strategy",
+      company: "Visa"
+    }
+  ];
+
   return (
     <section className="py-16 md:py-24 bg-black relative">
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            PEOPLE PREVIEW
+            OUR PEOPLE
           </h2>
           <p className="font-jetbrains text-gray-300 text-base md:text-lg max-w-2xl mx-auto">
             Meet the students and builders behind Maximally
           </p>
         </div>
         
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-8 text-center">
-          <div className="minecraft-block bg-maximally-red p-4 inline-block mb-6">
-            <Users className="h-8 w-8 text-black" />
+        {/* Core Team Section */}
+        <div className="mb-12">
+          <div className="text-center mb-8">
+            <div className="minecraft-block bg-maximally-red p-3 inline-block mb-4">
+              <Users className="h-6 w-6 text-black" />
+            </div>
+            <h3 className="font-press-start text-xl md:text-2xl text-maximally-red mb-2">
+              CORE TEAM
+            </h3>
           </div>
           
-          <p className="font-jetbrains text-gray-300 text-lg mb-6">
-            Discover our core team, judges, and the amazing community of builders who make Maximally possible.
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {coreTeam.map((member, index) => (
+              <div key={index} className="pixel-card bg-black/90 border-2 border-maximally-red p-6 hover:scale-105 transition-all duration-300">
+                <div className="text-center">
+                  <div className="minecraft-block bg-maximally-red p-2 inline-block mb-4">
+                    <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
+                      <span className="font-press-start text-xs text-black">
+                        {member.name.split(' ').map(n => n[0]).join('')}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <h4 className="font-press-start text-sm text-white mb-2">
+                    {member.name}
+                  </h4>
+                  
+                  <p className="font-press-start text-xs text-maximally-red mb-3">
+                    {member.role}
+                  </p>
+                  
+                  <p className="font-jetbrains text-xs text-gray-300 leading-relaxed">
+                    {member.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/people/core" className="pixel-button bg-maximally-red text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-yellow transition-colors">
-              CORE TEAM
+          <div className="text-center">
+            <Link to="/people/core" className="pixel-button bg-maximally-red text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-yellow transition-colors inline-flex items-center">
+              SEE FULL TEAM <ArrowRight className="h-3 w-3 ml-2" />
             </Link>
-            <Link to="/people/judges" className="pixel-button bg-black border-2 border-maximally-red text-maximally-red font-press-start text-xs px-6 py-3 hover:bg-maximally-red hover:text-black transition-colors">
-              JUDGES & MENTORS
-            </Link>
-            <Link to="/people" className="pixel-button bg-black border-2 border-maximally-yellow text-maximally-yellow font-press-start text-xs px-6 py-3 hover:bg-maximally-yellow hover:text-black transition-colors">
-              ALL PEOPLE
+          </div>
+        </div>
+
+        {/* Judges Preview */}
+        <div>
+          <div className="text-center mb-8">
+            <div className="minecraft-block bg-maximally-yellow p-3 inline-block mb-4">
+              <Trophy className="h-6 w-6 text-black" />
+            </div>
+            <h3 className="font-press-start text-xl md:text-2xl text-maximally-yellow mb-2">
+              FEATURED JUDGES
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {featuredJudges.map((judge, index) => (
+              <div key={index} className="pixel-card bg-black/90 border-2 border-maximally-yellow p-6 hover:scale-105 transition-all duration-300">
+                <div className="text-center">
+                  <div className="minecraft-block bg-maximally-yellow p-2 inline-block mb-4">
+                    <Trophy className="h-5 w-5 text-black" />
+                  </div>
+                  
+                  <h4 className="font-press-start text-sm text-white mb-2">
+                    {judge.name}
+                  </h4>
+                  
+                  <p className="font-press-start text-xs text-maximally-yellow mb-1">
+                    {judge.role}
+                  </p>
+                  
+                  <p className="font-jetbrains text-xs text-gray-300">
+                    {judge.company}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center">
+            <Link to="/people/judges" className="pixel-button bg-maximally-yellow text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-red transition-colors inline-flex items-center">
+              ALL JUDGES & MENTORS <ArrowRight className="h-3 w-3 ml-2" />
             </Link>
           </div>
         </div>
@@ -235,155 +339,151 @@ const PeoplePreview = () => {
 
 // Partners Component
 const Partners = () => {
-  const colorClasses = {
-    'maximally-red': {
-      border: 'border-maximally-red',
-      bg: 'bg-maximally-red',
-      text: 'text-maximally-red'
-    },
-    'maximally-yellow': {
-      border: 'border-maximally-yellow',
-      bg: 'bg-maximally-yellow', 
-      text: 'text-maximally-yellow'
-    },
-    'green-500': {
-      border: 'border-green-500',
-      bg: 'bg-green-500',
-      text: 'text-green-500'
-    }
-  };
-
-  const partnerCategories = [
+  const partners = [
     {
-      title: "SPONSORS",
-      partners: ["Masters' Union", "MakeX"],
-      color: "maximally-red"
+      name: "Masters' Union",
+      type: "Educational Partnership",
+      description: "Leading business school backing our vision of creating entrepreneurial leaders",
+      highlight: "Education Partner",
+      color: {
+        border: 'border-maximally-red',
+        bg: 'bg-maximally-red',
+        text: 'text-maximally-red'
+      }
     },
     {
-      title: "COLLABORATION ORGS",
-      partners: ["Young Researchers Institute", "Calyptus", "Others"],
-      color: "maximally-yellow"
+      name: "MakeX",
+      type: "Technology Partnership", 
+      description: "Innovative technology company supporting our hackathon infrastructure",
+      highlight: "Tech Partner",
+      color: {
+        border: 'border-maximally-yellow',
+        bg: 'bg-maximally-yellow',
+        text: 'text-maximally-yellow'
+      }
     },
     {
-      title: "SCHOOLS & COLLEGES",
-      partners: ["Chandigarh Schools", "Delhi NCR Colleges", "International Collaborators"],
-      color: "green-500"
+      name: "Young Researchers Institute",
+      type: "Research Partnership",
+      description: "Advancing research and innovation in youth-led technology initiatives",
+      highlight: "Research Partner", 
+      color: {
+        border: 'border-green-500',
+        bg: 'bg-green-500',
+        text: 'text-green-500'
+      }
+    },
+    {
+      name: "Calyptus",
+      type: "Industry Partnership",
+      description: "Industry leader connecting talent with opportunities in the tech ecosystem",
+      highlight: "Industry Partner",
+      color: {
+        border: 'border-blue-500',
+        bg: 'bg-blue-500',
+        text: 'text-blue-500'
+      }
     }
   ];
 
   return (
     <section className="py-16 md:py-24 bg-gray-900 relative">
+      {/* Background pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+      
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
+          <div className="minecraft-block bg-white p-4 inline-block mb-6">
+            <Heart className="h-8 w-8 text-black" />
+          </div>
           <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
-            PARTNERS
+            OUR PARTNERS
           </h2>
+          <p className="font-press-start text-maximally-red text-lg">
+            THEY BELIEVE IN OUR VISION
+          </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {partnerCategories.map((category, index) => {
-            const colors = colorClasses[category.color as keyof typeof colorClasses];
-            return (
-              <div key={index} className={`pixel-card bg-black border-2 ${colors.border} p-6`}>
-                <h3 className={`font-press-start text-sm md:text-base mb-4 ${colors.text}`}>
-                  {category.title}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {partners.map((partner, index) => (
+            <div key={index} className={`pixel-card bg-black/90 border-2 ${partner.color.border} p-8 hover:scale-105 transition-all duration-300 group relative overflow-hidden`}>
+              {/* Background glow effect */}
+              <div className={`absolute inset-0 ${partner.color.bg} opacity-5 group-hover:opacity-10 transition-opacity`} />
+              
+              <div className="relative z-10">
+                {/* Partner highlight badge */}
+                <div className={`minecraft-block ${partner.color.bg} px-4 py-2 inline-block mb-4`}>
+                  <span className="font-press-start text-xs text-black">
+                    {partner.highlight}
+                  </span>
+                </div>
+                
+                {/* Partner name */}
+                <h3 className="font-press-start text-lg md:text-xl text-white mb-2">
+                  {partner.name}
                 </h3>
                 
-                <ul className="space-y-2 font-jetbrains text-gray-300 text-sm">
-                  {category.partners.map((partner, pIndex) => (
-                    <li key={pIndex} className="flex items-center">
-                      <div className={`w-2 h-2 ${colors.bg} pixel-border mr-3`} />
-                      {partner}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Timeline Component
-const Timeline = () => {
-  const [expandedMilestone, setExpandedMilestone] = useState<number | null>(null);
-  
-  const milestones = [
-    {
-      title: "CODEQUEST",
-      description: "Our first hackathon that started it all. A small but passionate group of students came together to build something amazing.",
-      year: "2023"
-    },
-    {
-      title: "MAXIMALLY STARTUP MAKEATHON",
-      description: "Evolved into a full startup-focused event with real mentors, judges, and prizes. The foundation of what Maximally would become.",
-      year: "2024"
-    },
-    {
-      title: "MAXIMALLY AI SHIPATHON",
-      description: "Our breakthrough AI-focused hackathon that attracted global attention and set new standards for virtual events.",
-      year: "2024"
-    },
-    {
-      title: "GRAND INDIAN HACKATHON SEASON",
-      description: "A massive undertaking - 10 events across different themes, bringing together thousands of builders from around the world.",
-      year: "2024"
-    }
-  ];
-
-  return (
-    <section className="py-16 md:py-24 bg-black relative">
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-yellow drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            TIMELINE
-          </h2>
-        </div>
-        
-        <div className="space-y-4">
-          {milestones.map((milestone, index) => (
-            <div key={index} className="pixel-card bg-black border-2 border-maximally-yellow">
-              <button
-                onClick={() => setExpandedMilestone(expandedMilestone === index ? null : index)}
-                className="w-full p-6 text-left flex items-center justify-between hover:bg-gray-900 transition-colors"
-              >
-                <div className="flex items-center">
-                  <div className="minecraft-block bg-maximally-yellow p-2 mr-4">
-                    <Calendar className="h-4 w-4 text-black" />
-                  </div>
-                  <div>
-                    <h3 className="font-press-start text-sm md:text-base text-maximally-yellow">
-                      {milestone.title}
-                    </h3>
-                    <p className="font-jetbrains text-gray-400 text-sm mt-1">
-                      {milestone.year}
-                    </p>
-                  </div>
-                </div>
+                {/* Partner type */}
+                <p className={`font-press-start text-sm ${partner.color.text} mb-4`}>
+                  {partner.type}
+                </p>
                 
-                {expandedMilestone === index ? (
-                  <ChevronUp className="h-5 w-5 text-maximally-yellow" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-maximally-yellow" />
-                )}
-              </button>
-              
-              {expandedMilestone === index && (
-                <div className="px-6 pb-6">
-                  <p className="font-jetbrains text-gray-300 text-sm md:text-base leading-relaxed">
-                    {milestone.description}
-                  </p>
+                {/* Description */}
+                <p className="font-jetbrains text-gray-300 text-sm leading-relaxed mb-6">
+                  {partner.description}
+                </p>
+                
+                {/* Partnership indicator */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className={`w-3 h-3 ${partner.color.bg} pixel-border mr-2`} />
+                    <span className="font-press-start text-xs text-gray-400">
+                      ACTIVE PARTNER
+                    </span>
+                  </div>
+                  
+                  <div className={`minecraft-block ${partner.color.bg} p-2 group-hover:animate-pulse`}>
+                    <Heart className="h-4 w-4 text-black" />
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           ))}
         </div>
+        
+        {/* Schools & Colleges Section */}
+        <div className="mt-16 text-center">
+          <h3 className="font-press-start text-xl md:text-2xl text-maximally-yellow mb-8">
+            SCHOOLS & COLLEGES NETWORK
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            {[
+              "Chandigarh Schools",
+              "Delhi NCR Colleges", 
+              "International Collaborators"
+            ].map((network, index) => (
+              <div key={index} className="pixel-card bg-black/80 border-2 border-purple-500 p-6">
+                <div className="minecraft-block bg-purple-500 p-2 inline-block mb-4">
+                  <MapPin className="h-5 w-5 text-black" />
+                </div>
+                
+                <h4 className="font-press-start text-sm text-purple-400 mb-2">
+                  {network}
+                </h4>
+                
+                <p className="font-jetbrains text-xs text-gray-400">
+                  Network Partner
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
 };
+
 
 // Culture Section Component
 const Culture = () => {
@@ -514,7 +614,6 @@ const About = () => {
       <WhatWereBuilding />
       <PeoplePreview />
       <Partners />
-      <Timeline />
       <Culture />
       <FutureVision />
       <MediaKit />
