@@ -19,6 +19,7 @@ import Support from './pages/Support';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Story from './pages/Story';
+import About from './pages/About';
 
 import ThankYou from './pages/ThankYou';
 import Bootcamps from '@/pages/Bootcamps';
@@ -309,6 +310,7 @@ const App = () => {
             <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/story" element={<Story />} />
+            <Route path="/about" element={<About />} />
             <Route path="/support" element={<Support />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
