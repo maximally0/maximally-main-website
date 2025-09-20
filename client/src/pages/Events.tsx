@@ -4,19 +4,13 @@ import {
   Filter,
   Calendar,
   MapPin,
-  Trophy,
-  Users,
-  Clock,
-  Tag,
-  ExternalLink,
-  ArrowRight,
-  Globe,
   X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
-import { sampleHackathons, calculateHackathonStatus } from '@shared/schema';
+import CollapsibleHackathonCard from '@/components/CollapsibleHackathonCard';
+import { grandIndianHackathonSeason, calculateHackathonStatus } from '@shared/schema';
 
 const Events = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -33,9 +27,9 @@ const Events = () => {
   });
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
 
-  // Use the centralized hackathon data from shared schema with dynamic status calculation
+  // Use the real hackathon data from shared schema with dynamic status calculation
   const hackathons = useMemo(() => 
-    sampleHackathons.map(hackathon => ({
+    grandIndianHackathonSeason.map(hackathon => ({
       ...hackathon,
       status: calculateHackathonStatus(hackathon.startDate, hackathon.endDate)
     })), []);
@@ -282,127 +276,14 @@ const Events = () => {
                 </div>
               </div>
 
-              {/* Hackathon Cards */}
-              <div className="space-y-8">
+              {/* Hackathon Cards - Now using CollapsibleHackathonCard */}
+              <div className="space-y-6">
                 {filteredHackathons.map(hackathon => (
-                  <div 
-                    key={hackathon.id} 
-                    className="pixel-card bg-white dark:bg-card border-2 border-maximally-red p-8 hover:shadow-glow-red hover:scale-[1.02] transition-all duration-300 group animate-fade-in"
-                    data-testid={`hackathon-card-${hackathon.id}`}
-                  >
-                    <div className="flex gap-6">
-                      {/* Hackathon Logo/Avatar */}
-                      <div className="w-32 h-32 minecraft-block bg-maximally-red flex items-center justify-center flex-shrink-0 group-hover:bg-maximally-yellow transition-colors">
-                        <span className="text-black font-press-start text-lg text-center leading-tight">
-                          {hackathon.name.split(' ').map(word => word[0]).join('').slice(0, 3)}
-                        </span>
-                      </div>
-
-                      {/* Hackathon Details */}
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <h3 className="font-press-start text-xl text-gray-900 dark:text-white mb-3 group-hover:text-maximally-red transition-colors">
-                              {hackathon.name}
-                            </h3>
-                            
-                            {/* Status Badge */}
-                            <div className="flex gap-2">
-                              {hackathon.status === 'upcoming' && (
-                                <div className="minecraft-block bg-green-500 text-white px-4 py-2 font-press-start text-xs">
-                                  UPCOMING
-                                </div>
-                              )}
-                              {hackathon.status === 'completed' && (
-                                <div className="minecraft-block bg-gray-500 text-white px-4 py-2 font-press-start text-xs">
-                                  COMPLETED
-                                </div>
-                              )}
-                              {hackathon.status === 'ongoing' && (
-                                <div className="minecraft-block bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs animate-pulse">
-                                  LIVE NOW
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          
-                          {/* Prize & Participants Info */}
-                          <div className="text-right">
-                            <div className="pixel-card bg-maximally-yellow text-black p-3 mb-3">
-                              <div className="flex items-center justify-center">
-                                <Trophy className="h-5 w-5 mr-2" />
-                                <span className="font-press-start text-sm">{hackathon.prizes}</span>
-                              </div>
-                              <div className="font-jetbrains text-xs mt-1">IN PRIZES</div>
-                            </div>
-                            <div className="flex items-center text-gray-600 dark:text-gray-400">
-                              <Users className="h-4 w-4 mr-2" />
-                              <span className="font-jetbrains text-sm">{hackathon.participants.toLocaleString()} builders</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <p className="font-jetbrains text-gray-700 dark:text-gray-300 mb-6 text-lg leading-relaxed">
-                          {hackathon.description}
-                        </p>
-
-                        {/* Event Details Row */}
-                        <div className="flex flex-wrap gap-6 mb-6 text-sm">
-                          <div className="flex items-center text-gray-600 dark:text-gray-400">
-                            <Calendar className="h-5 w-5 mr-2 text-maximally-red" />
-                            <span className="font-jetbrains">
-                              {formatDate(hackathon.startDate)} - {formatDate(hackathon.endDate)}
-                            </span>
-                          </div>
-                          <div className="flex items-center text-gray-600 dark:text-gray-400">
-                            <MapPin className="h-5 w-5 mr-2 text-maximally-red" />
-                            <span className="font-jetbrains">{hackathon.location}</span>
-                          </div>
-                          <div className="flex items-center text-gray-600 dark:text-gray-400">
-                            <Clock className="h-5 w-5 mr-2 text-maximally-red" />
-                            <span className="font-jetbrains">{hackathon.length}</span>
-                          </div>
-                        </div>
-
-                        {/* Tags and Actions */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex flex-wrap gap-2">
-                            {hackathon.tags.slice(0, 4).map(tag => (
-                              <span 
-                                key={tag} 
-                                className="minecraft-block bg-maximally-red text-white px-3 py-1 font-jetbrains text-sm hover:bg-maximally-yellow hover:text-black transition-colors cursor-pointer"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                            {hackathon.tags.length > 4 && (
-                              <span className="minecraft-block bg-gray-500 text-white px-3 py-1 font-jetbrains text-sm">
-                                +{hackathon.tags.length - 4} more
-                              </span>
-                            )}
-                          </div>
-                          
-                          {/* Action Buttons */}
-                          <div className="flex gap-3">
-                            <Link
-                              to={hackathon.detailsUrl}
-                              className="pixel-button bg-black border-2 border-maximally-red text-white hover:bg-maximally-red hover:text-black transition-all px-6 py-3 font-press-start text-sm"
-                              data-testid={`view-details-${hackathon.id}`}
-                            >
-                              VIEW_DETAILS
-                            </Link>
-                            <Link
-                              to={hackathon.registerUrl}
-                              className="pixel-button bg-maximally-red text-black hover:bg-maximally-yellow hover:scale-105 transition-all px-6 py-3 font-press-start text-sm"
-                              data-testid={`register-${hackathon.id}`}
-                            >
-                              REGISTER_NOW
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <CollapsibleHackathonCard 
+                    key={hackathon.id}
+                    hackathon={hackathon}
+                    className="animate-fade-in"
+                  />
                 ))}
               </div>
 
