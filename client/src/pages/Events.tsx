@@ -1,281 +1,465 @@
+import { useState, useMemo } from 'react';
 import {
-  ArrowRight,
-  MessageCircle,
+  Search,
+  Filter,
   Calendar,
-  ExternalLink,
-  FileText,
+  MapPin,
   Trophy,
+  Users,
+  Clock,
+  Tag,
+  ExternalLink,
+  ArrowRight,
+  Globe,
+  X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 
 const Events = () => {
-  const upcomingEvents = [
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedFilters, setSelectedFilters] = useState<{
+    location: string[];
+    status: string[];
+    length: string[];
+    tags: string[];
+    type: string[];
+  }>({
+    location: [],
+    status: [],
+    length: [],
+    tags: [],
+    type: []
+  });
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
+
+  // Enhanced hackathon data structure inspired by DevPost
+  const hackathons = [
     {
+      id: 1,
       name: 'Code Hypothesis',
-      dates: 'September 2025',
-      description: 'Test your coding theories in the ultimate development challenge',
+      description: 'Test your coding theories in the ultimate development challenge. Build experiments that push the boundaries of what code can do.',
+      startDate: '2025-09-15',
+      endDate: '2025-09-17',
+      prizes: '$15,000',
+      participants: 2847,
+      location: 'Online',
+      status: 'upcoming',
+      length: '3 days',
+      tags: ['Machine Learning', 'Web3', 'AI'],
+      type: 'Community',
+      image: '/api/placeholder/300/200',
       registerUrl: '/codehypothesis',
       detailsUrl: '/codehypothesis',
-      icon: '🧪',
+      organizer: 'Maximally'
     },
     {
+      id: 2,
       name: 'Protocol 404',
-      dates: 'October 2025',
-      description: 'When the system is broken, build anyway',
+      description: 'When the system is broken, build anyway. Create solutions for problems that don\'t have traditional fixes.',
+      startDate: '2025-10-05',
+      endDate: '2025-10-06',
+      prizes: '$25,000',
+      participants: 1543,
+      location: 'Online',
+      status: 'upcoming',
+      length: '48 hours',
+      tags: ['Blockchain', 'DeFi', 'Web3'],
+      type: 'Community',
+      image: '/api/placeholder/300/200',
       registerUrl: '/protocol-404',
       detailsUrl: '/protocol-404',
-      icon: '⚡',
+      organizer: 'Maximally'
     },
     {
-      name: 'Project CodeGen',
-      dates: 'October 2025',
-      description: 'Beyond hackathons - real project generation',
-      registerUrl: '/project-codegen',
-      detailsUrl: '/project-codegen',
-      icon: '📝',
+      id: 3,
+      name: 'AI Shipathon 2025',
+      description: '48-hour global AI hackathon for builders and creators. Ship production-ready AI applications.',
+      startDate: '2025-08-15',
+      endDate: '2025-08-17',
+      prizes: '$50,000',
+      participants: 4291,
+      location: 'Online',
+      status: 'completed',
+      length: '48 hours',
+      tags: ['AI', 'Machine Learning', 'NLP'],
+      type: 'Community',
+      image: '/api/placeholder/300/200',
+      registerUrl: '/shipathon-report',
+      detailsUrl: '/shipathon-report',
+      organizer: 'Maximally'
     },
     {
-      name: 'Maximally Hacktober',
-      dates: 'October 2025',
-      description: "October's biggest hackathon celebration",
-      registerUrl: '/hacktober',
-      detailsUrl: '/hacktober',
-      icon: '🍂',
-    },
-    {
-      name: 'Maximally PromptStorm',
-      dates: 'Oct 25-26, 2025',
-      description: '24-hour AI prompt-engineering hackathon. When in doubt, prompt harder.',
+      id: 4,
+      name: 'PromptStorm 2025',
+      description: '24-hour AI prompt-engineering hackathon. When in doubt, prompt harder. Master the art of AI conversation.',
+      startDate: '2025-10-25',
+      endDate: '2025-10-26',
+      prizes: '$10,000',
+      participants: 892,
+      location: 'Online',
+      status: 'upcoming',
+      length: '24 hours',
+      tags: ['AI', 'Prompt Engineering', 'GPT'],
+      type: 'Community',
+      image: '/api/placeholder/300/200',
       registerUrl: '/promptstorm',
       detailsUrl: '/promptstorm',
-      icon: '⚡',
+      organizer: 'Maximally'
     },
     {
-      name: 'Maximally Codepocalypse',
-      dates: 'Oct 18-19, 2025',
-      description: 'What would you build if the internet had 48 hours left? Chaotic 48-hour hackathon.',
-      registerUrl: '/codepocalypse',
-      detailsUrl: '/codepocalypse',
-      icon: '☢️',
-    },
-    {
+      id: 5,
       name: 'Grand Tech Assembly',
-      dates: 'Nov 1-7, 2025',
-      description: 'Pick your mission, build your city, earn respect. 7-day GTA-themed hackathon.',
+      description: 'Pick your mission, build your city, earn respect. 7-day GTA-themed hackathon with missions and achievements.',
+      startDate: '2025-11-01',
+      endDate: '2025-11-07',
+      prizes: '$75,000',
+      participants: 3642,
+      location: 'Online',
+      status: 'upcoming',
+      length: '7 days',
+      tags: ['Gaming', 'Web3', 'Metaverse'],
+      type: 'Community',
+      image: '/api/placeholder/300/200',
       registerUrl: '/grand-tech-assembly',
       detailsUrl: '/grand-tech-assembly',
-      icon: '🎮',
+      organizer: 'Maximally'
     },
     {
-      name: 'Maximally Steal-A-Thon',
-      dates: 'Nov 9-10, 2025',
-      description: "The only hackathon where original ideas are banned. If it ain't broke... steal it.",
-      registerUrl: '/steal-a-thon',
-      detailsUrl: '/steal-a-thon',
-      icon: '🔥',
-    },
+      id: 6,
+      name: 'Codepocalypse 2025',
+      description: 'What would you build if the internet had 48 hours left? Chaotic 48-hour hackathon for end-times builders.',
+      startDate: '2025-10-18',
+      endDate: '2025-10-19',
+      prizes: '$20,000',
+      participants: 2156,
+      location: 'Online',
+      status: 'upcoming',
+      length: '48 hours',
+      tags: ['Survival Tech', 'Decentralized', 'Emergency'],
+      type: 'Community',
+      image: '/api/placeholder/300/200',
+      registerUrl: '/codepocalypse',
+      detailsUrl: '/codepocalypse',
+      organizer: 'Maximally'
+    }
   ];
 
-  const pastEvents = [
-    {
-      name: 'Maximally Startup Makeathon',
-      dates: 'July 2025',
-      description: '7-day sprint from idea to MVP to public pitch',
-      reportUrl: '/makeathon-report',
-      icon: '🚀',
-    },
-    {
-      name: 'Maximally AI Shipathon',
-      dates: 'August 2025',
-      description: '48-hour global AI hackathon for builders and creators',
-      reportUrl: '/shipathon-report',
-      icon: '🤖',
-    },
-  ];
+  // Filter and search functionality
+  const filteredHackathons = useMemo(() => {
+    return hackathons.filter(hackathon => {
+      // Search query filter
+      if (searchQuery && !hackathon.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+          !hackathon.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          !hackathon.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))) {
+        return false;
+      }
+
+      // Location filter
+      if (selectedFilters.location.length > 0 && !selectedFilters.location.includes(hackathon.location)) {
+        return false;
+      }
+
+      // Status filter  
+      if (selectedFilters.status.length > 0 && !selectedFilters.status.includes(hackathon.status)) {
+        return false;
+      }
+
+      // Length filter
+      if (selectedFilters.length.length > 0 && !selectedFilters.length.includes(hackathon.length)) {
+        return false;
+      }
+
+      // Tags filter
+      if (selectedFilters.tags.length > 0 && 
+          !selectedFilters.tags.some(tag => hackathon.tags.includes(tag))) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [hackathons, searchQuery, selectedFilters]);
+
+  const toggleFilter = (category: keyof typeof selectedFilters, value: string) => {
+    setSelectedFilters(prev => ({
+      ...prev,
+      [category]: prev[category].includes(value) 
+        ? prev[category].filter((item: string) => item !== value)
+        : [...prev[category], value]
+    }));
+  };
+
+  const clearAllFilters = () => {
+    setSelectedFilters({
+      location: [],
+      status: [],
+      length: [],
+      tags: [],
+      type: []
+    });
+    setSearchQuery('');
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
 
   return (
     <>
       <SEO
-        title="Events | The Grand Indian Hackathon Season | Maximally"
-        description="Join the Grand Indian Hackathon Season - 10 hackathons from September to November. Experience the biggest innovation challenge series in India."
-        keywords="hackathons India, Grand Indian Hackathon Season, coding competitions, innovation challenges, tech events India, student hackathons"
+        title="Find Hackathons | Join Global Innovation Challenges | Maximally"
+        description="Discover and join the world's best hackathons. Find upcoming coding competitions, AI challenges, and innovation contests from around the globe."
+        keywords="hackathons, coding competitions, AI hackathons, programming contests, innovation challenges, tech events, developer competitions"
       />
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        {/* Pixel Grid Background */}
-        <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        
-        {/* Floating Pixels */}
-        {Array.from({ length: 15 }, (_, i) => (
-          <div
-            key={i}
-            className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.3}s`,
-              animationDuration: `${4 + i * 0.2}s`,
-            }}
-          />
-        ))}
-
-        <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
-          {/* Header Section */}
-          <section className="text-center mb-20">
-            <div className="minecraft-block bg-maximally-red text-black px-6 py-3 inline-block mb-6">
-              <span className="font-press-start text-sm">🇮🇳 GRAND INDIAN HACKATHON SEASON 2025</span>
-            </div>
-            <h1 className="font-press-start text-4xl md:text-6xl lg:text-7xl mb-6 text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-              10 HACKATHONS
+      
+      <div className="min-h-screen bg-white dark:bg-black">
+        {/* Header */}
+        <div className="bg-maximally-red text-white py-8 mt-16">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <h1 className="font-press-start text-2xl md:text-3xl mb-4">
+              Join the world's best hackathons
             </h1>
-            <p className="font-jetbrains text-lg md:text-xl text-gray-300 max-w-4xl mx-auto mb-8 leading-relaxed">
-              From September to November, we're hosting 10 hackathons back to back. Be a part of it. Join our Discord for all updates and community access.
+            <p className="font-jetbrains text-lg">
+              Discover innovation challenges, coding competitions, and tech events
             </p>
-            <a
-              href="https://discord.gg/MpBnYk8qMX"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pixel-button bg-maximally-red text-black font-press-start py-4 px-8 text-lg hover:scale-105 transition-all duration-300 hover:bg-maximally-yellow flex items-center gap-2 mx-auto"
-            >
-              <MessageCircle className="h-5 w-5" />
-              JOIN_DISCORD
-            </a>
-          </section>
-
-          {/* Upcoming Events Section */}
-          <section className="mb-20">
-            <div className="text-center mb-12">
-              <h2 className="font-press-start text-3xl md:text-4xl mb-6 text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                UPCOMING EVENTS
-              </h2>
-              <div className="w-32 h-2 bg-maximally-red mx-auto pixel-border"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {upcomingEvents.map((event, index) => (
-                <div
-                  key={index}
-                  className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105 group"
-                >
-                  {/* Event Icon */}
-                  <div className="minecraft-block bg-maximally-red w-12 h-12 mx-auto mb-4 flex items-center justify-center group-hover:bg-maximally-yellow transition-colors">
-                    <span className="text-2xl">{event.icon}</span>
-                  </div>
-                  
-                  {/* Event Details */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <Calendar className="h-4 w-4 text-maximally-red" />
-                    <span className="font-jetbrains text-sm text-gray-300">
-                      {event.dates}
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-press-start text-sm mb-4 text-maximally-red group-hover:text-maximally-yellow transition-colors">
-                    {event.name}
-                  </h3>
-                  
-                  <p className="font-jetbrains text-gray-400 mb-6 text-sm leading-relaxed">
-                    {event.description}
-                  </p>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex flex-col gap-3">
-                    <Link
-                      to={event.registerUrl}
-                      className="pixel-button bg-maximally-red text-black font-press-start text-xs px-4 py-3 hover:bg-maximally-yellow transition-all flex items-center gap-2 justify-center"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                      <span>REGISTER</span>
-                    </Link>
-                    <Link
-                      to={event.detailsUrl}
-                      className="pixel-button bg-black border-2 border-gray-600 text-white font-press-start text-xs px-4 py-3 hover:border-maximally-red transition-all flex items-center gap-2 justify-center"
-                    >
-                      <ArrowRight className="h-3 w-3" />
-                      <span>DETAILS</span>
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Past Events Section */}
-          <section className="mb-20">
-            <div className="text-center mb-12">
-              <h2 className="font-press-start text-3xl md:text-4xl mb-6 text-white drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                PAST EVENTS
-              </h2>
-              <div className="w-32 h-2 bg-gray-600 mx-auto pixel-border"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {pastEvents.map((event, index) => (
-                <div
-                  key={index}
-                  className="pixel-card bg-black border-2 border-gray-600 p-6 hover:border-gray-400 transition-all duration-300 hover:scale-105 group relative"
-                >
-                  {/* Archive Badge */}
-                  <div className="minecraft-block bg-yellow-500 text-black px-3 py-1 absolute top-4 right-4">
-                    <span className="font-press-start text-xs">PAST</span>
-                  </div>
-                  
-                  {/* Event Icon */}
-                  <div className="minecraft-block bg-gray-600 w-12 h-12 mx-auto mb-4 flex items-center justify-center group-hover:bg-gray-500 transition-colors">
-                    <span className="text-2xl">{event.icon}</span>
-                  </div>
-                  
-                  {/* Event Details */}
-                  <div className="flex items-center gap-2 mb-3">
-                    <Calendar className="h-4 w-4 text-gray-400" />
-                    <span className="font-jetbrains text-sm text-gray-400">
-                      {event.dates}
-                    </span>
-                  </div>
-                  
-                  <h3 className="font-press-start text-sm mb-4 text-gray-300 group-hover:text-white transition-colors">
-                    {event.name}
-                  </h3>
-                  
-                  <p className="font-jetbrains text-gray-500 mb-6 text-sm leading-relaxed">
-                    {event.description}
-                  </p>
-                  
-                  {/* Report Button */}
-                  <Link
-                    to={event.reportUrl}
-                    className="pixel-button bg-gray-600 text-white font-press-start text-xs px-4 py-3 hover:bg-gray-500 transition-all flex items-center gap-2 justify-center"
-                  >
-                    <FileText className="h-3 w-3" />
-                    <span>VIEW_REPORT</span>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* CTA Section */}
-          <section className="text-center pixel-card bg-black border-2 border-maximally-red p-12 md:p-16 relative">
-            <div className="minecraft-block bg-maximally-red w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-              <Trophy className="h-8 w-8 text-black" />
-            </div>
-            
-            <h2 className="font-press-start text-2xl md:text-3xl mb-8 text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-              WANT TO PARTNER WITH US?
-            </h2>
-            <p className="font-jetbrains text-lg md:text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
-              Join the Grand Indian Hackathon Season as a sponsor, mentor, or collaborator.
-            </p>
-            <Link
-              to="/contact"
-              className="pixel-button bg-maximally-red text-black font-press-start inline-flex items-center gap-3 text-lg px-10 py-5 hover:bg-maximally-yellow transition-all duration-300"
-            >
-              <span>PARTNER_WITH_US</span>
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </section>
+          </div>
         </div>
 
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* Search Bar */}
+          <div className="mb-8">
+            <div className="relative max-w-2xl mx-auto">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Search by hackathon title or keyword"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maximally-red focus:border-maximally-red outline-none font-jetbrains"
+              />
+              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-maximally-red text-white px-4 py-1.5 rounded font-press-start text-xs hover:bg-maximally-yellow hover:text-black transition-colors">
+                Search
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Mobile Filter Toggle */}
+            <div className="lg:hidden">
+              <button
+                onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-jetbrains"
+              >
+                <Filter className="h-4 w-4" />
+                Filters
+              </button>
+            </div>
+
+            {/* Sidebar Filters */}
+            <div className={`lg:w-80 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 sticky top-24">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-press-start text-lg">Filters</h3>
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-maximally-red font-jetbrains text-sm hover:underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+
+                {/* Location Filter */}
+                <div className="mb-6">
+                  <h4 className="font-press-start text-sm mb-3">Location</h4>
+                  <div className="space-y-2">
+                    {['Online', 'In-person', 'Hybrid'].map(location => (
+                      <label key={location} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.location.includes(location)}
+                          onChange={() => toggleFilter('location', location)}
+                          className="mr-2"
+                        />
+                        <span className="font-jetbrains text-sm">{location}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Status Filter */}
+                <div className="mb-6">
+                  <h4 className="font-press-start text-sm mb-3">Status</h4>
+                  <div className="space-y-2">
+                    {['upcoming', 'ongoing', 'completed'].map(status => (
+                      <label key={status} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.status.includes(status)}
+                          onChange={() => toggleFilter('status', status)}
+                          className="mr-2"
+                        />
+                        <span className="font-jetbrains text-sm capitalize">{status}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Length Filter */}
+                <div className="mb-6">
+                  <h4 className="font-press-start text-sm mb-3">Length</h4>
+                  <div className="space-y-2">
+                    {['24 hours', '48 hours', '3 days', '7 days'].map(length => (
+                      <label key={length} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.length.includes(length)}
+                          onChange={() => toggleFilter('length', length)}
+                          className="mr-2"
+                        />
+                        <span className="font-jetbrains text-sm">{length}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Interest Tags Filter */}
+                <div className="mb-6">
+                  <h4 className="font-press-start text-sm mb-3">Interest Tags</h4>
+                  <div className="space-y-2">
+                    {['AI', 'Machine Learning', 'Web3', 'Blockchain', 'Gaming', 'DeFi'].map(tag => (
+                      <label key={tag} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedFilters.tags.includes(tag)}
+                          onChange={() => toggleFilter('tags', tag)}
+                          className="mr-2"
+                        />
+                        <span className="font-jetbrains text-sm">{tag}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1">
+              {/* Results Info */}
+              <div className="mb-6">
+                <p className="font-jetbrains text-gray-600">
+                  Showing {filteredHackathons.length} hackathons
+                </p>
+              </div>
+
+              {/* Hackathon Cards */}
+              <div className="space-y-6">
+                {filteredHackathons.map(hackathon => (
+                  <div key={hackathon.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                    <div className="flex gap-4">
+                      {/* Hackathon Image */}
+                      <div className="w-24 h-24 bg-maximally-red rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-white font-press-start text-xs">
+                          {hackathon.name.split(' ').map(word => word[0]).join('').slice(0, 3)}
+                        </span>
+                      </div>
+
+                      {/* Hackathon Details */}
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h3 className="font-press-start text-lg text-gray-900 mb-1">
+                              {hackathon.name}
+                            </h3>
+                            {hackathon.status === 'upcoming' && (
+                              <div className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-jetbrains">
+                                Upcoming
+                              </div>
+                            )}
+                            {hackathon.status === 'completed' && (
+                              <div className="inline-block px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded font-jetbrains">
+                                Completed
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <div className="flex items-center text-gray-600 mb-1">
+                              <Trophy className="h-4 w-4 mr-1" />
+                              <span className="font-jetbrains text-sm">{hackathon.prizes} in prizes</span>
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                              <Users className="h-4 w-4 mr-1" />
+                              <span className="font-jetbrains text-sm">{hackathon.participants.toLocaleString()} participants</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <p className="font-jetbrains text-gray-700 mb-3 line-clamp-2">
+                          {hackathon.description}
+                        </p>
+
+                        <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
+                          <div className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            <span className="font-jetbrains">
+                              {formatDate(hackathon.startDate)} - {formatDate(hackathon.endDate)}
+                            </span>
+                          </div>
+                          <div className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-1" />
+                            <span className="font-jetbrains">{hackathon.location}</span>
+                          </div>
+                          <div className="flex items-center">
+                            <Clock className="h-4 w-4 mr-1" />
+                            <span className="font-jetbrains">{hackathon.length}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-wrap gap-2">
+                            {hackathon.tags.slice(0, 3).map(tag => (
+                              <span key={tag} className="px-2 py-1 bg-maximally-red text-white text-xs rounded font-jetbrains">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="flex gap-2">
+                            <Link
+                              to={hackathon.detailsUrl}
+                              className="px-4 py-2 border border-maximally-red text-maximally-red rounded font-jetbrains text-sm hover:bg-maximally-red hover:text-white transition-colors"
+                            >
+                              View Details
+                            </Link>
+                            <Link
+                              to={hackathon.registerUrl}
+                              className="px-4 py-2 bg-maximally-red text-white rounded font-jetbrains text-sm hover:bg-maximally-yellow hover:text-black transition-colors"
+                            >
+                              Register
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {filteredHackathons.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="font-jetbrains text-gray-500">
+                    No hackathons found matching your criteria. Try adjusting your filters.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        
         <Footer />
       </div>
     </>
