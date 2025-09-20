@@ -34,34 +34,59 @@ const Events = () => {
       status: calculateHackathonStatus(hackathon.startDate, hackathon.endDate)
     })), []);
 
-  // Filter and search functionality
+  // Derive filter options from actual data
+  const filterOptions = useMemo(() => {
+    const uniqueLocations = Array.from(new Set(hackathons.map(h => h.location))).sort();
+    const uniqueStatuses = Array.from(new Set(hackathons.map(h => h.status))).sort();
+    const uniqueLengths = Array.from(new Set(hackathons.map(h => h.length))).sort();
+    const uniqueTags = Array.from(new Set(hackathons.flatMap(h => h.tags))).sort();
+    
+    return {
+      locations: uniqueLocations,
+      statuses: uniqueStatuses,
+      lengths: uniqueLengths,
+      tags: uniqueTags
+    };
+  }, [hackathons]);
+
+  // Utility function for normalized string comparison
+  const normalizeString = (str: string) => str.toLowerCase().trim();
+
+  // Filter and search functionality with normalized string comparisons
   const filteredHackathons = useMemo(() => {
     return hackathons.filter(hackathon => {
-      // Search query filter
-      if (searchQuery && !hackathon.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
-          !hackathon.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
-          !hackathon.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))) {
+      const normalizedSearchQuery = searchQuery ? normalizeString(searchQuery) : '';
+      
+      // Search query filter - case insensitive and trimmed
+      if (normalizedSearchQuery && 
+          !normalizeString(hackathon.name).includes(normalizedSearchQuery) && 
+          !normalizeString(hackathon.description).includes(normalizedSearchQuery) &&
+          !hackathon.tags.some(tag => normalizeString(tag).includes(normalizedSearchQuery))) {
         return false;
       }
 
-      // Location filter
-      if (selectedFilters.location.length > 0 && !selectedFilters.location.includes(hackathon.location)) {
+      // Location filter - case insensitive comparison
+      if (selectedFilters.location.length > 0 && 
+          !selectedFilters.location.some(filter => normalizeString(filter) === normalizeString(hackathon.location))) {
         return false;
       }
 
-      // Status filter  
-      if (selectedFilters.status.length > 0 && !selectedFilters.status.includes(hackathon.status)) {
+      // Status filter - case insensitive comparison
+      if (selectedFilters.status.length > 0 && 
+          !selectedFilters.status.some(filter => normalizeString(filter) === normalizeString(hackathon.status))) {
         return false;
       }
 
-      // Length filter
-      if (selectedFilters.length.length > 0 && !selectedFilters.length.includes(hackathon.length)) {
+      // Length filter - case insensitive comparison
+      if (selectedFilters.length.length > 0 && 
+          !selectedFilters.length.some(filter => normalizeString(filter) === normalizeString(hackathon.length))) {
         return false;
       }
 
-      // Tags filter
+      // Tags filter - case insensitive comparison
       if (selectedFilters.tags.length > 0 && 
-          !selectedFilters.tags.some(tag => hackathon.tags.includes(tag))) {
+          !selectedFilters.tags.some(filterTag => 
+            hackathon.tags.some(hackathonTag => normalizeString(filterTag) === normalizeString(hackathonTag)))) {
         return false;
       }
 
@@ -191,14 +216,14 @@ const Events = () => {
                 <div className="mb-8">
                   <h4 className="font-press-start text-sm mb-4 text-maximally-red">LOCATION</h4>
                   <div className="space-y-3">
-                    {['Online', 'In-person', 'Hybrid'].map(location => (
+                    {filterOptions.locations.map(location => (
                       <label key={location} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedFilters.location.includes(location)}
                           onChange={() => toggleFilter('location', location)}
                           className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                          data-testid={`filter-location-${location.toLowerCase()}`}
+                          data-testid={`filter-location-${normalizeString(location).replace(/\s+/g, '-')}`}
                         />
                         <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{location}</span>
                       </label>
@@ -210,7 +235,7 @@ const Events = () => {
                 <div className="mb-8">
                   <h4 className="font-press-start text-sm mb-4 text-maximally-red">STATUS</h4>
                   <div className="space-y-3">
-                    {['upcoming', 'ongoing', 'completed'].map(status => (
+                    {filterOptions.statuses.map(status => (
                       <label key={status} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
@@ -229,14 +254,14 @@ const Events = () => {
                 <div className="mb-8">
                   <h4 className="font-press-start text-sm mb-4 text-maximally-red">DURATION</h4>
                   <div className="space-y-3">
-                    {['24 hours', '48 hours', '3 days', '7 days'].map(length => (
+                    {filterOptions.lengths.map(length => (
                       <label key={length} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedFilters.length.includes(length)}
                           onChange={() => toggleFilter('length', length)}
                           className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                          data-testid={`filter-length-${length.replace(' ', '-')}`}
+                          data-testid={`filter-length-${normalizeString(length).replace(/\s+/g, '-')}`}
                         />
                         <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{length}</span>
                       </label>
@@ -244,18 +269,18 @@ const Events = () => {
                   </div>
                 </div>
 
-                {/* Interest Tags Filter */}
+                {/* Tags Filter */}
                 <div className="mb-6">
-                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">TECH FOCUS</h4>
-                  <div className="space-y-3">
-                    {['AI', 'Machine Learning', 'Web3', 'Blockchain', 'Gaming', 'DeFi'].map(tag => (
+                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">FOCUS AREAS</h4>
+                  <div className="space-y-3 max-h-48 overflow-y-auto">
+                    {filterOptions.tags.map(tag => (
                       <label key={tag} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedFilters.tags.includes(tag)}
                           onChange={() => toggleFilter('tags', tag)}
                           className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                          data-testid={`filter-tag-${tag.toLowerCase().replace(' ', '-')}`}
+                          data-testid={`filter-tag-${normalizeString(tag).replace(/\s+/g, '-')}`}
                         />
                         <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{tag}</span>
                       </label>
