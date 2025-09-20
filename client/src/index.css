@@ -1797,3 +1797,81 @@
 .hover\:pause-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Dark Mode Theme Variables */
+:root {
+  /* Base Colors */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  
+  /* Card */
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  
+  /* Border */
+  --border: 0 0% 89.8%;
+  --input: 0 0% 89.8%;
+  
+  /* Primary/Brand */
+  --primary: 358 93% 46%; /* maximally-red */
+  --primary-foreground: 0 0% 98%;
+  
+  /* Secondary */
+  --secondary: 0 0% 96.1%;
+  --secondary-foreground: 0 0% 9%;
+  
+  /* Muted */
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 45.1%;
+  
+  /* Accent */
+  --accent: 49 100% 60%; /* maximally-yellow */
+  --accent-foreground: 0 0% 9%;
+  
+  /* Destructive */
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  
+  /* Ring */
+  --ring: 358 93% 46%;
+  
+  /* Radius */
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Base Colors */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 98%;
+  
+  /* Card */
+  --card: 0 0% 7%;
+  --card-foreground: 0 0% 98%;
+  
+  /* Border */
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  
+  /* Primary/Brand */
+  --primary: 358 93% 46%; /* maximally-red stays same */
+  --primary-foreground: 0 0% 98%;
+  
+  /* Secondary */
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 98%;
+  
+  /* Muted */
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 60%;
+  
+  /* Accent */
+  --accent: 49 100% 60%; /* maximally-yellow stays same */
+  --accent-foreground: 0 0% 9%;
+  
+  /* Destructive */
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  
+  /* Ring */
+  --ring: 358 93% 46%;
+}
