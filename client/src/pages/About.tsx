@@ -372,17 +372,6 @@ const Partners = () => {
         bg: 'bg-green-500',
         text: 'text-green-500'
       }
-    },
-    {
-      name: "Calyptus",
-      type: "Industry Partnership",
-      description: "Industry leader connecting talent with opportunities in the tech ecosystem",
-      highlight: "Industry Partner",
-      color: {
-        border: 'border-blue-500',
-        bg: 'bg-blue-500',
-        text: 'text-blue-500'
-      }
     }
   ];
 
@@ -449,35 +438,6 @@ const Partners = () => {
               </div>
             </div>
           ))}
-        </div>
-        
-        {/* Schools & Colleges Section */}
-        <div className="mt-16 text-center">
-          <h3 className="font-press-start text-xl md:text-2xl text-maximally-yellow mb-8">
-            SCHOOLS & COLLEGES NETWORK
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              "Chandigarh Schools",
-              "Delhi NCR Colleges", 
-              "International Collaborators"
-            ].map((network, index) => (
-              <div key={index} className="pixel-card bg-black/80 border-2 border-purple-500 p-6">
-                <div className="minecraft-block bg-purple-500 p-2 inline-block mb-4">
-                  <MapPin className="h-5 w-5 text-black" />
-                </div>
-                
-                <h4 className="font-press-start text-sm text-purple-400 mb-2">
-                  {network}
-                </h4>
-                
-                <p className="font-jetbrains text-xs text-gray-400">
-                  Network Partner
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>
