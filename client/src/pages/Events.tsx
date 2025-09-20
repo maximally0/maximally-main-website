@@ -218,34 +218,58 @@ const Events = () => {
         keywords="hackathons, coding competitions, AI hackathons, programming contests, innovation challenges, tech events, developer competitions"
       />
       
-      <div className="min-h-screen bg-white dark:bg-black">
+      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors">
+        {/* Pixel Grid Background */}
+        <div className="fixed inset-0 bg-white dark:bg-black" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(229,9,20,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.1)_1px,transparent_1px)] bg-[size:50px_50px] dark:bg-[linear-gradient(rgba(229,9,20,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.2)_1px,transparent_1px)]" />
+        
         {/* Header */}
-        <div className="bg-maximally-red text-white py-8 mt-16">
-          <div className="max-w-7xl mx-auto px-4 text-center">
-            <h1 className="font-press-start text-2xl md:text-3xl mb-4">
+        <div className="bg-maximally-red text-white py-16 mt-16 relative z-10">
+          {/* Floating Pixels Animation */}
+          {Array.from({ length: 8 }, (_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-maximally-yellow pixel-border animate-float pointer-events-none"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${i * 0.5}s`,
+                animationDuration: `${4 + i * 0.3}s`,
+              }}
+            />
+          ))}
+          
+          <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
+            <div className="minecraft-block bg-maximally-yellow text-black px-6 py-3 inline-block mb-6 animate-pulse">
+              <span className="font-press-start text-sm">🌟 GLOBAL HACKATHON LEAGUE</span>
+            </div>
+            <h1 className="font-press-start text-3xl md:text-4xl lg:text-5xl mb-6 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] animate-fade-in">
               Join the world's best hackathons
             </h1>
-            <p className="font-jetbrains text-lg">
-              Discover innovation challenges, coding competitions, and tech events
+            <p className="font-jetbrains text-lg md:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in">
+              Discover innovation challenges, coding competitions, and tech events from around the globe
             </p>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
           {/* Search Bar */}
           <div className="mb-8">
-            <div className="relative max-w-2xl mx-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="text"
-                placeholder="Search by hackathon title or keyword"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-maximally-red focus:border-maximally-red outline-none font-jetbrains"
-              />
-              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-maximally-red text-white px-4 py-1.5 rounded font-press-start text-xs hover:bg-maximally-yellow hover:text-black transition-colors">
-                Search
-              </button>
+            <div className="pixel-card bg-white dark:bg-card border-2 border-maximally-red p-6 max-w-3xl mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="Search by hackathon title or keyword..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-28 py-4 bg-transparent border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-none focus:ring-2 focus:ring-maximally-red focus:border-maximally-red outline-none font-jetbrains text-lg"
+                  data-testid="search-hackathons"
+                />
+                <button className="pixel-button absolute right-2 top-1/2 transform -translate-y-1/2 bg-maximally-red text-white px-6 py-2 font-press-start text-xs hover:bg-maximally-yellow hover:text-black transition-colors hover:scale-105">
+                  SEARCH
+                </button>
+              </div>
             </div>
           </div>
 
@@ -254,75 +278,80 @@ const Events = () => {
             <div className="lg:hidden">
               <button
                 onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg font-jetbrains"
+                className="pixel-button bg-white dark:bg-card border-2 border-maximally-red text-gray-900 dark:text-white hover:bg-maximally-red hover:text-white transition-all px-6 py-3 font-press-start text-sm flex items-center gap-2"
+                data-testid="mobile-filter-toggle"
               >
                 <Filter className="h-4 w-4" />
-                Filters
+                FILTERS
               </button>
             </div>
 
             {/* Sidebar Filters */}
             <div className={`lg:w-80 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
-              <div className="bg-white border border-gray-200 rounded-lg p-6 sticky top-24">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-press-start text-lg">Filters</h3>
+              <div className="pixel-card bg-white dark:bg-card border-2 border-maximally-red p-6 sticky top-24 hover:shadow-glow-red transition-all">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-press-start text-lg text-gray-900 dark:text-white">FILTERS</h3>
                   <button
                     onClick={clearAllFilters}
-                    className="text-maximally-red font-jetbrains text-sm hover:underline"
+                    className="text-maximally-red font-jetbrains text-sm hover:text-maximally-yellow transition-colors underline-offset-4 hover:underline"
+                    data-testid="clear-all-filters"
                   >
                     Clear all
                   </button>
                 </div>
 
                 {/* Location Filter */}
-                <div className="mb-6">
-                  <h4 className="font-press-start text-sm mb-3">Location</h4>
-                  <div className="space-y-2">
+                <div className="mb-8">
+                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">LOCATION</h4>
+                  <div className="space-y-3">
                     {['Online', 'In-person', 'Hybrid'].map(location => (
-                      <label key={location} className="flex items-center">
+                      <label key={location} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedFilters.location.includes(location)}
                           onChange={() => toggleFilter('location', location)}
-                          className="mr-2"
+                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                          data-testid={`filter-location-${location.toLowerCase()}`}
                         />
-                        <span className="font-jetbrains text-sm">{location}</span>
+                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{location}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Status Filter */}
-                <div className="mb-6">
-                  <h4 className="font-press-start text-sm mb-3">Status</h4>
-                  <div className="space-y-2">
+                <div className="mb-8">
+                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">STATUS</h4>
+                  <div className="space-y-3">
                     {['upcoming', 'ongoing', 'completed'].map(status => (
-                      <label key={status} className="flex items-center">
+                      <label key={status} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedFilters.status.includes(status)}
                           onChange={() => toggleFilter('status', status)}
-                          className="mr-2"
+                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                          data-testid={`filter-status-${status}`}
                         />
-                        <span className="font-jetbrains text-sm capitalize">{status}</span>
+                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors capitalize">{status}</span>
                       </label>
                     ))}
                   </div>
                 </div>
 
                 {/* Length Filter */}
-                <div className="mb-6">
-                  <h4 className="font-press-start text-sm mb-3">Length</h4>
-                  <div className="space-y-2">
+                <div className="mb-8">
+                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">DURATION</h4>
+                  <div className="space-y-3">
                     {['24 hours', '48 hours', '3 days', '7 days'].map(length => (
-                      <label key={length} className="flex items-center">
+                      <label key={length} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedFilters.length.includes(length)}
                           onChange={() => toggleFilter('length', length)}
-                          className="mr-2"
+                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                          data-testid={`filter-length-${length.replace(' ', '-')}`}
                         />
-                        <span className="font-jetbrains text-sm">{length}</span>
+                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{length}</span>
                       </label>
                     ))}
                   </div>
@@ -330,17 +359,18 @@ const Events = () => {
 
                 {/* Interest Tags Filter */}
                 <div className="mb-6">
-                  <h4 className="font-press-start text-sm mb-3">Interest Tags</h4>
-                  <div className="space-y-2">
+                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">TECH FOCUS</h4>
+                  <div className="space-y-3">
                     {['AI', 'Machine Learning', 'Web3', 'Blockchain', 'Gaming', 'DeFi'].map(tag => (
-                      <label key={tag} className="flex items-center">
+                      <label key={tag} className="flex items-center cursor-pointer group">
                         <input
                           type="checkbox"
                           checked={selectedFilters.tags.includes(tag)}
                           onChange={() => toggleFilter('tags', tag)}
-                          className="mr-2"
+                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                          data-testid={`filter-tag-${tag.toLowerCase().replace(' ', '-')}`}
                         />
-                        <span className="font-jetbrains text-sm">{tag}</span>
+                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{tag}</span>
                       </label>
                     ))}
                   </div>
@@ -351,95 +381,129 @@ const Events = () => {
             {/* Main Content */}
             <div className="flex-1">
               {/* Results Info */}
-              <div className="mb-6">
-                <p className="font-jetbrains text-gray-600">
-                  Showing {filteredHackathons.length} hackathons
-                </p>
+              <div className="mb-8">
+                <div className="pixel-card bg-white dark:bg-card border-2 border-gray-300 dark:border-gray-600 p-4">
+                  <p className="font-press-start text-sm text-gray-700 dark:text-gray-300">
+                    SHOWING {filteredHackathons.length} HACKATHONS
+                  </p>
+                </div>
               </div>
 
               {/* Hackathon Cards */}
-              <div className="space-y-6">
+              <div className="space-y-8">
                 {filteredHackathons.map(hackathon => (
-                  <div key={hackathon.id} className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
-                    <div className="flex gap-4">
-                      {/* Hackathon Image */}
-                      <div className="w-24 h-24 bg-maximally-red rounded-lg flex items-center justify-center flex-shrink-0">
-                        <span className="text-white font-press-start text-xs">
+                  <div 
+                    key={hackathon.id} 
+                    className="pixel-card bg-white dark:bg-card border-2 border-maximally-red p-8 hover:shadow-glow-red hover:scale-[1.02] transition-all duration-300 group animate-fade-in"
+                    data-testid={`hackathon-card-${hackathon.id}`}
+                  >
+                    <div className="flex gap-6">
+                      {/* Hackathon Logo/Avatar */}
+                      <div className="w-32 h-32 minecraft-block bg-maximally-red flex items-center justify-center flex-shrink-0 group-hover:bg-maximally-yellow transition-colors">
+                        <span className="text-black font-press-start text-lg text-center leading-tight">
                           {hackathon.name.split(' ').map(word => word[0]).join('').slice(0, 3)}
                         </span>
                       </div>
 
                       {/* Hackathon Details */}
                       <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-start justify-between mb-4">
                           <div>
-                            <h3 className="font-press-start text-lg text-gray-900 mb-1">
+                            <h3 className="font-press-start text-xl text-gray-900 dark:text-white mb-3 group-hover:text-maximally-red transition-colors">
                               {hackathon.name}
                             </h3>
-                            {hackathon.status === 'upcoming' && (
-                              <div className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded font-jetbrains">
-                                Upcoming
-                              </div>
-                            )}
-                            {hackathon.status === 'completed' && (
-                              <div className="inline-block px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded font-jetbrains">
-                                Completed
-                              </div>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <div className="flex items-center text-gray-600 mb-1">
-                              <Trophy className="h-4 w-4 mr-1" />
-                              <span className="font-jetbrains text-sm">{hackathon.prizes} in prizes</span>
+                            
+                            {/* Status Badge */}
+                            <div className="flex gap-2">
+                              {hackathon.status === 'upcoming' && (
+                                <div className="minecraft-block bg-green-500 text-white px-4 py-2 font-press-start text-xs">
+                                  UPCOMING
+                                </div>
+                              )}
+                              {hackathon.status === 'completed' && (
+                                <div className="minecraft-block bg-gray-500 text-white px-4 py-2 font-press-start text-xs">
+                                  COMPLETED
+                                </div>
+                              )}
+                              {hackathon.status === 'ongoing' && (
+                                <div className="minecraft-block bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs animate-pulse">
+                                  LIVE NOW
+                                </div>
+                              )}
                             </div>
-                            <div className="flex items-center text-gray-600">
-                              <Users className="h-4 w-4 mr-1" />
-                              <span className="font-jetbrains text-sm">{hackathon.participants.toLocaleString()} participants</span>
+                          </div>
+                          
+                          {/* Prize & Participants Info */}
+                          <div className="text-right">
+                            <div className="pixel-card bg-maximally-yellow text-black p-3 mb-3">
+                              <div className="flex items-center justify-center">
+                                <Trophy className="h-5 w-5 mr-2" />
+                                <span className="font-press-start text-sm">{hackathon.prizes}</span>
+                              </div>
+                              <div className="font-jetbrains text-xs mt-1">IN PRIZES</div>
+                            </div>
+                            <div className="flex items-center text-gray-600 dark:text-gray-400">
+                              <Users className="h-4 w-4 mr-2" />
+                              <span className="font-jetbrains text-sm">{hackathon.participants.toLocaleString()} builders</span>
                             </div>
                           </div>
                         </div>
 
-                        <p className="font-jetbrains text-gray-700 mb-3 line-clamp-2">
+                        <p className="font-jetbrains text-gray-700 dark:text-gray-300 mb-6 text-lg leading-relaxed">
                           {hackathon.description}
                         </p>
 
-                        <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
-                          <div className="flex items-center">
-                            <Calendar className="h-4 w-4 mr-1" />
+                        {/* Event Details Row */}
+                        <div className="flex flex-wrap gap-6 mb-6 text-sm">
+                          <div className="flex items-center text-gray-600 dark:text-gray-400">
+                            <Calendar className="h-5 w-5 mr-2 text-maximally-red" />
                             <span className="font-jetbrains">
                               {formatDate(hackathon.startDate)} - {formatDate(hackathon.endDate)}
                             </span>
                           </div>
-                          <div className="flex items-center">
-                            <MapPin className="h-4 w-4 mr-1" />
+                          <div className="flex items-center text-gray-600 dark:text-gray-400">
+                            <MapPin className="h-5 w-5 mr-2 text-maximally-red" />
                             <span className="font-jetbrains">{hackathon.location}</span>
                           </div>
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-1" />
+                          <div className="flex items-center text-gray-600 dark:text-gray-400">
+                            <Clock className="h-5 w-5 mr-2 text-maximally-red" />
                             <span className="font-jetbrains">{hackathon.length}</span>
                           </div>
                         </div>
 
+                        {/* Tags and Actions */}
                         <div className="flex items-center justify-between">
                           <div className="flex flex-wrap gap-2">
-                            {hackathon.tags.slice(0, 3).map(tag => (
-                              <span key={tag} className="px-2 py-1 bg-maximally-red text-white text-xs rounded font-jetbrains">
+                            {hackathon.tags.slice(0, 4).map(tag => (
+                              <span 
+                                key={tag} 
+                                className="minecraft-block bg-maximally-red text-white px-3 py-1 font-jetbrains text-sm hover:bg-maximally-yellow hover:text-black transition-colors cursor-pointer"
+                              >
                                 {tag}
                               </span>
                             ))}
+                            {hackathon.tags.length > 4 && (
+                              <span className="minecraft-block bg-gray-500 text-white px-3 py-1 font-jetbrains text-sm">
+                                +{hackathon.tags.length - 4} more
+                              </span>
+                            )}
                           </div>
-                          <div className="flex gap-2">
+                          
+                          {/* Action Buttons */}
+                          <div className="flex gap-3">
                             <Link
                               to={hackathon.detailsUrl}
-                              className="px-4 py-2 border border-maximally-red text-maximally-red rounded font-jetbrains text-sm hover:bg-maximally-red hover:text-white transition-colors"
+                              className="pixel-button bg-black border-2 border-maximally-red text-white hover:bg-maximally-red hover:text-black transition-all px-6 py-3 font-press-start text-sm"
+                              data-testid={`view-details-${hackathon.id}`}
                             >
-                              View Details
+                              VIEW_DETAILS
                             </Link>
                             <Link
                               to={hackathon.registerUrl}
-                              className="px-4 py-2 bg-maximally-red text-white rounded font-jetbrains text-sm hover:bg-maximally-yellow hover:text-black transition-colors"
+                              className="pixel-button bg-maximally-red text-black hover:bg-maximally-yellow hover:scale-105 transition-all px-6 py-3 font-press-start text-sm"
+                              data-testid={`register-${hackathon.id}`}
                             >
-                              Register
+                              REGISTER_NOW
                             </Link>
                           </div>
                         </div>
@@ -449,11 +513,25 @@ const Events = () => {
                 ))}
               </div>
 
+              {/* Empty State */}
               {filteredHackathons.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="font-jetbrains text-gray-500">
-                    No hackathons found matching your criteria. Try adjusting your filters.
+                <div className="pixel-card bg-white dark:bg-card border-2 border-gray-400 dark:border-gray-600 p-12 text-center">
+                  <div className="minecraft-block bg-gray-500 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                    <Search className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="font-press-start text-lg text-gray-700 dark:text-gray-300 mb-4">
+                    NO HACKATHONS FOUND
+                  </h3>
+                  <p className="font-jetbrains text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                    No hackathons match your current search and filter criteria. Try adjusting your filters or search terms.
                   </p>
+                  <button
+                    onClick={clearAllFilters}
+                    className="pixel-button bg-maximally-red text-white hover:bg-maximally-yellow hover:text-black transition-all px-6 py-3 font-press-start text-sm"
+                    data-testid="clear-filters-empty-state"
+                  >
+                    CLEAR_ALL_FILTERS
+                  </button>
                 </div>
               )}
             </div>
