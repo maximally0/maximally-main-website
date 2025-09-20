@@ -16,6 +16,7 @@ import {
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
+import { sampleHackathons, calculateHackathonStatus } from '@shared/schema';
 
 const Events = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -24,127 +25,20 @@ const Events = () => {
     status: string[];
     length: string[];
     tags: string[];
-    type: string[];
   }>({
     location: [],
     status: [],
     length: [],
-    tags: [],
-    type: []
+    tags: []
   });
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
 
-  // Enhanced hackathon data structure inspired by DevPost
-  const hackathons = [
-    {
-      id: 1,
-      name: 'Code Hypothesis',
-      description: 'Test your coding theories in the ultimate development challenge. Build experiments that push the boundaries of what code can do.',
-      startDate: '2025-09-15',
-      endDate: '2025-09-17',
-      prizes: '$15,000',
-      participants: 2847,
-      location: 'Online',
-      status: 'upcoming',
-      length: '3 days',
-      tags: ['Machine Learning', 'Web3', 'AI'],
-      type: 'Community',
-      image: '/api/placeholder/300/200',
-      registerUrl: '/codehypothesis',
-      detailsUrl: '/codehypothesis',
-      organizer: 'Maximally'
-    },
-    {
-      id: 2,
-      name: 'Protocol 404',
-      description: 'When the system is broken, build anyway. Create solutions for problems that don\'t have traditional fixes.',
-      startDate: '2025-10-05',
-      endDate: '2025-10-06',
-      prizes: '$25,000',
-      participants: 1543,
-      location: 'Online',
-      status: 'upcoming',
-      length: '48 hours',
-      tags: ['Blockchain', 'DeFi', 'Web3'],
-      type: 'Community',
-      image: '/api/placeholder/300/200',
-      registerUrl: '/protocol-404',
-      detailsUrl: '/protocol-404',
-      organizer: 'Maximally'
-    },
-    {
-      id: 3,
-      name: 'AI Shipathon 2025',
-      description: '48-hour global AI hackathon for builders and creators. Ship production-ready AI applications.',
-      startDate: '2025-08-15',
-      endDate: '2025-08-17',
-      prizes: '$50,000',
-      participants: 4291,
-      location: 'Online',
-      status: 'completed',
-      length: '48 hours',
-      tags: ['AI', 'Machine Learning', 'NLP'],
-      type: 'Community',
-      image: '/api/placeholder/300/200',
-      registerUrl: '/shipathon-report',
-      detailsUrl: '/shipathon-report',
-      organizer: 'Maximally'
-    },
-    {
-      id: 4,
-      name: 'PromptStorm 2025',
-      description: '24-hour AI prompt-engineering hackathon. When in doubt, prompt harder. Master the art of AI conversation.',
-      startDate: '2025-10-25',
-      endDate: '2025-10-26',
-      prizes: '$10,000',
-      participants: 892,
-      location: 'Online',
-      status: 'upcoming',
-      length: '24 hours',
-      tags: ['AI', 'Prompt Engineering', 'GPT'],
-      type: 'Community',
-      image: '/api/placeholder/300/200',
-      registerUrl: '/promptstorm',
-      detailsUrl: '/promptstorm',
-      organizer: 'Maximally'
-    },
-    {
-      id: 5,
-      name: 'Grand Tech Assembly',
-      description: 'Pick your mission, build your city, earn respect. 7-day GTA-themed hackathon with missions and achievements.',
-      startDate: '2025-11-01',
-      endDate: '2025-11-07',
-      prizes: '$75,000',
-      participants: 3642,
-      location: 'Online',
-      status: 'upcoming',
-      length: '7 days',
-      tags: ['Gaming', 'Web3', 'Metaverse'],
-      type: 'Community',
-      image: '/api/placeholder/300/200',
-      registerUrl: '/grand-tech-assembly',
-      detailsUrl: '/grand-tech-assembly',
-      organizer: 'Maximally'
-    },
-    {
-      id: 6,
-      name: 'Codepocalypse 2025',
-      description: 'What would you build if the internet had 48 hours left? Chaotic 48-hour hackathon for end-times builders.',
-      startDate: '2025-10-18',
-      endDate: '2025-10-19',
-      prizes: '$20,000',
-      participants: 2156,
-      location: 'Online',
-      status: 'upcoming',
-      length: '48 hours',
-      tags: ['Survival Tech', 'Decentralized', 'Emergency'],
-      type: 'Community',
-      image: '/api/placeholder/300/200',
-      registerUrl: '/codepocalypse',
-      detailsUrl: '/codepocalypse',
-      organizer: 'Maximally'
-    }
-  ];
+  // Use the centralized hackathon data from shared schema with dynamic status calculation
+  const hackathons = useMemo(() => 
+    sampleHackathons.map(hackathon => ({
+      ...hackathon,
+      status: calculateHackathonStatus(hackathon.startDate, hackathon.endDate)
+    })), []);
 
   // Filter and search functionality
   const filteredHackathons = useMemo(() => {
@@ -195,15 +89,14 @@ const Events = () => {
       location: [],
       status: [],
       length: [],
-      tags: [],
-      type: []
+      tags: []
     });
     setSearchQuery('');
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+  const formatDate = (date: Date | string) => {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('en-US', { 
       month: 'short', 
       day: 'numeric', 
       year: 'numeric' 
