@@ -1,11 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'light' | 'dark';
-
 interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-  setTheme: (theme: Theme) => void;
+  theme: 'dark';
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -15,40 +11,16 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    // Check localStorage first, then system preference
-    const stored = localStorage.getItem('maximally-theme') as Theme;
-    if (stored && (stored === 'light' || stored === 'dark')) {
-      return stored;
-    }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
-
   useEffect(() => {
     const root = document.documentElement;
     
-    // Remove previous theme class
+    // Remove any existing theme class and add dark
     root.classList.remove('light', 'dark');
-    
-    // Add new theme class
-    root.classList.add(theme);
-    
-    // Update localStorage
-    localStorage.setItem('maximally-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setThemeState(prev => prev === 'light' ? 'dark' : 'light');
-  };
-
-  const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-  };
+    root.classList.add('dark');
+  }, []);
 
   const value = {
-    theme,
-    toggleTheme,
-    setTheme,
+    theme: 'dark' as const,
   };
 
   return (

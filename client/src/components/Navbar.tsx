@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Terminal, Sun, Moon } from "lucide-react";
-import { useTheme } from "./ThemeProvider";
+import { Menu, X, Terminal } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,28 +65,10 @@ const Navbar = () => {
                 {item.label}
               </a>
             ))}
-            
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-yellow hover:bg-maximally-yellow hover:text-black transition-all duration-200 p-2 ml-2"
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-            >
-              {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-            </button>
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="flex items-center space-x-2 lg:hidden">
-            {/* Mobile Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-yellow hover:bg-maximally-yellow hover:text-black transition-all duration-200 p-2"
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-            >
-              {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-            </button>
-            
             {/* Mobile Menu Toggle */}
             <button 
               className="pixel-button bg-maximally-red text-black p-2 hover:bg-maximally-yellow transition-colors"
