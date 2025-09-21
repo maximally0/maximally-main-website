@@ -4,12 +4,14 @@ import {
   Filter,
   Calendar,
   MapPin,
-  X
+  X,
+  ChevronDown
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
-import CollapsibleHackathonCard from '@/components/CollapsibleHackathonCard';
+import HackathonCard from '@/components/CollapsibleHackathonCard';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { grandIndianHackathonSeason, calculateHackathonStatus } from '@shared/schema';
 
 const Events = () => {
@@ -26,6 +28,17 @@ const Events = () => {
     tags: []
   });
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
+  const [expandedFilters, setExpandedFilters] = useState<{
+    location: boolean;
+    status: boolean;
+    duration: boolean;
+    tags: boolean;
+  }>({
+    location: true,
+    status: true,
+    duration: true,
+    tags: true
+  });
 
   // Use the real hackathon data from shared schema with dynamic status calculation
   const hackathons = useMemo(() => 
@@ -111,6 +124,13 @@ const Events = () => {
       tags: []
     });
     setSearchQuery('');
+  };
+
+  const toggleFilterSection = (section: keyof typeof expandedFilters) => {
+    setExpandedFilters(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
   const formatDate = (date: Date | string) => {
@@ -213,80 +233,100 @@ const Events = () => {
                 </div>
 
                 {/* Location Filter */}
-                <div className="mb-8">
-                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">LOCATION</h4>
-                  <div className="space-y-3">
-                    {filterOptions.locations.map(location => (
-                      <label key={location} className="flex items-center cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedFilters.location.includes(location)}
-                          onChange={() => toggleFilter('location', location)}
-                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                          data-testid={`filter-location-${normalizeString(location).replace(/\s+/g, '-')}`}
-                        />
-                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{location}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                <Collapsible open={expandedFilters.location} onOpenChange={() => toggleFilterSection('location')} className="mb-8">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                    <h4 className="font-press-start text-sm text-maximally-red">LOCATION</h4>
+                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.location ? 'rotate-180' : ''}`} />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-4">
+                    <div className="space-y-3">
+                      {filterOptions.locations.map(location => (
+                        <label key={location} className="flex items-center cursor-pointer group">
+                          <input
+                            type="checkbox"
+                            checked={selectedFilters.location.includes(location)}
+                            onChange={() => toggleFilter('location', location)}
+                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                            data-testid={`filter-location-${normalizeString(location).replace(/\s+/g, '-')}`}
+                          />
+                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{location}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
 
                 {/* Status Filter */}
-                <div className="mb-8">
-                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">STATUS</h4>
-                  <div className="space-y-3">
-                    {filterOptions.statuses.map(status => (
-                      <label key={status} className="flex items-center cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedFilters.status.includes(status)}
-                          onChange={() => toggleFilter('status', status)}
-                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                          data-testid={`filter-status-${status}`}
-                        />
-                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors capitalize">{status}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                <Collapsible open={expandedFilters.status} onOpenChange={() => toggleFilterSection('status')} className="mb-8">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                    <h4 className="font-press-start text-sm text-maximally-red">STATUS</h4>
+                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.status ? 'rotate-180' : ''}`} />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-4">
+                    <div className="space-y-3">
+                      {filterOptions.statuses.map(status => (
+                        <label key={status} className="flex items-center cursor-pointer group">
+                          <input
+                            type="checkbox"
+                            checked={selectedFilters.status.includes(status)}
+                            onChange={() => toggleFilter('status', status)}
+                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                            data-testid={`filter-status-${status}`}
+                          />
+                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors capitalize">{status}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
 
                 {/* Length Filter */}
-                <div className="mb-8">
-                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">DURATION</h4>
-                  <div className="space-y-3">
-                    {filterOptions.lengths.map(length => (
-                      <label key={length} className="flex items-center cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedFilters.length.includes(length)}
-                          onChange={() => toggleFilter('length', length)}
-                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                          data-testid={`filter-length-${normalizeString(length).replace(/\s+/g, '-')}`}
-                        />
-                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{length}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                <Collapsible open={expandedFilters.duration} onOpenChange={() => toggleFilterSection('duration')} className="mb-8">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                    <h4 className="font-press-start text-sm text-maximally-red">DURATION</h4>
+                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.duration ? 'rotate-180' : ''}`} />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-4">
+                    <div className="space-y-3">
+                      {filterOptions.lengths.map(length => (
+                        <label key={length} className="flex items-center cursor-pointer group">
+                          <input
+                            type="checkbox"
+                            checked={selectedFilters.length.includes(length)}
+                            onChange={() => toggleFilter('length', length)}
+                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                            data-testid={`filter-length-${normalizeString(length).replace(/\s+/g, '-')}`}
+                          />
+                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{length}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
 
                 {/* Tags Filter */}
-                <div className="mb-6">
-                  <h4 className="font-press-start text-sm mb-4 text-maximally-red">FOCUS AREAS</h4>
-                  <div className="space-y-3 max-h-48 overflow-y-auto">
-                    {filterOptions.tags.map(tag => (
-                      <label key={tag} className="flex items-center cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedFilters.tags.includes(tag)}
-                          onChange={() => toggleFilter('tags', tag)}
-                          className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                          data-testid={`filter-tag-${normalizeString(tag).replace(/\s+/g, '-')}`}
-                        />
-                        <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{tag}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+                <Collapsible open={expandedFilters.tags} onOpenChange={() => toggleFilterSection('tags')} className="mb-6">
+                  <CollapsibleTrigger className="flex items-center justify-between w-full group">
+                    <h4 className="font-press-start text-sm text-maximally-red">FOCUS AREAS</h4>
+                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.tags ? 'rotate-180' : ''}`} />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="mt-4">
+                    <div className="space-y-3 max-h-48 overflow-y-auto">
+                      {filterOptions.tags.map(tag => (
+                        <label key={tag} className="flex items-center cursor-pointer group">
+                          <input
+                            type="checkbox"
+                            checked={selectedFilters.tags.includes(tag)}
+                            onChange={() => toggleFilter('tags', tag)}
+                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                            data-testid={`filter-tag-${normalizeString(tag).replace(/\s+/g, '-')}`}
+                          />
+                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{tag}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
               </div>
             </div>
 
@@ -301,10 +341,10 @@ const Events = () => {
                 </div>
               </div>
 
-              {/* Hackathon Cards - Now using CollapsibleHackathonCard */}
-              <div className="space-y-6">
+              {/* Hackathon Cards - Now using HackathonCard */}
+              <div className="space-y-4">
                 {filteredHackathons.map(hackathon => (
-                  <CollapsibleHackathonCard 
+                  <HackathonCard 
                     key={hackathon.id}
                     hackathon={hackathon}
                     className="animate-fade-in"

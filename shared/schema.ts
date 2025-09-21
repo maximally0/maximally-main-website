@@ -81,8 +81,8 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     id: 'code-hypothesis-2025',
     name: 'Code Hypothesis',
     description: 'A 24-hour hackathon for wild ideas. Test theories instead of pitching. This is where code meets graffiti - build chaos, utility, and speed.',
-    startDate: new Date('2025-03-15T00:00:00Z'),
-    endDate: new Date('2025-03-16T23:59:59Z'),
+    startDate: new Date('2025-09-28T00:00:00Z'),
+    endDate: new Date('2025-09-28T23:59:59Z'),
     location: 'Online',
     length: '24 hours',
     participants: 0, // TBD - will be updated with actual registration data

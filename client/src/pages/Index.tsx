@@ -543,6 +543,101 @@ const Index = () => {
           </div>
         </section>
 
+        {/* MFHOP Section */}
+        <section className="py-20 relative bg-gradient-to-b from-gray-900 to-black">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <div className="minecraft-block bg-gradient-to-r from-maximally-red to-red-700 text-white px-6 py-3 inline-block mb-6">
+                  <span className="font-press-start text-sm">
+                    🤝 MFHOP
+                  </span>
+                </div>
+                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 minecraft-text">
+                  <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    MAXIMALLY FEDERATION
+                  </span>
+                </h2>
+                <h3 className="font-press-start text-sm sm:text-base md:text-lg text-gray-300 mb-6">
+                  OF HACKATHON ORGANIZERS AND PARTNERS
+                </h3>
+                <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed mb-8 px-4">
+                  A global network of hackathon organizers working together to grow reach, share sponsors, and strengthen events.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {[
+                  {
+                    title: 'Cross-Promotion',
+                    description: 'Share posts, newsletters, and reach new student bases.',
+                    icon: <Globe className="h-6 w-6" />,
+                    color: 'bg-blue-600'
+                  },
+                  {
+                    title: 'Sponsors & Partnerships',
+                    description: 'Exchange leads, pitch bigger packages together.',
+                    icon: <Trophy className="h-6 w-6" />,
+                    color: 'bg-green-600'
+                  },
+                  {
+                    title: 'Judges & Mentors',
+                    description: 'Tap into a shared circuit of experienced names.',
+                    icon: <Users className="h-6 w-6" />,
+                    color: 'bg-purple-600'
+                  }
+                ].map((benefit, i) => (
+                  <div
+                    key={i}
+                    className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105"
+                  >
+                    <div className={`minecraft-block ${benefit.color} w-12 h-12 mx-auto mb-4 flex items-center justify-center text-white`}>
+                      {benefit.icon}
+                    </div>
+                    <h4 className="font-press-start text-sm text-maximally-red mb-3 text-center">
+                      {benefit.title.toUpperCase()}
+                    </h4>
+                    <p className="font-jetbrains text-gray-300 text-sm text-center">
+                      {benefit.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center">
+                <div className="pixel-card bg-black border-2 border-maximally-red p-6 mb-8">
+                  <p className="font-jetbrains text-gray-300 text-sm sm:text-base">
+                    MFHOP is an initiative led by Maximally to bring hackathon organizers out of silos. 
+                    <span className="text-maximally-red font-bold"> Membership is free</span>, and open to any organizer who has hosted at least one hackathon.
+                  </p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+                  <Link
+                    to="/mfhop"
+                    className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-12 px-6 font-press-start text-xs sm:text-sm"
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>LEARN_MORE</span>
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+
+                  <a
+                    href="https://forms.gle/DcjBJx9uT5LMG8538"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pixel-button bg-maximally-yellow text-maximally-black group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 px-6 font-press-start text-xs sm:text-sm"
+                  >
+                    <Users className="h-4 w-4" />
+                    <span>APPLY_TO_JOIN</span>
+                    <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <Footer />
       </div>
     </>
