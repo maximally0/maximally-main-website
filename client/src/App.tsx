@@ -93,6 +93,7 @@ import PromptStorm from './pages/PromptStorm';
 import StealAThon from './pages/StealAThon';
 import Codepocalypse from './pages/Codepocalypse';
 import GrandTechAssembly from './pages/GrandTechAssembly';
+import DemoHackathon1 from './pages/DemoHackathon1';
 
 // Event Reports
 import MakeathonReport from './pages/MakeathonReport';
@@ -417,6 +418,7 @@ const App = () => {
               element={<GrandTechAssembly />}
             />
             <Route path="/hacktober" element={<Hacktober />} />
+            <Route path="/events/demo-hackathon1" element={<DemoHackathon1 />} />
 
             {/* Event Reports */}
             <Route path="/makeathon-report" element={<MakeathonReport />} />
