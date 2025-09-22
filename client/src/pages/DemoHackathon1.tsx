@@ -165,9 +165,12 @@ const hackathonData = {
   }
 };
 
-// Collapsible section component
-const CollapsibleSection = ({ title, children, defaultOpen = false }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) => {
+// Collapsible section component - only renders if content exists
+const CollapsibleSection = ({ title, children, defaultOpen = false, condition = true }: { title: string; children: React.ReactNode; defaultOpen?: boolean; condition?: boolean }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  
+  // Don't render the section if the condition is false (empty data)
+  if (!condition) return null;
   
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
@@ -213,17 +216,17 @@ const DemoHackathon1 = () => {
         canonicalUrl="https://maximally.in/events/demo-hackathon1"
       />
       
-      {/* Main Container with Tech-Future Background */}
+      {/* Main Container with Autumn Background (matching Hacktober) */}
       <div 
         className="min-h-screen relative overflow-hidden"
         style={{
           background: `
             linear-gradient(135deg, 
-              #1e3a8a 0%, 
-              #3b82f6 25%, 
-              #60a5fa 50%, 
-              #93c5fd 75%, 
-              #dbeafe 100%
+              #8B4513 0%, 
+              #D2691E 25%, 
+              #F5DEB3 50%, 
+              #CD853F 75%, 
+              #8B4513 100%
             )
           `
         }}
@@ -237,14 +240,14 @@ const DemoHackathon1 = () => {
                 45deg,
                 transparent,
                 transparent 2px,
-                rgba(59, 130, 246, 0.1) 2px,
-                rgba(59, 130, 246, 0.1) 4px
+                rgba(139, 69, 19, 0.1) 2px,
+                rgba(139, 69, 19, 0.1) 4px
               )
             `
           }}
         />
 
-        {/* Floating Tech Elements */}
+        {/* Floating Autumn Elements (matching Hacktober) */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {floatingElements.map((element) => (
             <div
@@ -257,9 +260,9 @@ const DemoHackathon1 = () => {
                 animationDuration: '6s'
               }}
             >
-              <svg width={element.size} height={element.size} viewBox="0 0 24 24" className="text-blue-600 opacity-70">
+              <svg width={element.size} height={element.size} viewBox="0 0 24 24" className="text-orange-600 opacity-70">
                 <path
-                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,7 14,7.5 17,8Z"
                   fill="currentColor"
                 />
               </svg>
@@ -283,17 +286,17 @@ const DemoHackathon1 = () => {
               {hackathonData.distinctionBadge}
             </div>
 
-            {/* Main Title */}
+            {/* Main Title with Autumn Style (matching Hacktober) */}
             <h1 className="mb-6">
               <span 
-                className="block text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4"
+                className="block text-5xl md:text-7xl lg:text-8xl font-bold text-amber-100 mb-4"
                 style={{
                   fontFamily: 'Georgia, Times New Roman, serif',
                   textShadow: `
-                    3px 3px 0px #1e3a8a,
-                    6px 6px 0px rgba(30, 58, 138, 0.8),
-                    9px 9px 0px rgba(30, 58, 138, 0.6),
-                    12px 12px 0px rgba(30, 58, 138, 0.4)
+                    3px 3px 0px #8B4513,
+                    6px 6px 0px rgba(139, 69, 19, 0.8),
+                    9px 9px 0px rgba(139, 69, 19, 0.6),
+                    12px 12px 0px rgba(139, 69, 19, 0.4)
                   `,
                   transform: 'rotate(-1deg)'
                 }}
@@ -301,12 +304,13 @@ const DemoHackathon1 = () => {
                 {hackathonData.title}
               </span>
               <span 
-                className="block text-3xl md:text-5xl lg:text-6xl font-bold text-blue-200"
+                className="block text-3xl md:text-5xl lg:text-6xl font-bold text-orange-200"
                 style={{
                   fontFamily: 'Georgia, Times New Roman, serif',
                   textShadow: `
-                    2px 2px 0px #3b82f6,
-                    4px 4px 0px rgba(59, 130, 246, 0.8)
+                    3px 3px 0px #D2691E,
+                    6px 6px 0px rgba(210, 105, 30, 0.8),
+                    9px 9px 0px rgba(210, 105, 30, 0.6)
                   `,
                   transform: 'rotate(1deg)'
                 }}
@@ -315,12 +319,12 @@ const DemoHackathon1 = () => {
               </span>
             </h1>
 
-            {/* Event Badge */}
+            {/* Event Badge with Autumn Style */}
             <div 
-              className="inline-flex items-center gap-2 bg-blue-100 text-blue-900 px-6 py-3 rounded-lg font-bold text-lg mb-6 shadow-lg transform rotate-1"
+              className="inline-flex items-center gap-2 bg-amber-100 text-amber-900 px-6 py-3 rounded-lg font-bold text-lg mb-6 shadow-lg transform rotate-1"
               style={{ 
                 fontFamily: 'Arial, sans-serif',
-                border: '3px solid #1e40af'
+                border: '3px solid #8B4513'
               }}
               data-testid="badge-event-info"
             >
@@ -329,7 +333,7 @@ const DemoHackathon1 = () => {
             </div>
 
             {/* Subtitle */}
-            <h2 className="text-2xl md:text-4xl font-bold text-blue-100 mb-4 transform -rotate-1" style={{ fontFamily: 'Georgia, serif' }}>
+            <h2 className="text-2xl md:text-4xl font-bold text-cream-100 mb-4 transform -rotate-1" style={{ fontFamily: 'Georgia, serif', color: '#F5DEB3' }}>
               {hackathonData.tagline}
             </h2>
 
@@ -339,7 +343,7 @@ const DemoHackathon1 = () => {
                 <Button 
                   asChild 
                   size="sm" 
-                  className="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-green-800"
+                  className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-orange-800"
                   data-testid="link-register"
                 >
                   <a href={hackathonData.links.register} target="_blank" rel="noopener noreferrer">
@@ -352,7 +356,7 @@ const DemoHackathon1 = () => {
                 <Button 
                   asChild 
                   size="sm" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-blue-800"
+                  className="bg-amber-700 hover:bg-amber-800 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-amber-900"
                   data-testid="link-devpost"
                 >
                   <a href={hackathonData.links.devpost} target="_blank" rel="noopener noreferrer">
@@ -365,7 +369,7 @@ const DemoHackathon1 = () => {
                 <Button 
                   asChild 
                   size="sm" 
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-indigo-800"
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-orange-700"
                   data-testid="link-discord"
                 >
                   <a href={hackathonData.links.discord} target="_blank" rel="noopener noreferrer">
@@ -378,7 +382,7 @@ const DemoHackathon1 = () => {
                 <Button 
                   asChild 
                   size="sm" 
-                  className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-green-700"
+                  className="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-amber-800"
                   data-testid="link-whatsapp"
                 >
                   <a href={hackathonData.links.whatsapp} target="_blank" rel="noopener noreferrer">
@@ -391,7 +395,7 @@ const DemoHackathon1 = () => {
                 <Button 
                   asChild 
                   size="sm" 
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-purple-800"
+                  className="bg-orange-800 hover:bg-orange-900 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-orange-900"
                   data-testid="link-info-deck"
                 >
                   <a href={hackathonData.links.infoDeck} target="_blank" rel="noopener noreferrer">
@@ -404,7 +408,7 @@ const DemoHackathon1 = () => {
                 <Button 
                   asChild 
                   size="sm" 
-                  className="bg-pink-600 hover:bg-pink-700 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-pink-800"
+                  className="bg-amber-800 hover:bg-amber-900 text-white font-bold px-4 py-2 text-sm rounded-lg transform hover:scale-105 transition-all shadow-lg border-2 border-amber-900"
                   data-testid="link-instagram"
                 >
                   <a href={hackathonData.links.instagram} target="_blank" rel="noopener noreferrer">
@@ -417,190 +421,181 @@ const DemoHackathon1 = () => {
           </div>
         </section>
 
-        {/* Content Sections */}
-        <section className="relative z-20 py-16 px-6" style={{ backgroundColor: '#dbeafe' }}>
+        {/* Content Sections with Autumn Background */}
+        <section className="relative z-20 py-16 px-6" style={{ backgroundColor: '#F5DEB3' }}>
           <div className="max-w-6xl mx-auto">
             
             {/* About Section */}
-            {hackathonData.about && (
-              <CollapsibleSection title="About the Event" defaultOpen={true}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div 
-                    className="bg-white p-6 rounded-lg shadow-lg transform -rotate-1 border-3 border-blue-600"
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <h3 className="text-xl font-bold text-blue-900 mb-4">Theme: {hackathonData.about.theme}</h3>
-                    <p className="text-lg text-blue-800 leading-relaxed font-semibold mb-4">
-                      {hackathonData.about.description}
-                    </p>
-                    <p className="text-base text-blue-700 italic">
-                      Vibe: {hackathonData.about.vibe}
-                    </p>
-                  </div>
-                  
-                  <div 
-                    className="bg-blue-100 p-6 rounded-lg shadow-lg transform rotate-1 border-3 border-blue-700"
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <h3 className="text-xl font-bold text-blue-900 mb-4">Rules:</h3>
-                    <ul className="text-lg text-blue-800 space-y-2 font-semibold">
-                      {hackathonData.about.rules.map((rule, index) => (
-                        <li key={index}>• {rule}</li>
-                      ))}
-                    </ul>
-                  </div>
+            <CollapsibleSection title="About the Event" defaultOpen={true} condition={!!hackathonData.about}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div 
+                  className="bg-white p-6 rounded-lg shadow-lg transform -rotate-1 border-3 border-orange-600"
+                  style={{ fontFamily: 'Arial, sans-serif' }}
+                  data-testid="about-theme"
+                >
+                  <h3 className="text-xl font-bold text-orange-900 mb-4">Theme: {hackathonData.about?.theme}</h3>
+                  <p className="text-lg text-orange-800 leading-relaxed font-semibold mb-4">
+                    {hackathonData.about?.description}
+                  </p>
+                  <p className="text-base text-orange-700 italic">
+                    Vibe: {hackathonData.about?.vibe}
+                  </p>
                 </div>
-              </CollapsibleSection>
-            )}
+                
+                <div 
+                  className="bg-orange-200 p-6 rounded-lg shadow-lg transform rotate-1 border-3 border-orange-800"
+                  style={{ fontFamily: 'Arial, sans-serif' }}
+                  data-testid="about-rules"
+                >
+                  <h3 className="text-xl font-bold text-orange-900 mb-4">Rules:</h3>
+                  <ul className="text-lg text-orange-800 space-y-2 font-semibold">
+                    {hackathonData.about?.rules.map((rule, index) => (
+                      <li key={index}>• {rule}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CollapsibleSection>
 
             {/* Event Facts */}
-            {hackathonData.facts && (
-              <CollapsibleSection title="Event Facts">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Object.entries(hackathonData.facts).map(([key, value], index) => (
-                    <div 
-                      key={key}
-                      className="bg-blue-100 p-6 rounded-lg shadow-lg transform hover:scale-105 transition-all border-3 border-blue-600"
-                      style={{ fontFamily: 'Arial, sans-serif' }}
-                      data-testid={`fact-${key}`}
-                    >
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-900 mb-2">{value}</div>
-                        <p className="text-lg font-semibold text-blue-800 capitalize">{key.replace(/([A-Z])/g, ' $1')}</p>
-                      </div>
+            <CollapsibleSection title="Event Facts" condition={!!hackathonData.facts}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Object.entries(hackathonData.facts || {}).map(([key, value], index) => (
+                  <div 
+                    key={key}
+                    className="bg-amber-200 p-6 rounded-lg shadow-lg transform hover:scale-105 transition-all border-3 border-amber-600"
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                    data-testid={`fact-${key}`}
+                  >
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-amber-900 mb-2">{value}</div>
+                      <p className="text-lg font-semibold text-amber-800 capitalize">{key.replace(/([A-Z])/g, ' $1')}</p>
                     </div>
-                  ))}
-                </div>
-              </CollapsibleSection>
-            )}
+                  </div>
+                ))}
+              </div>
+            </CollapsibleSection>
 
             {/* Who Should Join */}
-            {hackathonData.whoShouldJoin && hackathonData.whoShouldJoin.length > 0 && (
-              <CollapsibleSection title="Who Should Join">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {hackathonData.whoShouldJoin.map((group, index) => (
-                    <div 
-                      key={index} 
-                      className={`${group.color} p-6 rounded-lg shadow-lg transform ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'} border-3`}
-                      style={{ fontFamily: 'Arial, sans-serif' }}
-                      data-testid={`who-join-${index}`}
-                    >
-                      <div className="text-center">
-                        <div className="text-4xl mb-3">{group.icon}</div>
-                        <p className="text-gray-800 font-bold text-lg">{group.text}</p>
-                      </div>
+            <CollapsibleSection title="Who Should Join" condition={hackathonData.whoShouldJoin && hackathonData.whoShouldJoin.length > 0}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {hackathonData.whoShouldJoin?.map((group, index) => (
+                  <div 
+                    key={index} 
+                    className={`${group.color} p-6 rounded-lg shadow-lg transform ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'} border-3`}
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                    data-testid={`who-join-${index}`}
+                  >
+                    <div className="text-center">
+                      <div className="text-4xl mb-3">{group.icon}</div>
+                      <p className="text-gray-800 font-bold text-lg">{group.text}</p>
                     </div>
-                  ))}
-                </div>
-              </CollapsibleSection>
-            )}
+                  </div>
+                ))}
+              </div>
+            </CollapsibleSection>
 
             {/* How It Works */}
-            {hackathonData.howItWorks && hackathonData.howItWorks.length > 0 && (
-              <CollapsibleSection title="How It Works">
-                <div className="space-y-6">
-                  {hackathonData.howItWorks.map((item, index) => (
-                    <div 
-                      key={index} 
-                      className={`${item.color} p-6 rounded-lg shadow-lg transform ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'} border-3`}
-                      style={{ fontFamily: 'Arial, sans-serif' }}
-                      data-testid={`how-works-${index}`}
-                    >
-                      <div className="flex items-center gap-6">
-                        <div className="text-2xl font-bold text-gray-800 min-w-fit">{item.step}:</div>
-                        <div className="text-lg font-bold text-gray-800">{item.text}</div>
-                      </div>
+            <CollapsibleSection title="How It Works" condition={hackathonData.howItWorks && hackathonData.howItWorks.length > 0}>
+              <div className="space-y-6">
+                {hackathonData.howItWorks?.map((item, index) => (
+                  <div 
+                    key={index} 
+                    className={`${item.color} p-6 rounded-lg shadow-lg transform ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'} border-3`}
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                    data-testid={`how-works-${index}`}
+                  >
+                    <div className="flex items-center gap-6">
+                      <div className="text-2xl font-bold text-gray-800 min-w-fit">{item.step}:</div>
+                      <div className="text-lg font-bold text-gray-800">{item.text}</div>
                     </div>
-                  ))}
-                </div>
-              </CollapsibleSection>
-            )}
+                  </div>
+                ))}
+              </div>
+            </CollapsibleSection>
 
             {/* Timeline */}
-            {hackathonData.timeline && hackathonData.timeline.length > 0 && (
-              <CollapsibleSection title="Timeline">
-                <div className="space-y-4">
-                  {hackathonData.timeline.map((item, index) => (
-                    <div 
-                      key={index}
-                      className="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-all border-3 border-blue-600"
-                      style={{ fontFamily: 'Arial, sans-serif' }}
-                      data-testid={`timeline-${index}`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="text-lg font-bold text-blue-900 min-w-fit">{item.date}</div>
-                        <div className="text-lg text-blue-800">{item.event}</div>
-                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                          item.type === 'start' ? 'bg-green-200 text-green-800' :
-                          item.type === 'build' ? 'bg-blue-200 text-blue-800' :
-                          item.type === 'support' ? 'bg-purple-200 text-purple-800' :
-                          item.type === 'deadline' ? 'bg-red-200 text-red-800' :
-                          item.type === 'present' ? 'bg-yellow-200 text-yellow-800' :
-                          'bg-gray-200 text-gray-800'
-                        }`}>
-                          {item.type}
-                        </span>
-                      </div>
+            <CollapsibleSection title="Timeline" condition={hackathonData.timeline && hackathonData.timeline.length > 0}>
+              <div className="space-y-4">
+                {hackathonData.timeline?.map((item, index) => (
+                  <div 
+                    key={index}
+                    className="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-all border-3 border-orange-600"
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                    data-testid={`timeline-${index}`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="text-lg font-bold text-orange-900 min-w-fit">{item.date}</div>
+                      <div className="text-lg text-orange-800">{item.event}</div>
+                      <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                        item.type === 'start' ? 'bg-green-200 text-green-800' :
+                        item.type === 'build' ? 'bg-blue-200 text-blue-800' :
+                        item.type === 'support' ? 'bg-purple-200 text-purple-800' :
+                        item.type === 'deadline' ? 'bg-red-200 text-red-800' :
+                        item.type === 'present' ? 'bg-yellow-200 text-yellow-800' :
+                        'bg-gray-200 text-gray-800'
+                      }`}>
+                        {item.type}
+                      </span>
                     </div>
-                  ))}
-                </div>
-              </CollapsibleSection>
-            )}
+                  </div>
+                ))}
+              </div>
+            </CollapsibleSection>
 
             {/* Judging */}
-            {hackathonData.judging && (
-              <CollapsibleSection title="Judging">
-                <div className="space-y-6">
-                  <div 
-                    className="bg-white p-6 rounded-lg shadow-lg border-3 border-blue-600"
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <h3 className="text-xl font-bold text-blue-900 mb-4">Process</h3>
-                    <p className="text-lg text-blue-800 font-semibold">{hackathonData.judging.process}</p>
-                  </div>
-
-                  {hackathonData.judging.judges && hackathonData.judging.judges.length > 0 && (
-                    <div>
-                      <h3 className="text-2xl font-bold text-blue-900 mb-4">Judges</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {hackathonData.judging.judges.map((judge, index) => (
-                          <div 
-                            key={index}
-                            className="bg-blue-100 p-4 rounded-lg shadow-lg border-3 border-blue-600"
-                            style={{ fontFamily: 'Arial, sans-serif' }}
-                            data-testid={`judge-${index}`}
-                          >
-                            <div className="font-bold text-lg text-blue-900">{judge.name}</div>
-                            <div className="text-base text-blue-800 font-semibold">{judge.role}</div>
-                            <div className="text-sm text-blue-700 mt-2">{judge.bio}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {hackathonData.judging.criteria && hackathonData.judging.criteria.length > 0 && (
-                    <div>
-                      <h3 className="text-2xl font-bold text-blue-900 mb-4">Judging Criteria</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {hackathonData.judging.criteria.map((criterion, index) => (
-                          <div 
-                            key={index}
-                            className="bg-white p-4 rounded-lg shadow-lg border-3 border-blue-600 text-center"
-                            style={{ fontFamily: 'Arial, sans-serif' }}
-                            data-testid={`criteria-${index}`}
-                          >
-                            <div className="font-bold text-lg text-blue-900">{criterion.name}</div>
-                            <div className="font-black text-xl text-blue-800">({criterion.weight})</div>
-                            <div className="text-sm text-blue-700 mt-2">{criterion.description}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+            <CollapsibleSection title="Judging" condition={!!hackathonData.judging}>
+              <div className="space-y-6">
+                <div 
+                  className="bg-white p-6 rounded-lg shadow-lg border-3 border-amber-600"
+                  style={{ fontFamily: 'Arial, sans-serif' }}
+                  data-testid="judging-process"
+                >
+                  <h3 className="text-xl font-bold text-amber-900 mb-4">Process</h3>
+                  <p className="text-lg text-amber-800 font-semibold">{hackathonData.judging?.process}</p>
                 </div>
-              </CollapsibleSection>
-            )}
+
+                {hackathonData.judging?.judges && hackathonData.judging.judges.length > 0 && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-amber-900 mb-4">Judges</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {hackathonData.judging.judges.map((judge, index) => (
+                        <div 
+                          key={index}
+                          className="bg-amber-100 p-4 rounded-lg shadow-lg border-3 border-amber-600"
+                          style={{ fontFamily: 'Arial, sans-serif' }}
+                          data-testid={`judge-${index}`}
+                        >
+                          <div className="font-bold text-lg text-amber-900">{judge.name}</div>
+                          <div className="text-base text-amber-800 font-semibold">{judge.role}</div>
+                          <div className="text-sm text-amber-700 mt-2">{judge.bio}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {hackathonData.judging?.criteria && hackathonData.judging.criteria.length > 0 && (
+                  <div>
+                    <h3 className="text-2xl font-bold text-amber-900 mb-4">Judging Criteria</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {hackathonData.judging.criteria.map((criterion, index) => (
+                        <div 
+                          key={index}
+                          className="bg-white p-4 rounded-lg shadow-lg border-3 border-amber-600 text-center"
+                          style={{ fontFamily: 'Arial, sans-serif' }}
+                          data-testid={`criteria-${index}`}
+                        >
+                          <div className="font-bold text-lg text-amber-900">{criterion.name}</div>
+                          <div className="font-black text-xl text-amber-800">({criterion.weight})</div>
+                          <div className="text-sm text-amber-700 mt-2">{criterion.description}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CollapsibleSection>
 
             {/* Prizes */}
             {hackathonData.prizes && hackathonData.prizes.length > 0 && (
@@ -627,88 +622,85 @@ const DemoHackathon1 = () => {
             )}
 
             {/* Submission Guidelines */}
-            {hackathonData.submissionGuidelines && (
-              <CollapsibleSection title="Submission Guidelines">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div 
-                    className="bg-white p-6 rounded-lg shadow-lg transform -rotate-1 border-3 border-green-600"
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <h3 className="text-xl font-bold text-green-900 mb-4">Required</h3>
-                    <ul className="text-lg text-green-800 space-y-2 font-semibold">
-                      {hackathonData.submissionGuidelines.required.map((item, index) => (
-                        <li key={index}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div 
-                    className="bg-green-100 p-6 rounded-lg shadow-lg transform rotate-1 border-3 border-green-700"
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <h3 className="text-xl font-bold text-green-900 mb-4">Optional (Bonus Points)</h3>
-                    <ul className="text-lg text-green-800 space-y-2 font-semibold">
-                      {hackathonData.submissionGuidelines.optional.map((item, index) => (
-                        <li key={index}>• {item}</li>
-                      ))}
-                    </ul>
-                  </div>
+            <CollapsibleSection title="Submission Guidelines" condition={!!hackathonData.submissionGuidelines}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div 
+                  className="bg-white p-6 rounded-lg shadow-lg transform -rotate-1 border-3 border-orange-600"
+                  style={{ fontFamily: 'Arial, sans-serif' }}
+                  data-testid="submission-required"
+                >
+                  <h3 className="text-xl font-bold text-orange-900 mb-4">Required</h3>
+                  <ul className="text-lg text-orange-800 space-y-2 font-semibold">
+                    {hackathonData.submissionGuidelines?.required.map((item, index) => (
+                      <li key={index}>• {item}</li>
+                    ))}
+                  </ul>
                 </div>
-              </CollapsibleSection>
-            )}
+                
+                <div 
+                  className="bg-orange-200 p-6 rounded-lg shadow-lg transform rotate-1 border-3 border-orange-800"
+                  style={{ fontFamily: 'Arial, sans-serif' }}
+                  data-testid="submission-optional"
+                >
+                  <h3 className="text-xl font-bold text-orange-900 mb-4">Optional (Bonus Points)</h3>
+                  <ul className="text-lg text-orange-800 space-y-2 font-semibold">
+                    {hackathonData.submissionGuidelines?.optional.map((item, index) => (
+                      <li key={index}>• {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CollapsibleSection>
 
             {/* Tracks */}
-            {hackathonData.tracks && hackathonData.tracks.length > 0 && (
-              <CollapsibleSection title="Tracks & Themes">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {hackathonData.tracks.map((track, index) => (
-                    <div 
-                      key={index}
-                      className="bg-purple-100 p-6 rounded-lg shadow-lg transform hover:scale-105 transition-all border-3 border-purple-600"
-                      style={{ fontFamily: 'Arial, sans-serif' }}
-                      data-testid={`track-${index}`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="text-3xl">{track.icon}</div>
-                        <div>
-                          <div className="font-bold text-lg text-purple-900">{track.name}</div>
-                          <div className="text-base text-purple-800">{track.description}</div>
-                        </div>
+            <CollapsibleSection title="Tracks & Themes" condition={hackathonData.tracks && hackathonData.tracks.length > 0}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {hackathonData.tracks?.map((track, index) => (
+                  <div 
+                    key={index}
+                    className="bg-amber-100 p-6 rounded-lg shadow-lg transform hover:scale-105 transition-all border-3 border-amber-600"
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                    data-testid={`track-${index}`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="text-3xl">{track.icon}</div>
+                      <div>
+                        <div className="font-bold text-lg text-amber-900">{track.name}</div>
+                        <div className="text-base text-amber-800">{track.description}</div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </CollapsibleSection>
-            )}
+                  </div>
+                ))}
+              </div>
+            </CollapsibleSection>
 
             {/* FAQs */}
-            {hackathonData.faqs && hackathonData.faqs.length > 0 && (
-              <CollapsibleSection title="FAQs">
-                <div className="space-y-4">
-                  {hackathonData.faqs.map((faq, index) => (
-                    <div 
-                      key={index}
-                      className="bg-white p-6 rounded-lg shadow-lg border-3 border-gray-600"
-                      style={{ fontFamily: 'Arial, sans-serif' }}
-                      data-testid={`faq-${index}`}
-                    >
-                      <h4 className="font-bold text-lg text-gray-900 mb-2">Q: {faq.q}</h4>
-                      <p className="text-base text-gray-800">A: {faq.a}</p>
-                    </div>
-                  ))}
-                </div>
-              </CollapsibleSection>
-            )}
+            <CollapsibleSection title="FAQs" condition={hackathonData.faqs && hackathonData.faqs.length > 0}>
+              <div className="space-y-4">
+                {hackathonData.faqs?.map((faq, index) => (
+                  <div 
+                    key={index}
+                    className="bg-white p-6 rounded-lg shadow-lg border-3 border-amber-600"
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                    data-testid={`faq-${index}`}
+                  >
+                    <h4 className="font-bold text-lg text-amber-900 mb-2">Q: {faq.q}</h4>
+                    <p className="text-base text-amber-800">A: {faq.a}</p>
+                  </div>
+                ))}
+              </div>
+            </CollapsibleSection>
 
           </div>
         </section>
 
         {/* Footer Section */}
-        <section className="relative z-20 py-16 px-6" style={{ backgroundColor: '#1e3a8a' }}>
+        <section className="relative z-20 py-16 px-6" style={{ backgroundColor: '#8B4513' }}>
           <div className="text-center">
             <div 
-              className="bg-white text-blue-900 p-8 rounded-lg shadow-lg transform -rotate-2 inline-block border-4 border-blue-700"
+              className="bg-amber-100 text-amber-900 p-8 rounded-lg shadow-lg transform -rotate-2 inline-block border-4 border-amber-700"
               style={{ fontFamily: 'Georgia, serif' }}
+              data-testid="footer-cta"
             >
               <p className="text-2xl md:text-3xl font-bold">
                 Ready to build the future?
