@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import SEO from '@/components/SEO';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import {
   Zap,
   Clock,
@@ -160,6 +160,13 @@ export default function DynamicHackathon() {
   useEffect(() => {
     const fetchHackathon = async () => {
       if (!slug) return;
+      
+      // If Supabase is not configured, skip data fetching
+      if (!supabase) {
+        setError('Database connection not available');
+        setLoading(false);
+        return;
+      }
       
       try {
         const { data, error } = await supabase
