@@ -161,25 +161,17 @@ export default function DynamicHackathon() {
     const fetchHackathon = async () => {
       if (!slug) return;
       
-      // If Supabase is not configured, skip data fetching
-      if (!supabase) {
-        setError('Database connection not available');
-        setLoading(false);
-        return;
-      }
-      
       try {
-        const { data, error } = await supabase
-          .from('hackathons')
-          .select('*')
-          .eq('slug', slug)
-          .eq('is_active', true)
-          .single();
-
-        if (error) {
-          throw new Error('Hackathon not found');
+        const response = await fetch(`/api/hackathons/${slug}`);
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Hackathon not found');
+          }
+          throw new Error('Failed to fetch hackathon');
         }
-
+        
+        const data = await response.json();
         setHackathon(data);
         setIsVisible(true);
       } catch (err) {
