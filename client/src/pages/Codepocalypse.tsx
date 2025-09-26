@@ -156,7 +156,7 @@ export default function Codepocalypse() {
         <Navbar />
 
         {/* Hero Section */}
-        <section className="min-h-screen flex flex-col items-center justify-center relative px-4 pt-20">
+        <section className="min-h-screen flex flex-col items-center justify-center relative px-4 pt-32">
           {/* Badge */}
           <div
             className={`mb-6 transform transition-all duration-1000 ${

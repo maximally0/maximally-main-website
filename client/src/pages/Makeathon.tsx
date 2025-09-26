@@ -7,7 +7,7 @@ import { ArrowRight } from 'lucide-react';
 
 const Makeathon = () => {
   return (
-    <div className="min-h-screen pt-20 md:pt-24">
+    <div className="min-h-screen pt-32">
       {/* Archive Banner */}
       <div className="bg-black text-white py-4 px-4 text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-900/20 to-red-600/20"></div>

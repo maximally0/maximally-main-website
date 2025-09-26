@@ -19,48 +19,22 @@ import SEO from '@/components/SEO';
 // Hero Section Component
 const HeroSection = () => {
   return (
-    <section className="min-h-screen bg-black text-white relative overflow-hidden flex items-center">
-      {/* Pixel Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.1)_1px,transparent_1px)] bg-[size:50px_50px] animate-pulse" />
-      
-      {/* Floating Pixels */}
-      {Array.from({ length: 12 }, (_, i) => (
-        <div
-          key={i}
-          className="absolute w-2 h-2 bg-maximally-red pixel-border animate-float"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${i * 0.5}s`,
-            animationDuration: `${4 + i}s`,
-          }}
-        />
-      ))}
-      
-      <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-        <div className="minecraft-block bg-maximally-red p-4 inline-block mb-6">
-          <Code className="h-8 w-8 text-black" />
-        </div>
-        
-        <h1 className="font-press-start text-3xl md:text-4xl lg:text-6xl mb-6 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
-          ABOUT MAXIMALLY
-        </h1>
-        
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-6 md:p-8 max-w-4xl mx-auto">
-          <p className="font-press-start text-maximally-red text-lg md:text-xl mb-4">
-            HACKATHONS AS CULTURE, NOT JUST CODE
-          </p>
-          
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg leading-relaxed">
-            Hackathons have always been more than just code. They are experiments in how people think, 
-            create, and work together under pressure. They are places where rules bend, ideas collide, 
-            and the boundaries of what's possible shift overnight.
-          </p>
-          
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg leading-relaxed mt-4">
-            Yet, for too long, hackathons have been scattered — run in silos, limited by geography, 
-            or tied to a single school or company. Maximally was born out of a simple belief: 
-            hackathons deserve to be open, accessible, and cultural.
+    <div className="min-h-screen pt-32">
+      <SEO 
+        title="About Maximally | Where Global Innovators Are Born"
+        description="Join the global community for ambitious builders. Learn entrepreneurship, AI, and innovation through our transformative hackathons."
+      />
+
+      {/* Hero Section */}
+      <section className="py-20 bg-maximally-black relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/10 animate-grid-flow" />
+        <div className="container mx-auto px-4 text-center relative">
+          <h1 className="font-press-start text-4xl md:text-5xl lg:text-6xl text-white mb-6">
+            <span className="bg-[#39FF14]/20 px-2">Maximally:</span> Where Global{" "}
+            <span className="bg-[#FF5F5F]/20 px-2">Innovators</span> Are Born
+          </h1>
+          <p className="font-jetbrains text-white/80 text-xl md:text-2xl mb-8">
+            Ready to change the world?
           </p>
         </div>
       </div>

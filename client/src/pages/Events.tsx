@@ -15,30 +15,72 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { grandIndianHackathonSeason, calculateHackathonStatus } from '@shared/schema';
 
 const Events = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedFilters, setSelectedFilters] = useState<{
-    location: string[];
-    status: string[];
-    length: string[];
-    tags: string[];
-  }>({
-    location: [],
-    status: [],
-    length: [],
-    tags: []
-  });
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
-  const [expandedFilters, setExpandedFilters] = useState<{
-    location: boolean;
-    status: boolean;
-    duration: boolean;
-    tags: boolean;
-  }>({
-    location: true,
-    status: true,
-    duration: true,
-    tags: true
-  });
+  const upcomingEvents = [
+    {
+      name: 'Code Hypothesis',
+      dates: 'September 2025',
+      description: 'Test your coding theories in the ultimate development challenge',
+      registerUrl: '/hackathon/codehypothesis',
+      detailsUrl: '/hackathon/codehypothesis',
+      icon: '🧪',
+    },
+    {
+      name: 'Protocol 404',
+      dates: 'October 2025',
+      description: 'When the system is broken, build anyway',
+      registerUrl: '/hackathon/protocol-404',
+      detailsUrl: '/hackathon/protocol-404',
+      icon: '⚡',
+    },
+    {
+      name: 'Project CodeGen',
+      dates: 'October 2025',
+      description: 'Beyond hackathons - real project generation',
+      registerUrl: '/hackathon/project-codegen',
+      detailsUrl: '/hackathon/project-codegen',
+      icon: '📝',
+    },
+    {
+      name: 'Maximally Hacktober',
+      dates: 'October 2025',
+      description: "October's biggest hackathon celebration",
+      registerUrl: '/hackathon/hacktober',
+      detailsUrl: '/hackathon/hacktober',
+      icon: '🍂',
+    },
+    {
+      name: 'Maximally PromptStorm',
+      dates: 'Oct 25-26, 2025',
+      description: '24-hour AI prompt-engineering hackathon. When in doubt, prompt harder.',
+      registerUrl: '/hackathon/prompt-storm',
+      detailsUrl: '/hackathon/prompt-storm',
+      icon: '⚡',
+    },
+    {
+      name: 'Maximally Codepocalypse',
+      dates: 'Oct 18-19, 2025',
+      description: 'What would you build if the internet had 48 hours left? Chaotic 48-hour hackathon.',
+      registerUrl: '/hackathon/codepocalypse',
+      detailsUrl: '/hackathon/codepocalypse',
+      icon: '☢️',
+    },
+    {
+      name: 'Grand Tech Assembly',
+      dates: 'Nov 1-7, 2025',
+      description: 'Pick your mission, build your city, earn respect. 7-day GTA-themed hackathon.',
+      registerUrl: '/hackathon/grand-tech-assembly',
+      detailsUrl: '/hackathon/grand-tech-assembly',
+      icon: '🎮',
+    },
+    {
+      name: 'Maximally Steal-A-Thon',
+      dates: 'Nov 9-10, 2025',
+      description: "The only hackathon where original ideas are banned. If it ain't broke... steal it.",
+      registerUrl: '/hackathon/steal-a-thon',
+      detailsUrl: '/hackathon/steal-a-thon',
+      icon: '🔥',
+    },
+  ];
 
   // Use the real hackathon data from shared schema with dynamic status calculation
   const hackathons = useMemo(() => 

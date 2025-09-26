@@ -1,202 +1,201 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { relations } from "drizzle-orm";
 
+// Users table for authentication
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
 });
 
+// Blogs table for dynamic content
+export const blogs = pgTable("blogs", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  content: text("content").notNull(),
+  author: text("author").notNull(),
+  published: boolean("published").default(false),
+  cover_image: text("cover_image"),
+  excerpt: text("excerpt"),
+  tags: jsonb("tags"), // Array of tags
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// Judges table for hackathon judges
+export const judges = pgTable("judges", {
+  id: serial("id").primaryKey(),
+  hackathon_id: integer("hackathon_id"),
+  name: text("name").notNull(),
+  role: text("role"),
+  bio: text("bio"),
+  company: text("company"),
+  image: text("image"),
+  linkedin: text("linkedin"),
+  twitter: text("twitter"),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// Enhanced hackathons table with relations
+export const hackathons = pgTable("hackathons", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  subtitle: text("subtitle"),
+  tagline: text("tagline").notNull(),
+  
+  // Hero section
+  badge_text: text("badge_text"),
+  description: text("description").notNull(),
+  registration_url: text("registration_url"),
+  cover_image: text("cover_image"),
+  
+  // Fast facts
+  start_date: text("start_date").notNull(),
+  end_date: text("end_date").notNull(), 
+  duration: text("duration").notNull(),
+  format: text("format").notNull(),
+  team_size: text("team_size").notNull(),
+  judging_type: text("judging_type").notNull(),
+  results_date: text("results_date").notNull(),
+  
+  // Content sections
+  what_it_is: text("what_it_is").notNull(),
+  the_idea: text("the_idea").notNull(),
+  
+  // Lists (stored as JSON arrays)
+  who_joins: jsonb("who_joins").notNull(), // Array of strings
+  tech_rules: jsonb("tech_rules").notNull(), // Array of strings
+  fun_awards: jsonb("fun_awards").notNull(), // Array of strings
+  perks: jsonb("perks").notNull(), // Array of strings
+  
+  // Prizes
+  cash_pool: text("cash_pool"),
+  prize_pool: jsonb("prize_pool"), // Detailed prize structure
+  
+  // Judging details
+  judging_description: text("judging_description").notNull(),
+  judging_criteria: text("judging_criteria").notNull(),
+  
+  // Submission requirements
+  required_submissions: jsonb("required_submissions").notNull(), // Array of strings
+  optional_submissions: jsonb("optional_submissions"), // Array of strings
+  
+  // Additional text content fields for enhanced content management
+  announcements: text("announcements"), // Important updates and news
+  event_highlights: text("event_highlights"), // Key features and selling points
+  sponsor_message: text("sponsor_message"), // Message from sponsors
+  faq_content: text("faq_content"), // Frequently asked questions
+  timeline_details: text("timeline_details"), // Detailed timeline information
+  special_instructions: text("special_instructions"), // Any special notes or instructions
+  
+  // Theme and styling - comprehensive theming system
+  theme_config: jsonb("theme_config"), // Complete theme configuration
+  theme_color_primary: text("theme_color_primary").notNull(), // Backward compatibility
+  theme_color_secondary: text("theme_color_secondary").notNull(),
+  theme_color_accent: text("theme_color_accent").notNull(),
+  
+  // Status
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow(),
+  updated_at: timestamp("updated_at").defaultNow(),
+});
+
+// Define relationships
+export const hackathonRelations = relations(hackathons, ({ many }) => ({
+  judges: many(judges),
+}));
+
+export const judgeRelations = relations(judges, ({ one }) => ({
+  hackathon: one(hackathons, {
+    fields: [judges.hackathon_id],
+    references: [hackathons.id],
+  }),
+}));
+
+// Validation schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
 });
 
+export const insertBlogSchema = createInsertSchema(blogs).extend({
+  title: z.string().trim().min(1, 'Title is required'),
+  slug: z.string().trim().min(1, 'Slug is required').regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and dashes'),
+  content: z.string().trim().min(1, 'Content is required'),
+  author: z.string().trim().min(1, 'Author is required'),
+  published: z.boolean().default(false),
+  cover_image: z.string().transform(v => v?.trim() || undefined).optional(),
+  excerpt: z.string().transform(v => v?.trim() || undefined).optional(),
+  tags: z.array(z.string().trim().min(1, 'Each tag must be non-empty')).optional().default([]),
+});
+
+export const insertJudgeSchema = createInsertSchema(judges).extend({
+  hackathon_id: z.number().int().positive('Valid hackathon ID is required').optional(),
+  name: z.string().trim().min(1, 'Name is required'),
+  role: z.string().transform(v => v?.trim() || undefined).optional(),
+  bio: z.string().transform(v => v?.trim() || undefined).optional(),
+  company: z.string().transform(v => v?.trim() || undefined).optional(),
+  image: z.string().transform(v => v?.trim() || undefined).optional(),
+  linkedin: z.string().transform(v => v?.trim() || undefined).optional(),
+  twitter: z.string().transform(v => v?.trim() || undefined).optional(),
+});
+
+export const insertHackathonSchema = createInsertSchema(hackathons).extend({
+  slug: z.string().trim().min(1, 'Slug is required').regex(/^[a-z0-9-]+$/, 'Slug must contain only lowercase letters, numbers, and dashes'),
+  title: z.string().trim().min(1, 'Title is required'),
+  tagline: z.string().trim().min(1, 'Tagline is required'),
+  description: z.string().trim().min(1, 'Description is required'),
+  start_date: z.string().trim().min(1, 'Start date is required'),
+  end_date: z.string().trim().min(1, 'End date is required'),
+  duration: z.string().trim().min(1, 'Duration is required'),
+  format: z.string().trim().min(1, 'Format is required'),
+  team_size: z.string().trim().min(1, 'Team size is required'),
+  judging_type: z.string().trim().min(1, 'Judging type is required'),
+  results_date: z.string().trim().min(1, 'Results date is required'),
+  what_it_is: z.string().trim().min(1, 'What it is description is required'),
+  the_idea: z.string().trim().min(1, 'The idea description is required'),
+  judging_description: z.string().trim().min(1, 'Judging description is required'),
+  judging_criteria: z.string().trim().min(1, 'Judging criteria is required'),
+  who_joins: z.array(z.string().trim().min(1, 'Each participant type must be non-empty')).min(1, 'At least one participant type is required'),
+  tech_rules: z.array(z.string().trim().min(1, 'Each tech rule must be non-empty')).min(1, 'At least one tech rule is required'),
+  fun_awards: z.array(z.string().trim().min(1, 'Each fun award must be non-empty')).min(1, 'At least one fun award is required'),
+  perks: z.array(z.string().trim().min(1, 'Each perk must be non-empty')).min(1, 'At least one perk is required'),
+  required_submissions: z.array(z.string().trim().min(1, 'Each required submission must be non-empty')).min(1, 'At least one required submission is required'),
+  optional_submissions: z.array(z.string().trim().min(1, 'Each optional submission must be non-empty')).optional().default([]),
+  theme_color_primary: z.string().trim().min(1, 'Primary color is required'),
+  theme_color_secondary: z.string().trim().min(1, 'Secondary color is required'),
+  theme_color_accent: z.string().trim().min(1, 'Accent color is required'),
+  // Optional fields that can be empty
+  subtitle: z.string().transform(v => v?.trim() || undefined).optional(),
+  badge_text: z.string().transform(v => v?.trim() || undefined).optional(),
+  registration_url: z.union([z.string().url(), z.literal('')]).transform(v => v?.trim() || undefined).optional(),
+  cash_pool: z.string().transform(v => v?.trim() || undefined).optional(),
+  cover_image: z.string().transform(v => v?.trim() || undefined).optional(),
+  prize_pool: z.array(z.object({
+    title: z.string(),
+    amount: z.string(),
+    description: z.string().optional(),
+  })).optional().default([]),
+  // New optional text content fields
+  announcements: z.string().transform(v => v?.trim() || undefined).optional(),
+  event_highlights: z.string().transform(v => v?.trim() || undefined).optional(),
+  sponsor_message: z.string().transform(v => v?.trim() || undefined).optional(),
+  faq_content: z.string().transform(v => v?.trim() || undefined).optional(),
+  timeline_details: z.string().transform(v => v?.trim() || undefined).optional(),
+  special_instructions: z.string().transform(v => v?.trim() || undefined).optional(),
+});
+
+// Type exports
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
-
-// Hackathon table schema
-export const hackathons = pgTable('hackathons', {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
-  description: text('description').notNull(),
-  startDate: timestamp('start_date').notNull(),
-  endDate: timestamp('end_date').notNull(),
-  location: text('location').notNull(),
-  length: text('length').notNull(),
-  status: text('status', { enum: ['upcoming', 'ongoing', 'completed'] }).notNull(),
-  participants: integer('participants').notNull().default(0),
-  prizes: text('prizes').notNull(),
-  tags: text('tags').array().notNull().default([]),
-  registerUrl: text('register_url').notNull(),
-  detailsUrl: text('details_url').notNull(),
-  imageUrl: text('image_url'),
-  organizerName: text('organizer_name'),
-  organizerUrl: text('organizer_url'),
-});
-
-// Insert schema with validation
-export const insertHackathonSchema = createInsertSchema(hackathons, {
-  name: z.string().min(1, "Name is required"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  location: z.string().min(1, "Location is required"),
-  length: z.string().min(1, "Length is required"),
-  status: z.enum(['upcoming', 'ongoing', 'completed']),
-  participants: z.number().min(0, "Participants must be non-negative"),
-  prizes: z.string().min(1, "Prize information is required"),
-  tags: z.array(z.string()).min(1, "At least one tag is required"),
-  registerUrl: z.string().min(1, "Register URL is required"),
-  detailsUrl: z.string().min(1, "Details URL is required"),
-  imageUrl: z.string().url().optional(),
-  organizerUrl: z.string().url().optional(),
-}).omit({ id: true });
-
-// Types
+export type InsertBlog = z.infer<typeof insertBlogSchema>;
+export type Blog = typeof blogs.$inferSelect;
+export type InsertJudge = z.infer<typeof insertJudgeSchema>;
+export type Judge = typeof judges.$inferSelect;
 export type InsertHackathon = z.infer<typeof insertHackathonSchema>;
-export type SelectHackathon = typeof hackathons.$inferSelect;
-
-// Helper function to calculate hackathon status based on dates
-export function calculateHackathonStatus(startDate: Date, endDate: Date): 'upcoming' | 'ongoing' | 'completed' {
-  const now = new Date();
-  
-  if (now < startDate) {
-    return 'upcoming';
-  } else if (now >= startDate && now <= endDate) {
-    return 'ongoing';
-  } else {
-    return 'completed';
-  }
-}
-
-// Grand Indian Hackathon Season - Real hackathon data from individual pages
-// Note: Status is calculated dynamically based on dates to prevent drift
-const createHackathonEntry = (data: Omit<SelectHackathon, 'status'>) => ({
-  ...data,
-  status: calculateHackathonStatus(data.startDate, data.endDate)
-});
-
-export const grandIndianHackathonSeason: SelectHackathon[] = [
-  createHackathonEntry({
-    id: 'code-hypothesis-2025',
-    name: 'Code Hypothesis',
-    description: 'A 24-hour hackathon for wild ideas. Test theories instead of pitching. This is where code meets graffiti - build chaos, utility, and speed.',
-    startDate: new Date('2025-09-28T00:00:00Z'),
-    endDate: new Date('2025-09-28T23:59:59Z'),
-    location: 'Online',
-    length: '24 hours',
-    participants: 0, // TBD - will be updated with actual registration data
-    prizes: 'TBD',
-    tags: ['Chaos', 'Utility', 'Wild Ideas', 'Hacker Culture'],
-    registerUrl: '/codehypothesis',
-    detailsUrl: '/codehypothesis',
-    imageUrl: null,
-    organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
-  }),
-  createHackathonEntry({
-    id: 'protocol-404-2025',
-    name: 'Protocol 404',
-    description: 'Break the system. Build yours. A 48-hour hackathon where the system is already broken. You\'re not fixing it — you\'re building in the wreckage.',
-    startDate: new Date('2025-10-04T00:00:00Z'),
-    endDate: new Date('2025-10-05T23:59:59Z'),
-    location: 'Online',
-    length: '48 hours',
-    participants: 0, // TBD - will be updated with actual registration data
-    prizes: '₹5000+',
-    tags: ['System Breaking', 'Chaos', 'Utility', 'Indie Hackers'],
-    registerUrl: 'https://protocol404.devpost.com',
-    detailsUrl: '/protocol-404',
-    imageUrl: null,
-    organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
-  }),
-  createHackathonEntry({
-    id: 'project-codegen-2025',
-    name: 'Project CodeGen',
-    description: 'Build like you\'re 6. Ship like you\'re 16. A 48-hour hackathon for builders who play. Focus on playful, creative coding and fun projects.',
-    startDate: new Date('2025-10-11T00:00:00Z'),
-    endDate: new Date('2025-10-12T23:59:59Z'),
-    location: 'Online',
-    length: '48 hours',
-    participants: 0, // TBD - will be updated with actual registration data
-    prizes: '₹5000+',
-    tags: ['Playful', 'Creative', 'Teen Builders', 'Fun Programming'],
-    registerUrl: 'https://projectcodegen.devpost.com',
-    detailsUrl: '/project-codegen',
-    imageUrl: null,
-    organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
-  }),
-  createHackathonEntry({
-    id: 'promptstorm-2025',
-    name: 'PromptStorm',
-    description: '24-hour AI prompt-engineering hackathon. When in doubt, prompt harder. Make prompts the core of your build and iterate fast.',
-    startDate: new Date('2025-10-25T00:00:00Z'),
-    endDate: new Date('2025-10-26T23:59:59Z'),
-    location: 'Online',
-    length: '24 hours',
-    participants: 0, // TBD - will be updated with actual registration data
-    prizes: '₹3000+',
-    tags: ['AI', 'Prompt Engineering', 'Machine Learning', 'Creativity'],
-    registerUrl: '/promptstorm',
-    detailsUrl: '/promptstorm',
-    imageUrl: null,
-    organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
-  }),
-  createHackathonEntry({
-    id: 'hacktober-2025',
-    name: 'Maximally Hacktober',
-    description: 'Build slow. Build loud. Finish strong. A month-long hackathon for builders who won\'t quit. Take your time and build something meaningful.',
-    startDate: new Date('2025-10-01T00:00:00Z'),
-    endDate: new Date('2025-10-31T23:59:59Z'),
-    location: 'Online',
-    length: '1 month',
-    participants: 0, // TBD - will be updated with actual registration data
-    prizes: '₹5000+',
-    tags: ['Month-long', 'Autumn', 'Persistence', 'Long-form Building'],
-    registerUrl: '/hacktober',
-    detailsUrl: '/hacktober',
-    imageUrl: null,
-    organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
-  }),
-  createHackathonEntry({
-    id: 'steal-a-thon-2025',
-    name: 'Maximally Steal-A-Thon',
-    description: 'The only hackathon where original ideas are banned. Find a project, make it better, rename it, and ship. Remix culture at its finest.',
-    startDate: new Date('2025-11-09T00:00:00Z'),
-    endDate: new Date('2025-11-10T23:59:59Z'),
-    location: 'Online',
-    length: '24 hours',
-    participants: 0, // TBD - will be updated with actual registration data
-    prizes: '₹3000 Grand Prize',
-    tags: ['Remix Culture', 'Improvement', 'Iteration', 'Creativity'],
-    registerUrl: '/steal-a-thon',
-    detailsUrl: '/steal-a-thon',
-    imageUrl: null,
-    organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
-  }),
-  createHackathonEntry({
-    id: 'grand-tech-assembly-2025',
-    name: 'Grand Tech Assembly',
-    description: 'A 7-day GTA-themed hackathon with mission tracks. Pick your hustle: The Heist, Street Hustle, Chaos Mode, Rise to Power, or Vice Streets.',
-    startDate: new Date('2025-11-01T00:00:00Z'),
-    endDate: new Date('2025-11-07T23:59:59Z'),
-    location: 'Online',
-    length: '7 days',
-    participants: 0, // TBD - will be updated with actual registration data
-    prizes: 'TBD',
-    tags: ['GTA Theme', 'Mission Tracks', 'Gaming', 'Multiple Categories'],
-    registerUrl: '/grand-tech-assembly',
-    detailsUrl: '/grand-tech-assembly',
-    imageUrl: null,
-    organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
-  })
-];
-
-// Export as sampleHackathons for backward compatibility
-export const sampleHackathons = grandIndianHackathonSeason;
+export type Hackathon = typeof hackathons.$inferSelect;
