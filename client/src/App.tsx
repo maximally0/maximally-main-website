@@ -20,8 +20,6 @@ import Support from './pages/Support';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Story from './pages/Story';
-import About from './pages/About';
-
 import ThankYou from './pages/ThankYou';
 import Bootcamps from '@/pages/Bootcamps';
 import Blog from './pages/Blog';
@@ -58,8 +56,6 @@ import TopCareersForTeens from '@/pages/BlogPost/TopCareersForTeens';
 // Removed WallOfProgressiveSchools import
 import Events from './pages/Events';
 import About from './pages/About';
-import Resources from './pages/Resources';
-import People from './pages/People';
 import Press from './pages/Press';
 import Docs from './pages/Docs';
 import Federation from './pages/Federation';
@@ -327,7 +323,7 @@ const App = () => {
             {/* Community redirect to Discord */}
             <Route path="/community" element={<CommunityRedirect />} />
 
-            <Route path="/featured" element={<Featured />} />
+            {/* /featured route removed: Featured component not present in codebase */}
             <Route path="/mfhop" element={<Navigate to="/federation" replace />} />
 
             <Route path="/events" element={<Events />} />

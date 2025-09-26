@@ -12,81 +12,155 @@ import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import HackathonCard from '@/components/CollapsibleHackathonCard';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { grandIndianHackathonSeason, calculateHackathonStatus } from '@shared/schema';
+// Using local static data for the events page instead of server schema exports
 
 const Events = () => {
   const upcomingEvents = [
     {
       name: 'Code Hypothesis',
-      dates: 'September 2025',
-      description: 'Test your coding theories in the ultimate development challenge',
+      startDate: '2025-09-28',
+      endDate: '2025-09-28',
+      length: '24 hours',
+      location: 'Online',
+      description: 'A 24-hour hackathon for wild ideas. Test theories instead of pitching. This is where code meets graffiti - build chaos, utility, and speed.',
       registerUrl: '/hackathon/codehypothesis',
       detailsUrl: '/hackathon/codehypothesis',
-      icon: '🧪',
+      participants: 0,
+      tags: ['Chaos', 'Utility', 'Wild Ideas'],
     },
     {
       name: 'Protocol 404',
-      dates: 'October 2025',
-      description: 'When the system is broken, build anyway',
+      startDate: '2025-10-04',
+      endDate: '2025-10-05',
+      length: '48 hours',
+      location: 'Online',
+      description: "Break the system. Build yours. A 48-hour hackathon where the system is already broken. You're not fixing it – you're building in the wreckage.",
       registerUrl: '/hackathon/protocol-404',
       detailsUrl: '/hackathon/protocol-404',
-      icon: '⚡',
+      participants: 0,
+      tags: ['System Breaking', 'Chaos', 'Utility'],
     },
     {
       name: 'Project CodeGen',
-      dates: 'October 2025',
-      description: 'Beyond hackathons - real project generation',
+      startDate: '2025-10-10',
+      endDate: '2025-10-12',
+      length: '48 hours',
+      location: 'Online',
+      description: 'Beyond hackathons — real project generation and productization of winning ideas.',
       registerUrl: '/hackathon/project-codegen',
       detailsUrl: '/hackathon/project-codegen',
-      icon: '📝',
+      participants: 0,
+      tags: ['Product', 'AI', 'Collaboration'],
     },
     {
       name: 'Maximally Hacktober',
-      dates: 'October 2025',
-      description: "October's biggest hackathon celebration",
+      startDate: '2025-10-18',
+      endDate: '2025-10-19',
+      length: '48 hours',
+      location: 'Online',
+      description: "October's biggest hackathon celebration — ship features, make friends, and learn fast.",
       registerUrl: '/hackathon/hacktober',
       detailsUrl: '/hackathon/hacktober',
-      icon: '🍂',
+      participants: 0,
+      tags: ['Community', 'Open Source'],
     },
     {
-      name: 'Maximally PromptStorm',
-      dates: 'Oct 25-26, 2025',
+      name: 'Prompt Storm',
+      startDate: '2025-10-25',
+      endDate: '2025-10-25',
+      length: '24 hours',
+      location: 'Online',
       description: '24-hour AI prompt-engineering hackathon. When in doubt, prompt harder.',
       registerUrl: '/hackathon/prompt-storm',
       detailsUrl: '/hackathon/prompt-storm',
-      icon: '⚡',
+      participants: 0,
+      tags: ['AI', 'Prompt Engineering'],
     },
     {
-      name: 'Maximally Codepocalypse',
-      dates: 'Oct 18-19, 2025',
+      name: 'Codepocalypse',
+      startDate: '2025-10-18',
+      endDate: '2025-10-19',
+      length: '48 hours',
+      location: 'Online',
       description: 'What would you build if the internet had 48 hours left? Chaotic 48-hour hackathon.',
       registerUrl: '/hackathon/codepocalypse',
       detailsUrl: '/hackathon/codepocalypse',
-      icon: '☢️',
+      participants: 0,
+      tags: ['Chaos', 'Experimental'],
     },
     {
       name: 'Grand Tech Assembly',
-      dates: 'Nov 1-7, 2025',
+      startDate: '2025-11-01',
+      endDate: '2025-11-07',
+      length: '7 days',
+      location: 'Online',
       description: 'Pick your mission, build your city, earn respect. 7-day GTA-themed hackathon.',
       registerUrl: '/hackathon/grand-tech-assembly',
       detailsUrl: '/hackathon/grand-tech-assembly',
-      icon: '🎮',
+      participants: 0,
+      tags: ['GTA', 'GameDev'],
     },
     {
-      name: 'Maximally Steal-A-Thon',
-      dates: 'Nov 9-10, 2025',
-      description: "The only hackathon where original ideas are banned. If it ain't broke... steal it.",
+      name: 'Steal-A-Thon',
+      startDate: '2025-11-09',
+      endDate: '2025-11-10',
+      length: '2 days',
+      location: 'Online',
+      description: "The only hackathon where 'original' ideas are optional — remix and iterate fast.",
       registerUrl: '/hackathon/steal-a-thon',
       detailsUrl: '/hackathon/steal-a-thon',
-      icon: '🔥',
+      participants: 0,
+      tags: ['Remix', 'Iteration'],
     },
   ];
 
-  // Use the real hackathon data from shared schema with dynamic status calculation
-  const hackathons = useMemo(() => 
-    grandIndianHackathonSeason.map(hackathon => ({
-      ...hackathon,
-      status: calculateHackathonStatus(hackathon.startDate, hackathon.endDate)
+  // Local typed hackathon shape for client UI
+  type LocalHackathon = {
+    id: number;
+    name: string;
+    description: string;
+    startDate: string;
+    endDate?: string;
+    length: string;
+    location: string;
+    participants: number;
+    tags: string[];
+    detailsUrl: string;
+    registerUrl: string;
+    status: 'upcoming' | 'ongoing' | 'completed' | string;
+  };
+
+  // Simple status calculator based on dates (best-effort offline calculation)
+  const calcStatus = (start: string) => {
+    try {
+      const now = new Date();
+      const s = new Date(start);
+      if (isNaN(s.getTime())) return 'upcoming';
+      if (s > now) return 'upcoming';
+      // if start date is within last 7 days treat as ongoing (fallback)
+      const delta = (now.getTime() - s.getTime()) / (1000 * 60 * 60 * 24);
+      if (delta < 7) return 'ongoing';
+      return 'completed';
+    } catch (e) {
+      return 'upcoming';
+    }
+  };
+
+  // Use the static upcomingEvents array as the source of truth for the UI
+  const hackathons: LocalHackathon[] = useMemo(() =>
+    upcomingEvents.map((ev, i) => ({
+      id: i + 1,
+      name: ev.name,
+      description: ev.description,
+      startDate: ev.startDate,
+      endDate: ev.endDate,
+      length: ev.length,
+      location: ev.location,
+      participants: ev.participants ?? 0,
+      tags: ev.tags ?? [],
+      detailsUrl: ev.detailsUrl,
+      registerUrl: ev.registerUrl,
+      status: calcStatus(ev.startDate),
     })), []);
 
   // Derive filter options from actual data
@@ -103,6 +177,28 @@ const Events = () => {
       tags: uniqueTags
     };
   }, [hackathons]);
+
+  // Local UI state: search input, selected filters, expanded filter sections, mobile filter toggle
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedFilters, setSelectedFilters] = useState<{
+    location: string[];
+    status: string[];
+    length: string[];
+    tags: string[];
+  }>(
+    {
+      location: [],
+      status: [],
+      length: [],
+      tags: []
+    }
+  );
+
+  const [expandedFilters, setExpandedFilters] = useState<{ location: boolean; status: boolean; duration: boolean; tags: boolean }>(
+    { location: true, status: true, duration: true, tags: false }
+  );
+
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
 
   // Utility function for normalized string comparison
   const normalizeString = (str: string) => str.toLowerCase().trim();

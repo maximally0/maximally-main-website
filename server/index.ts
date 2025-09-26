@@ -1,4 +1,8 @@
+import dotenv from "dotenv";
 import express, { type Request, Response, NextFunction } from "express";
+
+// load local env for development (if present)
+dotenv.config({ path: ".env.local", override: false });
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
