@@ -1,0 +1,87 @@
+## About Page (story + proof)
+
+Everything that shows **who you are, what you’ve built, and why it matters**.
+
+- **Hero / Overview**: tagline + mission.
+- **Impact Stats**: participants, events, countries, revenue, judges.
+- **People Preview**: 3–6 leaders, link to `/people`.
+- **Partners**:
+    - Sponsors (Masters’ Union, MakeX, etc.)
+    - Collaboration orgs (YRI, Calyptus, etc.)
+    - Schools/colleges you’ve worked with.
+- **Press Mentions**:
+    - Articles, interviews, shoutouts, podcasts.
+    - Can be cards with logos + links.
+- **Initiatives**:
+    - Hackathons (linked to Events)
+    - Platform (MaximallyHack)
+    - Federation (MFHOP)
+    - Studios (content vertical)
+- **Judges / Mentors (preview)**: 3–5 notable names, link to full directory.
+- **Timeline**: CodeQuest → Make-a-thon → AI Shipathon → GIHS hackathons.
+- **Testimonials / Quotes**: from judges, partners, participants.
+- **Culture / Task Force**: 2–3 lines on team DNA.
+- **Future Vision**: where you’re headed.
+- **Media Kit**: downloadable logos, colors, press kit.
+- **Awards / Recognition** (if/when you have them).
+- **Global Reach Map**: optional visual of countries/regions.
+
+---
+
+## Resources Page (content + community hub)
+
+Everything someone can **use, read, or join**.
+
+- **Blog**: all your posts.
+- **Webinars**: upcoming + past recordings.
+- **YouTube**: embedded videos + link to channel.
+- **Community**: Discord, Telegram, WhatsApp (or one landing explaining all).
+- **Initiatives**: quick-access links to hackathons, MFHOP, platform, studios.
+- **Docs & Guides**:
+    - Judge handbook
+    - Participant handbook
+    - Sponsor/partner deck
+    - Press kit
+    - FAQs
+- **Newsletter / Updates**: signup + archive.
+- **Research / Reports (optional)**: whitepapers, case studies (e.g., Project SYMBIONT).
+- **Social Media Links**: Instagram, LinkedIn, X.
+
+---
+
+## Events Page (all programs)
+
+Everything **you host/run**.
+
+- Hackathons (AI Shipathon, Code Hypothesis, Protocol 404, CodeGen, Hacktober, Codepocalypse).
+- Bootcamps (Startup Bootcamp).
+- Make-a-thons (Startup Make-a-thon).
+- Each event card: name, date, desc, link, status.
+
+---
+
+## People Page (directories)
+
+Everyone involved.
+
+- **Core**: team members, Task Force.
+- **Judges**: large searchable directory.
+- **Mentors / Advisors** (if you want to separate from judges).
+
+---
+
+## Optional Standalone Pages
+
+- **Press**: all media mentions + downloadable media kit.
+- **Docs**: full repository of resources (like Devfolio’s Docs).
+- **Careers / Join Us**: apply to Task Force.
+- **Federation (MFHOP)**: dedicated explainer + membership info.
+
+---
+
+👉 Rule of thumb:
+
+- **About** = *story + proof*.
+- **Resources** = *content + community*.
+- **Events** = *all programs you run*.
+- **People** = *everyone involved*.

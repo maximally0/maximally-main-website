@@ -57,6 +57,12 @@ import YoutubeVsStartup from '@/pages/BlogPost/YoutubeVsStartup';
 import TopCareersForTeens from '@/pages/BlogPost/TopCareersForTeens';
 // Removed WallOfProgressiveSchools import
 import Events from './pages/Events';
+import About from './pages/About';
+import Resources from './pages/Resources';
+import People from './pages/People';
+import Press from './pages/Press';
+import Docs from './pages/Docs';
+import Federation from './pages/Federation';
 import MakeathonForFuture from './pages/BlogPost/MakeathonForFuture';
 import StartupsThroughMaximally from './pages/BlogPost/StartupsThroughMaximally';
 import MaximallyMakeathonsForTeachers from './pages/BlogPost/MaximallyMakeathonsForTeachers';
@@ -113,8 +119,7 @@ import ProjectCodeGenBeyondHackathons from './pages/blog/ProjectCodeGenBeyondHac
 // Partnership Blog Posts
 import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 
-// MFHOP
-import MFHOP from './pages/MFHOP';
+// MFHOP - now consolidated into Federation
 
 // People pages
 import People from './pages/People';
@@ -174,6 +179,14 @@ const App = () => {
             <Route path="/bootcamps" element={<Navigate to="/" replace />} />
             <Route path="/makeathon" element={<Makeathon />} />
             {/* Team route removed */}
+
+            {/* Main Pages */}
+            <Route path="/about" element={<About />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/people" element={<People />} />
+            <Route path="/press" element={<Press />} />
+            <Route path="/docs" element={<Docs />} />
+            <Route path="/federation" element={<Federation />} />
 
             <Route path="/blog" element={<Blog />} />
 
@@ -314,13 +327,8 @@ const App = () => {
             {/* Community redirect to Discord */}
             <Route path="/community" element={<CommunityRedirect />} />
 
-            <Route path="/people" element={<People />} />
-            <Route path="/people/core" element={<PeopleCore />} />
-            <Route path="/people/judges" element={<PeopleJudges />} />
-            <Route path="/resources" element={<Resources />} />
-            {/* Legacy redirect */}
-            <Route path="/featured" element={<Navigate to="/people" replace />} />
-            <Route path="/mfhop" element={<MFHOP />} />
+            <Route path="/featured" element={<Featured />} />
+            <Route path="/mfhop" element={<Navigate to="/federation" replace />} />
 
             <Route path="/events" element={<Events />} />
             <Route

@@ -16,214 +16,100 @@ import {
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 
-// Hero Section Component
-const HeroSection = () => {
+import { ArrowRight, Users, Calendar, MapPin, Trophy, Download, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
+import SEO from "@/components/SEO";
+import TallyFormDialog from "@/components/TallyFormDialog";
+import { useState } from "react";
+
+const About = () => {
+  const [isTallyFormOpen, setIsTallyFormOpen] = useState(false);
+  
   return (
     <div className="min-h-screen pt-32">
       <SEO 
-        title="About Maximally | Where Global Innovators Are Born"
-        description="Join the global community for ambitious builders. Learn entrepreneurship, AI, and innovation through our transformative hackathons."
+        title="About Maximally | Builder-First Platform for Global Hackathons"
+        description="Maximally is a builder-first platform for hackathons, competitions, and creative systems. Join the global hackathon league for ambitious builders worldwide."
       />
 
-      {/* Hero Section */}
+      {/* 1. Hero / What Maximally Is */}
       <section className="py-20 bg-maximally-black relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-white/10 animate-grid-flow" />
         <div className="container mx-auto px-4 text-center relative">
           <h1 className="font-press-start text-4xl md:text-5xl lg:text-6xl text-white mb-6">
-            <span className="bg-[#39FF14]/20 px-2">Maximally:</span> Where Global{" "}
-            <span className="bg-[#FF5F5F]/20 px-2">Innovators</span> Are Born
+            <span className="bg-maximally-red/20 px-2">Maximally</span> is a builder-first platform
           </h1>
-          <p className="font-jetbrains text-white/80 text-xl md:text-2xl mb-8">
-            Ready to change the world?
+          <p className="font-jetbrains text-white/90 text-xl md:text-2xl mb-8 max-w-4xl mx-auto">
+            For hackathons, competitions, and creative systems. Where ambitious builders worldwide come to prove their worth.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/events" className="pixel-button bg-maximally-red text-black px-8 py-4 hover:bg-maximally-yellow transition-all">
+              See Events
+            </Link>
+            <Link to="/blog" className="pixel-button bg-black border-2 border-maximally-red text-white px-8 py-4 hover:border-maximally-yellow transition-all">
+              Our Platform
+            </Link>
+            <Link to="/contact" className="pixel-button bg-maximally-blue text-white px-8 py-4 hover:bg-maximally-green transition-all">
+              Join Community
+            </Link>
+          </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-// What We're Building Component
-const WhatWereBuilding = () => {
-  const colorClasses = {
-    'maximally-red': {
-      border: 'border-maximally-red',
-      bg: 'bg-maximally-red',
-      text: 'text-maximally-red'
-    },
-    'maximally-yellow': {
-      border: 'border-maximally-yellow',
-      bg: 'bg-maximally-yellow', 
-      text: 'text-maximally-yellow'
-    },
-    'green-500': {
-      border: 'border-green-500',
-      bg: 'bg-green-500',
-      text: 'text-green-500'
-    },
-    'blue-500': {
-      border: 'border-blue-500',
-      bg: 'bg-blue-500',
-      text: 'text-blue-500'
-    },
-    'purple-500': {
-      border: 'border-purple-500',
-      bg: 'bg-purple-500',
-      text: 'text-purple-500'
-    }
-  };
-
-  const buildingBlocks = [
-    {
-      title: "HACKATHONS (EVENTS)",
-      description: "Where it all started. We run global online and hybrid hackathons with open themes, beginner-friendly tracks, and experimental formats.",
-      icon: Calendar,
-      color: "maximally-red",
-      link: "/events"
-    },
-    {
-      title: "MAXIMALLY PLATFORM",
-      description: "An AI-native hackathon platform that gives organizers creative tools for submissions, judging, and community engagement.",
-      icon: Code,
-      color: "maximally-yellow",
-      link: "#"
-    },
-    {
-      title: "FEDERATION (MFHOP)",
-      description: "A cross-school, cross-company network where organizers share resources, partnerships, and reach.",
-      icon: Globe,
-      color: "green-500",
-      link: "/mfhop"
-    },
-    {
-      title: "STUDIOS",
-      description: "Content around hackathons, innovation, and youth culture — documenting stories and voices of builders.",
-      icon: Users,
-      color: "blue-500",
-      link: "/blog"
-    },
-    {
-      title: "COMMUNITY",
-      description: "A living network of participants, mentors, and judges that stays connected long after events end.",
-      icon: Heart,
-      color: "purple-500",
-      link: "https://discord.gg/MpBnYk8qMX"
-    }
-  ];
-
-  return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,203,71,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,203,71,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
-      
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-yellow drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            WHAT WE'RE BUILDING
-          </h2>
+      {/* 2. Impact Snapshot */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-12 text-center">Impact Snapshot</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="font-press-start text-3xl text-maximally-red mb-2">1000+</div>
+              <div className="font-jetbrains text-gray-600">Participants</div>
+            </div>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="font-press-start text-3xl text-maximally-blue mb-2">10</div>
+              <div className="font-jetbrains text-gray-600">Events</div>
+            </div>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="font-press-start text-3xl text-maximally-green mb-2">50+</div>
+              <div className="font-jetbrains text-gray-600">Countries</div>
+            </div>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="font-press-start text-3xl text-maximally-yellow mb-2">₹2L</div>
+              <div className="font-jetbrains text-gray-600">Revenue</div>
+            </div>
+          </div>
+          <p className="text-center font-jetbrains text-gray-500 mt-6">Data as of December 2025</p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {buildingBlocks.map((block, index) => {
-            const colors = colorClasses[block.color as keyof typeof colorClasses];
-            return (
-              <div key={index} className={`pixel-card bg-black border-2 ${colors.border} p-6 hover:scale-105 transition-all duration-300 group`}>
-                <div className={`minecraft-block ${colors.bg} p-3 inline-block mb-4 group-hover:animate-pulse`}>
-                  <block.icon className="h-6 w-6 text-black" />
-                </div>
-                
-                <h3 className="font-press-start text-sm md:text-base mb-4 text-white">
-                  {block.title}
-                </h3>
-                
-                <p className="font-jetbrains text-gray-300 text-sm leading-relaxed mb-4">
-                  {block.description}
-                </p>
-                
-                {block.link.startsWith('http') ? (
-                  <a 
-                    href={block.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={`inline-flex items-center font-press-start text-xs ${colors.text} hover:text-white transition-colors`}
-                  >
-                    EXPLORE <ExternalLink className="h-3 w-3 ml-2" />
-                  </a>
-                ) : (
-                  <Link 
-                    to={block.link}
-                    className={`inline-flex items-center font-press-start text-xs ${colors.text} hover:text-white transition-colors`}
-                  >
-                    EXPLORE <ArrowRight className="h-3 w-3 ml-2" />
-                  </Link>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-// People Preview Component
-const PeoplePreview = () => {
-  // Core team data
-  const coreTeam = [
-    {
-      name: "Rishul Chanana",
-      role: "Founder & CEO",
-      organization: "Maximally",
-      description: "Building the future by creating a culture where young builders can thrive through high-stakes competitions."
-    },
-    {
-      name: "Drishti Arora", 
-      role: "Chief Operating Officer",
-      organization: "Maximally",
-      description: "Keeps Maximally's gears running smoothly, balancing scale with execution."
-    },
-    {
-      name: "Gautam Gambhir",
-      role: "Head of Engineering", 
-      organization: "Maximally",
-      description: "Architects the tech behind Maximally.in and pushes our platform to new heights."
-    }
-  ];
-
-  // Featured judges
-  const featuredJudges = [
-    {
-      name: "Rahul Chandra",
-      role: "Software Engineer",
-      company: "DeepMind"
-    },
-    {
-      name: "Krishna Ganeriwal", 
-      role: "Senior Software Engineer",
-      company: "Meta"
-    },
-    {
-      name: "Nidhi Mahajan",
-      role: "Director of Business Strategy",
-      company: "Visa"
-    }
-  ];
-
-  return (
-    <section className="py-16 md:py-24 bg-black relative">
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            OUR PEOPLE
-          </h2>
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg max-w-2xl mx-auto">
-            Meet the students and builders behind Maximally
-          </p>
-        </div>
-        
-        {/* Core Team Section */}
-        <div className="mb-12">
-          <div className="text-center mb-8">
-            <div className="minecraft-block bg-maximally-red p-3 inline-block mb-4">
-              <Users className="h-6 w-6 text-black" />
+      {/* 3. What We Do (Core Work) */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-12 text-center">What We Do</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
+              <div className="text-4xl mb-4">🏆</div>
+              <h3 className="font-press-start text-lg mb-3">Events</h3>
+              <p className="font-jetbrains mb-4">Hackathons, bootcamps, make-a-thons</p>
+              <Link to="/events" className="text-maximally-red font-jetbrains hover:underline">View Events →</Link>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
+              <div className="text-4xl mb-4">💻</div>
+              <h3 className="font-press-start text-lg mb-3">Platform</h3>
+              <p className="font-jetbrains mb-4">Building MaximallyHack - hosting + judge dashboards + team formation</p>
+              <Link to="/blog" className="text-maximally-red font-jetbrains hover:underline">Learn More →</Link>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
+              <div className="text-4xl mb-4">🤝</div>
+              <h3 className="font-press-start text-lg mb-3">Federation</h3>
+              <p className="font-jetbrains mb-4">MFHOP - network of hackathon organizers</p>
+              <Link to="/allies" className="text-maximally-red font-jetbrains hover:underline">Join Federation →</Link>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-lg hover:scale-105 transition-transform">
+              <div className="text-4xl mb-4">🎬</div>
+              <h3 className="font-press-start text-lg mb-3">Studios</h3>
+              <p className="font-jetbrains mb-4">Content/media vertical - podcasts, reels, blog</p>
+              <Link to="/blog" className="text-maximally-red font-jetbrains hover:underline">Read Blog →</Link>
             </div>
             <h3 className="font-press-start text-xl md:text-2xl text-maximally-red mb-2">
               CORE TEAM
@@ -264,12 +150,210 @@ const PeoplePreview = () => {
             </Link>
           </div>
         </div>
+      </section>
 
-        {/* Judges Preview */}
-        <div>
-          <div className="text-center mb-8">
-            <div className="minecraft-block bg-maximally-yellow p-3 inline-block mb-4">
-              <Trophy className="h-6 w-6 text-black" />
+      {/* 4. People Behind It */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-8 text-center">People Behind It</h2>
+          <p className="font-jetbrains text-xl text-center mb-12 max-w-3xl mx-auto">
+            Built by the <span className="bg-maximally-red/20 px-2">Maximally Task Force</span> - a high-agency culture of builders who move fast and ship real products.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="text-center bg-gray-50 p-6 rounded-lg">
+              <div className="w-16 h-16 bg-maximally-red rounded-full mx-auto mb-4 flex items-center justify-center">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-press-start text-lg mb-2">Task Force</h3>
+              <p className="font-jetbrains text-gray-600">High-agency builders</p>
+            </div>
+            <div className="text-center bg-gray-50 p-6 rounded-lg">
+              <div className="w-16 h-16 bg-maximally-blue rounded-full mx-auto mb-4 flex items-center justify-center">
+                <Trophy className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-press-start text-lg mb-2">Leaders</h3>
+              <p className="font-jetbrains text-gray-600">Innovation drivers</p>
+            </div>
+            <div className="text-center bg-gray-50 p-6 rounded-lg">
+              <div className="w-16 h-16 bg-maximally-green rounded-full mx-auto mb-4 flex items-center justify-center">
+                <MapPin className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="font-press-start text-lg mb-2">Global</h3>
+              <p className="font-jetbrains text-gray-600">Worldwide network</p>
+            </div>
+          </div>
+          <div className="text-center mt-12">
+            <Link to="/contact" className="pixel-button bg-maximally-red text-white px-8 py-4 hover:bg-maximally-yellow hover:text-black transition-all">
+              See Core Team
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Partners & Collabs */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-12 text-center">Partners & Collaborators</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center">
+            <div className="text-center">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <div className="font-press-start text-sm">Masters' Union</div>
+                <div className="font-jetbrains text-xs text-gray-500 mt-2">Outreach</div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <div className="font-press-start text-sm">MakeX</div>
+                <div className="font-jetbrains text-xs text-gray-500 mt-2">Sponsors</div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <div className="font-press-start text-sm">YRI</div>
+                <div className="font-jetbrains text-xs text-gray-500 mt-2">Mentors</div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <div className="font-press-start text-sm">Calyptus</div>
+                <div className="font-jetbrains text-xs text-gray-500 mt-2">Platform</div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <div className="font-press-start text-sm">More Soon</div>
+                <div className="font-jetbrains text-xs text-gray-500 mt-2">Stay Tuned</div>
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="bg-white p-4 rounded-lg shadow">
+                <div className="font-press-start text-sm">Join Us</div>
+                <div className="font-jetbrains text-xs text-gray-500 mt-2">Partnership</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Judges & Mentors */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-12 text-center">Judges & Mentors</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center bg-gray-50 p-6 rounded-lg">
+              <div className="w-20 h-20 bg-maximally-red rounded-full mx-auto mb-4"></div>
+              <h3 className="font-press-start text-lg mb-2">Industry Leaders</h3>
+              <p className="font-jetbrains text-gray-600">Tech Veterans</p>
+            </div>
+            <div className="text-center bg-gray-50 p-6 rounded-lg">
+              <div className="w-20 h-20 bg-maximally-blue rounded-full mx-auto mb-4"></div>
+              <h3 className="font-press-start text-lg mb-2">Startup Founders</h3>
+              <p className="font-jetbrains text-gray-600">Scale Experts</p>
+            </div>
+            <div className="text-center bg-gray-50 p-6 rounded-lg">
+              <div className="w-20 h-20 bg-maximally-green rounded-full mx-auto mb-4"></div>
+              <h3 className="font-press-start text-lg mb-2">Innovation Experts</h3>
+              <p className="font-jetbrains text-gray-600">Future Builders</p>
+            </div>
+          </div>
+          <div className="text-center mt-12">
+            <Link to="/contact" className="pixel-button bg-maximally-blue text-white px-8 py-4 hover:bg-maximally-green transition-all">
+              See All Judges
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Press & Mentions */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-12 text-center">Press & Mentions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="font-press-start text-lg mb-4">Featured In</h3>
+              <p className="font-jetbrains text-gray-600 mb-4">Coverage coming soon across major tech publications</p>
+              <div className="font-jetbrains text-sm text-maximally-red">Coming Soon</div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="font-press-start text-lg mb-4">Recognition</h3>
+              <p className="font-jetbrains text-gray-600 mb-4">"Building the future of hackathon culture"</p>
+              <div className="font-jetbrains text-sm text-maximally-blue">Industry Quote</div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="font-press-start text-lg mb-4">Awards</h3>
+              <p className="font-jetbrains text-gray-600 mb-4">Innovation in community building</p>
+              <div className="font-jetbrains text-sm text-maximally-green">Recognition</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Story & Timeline with Grand Indian Hackathon Season */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-12 text-center">Our Story & Timeline</h2>
+          <div className="space-y-8">
+            <div className="border-l-4 border-maximally-red pl-8">
+              <div className="bg-maximally-red text-white px-3 py-1 rounded font-press-start text-sm inline-block mb-2">CodeQuest</div>
+              <h3 className="font-press-start text-xl mb-2">The Beginning</h3>
+              <p className="font-jetbrains text-gray-600">Started as the biggest school hackathon</p>
+            </div>
+            <div className="border-l-4 border-maximally-blue pl-8">
+              <div className="bg-maximally-blue text-white px-3 py-1 rounded font-press-start text-sm inline-block mb-2">Platform Launch</div>
+              <h3 className="font-press-start text-xl mb-2">Maximally Launch</h3>
+              <p className="font-jetbrains text-gray-600">Global hackathon league for builders worldwide</p>
+            </div>
+            <div className="border-l-4 border-maximally-green pl-8">
+              <div className="bg-maximally-green text-white px-3 py-1 rounded font-press-start text-sm inline-block mb-2">July 2025</div>
+              <h3 className="font-press-start text-xl mb-2">Startup Make-a-thon</h3>
+              <p className="font-jetbrains text-gray-600">7-day sprint from idea to MVP to public pitch</p>
+            </div>
+            <div className="border-l-4 border-maximally-yellow pl-8">
+              <div className="bg-maximally-yellow text-black px-3 py-1 rounded font-press-start text-sm inline-block mb-2">August 2025</div>
+              <h3 className="font-press-start text-xl mb-2">AI Shipathon</h3>
+              <p className="font-jetbrains text-gray-600">48-hour global AI hackathon for builders and creators</p>
+            </div>
+            
+            {/* Grand Indian Hackathon Season */}
+            <div className="border-l-4 border-red-600 pl-8 bg-red-50 p-6 rounded-r-lg">
+              <div className="bg-red-600 text-white px-3 py-1 rounded font-press-start text-sm inline-block mb-4">🇮🇳 September - November 2025</div>
+              <h3 className="font-press-start text-2xl mb-4 text-red-600">Grand Indian Hackathon Season</h3>
+              <p className="font-jetbrains text-gray-700 mb-6">8 hackathons back-to-back, the biggest innovation challenge series</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="font-jetbrains">
+                  <strong>🧪 Code Hypothesis</strong> - September 2025<br/>
+                  <span className="text-gray-600">Test your coding theories</span>
+                </div>
+                <div className="font-jetbrains">
+                  <strong>⚡ Protocol 404</strong> - October 2025<br/>
+                  <span className="text-gray-600">When the system is broken, build anyway</span>
+                </div>
+                <div className="font-jetbrains">
+                  <strong>📝 Project CodeGen</strong> - October 2025<br/>
+                  <span className="text-gray-600">Beyond hackathons - real project generation</span>
+                </div>
+                <div className="font-jetbrains">
+                  <strong>🍂 Maximally Hacktober</strong> - October 2025<br/>
+                  <span className="text-gray-600">October's biggest hackathon celebration</span>
+                </div>
+                <div className="font-jetbrains">
+                  <strong>⚡ PromptStorm</strong> - Oct 25-26, 2025<br/>
+                  <span className="text-gray-600">24-hour AI prompt-engineering hackathon</span>
+                </div>
+                <div className="font-jetbrains">
+                  <strong>☢️ Codepocalypse</strong> - Oct 18-19, 2025<br/>
+                  <span className="text-gray-600">48-hour chaotic hackathon</span>
+                </div>
+                <div className="font-jetbrains">
+                  <strong>🎮 Grand Tech Assembly</strong> - Nov 1-7, 2025<br/>
+                  <span className="text-gray-600">7-day GTA-themed hackathon</span>
+                </div>
+                <div className="font-jetbrains">
+                  <strong>🔥 Steal-A-Thon</strong> - Nov 9-10, 2025<br/>
+                  <span className="text-gray-600">Where original ideas are banned</span>
+                </div>
+              </div>
             </div>
             <h3 className="font-press-start text-xl md:text-2xl text-maximally-yellow mb-2">
               FEATURED JUDGES
@@ -306,58 +390,25 @@ const PeoplePreview = () => {
             </Link>
           </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-// Partners Component
-const Partners = () => {
-  const partners = [
-    {
-      name: "Masters' Union",
-      type: "Educational Partnership",
-      description: "Leading business school backing our vision of creating entrepreneurial leaders",
-      highlight: "Education Partner",
-      color: {
-        border: 'border-maximally-red',
-        bg: 'bg-maximally-red',
-        text: 'text-maximally-red'
-      }
-    },
-    {
-      name: "MakeX",
-      type: "Technology Partnership", 
-      description: "Innovative technology company supporting our hackathon infrastructure",
-      highlight: "Tech Partner",
-      color: {
-        border: 'border-maximally-yellow',
-        bg: 'bg-maximally-yellow',
-        text: 'text-maximally-yellow'
-      }
-    },
-    {
-      name: "Young Researchers Institute",
-      type: "Research Partnership",
-      description: "Advancing research and innovation in youth-led technology initiatives",
-      highlight: "Research Partner", 
-      color: {
-        border: 'border-green-500',
-        bg: 'bg-green-500',
-        text: 'text-green-500'
-      }
-    }
-  ];
-
-  return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
-      
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <div className="minecraft-block bg-white p-4 inline-block mb-6">
-            <Heart className="h-8 w-8 text-black" />
+      {/* 9. Testimonials */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="font-press-start text-3xl mb-12 text-center">What Builders Say</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow">
+              <p className="font-jetbrains text-gray-600 mb-4">"Maximally changed how I think about building. The hackathons are intense and real."</p>
+              <div className="font-press-start text-sm text-maximally-red">- Builder, AI Shipathon</div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <p className="font-jetbrains text-gray-600 mb-4">"Best hackathon experience. The judges actually care about what you're building."</p>
+              <div className="font-press-start text-sm text-maximally-blue">- Participant, Makeathon</div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow">
+              <p className="font-jetbrains text-gray-600 mb-4">"The Grand Indian Hackathon Season pushed me to ship 3 projects in 2 months."</p>
+              <div className="font-press-start text-sm text-maximally-green">- Developer, Code Hypothesis</div>
+            </div>
           </div>
           <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
             OUR PARTNERS
@@ -413,77 +464,33 @@ const Partners = () => {
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-
-// Culture Section Component
-const Culture = () => {
-  const culturePoints = [
-    {
-      title: "OBSESSION WITH BUILDING",
-      icon: Target,
-      description: "We live and breathe creation. Every line of code, every event, every interaction is about building something better."
-    },
-    {
-      title: "WORK THAT FEELS ALIVE",
-      icon: Zap,
-      description: "Not mechanical, not corporate. Our work has soul, energy, and the kind of passion that keeps you up at night."
-    },
-    {
-      title: "TEENS AT FULL SPEED",
-      icon: Users,
-      description: "Young builders running at maximum velocity. No speed limits, no \"wait until you're older.\" The future is now."
-    }
-  ];
-
-  return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            CULTURE / TASK FORCE
-          </h2>
-          <p className="font-press-start text-maximally-yellow text-lg">
-            OUR DNA IS SIMPLE
+      {/* 10. Future Direction */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="font-press-start text-3xl mb-8">Future Direction</h2>
+          <p className="font-jetbrains text-xl max-w-3xl mx-auto mb-12">
+            Platform launch. Federation scaling. More events. Global expansion.
+            <br/><br/>
+            <span className="bg-maximally-red/20 px-2">We're just getting started.</span>
           </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {culturePoints.map((point, index) => (
-            <div key={index} className="pixel-card bg-black border-2 border-maximally-red p-6 text-center hover:border-maximally-yellow transition-colors">
-              <div className="minecraft-block bg-maximally-red p-4 inline-block mb-4 hover:bg-maximally-yellow transition-colors">
-                <point.icon className="h-6 w-6 text-black" />
-              </div>
-              
-              <h3 className="font-press-start text-sm md:text-base mb-4 text-maximally-red">
-                {point.title}
-              </h3>
-              
-              <p className="font-jetbrains text-gray-300 text-sm leading-relaxed">
-                {point.description}
-              </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="text-4xl mb-4">🚀</div>
+              <h3 className="font-press-start text-lg mb-3">Platform 2.0</h3>
+              <p className="font-jetbrains">MaximallyHack full launch</p>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Future Vision Component
-const FutureVision = () => {
-  return (
-    <section className="py-16 md:py-24 bg-black relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-maximally-red/10 via-maximally-yellow/10 to-maximally-red/10 animate-pulse" />
-      
-      <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-        <div className="pixel-card bg-black/90 border-2 border-maximally-yellow p-8 md:p-12 max-w-4xl mx-auto">
-          <div className="minecraft-block bg-maximally-yellow p-4 inline-block mb-6">
-            <Globe className="h-8 w-8 text-black" />
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="text-4xl mb-4">🌍</div>
+              <h3 className="font-press-start text-lg mb-3">Global Scale</h3>
+              <p className="font-jetbrains">Federation expansion worldwide</p>
+            </div>
+            <div className="bg-gray-50 p-6 rounded-lg">
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="font-press-start text-lg mb-3">More Events</h3>
+              <p className="font-jetbrains">Year-round hackathon seasons</p>
+            </div>
           </div>
           
           <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-6 text-maximally-yellow drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
@@ -499,35 +506,45 @@ const FutureVision = () => {
             Where every student, every builder, every dreamer has access to the tools and community they need to create the future.
           </p>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
 
-// Media Kit Component
-const MediaKit = () => {
-  return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-        <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-8 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
-          MEDIA KIT
-        </h2>
-        
-        <div className="pixel-card bg-black border-2 border-maximally-red p-8 max-w-2xl mx-auto">
-          <div className="minecraft-block bg-maximally-red p-4 inline-block mb-6">
-            <Mail className="h-8 w-8 text-black" />
+      {/* 11. Media Kit & Resources */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="font-press-start text-3xl mb-8">Media Kit & Resources</h2>
+          <p className="font-jetbrains text-xl mb-8">Download brand assets and access resources</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="pixel-button bg-maximally-red text-white px-8 py-4 hover:bg-maximally-yellow hover:text-black transition-all flex items-center gap-2">
+              <Download className="h-5 w-5" />
+              Download Logo Pack
+            </button>
+            <Link to="/blog" className="pixel-button bg-black border-2 border-maximally-red text-white px-8 py-4 hover:border-maximally-yellow transition-all flex items-center gap-2">
+              <ExternalLink className="h-5 w-5" />
+              Resources
+            </Link>
           </div>
-          
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg mb-6">
-            Need logos, colors, or press materials? We've got you covered.
+        </div>
+      </section>
+
+      {/* 12. Culture / Join Us */}
+      <section className="py-16 bg-maximally-black text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="font-press-start text-3xl mb-8">Join the Maximally Task Force</h2>
+          <p className="font-jetbrains text-xl mb-8 max-w-3xl mx-auto">
+            High-agency. Builder-first. Ship real products. Join a culture where proof-of-work matters more than credentials.
           </p>
-          
-          <a 
-            href="mailto:brand@maximally.in" 
-            className="pixel-button bg-maximally-red text-black font-press-start text-sm px-6 py-3 hover:bg-maximally-yellow transition-colors inline-flex items-center"
-          >
-            CONTACT: BRAND@MAXIMALLY.IN <Mail className="h-4 w-4 ml-2" />
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <TallyFormDialog open={isTallyFormOpen} onOpenChange={setIsTallyFormOpen} />
+            <button 
+              onClick={() => setIsTallyFormOpen(true)}
+              className="pixel-button bg-maximally-red text-black px-8 py-4 hover:bg-maximally-yellow transition-all"
+            >
+              Apply to Join
+            </button>
+            <Link to="/contact" className="pixel-button bg-black border-2 border-maximally-red text-white px-8 py-4 hover:border-maximally-yellow transition-all">
+              Volunteer
+            </Link>
+          </div>
         </div>
       </div>
     </section>
