@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "web"]
+modules = ["nodejs-20", "web", "postgresql-16"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
@@ -13,6 +13,22 @@ build = ["npm", "run", "build"]
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 36345
+externalPort = 4200
+
+[[ports]]
+localPort = 40091
+externalPort = 3003
+
+[[ports]]
+localPort = 43701
+externalPort = 3000
+
+[[ports]]
+localPort = 45337
+externalPort = 3002
 
 [workflows]
 runButton = "Project"
@@ -35,6 +51,9 @@ task = "shell.exec"
 args = "npm run dev"
 waitForPort = 5000
 
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [[workflows.workflow]]
 name = "Dev Server"
 author = 43567458
@@ -43,3 +62,7 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "npm run dev"
+
+[agent]
+integrations = ["javascript_database:1.0.0", "javascript_supabase:1.0.0"]
+expertMode = true

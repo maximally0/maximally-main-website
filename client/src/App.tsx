@@ -84,14 +84,8 @@ import MaximallyAIShipathonGuide from './pages/blog/MaximallyAIShipathonGuide';
 import TopAIHackathonsStudents2025 from './pages/blog/TopAIHackathonsStudents2025';
 import NoCodeAIShipathon from './pages/blog/NoCodeAIShipathon';
 import FirstAIProject48Hours from './pages/blog/FirstAIProject48Hours';
-import CodeHypothesis from './pages/CodeHypothesis';
-import Protocol404 from './pages/Protocol404';
-import ProjectCodeGen from './pages/ProjectCodeGen';
-import Hacktober from './pages/Hacktober';
-import PromptStorm from './pages/PromptStorm';
-import StealAThon from './pages/StealAThon';
-import Codepocalypse from './pages/Codepocalypse';
-import GrandTechAssembly from './pages/GrandTechAssembly';
+import DynamicHackathon from './pages/DynamicHackathon';
+import AdminHackathons from './pages/AdminHackathons';
 
 // Event Reports
 import MakeathonReport from './pages/MakeathonReport';
@@ -387,18 +381,17 @@ const App = () => {
               path="/blog/teamwork-leadership-maximally"
               element={<BuildingTeamworkLeadership />}
             />
-            {/* Removed shipathon route */}
-            <Route path="/codehypothesis" element={<CodeHypothesis />} />
-            <Route path="/protocol-404" element={<Protocol404 />} />
-            <Route path="/project-codegen" element={<ProjectCodeGen />} />
-            <Route path="/promptstorm" element={<PromptStorm />} />
-            <Route path="/steal-a-thon" element={<StealAThon />} />
-            <Route path="/codepocalypse" element={<Codepocalypse />} />
-            <Route
-              path="/grand-tech-assembly"
-              element={<GrandTechAssembly />}
-            />
-            <Route path="/hacktober" element={<Hacktober />} />
+            {/* Hackathon routes - redirect to dynamic pages */}
+            <Route path="/codepocalypse" element={<Navigate to="/hackathon/codepocalypse" replace />} />
+            <Route path="/protocol-404" element={<Navigate to="/hackathon/protocol-404" replace />} />
+            <Route path="/hacktober" element={<Navigate to="/hackathon/hacktober" replace />} />
+            <Route path="/steal-a-thon" element={<Navigate to="/hackathon/steal-a-thon" replace />} />
+            <Route path="/grand-tech-assembly" element={<Navigate to="/hackathon/grand-tech-assembly" replace />} />
+            <Route path="/promptstorm" element={<Navigate to="/hackathon/prompt-storm" replace />} />
+            
+            {/* Redirect static routes to dynamic ones */}
+            <Route path="/codehypothesis" element={<Navigate to="/hackathon/codehypothesis" replace />} />
+            <Route path="/project-codegen" element={<Navigate to="/hackathon/project-codegen" replace />} />
 
             {/* Event Reports */}
             <Route path="/makeathon-report" element={<MakeathonReport />} />
@@ -457,6 +450,12 @@ const App = () => {
               path="/blog/project-codegen-beyond-hackathons"
               element={<ProjectCodeGenBeyondHackathons />}
             />
+
+            {/* Admin routes */}
+            <Route path="/admin/hackathons" element={<AdminHackathons />} />
+
+            {/* Dynamic hackathon route - for database-driven hackathons */}
+            <Route path="/hackathon/:slug" element={<DynamicHackathon />} />
 
             {/* Dynamic blog route - must be after all static routes */}
             <Route path="/blog/:slug" element={<BlogRouter />} />

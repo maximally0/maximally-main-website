@@ -8,7 +8,7 @@ import { useState } from "react";
 const About = () => {
   const [isTallyFormOpen, setIsTallyFormOpen] = useState(false);
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-32">
       <SEO 
         title="About Maximally | Where Global Innovators Are Born"
         description="Join the global community for ambitious builders. Learn entrepreneurship, AI, and innovation through our transformative hackathons."
