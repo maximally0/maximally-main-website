@@ -9,11 +9,25 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { PixelCard } from '@/components/ui/pixel-card';
-import type { SelectHackathon } from '@shared/schema';
 import { cn } from '@/lib/utils';
 
+// Local type for UI card usage
+interface LocalHackathon {
+  id: number | string;
+  name: string;
+  description: string;
+  startDate: string | Date;
+  length: string;
+  location: string;
+  participants: number;
+  tags: string[];
+  detailsUrl: string;
+  registerUrl: string;
+  status?: 'upcoming' | 'ongoing' | 'completed' | string;
+}
+
 interface HackathonCardProps {
-  hackathon: SelectHackathon;
+  hackathon: LocalHackathon;
   className?: string;
 }
 
@@ -32,8 +46,10 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
   const getStatusBadge = () => {
     const baseClasses = "minecraft-block px-3 py-1 font-press-start text-xs";
     const animationClass = shouldReduceMotion ? "" : "animate-pulse";
+
+    const status = String(hackathon.status || '').toLowerCase().trim();
     
-    switch (hackathon.status) {
+    switch (status) {
       case 'upcoming':
         return (
           <div 
@@ -53,6 +69,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
           </div>
         );
       case 'ongoing':
+      case 'live':
         return (
           <div 
             className={cn(baseClasses, "bg-maximally-yellow text-black", animationClass)}
@@ -123,7 +140,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
           {/* Tags */}
           <div className="mb-4">
             <div className="flex flex-wrap gap-1">
-              {hackathon.tags.slice(0, 3).map(tag => (
+              {hackathon.tags.slice(0, 3).map((tag: string) => (
                 <span 
                   key={tag} 
                   className="minecraft-block bg-maximally-red text-white px-2 py-1 font-jetbrains text-xs"

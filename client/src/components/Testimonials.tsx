@@ -33,7 +33,15 @@ const testimonialData = [
   }
 ];
 
-const TestimonialCard = ({ testimonial }) => {
+type Testimonial = {
+  name: string;
+  handle: string;
+  achievement: string;
+  quote: string;
+  avatar: string;
+};
+
+const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div className="pixel-card h-full flex flex-col p-4 sm:p-6">
       <div className="flex items-center mb-4">

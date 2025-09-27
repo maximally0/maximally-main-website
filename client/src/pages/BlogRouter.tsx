@@ -463,12 +463,12 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
           📱 Share
         </button>
         <button 
-          onClick={() => {
+          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
             const url = getProductionUrl();
             navigator.clipboard.writeText(url);
             // Show a brief feedback message
-            const button = event.currentTarget;
-            const originalText = button.textContent;
+            const button = e.currentTarget as HTMLButtonElement;
+            const originalText = button.textContent || '';
             button.textContent = '✅ Copied!';
             setTimeout(() => {
               button.textContent = originalText;

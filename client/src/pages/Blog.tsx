@@ -602,7 +602,7 @@ const Blog = () => {
       date: format(new Date(post.date), 'MMMM d, yyyy'),
       readTime: post.readTime,
       category: post.category,
-      link: post.link,
+      link: post.link ?? '/blog',
       coverImage: undefined, // Static posts don't have cover images in the current data
       authorName: undefined, // Static posts don't have author names in the current data
     }));
@@ -614,7 +614,7 @@ const Blog = () => {
       readTime: formatReadingTime(post.reading_time_minutes, post.content),
       category: post.tags || 'AI Hackathons',
       link: `/blog/${post.slug}`,
-      coverImage: post.cover_image,
+      coverImage: post.cover_image ?? undefined,
       authorName: post.author_name,
     }));
 

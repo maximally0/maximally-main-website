@@ -3,6 +3,7 @@ import { ArrowRight, Star, Users, Target, Rocket, Sparkles, Crown, Code, Zap, Ca
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import TallyFormDialog from "@/components/TallyFormDialog";
+import { Button } from '@/components/ui/button';
 
 const Sponsor = () => {
   const [isTallyFormOpen, setIsTallyFormOpen] = useState(false);

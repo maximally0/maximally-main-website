@@ -29,7 +29,8 @@ const eventsData = [
   }
 ];
 
-const EventCard = ({ event }) => {
+type LocalEvent = { title: string; description: string; date: string; price: string; daysLeft: number; color: string };
+const EventCard = ({ event }: { event: LocalEvent }) => {
   return (
     <div className="pixel-card h-full flex flex-col">
       <div className={`${event.color} text-white p-4 -m-5 mb-6 pixel-border`}>

@@ -9,6 +9,20 @@ export const supabase = (supabaseUrl && supabaseAnonKey)
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 
+// Narrow type for event listings (used by dynamic Events page)
+export type HackathonListItem = {
+  title: string;
+  subtitle: string | null;
+  start_date: string;
+  end_date: string;
+  location: string | null;
+  duration: string;
+  status: string | null;
+  focus_areas: any; // jsonb (array of strings or object)
+  devpost_url: string | null;
+  devpost_register_url: string | null;
+};
+
 export interface BlogPost {
   id: string;
   title: string;
