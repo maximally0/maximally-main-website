@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Search,
   Filter,
@@ -12,40 +12,97 @@ import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import HackathonCard from '@/components/CollapsibleHackathonCard';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { grandIndianHackathonSeason, calculateHackathonStatus } from '@shared/schema';
+import { supabase, type HackathonListItem } from '@/lib/supabaseClient';
 
 const Events = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedFilters, setSelectedFilters] = useState<{
-    location: string[];
-    status: string[];
-    length: string[];
+  // Local typed hackathon shape for client UI
+  type LocalHackathon = {
+    id: number;
+    name: string;
+    description: string;
+    startDate: string;
+    endDate?: string;
+    length: string;
+    location: string;
+    participants: number;
     tags: string[];
-  }>({
-    location: [],
-    status: [],
-    length: [],
-    tags: []
-  });
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
-  const [expandedFilters, setExpandedFilters] = useState<{
-    location: boolean;
-    status: boolean;
-    duration: boolean;
-    tags: boolean;
-  }>({
-    location: true,
-    status: true,
-    duration: true,
-    tags: true
-  });
+    detailsUrl: string;
+    registerUrl: string;
+    status: 'upcoming' | 'ongoing' | 'completed' | string;
+  };
 
-  // Use the real hackathon data from shared schema with dynamic status calculation
-  const hackathons = useMemo(() => 
-    grandIndianHackathonSeason.map(hackathon => ({
-      ...hackathon,
-      status: calculateHackathonStatus(hackathon.startDate, hackathon.endDate)
-    })), []);
+  const [hackathons, setHackathons] = useState<LocalHackathon[]>([]);
+
+  const toTags = (value: any): string[] => {
+    if (!value) return [];
+    if (Array.isArray(value)) return value.map(String);
+    if (typeof value === 'object') return Object.values(value).map(String);
+    return [];
+  };
+
+  const calcStatus = (status?: string | null, start?: string) => {
+    if (status) return status as any;
+    if (!start) return 'upcoming';
+    try {
+      const now = new Date();
+      const s = new Date(start);
+      if (isNaN(s.getTime())) return 'upcoming';
+      if (s > now) return 'upcoming';
+      const delta = (now.getTime() - s.getTime()) / (1000 * 60 * 60 * 24);
+      if (delta < 7) return 'ongoing';
+      return 'completed';
+    } catch {
+      return 'upcoming';
+    }
+  };
+
+  const fetchHackathons = async () => {
+    if (!supabase) return; // gracefully do nothing if Supabase not configured
+    const { data, error } = await supabase
+      .from('hackathons')
+      .select(
+        'title, subtitle, start_date, end_date, location, duration, status, focus_areas, devpost_url, devpost_register_url'
+      )
+      .or('is_active.is.true,is_active.is.null')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error('Error fetching hackathons', error.message);
+      return;
+    }
+    const items = (data as HackathonListItem[] | null) ?? [];
+    const mapped: LocalHackathon[] = items.map((h, idx) => ({
+      id: idx + 1,
+      name: h.title,
+      description: h.subtitle ?? '',
+      startDate: h.start_date,
+      endDate: h.end_date,
+      length: h.duration,
+      location: h.location ?? 'Online',
+      participants: 0,
+      tags: toTags(h.focus_areas),
+      detailsUrl: h.devpost_url ?? '#',
+      registerUrl: h.devpost_register_url ?? '#',
+      status: calcStatus(h.status ?? undefined, h.start_date),
+    }));
+    setHackathons(mapped);
+  };
+
+  useEffect(() => {
+    fetchHackathons();
+    const sb = supabase;
+    if (!sb) return;
+    const channel = sb
+      .channel('realtime-hackathons-events-page')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'hackathons' }, () => {
+        fetchHackathons();
+      })
+      .subscribe();
+    return () => {
+      sb.removeChannel(channel);
+    };
+  }, []);
+
+  // hackathons are loaded from Supabase above
 
   // Derive filter options from actual data
   const filterOptions = useMemo(() => {
@@ -61,6 +118,28 @@ const Events = () => {
       tags: uniqueTags
     };
   }, [hackathons]);
+
+  // Local UI state: search input, selected filters, expanded filter sections, mobile filter toggle
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedFilters, setSelectedFilters] = useState<{
+    location: string[];
+    status: string[];
+    length: string[];
+    tags: string[];
+  }>(
+    {
+      location: [],
+      status: [],
+      length: [],
+      tags: []
+    }
+  );
+
+  const [expandedFilters, setExpandedFilters] = useState<{ location: boolean; status: boolean; duration: boolean; tags: boolean }>(
+    { location: true, status: true, duration: true, tags: false }
+  );
+
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
 
   // Utility function for normalized string comparison
   const normalizeString = (str: string) => str.toLowerCase().trim();
