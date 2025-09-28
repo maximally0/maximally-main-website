@@ -12,26 +12,12 @@ import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import HackathonCard from '@/components/CollapsibleHackathonCard';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { supabase, type HackathonListItem } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabaseClient';
+import type { SelectHackathon } from '@shared/schema';
 
 const Events = () => {
-  // Local typed hackathon shape for client UI
-  type LocalHackathon = {
-    id: number;
-    name: string;
-    description: string;
-    startDate: string;
-    endDate?: string;
-    length: string;
-    location: string;
-    participants: number;
-    tags: string[];
-    detailsUrl: string;
-    registerUrl: string;
-    status: 'upcoming' | 'ongoing' | 'completed' | string;
-  };
-
-  const [hackathons, setHackathons] = useState<LocalHackathon[]>([]);
+  // Use the shared SelectHackathon type so the card component receives the expected shape
+  const [hackathons, setHackathons] = useState<SelectHackathon[]>([]);
 
   const toTags = (value: any): string[] => {
     if (!value) return [];
@@ -69,20 +55,26 @@ const Events = () => {
       console.error('Error fetching hackathons', error.message);
       return;
     }
-    const items = (data as HackathonListItem[] | null) ?? [];
-    const mapped: LocalHackathon[] = items.map((h, idx) => ({
-      id: idx + 1,
-      name: h.title,
-      description: h.subtitle ?? '',
-      startDate: h.start_date,
-      endDate: h.end_date,
-      length: h.duration,
+    const items = (data as any[] | null) ?? [];
+    // Map Supabase row shape to SelectHackathon (schema used by UI components)
+    const mapped: SelectHackathon[] = items.map((h, idx) => ({
+      id: (h.id ?? h.title ?? `remote-${idx + 1}`).toString(),
+      name: h.title ?? h.name ?? '',
+      description: h.subtitle ?? h.description ?? '',
+      // convert timestamps/strings to Date objects expected by SelectHackathon
+      startDate: h.start_date ? new Date(h.start_date) : new Date(),
+      endDate: h.end_date ? new Date(h.end_date) : new Date(h.start_date ?? Date.now()),
+      length: h.duration ?? h.length ?? '',
       location: h.location ?? 'Online',
-      participants: 0,
-      tags: toTags(h.focus_areas),
-      detailsUrl: h.devpost_url ?? '#',
-      registerUrl: h.devpost_register_url ?? '#',
-      status: calcStatus(h.status ?? undefined, h.start_date),
+      participants: Number(h.participants ?? 0),
+      prizes: h.prizes ?? 'TBD',
+      tags: Array.isArray(h.focus_areas) ? h.focus_areas.map(String) : (Array.isArray(h.tags) ? h.tags.map(String) : []),
+      registerUrl: h.devpost_register_url ?? h.registerUrl ?? '#',
+      detailsUrl: h.devpost_url ?? h.detailsUrl ?? '#',
+      imageUrl: h.image_url ?? null,
+      organizerName: h.organizer_name ?? null,
+      organizerUrl: h.organizer_url ?? null,
+      status: (h.status ?? calcStatus(h.status ?? undefined, h.start_date)) as any,
     }));
     setHackathons(mapped);
   };
