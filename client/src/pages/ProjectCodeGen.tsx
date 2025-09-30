@@ -23,7 +23,7 @@ const ProjectCodeGen = () => {
     <>
       <SEO
         title="Project CodeGen - 48-Hour Playful Hackathon | October 11-12, 2025"
-        description="Build like you're 6. Ship like you're 16. A 48-hour hackathon for builders who play. October 11-12, 2025 - Online hackathon with ₹5000+ prizes."
+        description="Build like you're 6. Ship like you're 16. A 48-hour hackathon for builders who play. October 11-12, 2025 - Online hackathon for creative teen builders."
         keywords="project codegen, playful hackathon, teen builders, creative coding, october 2025, fun programming, kid-friendly hackathon"
         canonicalUrl="https://maximally.in/project-codegen"
       />
@@ -421,50 +421,6 @@ const ProjectCodeGen = () => {
                   <div className="font-black text-xl mt-2 text-gray-800">({item.percentage})</div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Prizes Section */}
-        <section className="relative z-20 py-16 px-6 bg-yellow-100">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-orange-600 mb-12 text-center transform -rotate-1" style={{ fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}>
-              Prizes
-            </h2>
-            <div className="space-y-6 mb-8">
-              {[
-                { place: "🧸", title: "Big Kid Award", prize: "₹3000 + LOR + feature", color: "bg-red-200 border-red-400" },
-                { place: "🎨", title: "Most Playful Build", prize: "₹2000", color: "bg-blue-200 border-blue-400" },
-                { place: "🍭", title: "Judge Stickers", prize: "zine shoutouts + spotlight", color: "bg-purple-200 border-purple-400" }
-              ].map((item, index) => (
-                <div 
-                  key={index} 
-                  className={`${item.color} p-6 rounded-2xl shadow-lg transform ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'}`}
-                  style={{ 
-                    border: '3px solid',
-                    fontFamily: 'Comic Sans MS, Quicksand, sans-serif'
-                  }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="text-4xl">{item.place}</div>
-                    <div>
-                      <div className="font-bold text-lg text-gray-700">{item.title}</div>
-                      <div className="font-bold text-gray-600">{item.prize}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <div 
-                className="bg-green-300 text-green-800 font-bold text-xl px-8 py-4 rounded-full inline-block shadow-lg transform rotate-2"
-                style={{ 
-                  fontFamily: 'Comic Sans MS, Quicksand, sans-serif',
-                  border: '3px solid #4caf50'
-                }}
-              >
-                💰 Total pool: ₹5000
-              </div>
             </div>
           </div>
         </section>
