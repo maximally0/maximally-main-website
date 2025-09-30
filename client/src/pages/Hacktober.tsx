@@ -24,7 +24,7 @@ const Hacktober = () => {
     <>
       <SEO
         title="Maximally Hacktober - Month-Long Hackathon | October 1-31, 2025"
-        description="Build slow. Build loud. Finish strong. A month-long hackathon for builders who won't quit. October 1-31, 2025 - Online hackathon with ₹5000+ prizes."
+        description="Build slow. Build loud. Finish strong. A month-long hackathon for builders who won't quit. October 1-31, 2025 - Online hackathon for persistent builders."
         keywords="hacktober, month-long hackathon, october hackathon, autumn coding, indie hackers, long-form building, maximally"
         canonicalUrl="https://maximally.in/hacktober"
       />
@@ -397,44 +397,6 @@ const Hacktober = () => {
                   <div className="font-black text-xl mt-2 text-gray-900">({item.percentage})</div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Prizes Section */}
-        <section className="relative z-20 py-16 px-6" style={{ backgroundColor: '#8B4513' }}>
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-amber-100 mb-12 text-center transform -rotate-1" style={{ fontFamily: 'Georgia, serif' }}>
-              Prizes
-            </h2>
-            <div className="space-y-6 mb-8">
-              {[
-                { place: "🍁", title: "Builder of the Month", prize: "₹3000 + LOR + feature", color: "bg-orange-200 border-orange-600" },
-                { place: "🎃", title: "Most Seasonal Submission", prize: "₹2000", color: "bg-amber-200 border-amber-600" },
-                { place: "👻", title: "Judge Mentions", prize: "zine features, shoutouts, internship intros", color: "bg-yellow-200 border-yellow-600" }
-              ].map((item, index) => (
-                <div 
-                  key={index} 
-                  className={`${item.color} p-6 rounded-lg shadow-lg transform ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'} border-3`}
-                  style={{ fontFamily: 'Arial, sans-serif' }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="text-4xl">{item.place}</div>
-                    <div>
-                      <div className="font-bold text-lg text-gray-800">{item.title}</div>
-                      <div className="font-semibold text-gray-700">{item.prize}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <div 
-                className="bg-amber-200 text-amber-900 font-bold text-xl px-8 py-4 rounded-lg inline-block shadow-lg transform rotate-2 border-3 border-amber-700"
-                style={{ fontFamily: 'Arial, sans-serif' }}
-              >
-                💰 Total Pool: ₹5000
-              </div>
             </div>
           </div>
         </section>
