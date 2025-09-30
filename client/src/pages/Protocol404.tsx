@@ -29,7 +29,7 @@ const Protocol404 = () => {
     <>
       <SEO
         title="Protocol 404 - 48-Hour Hackathon | October 4-5, 2025"
-        description="Break the system. Build yours. A 48-hour hackathon for system-breakers. October 4-5, 2025 - Online hackathon with ₹5000+ prizes."
+        description="Break the system. Build yours. A 48-hour hackathon for system-breakers. October 4-5, 2025 - Online hackathon for indie builders and chaos creators."
         keywords="protocol 404, hackathon, system breakers, coding competition, october 2025, chaos utility, indie hackers"
         canonicalUrl="https://maximally.in/protocol-404"
       />
@@ -298,39 +298,6 @@ const Protocol404 = () => {
                   <div className="text-white font-mono text-xl mt-2">({item.percentage})</div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Prizes Section */}
-        <section className="relative z-20 py-16 px-6 bg-black">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-red-500 mb-12 text-center font-mono">
-              Prizes
-            </h2>
-            <div className="space-y-6 mb-8">
-              {[
-                { place: "🥇", title: "Protocol Breaker", prize: "₹3000 + judge LOR + social feature" },
-                { place: "🥈", title: "Most Gloriously Broken Build", prize: "₹2000" },
-                { place: "🎖️", title: "404 Mentions", prize: "digital zine features + judge shoutouts" }
-              ].map((item, index) => (
-                <Card key={index} className="bg-gray-900 border-yellow-400 border-2">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className="text-3xl">{item.place}</div>
-                      <div>
-                        <div className="text-yellow-400 font-bold font-mono text-lg">{item.title}</div>
-                        <div className="text-white font-mono">{item.prize}</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-            <div className="text-center">
-              <div className="bg-red-500 text-black font-bold font-mono text-xl px-8 py-4 rounded-lg inline-block">
-                💰 Total pool: ₹5000
-              </div>
             </div>
           </div>
         </section>
