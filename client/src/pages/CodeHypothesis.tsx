@@ -455,63 +455,6 @@ const CodeHypothesis = () => {
           </div>
         </section>
 
-        {/* Prizes */}
-        <section className="py-20 px-6">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-green-400 mb-12 font-mono tracking-wider text-center">
-              PRIZES
-            </h2>
-            <div className="text-center mb-8">
-              <div className="inline-block bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-8 py-4 font-bold text-2xl font-mono tracking-wider">
-                ₹5,000 TOTAL PRIZE POOL
-              </div>
-            </div>
-            <div className="grid md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: "TOP REBEL",
-                  prize: "₹3,000",
-                  extras: ["Featured Showcase", "Letter of Recommendation"],
-                  color: "border-red-500 text-red-500"
-                },
-                {
-                  title: "WILDCARD HACK",
-                  prize: "₹2,000", 
-                  extras: ["Community Referral", "Mentor Connect"],
-                  color: "border-yellow-400 text-yellow-400"
-                }
-              ].map((award, index) => (
-                <div key={index} className={`bg-black/80 border-2 ${award.color.split(' ')[0]} p-8 text-center relative group hover:scale-105 transition-all duration-300`}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-current/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className="relative z-10">
-                    <h3 className={`text-2xl font-bold font-mono mb-4 ${award.color.split(' ')[1]} tracking-wider`}>
-                      {award.title}
-                    </h3>
-                    <div className={`text-4xl font-bold font-mono mb-6 ${award.color.split(' ')[1]} animate-pulse`}>
-                      {award.prize}
-                    </div>
-                    <div className="space-y-2">
-                      {award.extras.map((extra, i) => (
-                        <div key={i} className="flex items-center justify-center gap-2 text-white/80 font-mono text-sm">
-                          <CheckCircle size={16} className="text-green-400" />
-                          {extra}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-8 text-center">
-              <p className="text-white/70 font-mono">
-                <span className="text-green-400 font-bold">JUDGE MENTIONS</span> = Shoutouts • {' '}
-                <span className="text-yellow-400 font-bold">ZINE FEATURES</span> • {' '}
-                <span className="text-red-500 font-bold">LORs</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* Submission Requirements */}
         <section className="py-20 px-6 bg-gradient-to-b from-black to-gray-900">
           <div className="max-w-4xl mx-auto">
