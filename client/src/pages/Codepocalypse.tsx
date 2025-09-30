@@ -80,13 +80,6 @@ export default function Codepocalypse() {
     'Optional 60s video',
   ];
 
-  const funAwards = [
-    'Most cursed build',
-    "Shouldn't have worked but did",
-    'Built while sleep-deprived',
-    'Best bug that became a feature',
-  ];
-
   return (
     <div className="min-h-screen bg-gray-900 relative overflow-hidden">
       <SEO
@@ -222,20 +215,6 @@ export default function Codepocalypse() {
                 REGISTER NOW
               </span>
             </Button>
-            <Button
-              onClick={() =>
-                document
-                  .getElementById('prizes')
-                  ?.scrollIntoView({ behavior: 'smooth' })
-              }
-              className="bg-black text-yellow-400 font-press-start py-4 px-8 text-lg hover:scale-105 transition-all duration-300 border-4 border-red-500 shadow-2xl relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gray-900 transform skew-x-12 -translate-x-full hover:translate-x-0 transition-transform duration-300"></div>
-              <span className="relative z-10 flex items-center">
-                <Trophy className="h-5 w-5 mr-2" />
-                VIEW PRIZES
-              </span>
-            </Button>
           </div>
 
           {/* Apocalyptic decoration */}
@@ -358,76 +337,6 @@ export default function Codepocalypse() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Prizes */}
-        <section id="prizes" className="py-20 px-4">
-          <div className="container mx-auto max-w-5xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-red-500 text-center flex items-center justify-center gap-3">
-              <Trophy className="h-8 w-8 text-yellow-400" />
-              PRIZES & PERKS
-              <Trophy className="h-8 w-8 text-yellow-400" />
-            </h2>
-
-            {/* Cash Pool */}
-            <div className="text-center mb-8">
-              <div className="bg-yellow-400 text-black px-8 py-4 border-4 border-red-500 inline-block relative">
-                <div className="absolute -top-2 -left-2 w-6 h-6 bg-red-500"></div>
-                <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-black"></div>
-                <span className="font-press-start text-xl">
-                  CASH POOL: ₹5000
-                </span>
-              </div>
-            </div>
-
-            {/* Perks */}
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <Card className="bg-black border-4 border-yellow-400">
-                <CardContent className="p-6">
-                  <h3 className="font-press-start text-xl text-yellow-400 mb-4">
-                    PERKS
-                  </h3>
-                  <ul className="space-y-2">
-                    <li className="font-jetbrains text-gray-300 flex items-center gap-2">
-                      <Star className="h-4 w-4 text-red-500" />
-                      LORs from elite judges
-                    </li>
-                    <li className="font-jetbrains text-gray-300 flex items-center gap-2">
-                      <Star className="h-4 w-4 text-red-500" />
-                      Feature on wall of fame
-                    </li>
-                    <li className="font-jetbrains text-gray-300 flex items-center gap-2">
-                      <Star className="h-4 w-4 text-red-500" />
-                      Internship referrals
-                    </li>
-                    <li className="font-jetbrains text-gray-300 flex items-center gap-2">
-                      <Star className="h-4 w-4 text-red-500" />
-                      Maximally socials shoutouts
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-red-900 border-4 border-yellow-400">
-                <CardContent className="p-6">
-                  <h3 className="font-press-start text-xl text-yellow-400 mb-4">
-                    FUN AWARDS
-                  </h3>
-                  <ul className="space-y-2">
-                    {funAwards.map((award, index) => (
-                      <li
-                        key={index}
-                        className="font-jetbrains text-gray-200 flex items-center gap-2"
-                      >
-                        <Skull className="h-4 w-4 text-yellow-400" />
-                        {award}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </section>
