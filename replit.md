@@ -93,6 +93,14 @@ The application follows a modern full-stack monolith approach with clear separat
 
 ## Changelog
 
+- September 30, 2025. **REPLIT ENVIRONMENT SETUP**: Configured application for Replit environment
+  - Made Supabase integration optional to allow app to run without external database credentials
+  - Modified `supabaseClient.ts` to gracefully handle missing environment variables
+  - Added null checks in `useBlog.ts` to return empty results when Supabase is not configured
+  - Configured workflow "Start application" to run on port 5000 with webview output
+  - Verified deployment configuration with autoscale deployment target
+  - All pages (Home, Events, About, Resources, Contact) working correctly
+  - Hot module reloading working with Vite development server
 - July 12, 2025. **BLOG CONTENT EXPANSION & FEATURED UPDATES**: Added comprehensive AI Shipathon blog content for SEO
   - Created 4 new AI Shipathon focused blog posts with rich content and proper formatting
   - Added routes and navigation for all new blog posts

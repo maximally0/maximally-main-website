@@ -5,6 +5,11 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
   return useQuery({
     queryKey: ['blogs', page, pageSize, search],
     queryFn: async (): Promise<{ data: BlogPost[]; total: number }> => {
+      // Return empty results if Supabase is not configured
+      if (!supabase) {
+        return { data: [], total: 0 };
+      }
+
       let query = supabase
         .from('blogs')
         .select('*', { count: 'exact' })
@@ -39,6 +44,11 @@ export const useBlog = (slug: string) => {
   return useQuery({
     queryKey: ['blog', slug],
     queryFn: async (): Promise<BlogPost | null> => {
+      // Return null if Supabase is not configured
+      if (!supabase) {
+        return null;
+      }
+
       const { data, error } = await supabase
         .from('blogs')
         .select('*')
