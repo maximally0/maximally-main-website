@@ -168,22 +168,6 @@ export default function GrandTechAssembly() {
     },
   ];
 
-  const trackAwards = [
-    'Respect the Hustle',
-    'Side Quest Kingpin',
-    'Most Cursed Build',
-    'The Kingpin Award',
-    'First Blood',
-  ];
-
-  const sideQuestAwards = [
-    'Meme Lord',
-    'Nitro Coder',
-    'Chaos Dropper',
-    'Comedian Coder',
-    'Sleepless but Shipping',
-  ];
-
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
       <SEO
@@ -545,72 +529,6 @@ export default function GrandTechAssembly() {
                   Short written notes for teams
                 </p>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Prizes */}
-        <section className="py-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
-          <div className="container mx-auto max-w-5xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-yellow-400 text-center flex items-center justify-center gap-3">
-              <Trophy className="h-8 w-8 text-green-400" />
-              PRIZES & AWARDS
-              <Trophy className="h-8 w-8 text-green-400" />
-            </h2>
-
-            {/* Cash Pool */}
-            <div className="text-center mb-8">
-              <div className="bg-green-500 text-black px-8 py-4 border-2 border-purple-400 inline-block relative">
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-purple-400"></div>
-                <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-yellow-400"></div>
-                <span className="font-press-start text-xl">
-                  CASH POOL: ₹5000
-                </span>
-              </div>
-            </div>
-
-            {/* Awards */}
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card className="bg-gray-800 border-2 border-green-400">
-                <CardContent className="p-6">
-                  <h3 className="font-press-start text-xl text-green-400 mb-4">
-                    TRACK AWARDS
-                  </h3>
-                  <ul className="space-y-2">
-                    {trackAwards.map((award, index) => (
-                      <li
-                        key={index}
-                        className="font-jetbrains text-gray-300 flex items-center gap-2"
-                      >
-                        <Crown className="h-4 w-4 text-yellow-400" />
-                        {award}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gray-800 border-2 border-purple-400">
-                <CardContent className="p-6">
-                  <h3 className="font-press-start text-xl text-purple-400 mb-4">
-                    SIDE QUEST AWARDS
-                  </h3>
-                  <ul className="space-y-2">
-                    {sideQuestAwards.map((award, index) => (
-                      <li
-                        key={index}
-                        className="font-jetbrains text-gray-300 flex items-center gap-2"
-                      >
-                        <Star
-                          className="h-4 w-4 text-yellow-400"
-                          fill="currentColor"
-                        />
-                        {award}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </section>
