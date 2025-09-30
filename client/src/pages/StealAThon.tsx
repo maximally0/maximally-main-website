@@ -110,24 +110,6 @@ export default function StealAThon() {
     { criteria: 'Presentation', weight: '10%' },
   ];
 
-  const prizes = [
-    {
-      title: 'Grand Theft Project',
-      prize: '₹3000 + LOR + social feature',
-      icon: <Trophy className="h-8 w-8 text-yellow-400" />,
-    },
-    {
-      title: 'Best Makeover',
-      prize: '₹2000',
-      icon: <Copy className="h-8 w-8 text-red-500" />,
-    },
-    {
-      title: 'Petty Theft Mentions',
-      prize: 'season zine feature + shoutouts',
-      icon: <Star className="h-8 w-8 text-white" />,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-black overflow-x-hidden">
       <SEO
@@ -523,58 +505,6 @@ export default function StealAThon() {
                   devs, and creators
                 </p>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Prizes */}
-        <section className="py-12 sm:py-20 px-4 bg-black">
-          <div className="container mx-auto max-w-5xl">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-8 text-yellow-400 text-center flex items-center justify-center gap-3">
-              <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform rotate-12" />
-              PRIZES
-              <Trophy className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform -rotate-12" />
-            </h2>
-            <div className="text-center mb-8">
-              <div className="bg-yellow-400 text-black px-4 sm:px-6 py-3 border-2 sm:border-4 border-black inline-block transform -rotate-2">
-                <span className="font-press-start text-base sm:text-lg">
-                  TOTAL POOL: ₹5000
-                </span>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {prizes.map((prize, index) => (
-                <Card
-                  key={index}
-                  className={`bg-${
-                    index % 3 === 0
-                      ? 'red'
-                      : index % 3 === 1
-                      ? 'yellow'
-                      : 'white'
-                  }-${
-                    index % 3 === 0 ? '500' : index % 3 === 1 ? '400' : 'white'
-                  } text-${
-                    index % 3 === 2
-                      ? 'black'
-                      : index % 3 === 1
-                      ? 'black'
-                      : 'white'
-                  } border-2 sm:border-4 border-black hover:scale-105 transition-all duration-300 transform ${
-                    index % 2 === 0 ? 'rotate-2' : '-rotate-2'
-                  }`}
-                >
-                  <CardContent className="p-4 sm:p-6 text-center">
-                    <div className="mb-4 flex justify-center">{prize.icon}</div>
-                    <h3 className="font-press-start text-sm sm:text-lg mb-3 leading-tight">
-                      {prize.title}
-                    </h3>
-                    <p className="font-jetbrains font-bold text-sm sm:text-base">
-                      {prize.prize}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </div>
         </section>
