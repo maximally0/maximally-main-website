@@ -98,24 +98,6 @@ export default function PromptStorm() {
     { criteria: 'Presentation', weight: '10%' },
   ];
 
-  const prizes = [
-    {
-      title: 'PromptStorm Champion',
-      prize: '₹3000 + LOR + social feature',
-      icon: <Trophy className="h-8 w-8 text-yellow-400" />,
-    },
-    {
-      title: 'Most Unexpected Output',
-      prize: '₹2000',
-      icon: <Sparkles className="h-8 w-8 text-blue-400" />,
-    },
-    {
-      title: 'Judge Mentions',
-      prize: 'zine feature + shoutouts',
-      icon: <Star className="h-8 w-8 text-purple-400" />,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-black">
       <SEO
@@ -440,42 +422,6 @@ export default function PromptStorm() {
                 <span className="text-yellow-400 font-bold">Judges:</span> AI
                 builders, designers, creators
               </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Prizes */}
-        <section className="py-20 px-4">
-          <div className="container mx-auto max-w-5xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-yellow-400 text-center flex items-center justify-center gap-3">
-              <Trophy className="h-8 w-8 text-blue-400" />
-              PRIZES
-              <Trophy className="h-8 w-8 text-blue-400" />
-            </h2>
-            <div className="text-center mb-8">
-              <div className="bg-gradient-to-r from-yellow-600 to-yellow-500 text-black px-6 py-3 rounded-full inline-block">
-                <span className="font-press-start text-lg">
-                  TOTAL POOL: ₹5000
-                </span>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {prizes.map((prize, index) => (
-                <Card
-                  key={index}
-                  className="bg-gradient-to-br from-yellow-600/20 to-black border-2 border-yellow-400 hover:scale-105 transition-all duration-300"
-                >
-                  <CardContent className="p-6 text-center">
-                    <div className="mb-4 flex justify-center">{prize.icon}</div>
-                    <h3 className="font-press-start text-lg text-white mb-3 leading-tight">
-                      {prize.title}
-                    </h3>
-                    <p className="font-jetbrains text-yellow-400 font-bold">
-                      {prize.prize}
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </div>
         </section>
