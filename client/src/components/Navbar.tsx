@@ -68,7 +68,7 @@ const Navbar = () => {
             ))}
             <a
               href="/login"
-              className="pixel-button bg-maximally-red border-2 border-maximally-red text-black hover:bg-maximally-yellow hover:border-maximally-yellow transition-all duration-200 font-press-start text-xs px-6 py-2"
+              className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
               data-testid="button-join"
             >
               JOIN
