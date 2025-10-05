@@ -90,22 +90,33 @@ export const generateExcerpt = (content: string, maxLength = 150): string => {
 
 export const calculateReadTime = (content: string): string => {
   const wordsPerMinute = 200;
-  const words = content.split(/\s+/).length;
-  const minutes = Math.ceil(words / wordsPerMinute);
+  if (!content) return '1 min read';
+  // strip HTML tags if present
+  const plain = content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const words = plain ? plain.split(/\s+/).length : 0;
+  const minutes = Math.max(1, Math.ceil(words / wordsPerMinute));
   return `${minutes} min read`;
 };
 
-export const formatReadingTime = (databaseMinutes: number | null, fallbackContent?: string): string => {
-  // If we have a value from the database, use it
-  if (databaseMinutes && databaseMinutes > 0) {
-    return `${databaseMinutes} min read`;
+export const formatReadingTime = (
+  databaseMinutes: number | string | null | undefined,
+  fallbackContent?: string
+): string => {
+  // Use DB value if present (not null/undefined). Accept numbers or numeric strings.
+  if (databaseMinutes !== null && databaseMinutes !== undefined) {
+    const parsed = Number(databaseMinutes);
+    if (!Number.isNaN(parsed)) {
+      const mins = Math.max(1, Math.floor(parsed));
+      return `${mins} min read`;
+    }
+    // If DB value is present but not parseable, fall back to calculated time below
   }
-  
+
   // Fallback to calculated reading time if we have content
   if (fallbackContent) {
     return calculateReadTime(fallbackContent);
   }
-  
+
   // Last resort fallback
   return '2 min read';
 };

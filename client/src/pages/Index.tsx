@@ -23,6 +23,7 @@ import { Link } from 'react-router-dom';
 
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { supabase } from '@/lib/supabaseClient';
 
 const Index = () => {
   const [text, setText] = useState('');
@@ -54,6 +55,85 @@ const Index = () => {
 
     return () => {
       clearInterval(timer);
+    };
+  }, []);
+
+  const [featured, setFeatured] = useState<{
+    title: string;
+    subtitle?: string | null;
+    start_date?: string | null;
+    end_date?: string | null;
+    duration?: string | null;
+    location?: string | null;
+    tag?: string | null;
+    register_url?: string | null;
+    details_url?: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    const loadFeatured = async () => {
+      if (!supabase) return;
+      const { data: dashboardRow, error: dashErr } = await supabase
+        .from('dashboard')
+        .select('featured_hackathon_id')
+        .eq('id', 1)
+        .single();
+      if (dashErr || !dashboardRow) {
+        console.error('Failed to load dashboard row for featured hackathon', dashErr);
+        return;
+      }
+
+      const rawId =
+        (dashboardRow as any).featured_hackathon_id
+      if (rawId === undefined || rawId === null || rawId === '') {
+        console.warn('No featured hackathon id found on dashboard row');
+        return;
+      }
+      const featuredId = typeof rawId === 'string' ? parseInt(rawId, 10) : Number(rawId);
+      if (Number.isNaN(featuredId)) {
+        console.warn('Featured hackathon id is not a valid number:', rawId);
+        return;
+      }
+
+      const { data: hack, error: hackErr } = await supabase
+        .from('hackathons')
+        .select('id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url')
+        .eq('id', featuredId)
+        .single();
+      if (hackErr || !hack) {
+        console.error('Failed to load hackathon by featured id', { featuredId, error: hackErr });
+        return;
+      }
+
+      const firstTag = Array.isArray(hack.focus_areas)
+        ? String(hack.focus_areas[0] ?? '')
+        : (typeof hack.focus_areas === 'object' && hack.focus_areas !== null)
+          ? String(Object.values(hack.focus_areas as any)[0] ?? '')
+          : '';
+      console.log("Fetched hackathon:", hack);
+      setFeatured({
+        title: hack.title ?? 'FEATURED HACKATHON',
+        subtitle: hack.subtitle ?? null,
+        start_date: hack.start_date ?? null,
+        end_date: hack.end_date ?? null,
+        duration: hack.duration ?? null,
+        location: hack.location ?? null,
+        tag: firstTag || null,
+        register_url: hack.devpost_register_url ?? hack.registration_url ?? null,
+        details_url: hack.devpost_url ?? null,
+      });
+    };
+
+    loadFeatured();
+    const sb = supabase;
+    if (!sb) return;
+    const channel = sb
+      .channel('realtime-featured-hackathon')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'dashboard' }, loadFeatured)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'hackathons' }, loadFeatured)
+      .subscribe();
+    return () => {
+      sb.removeChannel(channel);
     };
   }, []);
 
@@ -239,18 +319,18 @@ const Index = () => {
                 <div className="relative z-10">
                   {/* Event Title */}
                   <div className="text-center mb-6 sm:mb-8">
-                    <div className="inline-block mb-4">
+                  <div className="inline-block mb-4">
                       <div className="minecraft-block bg-maximally-yellow text-maximally-black px-4 py-2 text-4xl sm:text-5xl md:text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
                         ⚡
                       </div>
                     </div>
                     <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 minecraft-text">
                       <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:drop-shadow-[5px_5px_0px_rgba(255,215,0,0.5)] transition-all duration-300">
-                        PROMPTSTORM
+                        {featured?.title ?? 'FEATURED HACKATHON'}
                       </span>
                     </h2>
                     <p className="font-press-start text-xs sm:text-sm md:text-base text-maximally-yellow mb-4">
-                      24-HOUR AI HACKATHON
+                      {featured?.tag ? String(featured.tag).toUpperCase() : (featured?.duration ? featured.duration.toUpperCase() : '24-HOUR AI HACKATHON')}
                     </p>
                   </div>
 
@@ -266,10 +346,21 @@ const Index = () => {
                         </span>
                       </div>
                       <p className="font-press-start text-sm text-white">
-                        OCT 25-26
+                        {(() => {
+                          const s = featured?.start_date ? new Date(featured.start_date) : null;
+                          const e = featured?.end_date ? new Date(featured.end_date) : null;
+                          if (!s || !e || isNaN(s.getTime()) || isNaN(e.getTime())) return 'TBD';
+                          const month = s.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+                          const range = s.getDate() === e.getDate() ? `${s.getDate()}` : `${s.getDate()}-${e.getDate()}`;
+                          return `${month} ${range}`;
+                        })()}
                       </p>
                       <p className="font-jetbrains text-xs text-gray-400 mt-1">
-                        2025
+                        {(() => {
+                          const s = featured?.start_date ? new Date(featured.start_date) : null;
+                          if (!s || isNaN(s.getTime())) return '';
+                          return s.getFullYear();
+                        })()}
                       </p>
                     </div>
 
@@ -283,7 +374,7 @@ const Index = () => {
                         </span>
                       </div>
                       <p className="font-press-start text-sm text-white">
-                        24 HOURS
+                        {(featured?.duration ?? '24 hours').toString().toUpperCase()}
                       </p>
                       <p className="font-jetbrains text-xs text-gray-400 mt-1">
                         Non-stop
@@ -300,7 +391,7 @@ const Index = () => {
                         </span>
                       </div>
                       <p className="font-press-start text-sm text-white">
-                        ONLINE
+                        {(featured?.location ?? 'Online').toString().toUpperCase()}
                       </p>
                       <p className="font-jetbrains text-xs text-gray-400 mt-1">
                         Join anywhere
@@ -311,16 +402,14 @@ const Index = () => {
                   {/* Description */}
                   <div className="mb-8 text-center">
                     <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                      Build the next generation of AI applications in 24 hours. 
-                      <span className="text-maximally-yellow font-bold"> Think fast. Ship faster. </span>
-                      Compete with the best builders and win amazing prizes.
+                      {featured?.subtitle ?? 'Build the next generation of AI applications in 24 hours.'}
                     </p>
                   </div>
 
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link
-                      to="/events"
+                      to={featured?.register_url ?? '/events'}
                       data-testid="button-featured-register"
                       className="pixel-button bg-maximally-red text-white group/btn flex items-center justify-center gap-2 hover:scale-110 transform transition-all hover:shadow-glow-red h-14 sm:h-16 px-8 sm:px-10 font-press-start text-sm sm:text-base relative overflow-hidden"
                     >
@@ -331,7 +420,7 @@ const Index = () => {
                     </Link>
 
                     <Link
-                      to="/events"
+                      to={featured?.details_url ?? '/events'}
                       data-testid="button-featured-details"
                       className="pixel-button bg-black border-2 border-maximally-red text-maximally-red group/btn flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-white h-14 sm:h-16 px-8 sm:px-10 font-press-start text-sm sm:text-base"
                     >
