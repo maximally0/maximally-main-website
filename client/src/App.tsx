@@ -121,6 +121,7 @@ import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 
 // MFHOP
 import MFHOP from './pages/MFHOP';
+import PartnerNetwork from './pages/PartnerNetwork';
 
 // People pages
 import People from './pages/People';
@@ -327,6 +328,7 @@ const App = () => {
             {/* Legacy redirect */}
             <Route path="/featured" element={<Navigate to="/people" replace />} />
             <Route path="/mfhop" element={<MFHOP />} />
+            <Route path="/partner" element={<PartnerNetwork />} />
 
             <Route path="/events" element={<Events />} />
             <Route

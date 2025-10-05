@@ -15,6 +15,9 @@ import {
   MapPin,
   Flame,
   Sparkles,
+  Rocket,
+  Handshake,
+  CheckCircle2,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -408,6 +411,136 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Partner Network Section */}
+        <section className="py-20 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
+          {/* Background Elements */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-20 right-10 w-24 h-24 bg-maximally-yellow/10 blur-3xl rounded-full animate-pulse" />
+            <div className="absolute bottom-20 left-10 w-32 h-32 bg-maximally-red/10 blur-3xl rounded-full animate-pulse delay-500" />
+          </div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-6xl mx-auto">
+              {/* Header */}
+              <div className="text-center mb-12">
+                <div className="minecraft-block bg-gradient-to-r from-maximally-yellow to-orange-500 text-black px-6 py-3 inline-block mb-6">
+                  <span className="font-press-start text-xs sm:text-sm flex items-center gap-2">
+                    <Handshake className="h-4 w-4" />
+                    PARTNERSHIP PROGRAM
+                  </span>
+                </div>
+                <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 minecraft-text">
+                  <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    HOST WITH MAXIMALLY
+                  </span>
+                </h2>
+                <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed mb-4">
+                  Co-organize, feature, or partner with Maximally to host your hackathon — 
+                  and we'll support you every step of the way.
+                </p>
+                <p className="text-gray-400 text-xs sm:text-sm md:text-base max-w-3xl mx-auto font-jetbrains">
+                  Join hundreds of student, startup, and community hackathons worldwide.
+                </p>
+              </div>
+
+              {/* Benefits Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105" data-testid="partner-benefit-1">
+                  <div className="minecraft-block bg-blue-600 w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+                    <Globe className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-3 text-center">
+                    GLOBAL NETWORK
+                  </h3>
+                  <p className="font-jetbrains text-sm text-gray-300 text-center mb-3">
+                    Access to MFHOP, organizer events, and cross-promotion
+                  </p>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
+                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
+                      <span>Federation membership</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
+                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
+                      <span>Community amplification</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105" data-testid="partner-benefit-2">
+                  <div className="minecraft-block bg-green-600 w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+                    <Users className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-3 text-center">
+                    FULL SUPPORT
+                  </h3>
+                  <p className="font-jetbrains text-sm text-gray-300 text-center mb-3">
+                    1-on-1 mentorship, playbooks, and dedicated assistance
+                  </p>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
+                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
+                      <span>Organizer mentorship</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
+                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
+                      <span>Judging frameworks</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105" data-testid="partner-benefit-3">
+                  <div className="minecraft-block bg-purple-600 w-12 h-12 mx-auto mb-4 flex items-center justify-center">
+                    <Trophy className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-3 text-center">
+                    PRIZES & PERKS
+                  </h3>
+                  <p className="font-jetbrains text-sm text-gray-300 text-center mb-3">
+                    Prize pools, swag kits, and software lab credits
+                  </p>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
+                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
+                      <span>Maximally prize pool</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
+                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
+                      <span>Emergency budget support</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="text-center">
+                <p className="text-gray-400 text-sm font-jetbrains mb-6">
+                  Whether you're a first-time organizer or returning host, you're never doing it alone.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link
+                    to="/partner"
+                    data-testid="button-partner-learn"
+                    className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-14 px-8 font-press-start text-sm"
+                  >
+                    <Rocket className="h-5 w-5" />
+                    <span>BECOME_A_PARTNER</span>
+                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+
+                  <a
+                    href="#"
+                    data-testid="button-partner-guide"
+                    className="pixel-button bg-black border-2 border-maximally-red text-maximally-red group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-white h-14 px-8 font-press-start text-sm"
+                  >
+                    <FileText className="h-5 w-5" />
+                    <span>VIEW_GUIDE</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Stats Section */}
         <section className="py-20 bg-gradient-to-b from-black via-gray-900 to-black relative">
