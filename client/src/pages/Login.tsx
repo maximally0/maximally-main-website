@@ -32,7 +32,7 @@ export default function Login() {
         />
       </Helmet>
 
-      <div className="min-h-screen bg-black dark:bg-black flex items-center justify-center p-4">
+      <div className="min-h-screen bg-black dark:bg-black flex items-center justify-center p-4 pt-24">
         <div className="starfield" />
         <div className="absolute inset-0 bg-grid-white opacity-20" />
         
