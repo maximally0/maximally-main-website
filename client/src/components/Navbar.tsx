@@ -35,6 +35,7 @@ const Navbar = () => {
     { path: "/events", label: "EVENTS", color: "#E50914" },
     { path: "/about", label: "ABOUT", color: "#E50914" },
     { path: "/resources", label: "RESOURCES", color: "#FFCB47" },
+    { path: "/profile", label: "PROFILE", color: "#E50914" },
     { path: "/contact", label: "CONTACT", color: "#FF2B2B" }
   ];
 
@@ -65,6 +66,13 @@ const Navbar = () => {
                 {item.label}
               </a>
             ))}
+            <a
+              href="/login"
+              className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+              data-testid="button-join"
+            >
+              JOIN
+            </a>
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}
@@ -95,6 +103,14 @@ const Navbar = () => {
                     {item.label}
                   </a>
                 ))}
+                <a
+                  href="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
+                  data-testid="button-join-mobile"
+                >
+                  JOIN
+                </a>
               </div>
             </div>
           </div>
