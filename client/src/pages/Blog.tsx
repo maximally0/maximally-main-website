@@ -601,21 +601,25 @@ const Blog = () => {
       excerpt: post.excerpt,
       date: format(new Date(post.date), 'MMMM d, yyyy'),
       readTime: post.readTime,
-      category: post.category,
-      link: post.link,
-      coverImage: undefined, // Static posts don't have cover images in the current data
-      authorName: undefined, // Static posts don't have author names in the current data
+      category: post.category || 'Blog',
+      // BlogCardProps requires a string link — ensure fallback string
+      link: post.link || '#',
+      // static posts have no cover image or author by design
+      coverImage: undefined,
+      authorName: undefined,
     }));
 
     const dynamicPosts: BlogCardProps[] = (dynamicBlogData?.data || []).map(post => ({
       title: post.title,
-      excerpt: generateExcerpt(post.content),
-      date: format(new Date(post.created_at), 'MMMM d, yyyy'),
-      readTime: formatReadingTime(post.reading_time_minutes, post.content),
-      category: post.tags || 'AI Hackathons',
-      link: `/blog/${post.slug}`,
-      coverImage: post.cover_image,
-      authorName: post.author_name,
+      excerpt: generateExcerpt(post.content || ''),
+      date: format(new Date(post.created_at || ''), 'MMMM d, yyyy'),
+      readTime: formatReadingTime(post.reading_time_minutes ?? null, post.content || ''),
+      // Normalize tags which may be jsonb (array or string) into a single string category
+      category: Array.isArray(post.tags) ? (post.tags[0] || 'AI Hackathons') : (typeof post.tags === 'string' ? post.tags : 'AI Hackathons'),
+      link: `/blog/${post.slug ?? ''}`,
+      // convert null cover_image to undefined so it matches BlogCardProps optional string
+      coverImage: post.cover_image ?? undefined,
+      authorName: post.author_name ?? undefined,
     }));
 
     // Combine and sort by date (most recent first)

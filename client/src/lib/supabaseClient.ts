@@ -9,15 +9,17 @@ export const supabase = (supabaseUrl && supabaseAnonKey)
   : null;
 
 export interface BlogPost {
-  id: string;
+  // DB uses integer ids
+  id: number;
   title: string;
   slug: string;
   content: string;
   cover_image: string | null;
-  author_name: string;
+  author_name?: string | null;
   status: 'draft' | 'published';
-  created_at: string;
-  updated_at: string;
-  tags: string;
-  reading_time_minutes: number | null;
+  created_at: string | null;
+  updated_at: string | null;
+  // tags is jsonb in the database — could be an array or a string or null
+  tags?: string | string[] | null;
+  reading_time_minutes?: number | null;
 }
