@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 
 import Index from './pages/Index';
+import Login from './pages/Login';
 import Makeathon from './pages/Makeathon';
 import Contact from './pages/Contact';
 import Support from './pages/Support';
@@ -177,6 +178,7 @@ const App = () => {
             <Navbar />
             <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/bootcamps" element={<Navigate to="/" replace />} />
             <Route path="/makeathon" element={<Makeathon />} />
             {/* Team route removed */}
