@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -8,159 +9,29 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail } from 'lucide-react';
+import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
+import type { User, Achievement, SelectHackathon } from '@shared/schema';
 
-interface UserProfile {
-  name: string;
-  bio: string;
-  location: string;
-  skills: string[];
-  email: string;
-  github?: string;
-  linkedin?: string;
-  twitter?: string;
-  website?: string;
-  avatarUrl?: string;
+interface HackathonWithDetails {
+  id: number;
+  userId: number;
+  hackathonId: string;
+  status: 'registered' | 'participated' | 'completed';
+  placement: string | null;
+  projectName: string | null;
+  projectDescription: string | null;
+  registeredAt: Date;
+  hackathon: SelectHackathon;
 }
 
-interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  date: string;
-  icon: string;
-}
-
-interface HackathonParticipation {
-  id: string;
-  name: string;
-  status: 'upcoming' | 'completed';
-  startDate: Date;
-  endDate: Date;
-  location: string;
-  placement?: string;
-  project?: string;
-  imageUrl?: string;
-}
-
-const mockUserProfile: UserProfile = {
-  name: 'Alex Johnson',
-  bio: 'Full-stack developer passionate about AI and building innovative solutions. Love participating in hackathons and learning new technologies.',
-  location: 'San Francisco, CA',
-  skills: ['React', 'TypeScript', 'Node.js', 'Python', 'AI/ML', 'PostgreSQL'],
-  email: 'alex.johnson@example.com',
-  github: 'alexjohnson',
-  linkedin: 'alexjohnson',
-  twitter: 'alexjohnson',
-  website: 'https://alexjohnson.dev',
-  avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex'
-};
-
-const mockHackathons: HackathonParticipation[] = [
-  {
-    id: '1',
-    name: 'AI Shipathon 2025',
-    status: 'upcoming',
-    startDate: new Date('2025-11-15'),
-    endDate: new Date('2025-11-17'),
-    location: 'Online',
-    imageUrl: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=250&fit=crop'
-  },
-  {
-    id: '2',
-    name: 'Protocol 404',
-    status: 'upcoming',
-    startDate: new Date('2025-12-01'),
-    endDate: new Date('2025-12-02'),
-    location: 'New York, NY',
-    imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=250&fit=crop'
-  },
-  {
-    id: '3',
-    name: 'CodeHypothesis',
-    status: 'completed',
-    startDate: new Date('2024-09-20'),
-    endDate: new Date('2024-09-22'),
-    location: 'San Francisco, CA',
-    placement: '1st Place',
-    project: 'AI-Powered Code Review Tool',
-    imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&h=250&fit=crop'
-  },
-  {
-    id: '4',
-    name: 'Promptstorm',
-    status: 'completed',
-    startDate: new Date('2024-07-10'),
-    endDate: new Date('2024-07-11'),
-    location: 'Online',
-    placement: 'Top 10',
-    project: 'Prompt Optimization Platform',
-    imageUrl: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=400&h=250&fit=crop'
-  },
-  {
-    id: '5',
-    name: 'Steal-a-thon',
-    status: 'completed',
-    startDate: new Date('2024-05-15'),
-    endDate: new Date('2024-05-16'),
-    location: 'Boston, MA',
-    placement: 'Participant',
-    project: 'Open Source Clone Builder',
-    imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=250&fit=crop'
-  }
-];
-
-const mockAchievements: Achievement[] = [
-  {
-    id: '1',
-    title: 'First Win',
-    description: 'Won your first hackathon',
-    date: '2024-09-22',
-    icon: '🏆'
-  },
-  {
-    id: '2',
-    title: 'Serial Hacker',
-    description: 'Participated in 5+ hackathons',
-    date: '2024-08-15',
-    icon: '⚡'
-  },
-  {
-    id: '3',
-    title: 'AI Innovator',
-    description: 'Built 3 AI-powered projects',
-    date: '2024-07-20',
-    icon: '🤖'
-  },
-  {
-    id: '4',
-    title: 'Team Player',
-    description: 'Collaborated with 10+ teammates',
-    date: '2024-06-10',
-    icon: '👥'
-  },
-  {
-    id: '5',
-    title: 'Early Bird',
-    description: 'Registered for 3 hackathons in advance',
-    date: '2024-10-01',
-    icon: '🐦'
-  },
-  {
-    id: '6',
-    title: 'Code Warrior',
-    description: 'Shipped 5 projects in hackathons',
-    date: '2024-09-05',
-    icon: '⚔️'
-  }
-];
-
-function HackathonCard({ hackathon }: { hackathon: HackathonParticipation }) {
+function HackathonCard({ userHackathon }: { userHackathon: HackathonWithDetails }) {
+  const { hackathon, placement, projectName } = userHackathon;
+  
   return (
     <Card 
       className="p-6 bg-white dark:bg-black border-gray-200 dark:border-red-900/30 hover:border-red-500 dark:hover:border-red-500 transition-colors"
-      data-testid={`hackathon-card-${hackathon.id}`}
+      data-testid={`hackathon-card-${userHackathon.id}`}
     >
       <div className="flex gap-4">
         {hackathon.imageUrl && (
@@ -168,33 +39,33 @@ function HackathonCard({ hackathon }: { hackathon: HackathonParticipation }) {
             src={hackathon.imageUrl} 
             alt={hackathon.name}
             className="w-24 h-24 object-cover rounded-lg"
-            data-testid={`hackathon-image-${hackathon.id}`}
+            data-testid={`hackathon-image-${userHackathon.id}`}
           />
         )}
         <div className="flex-1">
-          <h3 className="text-lg font-bold text-black dark:text-white mb-2" data-testid={`hackathon-name-${hackathon.id}`}>
+          <h3 className="text-lg font-bold text-black dark:text-white mb-2" data-testid={`hackathon-name-${userHackathon.id}`}>
             {hackathon.name}
           </h3>
           <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-            <div className="flex items-center gap-2" data-testid={`hackathon-date-${hackathon.id}`}>
+            <div className="flex items-center gap-2" data-testid={`hackathon-date-${userHackathon.id}`}>
               <Calendar className="w-4 h-4" />
               {format(hackathon.startDate, 'MMM dd, yyyy')} - {format(hackathon.endDate, 'MMM dd, yyyy')}
             </div>
-            <div className="flex items-center gap-2" data-testid={`hackathon-location-${hackathon.id}`}>
+            <div className="flex items-center gap-2" data-testid={`hackathon-location-${userHackathon.id}`}>
               <MapPin className="w-4 h-4" />
               {hackathon.location}
             </div>
-            {hackathon.placement && (
-              <div className="flex items-center gap-2" data-testid={`hackathon-placement-${hackathon.id}`}>
+            {placement && (
+              <div className="flex items-center gap-2" data-testid={`hackathon-placement-${userHackathon.id}`}>
                 <Trophy className="w-4 h-4 text-red-500" />
-                <span className="font-semibold text-red-500">{hackathon.placement}</span>
+                <span className="font-semibold text-red-500">{placement}</span>
               </div>
             )}
-            {hackathon.project && (
+            {projectName && (
               <div className="mt-2">
                 <span className="text-gray-500 dark:text-gray-500">Project:</span>{' '}
-                <span className="text-black dark:text-white" data-testid={`hackathon-project-${hackathon.id}`}>
-                  {hackathon.project}
+                <span className="text-black dark:text-white" data-testid={`hackathon-project-${userHackathon.id}`}>
+                  {projectName}
                 </span>
               </div>
             )}
@@ -205,8 +76,18 @@ function HackathonCard({ hackathon }: { hackathon: HackathonParticipation }) {
   );
 }
 
-function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: (profile: UserProfile) => void }) {
-  const [formData, setFormData] = useState<UserProfile>(profile);
+function EditProfileDialog({ profile, onSave }: { profile: User; onSave: (profile: Partial<User>) => void }) {
+  const [formData, setFormData] = useState<Partial<User>>({
+    name: profile.name || '',
+    bio: profile.bio || '',
+    location: profile.location || '',
+    email: profile.email || '',
+    skills: profile.skills || [],
+    github: profile.github || '',
+    linkedin: profile.linkedin || '',
+    twitter: profile.twitter || '',
+    website: profile.website || '',
+  });
   const [open, setOpen] = useState(false);
 
   const handleSave = () => {
@@ -226,7 +107,7 @@ function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: 
           Edit Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl bg-white dark:bg-black border-gray-200 dark:border-red-900/30">
+      <DialogContent className="max-w-2xl bg-white dark:bg-black border-gray-200 dark:border-red-900/30 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-black dark:text-white">Edit Profile</DialogTitle>
         </DialogHeader>
@@ -235,7 +116,7 @@ function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: 
             <Label htmlFor="name" className="text-black dark:text-white">Name</Label>
             <Input
               id="name"
-              value={formData.name}
+              value={formData.name || ''}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="mt-1 bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-black dark:text-white"
               data-testid="input-name"
@@ -245,7 +126,7 @@ function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: 
             <Label htmlFor="bio" className="text-black dark:text-white">Bio</Label>
             <Textarea
               id="bio"
-              value={formData.bio}
+              value={formData.bio || ''}
               onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
               className="mt-1 bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-black dark:text-white"
               rows={3}
@@ -256,7 +137,7 @@ function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: 
             <Label htmlFor="location" className="text-black dark:text-white">Location</Label>
             <Input
               id="location"
-              value={formData.location}
+              value={formData.location || ''}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
               className="mt-1 bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-black dark:text-white"
               data-testid="input-location"
@@ -267,7 +148,7 @@ function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: 
             <Input
               id="email"
               type="email"
-              value={formData.email}
+              value={formData.email || ''}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="mt-1 bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-black dark:text-white"
               data-testid="input-email"
@@ -321,7 +202,7 @@ function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: 
             <Label htmlFor="skills" className="text-black dark:text-white">Skills (comma-separated)</Label>
             <Input
               id="skills"
-              value={formData.skills.join(', ')}
+              value={(formData.skills || []).join(', ')}
               onChange={(e) => setFormData({ ...formData, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
               className="mt-1 bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-black dark:text-white"
               placeholder="React, TypeScript, Python, etc."
@@ -351,9 +232,49 @@ function EditProfileDialog({ profile, onSave }: { profile: UserProfile; onSave: 
 }
 
 export default function Profile() {
-  const [userProfile, setUserProfile] = useState<UserProfile>(mockUserProfile);
-  const upcomingHackathons = mockHackathons.filter(h => h.status === 'upcoming');
-  const previousHackathons = mockHackathons.filter(h => h.status === 'completed');
+  // Fetch user profile
+  const { data: userProfile, isLoading: profileLoading } = useQuery<User>({
+    queryKey: ['/api/profile'],
+  });
+
+  // Fetch user hackathons
+  const { data: userHackathons = [], isLoading: hackathonsLoading } = useQuery<HackathonWithDetails[]>({
+    queryKey: ['/api/profile/hackathons'],
+  });
+
+  // Fetch user achievements
+  const { data: achievements = [], isLoading: achievementsLoading } = useQuery<Achievement[]>({
+    queryKey: ['/api/profile/achievements'],
+  });
+
+  const handleSaveProfile = (updatedProfile: Partial<User>) => {
+    // TODO: Implement mutation to update profile via API
+    console.log('Profile update:', updatedProfile);
+  };
+
+  if (profileLoading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-red-500" />
+      </div>
+    );
+  }
+
+  if (!userProfile) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-black flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Please log in to view your profile</h2>
+          <Button asChild className="bg-red-500 hover:bg-red-600 text-white">
+            <a href="/login">Go to Login</a>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const upcomingHackathons = userHackathons.filter(h => h.status === 'registered');
+  const previousHackathons = userHackathons.filter(h => h.status === 'completed' || h.status === 'participated');
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white">
@@ -361,36 +282,46 @@ export default function Profile() {
         <Card className="p-8 mb-8 bg-white dark:bg-black border-gray-200 dark:border-red-900/30">
           <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
             <Avatar className="w-24 h-24 border-2 border-red-500" data-testid="avatar-user">
-              <AvatarImage src={userProfile.avatarUrl} alt={userProfile.name} />
+              <AvatarImage src={userProfile.avatarUrl || undefined} alt={userProfile.name || userProfile.username} />
               <AvatarFallback className="bg-red-500 text-white text-2xl">
-                {userProfile.name.split(' ').map(n => n[0]).join('')}
+                {(userProfile.name || userProfile.username).split(' ').map(n => n[0]).join('').toUpperCase()}
               </AvatarFallback>
             </Avatar>
             
             <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2" data-testid="text-username">{userProfile.name}</h1>
-              <p className="text-gray-600 dark:text-gray-400 mb-3" data-testid="text-bio">{userProfile.bio}</p>
+              <h1 className="text-3xl font-bold mb-2" data-testid="text-username">
+                {userProfile.name || userProfile.username}
+              </h1>
+              {userProfile.bio && (
+                <p className="text-gray-600 dark:text-gray-400 mb-3" data-testid="text-bio">{userProfile.bio}</p>
+              )}
               <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
-                <div className="flex items-center gap-1" data-testid="text-location">
-                  <MapPin className="w-4 h-4" />
-                  {userProfile.location}
-                </div>
-                <div className="flex items-center gap-1" data-testid="text-email">
-                  <Mail className="w-4 h-4" />
-                  {userProfile.email}
-                </div>
+                {userProfile.location && (
+                  <div className="flex items-center gap-1" data-testid="text-location">
+                    <MapPin className="w-4 h-4" />
+                    {userProfile.location}
+                  </div>
+                )}
+                {userProfile.email && (
+                  <div className="flex items-center gap-1" data-testid="text-email">
+                    <Mail className="w-4 h-4" />
+                    {userProfile.email}
+                  </div>
+                )}
               </div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {userProfile.skills.map((skill, index) => (
-                  <Badge 
-                    key={index} 
-                    className="bg-red-500/10 text-red-500 border-red-500/20"
-                    data-testid={`badge-skill-${index}`}
-                  >
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
+              {userProfile.skills && userProfile.skills.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {userProfile.skills.map((skill, index) => (
+                    <Badge 
+                      key={index} 
+                      className="bg-red-500/10 text-red-500 border-red-500/20"
+                      data-testid={`badge-skill-${index}`}
+                    >
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+              )}
               <div className="flex gap-3">
                 {userProfile.github && (
                   <a 
@@ -439,36 +370,46 @@ export default function Profile() {
               </div>
             </div>
             
-            <EditProfileDialog profile={userProfile} onSave={setUserProfile} />
+            <EditProfileDialog profile={userProfile} onSave={handleSaveProfile} />
           </div>
         </Card>
 
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-4 text-black dark:text-white" data-testid="heading-achievements">Achievements</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {mockAchievements.map((achievement) => (
-              <Card 
-                key={achievement.id}
-                className="p-4 bg-white dark:bg-black border-gray-200 dark:border-red-900/30 hover:border-red-500 dark:hover:border-red-500 transition-colors"
-                data-testid={`achievement-card-${achievement.id}`}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="text-3xl" data-testid={`achievement-icon-${achievement.id}`}>{achievement.icon}</div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-black dark:text-white mb-1" data-testid={`achievement-title-${achievement.id}`}>
-                      {achievement.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2" data-testid={`achievement-description-${achievement.id}`}>
-                      {achievement.description}
-                    </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-500" data-testid={`achievement-date-${achievement.id}`}>
-                      {format(new Date(achievement.date), 'MMM dd, yyyy')}
-                    </p>
+          {achievementsLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-red-500" />
+            </div>
+          ) : achievements.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {achievements.map((achievement) => (
+                <Card 
+                  key={achievement.id}
+                  className="p-4 bg-white dark:bg-black border-gray-200 dark:border-red-900/30 hover:border-red-500 dark:hover:border-red-500 transition-colors"
+                  data-testid={`achievement-card-${achievement.id}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="text-3xl" data-testid={`achievement-icon-${achievement.id}`}>{achievement.icon}</div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-black dark:text-white mb-1" data-testid={`achievement-title-${achievement.id}`}>
+                        {achievement.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2" data-testid={`achievement-description-${achievement.id}`}>
+                        {achievement.description}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-500" data-testid={`achievement-date-${achievement.id}`}>
+                        {format(new Date(achievement.earnedAt), 'MMM dd, yyyy')}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <Card className="p-8 text-center bg-white dark:bg-black border-gray-200 dark:border-red-900/30">
+              <p className="text-gray-500 dark:text-gray-500">No achievements yet. Participate in hackathons to earn badges!</p>
+            </Card>
+          )}
         </div>
 
         <div>
@@ -491,9 +432,13 @@ export default function Profile() {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="upcoming" className="mt-6 space-y-4">
-              {upcomingHackathons.length > 0 ? (
+              {hackathonsLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-red-500" />
+                </div>
+              ) : upcomingHackathons.length > 0 ? (
                 upcomingHackathons.map((hackathon) => (
-                  <HackathonCard key={hackathon.id} hackathon={hackathon} />
+                  <HackathonCard key={hackathon.id} userHackathon={hackathon} />
                 ))
               ) : (
                 <Card className="p-8 text-center bg-white dark:bg-black border-gray-200 dark:border-red-900/30">
@@ -504,9 +449,13 @@ export default function Profile() {
               )}
             </TabsContent>
             <TabsContent value="previous" className="mt-6 space-y-4">
-              {previousHackathons.length > 0 ? (
+              {hackathonsLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-red-500" />
+                </div>
+              ) : previousHackathons.length > 0 ? (
                 previousHackathons.map((hackathon) => (
-                  <HackathonCard key={hackathon.id} hackathon={hackathon} />
+                  <HackathonCard key={hackathon.id} userHackathon={hackathon} />
                 ))
               ) : (
                 <Card className="p-8 text-center bg-white dark:bg-black border-gray-200 dark:border-red-900/30">

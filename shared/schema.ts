@@ -6,6 +6,16 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  name: text("name"),
+  bio: text("bio"),
+  location: text("location"),
+  email: text("email"),
+  skills: text("skills").array().default([]),
+  github: text("github"),
+  linkedin: text("linkedin"),
+  twitter: text("twitter"),
+  website: text("website"),
+  avatarUrl: text("avatar_url"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -13,8 +23,52 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 });
 
+export const updateProfileSchema = createInsertSchema(users).pick({
+  name: true,
+  bio: true,
+  location: true,
+  email: true,
+  skills: true,
+  github: true,
+  linkedin: true,
+  twitter: true,
+  website: true,
+  avatarUrl: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
+export type UpdateProfile = z.infer<typeof updateProfileSchema>;
 export type User = typeof users.$inferSelect;
+
+// User hackathon registrations
+export const userHackathons = pgTable('user_hackathons', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  hackathonId: text('hackathon_id').notNull(),
+  status: text('status', { enum: ['registered', 'participated', 'completed'] }).notNull().default('registered'),
+  placement: text('placement'),
+  projectName: text('project_name'),
+  projectDescription: text('project_description'),
+  registeredAt: timestamp('registered_at').notNull().defaultNow(),
+});
+
+export const insertUserHackathonSchema = createInsertSchema(userHackathons).omit({ id: true });
+export type InsertUserHackathon = z.infer<typeof insertUserHackathonSchema>;
+export type UserHackathon = typeof userHackathons.$inferSelect;
+
+// User achievements
+export const achievements = pgTable('achievements', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull(),
+  title: text('title').notNull(),
+  description: text('description').notNull(),
+  icon: text('icon').notNull(),
+  earnedAt: timestamp('earned_at').notNull().defaultNow(),
+});
+
+export const insertAchievementSchema = createInsertSchema(achievements).omit({ id: true });
+export type InsertAchievement = z.infer<typeof insertAchievementSchema>;
+export type Achievement = typeof achievements.$inferSelect;
 
 // Hackathon table schema
 export const hackathons = pgTable('hackathons', {

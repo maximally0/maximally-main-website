@@ -66,6 +66,13 @@ const Navbar = () => {
                 {item.label}
               </a>
             ))}
+            <a
+              href="/login"
+              className="pixel-button bg-maximally-red border-2 border-maximally-red text-black hover:bg-maximally-yellow hover:border-maximally-yellow transition-all duration-200 font-press-start text-xs px-6 py-2"
+              data-testid="button-join"
+            >
+              JOIN
+            </a>
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}
@@ -96,6 +103,14 @@ const Navbar = () => {
                     {item.label}
                   </a>
                 ))}
+                <a
+                  href="/login"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
+                  data-testid="button-join-mobile"
+                >
+                  JOIN
+                </a>
               </div>
             </div>
           </div>
