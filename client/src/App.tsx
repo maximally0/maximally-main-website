@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 
 import Index from './pages/Index';
+import Login from './pages/Login';
 import Makeathon from './pages/Makeathon';
 import Contact from './pages/Contact';
 import Support from './pages/Support';
@@ -21,6 +22,7 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Story from './pages/Story';
 import About from './pages/About';
+import Profile from './pages/Profile';
 
 import ThankYou from './pages/ThankYou';
 import Bootcamps from '@/pages/Bootcamps';
@@ -177,6 +179,8 @@ const App = () => {
             <Navbar />
             <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/bootcamps" element={<Navigate to="/" replace />} />
             <Route path="/makeathon" element={<Makeathon />} />
             {/* Team route removed */}
