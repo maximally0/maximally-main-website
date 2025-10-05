@@ -412,130 +412,191 @@ const Index = () => {
         </section>
 
         {/* Partner Network Section */}
-        <section className="py-20 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
-          {/* Background Elements */}
+        <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 relative overflow-hidden">
+          {/* Animated Background Grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,215,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,215,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px] animate-pulse" />
+          
+          {/* Glowing Orbs */}
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-20 right-10 w-24 h-24 bg-maximally-yellow/10 blur-3xl rounded-full animate-pulse" />
-            <div className="absolute bottom-20 left-10 w-32 h-32 bg-maximally-red/10 blur-3xl rounded-full animate-pulse delay-500" />
+            <div className="absolute top-10 left-1/4 w-40 h-40 bg-maximally-yellow/20 blur-3xl rounded-full animate-pulse" />
+            <div className="absolute bottom-10 right-1/4 w-48 h-48 bg-maximally-red/20 blur-3xl rounded-full animate-pulse delay-700" />
+            <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-orange-500/15 blur-3xl rounded-full animate-pulse delay-300" />
+          </div>
+
+          {/* Floating Particles */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-maximally-yellow/40 pixel-border animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${i * 0.5}s`,
+                  animationDuration: `${4 + i}s`
+                }}
+              />
+            ))}
           </div>
 
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-6xl mx-auto">
               {/* Header */}
-              <div className="text-center mb-12">
-                <div className="minecraft-block bg-gradient-to-r from-maximally-yellow to-orange-500 text-black px-6 py-3 inline-block mb-6">
-                  <span className="font-press-start text-xs sm:text-sm flex items-center gap-2">
-                    <Handshake className="h-4 w-4" />
+              <div className="text-center mb-16">
+                <div className="minecraft-block bg-gradient-to-r from-maximally-yellow via-orange-500 to-maximally-yellow text-black px-8 py-4 inline-block mb-8 animate-[glow_2s_ease-in-out_infinite] shadow-lg shadow-maximally-yellow/50">
+                  <span className="font-press-start text-sm sm:text-base flex items-center gap-3">
+                    <Handshake className="h-5 w-5 animate-bounce" />
                     PARTNERSHIP PROGRAM
+                    <Sparkles className="h-5 w-5 animate-spin-slow" />
                   </span>
                 </div>
-                <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                
+                <h2 className="font-press-start text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 minecraft-text">
+                  <span className="text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:drop-shadow-[6px_6px_0px_rgba(255,215,0,0.5)] transition-all duration-300">
                     HOST WITH MAXIMALLY
                   </span>
                 </h2>
-                <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed mb-4">
-                  Co-organize, feature, or partner with Maximally to host your hackathon — 
-                  and we'll support you every step of the way.
-                </p>
-                <p className="text-gray-400 text-xs sm:text-sm md:text-base max-w-3xl mx-auto font-jetbrains">
-                  Join hundreds of student, startup, and community hackathons worldwide.
+                
+                <div className="max-w-4xl mx-auto mb-6">
+                  <p className="text-gray-200 text-base sm:text-lg md:text-xl font-jetbrains leading-relaxed mb-4">
+                    Co-organize, feature, or partner with Maximally to host your hackathon — 
+                    <span className="text-maximally-yellow font-bold"> and we'll support you every step of the way.</span>
+                  </p>
+                  <div className="flex items-center justify-center gap-2 text-maximally-red">
+                    <div className="h-px w-12 bg-maximally-red" />
+                    <Sparkles className="h-4 w-4" />
+                    <div className="h-px w-12 bg-maximally-red" />
+                  </div>
+                </div>
+                
+                <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains">
+                  Join <span className="text-maximally-yellow font-bold">hundreds</span> of student, startup, and community hackathons worldwide.
                 </p>
               </div>
 
-              {/* Benefits Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105" data-testid="partner-benefit-1">
-                  <div className="minecraft-block bg-blue-600 w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                    <Globe className="h-6 w-6 text-white" />
+              {/* Benefits Grid - Enhanced */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden" data-testid="partner-benefit-1">
+                  {/* Animated Background */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  {/* Corner Accents */}
+                  <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  <div className="relative z-10">
+                    <div className="minecraft-block bg-gradient-to-br from-blue-600 to-blue-800 w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-blue-600/50 group-hover:animate-bounce">
+                      <Globe className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="font-press-start text-sm sm:text-base text-maximally-red mb-4 text-center group-hover:text-maximally-yellow transition-colors">
+                      GLOBAL NETWORK
+                    </h3>
+                    <p className="font-jetbrains text-sm text-gray-300 text-center mb-4 leading-relaxed">
+                      Access to MFHOP, organizer events, and cross-promotion
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3 text-xs font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
+                        <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
+                        <span>Federation membership</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-xs font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
+                        <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
+                        <span>Community amplification</span>
+                      </li>
+                    </ul>
                   </div>
-                  <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-3 text-center">
-                    GLOBAL NETWORK
-                  </h3>
-                  <p className="font-jetbrains text-sm text-gray-300 text-center mb-3">
-                    Access to MFHOP, organizer events, and cross-promotion
-                  </p>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
-                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
-                      <span>Federation membership</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
-                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
-                      <span>Community amplification</span>
-                    </li>
-                  </ul>
                 </div>
 
-                <div className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105" data-testid="partner-benefit-2">
-                  <div className="minecraft-block bg-green-600 w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                    <Users className="h-6 w-6 text-white" />
+                <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden" data-testid="partner-benefit-2">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  <div className="relative z-10">
+                    <div className="minecraft-block bg-gradient-to-br from-green-600 to-green-800 w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-green-600/50 group-hover:animate-bounce">
+                      <Users className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="font-press-start text-sm sm:text-base text-maximally-red mb-4 text-center group-hover:text-maximally-yellow transition-colors">
+                      FULL SUPPORT
+                    </h3>
+                    <p className="font-jetbrains text-sm text-gray-300 text-center mb-4 leading-relaxed">
+                      1-on-1 mentorship, playbooks, and dedicated assistance
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3 text-xs font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
+                        <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
+                        <span>Organizer mentorship</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-xs font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
+                        <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
+                        <span>Judging frameworks</span>
+                      </li>
+                    </ul>
                   </div>
-                  <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-3 text-center">
-                    FULL SUPPORT
-                  </h3>
-                  <p className="font-jetbrains text-sm text-gray-300 text-center mb-3">
-                    1-on-1 mentorship, playbooks, and dedicated assistance
-                  </p>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
-                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
-                      <span>Organizer mentorship</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
-                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
-                      <span>Judging frameworks</span>
-                    </li>
-                  </ul>
                 </div>
 
-                <div className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105" data-testid="partner-benefit-3">
-                  <div className="minecraft-block bg-purple-600 w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                    <Trophy className="h-6 w-6 text-white" />
+                <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden" data-testid="partner-benefit-3">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
+                  
+                  <div className="relative z-10">
+                    <div className="minecraft-block bg-gradient-to-br from-purple-600 to-purple-800 w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-purple-600/50 group-hover:animate-bounce">
+                      <Trophy className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="font-press-start text-sm sm:text-base text-maximally-red mb-4 text-center group-hover:text-maximally-yellow transition-colors">
+                      PRIZES & PERKS
+                    </h3>
+                    <p className="font-jetbrains text-sm text-gray-300 text-center mb-4 leading-relaxed">
+                      Prize pools, swag kits, and software lab credits
+                    </p>
+                    <ul className="space-y-3">
+                      <li className="flex items-start gap-3 text-xs font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
+                        <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
+                        <span>Maximally prize pool</span>
+                      </li>
+                      <li className="flex items-start gap-3 text-xs font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
+                        <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
+                        <span>Emergency budget support</span>
+                      </li>
+                    </ul>
                   </div>
-                  <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-3 text-center">
-                    PRIZES & PERKS
-                  </h3>
-                  <p className="font-jetbrains text-sm text-gray-300 text-center mb-3">
-                    Prize pools, swag kits, and software lab credits
-                  </p>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
-                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
-                      <span>Maximally prize pool</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-xs font-jetbrains text-gray-400">
-                      <CheckCircle2 className="h-3 w-3 text-maximally-yellow flex-shrink-0 mt-0.5" />
-                      <span>Emergency budget support</span>
-                    </li>
-                  </ul>
                 </div>
               </div>
 
-              {/* CTA */}
+              {/* Enhanced CTA */}
               <div className="text-center">
-                <p className="text-gray-400 text-sm font-jetbrains mb-6">
-                  Whether you're a first-time organizer or returning host, you're never doing it alone.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <div className="pixel-card bg-gradient-to-r from-gray-900 via-black to-gray-900 border-2 border-maximally-yellow/50 p-8 mb-8 hover:border-maximally-yellow transition-all duration-300">
+                  <p className="text-gray-300 text-base sm:text-lg font-jetbrains mb-2">
+                    <span className="text-maximally-yellow font-bold">250+ hackathons advised.</span> You're never doing it alone.
+                  </p>
+                  <p className="text-gray-400 text-sm font-jetbrains">
+                    Whether you're a first-time organizer or returning host.
+                  </p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-6 justify-center">
                   <Link
                     to="/partner"
                     data-testid="button-partner-learn"
-                    className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-14 px-8 font-press-start text-sm"
+                    className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-3 hover:scale-110 transform transition-all hover:shadow-2xl hover:shadow-maximally-red/50 h-16 px-10 font-press-start text-sm sm:text-base relative overflow-hidden"
                   >
-                    <Rocket className="h-5 w-5" />
+                    <div className="absolute inset-0 bg-maximally-yellow opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                    <Rocket className="h-6 w-6 group-hover:animate-bounce" />
                     <span>BECOME_A_PARTNER</span>
-                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform" />
                   </Link>
 
-                  <a
-                    href="#"
+                  <Link
+                    to="/partner"
                     data-testid="button-partner-guide"
-                    className="pixel-button bg-black border-2 border-maximally-red text-maximally-red group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-white h-14 px-8 font-press-start text-sm"
+                    className="pixel-button bg-black border-4 border-maximally-red text-maximally-red group flex items-center justify-center gap-3 hover:scale-110 transform transition-all hover:bg-maximally-red hover:text-white hover:shadow-2xl hover:shadow-maximally-red/50 h-16 px-10 font-press-start text-sm sm:text-base"
                   >
-                    <FileText className="h-5 w-5" />
+                    <FileText className="h-6 w-6 group-hover:animate-pulse" />
                     <span>VIEW_GUIDE</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
