@@ -14,7 +14,6 @@ import {
   Clock,
   MapPin,
   Flame,
-  Award,
   Sparkles,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -315,19 +314,6 @@ const Index = () => {
                     </p>
                   </div>
 
-                  {/* Prize Pool */}
-                  <div className="mb-8">
-                    <div className="pixel-card bg-gradient-to-r from-maximally-yellow/20 to-maximally-red/20 border-2 border-maximally-yellow p-6 text-center transform hover:scale-105 transition-all duration-300">
-                      <Award className="h-8 w-8 text-maximally-yellow mx-auto mb-3 animate-pulse" />
-                      <p className="font-press-start text-xs sm:text-sm text-gray-400 mb-2">
-                        TOTAL PRIZE POOL
-                      </p>
-                      <p className="font-press-start text-2xl sm:text-3xl md:text-4xl text-maximally-yellow drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-                        $10,000+
-                      </p>
-                    </div>
-                  </div>
-
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link
@@ -350,34 +336,6 @@ const Index = () => {
                       <span>VIEW_DETAILS</span>
                     </Link>
                   </div>
-                </div>
-              </div>
-
-              {/* Stats Bar */}
-              <div className="grid grid-cols-3 gap-4 mt-8">
-                <div className="text-center pixel-card bg-black/50 border-2 border-maximally-red p-4 hover:border-maximally-yellow transition-all duration-300 hover:scale-105">
-                  <p className="font-press-start text-lg sm:text-2xl text-maximally-red mb-2">
-                    500+
-                  </p>
-                  <p className="font-press-start text-[10px] sm:text-xs text-gray-400">
-                    PARTICIPANTS
-                  </p>
-                </div>
-                <div className="text-center pixel-card bg-black/50 border-2 border-maximally-red p-4 hover:border-maximally-yellow transition-all duration-300 hover:scale-105">
-                  <p className="font-press-start text-lg sm:text-2xl text-maximally-red mb-2">
-                    50+
-                  </p>
-                  <p className="font-press-start text-[10px] sm:text-xs text-gray-400">
-                    TEAMS
-                  </p>
-                </div>
-                <div className="text-center pixel-card bg-black/50 border-2 border-maximally-red p-4 hover:border-maximally-yellow transition-all duration-300 hover:scale-105">
-                  <p className="font-press-start text-lg sm:text-2xl text-maximally-red mb-2">
-                    24H
-                  </p>
-                  <p className="font-press-start text-[10px] sm:text-xs text-gray-400">
-                    BUILD TIME
-                  </p>
                 </div>
               </div>
             </div>
