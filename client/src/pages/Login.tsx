@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
 
 export default function Login() {
@@ -20,6 +21,10 @@ export default function Login() {
 
   const handleGoogleSignIn = () => {
     console.log('Google sign-in clicked');
+  };
+
+  const handleGithubSignIn = () => {
+    console.log('GitHub sign-in clicked');
   };
 
   return (
@@ -49,27 +54,6 @@ export default function Login() {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <Button
-              variant="outline"
-              className="w-full bg-white dark:bg-white hover:bg-gray-100 dark:hover:bg-gray-100 text-black dark:text-black border-gray-300 dark:border-gray-300"
-              onClick={handleGoogleSignIn}
-              data-testid="button-google-signin"
-            >
-              <FcGoogle className="mr-2 h-5 w-5" />
-              Sign in with Google
-            </Button>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full bg-gray-700 dark:bg-gray-700" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-black dark:bg-black px-2 text-gray-400 dark:text-gray-400">
-                  Or continue with email
-                </span>
-              </div>
-            </div>
-
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-gray-200 dark:text-gray-200">
@@ -129,6 +113,39 @@ export default function Login() {
                 {isSignUp ? 'Sign Up' : 'Sign In'}
               </Button>
             </form>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator className="w-full bg-gray-700 dark:bg-gray-700" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-black dark:bg-black px-2 text-gray-400 dark:text-gray-400">
+                  Or sign in with
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <Button
+                variant="outline"
+                className="w-full bg-white dark:bg-white hover:bg-gray-100 dark:hover:bg-gray-100 text-black dark:text-black border-gray-300 dark:border-gray-300"
+                onClick={handleGoogleSignIn}
+                data-testid="button-google-signin"
+              >
+                <FcGoogle className="mr-2 h-5 w-5" />
+                Google
+              </Button>
+
+              <Button
+                variant="outline"
+                className="w-full bg-white dark:bg-white hover:bg-gray-100 dark:hover:bg-gray-100 text-black dark:text-black border-gray-300 dark:border-gray-300"
+                onClick={handleGithubSignIn}
+                data-testid="button-github-signin"
+              >
+                <FaGithub className="mr-2 h-5 w-5" />
+                GitHub
+              </Button>
+            </div>
 
             <div className="text-center text-sm">
               <button
