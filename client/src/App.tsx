@@ -23,6 +23,9 @@ import Privacy from './pages/Privacy';
 import Story from './pages/Story';
 import About from './pages/About';
 import Profile from './pages/Profile';
+import AdminPanel from './pages/AdminPanel';
+import RequireAuth from '@/components/RequireAuth';
+import MyProfileRedirect from './pages/MyProfileRedirect';
 
 import ThankYou from './pages/ThankYou';
 import Bootcamps from '@/pages/Bootcamps';
@@ -181,7 +184,9 @@ const App = () => {
             <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
+<Route path="/profile" element={<MyProfileRedirect />} />
+            <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="/bootcamps" element={<Navigate to="/" replace />} />
             <Route path="/makeathon" element={<Makeathon />} />
             {/* Team route removed */}
@@ -334,7 +339,7 @@ const App = () => {
             <Route path="/mfhop" element={<MFHOP />} />
             <Route path="/partner" element={<PartnerNetwork />} />
 
-            <Route path="/events" element={<Events />} />
+<Route path="/events" element={<Events />} />
             <Route
               path="/blog/makeathon-for-future"
               element={<MakeathonForFuture />}

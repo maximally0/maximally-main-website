@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Terminal } from "lucide-react";
+import { supabase, getCurrentUserWithProfile, signOut } from "@/lib/supabaseClient";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,12 +31,67 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileUrl, setProfileUrl] = useState<string>("/profile");
+
+  useEffect(() => {
+    (async () => {
+      if (!supabase) {
+        console.log('Supabase not configured, user will appear as not logged in');
+        setIsLoggedIn(false);
+        return;
+      }
+      
+      try {
+        const ctx = await getCurrentUserWithProfile();
+        if (ctx) {
+          setIsLoggedIn(true);
+          const fallback = ctx.user.email?.split('@')[0] || 'me';
+          const uname = (ctx.profile as any)?.username || fallback;
+          setProfileUrl(`/profile/${uname}`);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (err) {
+        console.error('Error checking auth status:', err);
+        setIsLoggedIn(false);
+      }
+    })();
+
+    // keep navbar in sync with auth state changes
+    if (!supabase) {
+      console.log('Supabase not available, skipping auth state subscription');
+      return;
+    }
+    
+    try {
+      const sub = supabase.auth.onAuthStateChange(async () => {
+        try {
+          const ctx = await getCurrentUserWithProfile();
+          if (ctx) {
+            setIsLoggedIn(true);
+            const fallback = ctx.user.email?.split('@')[0] || 'me';
+            const uname = (ctx.profile as any)?.username || fallback;
+            setProfileUrl(`/profile/${uname}`);
+          } else {
+            setIsLoggedIn(false);
+          }
+        } catch (err) {
+          console.error('Error in auth state change:', err);
+          setIsLoggedIn(false);
+        }
+      });
+      return () => { sub && (sub as any).data?.subscription?.unsubscribe?.(); };
+    } catch (err) {
+      console.error('Failed to set up auth state subscription:', err);
+    }
+  }, []);
+
   const menuItems = [
     { path: "/", label: "HOME", color: "#E50914" },
     { path: "/events", label: "EVENTS", color: "#E50914" },
     { path: "/about", label: "ABOUT", color: "#E50914" },
     { path: "/resources", label: "RESOURCES", color: "#FFCB47" },
-    { path: "/profile", label: "PROFILE", color: "#E50914" },
     { path: "/contact", label: "CONTACT", color: "#FF2B2B" }
   ];
 
@@ -66,13 +122,32 @@ const Navbar = () => {
                 {item.label}
               </a>
             ))}
-            <a
-              href="/login"
-              className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
-              data-testid="button-join"
-            >
-              JOIN
-            </a>
+            {isLoggedIn ? (
+              <>
+                <a
+                  href={profileUrl}
+                  className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                  data-testid="button-profile"
+                >
+                  PROFILE
+                </a>
+                <button
+                  onClick={async () => { await signOut(); window.location.href = '/'; }}
+                  className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                  data-testid="button-logout"
+                >
+                  LOGOUT
+                </button>
+              </>
+            ) : (
+              <a
+                href="/login"
+                className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                data-testid="button-join"
+              >
+                JOIN
+              </a>
+            )}
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}
@@ -103,14 +178,34 @@ const Navbar = () => {
                     {item.label}
                   </a>
                 ))}
-                <a
-                  href="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
-                  data-testid="button-join-mobile"
-                >
-                  JOIN
-                </a>
+                {isLoggedIn ? (
+                  <>
+                    <a
+                      href={profileUrl}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
+                      data-testid="button-profile-mobile"
+                    >
+                      PROFILE
+                    </a>
+                    <button
+                      onClick={async () => { setIsMenuOpen(false); await signOut(); window.location.href = '/'; }}
+                      className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
+                      data-testid="button-logout-mobile"
+                    >
+                      LOGOUT
+                    </button>
+                  </>
+                ) : (
+                  <a
+                    href="/login"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
+                    data-testid="button-join-mobile"
+                  >
+                    JOIN
+                  </a>
+                )}
               </div>
             </div>
           </div>

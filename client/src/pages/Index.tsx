@@ -70,58 +70,137 @@ const Index = () => {
     details_url?: string | null;
   } | null>(null);
 
+
   useEffect(() => {
     const loadFeatured = async () => {
+      console.log('🚀 Loading featured hackathon...');
+      if (!supabase) {
+        console.warn('Supabase not available, using default featured hackathon');
+        // Set a default featured hackathon
+        setFeatured({
+          title: 'Maximally Hacktober',
+          subtitle: "Build slow. Build loud. Finish strong. A month-long hackathon for builders who won't quit.",
+          start_date: 'Oct 1, 2025',
+          end_date: 'Oct 31, 2025',
+          duration: '1 month',
+          location: 'Online',
+          tag: 'Ongoing',
+          register_url: 'https://maximallyhacktober.devpost.com/',
+          details_url: 'https://maximally.in/hacktober',
+        });
+        return;
+      }
+      
+      try {
+        // Get featured hackathon ID from dashboard
+        console.log('📊 Step 1: Fetching dashboard...');
+        const { data: dashboardRow, error: dashErr } = await supabase
+          .from('dashboard')
+          .select('featured_hackathon_id')
+          .eq('id', 1)
+          .single();
+          
+        if (dashErr || !dashboardRow) {
+          console.error('❌ Failed to load dashboard row for featured hackathon', dashErr);
+          await loadLatestHackathon(); // Fallback to latest hackathon
+          return;
+        }
+
+        console.log('✅ Dashboard loaded:', dashboardRow);
+        const rawId = dashboardRow.featured_hackathon_id;
+        
+        if (rawId === undefined || rawId === null || rawId === '') {
+          console.warn('❌ No featured hackathon id found on dashboard row');
+          await loadLatestHackathon(); // Fallback to latest hackathon
+          return;
+        }
+        
+        const featuredId = typeof rawId === 'string' ? parseInt(rawId, 10) : Number(rawId);
+        console.log('🎯 Featured ID processed:', featuredId, '(type:', typeof featuredId, ')');
+        
+        if (Number.isNaN(featuredId)) {
+          console.warn('❌ Featured hackathon id is not a valid number:', rawId);
+          await loadLatestHackathon(); // Fallback to latest hackathon
+          return;
+        }
+
+        // Get the featured hackathon
+        console.log('🏆 Step 2: Fetching hackathon ID', featuredId, '...');
+        const { data: hack, error: hackErr } = await supabase
+          .from('hackathons')
+          .select('id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url')
+          .eq('id', featuredId)
+          .single();
+          
+        if (hackErr || !hack) {
+          console.error('❌ Failed to load hackathon by featured id', { featuredId, error: hackErr });
+          await loadLatestHackathon(); // Fallback to latest hackathon
+          return;
+        }
+
+        console.log('✅ Raw hackathon data:', hack);
+        
+        const firstTag = Array.isArray(hack.focus_areas)
+          ? String(hack.focus_areas[0] ?? '')
+          : (typeof hack.focus_areas === 'object' && hack.focus_areas !== null)
+            ? String(Object.values(hack.focus_areas as any)[0] ?? '')
+            : '';
+            
+        const processedFeatured = {
+          title: hack.title ?? 'FEATURED HACKATHON',
+          subtitle: hack.subtitle ?? null,
+          start_date: hack.start_date ?? null,
+          end_date: hack.end_date ?? null,
+          duration: hack.duration ?? null,
+          location: hack.location ?? null,
+          tag: firstTag || null,
+          register_url: hack.devpost_register_url ?? hack.registration_url ?? null,
+          details_url: hack.devpost_url ?? null,
+        };
+        
+        console.log('🎨 Processed featured object:', processedFeatured);
+        console.log('🔄 Setting featured state...');
+        setFeatured(processedFeatured);
+        console.log('✅ Featured state set!');
+      } catch (error) {
+        console.error('❌ Error loading featured hackathon:', error);
+        await loadLatestHackathon(); // Fallback to latest hackathon
+      }
+    };
+    
+    // Fallback function to load the latest hackathon
+    const loadLatestHackathon = async () => {
       if (!supabase) return;
-      const { data: dashboardRow, error: dashErr } = await supabase
-        .from('dashboard')
-        .select('featured_hackathon_id')
-        .eq('id', 1)
-        .single();
-      if (dashErr || !dashboardRow) {
-        console.error('Failed to load dashboard row for featured hackathon', dashErr);
-        return;
+      try {
+        const { data: latestHack, error: latestErr } = await supabase
+          .from('hackathons')
+          .select('id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url')
+          .eq('is_active', true)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .single();
+          
+        if (!latestErr && latestHack) {
+          const firstTag = Array.isArray(latestHack.focus_areas)
+            ? String(latestHack.focus_areas[0] ?? '')
+            : '';
+            
+          setFeatured({
+            title: latestHack.title ?? 'LATEST HACKATHON',
+            subtitle: latestHack.subtitle ?? null,
+            start_date: latestHack.start_date ?? null,
+            end_date: latestHack.end_date ?? null,
+            duration: latestHack.duration ?? null,
+            location: latestHack.location ?? null,
+            tag: firstTag || null,
+            register_url: latestHack.devpost_register_url ?? latestHack.registration_url ?? null,
+            details_url: latestHack.devpost_url ?? null,
+          });
+          console.log("✅ Loaded latest hackathon as featured:", latestHack);
+        }
+      } catch (err) {
+        console.error('Failed to load latest hackathon:', err);
       }
-
-      const rawId =
-        (dashboardRow as any).featured_hackathon_id
-      if (rawId === undefined || rawId === null || rawId === '') {
-        console.warn('No featured hackathon id found on dashboard row');
-        return;
-      }
-      const featuredId = typeof rawId === 'string' ? parseInt(rawId, 10) : Number(rawId);
-      if (Number.isNaN(featuredId)) {
-        console.warn('Featured hackathon id is not a valid number:', rawId);
-        return;
-      }
-
-      const { data: hack, error: hackErr } = await supabase
-        .from('hackathons')
-        .select('id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url')
-        .eq('id', featuredId)
-        .single();
-      if (hackErr || !hack) {
-        console.error('Failed to load hackathon by featured id', { featuredId, error: hackErr });
-        return;
-      }
-
-      const firstTag = Array.isArray(hack.focus_areas)
-        ? String(hack.focus_areas[0] ?? '')
-        : (typeof hack.focus_areas === 'object' && hack.focus_areas !== null)
-          ? String(Object.values(hack.focus_areas as any)[0] ?? '')
-          : '';
-      console.log("Fetched hackathon:", hack);
-      setFeatured({
-        title: hack.title ?? 'FEATURED HACKATHON',
-        subtitle: hack.subtitle ?? null,
-        start_date: hack.start_date ?? null,
-        end_date: hack.end_date ?? null,
-        duration: hack.duration ?? null,
-        location: hack.location ?? null,
-        tag: firstTag || null,
-        register_url: hack.devpost_register_url ?? hack.registration_url ?? null,
-        details_url: hack.devpost_url ?? null,
-      });
     };
 
     loadFeatured();

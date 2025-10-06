@@ -14,6 +14,7 @@ import HackathonCard from '@/components/CollapsibleHackathonCard';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { supabase } from '@/lib/supabaseClient';
 import type { SelectHackathon } from '@shared/schema';
+import { grandIndianHackathonSeason } from '@shared/schema';
 
 const Events = () => {
   // Use the shared SelectHackathon type so the card component receives the expected shape
@@ -43,55 +44,101 @@ const Events = () => {
   };
 
   const fetchHackathons = async () => {
-    if (!supabase) return; // gracefully do nothing if Supabase not configured
-    const { data, error } = await supabase
-      .from('hackathons')
-      .select(
-        'title, subtitle, start_date, end_date, location, duration, status, focus_areas, devpost_url, devpost_register_url'
-      )
-      .or('is_active.is.true,is_active.is.null')
-      .order('created_at', { ascending: false });
-    if (error) {
-      console.error('Error fetching hackathons', error.message);
+    if (!supabase) {
+      // Use fallback data from schema when Supabase is not configured
+      console.log('Supabase not configured, using fallback hackathon data');
+      setHackathons(grandIndianHackathonSeason);
       return;
     }
-    const items = (data as any[] | null) ?? [];
-    // Map Supabase row shape to SelectHackathon (schema used by UI components)
-    const mapped: SelectHackathon[] = items.map((h, idx) => ({
-      id: (h.id ?? h.title ?? `remote-${idx + 1}`).toString(),
-      name: h.title ?? h.name ?? '',
-      description: h.subtitle ?? h.description ?? '',
-      // convert timestamps/strings to Date objects expected by SelectHackathon
-      startDate: h.start_date ? new Date(h.start_date) : new Date(),
-      endDate: h.end_date ? new Date(h.end_date) : new Date(h.start_date ?? Date.now()),
-      length: h.duration ?? h.length ?? '',
-      location: h.location ?? 'Online',
-      participants: Number(h.participants ?? 0),
-      prizes: h.prizes ?? 'TBD',
-      tags: Array.isArray(h.focus_areas) ? h.focus_areas.map(String) : (Array.isArray(h.tags) ? h.tags.map(String) : []),
-      registerUrl: h.devpost_register_url ?? h.registerUrl ?? '#',
-      detailsUrl: h.devpost_url ?? h.detailsUrl ?? '#',
-      imageUrl: h.image_url ?? null,
-      organizerName: h.organizer_name ?? null,
-      organizerUrl: h.organizer_url ?? null,
-      status: (h.status ?? calcStatus(h.status ?? undefined, h.start_date)) as any,
-    }));
-    setHackathons(mapped);
+    
+    try {
+      console.log('📋 Events: Starting hackathons fetch...');
+      const { data, error } = await supabase
+        .from('hackathons')
+        .select(
+          'id, title, subtitle, start_date, end_date, location, duration, status, focus_areas, devpost_url, devpost_register_url, registration_url'
+        )
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+        
+      if (error) {
+        console.error('❌ Error fetching hackathons from Supabase:', error);
+        console.log('Error details:', error.code, error.message, error.details);
+        console.log('Falling back to hardcoded hackathon data');
+        setHackathons(grandIndianHackathonSeason);
+        return;
+      }
+      
+      console.log('✅ Events: Raw data received:', data);
+      const items = (data as any[] | null) ?? [];
+      console.log('📈 Events: Items array length:', items.length);
+      
+      if (items.length === 0) {
+        // If no data in Supabase, use fallback
+        console.log('🚨 No hackathons found in database, using fallback data');
+        setHackathons(grandIndianHackathonSeason);
+        return;
+      }
+      
+      // Map Supabase row shape to SelectHackathon (schema used by UI components)
+      console.log('🗺️ Events: Mapping', items.length, 'hackathons...');
+      const mapped: SelectHackathon[] = items.map((h, idx) => {
+        console.log(`  - Mapping hackathon ${idx + 1}:`, h.title);
+        return {
+          id: (h.id ?? `hackathon-${idx + 1}`).toString(),
+          name: h.title ?? '',
+          description: h.subtitle ?? '',
+          // convert date strings to Date objects expected by SelectHackathon
+          startDate: h.start_date ? new Date(h.start_date) : new Date(),
+          endDate: h.end_date ? new Date(h.end_date) : new Date(h.start_date ?? Date.now()),
+          length: h.duration ?? '48 hours',
+          location: h.location ?? 'Online',
+          participants: 0, // Not available in database yet
+          prizes: 'TBD', // Not available in database yet
+          tags: Array.isArray(h.focus_areas) ? h.focus_areas.map(String) : [],
+          registerUrl: h.devpost_register_url ?? h.registration_url ?? '#',
+          detailsUrl: h.devpost_url ?? '#',
+          imageUrl: null, // Not available in database yet
+          organizerName: 'Maximally', // Default organizer
+          organizerUrl: 'https://maximally.org',
+          status: (h.status ?? calcStatus(h.status ?? undefined, h.start_date)) as any,
+        };
+      });
+      
+      console.log('✅ Events: Mapped hackathons:', mapped.length, 'items');
+      console.log('First mapped item:', mapped[0]);
+      setHackathons(mapped);
+      console.log('🎉 Events: Hackathons state updated!');
+    } catch (err) {
+      console.error('❌ Failed to fetch hackathons from Supabase:', err);
+      console.log('Using fallback hackathon data due to connection error');
+      setHackathons(grandIndianHackathonSeason);
+    }
   };
 
   useEffect(() => {
     fetchHackathons();
+    
+    // Only set up real-time subscriptions if Supabase is properly configured
     const sb = supabase;
-    if (!sb) return;
-    const channel = sb
-      .channel('realtime-hackathons-events-page')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'hackathons' }, () => {
-        fetchHackathons();
-      })
-      .subscribe();
-    return () => {
-      sb.removeChannel(channel);
-    };
+    if (!sb) {
+      console.log('Supabase client not available, skipping real-time subscriptions');
+      return;
+    }
+    
+    try {
+      const channel = sb
+        .channel('realtime-hackathons-events-page')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'hackathons' }, () => {
+          fetchHackathons();
+        })
+        .subscribe();
+      return () => {
+        sb.removeChannel(channel);
+      };
+    } catch (err) {
+      console.error('Failed to set up real-time subscriptions:', err);
+    }
   }, []);
 
   // hackathons are loaded from Supabase above
