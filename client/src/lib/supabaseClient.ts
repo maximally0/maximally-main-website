@@ -4,30 +4,77 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Initialize Supabase client safely
+console.log('🔑 Supabase initialization:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  url: supabaseUrl,
+  keyPrefix: supabaseAnonKey?.slice(0, 20) + '...'
+});
+
+// Create single instance with proper configuration to prevent multiple instances
 export const supabase =
   supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey)
+    ? createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true
+        },
+        db: {
+          schema: 'public'
+        },
+        global: {
+          headers: { 'x-client-info': 'maximally-webapp' }
+        }
+      })
     : null;
 
 if (!supabase) {
-  console.warn('Supabase client not initialized. Check env variables.');
+  console.error('❌ Supabase client not initialized. Check env variables.');
+  console.error('- VITE_SUPABASE_URL:', supabaseUrl);
+  console.error('- VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Present' : 'Missing');
+} else {
+  console.log('✅ Supabase client initialized successfully');
+}
+
+// Create a separate client specifically for public data queries (bypasses auth state)
+export const supabasePublic = 
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          persistSession: false,  // Don't persist auth state
+          autoRefreshToken: false // Don't auto-refresh tokens
+        },
+        db: {
+          schema: 'public'
+        },
+        global: {
+          headers: { 'x-client-info': 'maximally-public' }
+        }
+      })
+    : null;
+
+if (supabasePublic) {
+  console.log('✅ Public Supabase client initialized for data queries');
 }
 
 // -------------------- Types --------------------
 export type Profile = {
   id: string; // uuid
   email: string | null;
-  role: 'user' | 'admin';
   username: string | null;
-  name: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
   bio: string | null;
   location: string | null;
   skills: string[] | null;
-  github: string | null;
-  linkedin: string | null;
-  twitter: string | null;
-  website: string | null;
-  avatar_url: string | null;
+  github_username: string | null;
+  linkedin_username: string | null;
+  twitter_username: string | null;
+  website_url: string | null;
+  role: 'user' | 'admin';
+  is_verified: boolean | null;
+  preferences: any | null;
   created_at?: string | null;
   updated_at?: string | null;
 };
@@ -40,15 +87,15 @@ export interface SignUpPayload {
 }
 
 export type UpdatableProfileFields = {
-  name?: string | null;
+  full_name?: string | null;
   bio?: string | null;
   location?: string | null;
   email?: string | null; // ignored server-side
   skills?: string[] | null;
-  github?: string | null;
-  linkedin?: string | null;
-  twitter?: string | null;
-  website?: string | null;
+  github_username?: string | null;
+  linkedin_username?: string | null;
+  twitter_username?: string | null;
+  website_url?: string | null;
   avatar_url?: string | null;
 };
 
@@ -203,7 +250,7 @@ export async function signUpWithEmailPassword(payload: SignUpPayload) {
         id: user.id,
         email: user.email ?? null,
         role: 'user',
-        name: name ?? null,
+        full_name: name ?? null,
         username: finalUsername,
       } as any;
 

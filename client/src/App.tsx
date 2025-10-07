@@ -3,6 +3,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { AuthProvider } from './contexts/AuthContext';
 import {
   BrowserRouter as Router,
   Routes,
@@ -177,7 +178,8 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <Router>
+          <AuthProvider>
+            <Router>
             <ScrollToTop />
 
             <Navbar />
@@ -493,7 +495,8 @@ const App = () => {
             {/* Catch all route for 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Router>
+            </Router>
+          </AuthProvider>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

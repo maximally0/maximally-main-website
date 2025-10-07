@@ -8,10 +8,12 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
-import { supabase, signInWithEmailPassword, signUpWithEmailPassword, getCurrentUserWithProfile } from '@/lib/supabaseClient';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '@/lib/supabaseClient';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { signIn, signUp } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -26,85 +28,57 @@ export default function Login() {
     setError(null);
     setLoading(true);
 
-    // Check if Supabase is available
-    if (!supabase) {
-      setError('Authentication service is not available. Please check your connection.');
-      setLoading(false);
-      return;
+    // Validation
+    if (isSignUp) {
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
+        setLoading(false);
+        return;
+      }
+      if (password.length < 8) {
+        setError('Password must be at least 8 characters long');
+        setLoading(false);
+        return;
+      }
+      if (name.trim().length < 2) {
+        setError('Name must be at least 2 characters long');
+        setLoading(false);
+        return;
+      }
+      if (username.trim().length < 3) {
+        setError('Username must be at least 3 characters long');
+        setLoading(false);
+        return;
+      }
     }
-
-    const withTimeout = async <T,>(p: Promise<T>, ms: number, label: string): Promise<T> => {
-      return await Promise.race<T>([
-        p,
-        new Promise<T>((_resolve, reject) =>
-          setTimeout(() => reject(new Error(`${label} timed out after ${ms/1000}s`)), ms)
-        ) as any,
-      ]);
-    };
 
     try {
       if (isSignUp) {
-        if (password !== confirmPassword) {
-          setError('Passwords do not match');
-          setLoading(false);
-          return;
-        }
-        
-        if (password.length < 6) {
-          setError('Password must be at least 6 characters long');
-          setLoading(false);
-          return;
-        }
-        
         console.log('Attempting to sign up user...');
-        await withTimeout(signUpWithEmailPassword({ email, password, name, username }), 15000, 'Sign up');
+        const result = await signUp(email, password, name.trim(), username.trim());
+        if (result.error) {
+          setError(result.error.message);
+          setLoading(false);
+          return;
+        }
         console.log('Sign up successful');
-      } else {
-        console.log('Attempting to sign in user...');
-        await withTimeout(signInWithEmailPassword(email, password), 15000, 'Sign in');
-        console.log('Sign in successful');
-      }
-
-      // Give more time for profile creation/fetching
-      console.log('Fetching user profile...');
-      const ctx = await Promise.race([
-        getCurrentUserWithProfile(),
-        new Promise<null>((resolve) => setTimeout(() => resolve(null), 10000)),
-      ]);
-
-      if (ctx && ctx.profile?.role === 'admin') {
-        console.log('Redirecting admin user to admin panel');
-        navigate('/admin');
-      } else if (ctx && ctx.profile) {
-        const fallback = ctx.user.email?.split('@')[0] || 'me';
-        const uname = ctx.profile.username || fallback;
-        console.log(`Redirecting user to profile: /profile/${uname}`);
-        navigate(`/profile/${uname}`);
-      } else if (ctx) {
-        console.log('User found but no profile, redirecting to generic profile');
+        // Redirect to profile page after successful signup
         navigate('/profile');
       } else {
-        console.log('No user context found, but auth seemed successful. Redirecting to home.');
-        navigate('/');
+        console.log('Attempting to sign in user...');
+        const result = await signIn(email, password);
+        if (result.error) {
+          setError(result.error.message);
+          setLoading(false);
+          return;
+        }
+        console.log('Sign in successful');
+        // Redirect to profile page after successful signin
+        navigate('/profile');
       }
     } catch (err: any) {
       console.error('Authentication error:', err);
-      let errorMessage = 'Authentication failed';
-      
-      if (err?.message?.includes('Invalid login credentials')) {
-        errorMessage = 'Invalid email or password';
-      } else if (err?.message?.includes('User already registered')) {
-        errorMessage = 'An account with this email already exists';
-      } else if (err?.message?.includes('timeout')) {
-        errorMessage = 'Request timed out. Please check your connection and try again.';
-      } else if (err?.message?.includes('Authentication service is not configured')) {
-        errorMessage = 'Authentication service is currently unavailable';
-      } else if (err?.message) {
-        errorMessage = err.message;
-      }
-      
-      setError(errorMessage);
-    } finally {
+      setError(err.message || 'An unexpected error occurred');
       setLoading(false);
     }
   };

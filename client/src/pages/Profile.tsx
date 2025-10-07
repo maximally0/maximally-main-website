@@ -220,15 +220,15 @@ export default function Profile() {
 
   const userProfile: ProfileUI = {
     username: dbProfile.username ?? '',
-    name: dbProfile.name ?? null,
+    name: dbProfile.full_name ?? null,
     bio: dbProfile.bio ?? null,
     location: dbProfile.location ?? null,
     email: dbProfile.email ?? null,
     skills: dbProfile.skills ?? [],
-    github: dbProfile.github ?? null,
-    linkedin: dbProfile.linkedin ?? null,
-    twitter: dbProfile.twitter ?? null,
-    website: dbProfile.website ?? null,
+    github: dbProfile.github_username ?? null,
+    linkedin: dbProfile.linkedin_username ?? null,
+    twitter: dbProfile.twitter_username ?? null,
+    website: dbProfile.website_url ?? null,
     avatarUrl: dbProfile.avatar_url ?? null,
   };
 

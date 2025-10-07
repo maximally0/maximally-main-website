@@ -23,7 +23,7 @@ import { Link } from 'react-router-dom';
 
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase, supabasePublic } from '@/lib/supabaseClient';
 
 const Index = () => {
   const [text, setText] = useState('');
@@ -74,8 +74,11 @@ const Index = () => {
   useEffect(() => {
     const loadFeatured = async () => {
       console.log('🚀 Loading featured hackathon...');
-      if (!supabase) {
-        console.warn('Supabase not available, using default featured hackathon');
+      console.log('🔧 Supabase client:', !!supabase);
+      console.log('🔧 Public client:', !!supabasePublic);
+      
+      if (!supabasePublic) {
+        console.warn('⚠️ Supabase public client not available, using default featured hackathon');
         // Set a default featured hackathon
         setFeatured({
           title: 'Maximally Hacktober',
@@ -92,16 +95,32 @@ const Index = () => {
       }
       
       try {
-        // Get featured hackathon ID from dashboard
-        console.log('📊 Step 1: Fetching dashboard...');
-        const { data: dashboardRow, error: dashErr } = await supabase
-          .from('dashboard')
-          .select('featured_hackathon_id')
-          .eq('id', 1)
-          .single();
+        // Use direct fetch to bypass Supabase client issues
+        const SUPABASE_URL = 'https://vbjqqspfosgelxhhqlks.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZianFxc3Bmb3NnZWx4aGhxbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjk2ODYsImV4cCI6MjA3MzAwNTY4Nn0.fpbf1kNT-qI54aaHS0-To3jrRKU91lgwINzHEC_wUis';
+        
+        console.log('📊 Step 1: Fetching dashboard via direct fetch...');
+        
+        const dashboardResponse = await fetch(`${SUPABASE_URL}/rest/v1/dashboard?select=featured_hackathon_id&id=eq.1`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!dashboardResponse.ok) {
+          throw new Error(`Dashboard fetch failed: ${dashboardResponse.status}`);
+        }
+        
+        const dashboardData = await dashboardResponse.json();
+        const dashboardRow = dashboardData?.[0];
           
-        if (dashErr || !dashboardRow) {
-          console.error('❌ Failed to load dashboard row for featured hackathon', dashErr);
+        console.log('📄 Dashboard query result:', dashboardData);
+          
+        if (!dashboardRow || !dashboardRow.featured_hackathon_id) {
+          console.error('❌ Failed to load dashboard row for featured hackathon');
+          console.log('🔄 Falling back to latest hackathon...');
           await loadLatestHackathon(); // Fallback to latest hackathon
           return;
         }
@@ -124,17 +143,29 @@ const Index = () => {
           return;
         }
 
-        // Get the featured hackathon
+        // Get the featured hackathon via direct fetch
         console.log('🏆 Step 2: Fetching hackathon ID', featuredId, '...');
-        const { data: hack, error: hackErr } = await supabase
-          .from('hackathons')
-          .select('id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url')
-          .eq('id', featuredId)
-          .single();
+        
+        const hackathonResponse = await fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,duration,location,focus_areas,devpost_url,devpost_register_url,registration_url&id=eq.${featuredId}`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!hackathonResponse.ok) {
+          console.error('❌ Failed to load hackathon by featured id', { featuredId, status: hackathonResponse.status });
+          await loadLatestHackathon();
+          return;
+        }
+        
+        const hackathonData = await hackathonResponse.json();
+        const hack = hackathonData?.[0];
           
-        if (hackErr || !hack) {
-          console.error('❌ Failed to load hackathon by featured id', { featuredId, error: hackErr });
-          await loadLatestHackathon(); // Fallback to latest hackathon
+        if (!hack) {
+          console.error('❌ No hackathon found for featured id', featuredId);
+          await loadLatestHackathon();
           return;
         }
 
@@ -170,15 +201,15 @@ const Index = () => {
     
     // Fallback function to load the latest hackathon
     const loadLatestHackathon = async () => {
-      if (!supabase) return;
+      if (!supabasePublic) return;
       try {
-        const { data: latestHack, error: latestErr } = await supabase
+        const { data: latestData, error: latestErr } = await supabasePublic
           .from('hackathons')
           .select('id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url')
           .eq('is_active', true)
           .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
+          .limit(1);
+        const latestHack = latestData?.[0]; // Get first row from array
           
         if (!latestErr && latestHack) {
           const firstTag = Array.isArray(latestHack.focus_areas)

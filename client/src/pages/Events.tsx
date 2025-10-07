@@ -12,7 +12,7 @@ import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import HackathonCard from '@/components/CollapsibleHackathonCard';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase, supabasePublic } from '@/lib/supabaseClient';
 import type { SelectHackathon } from '@shared/schema';
 import { grandIndianHackathonSeason } from '@shared/schema';
 
@@ -44,34 +44,44 @@ const Events = () => {
   };
 
   const fetchHackathons = async () => {
-    if (!supabase) {
+    console.log('📝 Events: Supabase client check:', !!supabase);
+    console.log('📝 Events: Public client check:', !!supabasePublic);
+    
+    if (!supabasePublic) {
       // Use fallback data from schema when Supabase is not configured
-      console.log('Supabase not configured, using fallback hackathon data');
+      console.log('⚠️ Supabase public client not configured, using fallback hackathon data');
       setHackathons(grandIndianHackathonSeason);
       return;
     }
     
     try {
-      console.log('📋 Events: Starting hackathons fetch...');
-      const { data, error } = await supabase
-        .from('hackathons')
-        .select(
-          'id, title, subtitle, start_date, end_date, location, duration, status, focus_areas, devpost_url, devpost_register_url, registration_url'
-        )
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-        
-      if (error) {
-        console.error('❌ Error fetching hackathons from Supabase:', error);
-        console.log('Error details:', error.code, error.message, error.details);
-        console.log('Falling back to hardcoded hackathon data');
+      // Use direct fetch to bypass Supabase client issues
+      const SUPABASE_URL = 'https://vbjqqspfosgelxhhqlks.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZianFxc3Bmb3NnZWx4aGhxbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjk2ODYsImV4cCI6MjA3MzAwNTY4Nn0.fpbf1kNT-qI54aaHS0-To3jrRKU91lgwINzHEC_wUis';
+      
+      console.log('📝 Events: Starting hackathons fetch via direct fetch...');
+      
+      const hackathonsResponse = await fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url&is_active=eq.true&order=created_at.desc`, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!hackathonsResponse.ok) {
+        console.error('❌ Error fetching hackathons:', hackathonsResponse.status);
+        console.log('🔄 Falling back to hardcoded hackathon data');
         setHackathons(grandIndianHackathonSeason);
         return;
       }
       
+      const data = await hackathonsResponse.json();
+      console.log('📄 Hackathons fetch result:', data);
+      
       console.log('✅ Events: Raw data received:', data);
-      const items = (data as any[] | null) ?? [];
-      console.log('📈 Events: Items array length:', items.length);
+      const items = Array.isArray(data) ? data : [];
+      console.log('📊 Events: Items array length:', items.length);
       
       if (items.length === 0) {
         // If no data in Supabase, use fallback
