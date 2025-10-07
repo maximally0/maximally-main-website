@@ -164,17 +164,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(429).json({ success: false, message: 'Too many requests' });
       }
 
-      // Allowlist fields and validate/sanitize
+      // Allowlist fields and validate/sanitize - using actual database field names
       type Patch = {
-        name?: string | null;
+        full_name?: string | null;
         bio?: string | null;
         location?: string | null;
         email?: string | null; // ignored here (email updates should go through auth API)
         skills?: string[] | null;
-        github?: string | null;
-        linkedin?: string | null;
-        twitter?: string | null;
-        website?: string | null;
+        github_username?: string | null;
+        linkedin_username?: string | null;
+        twitter_username?: string | null;
+        website_url?: string | null;
         avatar_url?: string | null;
       };
       const body: Patch = req.body || {};
@@ -215,15 +215,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       const patch: Patch = {
-        name: trimOrNull(body.name, 100),
+        full_name: trimOrNull(body.full_name, 100),
         bio: trimOrNull(body.bio, 1000),
         location: trimOrNull(body.location, 100),
         // email intentionally ignored to avoid desync with auth
         skills: sanitizeSkills(body.skills),
-        github: sanitizeHandle(body.github),
-        linkedin: sanitizeHandle(body.linkedin),
-        twitter: sanitizeHandle(body.twitter),
-        website: sanitizeWebsite(body.website),
+        github_username: sanitizeHandle(body.github_username),
+        linkedin_username: sanitizeHandle(body.linkedin_username),
+        twitter_username: sanitizeHandle(body.twitter_username),
+        website_url: sanitizeWebsite(body.website_url),
         avatar_url: trimOrNull(body.avatar_url, 500),
       };
 

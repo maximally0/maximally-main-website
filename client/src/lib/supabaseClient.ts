@@ -24,31 +24,22 @@ const getEnvVar = (key: string): string | undefined => {
 const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
 const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
 
-console.log('🌍 Environment debug:', {
-  hasImportMeta: typeof import.meta !== 'undefined',
-  hasEnv: typeof import.meta?.env !== 'undefined',
-  allEnvKeys: import.meta?.env ? Object.keys(import.meta.env) : [],
-  environment: typeof window !== 'undefined' ? 'browser' : 'server'
-});
+// Only log detailed environment info in development
+if (import.meta.env.DEV) {
+  console.log('🌍 Environment debug:', {
+    hasImportMeta: typeof import.meta !== 'undefined',
+    hasEnv: typeof import.meta?.env !== 'undefined',
+    allEnvKeys: import.meta?.env ? Object.keys(import.meta.env) : [],
+    environment: typeof window !== 'undefined' ? 'browser' : 'server'
+  });
 
-console.log('🔑 Supabase configuration:', {
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  urlLength: supabaseUrl?.length || 0,
-  keyLength: supabaseAnonKey?.length || 0,
-  urlSample: supabaseUrl ? supabaseUrl.slice(0, 30) + '...' : 'missing',
-  keySample: supabaseAnonKey ? supabaseAnonKey.slice(0, 20) + '...' : 'missing'
-});
-
-// Initialize Supabase client safely
-console.log('🔑 Supabase initialization:', {
-  hasUrl: !!supabaseUrl,
-  hasKey: !!supabaseAnonKey,
-  url: supabaseUrl,
-  keyPrefix: supabaseAnonKey?.slice(0, 20) + '...',
-  fullUrl: supabaseUrl,
-  environment: typeof window !== 'undefined' ? 'browser' : 'server'
-});
+  console.log('🔑 Supabase configuration:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseAnonKey,
+    urlLength: supabaseUrl?.length || 0,
+    keyLength: supabaseAnonKey?.length || 0
+  });
+}
 
 // Create single instance with proper configuration to prevent multiple instances
 // Use singleton pattern to ensure only one client is ever created
@@ -88,25 +79,12 @@ if (!supabase) {
   console.log('✅ Supabase client initialized successfully');
 }
 
-// Create a separate client specifically for public data queries (bypasses auth state)
-export const supabasePublic = 
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          persistSession: false,  // Don't persist auth state
-          autoRefreshToken: false // Don't auto-refresh tokens
-        },
-        db: {
-          schema: 'public'
-        },
-        global: {
-          headers: { 'x-client-info': 'maximally-public' }
-        }
-      })
-    : null;
+// Use the same client instance for all queries to avoid multiple GoTrueClient instances
+// Public data queries will work fine with the main client
+export const supabasePublic = supabase;
 
-if (supabasePublic) {
-  console.log('✅ Public Supabase client initialized for data queries');
+if (supabase) {
+  console.log('✅ Using main Supabase client for public data queries (no duplication)');
 }
 
 // -------------------- Types --------------------
@@ -172,9 +150,27 @@ export async function getSession(): Promise<Session | null> {
 }
 
 export async function getUser(): Promise<User | null> {
-  if (!supabase) return null;
-  const { data } = await supabase.auth.getUser();
-  return data.user ?? null;
+  if (!supabase) {
+    console.log('❌ getUser: Supabase client not available');
+    return null;
+  }
+  
+  try {
+    console.log('🔍 getUser: Calling supabase.auth.getUser()...');
+    const { data, error } = await supabase.auth.getUser();
+    
+    if (error) {
+      console.error('❌ getUser: Supabase auth error:', error);
+      return null;
+    }
+    
+    const user = data.user ?? null;
+    console.log('✅ getUser: Result:', user ? user.email : 'No user');
+    return user;
+  } catch (err: any) {
+    console.error('❌ getUser: Exception:', err.message || err);
+    return null;
+  }
 }
 
 // -------------------- Profile Helpers --------------------
@@ -211,21 +207,42 @@ export async function getProfileByUsername(username: string): Promise<Profile | 
 }
 
 export async function ensureUserProfile(user: User): Promise<Profile | null> {
-  if (!supabase) return null;
+  if (!supabase) {
+    console.error('❌ ensureUserProfile: Supabase client not available');
+    return null;
+  }
+  
   try {
+    console.log('🔍 ensureUserProfile: Checking existing profile for:', user.email);
     const existing = await getProfile(user.id);
-    if (existing) return existing;
+    if (existing) {
+      console.log('✅ ensureUserProfile: Existing profile found:', existing.username || existing.email);
+      return existing;
+    }
 
+    console.log('🔄 ensureUserProfile: Creating new profile for:', user.email);
     const email = user.email ?? null;
     const { data, error } = await supabase
       .from('profiles')
       .upsert({ id: user.id, email, role: 'user' }, { onConflict: 'id' })
       .select()
       .maybeSingle();
-    if (error) throw error;
-    return data as Profile ?? null;
-  } catch (err) {
-    console.error('ensureUserProfile error:', err);
+      
+    if (error) {
+      console.error('❌ ensureUserProfile: Database error:', error);
+      throw error;
+    }
+    
+    const profile = data as Profile ?? null;
+    if (profile) {
+      console.log('✅ ensureUserProfile: New profile created:', profile.email);
+    } else {
+      console.error('❌ ensureUserProfile: No profile returned from upsert');
+    }
+    
+    return profile;
+  } catch (err: any) {
+    console.error('❌ ensureUserProfile error:', err.message || err);
     return null;
   }
 }
@@ -325,12 +342,61 @@ export async function signOut() {
 }
 
 // -------------------- User Helpers --------------------
+// Cache promise to prevent multiple simultaneous calls
+let _getCurrentUserPromise: Promise<{ user: User; profile: Profile } | null> | null = null;
+
 export async function getCurrentUserWithProfile(): Promise<{ user: User; profile: Profile } | null> {
-  const user = await getUser();
-  if (!user) return null;
-  const profile = await ensureUserProfile(user);
-  if (!profile) return null;
-  return { user, profile };
+  // If there's already a pending request, return that promise
+  if (_getCurrentUserPromise) {
+    console.log('🔄 getCurrentUserWithProfile: Using cached promise');
+    return _getCurrentUserPromise;
+  }
+  
+  console.log('👤 getCurrentUserWithProfile: Starting new request...');
+  
+  // Create and cache the promise with timeout
+  _getCurrentUserPromise = (async () => {
+    try {
+      // Add timeout to prevent hanging indefinitely
+      const result = await Promise.race([
+        (async () => {
+          const user = await getUser();
+          if (!user) {
+            console.log('❌ getCurrentUserWithProfile: No user found');
+            return null;
+          }
+          
+          console.log('👤 getCurrentUserWithProfile: User found:', user.email);
+          
+          const profile = await ensureUserProfile(user);
+          if (!profile) {
+            console.error('❌ getCurrentUserWithProfile: No profile found/created');
+            return null;
+          }
+          
+          console.log('✅ getCurrentUserWithProfile: Success! Profile:', {
+            username: profile.username,
+            email: profile.email,
+            role: profile.role
+          });
+          
+          return { user, profile };
+        })(),
+        new Promise<null>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error('getCurrentUserWithProfile timeout after 10 seconds'));
+          }, 10000);
+        })
+      ]);
+      
+      return result;
+    } finally {
+      // Clear the cache after completion (success or failure)
+      _getCurrentUserPromise = null;
+    }
+  })();
+  
+  return _getCurrentUserPromise;
 }
 
 export async function isAdmin(): Promise<boolean> {

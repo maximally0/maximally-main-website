@@ -55,25 +55,44 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const signIn = async (email: string, password: string) => {
+    let timeoutId: NodeJS.Timeout;
+    
     try {
       setLoading(true);
+      console.log('🔑 Starting sign in for:', email);
+      
+      // Set a backup timeout to clear loading state
+      timeoutId = setTimeout(() => {
+        console.log('⏰ Sign in timeout - clearing loading state');
+        setLoading(false);
+      }, 3000); // 3 second max wait
+      
       const user = await signInWithEmailPassword(email, password);
       
       console.log('✅ Sign in successful:', user?.email);
+      // Clear the timeout since sign in was successful
+      clearTimeout(timeoutId);
+      
       // The auth state change listener will handle setting user/profile
       return { error: null };
     } catch (error: any) {
-      console.error('❌ Sign in error:', error);
+      console.error('❌ Sign in error:', error.message || error);
+      if (timeoutId) clearTimeout(timeoutId);
       return { error };
     } finally {
-      // Add a delay to ensure auth state change has time to process
-      setTimeout(() => setLoading(false), 500);
+      // Always ensure loading is cleared after a short delay
+      setTimeout(() => {
+        console.log('🔄 Final clearing of sign in loading state');
+        setLoading(false);
+      }, 100);
     }
   };
 
   const signUp = async (email: string, password: string, name: string, username: string) => {
     try {
       setLoading(true);
+      console.log('📝 Starting sign up for:', email);
+      
       const payload: SignUpPayload = { email, password, name, username };
       const user = await signUpWithEmailPassword(payload);
       
@@ -81,11 +100,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // The auth state change listener will handle setting user/profile
       return { error: null };
     } catch (error: any) {
-      console.error('❌ Sign up error:', error);
+      console.error('❌ Sign up error:', error.message || error);
       return { error };
     } finally {
-      // Add a delay to ensure auth state change has time to process
-      setTimeout(() => setLoading(false), 500);
+      // Add a shorter delay and ensure loading is always cleared
+      setTimeout(() => {
+        console.log('🔄 Clearing sign up loading state');
+        setLoading(false);
+      }, 300);
     }
   };
 
@@ -109,6 +131,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
       return;
     }
+
+    // Fallback: If loading state persists for too long, clear it
+    const loadingTimeout = setTimeout(() => {
+      console.warn('⚠️ Auth loading state timeout - forcing clear');
+      setLoading(false);
+    }, 8000); // 8 seconds timeout
 
     // Get initial session
     const getInitialSession = async () => {
@@ -151,18 +179,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        console.log('👤 Getting user profile...');
-        // Get user profile when signed in
+        console.log('👤 Getting user profile for:', session.user.email);
+        // Get user profile when signed in with timeout protection
         try {
-          const result = await getCurrentUserWithProfile();
+          // Add timeout to prevent hanging
+          const profilePromise = getCurrentUserWithProfile();
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Profile loading timeout')), 5000)
+          );
+          
+          const result = await Promise.race([profilePromise, timeoutPromise]);
           if (result) {
             setProfile(result.profile);
-            console.log('✅ Profile loaded:', result.profile.username || result.profile.email);
+            console.log('✅ Profile loaded successfully:', result.profile.username || result.profile.email);
           } else {
-            console.warn('⚠️ No profile found for user');
+            console.warn('⚠️ No profile found for user, this might indicate a database issue');
+            // Set profile to null but don't block the auth flow
+            setProfile(null);
           }
-        } catch (error) {
-          console.error('❌ Error getting profile after auth change:', error);
+        } catch (error: any) {
+          console.error('❌ Error getting profile after auth change:', error.message || error);
+          // Don't block the auth flow even if profile loading fails
+          setProfile(null);
         }
       } else {
         console.log('🚪 User signed out, clearing profile');
@@ -173,8 +211,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(loadingTimeout);
+    };
+  }, [loading]);
 
   const value: AuthContextType = {
     user,

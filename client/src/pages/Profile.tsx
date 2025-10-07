@@ -235,7 +235,21 @@ export default function Profile() {
   const isOwner = currentCtx?.user?.id === dbProfile.id;
 
   const handleSaveProfile = async (updatedProfile: Partial<ProfileUI>) => {
-    await updateProfileMe({ ...updatedProfile, avatar_url: updatedProfile.avatarUrl ?? null });
+    // Map UI field names to database field names
+    const dbFields = {
+      full_name: updatedProfile.name,
+      bio: updatedProfile.bio,
+      location: updatedProfile.location,
+      skills: updatedProfile.skills,
+      github_username: updatedProfile.github,
+      linkedin_username: updatedProfile.linkedin,
+      twitter_username: updatedProfile.twitter,
+      website_url: updatedProfile.website,
+      avatar_url: updatedProfile.avatarUrl ?? null
+    };
+    
+    console.log('Saving profile with fields:', dbFields);
+    await updateProfileMe(dbFields);
     await queryClient.invalidateQueries({ queryKey: ['profile', username] });
   };
 
@@ -244,8 +258,192 @@ export default function Profile() {
   // with type-safe mapping and loaders.
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white">
-      {/* Copy-paste the full UI structure of your current JSX here, replacing unsafe any with proper types */}
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-black to-gray-900 pt-20">
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex flex-col md:flex-row items-start gap-8">
+            {/* Avatar */}
+            <div className="flex-shrink-0">
+              <Avatar className="w-32 h-32 border-4 border-maximally-red">
+                <AvatarImage src={userProfile.avatarUrl || ''} alt={userProfile.name || userProfile.username} />
+                <AvatarFallback className="bg-maximally-red text-white text-3xl">
+                  {(userProfile.name || userProfile.username || 'U').charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+
+            {/* Profile Info */}
+            <div className="flex-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-3xl font-bold text-maximally-red mb-2">
+                    {userProfile.name || userProfile.username}
+                  </h1>
+                  <p className="text-gray-300 text-lg">@{userProfile.username}</p>
+                </div>
+                {isOwner && (
+                  <div className="mt-4 sm:mt-0">
+                    <EditProfileDialog profile={userProfile} onSave={handleSaveProfile} />
+                  </div>
+                )}
+              </div>
+
+              {/* Bio */}
+              {userProfile.bio && (
+                <p className="text-gray-300 mb-4 max-w-2xl">{userProfile.bio}</p>
+              )}
+
+              {/* Location and Contact Info */}
+              <div className="flex flex-wrap gap-6 mb-6">
+                {userProfile.location && (
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <MapPin className="w-4 h-4" />
+                    <span>{userProfile.location}</span>
+                  </div>
+                )}
+                {userProfile.email && (
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Mail className="w-4 h-4" />
+                    <span>{userProfile.email}</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Social Links */}
+              <div className="flex flex-wrap gap-4 mb-6">
+                {userProfile.github && (
+                  <a
+                    href={`https://github.com/${userProfile.github}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-400 hover:text-maximally-red transition-colors"
+                  >
+                    <Github className="w-4 h-4" />
+                    <span>GitHub</span>
+                  </a>
+                )}
+                {userProfile.linkedin && (
+                  <a
+                    href={`https://linkedin.com/in/${userProfile.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-400 hover:text-maximally-red transition-colors"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    <span>LinkedIn</span>
+                  </a>
+                )}
+                {userProfile.twitter && (
+                  <a
+                    href={`https://twitter.com/${userProfile.twitter}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-400 hover:text-maximally-red transition-colors"
+                  >
+                    <Twitter className="w-4 h-4" />
+                    <span>Twitter</span>
+                  </a>
+                )}
+                {userProfile.website && (
+                  <a
+                    href={userProfile.website.startsWith('http') ? userProfile.website : `https://${userProfile.website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-gray-400 hover:text-maximally-red transition-colors"
+                  >
+                    <Globe className="w-4 h-4" />
+                    <span>Website</span>
+                  </a>
+                )}
+              </div>
+
+              {/* Skills */}
+              {userProfile.skills && userProfile.skills.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-maximally-red mb-3">Skills</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {userProfile.skills.map((skill, index) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="bg-maximally-red/20 text-maximally-red border-maximally-red/30"
+                      >
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Content Tabs */}
+      <div className="container mx-auto px-4 py-8">
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-gray-900 mb-8">
+            <TabsTrigger value="overview" className="text-gray-400 data-[state=active]:text-maximally-red">
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="hackathons" className="text-gray-400 data-[state=active]:text-maximally-red">
+              Hackathons
+            </TabsTrigger>
+            <TabsTrigger value="achievements" className="text-gray-400 data-[state=active]:text-maximally-red">
+              Achievements
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            <Card className="bg-gray-900 border-gray-800">
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-maximally-red mb-4">About</h3>
+                <p className="text-gray-300">
+                  {userProfile.bio || 'This user hasn\'t added a bio yet.'}
+                </p>
+              </div>
+            </Card>
+
+            {/* Recent Activity Placeholder */}
+            <Card className="bg-gray-900 border-gray-800">
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-maximally-red mb-4">Recent Activity</h3>
+                <p className="text-gray-500">No recent activity to show.</p>
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="hackathons" className="space-y-6">
+            <div className="text-center py-12">
+              <Trophy className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-400 mb-2">No Hackathons Yet</h3>
+              <p className="text-gray-500">This user hasn't participated in any hackathons yet.</p>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="achievements" className="space-y-6">
+            <div className="text-center py-12">
+              <Trophy className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-400 mb-2">No Achievements Yet</h3>
+              <p className="text-gray-500">This user hasn't earned any achievements yet.</p>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        {/* Delete Account Button for Owner */}
+        {isOwner && (
+          <div className="mt-12 pt-8 border-t border-gray-800">
+            <div className="bg-red-900/20 border border-red-900/30 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-red-400 mb-2">Danger Zone</h3>
+              <p className="text-gray-400 mb-4">
+                Once you delete your account, there is no going back. Please be certain.
+              </p>
+              <DeleteAccountButton />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -62,8 +62,8 @@ export default function Login() {
           return;
         }
         console.log('Sign up successful');
-        // Redirect to profile page after successful signup
-        navigate('/profile');
+        // Redirect to home page after successful signup
+        navigate('/');
       } else {
         console.log('Attempting to sign in user...');
         const result = await signIn(email, password);
@@ -73,8 +73,8 @@ export default function Login() {
           return;
         }
         console.log('Sign in successful');
-        // Redirect to profile page after successful signin
-        navigate('/profile');
+        // Redirect to home page after successful signin
+        navigate('/');
       }
     } catch (err: any) {
       console.error('Authentication error:', err);
