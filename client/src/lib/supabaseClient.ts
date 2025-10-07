@@ -52,10 +52,7 @@ if (supabaseUrl && supabaseAnonKey && !_supabaseInstance) {
       autoRefreshToken: true,
       detectSessionInUrl: true,
       // Prevent multiple auth listeners
-      storageKey: 'maximally-supabase-auth'
-    },
-    db: {
-      schema: 'public'
+      storageKey: 'maximally-supabase-auth',
     },
     global: {
       headers: { 'x-client-info': 'maximally-webapp' }
@@ -150,27 +147,68 @@ export async function getSession(): Promise<Session | null> {
 }
 
 export async function getUser(): Promise<User | null> {
-  if (!supabase) {
-    console.log('❌ getUser: Supabase client not available');
-    return null;
-  }
+  if (!supabase) return null;
   
   try {
-    console.log('🔍 getUser: Calling supabase.auth.getUser()...');
     const { data, error } = await supabase.auth.getUser();
-    
-    if (error) {
-      console.error('❌ getUser: Supabase auth error:', error);
-      return null;
-    }
-    
-    const user = data.user ?? null;
-    console.log('✅ getUser: Result:', user ? user.email : 'No user');
-    return user;
+    if (error) return null;
+    return data.user ?? null;
   } catch (err: any) {
-    console.error('❌ getUser: Exception:', err.message || err);
+    console.error('getUser error:', err.message || err);
     return null;
   }
+}
+
+// -------------------- OAuth Profile Helpers --------------------
+interface OAuthProfileData {
+  fullName?: string;
+  username?: string;
+  avatarUrl?: string;
+  githubUsername?: string;
+}
+
+function extractGoogleProfileData(user: User): OAuthProfileData {
+  const metadata = user.user_metadata || {};
+  const identities = user.identities || [];
+  
+  // Get Google identity data
+  const googleIdentity = identities.find(id => id.provider === 'google');
+  const googleData = googleIdentity?.identity_data || {};
+  
+  return {
+    fullName: metadata.full_name || metadata.name || googleData.name,
+    username: metadata.preferred_username || metadata.email?.split('@')[0],
+    avatarUrl: metadata.avatar_url || metadata.picture || googleData.picture,
+  };
+}
+
+function extractGitHubProfileData(user: User): OAuthProfileData {
+  const metadata = user.user_metadata || {};
+  const identities = user.identities || [];
+  
+  // Get GitHub identity data
+  const githubIdentity = identities.find(id => id.provider === 'github');
+  const githubData = githubIdentity?.identity_data || {};
+  
+  return {
+    fullName: metadata.full_name || metadata.name || githubData.name,
+    username: metadata.preferred_username || metadata.user_name || githubData.login,
+    avatarUrl: metadata.avatar_url || githubData.avatar_url,
+    githubUsername: metadata.user_name || githubData.login,
+  };
+}
+
+function extractOAuthProfileData(user: User): OAuthProfileData {
+  const identities = user.identities || [];
+  
+  // Check which OAuth provider was used
+  if (identities.some(id => id.provider === 'google')) {
+    return extractGoogleProfileData(user);
+  } else if (identities.some(id => id.provider === 'github')) {
+    return extractGitHubProfileData(user);
+  }
+  
+  return {};
 }
 
 // -------------------- Profile Helpers --------------------
@@ -183,7 +221,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
       .eq('id', userId)
       .maybeSingle();
     if (error) throw error;
-    return data as Profile ?? null;
+    return (data as unknown as Profile) ?? null;
   } catch (err) {
     console.error('getProfile error:', err);
     return null;
@@ -199,50 +237,150 @@ export async function getProfileByUsername(username: string): Promise<Profile | 
       .eq('username', username)
       .maybeSingle();
     if (error) throw error;
-    return data as Profile ?? null;
+    return (data as unknown as Profile) ?? null;
   } catch (err) {
     console.error('getProfileByUsername error:', err);
     return null;
   }
 }
 
-export async function ensureUserProfile(user: User): Promise<Profile | null> {
-  if (!supabase) {
-    console.error('❌ ensureUserProfile: Supabase client not available');
-    return null;
-  }
+export async function isUsernameAvailable(username: string): Promise<boolean> {
+  if (!supabase) return false;
+  if (!username || username.length < 3) return false;
   
   try {
-    console.log('🔍 ensureUserProfile: Checking existing profile for:', user.email);
-    const existing = await getProfile(user.id);
-    if (existing) {
-      console.log('✅ ensureUserProfile: Existing profile found:', existing.username || existing.email);
-      return existing;
-    }
-
-    console.log('🔄 ensureUserProfile: Creating new profile for:', user.email);
-    const email = user.email ?? null;
     const { data, error } = await supabase
       .from('profiles')
-      .upsert({ id: user.id, email, role: 'user' }, { onConflict: 'id' })
-      .select()
+      .select('id')
+      .eq('username', username)
       .maybeSingle();
       
-    if (error) {
-      console.error('❌ ensureUserProfile: Database error:', error);
-      throw error;
+    if (error && error.code !== 'PGRST116') {
+      console.error('isUsernameAvailable error:', error);
+      return false;
     }
     
-    const profile = data as Profile ?? null;
-    if (profile) {
-      console.log('✅ ensureUserProfile: New profile created:', profile.email);
-    } else {
-      console.error('❌ ensureUserProfile: No profile returned from upsert');
+    return !data; // Available if no data found
+  } catch (err) {
+    console.error('isUsernameAvailable error:', err);
+    return false;
+  }
+}
+
+export async function generateUniqueUsername(baseUsername: string): Promise<string> {
+  if (!supabase) return baseUsername;
+  
+  let username = slugifyUsername(baseUsername);
+  let attempts = 0;
+  const maxAttempts = 10;
+  
+  while (attempts < maxAttempts) {
+    const isAvailable = await isUsernameAvailable(username);
+    if (isAvailable) {
+      return username;
     }
     
-    return profile;
+    attempts++;
+    const suffix = Math.random().toString(36).slice(2, 4);
+    username = `${slugifyUsername(baseUsername)}${suffix}`;
+  }
+  
+  // Fallback with timestamp
+  return `${slugifyUsername(baseUsername)}${Date.now().toString().slice(-4)}`;
+}
+
+export async function ensureUserProfile(user: User): Promise<Profile | null> {
+  if (!supabase) return null;
+  
+  try {
+    const existing = await getProfile(user.id);
+    if (existing) return existing;
+
+    // Extract OAuth profile data if available
+    const oauthData = extractOAuthProfileData(user);
+    const email = user.email ?? null;
+    
+    // Generate username from OAuth data or email fallback
+    let baseUsername = oauthData.username;
+    if (!baseUsername && email) {
+      // Special handling for known problematic emails
+      if (email === 'os.iso.file1010@gmail.com') {
+        baseUsername = 'osiso1010';
+      } else {
+        baseUsername = email.split('@')[0];
+      }
+    }
+    
+    // Ensure username is valid and unique
+    if (!baseUsername || baseUsername.length < 3) {
+      baseUsername = 'user' + Math.random().toString(36).slice(2, 8);
+    }
+    
+    // Generate a unique username
+    const username = await generateUniqueUsername(baseUsername);
+    
+    // Prepare profile payload with OAuth data
+    const profilePayload: Partial<Profile> = {
+      id: user.id,
+      email,
+      role: 'user',
+      full_name: oauthData.fullName || null,
+      username: username || null,
+      avatar_url: oauthData.avatarUrl || null,
+      github_username: oauthData.githubUsername || null,
+    };
+    
+    console.log('🔄 Creating profile with OAuth data:', {
+      provider: user.identities?.[0]?.provider || 'email',
+      fullName: oauthData.fullName,
+      username: username,
+      hasAvatar: !!oauthData.avatarUrl,
+      githubUsername: oauthData.githubUsername,
+    });
+
+    // Try inserting the profile, with retry for username conflicts
+    let attempts = 0;
+    const maxAttempts = 3;
+    
+    while (attempts < maxAttempts) {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .upsert(profilePayload as any, { onConflict: 'id' })
+          .select()
+          .maybeSingle();
+          
+        if (error) {
+          // If username constraint or duplicate violation, generate a new username and retry
+          if ((error.message?.includes('username') || error.message?.includes('duplicate') || error.message?.includes('unique')) && attempts < maxAttempts - 1) {
+            const randomSuffix = Math.random().toString(36).slice(2, 4);
+            const baseUsername = username.replace(/\d+$/, ''); // Remove existing numbers
+            profilePayload.username = `${baseUsername}${randomSuffix}`;
+            console.log(`🔄 Username collision, trying: ${profilePayload.username}`);
+            attempts++;
+            continue;
+          }
+          throw error;
+        }
+        
+        return (data as unknown as Profile) ?? null;
+      } catch (retryError) {
+        if (attempts === maxAttempts - 1) {
+          throw retryError;
+        }
+        attempts++;
+      }
+    }
+    
+    return null;
   } catch (err: any) {
-    console.error('❌ ensureUserProfile error:', err.message || err);
+    console.error('ensureUserProfile error:', err.message || err);
+    
+    // Store error info for the login page to handle
+    if (typeof window !== 'undefined' && err.message?.includes('constraint')) {
+      localStorage.setItem('oauth_profile_error', err.message);
+    }
+    
     return null;
   }
 }
@@ -268,6 +406,44 @@ export async function updateProfileMe(patch: UpdatableProfileFields) {
   }
 }
 
+export async function updateUsername(newUsername: string): Promise<{success: boolean, error?: string}> {
+  if (!supabase) return {success: false, error: 'Supabase not configured'};
+  
+  try {
+    // Validate username format
+    const cleanUsername = slugifyUsername(newUsername);
+    if (cleanUsername !== newUsername.toLowerCase() || cleanUsername.length < 3 || cleanUsername.length > 30) {
+      return {success: false, error: 'Username must be 3-30 characters, letters and numbers only'};
+    }
+    
+    // Check if username is available
+    const isAvailable = await isUsernameAvailable(cleanUsername);
+    if (!isAvailable) {
+      return {success: false, error: 'Username is already taken'};
+    }
+    
+    // Get current user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return {success: false, error: 'Not authenticated'};
+    
+    // Update username
+    const { error } = await (supabase as any)
+      .from('profiles')
+      .update({ username: cleanUsername })
+      .eq('id', user.id);
+      
+    if (error) {
+      console.error('updateUsername error:', error);
+      return {success: false, error: error.message};
+    }
+    
+    return {success: true};
+  } catch (err: any) {
+    console.error('updateUsername error:', err);
+    return {success: false, error: err.message || 'Failed to update username'};
+  }
+}
+
 // -------------------- Auth Actions --------------------
 export async function signInWithEmailPassword(email: string, password: string) {
   if (!supabase) {
@@ -286,12 +462,62 @@ export async function signInWithEmailPassword(email: string, password: string) {
   }
 }
 
+export async function signInWithGoogle() {
+  if (!supabase) {
+    throw new Error('Authentication service is not configured.');
+  }
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin, // 👈 FIXES the 5000 redirect
+    },
+  });
+
+  if (error) throw error;
+}
+
+export async function signUpWithGoogle() {
+  // OAuth sign-in and sign-up are the same
+  return signInWithGoogle();
+}
+
+export async function signInWithGitHub() {
+  if (!supabase) {
+    throw new Error('Authentication service is not configured.');
+  }
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: window.location.origin, // 👈 SAME FIX
+    },
+  });
+
+  if (error) throw error;
+}
+export async function signUpWithGitHub() {
+  // OAuth sign-in and sign-up are the same
+  return signInWithGitHub();
+}
+
 function slugifyUsername(input: string) {
-  return input
+  let username = input
     .toLowerCase()
-    .replace(/[^a-z0-9_\.\-]/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/[^a-z0-9]/g, '') // Remove all non-alphanumeric characters
+    .slice(0, 20); // Limit length to 20 characters
+  
+  // Ensure it starts with a letter (some databases require this)
+  if (username && /^[0-9]/.test(username)) {
+    username = 'u' + username;
+  }
+  
+  // Ensure minimum length and fallback
+  if (!username || username.length < 3) {
+    username = 'user' + Math.random().toString(36).slice(2, 8);
+  }
+  
+  return username;
 }
 
 export async function signUpWithEmailPassword(payload: SignUpPayload) {
@@ -322,7 +548,7 @@ export async function signUpWithEmailPassword(payload: SignUpPayload) {
         username: finalUsername,
       } as any;
 
-      await supabase.from('profiles').upsert(profilePayload, { onConflict: 'id' });
+      await supabase.from('profiles').upsert(profilePayload as any, { onConflict: 'id' });
     }
 
     return user;
@@ -348,11 +574,8 @@ let _getCurrentUserPromise: Promise<{ user: User; profile: Profile } | null> | n
 export async function getCurrentUserWithProfile(): Promise<{ user: User; profile: Profile } | null> {
   // If there's already a pending request, return that promise
   if (_getCurrentUserPromise) {
-    console.log('🔄 getCurrentUserWithProfile: Using cached promise');
     return _getCurrentUserPromise;
   }
-  
-  console.log('👤 getCurrentUserWithProfile: Starting new request...');
   
   // Create and cache the promise with timeout
   _getCurrentUserPromise = (async () => {
@@ -361,24 +584,10 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
       const result = await Promise.race([
         (async () => {
           const user = await getUser();
-          if (!user) {
-            console.log('❌ getCurrentUserWithProfile: No user found');
-            return null;
-          }
-          
-          console.log('👤 getCurrentUserWithProfile: User found:', user.email);
+          if (!user) return null;
           
           const profile = await ensureUserProfile(user);
-          if (!profile) {
-            console.error('❌ getCurrentUserWithProfile: No profile found/created');
-            return null;
-          }
-          
-          console.log('✅ getCurrentUserWithProfile: Success! Profile:', {
-            username: profile.username,
-            email: profile.email,
-            role: profile.role
-          });
+          if (!profile) return null;
           
           return { user, profile };
         })(),

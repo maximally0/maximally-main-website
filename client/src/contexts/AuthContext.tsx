@@ -4,6 +4,10 @@ import {
   supabase, 
   signInWithEmailPassword, 
   signUpWithEmailPassword,
+  signInWithGoogle,
+  signUpWithGoogle,
+  signInWithGitHub,
+  signUpWithGitHub,
   signOut as supabaseSignOut,
   getCurrentUserWithProfile,
   type Profile,
@@ -17,6 +21,10 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: any }>;
   signUp: (email: string, password: string, name: string, username: string) => Promise<{ error?: any }>;
+  signInWithGoogle: () => Promise<{ error?: any }>;
+  signUpWithGoogle: () => Promise<{ error?: any }>;
+  signInWithGitHub: () => Promise<{ error?: any }>;
+  signUpWithGitHub: () => Promise<{ error?: any }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -55,7 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const signIn = async (email: string, password: string) => {
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: NodeJS.Timeout | undefined;
     
     try {
       setLoading(true);
@@ -71,7 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       console.log('✅ Sign in successful:', user?.email);
       // Clear the timeout since sign in was successful
-      clearTimeout(timeoutId);
+      if (timeoutId) clearTimeout(timeoutId);
       
       // The auth state change listener will handle setting user/profile
       return { error: null };
@@ -108,6 +116,42 @@ export function AuthProvider({ children }: AuthProviderProps) {
         console.log('🔄 Clearing sign up loading state');
         setLoading(false);
       }, 300);
+    }
+  };
+
+  const signInWithGoogleHandler = async () => {
+    try {
+      await signInWithGoogle();
+      return { error: null };
+    } catch (error: any) {
+      return { error };
+    }
+  };
+
+  const signUpWithGoogleHandler = async () => {
+    try {
+      await signUpWithGoogle();
+      return { error: null };
+    } catch (error: any) {
+      return { error };
+    }
+  };
+
+  const signInWithGitHubHandler = async () => {
+    try {
+      await signInWithGitHub();
+      return { error: null };
+    } catch (error: any) {
+      return { error };
+    }
+  };
+
+  const signUpWithGitHubHandler = async () => {
+    try {
+      await signUpWithGitHub();
+      return { error: null };
+    } catch (error: any) {
+      return { error };
     }
   };
 
@@ -171,7 +215,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log('🔄 Auth state changed:', {
         event, 
         userEmail: session?.user?.email || 'no user',
-        hasSession: !!session
+        hasSession: !!session,
+        isSignIn: event === 'SIGNED_IN',
+        isToken: event === 'TOKEN_REFRESHED'
       });
       
       // Update session and user immediately
@@ -188,8 +234,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setTimeout(() => reject(new Error('Profile loading timeout')), 5000)
           );
           
-          const result = await Promise.race([profilePromise, timeoutPromise]);
-          if (result) {
+          const result = await Promise.race([profilePromise, timeoutPromise]) as { user: any; profile: any } | null;
+          if (result && result.profile) {
             setProfile(result.profile);
             console.log('✅ Profile loaded successfully:', result.profile.username || result.profile.email);
           } else {
@@ -215,7 +261,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       subscription.unsubscribe();
       clearTimeout(loadingTimeout);
     };
-  }, [loading]);
+  }, []);
 
   const value: AuthContextType = {
     user,
@@ -224,6 +270,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     loading,
     signIn,
     signUp,
+    signInWithGoogle: signInWithGoogleHandler,
+    signUpWithGoogle: signUpWithGoogleHandler,
+    signInWithGitHub: signInWithGitHubHandler,
+    signUpWithGitHub: signUpWithGitHubHandler,
     signOut,
     refreshProfile,
   };

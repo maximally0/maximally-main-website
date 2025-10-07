@@ -33,7 +33,17 @@ const testimonialData = [
   }
 ];
 
-const TestimonialCard = ({ testimonial }) => {
+interface TestimonialCardProps {
+  testimonial: {
+    name: string;
+    handle: string;
+    achievement: string;
+    quote: string;
+    avatar: string;
+  };
+}
+
+const TestimonialCard = ({ testimonial }: TestimonialCardProps) => {
   return (
     <div className="pixel-card h-full flex flex-col p-4 sm:p-6">
       <div className="flex items-center mb-4">

@@ -78,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Upsert profile with role=admin
       const { error: upsertErr } = await supabaseAdmin
         .from("profiles")
-        .upsert({ id: invitedUser.id, email, role: "admin" }, { onConflict: "id" });
+        .upsert({ id: invitedUser.id, email, role: "admin" } as any, { onConflict: "id" });
 
       if (upsertErr) {
         return res.status(500).json({ success: false, message: `User invited but failed to set admin profile: ${upsertErr.message}` });
@@ -118,10 +118,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .select('avatar_url')
         .eq('id', userId)
         .maybeSingle();
-      if (!profErr && prof?.avatar_url) {
+      if (!profErr && (prof as any)?.avatar_url) {
         try {
           const prefix = '/storage/v1/object/public/avatar/';
-          const url = new URL(prof.avatar_url, SUPABASE_URL);
+          const url = new URL((prof as any).avatar_url, SUPABASE_URL);
           const idx = url.pathname.indexOf(prefix);
           if (idx >= 0) {
             const path = url.pathname.slice(idx + prefix.length);

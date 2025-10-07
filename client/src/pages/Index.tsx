@@ -25,12 +25,28 @@ import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { supabase, supabasePublic } from '@/lib/supabaseClient';
 
+// Type definitions for hackathon data
+interface HackathonData {
+  id: number;
+  title: string;
+  subtitle?: string | null;
+  start_date?: string | null;
+  end_date?: string | null;
+  duration?: string | null;
+  location?: string | null;
+  focus_areas?: string[] | any;
+  devpost_url?: string | null;
+  devpost_register_url?: string | null;
+  registration_url?: string | null;
+}
+
 const Index = () => {
   const [text, setText] = useState('');
   const fullText = 'WE HOST HACKATHONS';
   const [floatingPixels, setFloatingPixels] = useState<
     Array<{ id: number; x: number; y: number; delay: number }>
   >([]);
+
 
   useEffect(() => {
     // Generate floating pixels
@@ -161,7 +177,7 @@ const Index = () => {
         }
         
         const hackathonData = await hackathonResponse.json();
-        const hack = hackathonData?.[0];
+        const hack = hackathonData?.[0] as HackathonData | undefined;
           
         if (!hack) {
           console.error('❌ No hackathon found for featured id', featuredId);
@@ -209,7 +225,7 @@ const Index = () => {
           .eq('is_active', true)
           .order('created_at', { ascending: false })
           .limit(1);
-        const latestHack = latestData?.[0]; // Get first row from array
+        const latestHack = latestData?.[0] as HackathonData | undefined; // Get first row from array
           
         if (!latestErr && latestHack) {
           const firstTag = Array.isArray(latestHack.focus_areas)

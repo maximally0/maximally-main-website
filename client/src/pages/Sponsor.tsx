@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowRight, Star, Users, Target, Rocket, Sparkles, Crown, Code, Zap, CalendarCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import SEO from '@/components/SEO';
 import TallyFormDialog from "@/components/TallyFormDialog";
 

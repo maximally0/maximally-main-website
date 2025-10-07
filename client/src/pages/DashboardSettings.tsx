@@ -42,7 +42,7 @@ export default function DashboardSettings() {
       if (authErr) throw authErr;
 
       // Persist in profiles table as well
-      const { error: dbErr } = await supabase
+      const { error: dbErr } = await (supabase as any)
         .from('profiles')
         .update({ email })
         .eq('id', userId);

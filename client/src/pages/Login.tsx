@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,7 +13,7 @@ import { supabase } from '@/lib/supabaseClient';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -22,6 +22,55 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Handle OAuth errors and user redirect
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthError = urlParams.get('error');
+    const errorDescription = urlParams.get('error_description');
+    
+    if (oauthError) {
+      console.error('❌ OAuth error:', {
+        error: oauthError,
+        description: errorDescription,
+        code: urlParams.get('error_code')
+      });
+      
+      // Clear the error from URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      
+      // Clear any corrupted OAuth state
+      if (supabase) {
+        supabase.auth.signOut().catch(() => {});
+      }
+      
+      // Clear browser storage to reset OAuth state
+      try {
+        localStorage.removeItem('maximally-supabase-auth');
+        sessionStorage.clear();
+      } catch (e) {}
+      
+      setError('OAuth authentication failed. Please try again.');
+      return;
+    }
+    
+    // Check for profile constraint errors and handle them
+    if (window.location.pathname === '/login' && !oauthError && !user) {
+      const currentError = localStorage.getItem('oauth_profile_error');
+      if (currentError) {
+        localStorage.removeItem('oauth_profile_error');
+        setError('Profile creation failed. Please try signing in again.');
+        if (supabase) {
+          supabase.auth.signOut().catch(() => {});
+        }
+      }
+    }
+    
+    if (user) {
+      console.log('✅ User authenticated, redirecting to home');
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate, supabase]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +135,26 @@ export default function Login() {
   const handleGoogleSignIn = async () => {
     if (!supabase) return;
     try {
-      await supabase.auth.signInWithOAuth({ provider: 'google' });
+      // Clear any existing OAuth state to prevent conflicts
+      await supabase.auth.signOut();
+      
+      // Small delay to ensure cleanup is complete
+      setTimeout(async () => {
+        if (!supabase) {
+          setError('Authentication service not available');
+          return;
+        }
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin
+          }
+        });
+        if (error) {
+          console.error('Google OAuth error:', error);
+          setError('Google sign-in failed: ' + error.message);
+        }
+      }, 100);
     } catch (err) {
       console.error('Google sign-in error', err);
       setError('Google sign-in failed');
@@ -96,7 +164,26 @@ export default function Login() {
   const handleGithubSignIn = async () => {
     if (!supabase) return;
     try {
-      await supabase.auth.signInWithOAuth({ provider: 'github' });
+      // Clear any existing OAuth state to prevent conflicts
+      await supabase.auth.signOut();
+      
+      // Small delay to ensure cleanup is complete
+      setTimeout(async () => {
+        if (!supabase) {
+          setError('Authentication service not available');
+          return;
+        }
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'github',
+          options: {
+            redirectTo: window.location.origin
+          }
+        });
+        if (error) {
+          console.error('GitHub OAuth error:', error);
+          setError('GitHub sign-in failed: ' + error.message);
+        }
+      }, 100);
     } catch (err) {
       console.error('GitHub sign-in error', err);
       setError('GitHub sign-in failed');

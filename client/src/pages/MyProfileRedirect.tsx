@@ -15,7 +15,7 @@ export default function MyProfileRedirect() {
           setTimeout(() => reject(new Error('Profile loading timeout')), 8000)
         );
         
-        const ctx = await Promise.race([profilePromise, timeoutPromise]);
+        const ctx = await Promise.race([profilePromise, timeoutPromise]) as any;
         
         if (!ctx) {
           console.log('🚪 MyProfileRedirect: No user context, redirecting to login');
@@ -23,8 +23,8 @@ export default function MyProfileRedirect() {
           return;
         }
         
-        const fallback = ctx.user.email?.split('@')[0] || 'me';
-        const username = (ctx.profile as any)?.username || fallback;
+        const fallback = ctx.user?.email?.split('@')[0] || 'me';
+        const username = ctx.profile?.username || fallback;
         console.log('✅ MyProfileRedirect: Redirecting to profile:', username);
         navigate(`/profile/${username}`, { replace: true });
       } catch (error: any) {

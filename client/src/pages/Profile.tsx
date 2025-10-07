@@ -13,7 +13,8 @@ import { Label } from '@/components/ui/label';
 import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Achievement, SelectHackathon } from '@shared/schema';
-import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe } from '@/lib/supabaseClient';
+import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut } from '@/lib/supabaseClient';
+import UsernameSettings from '@/components/UsernameSettings';
 
 interface HackathonWithDetails {
   id: number;
@@ -169,7 +170,18 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
           {/* Skills */}
           <div>
             <Label htmlFor="skills" className="text-black dark:text-white">Skills (comma-separated)</Label>
-            <Input id="skills" value={(formData.skills || []).join(', ')} onChange={(e) => setFormData({ ...formData, skills: e.target.value.split(',').map(s => s.trim()).filter(s => s) })} className="mt-1 bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-black dark:text-white" placeholder="React, TypeScript, Python, etc." />
+            <Input 
+              id="skills" 
+              value={(formData.skills || []).join(', ')} 
+              onChange={(e) => {
+                const value = e.target.value;
+                // Split on commas and trim whitespace, but keep empty strings to allow typing
+                const skills = value.split(',').map(s => s.trim());
+                setFormData({ ...formData, skills });
+              }} 
+              className="mt-1 bg-white dark:bg-black border-gray-300 dark:border-gray-700 text-black dark:text-white" 
+              placeholder="React, TypeScript, Python, etc." 
+            />
           </div>
           {/* Buttons */}
           <div className="flex justify-end gap-2 mt-6">
@@ -240,7 +252,7 @@ export default function Profile() {
       full_name: updatedProfile.name,
       bio: updatedProfile.bio,
       location: updatedProfile.location,
-      skills: updatedProfile.skills,
+      skills: updatedProfile.skills?.filter(skill => skill.trim() !== ''),
       github_username: updatedProfile.github,
       linkedin_username: updatedProfile.linkedin,
       twitter_username: updatedProfile.twitter,
@@ -283,8 +295,14 @@ export default function Profile() {
                   <p className="text-gray-300 text-lg">@{userProfile.username}</p>
                 </div>
                 {isOwner && (
-                  <div className="mt-4 sm:mt-0">
+                  <div className="mt-4 sm:mt-0 flex gap-3">
                     <EditProfileDialog profile={userProfile} onSave={handleSaveProfile} />
+                    <button
+                      onClick={async () => { await signOut(); window.location.href = '/'; }}
+                      className="pixel-button bg-red-600 hover:bg-red-700 text-white font-press-start text-xs px-4 py-2 border-2 border-red-600 hover:border-red-700"
+                    >
+                      LOGOUT
+                    </button>
                   </div>
                 )}
               </div>
@@ -383,7 +401,7 @@ export default function Profile() {
       {/* Content Tabs */}
       <div className="container mx-auto px-4 py-8">
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-gray-900 mb-8">
+          <TabsList className={`grid w-full ${isOwner ? 'grid-cols-4' : 'grid-cols-3'} bg-gray-900 mb-8`}>
             <TabsTrigger value="overview" className="text-gray-400 data-[state=active]:text-maximally-red">
               Overview
             </TabsTrigger>
@@ -393,6 +411,11 @@ export default function Profile() {
             <TabsTrigger value="achievements" className="text-gray-400 data-[state=active]:text-maximally-red">
               Achievements
             </TabsTrigger>
+            {isOwner && (
+              <TabsTrigger value="settings" className="text-gray-400 data-[state=active]:text-maximally-red">
+                Settings
+              </TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -429,6 +452,32 @@ export default function Profile() {
               <p className="text-gray-500">This user hasn't earned any achievements yet.</p>
             </div>
           </TabsContent>
+
+          {isOwner && (
+            <TabsContent value="settings" className="space-y-6">
+              <UsernameSettings />
+              
+              {/* Account Settings */}
+              <Card className="bg-gray-900 border-gray-800">
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold text-maximally-red mb-4">Account Settings</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-lg font-medium text-gray-300 mb-2">Profile Visibility</h4>
+                      <p className="text-gray-500 text-sm">Your profile is currently public and visible to everyone.</p>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-medium text-gray-300 mb-2">Data Export</h4>
+                      <p className="text-gray-500 text-sm mb-3">Download a copy of your Maximally data.</p>
+                      <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
+                        Export Data
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </TabsContent>
+          )}
         </Tabs>
 
         {/* Delete Account Button for Owner */}
