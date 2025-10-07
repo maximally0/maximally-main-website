@@ -1,33 +1,84 @@
 import { createClient, type User, type Session } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Check multiple environment variable sources
+const getEnvVar = (key: string): string | undefined => {
+  // Try Vite import.meta.env first
+  if (import.meta && import.meta.env) {
+    const value = import.meta.env[key];
+    if (value) return value;
+  }
+  
+  // Fallback to process.env (Node.js)
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env[key];
+  }
+  
+  // Fallback to window environment (if set by server)
+  if (typeof window !== 'undefined' && (window as any).__ENV__) {
+    return (window as any).__ENV__[key];
+  }
+  
+  return undefined;
+};
+
+const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
+const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
+
+console.log('🌍 Environment debug:', {
+  hasImportMeta: typeof import.meta !== 'undefined',
+  hasEnv: typeof import.meta?.env !== 'undefined',
+  allEnvKeys: import.meta?.env ? Object.keys(import.meta.env) : [],
+  environment: typeof window !== 'undefined' ? 'browser' : 'server'
+});
+
+console.log('🔑 Supabase configuration:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseAnonKey,
+  urlLength: supabaseUrl?.length || 0,
+  keyLength: supabaseAnonKey?.length || 0,
+  urlSample: supabaseUrl ? supabaseUrl.slice(0, 30) + '...' : 'missing',
+  keySample: supabaseAnonKey ? supabaseAnonKey.slice(0, 20) + '...' : 'missing'
+});
 
 // Initialize Supabase client safely
 console.log('🔑 Supabase initialization:', {
   hasUrl: !!supabaseUrl,
   hasKey: !!supabaseAnonKey,
   url: supabaseUrl,
-  keyPrefix: supabaseAnonKey?.slice(0, 20) + '...'
+  keyPrefix: supabaseAnonKey?.slice(0, 20) + '...',
+  fullUrl: supabaseUrl,
+  environment: typeof window !== 'undefined' ? 'browser' : 'server'
 });
 
 // Create single instance with proper configuration to prevent multiple instances
-export const supabase =
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: true
-        },
-        db: {
-          schema: 'public'
-        },
-        global: {
-          headers: { 'x-client-info': 'maximally-webapp' }
-        }
-      })
-    : null;
+// Use singleton pattern to ensure only one client is ever created
+let _supabaseInstance: ReturnType<typeof createClient> | null = null;
+
+if (supabaseUrl && supabaseAnonKey && !_supabaseInstance) {
+  _supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      // Prevent multiple auth listeners
+      storageKey: 'maximally-supabase-auth'
+    },
+    db: {
+      schema: 'public'
+    },
+    global: {
+      headers: { 'x-client-info': 'maximally-webapp' }
+    }
+  });
+  
+  console.log('✅ Supabase client created (singleton instance)');
+} else if (!supabaseUrl || !supabaseAnonKey) {
+  console.warn('⚠️ Supabase client not created - missing environment variables');
+} else {
+  console.log('♾️ Reusing existing Supabase client instance');
+}
+
+export const supabase = _supabaseInstance;
 
 if (!supabase) {
   console.error('❌ Supabase client not initialized. Check env variables.');

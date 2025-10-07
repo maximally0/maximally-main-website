@@ -59,13 +59,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(true);
       const user = await signInWithEmailPassword(email, password);
       
+      console.log('✅ Sign in successful:', user?.email);
       // The auth state change listener will handle setting user/profile
       return { error: null };
     } catch (error: any) {
-      console.error('Sign in error:', error);
+      console.error('❌ Sign in error:', error);
       return { error };
     } finally {
-      setLoading(false);
+      // Add a delay to ensure auth state change has time to process
+      setTimeout(() => setLoading(false), 500);
     }
   };
 
@@ -75,13 +77,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const payload: SignUpPayload = { email, password, name, username };
       const user = await signUpWithEmailPassword(payload);
       
+      console.log('✅ Sign up successful:', user?.email);
       // The auth state change listener will handle setting user/profile
       return { error: null };
     } catch (error: any) {
-      console.error('Sign up error:', error);
+      console.error('❌ Sign up error:', error);
       return { error };
     } finally {
-      setLoading(false);
+      // Add a delay to ensure auth state change has time to process
+      setTimeout(() => setLoading(false), 500);
     }
   };
 
@@ -136,25 +140,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.email);
+      console.log('🔄 Auth state changed:', {
+        event, 
+        userEmail: session?.user?.email || 'no user',
+        hasSession: !!session
+      });
       
+      // Update session and user immediately
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user) {
+        console.log('👤 Getting user profile...');
         // Get user profile when signed in
         try {
           const result = await getCurrentUserWithProfile();
           if (result) {
             setProfile(result.profile);
+            console.log('✅ Profile loaded:', result.profile.username || result.profile.email);
+          } else {
+            console.warn('⚠️ No profile found for user');
           }
         } catch (error) {
-          console.error('Error getting profile after auth change:', error);
+          console.error('❌ Error getting profile after auth change:', error);
         }
       } else {
+        console.log('🚪 User signed out, clearing profile');
         setProfile(null);
       }
 
+      // Always ensure loading is false after state change
       setLoading(false);
     });
 

@@ -589,7 +589,18 @@ const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { data: dynamicBlogData, isLoading: dynamicLoading } = useBlogs(1, 1000, '');
+  const { data: dynamicBlogData, isLoading: dynamicLoading, error: dynamicError } = useBlogs(1, 1000, '');
+  
+  // Debug: Log the blog data fetching results
+  useEffect(() => {
+    console.log('📝 Blog component: useBlogs results:', {
+      data: dynamicBlogData,
+      isLoading: dynamicLoading,
+      error: dynamicError,
+      dataLength: dynamicBlogData?.data?.length || 0,
+      totalBlogs: dynamicBlogData?.total || 0
+    });
+  }, [dynamicBlogData, dynamicLoading, dynamicError]);
   
   useEffect(() => {
     window.scrollTo(0, 0);
