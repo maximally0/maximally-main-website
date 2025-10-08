@@ -17,16 +17,30 @@ export default function MyProfileRedirect() {
         
         const ctx = await Promise.race([profilePromise, timeoutPromise]) as any;
         
+        console.log('🔍 MyProfileRedirect: Context loaded:', {
+          hasUser: !!ctx?.user,
+          userEmail: ctx?.user?.email,
+          hasProfile: !!ctx?.profile,
+          profileUsername: ctx?.profile?.username,
+          profileEmail: ctx?.profile?.email
+        });
+        
         if (!ctx) {
           console.log('🚪 MyProfileRedirect: No user context, redirecting to login');
           navigate('/login', { replace: true });
           return;
         }
         
-        const fallback = ctx.user?.email?.split('@')[0] || 'me';
-        const username = ctx.profile?.username || fallback;
-        console.log('✅ MyProfileRedirect: Redirecting to profile:', username);
-        navigate(`/profile/${username}`, { replace: true });
+        if (!ctx.profile?.username) {
+          console.error('❌ MyProfileRedirect: No username in profile! Profile:', ctx.profile);
+          const fallback = ctx.user?.email?.split('@')[0] || 'me';
+          console.warn('⚠️ MyProfileRedirect: Using fallback username:', fallback);
+          navigate(`/profile/${fallback}`, { replace: true });
+          return;
+        }
+        
+        console.log('✅ MyProfileRedirect: Redirecting to profile:', ctx.profile.username);
+        navigate(`/profile/${ctx.profile.username}`, { replace: true });
       } catch (error: any) {
         console.error('❌ MyProfileRedirect: Error loading profile, redirecting to home:', error.message);
         // If profile loading fails, redirect to home page instead of staying stuck

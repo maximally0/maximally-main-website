@@ -231,12 +231,29 @@ export async function getProfile(userId: string): Promise<Profile | null> {
 export async function getProfileByUsername(username: string): Promise<Profile | null> {
   if (!supabase) return null;
   try {
+    console.log('🔍 getProfileByUsername: Direct query for username:', username);
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('username', username)
       .maybeSingle();
-    if (error) throw error;
+    
+    if (error) {
+      console.error('❌ getProfileByUsername error:', error);
+      return null;
+    }
+    
+    if (data) {
+      const profile = data as any;
+      console.log('✅ Profile found for username:', username, 'with data:', {
+        id: profile.id,
+        email: profile.email,
+        username: profile.username
+      });
+    } else {
+      console.warn('⚠️ No profile found for username:', username);
+    }
+    
     return (data as unknown as Profile) ?? null;
   } catch (err) {
     console.error('getProfileByUsername error:', err);
@@ -454,7 +471,7 @@ export async function signInWithEmailPassword(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     if (!data.user) throw new Error('No user returned');
-    await ensureUserProfile(data.user);
+    console.log('✅ Email signin successful, profile should already exist:', data.user.email);
     return data.user;
   } catch (err) {
     console.error('signInWithEmailPassword error:', err);
@@ -537,8 +554,14 @@ export async function signUpWithEmailPassword(payload: SignUpPayload) {
     }
 
     if (user) {
-      const fallback = user.email?.split('@')[0] || 'user';
-      const finalUsername = slugifyUsername(username || fallback);
+      // Use provided username directly, only fallback if empty
+      let finalUsername = username;
+      if (!finalUsername || finalUsername.trim() === '') {
+        const fallback = user.email?.split('@')[0] || 'user';
+        finalUsername = slugifyUsername(fallback);
+      }
+
+      console.log('🚀 SIGNUP: Creating profile with username:', finalUsername, 'from input:', username);
 
       const profilePayload: Partial<Profile> = {
         id: user.id,
@@ -548,7 +571,12 @@ export async function signUpWithEmailPassword(payload: SignUpPayload) {
         username: finalUsername,
       } as any;
 
-      await supabase.from('profiles').upsert(profilePayload as any, { onConflict: 'id' });
+      const { error: profileError } = await supabase.from('profiles').upsert(profilePayload as any, { onConflict: 'id' });
+      if (profileError) {
+        console.error('❌ Profile creation error:', profileError);
+        throw new Error('Failed to create profile: ' + profileError.message);
+      }
+      console.log('✅ Profile created successfully with username:', finalUsername);
     }
 
     return user;
@@ -580,25 +608,47 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
   // Create and cache the promise with timeout
   _getCurrentUserPromise = (async () => {
     try {
-      // Add timeout to prevent hanging indefinitely
-      const result = await Promise.race([
-        (async () => {
-          const user = await getUser();
-          if (!user) return null;
-          
-          const profile = await ensureUserProfile(user);
-          if (!profile) return null;
-          
-          return { user, profile };
-        })(),
-        new Promise<null>((_, reject) => {
-          setTimeout(() => {
-            reject(new Error('getCurrentUserWithProfile timeout after 10 seconds'));
-          }, 10000);
-        })
-      ]);
+      const user = await getUser();
+      if (!user) {
+        console.log('🚪 getCurrentUserWithProfile: No user found');
+        return null;
+      }
       
-      return result;
+      console.log('🔍 getCurrentUserWithProfile: Direct profile query for user:', user.email);
+      
+      // DIRECT QUERY - BYPASS ALL POLICIES
+      if (!supabase) {
+        console.error('❌ Supabase not initialized');
+        return null;
+      }
+      
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) {
+        console.error('❌ Direct profile query failed:', error);
+        return null;
+      }
+      
+      if (!profile) {
+        console.error('❌ No profile found for user:', user.email);
+        return null;
+      }
+      
+      const profileData = profile as any;
+      console.log('✅ Profile loaded directly:', {
+        username: profileData.username,
+        email: profileData.email,
+        id: profileData.id
+      });
+      
+      return { user, profile: profile as Profile };
+    } catch (error: any) {
+      console.error('❌ getCurrentUserWithProfile error:', error);
+      return null;
     } finally {
       // Clear the cache after completion (success or failure)
       _getCurrentUserPromise = null;

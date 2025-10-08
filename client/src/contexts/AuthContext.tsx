@@ -99,12 +99,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const signUp = async (email: string, password: string, name: string, username: string) => {
     try {
       setLoading(true);
-      console.log('📝 Starting sign up for:', email);
+      console.log('📝 Starting sign up for:', { email, name, username });
       
       const payload: SignUpPayload = { email, password, name, username };
       const user = await signUpWithEmailPassword(payload);
       
       console.log('✅ Sign up successful:', user?.email);
+      console.log('🔄 Waiting for auth state change to load profile...');
       // The auth state change listener will handle setting user/profile
       return { error: null };
     } catch (error: any) {
