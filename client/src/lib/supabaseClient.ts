@@ -175,10 +175,22 @@ function extractGoogleProfileData(user: User): OAuthProfileData {
   const googleIdentity = identities.find(id => id.provider === 'google');
   const googleData = googleIdentity?.identity_data || {};
   
+  // Extract avatar URL from multiple possible sources
+  const avatarUrl = metadata.avatar_url || 
+                   metadata.picture || 
+                   googleData.picture ||
+                   googleData.avatar_url;
+  
+  console.log('🎨 Google profile data extracted:', {
+    fullName: metadata.full_name || metadata.name || googleData.name,
+    username: metadata.preferred_username || metadata.email?.split('@')[0],
+    avatarUrl
+  });
+  
   return {
     fullName: metadata.full_name || metadata.name || googleData.name,
     username: metadata.preferred_username || metadata.email?.split('@')[0],
-    avatarUrl: metadata.avatar_url || metadata.picture || googleData.picture,
+    avatarUrl,
   };
 }
 
@@ -190,10 +202,23 @@ function extractGitHubProfileData(user: User): OAuthProfileData {
   const githubIdentity = identities.find(id => id.provider === 'github');
   const githubData = githubIdentity?.identity_data || {};
   
+  // Extract avatar URL from multiple possible sources
+  const avatarUrl = metadata.avatar_url || 
+                   githubData.avatar_url || 
+                   metadata.picture ||
+                   (githubData.login ? `https://github.com/${githubData.login}.png` : null);
+  
+  console.log('🐙 GitHub profile data extracted:', {
+    fullName: metadata.full_name || metadata.name || githubData.name,
+    username: metadata.preferred_username || metadata.user_name || githubData.login,
+    avatarUrl,
+    githubUsername: metadata.user_name || githubData.login
+  });
+  
   return {
     fullName: metadata.full_name || metadata.name || githubData.name,
     username: metadata.preferred_username || metadata.user_name || githubData.login,
-    avatarUrl: metadata.avatar_url || githubData.avatar_url,
+    avatarUrl,
     githubUsername: metadata.user_name || githubData.login,
   };
 }
@@ -614,7 +639,7 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
         return null;
       }
       
-      console.log('🔍 getCurrentUserWithProfile: Direct profile query for user:', user.email);
+      console.log('🔍 getCurrentUserWithProfile: Looking for profile for user:', user.email);
       
       // DIRECT QUERY - BYPASS ALL POLICIES
       if (!supabase) {
@@ -622,27 +647,34 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
         return null;
       }
       
-      const { data: profile, error } = await supabase
+      let { data: profile, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
       
-      if (error) {
+      if (error && error.code !== 'PGRST116') {
         console.error('❌ Direct profile query failed:', error);
         return null;
       }
       
+      // If no profile found, create one (especially important for OAuth users)
       if (!profile) {
-        console.error('❌ No profile found for user:', user.email);
-        return null;
+        console.log('🔄 No profile found, creating one for OAuth user:', user.email);
+        profile = await ensureUserProfile(user);
+        if (!profile) {
+          console.error('❌ Failed to create profile for user:', user.email);
+          return null;
+        }
+        console.log('✅ Profile created successfully for:', user.email);
       }
       
       const profileData = profile as any;
-      console.log('✅ Profile loaded directly:', {
+      console.log('✅ Profile loaded:', {
         username: profileData.username,
         email: profileData.email,
-        id: profileData.id
+        id: profileData.id,
+        hasAvatar: !!profileData.avatar_url
       });
       
       return { user, profile: profile as Profile };
