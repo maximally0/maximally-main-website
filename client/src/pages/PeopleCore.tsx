@@ -1,14 +1,23 @@
-import { Star, Users, Code, GraduationCap, LucideIcon } from 'lucide-react';
+import { Star, Users, Code, GraduationCap, Linkedin, Twitter, Github, Globe, Loader2, LucideIcon } from 'lucide-react';
+import { FaLinkedin, FaTwitter, FaGithub, FaGlobe } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/lib/supabaseClient';
 
 interface TeamMember {
+  id: number;
   name: string;
-  role: string;
-  organization?: string;
+  role_in_company: string;
+  company?: string;
   description?: string;
-  socials?: Record<string, string>;
+  category: 'advisors' | 'organizing_board' | 'developers' | 'alumni';
+  linkedin_url?: string;
+  twitter_url?: string;
+  github_url?: string;
+  website_url?: string;
+  display_order: number;
 }
 
 interface ColorTheme {
@@ -26,81 +35,51 @@ interface TeamSectionProps {
 }
 
 const PeopleCore = () => {
-  const advisors = [
-    {
-      name: "Milankumar Rana",
-      role: "Software Engineer Advisor",
-      organization: "FedEx",
-      description: "Innovation happens when young minds are given the right platform and mentorship to transform ideas into reality.",
-      socials: {}
-    },
-    {
-      name: "Vikranth Kumar Shivaa",
-      role: "Advisor & Mentor",
-      organization: "Maximally",
-      description: "Vikranth has been central to Maximally's growth — helping us shape the Grand Indian Hackathon season and guiding our organizing efforts with clarity and consistency.",
-      socials: {}
-    }
-  ];
+  const [people, setPeople] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const organizingBoard = [
-    {
-      name: "Rishul Chanana",
-      role: "Founder & CEO",
-      organization: "Maximally",
-      description: "Building the future by creating a culture where young builders can thrive through high-stakes competitions.",
-      socials: {}
-    },
-    {
-      name: "Drishti Arora",
-      role: "Chief Operating Officer (COO)",
-      organization: "Maximally",
-      description: "Keeps Maximally's gears running smoothly, balancing scale with execution.",
-      socials: {}
-    },
-    {
-      name: "Raghwender (Raghav) Vasisth",
-      role: "President, Maximally Federation of Hackathon Organizers and Partners (MFHOP)",
-      organization: "Maximally",
-      description: "Spearheading our federation, connecting hackathon leaders across India into one network.",
-      socials: {}
-    },
-    {
-      name: "Pranav Marjara",
-      role: "Operations & Coordination Lead",
-      organization: "Maximally",
-      description: "The glue of the org — manages internal flow, ensures teams stay in sync, and keeps chaos in check.",
-      socials: {}
-    }
-  ];
+  // Fetch people from database
+  useEffect(() => {
+    const fetchPeople = async () => {
+      if (!supabase) {
+        setError('Database not available');
+        setLoading(false);
+        return;
+      }
 
-  const developers: TeamMember[] = [
-    {
-      name: "Gautam Gambhir",
-      role: "Head of Engineering",
-      organization: "Maximally",
-      description: "Architects the tech behind Maximally.in and pushes our platform to new heights.",
-      socials: {}
-    },
-    {
-      name: "Pranati Dubey",
-      role: "Culture & Systems Engineer",
-      organization: "Maximally",
-      description: "Bridges code and culture, shaping both our platform and our community experience.",
-      socials: {}
-    }
-  ];
+      try {
+        const { data, error } = await supabase
+          .from('people')
+          .select('*')
+          .order('display_order', { ascending: true });
 
+        if (error) {
+          throw error;
+        }
 
-  const alumni: TeamMember[] = [
-    {
-      name: "Janak Walia",
-      role: "Founding Contributor",
-      organization: "Maximally",
-      description: "Helped shape Maximally during its earliest days and played a key role in launching our first Startup Makeathon.",
-      socials: {}
-    }
-  ];
+        setPeople(data || []);
+      } catch (err: any) {
+        console.error('Error fetching people:', err);
+        setError(err.message || 'Failed to load team members');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPeople();
+  }, []);
+
+  // Helper function to get people by category
+  const getPeopleByCategory = (category: TeamMember['category']): TeamMember[] => {
+    return people.filter(person => person.category === category)
+                 .sort((a, b) => a.display_order - b.display_order);
+  };
+
+  const advisors = getPeopleByCategory('advisors');
+  const organizingBoard = getPeopleByCategory('organizing_board');
+  const developers = getPeopleByCategory('developers');
+  const alumni = getPeopleByCategory('alumni');
 
   const TeamSection = ({ title, members, icon: Icon, colorTheme, emptyMessage }: TeamSectionProps) => (
     <section className="mb-16">
@@ -120,9 +99,9 @@ const PeopleCore = () => {
       
       {members.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {members.map((member, index) => (
+          {members.map((member) => (
             <div 
-              key={index} 
+              key={member.id} 
               className={`pixel-card bg-black border-2 ${colorTheme.border} p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow`}
             >
               <div className={`minecraft-block ${colorTheme.bg} w-12 h-12 mx-auto mb-4 flex items-center justify-center`}>
@@ -134,19 +113,69 @@ const PeopleCore = () => {
               </h3>
               
               <p className="font-jetbrains text-xs text-gray-300 text-center mb-1">
-                {member.role}
+                {member.role_in_company}
               </p>
               
-              {member.organization && (
+              {member.company && (
                 <p className="font-jetbrains text-xs font-bold text-white text-center mb-3">
-                  {member.organization}
+                  {member.company}
                 </p>
               )}
               
               {member.description && (
-                <p className="font-jetbrains text-xs text-gray-300 text-center italic">
+                <p className="font-jetbrains text-xs text-gray-300 text-center italic mb-4">
                   "{member.description}"
                 </p>
+              )}
+              
+              {/* Social Media Links */}
+              {(member.linkedin_url || member.twitter_url || member.github_url || member.website_url) && (
+                <div className="flex justify-center gap-2 mt-4">
+                  {member.linkedin_url && (
+                    <a
+                      href={member.linkedin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
+                      title="LinkedIn"
+                    >
+                      <FaLinkedin className="w-4 h-4 text-white" />
+                    </a>
+                  )}
+                  {member.twitter_url && (
+                    <a
+                      href={member.twitter_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                      title="Twitter"
+                    >
+                      <FaTwitter className="w-4 h-4 text-white" />
+                    </a>
+                  )}
+                  {member.github_url && (
+                    <a
+                      href={member.github_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors duration-200"
+                      title="GitHub"
+                    >
+                      <FaGithub className="w-4 h-4 text-white" />
+                    </a>
+                  )}
+                  {member.website_url && (
+                    <a
+                      href={member.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-8 h-8 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center transition-colors duration-200"
+                      title="Website"
+                    >
+                      <FaGlobe className="w-4 h-4 text-white" />
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           ))}
@@ -212,54 +241,87 @@ const PeopleCore = () => {
               </Link>
             </section>
 
-            {/* Team Sections */}
-            <TeamSection
-              title="Advisors"
-              members={advisors}
-              icon={Star}
-              colorTheme={{
-                bg: "bg-maximally-red",
-                text: "text-maximally-red", 
-                border: "border-maximally-red"
-              }}
-              emptyMessage="Our amazing advisors guide our strategic direction."
-            />
+            {/* Loading State */}
+            {loading && (
+              <div className="text-center py-16">
+                <div className="minecraft-block bg-maximally-red text-white px-6 py-4 inline-block mb-4">
+                  <span className="font-press-start text-sm flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    LOADING TEAM DATA
+                  </span>
+                </div>
+                <p className="text-gray-400 font-jetbrains">Fetching our amazing team members...</p>
+              </div>
+            )}
 
-            <TeamSection
-              title="Organizing Board"
-              members={organizingBoard}
-              icon={Users}
-              colorTheme={{
-                bg: "bg-maximally-yellow",
-                text: "text-maximally-yellow",
-                border: "border-maximally-yellow"
-              }}
-              emptyMessage="The leadership team driving Maximally forward."
-            />
+            {/* Error State */}
+            {error && !loading && (
+              <div className="text-center py-16">
+                <div className="minecraft-block bg-red-600 text-white px-6 py-4 inline-block mb-4">
+                  <span className="font-press-start text-sm">ERROR LOADING TEAM</span>
+                </div>
+                <p className="text-red-400 font-jetbrains mb-4">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="minecraft-block bg-maximally-red text-white px-4 py-2 hover:bg-red-700 transition-colors"
+                >
+                  <span className="font-press-start text-xs">RETRY</span>
+                </button>
+              </div>
+            )}
 
-            <TeamSection
-              title="Developers"
-              members={developers}
-              icon={Code}
-              colorTheme={{
-                bg: "bg-green-500",
-                text: "text-green-500",
-                border: "border-green-500"
-              }}
-              emptyMessage="The technical team building our platform."
-            />
+            {/* Team Sections - Only show when data is loaded */}
+            {!loading && !error && (
+              <>
+                <TeamSection
+                  title="Advisors"
+                  members={advisors}
+                  icon={Star}
+                  colorTheme={{
+                    bg: "bg-maximally-red",
+                    text: "text-maximally-red", 
+                    border: "border-maximally-red"
+                  }}
+                  emptyMessage="Our amazing advisors guide our strategic direction."
+                />
 
-            <TeamSection
-              title="Alumni"
-              members={alumni}
-              icon={GraduationCap}
-              colorTheme={{
-                bg: "bg-blue-500",
-                text: "text-blue-500",
-                border: "border-blue-500"
-              }}
-              emptyMessage="Past core members who helped build our foundation."
-            />
+                <TeamSection
+                  title="Organizing Board"
+                  members={organizingBoard}
+                  icon={Users}
+                  colorTheme={{
+                    bg: "bg-maximally-yellow",
+                    text: "text-maximally-yellow",
+                    border: "border-maximally-yellow"
+                  }}
+                  emptyMessage="The leadership team driving Maximally forward."
+                />
+
+                <TeamSection
+                  title="Developers"
+                  members={developers}
+                  icon={Code}
+                  colorTheme={{
+                    bg: "bg-green-500",
+                    text: "text-green-500",
+                    border: "border-green-500"
+                  }}
+                  emptyMessage="The technical team building our platform."
+                />
+
+                <TeamSection
+                  title="Alumni"
+                  members={alumni}
+                  icon={GraduationCap}
+                  colorTheme={{
+                    bg: "bg-blue-500",
+                    text: "text-blue-500",
+                    border: "border-blue-500"
+                  }}
+                  emptyMessage="Past core members who helped build our foundation."
+                />
+              </>
+            )}
           </div>
         </main>
         
