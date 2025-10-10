@@ -72,6 +72,39 @@ export default function Login() {
     }
   }, [user, navigate, supabase]);
 
+  // Email validation check before signup
+  const validateEmailBeforeSignup = async (email: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/auth/validate-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok || !data.success) {
+        return false;
+      }
+      
+      const validation = data.validation;
+      
+      // Check if email is valid (not disposable, has MX record, etc.)
+      if (!validation.isValid) {
+        setError(validation.issues?.[0] || 'Email validation failed');
+        return false;
+      }
+      
+      return true;
+    } catch (err: any) {
+      console.error('Email validation error:', err);
+      setError('Unable to validate email. Please try again.');
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -79,6 +112,7 @@ export default function Login() {
 
     // Validation
     if (isSignUp) {
+      
       if (password !== confirmPassword) {
         setError('Passwords do not match');
         setLoading(false);
@@ -103,7 +137,18 @@ export default function Login() {
 
     try {
       if (isSignUp) {
-        console.log('Attempting to sign up user...');
+        console.log('Attempting to sign up user with email validation...');
+        
+        // First, validate the email
+        const emailIsValid = await validateEmailBeforeSignup(email);
+        if (!emailIsValid) {
+          setLoading(false);
+          return;
+        }
+        
+        console.log('Email validation passed, proceeding with signup...');
+        
+        // Use the original signup method (which works correctly for username storage)
         const result = await signUp(email, password, name.trim(), username.trim());
         if (result.error) {
           setError(result.error.message);
@@ -201,7 +246,7 @@ export default function Login() {
       </Helmet>
 
       <div className="min-h-screen bg-black dark:bg-black flex items-center justify-center p-4 pt-24">
-        <div className="starfield" />
+        <div className="" />
         <div className="absolute inset-0 bg-grid-white opacity-20" />
 
         <Card className="w-full max-w-md bg-black/90 dark:bg-black/90 border-maximally-red/30 dark:border-maximally-red/30 backdrop-blur-sm relative z-10" data-testid="card-auth">

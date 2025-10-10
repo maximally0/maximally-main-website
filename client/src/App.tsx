@@ -134,6 +134,7 @@ import People from './pages/People';
 import PeopleCore from './pages/PeopleCore';
 import PeopleJudges from './pages/PeopleJudges';
 import Resources from './pages/Resources';
+import TestEmailValidation from './pages/TestEmailValidation';
 
 const queryClient = new QueryClient();
 
@@ -186,6 +187,7 @@ const App = () => {
             <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/test-email" element={<TestEmailValidation />} />
 <Route path="/profile" element={<MyProfileRedirect />} />
             <Route path="/profile/:username" element={<Profile />} />
             <Route path="/admin" element={<AdminPanel />} />

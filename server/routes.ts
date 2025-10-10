@@ -193,6 +193,165 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Secure email signup endpoint with validation
+  app.post("/api/auth/signup-validate", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+      
+      const { email, password, name, username } = req.body as { 
+        email?: string; 
+        password?: string; 
+        name?: string; 
+        username?: string; 
+      };
+      
+      console.log('📝 Signup request data:', {
+        email: email?.slice(0, 5) + '***',
+        name: name,
+        username: username,
+        hasPassword: !!password
+      });
+      console.log('🔍 Raw request body:', JSON.stringify(req.body, null, 2));
+      console.log('🔍 Username analysis:', {
+        raw: req.body.username,
+        type: typeof req.body.username,
+        length: req.body.username?.length,
+        trimmed: req.body.username?.trim()
+      });
+      
+      // Basic input validation
+      if (!email || typeof email !== 'string') {
+        return res.status(400).json({ success: false, message: 'Email is required' });
+      }
+      if (!password || typeof password !== 'string' || password.length < 8) {
+        return res.status(400).json({ success: false, message: 'Password must be at least 8 characters long' });
+      }
+      
+      // Rate limiting - 5 signup attempts per IP per hour
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      if (!rateLimit(clientIP, 'signup:attempt', 5, 3600_000)) {
+        return res.status(429).json({ success: false, message: 'Too many signup attempts. Please try again later.' });
+      }
+      
+      // Import email validation utilities
+      const { validateEmail } = await import('../shared/emailValidation');
+      
+      // Validate email comprehensively
+      console.log('🔍 Validating email:', email);
+      const emailValidation = await validateEmail(email);
+      console.log('📧 Email validation result:', JSON.stringify(emailValidation, null, 2));
+      
+      if (!emailValidation.isValid) {
+        console.log('❌ Email validation failed:', emailValidation.issues);
+        return res.status(400).json({ 
+          success: false, 
+          message: emailValidation.issues[0] || 'Invalid email address',
+          details: {
+            issues: emailValidation.issues,
+            domain: emailValidation.domain,
+            isDisposable: emailValidation.isDisposable
+          }
+        });
+      }
+      
+      console.log('✅ Email validation passed');
+      
+      
+      // Create user with admin client (bypasses email confirmation if configured)
+      const { data: userData, error: createError } = await (supabaseAdmin as any).auth.admin.createUser({
+        email: email.trim().toLowerCase(),
+        password: password,
+        email_confirm: true, // Auto-confirm email since we validated it
+        user_metadata: {
+          full_name: name?.trim() || null,
+          username: username?.trim() || null, // Store the provided username
+          signup_method: 'validated_email',
+          validated_at: new Date().toISOString(),
+          domain_validated: true,
+          mx_verified: emailValidation.hasMx
+        },
+        app_metadata: {
+          username: username?.trim() || null // Also store in app_metadata for server access
+        }
+      });
+      
+      if (createError) {
+        // Handle duplicate user error specifically
+        if (createError.message?.includes('already registered') || createError.message?.includes('already exists')) {
+          return res.status(409).json({ success: false, message: 'An account with this email already exists' });
+        }
+        return res.status(400).json({ success: false, message: createError.message });
+      }
+      
+      const user = userData?.user;
+      if (!user?.id) {
+        return res.status(500).json({ success: false, message: 'User created but no user data returned' });
+      }
+      
+      // Note: This project uses Drizzle ORM with local database, not Supabase profiles table
+      // The user creation in Supabase auth is sufficient for now
+      // Profile creation would need to be handled through your Drizzle schema if needed
+      
+      console.log('✅ User created successfully in Supabase auth:', user.email);
+      
+      return res.json({ 
+        success: true, 
+        message: 'Account created successfully',
+        user: {
+          id: user.id,
+          email: user.email,
+          email_confirmed_at: user.email_confirmed_at,
+          username: user.user_metadata?.username || null
+        }
+      });
+      
+    } catch (err: any) {
+      console.error('Signup validation error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to create account' });
+    }
+  });
+  
+  // Email validation endpoint (for real-time frontend validation)
+  app.post("/api/auth/validate-email", async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body as { email?: string };
+      
+      if (!email || typeof email !== 'string') {
+        return res.status(400).json({ success: false, message: 'Email is required' });
+      }
+      
+      // Rate limiting - 20 validations per IP per minute
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      if (!rateLimit(clientIP, 'email:validate', 20, 60_000)) {
+        return res.status(429).json({ success: false, message: 'Too many validation requests' });
+      }
+      
+      // Import email validation utilities
+      const { validateEmailQuick } = await import('../shared/emailValidation');
+      
+      // Quick validation (no MX check for real-time use)
+      const validation = validateEmailQuick(email);
+      
+      return res.json({ 
+        success: true,
+        validation: {
+          isValid: validation.isValid,
+          domain: validation.domain,
+          issues: validation.issues,
+          isSafe: validation.isSafe,
+          isDisposable: validation.isDisposable
+        }
+      });
+      
+    } catch (err: any) {
+      console.error('Email validation error:', err);
+      return res.status(500).json({ success: false, message: 'Failed to validate email' });
+    }
+  });
+
   // Password change endpoint with authentication
   app.post("/api/auth/change-password", async (req: Request, res: Response) => {
     try {
