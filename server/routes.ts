@@ -145,6 +145,213 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Password status check endpoint
+  app.get("/api/auth/check-password-status", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+      
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+      
+      // Get user details from admin API to check if password is set
+      const { data: userData, error: userError } = await (supabaseAdmin as any).auth.admin.getUserById(userId);
+      
+      if (userError || !userData?.user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+      }
+      
+      const user = userData.user;
+      
+      // Check if user has password set
+      const hasEmailIdentity = user.identities?.some((identity: any) => identity.provider === 'email');
+      
+      // Check user metadata for password flag (set when OAuth user sets password)
+      const hasPasswordFromMetadata = user.user_metadata?.has_password === true;
+      
+      // User has password if they signed up with email OR if they're OAuth user who set password
+      const hasPassword = hasEmailIdentity || hasPasswordFromMetadata;
+      
+      return res.json({ 
+        success: true, 
+        hasPassword: !!hasPassword,
+        identities: user.identities?.map((id: any) => id.provider) || [],
+        metadata: {
+          hasPasswordFlag: hasPasswordFromMetadata,
+          hasEmailIdentity
+        }
+      });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to check password status' });
+    }
+  });
+  
+  // Password change endpoint with authentication
+  app.post("/api/auth/change-password", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+      
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+      
+      if (!rateLimit(userId, 'password:change', 3, 300_000)) { // 3 attempts per 5 minutes
+        return res.status(429).json({ success: false, message: 'Too many password change attempts' });
+      }
+      
+      const { newPassword } = req.body as { newPassword?: string };
+      if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 8) {
+        return res.status(400).json({ success: false, message: 'New password must be at least 8 characters long' });
+      }
+      
+      // Get current user to preserve existing metadata
+      const { data: currentUser } = await (supabaseAdmin as any).auth.admin.getUserById(userId);
+      const existingMetadata = currentUser?.user?.user_metadata || {};
+      
+      // Update password using admin client
+      const { error } = await (supabaseAdmin as any).auth.admin.updateUserById(userId, {
+        password: newPassword,
+        user_metadata: { 
+          ...existingMetadata,
+          has_password: true,
+          password_set_at: new Date().toISOString()
+        }
+      });
+      
+      if (error) {
+        return res.status(400).json({ success: false, message: error.message });
+      }
+      
+      return res.json({ success: true, message: 'Password updated successfully' });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to change password' });
+    }
+  });
+  
+  // User data export endpoint
+  app.get("/api/user/export-data", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+      
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+      
+      // Rate limit data exports (max 3 per hour)
+      if (!rateLimit(userId, 'data:export', 3, 3600_000)) {
+        return res.status(429).json({ success: false, message: 'Too many export requests. Please try again later.' });
+      }
+      
+      // Get user profile data
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (profileError) {
+        return res.status(404).json({ success: false, message: 'Profile not found' });
+      }
+      
+      // Get user auth data (limited info for privacy)
+      const { data: userData, error: userError } = await (supabaseAdmin as any).auth.admin.getUserById(userId);
+      const authData = userData?.user ? {
+        id: userData.user.id,
+        email: userData.user.email,
+        email_confirmed_at: userData.user.email_confirmed_at,
+        created_at: userData.user.created_at,
+        updated_at: userData.user.updated_at,
+        identities: userData.user.identities?.map((identity: any) => ({
+          provider: identity.provider,
+          created_at: identity.created_at,
+          updated_at: identity.updated_at
+        })),
+        user_metadata: userData.user.user_metadata
+      } : null;
+      
+      // Try to get additional user data (hackathons, achievements, etc.)
+      // These queries will fail gracefully if tables don't exist
+      let hackathons = [];
+      let achievements = [];
+      
+      try {
+        const { data: hackathonData } = await supabaseAdmin
+          .from('user_hackathons')
+          .select('*')
+          .eq('userId', userId);
+        hackathons = hackathonData || [];
+      } catch (error) {
+        console.log('No hackathon data available or table does not exist');
+      }
+      
+      try {
+        const { data: achievementData } = await supabaseAdmin
+          .from('user_achievements')
+          .select('*')
+          .eq('userId', userId);
+        achievements = achievementData || [];
+      } catch (error) {
+        console.log('No achievement data available or table does not exist');
+      }
+      
+      const exportData = {
+        export_info: {
+          exported_at: new Date().toISOString(),
+          data_version: '1.0',
+          platform: 'Maximally',
+          user_id: userId,
+          export_type: 'full_user_data'
+        },
+        profile: profile,
+        auth: authData,
+        hackathons: hackathons,
+        achievements: achievements,
+        statistics: {
+          total_hackathons: hackathons.length,
+          total_achievements: achievements.length,
+          account_age_days: userData?.user?.created_at 
+            ? Math.floor((Date.now() - new Date(userData.user.created_at).getTime()) / (1000 * 60 * 60 * 24))
+            : null
+        }
+      };
+      
+      // Create filename with timestamp
+      const timestamp = new Date().toISOString().split('T')[0];
+      const filename = `maximally-data-${timestamp}.json`;
+      
+      // Set response headers for file download
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      
+      return res.json(exportData);
+      
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to export user data' });
+    }
+  });
+  
   // Profile update endpoint with validation and per-user rate limiting
   app.post("/api/profile/update", async (req: Request, res: Response) => {
     try {

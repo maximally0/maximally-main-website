@@ -486,6 +486,105 @@ export async function updateUsername(newUsername: string): Promise<{success: boo
   }
 }
 
+// -------------------- Password Management --------------------
+export async function changePassword(currentPassword: string, newPassword: string): Promise<{success: boolean, error?: string}> {
+  if (!supabase) return {success: false, error: 'Supabase not configured'};
+  
+  try {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return {success: false, error: 'Not authenticated'};
+    
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ newPassword })
+    });
+    
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return {success: false, error: result?.message || 'Failed to change password'};
+    }
+    
+    return {success: true};
+  } catch (err: any) {
+    console.error('changePassword error:', err);
+    return {success: false, error: err.message || 'Failed to change password'};
+  }
+}
+
+export async function setPasswordForOAuthUser(newPassword: string): Promise<{success: boolean, error?: string}> {
+  if (!supabase) return {success: false, error: 'Supabase not configured'};
+  
+  try {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return {success: false, error: 'Not authenticated'};
+    
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ newPassword })
+    });
+    
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return {success: false, error: result?.message || 'Failed to set password'};
+    }
+    
+    // Update client-side user metadata immediately for UI consistency
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const existingMetadata = user?.user_metadata || {};
+      
+      await supabase.auth.updateUser({
+        data: {
+          ...existingMetadata,
+          has_password: true,
+          password_set_at: new Date().toISOString()
+        }
+      });
+    } catch (metadataError) {
+      // Don't fail if metadata update fails, as password was already set
+      console.warn('Failed to update local user metadata:', metadataError);
+    }
+    
+    return {success: true};
+  } catch (err: any) {
+    console.error('setPasswordForOAuthUser error:', err);
+    return {success: false, error: err.message || 'Failed to set password'};
+  }
+}
+
+export async function checkIfUserHasPassword(): Promise<boolean> {
+  if (!supabase) return false;
+  
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return false;
+    
+    // Check if user has any email-based identity (indicates original password-based signup)
+    const hasEmailIdentity = user.identities?.some(identity => identity.provider === 'email');
+    if (hasEmailIdentity) return true;
+    
+    // Check user metadata for password flag (primary check for OAuth users)
+    const hasPasswordFromMetadata = user.user_metadata?.has_password === true;
+    if (hasPasswordFromMetadata) return true;
+    
+    // Fallback: assume OAuth-only users don't have password initially
+    return false;
+  } catch (err: any) {
+    console.error('checkIfUserHasPassword error:', err);
+    return false;
+  }
+}
+
 // -------------------- Auth Actions --------------------
 export async function signInWithEmailPassword(email: string, password: string) {
   if (!supabase) {

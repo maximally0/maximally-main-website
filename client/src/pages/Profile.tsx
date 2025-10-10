@@ -15,6 +15,8 @@ import { format } from 'date-fns';
 import type { Achievement, SelectHackathon } from '@shared/schema';
 import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut } from '@/lib/supabaseClient';
 import UsernameSettings from '@/components/UsernameSettings';
+import PasswordSettings from '@/components/PasswordSettings';
+import ExportDataButton from '@/components/ExportDataButton';
 
 interface HackathonWithDetails {
   id: number;
@@ -289,9 +291,17 @@ export default function Profile() {
             <div className="flex-1">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
                 <div>
-                  <h1 className="text-3xl font-bold text-maximally-red mb-2">
-                    {userProfile.name || userProfile.username}
-                  </h1>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                    <h1 className="text-3xl font-bold text-maximally-red">
+                      {userProfile.name || userProfile.username}
+                    </h1>
+                    {dbProfile.role === 'admin' && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-maximally-red text-white border border-maximally-red/50 shadow-sm w-fit">
+                        <span className="w-1.5 h-1.5 bg-white rounded-full mr-1.5"></span>
+                        ADMIN
+                      </span>
+                    )}
+                  </div>
                   <p className="text-gray-300 text-lg">@{userProfile.username}</p>
                 </div>
                 {isOwner && (
@@ -456,6 +466,7 @@ export default function Profile() {
           {isOwner && (
             <TabsContent value="settings" className="space-y-6">
               <UsernameSettings />
+              <PasswordSettings />
               
               {/* Account Settings */}
               <Card className="bg-gray-900 border-gray-800">
@@ -469,29 +480,25 @@ export default function Profile() {
                     <div>
                       <h4 className="text-lg font-medium text-gray-300 mb-2">Data Export</h4>
                       <p className="text-gray-500 text-sm mb-3">Download a copy of your Maximally data.</p>
-                      <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800">
-                        Export Data
-                      </Button>
+                      <ExportDataButton />
                     </div>
                   </div>
+                </div>
+              </Card>
+              
+              {/* Danger Zone */}
+              <Card className="bg-red-900/20 border-red-900/30">
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-red-400 mb-2">Danger Zone</h3>
+                  <p className="text-gray-400 mb-4">
+                    Once you delete your account, there is no going back. Please be certain.
+                  </p>
+                  <DeleteAccountButton />
                 </div>
               </Card>
             </TabsContent>
           )}
         </Tabs>
-
-        {/* Delete Account Button for Owner */}
-        {isOwner && (
-          <div className="mt-12 pt-8 border-t border-gray-800">
-            <div className="bg-red-900/20 border border-red-900/30 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-red-400 mb-2">Danger Zone</h3>
-              <p className="text-gray-400 mb-4">
-                Once you delete your account, there is no going back. Please be certain.
-              </p>
-              <DeleteAccountButton />
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
