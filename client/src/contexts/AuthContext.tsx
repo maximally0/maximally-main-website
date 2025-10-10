@@ -66,18 +66,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
     let timeoutId: NodeJS.Timeout | undefined;
     
     try {
-      setLoading(true);
-      console.log('🔑 Starting sign in for:', email);
+  setLoading(true);
       
       // Set a backup timeout to clear loading state
       timeoutId = setTimeout(() => {
-        console.log('⏰ Sign in timeout - clearing loading state');
+        // Sign in timeout - clearing loading state
         setLoading(false);
       }, 3000); // 3 second max wait
       
       const user = await signInWithEmailPassword(email, password);
       
-      console.log('✅ Sign in successful:', user?.email);
+  // Sign in successful
       // Clear the timeout since sign in was successful
       if (timeoutId) clearTimeout(timeoutId);
       
@@ -90,7 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       // Always ensure loading is cleared after a short delay
       setTimeout(() => {
-        console.log('🔄 Final clearing of sign in loading state');
+    // Final clearing of sign in loading state
         setLoading(false);
       }, 100);
     }
@@ -98,14 +97,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signUp = async (email: string, password: string, name: string, username: string) => {
     try {
-      setLoading(true);
-      console.log('📝 Starting sign up for:', { email, name, username });
+  setLoading(true);
+  // Starting sign up (logging removed)
       
       const payload: SignUpPayload = { email, password, name, username };
       const user = await signUpWithEmailPassword(payload);
       
-      console.log('✅ Sign up successful:', user?.email);
-      console.log('🔄 Waiting for auth state change to load profile...');
+  // Sign up successful
+  // Waiting for auth state change to load profile
       // The auth state change listener will handle setting user/profile
       return { error: null };
     } catch (error: any) {
@@ -113,8 +112,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return { error };
     } finally {
       // Add a shorter delay and ensure loading is always cleared
-      setTimeout(() => {
-        console.log('🔄 Clearing sign up loading state');
+        setTimeout(() => {
+        // Clearing sign up loading state
         setLoading(false);
       }, 300);
     }
@@ -213,20 +212,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('🔄 Auth state changed:', {
-        event, 
-        userEmail: session?.user?.email || 'no user',
-        hasSession: !!session,
-        isSignIn: event === 'SIGNED_IN',
-        isToken: event === 'TOKEN_REFRESHED'
-      });
+      // Auth state changed (logging removed)
       
       // Update session and user immediately
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        console.log('👤 Getting user profile for:', session.user.email);
+  // Getting user profile for session
         // Get user profile when signed in with timeout protection
         try {
           // Add timeout to prevent hanging
@@ -236,9 +229,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           );
           
           const result = await Promise.race([profilePromise, timeoutPromise]) as { user: any; profile: any } | null;
-          if (result && result.profile) {
+            if (result && result.profile) {
             setProfile(result.profile);
-            console.log('✅ Profile loaded successfully:', result.profile.username || result.profile.email);
           } else {
             console.warn('⚠️ No profile found for user, this might indicate a database issue');
             // Set profile to null but don't block the auth flow
@@ -249,8 +241,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           // Don't block the auth flow even if profile loading fails
           setProfile(null);
         }
-      } else {
-        console.log('🚪 User signed out, clearing profile');
+          } else {
+        // User signed out, clearing profile
         setProfile(null);
       }
 

@@ -224,12 +224,24 @@ const PeoplePreview = () => {
         setLoading(true);
         setError(null);
 
+        // Ensure supabase client is available
+        if (!supabase) throw new Error('Supabase client not available');
         // First, fetch dashboard configuration
-        const { data: dashboardData, error: dashboardError } = await supabase
+        type DashboardRow = {
+          featured_core_id_1?: number | null;
+          featured_core_id_2?: number | null;
+          featured_core_id_3?: number | null;
+          featured_judge_id_1?: number | null;
+          featured_judge_id_2?: number | null;
+          featured_judge_id_3?: number | null;
+        };
+
+        const db = supabase as any;
+        const { data: dashboardData, error: dashboardError } = await db
           .from('dashboard')
           .select('featured_core_id_1, featured_core_id_2, featured_core_id_3, featured_judge_id_1, featured_judge_id_2, featured_judge_id_3')
           .eq('id', 1)
-          .single();
+          .single() as { data?: DashboardRow; error?: any };
 
         if (dashboardError) {
           throw new Error(`Dashboard fetch failed: ${dashboardError.message}`);
@@ -251,18 +263,19 @@ const PeoplePreview = () => {
 
         // Fetch core team members
         if (coreIds.length > 0) {
-          const { data: coreData, error: coreError } = await supabase
+          const { data: coreData, error: coreError } = await db
             .from('people')
             .select('id, name, role_in_company, company, description')
-            .in('id', coreIds);
+            .in('id', coreIds) as { data?: any[]; error?: any };
 
           if (coreError) {
             throw new Error(`Core team fetch failed: ${coreError.message}`);
           }
 
           // Sort core team members by the order they appear in dashboard configuration
+          const coreDataArr: any[] = coreData || [];
           const sortedCoreTeam = coreIds.map(id => 
-            coreData?.find(member => member.id === id)
+            coreDataArr.find(member => member.id === id)
           ).filter(member => member !== undefined) as CoreTeamMember[];
 
           setCoreTeam(sortedCoreTeam);
@@ -270,18 +283,19 @@ const PeoplePreview = () => {
 
         // Fetch featured judges
         if (judgeIds.length > 0) {
-          const { data: judgeData, error: judgeError } = await supabase
+          const { data: judgeData, error: judgeError } = await db
             .from('judges')
             .select('id, name, role_in_company, company')
-            .in('id', judgeIds);
+            .in('id', judgeIds) as { data?: any[]; error?: any };
 
           if (judgeError) {
             throw new Error(`Judges fetch failed: ${judgeError.message}`);
           }
 
           // Sort judges by the order they appear in dashboard configuration
+          const judgeDataArr: any[] = judgeData || [];
           const sortedJudges = judgeIds.map(id => 
-            judgeData?.find(judge => judge.id === id)
+            judgeDataArr.find(judge => judge.id === id)
           ).filter(judge => judge !== undefined) as FeaturedJudge[];
 
           setFeaturedJudges(sortedJudges);

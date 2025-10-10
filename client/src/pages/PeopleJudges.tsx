@@ -26,11 +26,12 @@ const PeopleJudges = () => {
       try {
         setLoading(true);
         setError(null);
-        
-        const { data, error: fetchError } = await supabase
+        if (!supabase) throw new Error('Supabase client not available');
+        const db = supabase as any;
+        const { data, error: fetchError } = await db
           .from('judges')
           .select('*')
-          .order('display_order', { ascending: true });
+          .order('display_order', { ascending: true }) as { data?: any[]; error?: any };
 
         if (fetchError) {
           setError('Failed to load judges. Please try again.');

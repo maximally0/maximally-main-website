@@ -24,22 +24,7 @@ const getEnvVar = (key: string): string | undefined => {
 const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
 const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
 
-// Only log detailed environment info in development
-if (import.meta.env.DEV) {
-  console.log('🌍 Environment debug:', {
-    hasImportMeta: typeof import.meta !== 'undefined',
-    hasEnv: typeof import.meta?.env !== 'undefined',
-    allEnvKeys: import.meta?.env ? Object.keys(import.meta.env) : [],
-    environment: typeof window !== 'undefined' ? 'browser' : 'server'
-  });
-
-  console.log('🔑 Supabase configuration:', {
-    hasUrl: !!supabaseUrl,
-    hasKey: !!supabaseAnonKey,
-    urlLength: supabaseUrl?.length || 0,
-    keyLength: supabaseAnonKey?.length || 0
-  });
-}
+// Development environment logging removed
 
 // Create single instance with proper configuration to prevent multiple instances
 // Use singleton pattern to ensure only one client is ever created
@@ -58,12 +43,10 @@ if (supabaseUrl && supabaseAnonKey && !_supabaseInstance) {
       headers: { 'x-client-info': 'maximally-webapp' }
     }
   });
-  
-  console.log('✅ Supabase client created (singleton instance)');
 } else if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('⚠️ Supabase client not created - missing environment variables');
 } else {
-  console.log('♾️ Reusing existing Supabase client instance');
+  // Reusing existing Supabase client instance
 }
 
 export const supabase = _supabaseInstance;
@@ -73,7 +56,7 @@ if (!supabase) {
   console.error('- VITE_SUPABASE_URL:', supabaseUrl);
   console.error('- VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Present' : 'Missing');
 } else {
-  console.log('✅ Supabase client initialized successfully');
+  // Supabase client initialized successfully
 }
 
 // Use the same client instance for all queries to avoid multiple GoTrueClient instances
@@ -81,7 +64,7 @@ if (!supabase) {
 export const supabasePublic = supabase;
 
 if (supabase) {
-  console.log('✅ Using main Supabase client for public data queries (no duplication)');
+  // Using main Supabase client for public data queries
 }
 
 // -------------------- Types --------------------
@@ -181,11 +164,7 @@ function extractGoogleProfileData(user: User): OAuthProfileData {
                    googleData.picture ||
                    googleData.avatar_url;
   
-  console.log('🎨 Google profile data extracted:', {
-    fullName: metadata.full_name || metadata.name || googleData.name,
-    username: metadata.preferred_username || metadata.email?.split('@')[0],
-    avatarUrl
-  });
+  // Google profile data extracted
   
   return {
     fullName: metadata.full_name || metadata.name || googleData.name,
@@ -208,12 +187,7 @@ function extractGitHubProfileData(user: User): OAuthProfileData {
                    metadata.picture ||
                    (githubData.login ? `https://github.com/${githubData.login}.png` : null);
   
-  console.log('🐙 GitHub profile data extracted:', {
-    fullName: metadata.full_name || metadata.name || githubData.name,
-    username: metadata.preferred_username || metadata.user_name || githubData.login,
-    avatarUrl,
-    githubUsername: metadata.user_name || githubData.login
-  });
+  // GitHub profile data extracted
   
   return {
     fullName: metadata.full_name || metadata.name || githubData.name,
@@ -256,7 +230,7 @@ export async function getProfile(userId: string): Promise<Profile | null> {
 export async function getProfileByUsername(username: string): Promise<Profile | null> {
   if (!supabase) return null;
   try {
-    console.log('🔍 getProfileByUsername: Direct query for username:', username);
+  // getProfileByUsername: Direct query for username
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -270,11 +244,7 @@ export async function getProfileByUsername(username: string): Promise<Profile | 
     
     if (data) {
       const profile = data as any;
-      console.log('✅ Profile found for username:', username, 'with data:', {
-        id: profile.id,
-        email: profile.email,
-        username: profile.username
-      });
+  // Profile found for username
     } else {
       console.warn('⚠️ No profile found for username:', username);
     }
@@ -372,13 +342,7 @@ export async function ensureUserProfile(user: User): Promise<Profile | null> {
       github_username: oauthData.githubUsername || null,
     };
     
-    console.log('🔄 Creating profile with OAuth data:', {
-      provider: user.identities?.[0]?.provider || 'email',
-      fullName: oauthData.fullName,
-      username: username,
-      hasAvatar: !!oauthData.avatarUrl,
-      githubUsername: oauthData.githubUsername,
-    });
+  // Creating profile with OAuth data
 
     // Try inserting the profile, with retry for username conflicts
     let attempts = 0;
@@ -398,7 +362,7 @@ export async function ensureUserProfile(user: User): Promise<Profile | null> {
             const randomSuffix = Math.random().toString(36).slice(2, 4);
             const baseUsername = username.replace(/\d+$/, ''); // Remove existing numbers
             profilePayload.username = `${baseUsername}${randomSuffix}`;
-            console.log(`🔄 Username collision, trying: ${profilePayload.username}`);
+            // Username collision, retrying with new username
             attempts++;
             continue;
           }
@@ -595,7 +559,7 @@ export async function signInWithEmailPassword(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     if (!data.user) throw new Error('No user returned');
-    console.log('✅ Email signin successful, profile should already exist:', data.user.email);
+  // Email signin successful
     return data.user;
   } catch (err) {
     console.error('signInWithEmailPassword error:', err);
@@ -685,7 +649,7 @@ export async function signUpWithEmailPassword(payload: SignUpPayload) {
         finalUsername = slugifyUsername(fallback);
       }
 
-      console.log('🚀 SIGNUP: Creating profile with username:', finalUsername, 'from input:', username);
+  // SIGNUP: Creating profile with username
 
       const profilePayload: Partial<Profile> = {
         id: user.id,
@@ -700,7 +664,7 @@ export async function signUpWithEmailPassword(payload: SignUpPayload) {
         console.error('❌ Profile creation error:', profileError);
         throw new Error('Failed to create profile: ' + profileError.message);
       }
-      console.log('✅ Profile created successfully with username:', finalUsername);
+  // Profile created successfully
     }
 
     return user;
@@ -734,11 +698,11 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
     try {
       const user = await getUser();
       if (!user) {
-        console.log('🚪 getCurrentUserWithProfile: No user found');
+  // getCurrentUserWithProfile: No user found
         return null;
       }
       
-      console.log('🔍 getCurrentUserWithProfile: Looking for profile for user:', user.email);
+  // getCurrentUserWithProfile: Looking for profile for user
       
       // DIRECT QUERY - BYPASS ALL POLICIES
       if (!supabase) {
@@ -746,35 +710,34 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
         return null;
       }
       
-      let { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .maybeSingle();
-      
-      if (error && error.code !== 'PGRST116') {
-        console.error('❌ Direct profile query failed:', error);
-        return null;
-      }
+          // Use an explicit result variable so TypeScript can infer correct types
+          const profileRes = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle();
+          
+          let profile = (profileRes as any)?.data as Profile | null;
+          const profileErr = (profileRes as any)?.error;
+          
+          if (profileErr && profileErr.code !== 'PGRST116') {
+            console.error('❌ Direct profile query failed:', profileErr);
+            return null;
+          }
       
       // If no profile found, create one (especially important for OAuth users)
       if (!profile) {
-        console.log('🔄 No profile found, creating one for OAuth user:', user.email);
+  // No profile found, creating one for OAuth user
         profile = await ensureUserProfile(user);
         if (!profile) {
           console.error('❌ Failed to create profile for user:', user.email);
           return null;
         }
-        console.log('✅ Profile created successfully for:', user.email);
+  // Profile created successfully for user
       }
       
       const profileData = profile as any;
-      console.log('✅ Profile loaded:', {
-        username: profileData.username,
-        email: profileData.email,
-        id: profileData.id,
-        hasAvatar: !!profileData.avatar_url
-      });
+  // Profile loaded
       
       return { user, profile: profile as Profile };
     } catch (error: any) {

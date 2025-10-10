@@ -38,6 +38,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json({ ok: true });
   });
 
+  // CAPTCHA verification endpoint
+  app.post("/api/verify-captcha", async (req: Request, res: Response) => {
+    try {
+      const { token } = req.body as { token?: string };
+      
+      if (!token || typeof token !== 'string') {
+        return res.status(400).json({ success: false, message: 'CAPTCHA token is required' });
+      }
+      
+      const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
+      if (!RECAPTCHA_SECRET_KEY) {
+        console.error('RECAPTCHA_SECRET_KEY not configured');
+        return res.status(500).json({ success: false, message: 'CAPTCHA verification not configured' });
+      }
+      
+      // Rate limiting - 10 CAPTCHA verifications per IP per minute
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      if (!rateLimit(clientIP, 'captcha:verify', 10, 60_000)) {
+        return res.status(429).json({ success: false, message: 'Too many CAPTCHA verification attempts' });
+      }
+      
+      // Verify CAPTCHA with Google's API
+      const verificationUrl = 'https://www.google.com/recaptcha/api/siteverify';
+      const params = new URLSearchParams();
+      params.append('secret', RECAPTCHA_SECRET_KEY);
+      params.append('response', token);
+      params.append('remoteip', clientIP);
+      
+      const verificationResponse = await fetch(verificationUrl, {
+        method: 'POST',
+        body: params,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      
+      const verificationResult = await verificationResponse.json();
+      
+      if (!verificationResult.success) {
+        console.log('CAPTCHA verification failed:', verificationResult['error-codes']);
+        return res.json({ 
+          success: false, 
+          message: 'CAPTCHA verification failed',
+          errors: verificationResult['error-codes']
+        });
+      }
+      
+      // For reCAPTCHA v3, check the score if provided
+      if (verificationResult.score !== undefined) {
+        const minimumScore = 0.3; // Lowered threshold for better user experience
+        if (verificationResult.score < minimumScore) {
+          console.log(`CAPTCHA score too low: ${verificationResult.score}`);
+          return res.json({ 
+            success: false, 
+            message: 'Security verification failed. Please try again.',
+            score: verificationResult.score
+          });
+        }
+        console.log(`CAPTCHA v3 score: ${verificationResult.score} (threshold: ${minimumScore})`);
+      }
+      
+      console.log('CAPTCHA verification successful', {
+        hostname: verificationResult.hostname,
+        score: verificationResult.score,
+        action: verificationResult.action
+      });
+      
+      return res.json({ 
+        success: true, 
+        message: 'CAPTCHA verification successful',
+        score: verificationResult.score,
+        action: verificationResult.action
+      });
+    } catch (err: any) {
+      console.error('CAPTCHA verification error:', err);
+      return res.status(500).json({ 
+        success: false, 
+        message: 'CAPTCHA verification failed due to server error' 
+      });
+    }
+  });
+
   // Secure admin invite endpoint
   app.post("/api/admin/invite", async (req: Request, res: Response) => {
     try {
@@ -451,8 +533,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Try to get additional user data (hackathons, achievements, etc.)
       // These queries will fail gracefully if tables don't exist
-      let hackathons = [];
-      let achievements = [];
+  let hackathons: any[] = [];
+  let achievements: any[] = [];
       
       try {
         const { data: hackathonData } = await supabaseAdmin

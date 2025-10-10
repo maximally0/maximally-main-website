@@ -262,7 +262,7 @@ export default function Profile() {
       avatar_url: updatedProfile.avatarUrl ?? null
     };
     
-    console.log('Saving profile with fields:', dbFields);
+  // Saving profile (debug logging removed)
     await updateProfileMe(dbFields);
     await queryClient.invalidateQueries({ queryKey: ['profile', username] });
   };

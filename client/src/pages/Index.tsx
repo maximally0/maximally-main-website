@@ -87,9 +87,7 @@ const Index = () => {
 
   useEffect(() => {
     const loadFeatured = async () => {
-      console.log("🚀 Loading featured hackathon...");
-      console.log("🔧 Supabase client:", !!supabase);
-      console.log("🔧 Public client:", !!supabasePublic);
+      // Loading featured hackathon (debug logs removed)
 
       if (!supabasePublic) {
         console.warn(
@@ -117,7 +115,7 @@ const Index = () => {
         const SUPABASE_ANON_KEY =
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZianFxc3Bmb3NnZWx4aGhxbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjk2ODYsImV4cCI6MjA3MzAwNTY4Nn0.fpbf1kNT-qI54aaHS0-To3jrRKU91lgwINzHEC_wUis";
 
-        console.log("📊 Step 1: Fetching dashboard via direct fetch...");
+  // Step 1: Fetching dashboard via direct fetch
 
         const dashboardResponse = await fetch(
           `${SUPABASE_URL}/rest/v1/dashboard?select=featured_hackathon_id&id=eq.1`,
@@ -139,18 +137,18 @@ const Index = () => {
         const dashboardData = await dashboardResponse.json();
         const dashboardRow = dashboardData?.[0];
 
-        console.log("📄 Dashboard query result:", dashboardData);
+  // Dashboard query result (debug logging removed)
 
         if (!dashboardRow || !dashboardRow.featured_hackathon_id) {
           console.error(
             "❌ Failed to load dashboard row for featured hackathon"
           );
-          console.log("🔄 Falling back to latest hackathon...");
+          // Falling back to latest hackathon
           await loadLatestHackathon(); // Fallback to latest hackathon
           return;
         }
 
-        console.log("✅ Dashboard loaded:", dashboardRow);
+    // Dashboard loaded
         const rawId = dashboardRow.featured_hackathon_id;
 
         if (rawId === undefined || rawId === null || rawId === "") {
@@ -159,15 +157,8 @@ const Index = () => {
           return;
         }
 
-        const featuredId =
-          typeof rawId === "string" ? parseInt(rawId, 10) : Number(rawId);
-        console.log(
-          "🎯 Featured ID processed:",
-          featuredId,
-          "(type:",
-          typeof featuredId,
-          ")"
-        );
+        const featuredId = typeof rawId === "string" ? parseInt(rawId, 10) : Number(rawId);
+        // Featured ID processed
 
         if (Number.isNaN(featuredId)) {
           console.warn(
@@ -179,7 +170,7 @@ const Index = () => {
         }
 
         // Get the featured hackathon via direct fetch
-        console.log("🏆 Step 2: Fetching hackathon ID", featuredId, "...");
+  // Fetching hackathon by ID
 
         const hackathonResponse = await fetch(
           `${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,duration,location,focus_areas,devpost_url,devpost_register_url,registration_url&id=eq.${featuredId}`,
@@ -210,7 +201,7 @@ const Index = () => {
           return;
         }
 
-        console.log("✅ Raw hackathon data:", hack);
+  // Raw hackathon data (debug logging removed)
 
         const firstTag = Array.isArray(hack.focus_areas)
           ? String(hack.focus_areas[0] ?? "")
@@ -231,10 +222,8 @@ const Index = () => {
           details_url: hack.devpost_url ?? null,
         };
 
-        console.log("🎨 Processed featured object:", processedFeatured);
-        console.log("🔄 Setting featured state...");
-        setFeatured(processedFeatured);
-        console.log("✅ Featured state set!");
+    // Processed featured object (logging removed)
+    setFeatured(processedFeatured);
       } catch (error) {
         console.error("❌ Error loading featured hackathon:", error);
         await loadLatestHackathon(); // Fallback to latest hackathon
@@ -274,7 +263,6 @@ const Index = () => {
               null,
             details_url: latestHack.devpost_url ?? null,
           });
-          console.log("✅ Loaded latest hackathon as featured:", latestHack);
         }
       } catch (err) {
         console.error("Failed to load latest hackathon:", err);

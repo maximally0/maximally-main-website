@@ -17,16 +17,10 @@ export default function MyProfileRedirect() {
         
         const ctx = await Promise.race([profilePromise, timeoutPromise]) as any;
         
-        console.log('🔍 MyProfileRedirect: Context loaded:', {
-          hasUser: !!ctx?.user,
-          userEmail: ctx?.user?.email,
-          hasProfile: !!ctx?.profile,
-          profileUsername: ctx?.profile?.username,
-          profileEmail: ctx?.profile?.email
-        });
+        // MyProfileRedirect: context loaded (debug logs removed)
         
         if (!ctx) {
-          console.log('🚪 MyProfileRedirect: No user context, redirecting to login');
+          // No user context, redirecting to login
           navigate('/login', { replace: true });
           return;
         }
@@ -39,7 +33,7 @@ export default function MyProfileRedirect() {
           return;
         }
         
-        console.log('✅ MyProfileRedirect: Redirecting to profile:', ctx.profile.username);
+  // Redirecting to profile
         navigate(`/profile/${ctx.profile.username}`, { replace: true });
       } catch (error: any) {
         console.error('❌ MyProfileRedirect: Error loading profile, redirecting to home:', error.message);

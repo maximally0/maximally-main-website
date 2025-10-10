@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,8 @@ import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/lib/supabaseClient';
+import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
+import { verifyCaptcha, isCaptchaRequired, isValidCaptchaToken } from '@/lib/captcha';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -22,6 +24,16 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // CAPTCHA state
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaError, setCaptchaError] = useState<string | null>(null);
+  const [captchaLoaded, setCaptchaLoaded] = useState(false);
+  const captchaRequired = isCaptchaRequired();
+  const recaptchaRef = useRef<RecaptchaRef | null>(null);
+  const captchaTokenRef = useRef<string | null>(null);
+  
+  // Removed development-only CAPTCHA debug logging
 
   // Handle OAuth errors and user redirect
   useEffect(() => {
@@ -67,10 +79,32 @@ export default function Login() {
     }
     
     if (user) {
-      console.log('✅ User authenticated, redirecting to home');
+      // User authenticated, redirecting to home
       navigate('/', { replace: true });
     }
   }, [user, navigate, supabase]);
+
+  // CAPTCHA handlers
+  const handleCaptchaVerify = (token: string | null) => {
+    setCaptchaToken(token);
+    captchaTokenRef.current = token;
+    setCaptchaError(null);
+    setCaptchaLoaded(true);
+  };
+
+  const handleCaptchaError = () => {
+    setCaptchaToken(null);
+    setCaptchaError('CAPTCHA verification failed. Please refresh and try again.');
+    setCaptchaLoaded(false);
+    captchaTokenRef.current = null;
+  };
+
+  const resetCaptcha = () => {
+    setCaptchaToken(null);
+    setCaptchaError(null);
+    setCaptchaLoaded(false);
+    captchaTokenRef.current = null;
+  };
 
   // Email validation check before signup
   const validateEmailBeforeSignup = async (email: string): Promise<boolean> => {
@@ -108,7 +142,38 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setCaptchaError(null);
     setLoading(true);
+
+    // Check CAPTCHA if required
+    if (captchaRequired) {
+      // If no token yet, show immediate error and then attempt programmatic execution
+      if (!isValidCaptchaToken(captchaTokenRef.current)) {
+        // Show immediate error so user sees feedback right away
+        setError('Please complete the CAPTCHA verification');
+        setLoading(false);
+
+        // Still attempt to programmatically execute the invisible widget for convenience
+        try {
+          recaptchaRef.current?.execute();
+        } catch (err) {
+          console.warn('Recaptcha execute failed (maybe non-invisible widget):', err);
+        }
+
+        return;
+      }
+
+  // Verify CAPTCHA with backend before proceeding with authentication
+      const captchaResult = await verifyCaptcha(captchaTokenRef.current as string);
+      
+      if (!captchaResult.success) {
+        setError(captchaResult.message || 'CAPTCHA verification failed');
+        resetCaptcha();
+        setLoading(false);
+        return;
+      }
+      // CAPTCHA verification successful
+    }
 
     // Validation
     if (isSignUp) {
@@ -137,7 +202,7 @@ export default function Login() {
 
     try {
       if (isSignUp) {
-        console.log('Attempting to sign up user with email validation...');
+  // Attempting to sign up user with email validation
         
         // First, validate the email
         const emailIsValid = await validateEmailBeforeSignup(email);
@@ -146,7 +211,7 @@ export default function Login() {
           return;
         }
         
-        console.log('Email validation passed, proceeding with signup...');
+  // Email validation passed, proceeding with signup
         
         // Use the original signup method (which works correctly for username storage)
         const result = await signUp(email, password, name.trim(), username.trim());
@@ -155,30 +220,49 @@ export default function Login() {
           setLoading(false);
           return;
         }
-        console.log('Sign up successful');
+  // Sign up successful
         // Redirect to home page after successful signup
         navigate('/');
       } else {
-        console.log('Attempting to sign in user...');
+  // Attempting to sign in user
         const result = await signIn(email, password);
         if (result.error) {
           setError(result.error.message);
+          resetCaptcha(); // Reset CAPTCHA on authentication error
           setLoading(false);
           return;
         }
-        console.log('Sign in successful');
+  // Sign in successful
         // Redirect to home page after successful signin
         navigate('/');
       }
     } catch (err: any) {
       console.error('Authentication error:', err);
       setError(err.message || 'An unexpected error occurred');
+      resetCaptcha(); // Reset CAPTCHA on any error
       setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
     if (!supabase) return;
+    
+    // Check CAPTCHA if required
+    if (captchaRequired) {
+      if (!isValidCaptchaToken(captchaToken)) {
+        setError('Please complete the CAPTCHA verification before signing in with Google');
+        return;
+      }
+
+      // Verify CAPTCHA with backend
+      const captchaResult = await verifyCaptcha(captchaToken);
+      if (!captchaResult.success) {
+        setError(captchaResult.message || 'CAPTCHA verification failed');
+        resetCaptcha();
+        return;
+      }
+    }
+    
     try {
       // Clear any existing OAuth state to prevent conflicts
       await supabase.auth.signOut();
@@ -208,6 +292,23 @@ export default function Login() {
 
   const handleGithubSignIn = async () => {
     if (!supabase) return;
+    
+    // Check CAPTCHA if required
+    if (captchaRequired) {
+      if (!isValidCaptchaToken(captchaToken)) {
+        setError('Please complete the CAPTCHA verification before signing in with GitHub');
+        return;
+      }
+
+      // Verify CAPTCHA with backend
+      const captchaResult = await verifyCaptcha(captchaToken);
+      if (!captchaResult.success) {
+        setError(captchaResult.message || 'CAPTCHA verification failed');
+        resetCaptcha();
+        return;
+      }
+    }
+    
     try {
       // Clear any existing OAuth state to prevent conflicts
       await supabase.auth.signOut();
@@ -340,6 +441,23 @@ export default function Login() {
                 </>
               )}
 
+              {captchaRequired && (
+                <div className="space-y-2">
+                  <div className="flex justify-center ml-2">
+                    <Recaptcha
+                      ref={recaptchaRef}
+                      onVerify={handleCaptchaVerify}
+                      onError={handleCaptchaError}
+                      size="normal"
+                      className=""
+                    />
+                  </div>
+                  {captchaError && (
+                    <div className="text-red-400 text-sm" role="alert">{captchaError}</div>
+                  )}
+                </div>
+              )}
+
               <Button
                 type="submit"
                 className="w-full bg-maximally-red dark:bg-maximally-red hover:bg-maximally-red/90 dark:hover:bg-maximally-red/90 text-white dark:text-white font-semibold"
@@ -348,6 +466,8 @@ export default function Login() {
               >
                 {loading ? 'Please wait...' : (isSignUp ? 'Sign Up' : 'Sign In')}
               </Button>
+
+              {/* Debug button removed - removed in favor of production UX */}
             </form>
 
             <div className="relative">
@@ -385,7 +505,11 @@ export default function Login() {
 
             <div className="text-center text-sm">
               <button
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setError(null);
+                  resetCaptcha(); // Reset CAPTCHA when switching modes
+                }}
                 className="text-gray-400 dark:text-gray-400 hover:text-maximally-red dark:hover:text-maximally-red transition-colors"
                 data-testid="button-toggle-mode"
               >
