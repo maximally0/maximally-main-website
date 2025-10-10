@@ -60,7 +60,6 @@ const PeopleCore = () => {
 
         setPeople(data || []);
       } catch (err: any) {
-        console.error('Error fetching people:', err);
         setError(err.message || 'Failed to load team members');
       } finally {
         setLoading(false);

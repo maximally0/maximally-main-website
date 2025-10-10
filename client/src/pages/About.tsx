@@ -20,15 +20,6 @@ import SEO from '@/components/SEO';
 import { supabase } from '@/lib/supabaseClient';
 
 // Interfaces for dynamic data
-interface DashboardData {
-  featured_core_id_1: number | null;
-  featured_core_id_2: number | null;
-  featured_core_id_3: number | null;
-  featured_judge_id_1: number | null;
-  featured_judge_id_2: number | null;
-  featured_judge_id_3: number | null;
-}
-
 interface CoreTeamMember {
   id: number;
   name: string;
@@ -297,7 +288,6 @@ const PeoplePreview = () => {
         }
 
       } catch (err: any) {
-        console.error('Error fetching people data:', err);
         setError(err.message || 'Failed to load people data');
       } finally {
         setLoading(false);

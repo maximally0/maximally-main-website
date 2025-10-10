@@ -33,13 +33,11 @@ const PeopleJudges = () => {
           .order('display_order', { ascending: true });
 
         if (fetchError) {
-          console.error('Error fetching judges:', fetchError);
           setError('Failed to load judges. Please try again.');
         } else {
           setJudges(data || []);
         }
       } catch (err) {
-        console.error('Unexpected error:', err);
         setError('An unexpected error occurred. Please try again.');
       } finally {
         setLoading(false);
