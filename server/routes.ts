@@ -483,6 +483,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Certificate verification endpoint
+  app.get("/api/certificates/verify/:certificate_id", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const { certificate_id } = req.params;
+      
+      // Basic validation of certificate_id format (should match CERT-[A-Z0-9]{6})
+      if (!certificate_id || typeof certificate_id !== 'string') {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Invalid certificate ID format",
+          status: "invalid_id"
+        });
+      }
+
+      // Rate limiting - 30 certificate verifications per IP per minute
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      if (!rateLimit(clientIP, 'certificate:verify', 30, 60_000)) {
+        return res.status(429).json({ success: false, message: 'Too many verification requests' });
+      }
+
+      // Query certificate from database
+      const { data: certificate, error: certError } = await supabaseAdmin
+        .from('certificates')
+        .select('*')
+        .eq('certificate_id', certificate_id.toUpperCase())
+        .single();
+
+      if (certError || !certificate) {
+        return res.json({
+          success: true,
+          status: "invalid_id",
+          message: "Invalid certificate ID",
+          certificate_id: certificate_id.toUpperCase()
+        });
+      }
+
+      // Check if certificate is revoked/inactive
+      if (certificate.status !== 'active') {
+        return res.json({
+          success: true,
+          status: "revoked",
+          message: "This certificate has been revoked",
+          certificate_id: certificate_id.toUpperCase(),
+          certificate: {
+            participant_name: certificate.participant_name,
+            hackathon_name: certificate.hackathon_name,
+            type: certificate.type,
+            position: certificate.position,
+            created_at: certificate.created_at
+          }
+        });
+      }
+
+      // Certificate is valid and active
+      return res.json({
+        success: true,
+        status: "verified",
+        message: "Certificate is verified and valid",
+        certificate_id: certificate_id.toUpperCase(),
+        certificate: {
+          participant_name: certificate.participant_name,
+          participant_email: certificate.participant_email,
+          hackathon_name: certificate.hackathon_name,
+          type: certificate.type,
+          position: certificate.position,
+          pdf_url: certificate.pdf_url,
+          jpg_url: certificate.jpg_url,
+          created_at: certificate.created_at
+        }
+      });
+
+    } catch (err: any) {
+      console.error('Certificate verification error:', err);
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Failed to verify certificate',
+        status: "error"
+      });
+    }
+  });
+
   // User data export endpoint
   app.get("/api/user/export-data", async (req: Request, res: Response) => {
     try {
