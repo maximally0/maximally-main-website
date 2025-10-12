@@ -71,13 +71,13 @@ const CertificateVerification: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'verified':
-        return 'text-green-600 bg-green-50 border-green-200';
+        return 'border-green-500 shadow-green-500/30';
       case 'revoked':
-        return 'text-orange-600 bg-orange-50 border-orange-200';
+        return 'border-maximally-yellow shadow-maximally-yellow/30';
       case 'invalid_id':
-        return 'text-red-600 bg-red-50 border-red-200';
+        return 'border-maximally-red shadow-maximally-red/30';
       default:
-        return 'text-red-600 bg-red-50 border-red-200';
+        return 'border-maximally-red shadow-maximally-red/30';
     }
   };
 
@@ -95,14 +95,14 @@ const CertificateVerification: React.FC = () => {
         <Helmet>
           <title>Verifying Certificate - Maximally</title>
         </Helmet>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600 mx-auto"></div>
-              <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                Verifying Certificate
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-maximally-red mx-auto"></div>
+              <h2 className="mt-6 font-press-start text-lg text-maximally-red">
+                VERIFYING CERTIFICATE
               </h2>
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="mt-4 text-sm text-gray-400 font-jetbrains">
                 Please wait while we verify certificate ID: {certificate_id}
               </p>
             </div>
@@ -118,22 +118,22 @@ const CertificateVerification: React.FC = () => {
         <Helmet>
           <title>Certificate Verification Error - Maximally</title>
         </Helmet>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-8">
             <div className="text-center">
-              <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-                Verification Error
+              <XCircle className="w-16 h-16 text-maximally-red mx-auto mb-4" />
+              <h2 className="mt-6 font-press-start text-lg text-maximally-red">
+                VERIFICATION ERROR
               </h2>
-              <p className="mt-2 text-sm text-gray-600">
+              <p className="mt-4 text-sm text-gray-400 font-jetbrains">
                 {error || 'Failed to verify certificate'}
               </p>
               <div className="mt-6">
                 <Link
                   to="/"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="pixel-button bg-maximally-red text-white font-press-start text-xs px-6 py-3 hover:bg-maximally-red/90 transition-colors"
                 >
-                  Go Home
+                  GO_HOME
                 </Link>
               </div>
             </div>
@@ -158,90 +158,90 @@ const CertificateVerification: React.FC = () => {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto">
+      <div className="min-h-screen bg-black text-white py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Certificate Verification
+            <h1 className="font-press-start text-2xl md:text-3xl text-maximally-red mb-6">
+              CERTIFICATE VERIFICATION
             </h1>
-            <p className="text-lg text-gray-600">
-              Certificate ID: <span className="font-mono font-semibold">{certificate_id}</span>
+            <p className="text-lg text-gray-300 font-jetbrains">
+              Certificate ID: <span className="font-mono font-bold text-maximally-yellow">{certificate_id}</span>
             </p>
           </div>
 
-          <div className={`bg-white shadow-lg rounded-lg border-2 ${getStatusColor(status)} p-8`}>
+          <div className={`bg-gray-900 border-4 ${getStatusColor(status)} p-8 minecraft-block`}>
             <div className="text-center">
               {renderStatusIcon(status)}
               
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {status === 'verified' && 'Certificate Verified ✓'}
-                {status === 'revoked' && 'Certificate Revoked'}
-                {status === 'invalid_id' && 'Invalid Certificate ID'}
-                {status === 'error' && 'Verification Error'}
+              <h2 className="font-press-start text-lg md:text-xl text-white mb-4">
+                {status === 'verified' && '✓ CERTIFICATE VERIFIED'}
+                {status === 'revoked' && '⚠ CERTIFICATE REVOKED'}
+                {status === 'invalid_id' && '✗ INVALID CERTIFICATE ID'}
+                {status === 'error' && '✗ VERIFICATION ERROR'}
               </h2>
               
-              <p className="text-lg text-gray-600 mb-6">
+              <p className="text-base text-gray-300 font-jetbrains mb-6">
                 {message}
               </p>
 
               {certificate && (
-                <div className="bg-gray-50 rounded-lg p-6 text-left">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Certificate Details
+                <div className="bg-black border-2 border-gray-700 rounded-lg p-6 text-left">
+                  <h3 className="font-press-start text-base text-maximally-yellow mb-6">
+                    CERTIFICATE DETAILS
                   </h3>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div>
-                      <span className="font-medium text-gray-700">Holder Name:</span>
-                      <span className="ml-2 text-gray-900 text-lg font-semibold">
+                      <span className="font-jetbrains text-sm text-gray-400">Holder Name:</span>
+                      <span className="ml-3 text-white text-lg font-bold font-jetbrains">
                         {certificate.participant_name}
                       </span>
                     </div>
                     
                     {certificate.participant_email && status === 'verified' && (
                       <div>
-                        <span className="font-medium text-gray-700">Email:</span>
-                        <span className="ml-2 text-gray-900">
+                        <span className="font-jetbrains text-sm text-gray-400">Email:</span>
+                        <span className="ml-3 text-white font-jetbrains">
                           {certificate.participant_email}
                         </span>
                       </div>
                     )}
                     
                     <div>
-                      <span className="font-medium text-gray-700">Event:</span>
-                      <span className="ml-2 text-gray-900">
+                      <span className="font-jetbrains text-sm text-gray-400">Event:</span>
+                      <span className="ml-3 text-maximally-red font-bold font-jetbrains">
                         {certificate.hackathon_name}
                       </span>
                     </div>
                     
                     <div>
-                      <span className="font-medium text-gray-700">Type:</span>
-                      <span className="ml-2 text-gray-900">
+                      <span className="font-jetbrains text-sm text-gray-400">Type:</span>
+                      <span className="ml-3 text-white font-jetbrains">
                         {certificate.type}
                       </span>
                     </div>
                     
                     {certificate.position && (
                       <div>
-                        <span className="font-medium text-gray-700">Position:</span>
-                        <span className="ml-2 text-gray-900 font-semibold">
+                        <span className="font-jetbrains text-sm text-gray-400">Position:</span>
+                        <span className="ml-3 text-maximally-yellow font-bold font-jetbrains">
                           {certificate.position}
                         </span>
                       </div>
                     )}
                     
                     <div>
-                      <span className="font-medium text-gray-700">Issued Date:</span>
-                      <span className="ml-2 text-gray-900">
+                      <span className="font-jetbrains text-sm text-gray-400">Issued Date:</span>
+                      <span className="ml-3 text-white font-jetbrains">
                         {formatDate(certificate.created_at)}
                       </span>
                     </div>
                   </div>
 
                   {status === 'verified' && (certificate.pdf_url || certificate.jpg_url) && (
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                      <h4 className="text-lg font-medium text-gray-900 mb-3">
-                        Certificate Files
+                    <div className="mt-6 pt-6 border-t border-gray-700">
+                      <h4 className="font-press-start text-sm text-maximally-red mb-4">
+                        CERTIFICATE FILES
                       </h4>
                       <div className="flex flex-wrap gap-3">
                         {certificate.pdf_url && (
@@ -249,11 +249,11 @@ const CertificateVerification: React.FC = () => {
                             href={certificate.pdf_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+                            className="pixel-button bg-maximally-red text-white font-press-start text-xs px-4 py-2 flex items-center gap-2 hover:bg-maximally-red/90 transition-colors"
                           >
-                            <Download className="w-4 h-4 mr-2" />
-                            Download PDF
-                            <ExternalLink className="w-4 h-4 ml-2" />
+                            <Download className="w-3 h-3" />
+                            DOWNLOAD_PDF
+                            <ExternalLink className="w-3 h-3" />
                           </a>
                         )}
                         {certificate.jpg_url && (
@@ -261,11 +261,11 @@ const CertificateVerification: React.FC = () => {
                             href={certificate.jpg_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+                            className="pixel-button bg-maximally-blue text-white font-press-start text-xs px-4 py-2 flex items-center gap-2 hover:bg-maximally-blue/90 transition-colors"
                           >
-                            <Eye className="w-4 h-4 mr-2" />
-                            View Image
-                            <ExternalLink className="w-4 h-4 ml-2" />
+                            <Eye className="w-3 h-3" />
+                            VIEW_IMAGE
+                            <ExternalLink className="w-3 h-3" />
                           </a>
                         )}
                       </div>
@@ -277,30 +277,32 @@ const CertificateVerification: React.FC = () => {
               <div className="mt-8 flex justify-center space-x-4">
                 <Link
                   to="/"
-                  className="inline-flex items-center px-6 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="pixel-button bg-gray-800 border-2 border-gray-600 text-white font-press-start text-xs px-6 py-3 hover:bg-gray-700 transition-colors"
                 >
-                  Go Home
+                  GO_HOME
                 </Link>
                 
                 <button
                   onClick={() => window.location.reload()}
-                  className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="pixel-button bg-maximally-red text-white font-press-start text-xs px-6 py-3 hover:bg-maximally-red/90 transition-colors"
                 >
-                  Verify Again
+                  VERIFY_AGAIN
                 </button>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500">
-              This certificate verification is powered by Maximally's secure verification system.
-              If you have questions about this certificate, please{' '}
-              <Link to="/contact" className="text-indigo-600 hover:text-indigo-500">
-                contact us
-              </Link>
-              .
-            </p>
+          <div className="mt-12 text-center">
+            <div className="bg-gray-900 border-2 border-gray-800 rounded-lg p-6">
+              <p className="text-sm text-gray-400 font-jetbrains">
+                This certificate verification is powered by Maximally's secure verification system.
+                If you have questions about this certificate, please{' '}
+                <Link to="/contact" className="text-maximally-red hover:text-maximally-red/80 transition-colors font-bold">
+                  contact us
+                </Link>
+                .
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -342,184 +342,248 @@ export default function Login() {
         <title>{isSignUp ? 'Sign Up' : 'Login'} - Maximally</title>
         <meta
           name="description"
-          content="Join Maximally - India's premier skill development platform for teenagers."
+          content="Join Maximally - World's First AI-Native Hackathon Platform"
         />
       </Helmet>
 
-      <div className="min-h-screen bg-black dark:bg-black flex items-center justify-center p-4 pt-24">
-        <div className="" />
-        <div className="absolute inset-0 bg-grid-white opacity-20" />
+      <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center p-4 pt-24">
+        {/* Pixel Grid Background */}
+        <div className="fixed inset-0 bg-black" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        
+        {/* Floating Pixels */}
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${i * 0.5}s`,
+              animationDuration: `${4 + i * 0.5}s`,
+            }}
+          />
+        ))}
 
-        <Card className="w-full max-w-md bg-black/90 dark:bg-black/90 border-maximally-red/30 dark:border-maximally-red/30 backdrop-blur-sm relative z-10" data-testid="card-auth">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-3xl font-bold text-center text-maximally-red dark:text-maximally-red">
-              {isSignUp ? 'Create Account' : 'Welcome Back'}
-            </CardTitle>
-            <CardDescription className="text-center text-gray-400 dark:text-gray-400">
-              {isSignUp
-                ? 'Sign up to join the Maximally community'
-                : 'Sign in to continue to Maximally'}
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            {error && (
-              <div className="text-red-400 text-sm" role="alert" data-testid="auth-error">{error}</div>
-            )}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-200 dark:text-gray-200">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="bg-black/50 dark:bg-black/50 border-gray-700 dark:border-gray-700 text-white dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 focus:border-maximally-red dark:focus:border-maximally-red"
-                  required
-                  data-testid="input-email"
-                />
+        {/* Auth Card */}
+        <div className="w-full max-w-lg relative z-10">
+          <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red hover:border-maximally-yellow transition-all duration-500 p-8 relative group overflow-hidden" data-testid="card-auth">
+            {/* Corner decorations */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
+            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
+            
+            {/* Animated Border Glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-maximally-red via-maximally-yellow to-maximally-red opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500" />
+            
+            <div className="relative z-10">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <div className="minecraft-block bg-maximally-red/20 border-2 border-maximally-red p-3 inline-block mb-4 animate-[glow_2s_ease-in-out_infinite]">
+                  <span className="text-4xl">⚡</span>
+                </div>
+                <h1 className="font-press-start text-2xl md:text-3xl font-bold mb-4 minecraft-text">
+                  <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">
+                    {isSignUp ? 'JOIN_MAXIMALLY' : 'WELCOME_BACK'}
+                  </span>
+                </h1>
+                <p className="font-press-start text-xs text-maximally-yellow mb-2">
+                  {isSignUp ? 'CREATE_ACCOUNT' : 'SIGN_IN_TO_CONTINUE'}
+                </p>
+                <p className="font-jetbrains text-sm text-gray-400">
+                  {isSignUp
+                    ? 'Join the global innovation league'
+                    : 'Access your dashboard'}
+                </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-gray-200 dark:text-gray-200">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-black/50 dark:bg-black/50 border-gray-700 dark:border-gray-700 text-white dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 focus:border-maximally-red dark:focus:border-maximally-red"
-                  required
-                  data-testid="input-password"
-                />
-              </div>
-
-              {isSignUp && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-gray-200 dark:text-gray-200">Full Name</Label>
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Your name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="bg-black/50 dark:bg-black/50 border-gray-700 dark:border-gray-700 text-white dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 focus:border-maximally-red dark:focus:border-maximally-red"
-                      required
-                      data-testid="input-name"
-                    />
+              {/* Error Display */}
+              {error && (
+                <div className="minecraft-block bg-red-900/30 border-2 border-maximally-red p-3 mb-6">
+                  <div className="text-red-300 font-press-start text-xs" role="alert" data-testid="auth-error">
+                    ⚠️ {error}
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="username" className="text-gray-200 dark:text-gray-200">Username</Label>
-                    <Input
-                      id="username"
-                      type="text"
-                      placeholder="choose-a-username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      className="bg-black/50 dark:bg-black/50 border-gray-700 dark:border-gray-700 text-white dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 focus:border-maximally-red dark:focus:border-maximally-red"
-                      required
-                      data-testid="input-username"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="text-gray-200 dark:text-gray-200">Confirm Password</Label>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="bg-black/50 dark:bg-black/50 border-gray-700 dark:border-gray-700 text-white dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 focus:border-maximally-red dark:focus:border-maximally-red"
-                      required
-                      data-testid="input-confirm-password"
-                    />
-                  </div>
-                </>
-              )}
-
-              {captchaRequired && (
-                <div className="space-y-2">
-                  <div className="flex justify-center ml-2">
-                    <Recaptcha
-                      ref={recaptchaRef}
-                      onVerify={handleCaptchaVerify}
-                      onError={handleCaptchaError}
-                      size="normal"
-                      className=""
-                    />
-                  </div>
-                  {captchaError && (
-                    <div className="text-red-400 text-sm" role="alert">{captchaError}</div>
-                  )}
                 </div>
               )}
+              
+              {/* Form */}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="font-press-start text-xs text-maximally-blue flex items-center gap-2">
+                    <span className="w-2 h-2 bg-maximally-blue"></span>
+                    EMAIL_ADDRESS
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="hacker@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue placeholder:text-gray-500 transition-colors"
+                    required
+                    data-testid="input-email"
+                  />
+                </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-maximally-red dark:bg-maximally-red hover:bg-maximally-red/90 dark:hover:bg-maximally-red/90 text-white dark:text-white font-semibold"
-                data-testid="button-submit"
-                disabled={loading}
-              >
-                {loading ? 'Please wait...' : (isSignUp ? 'Sign Up' : 'Sign In')}
-              </Button>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
+                    <span className="w-2 h-2 bg-maximally-green"></span>
+                    PASSWORD
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
+                    required
+                    data-testid="input-password"
+                  />
+                </div>
 
-              {/* Debug button removed - removed in favor of production UX */}
-            </form>
+                {isSignUp && (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="font-press-start text-xs text-maximally-yellow flex items-center gap-2">
+                        <span className="w-2 h-2 bg-maximally-yellow"></span>
+                        FULL_NAME
+                      </Label>
+                      <Input
+                        id="name"
+                        type="text"
+                        placeholder="Enter your full name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-yellow placeholder:text-gray-500 transition-colors"
+                        required
+                        data-testid="input-name"
+                      />
+                    </div>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full bg-gray-700 dark:bg-gray-700" />
+                    <div className="space-y-2">
+                      <Label htmlFor="username" className="font-press-start text-xs text-maximally-red flex items-center gap-2">
+                        <span className="w-2 h-2 bg-maximally-red"></span>
+                        USERNAME
+                      </Label>
+                      <Input
+                        id="username"
+                        type="text"
+                        placeholder="choose_a_username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-red placeholder:text-gray-500 transition-colors"
+                        required
+                        data-testid="input-username"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
+                        <span className="w-2 h-2 bg-maximally-green"></span>
+                        CONFIRM_PASSWORD
+                      </Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
+                        required
+                        data-testid="input-confirm-password"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {captchaRequired && (
+                  <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-blue/30 p-4">
+                    <h3 className="font-press-start text-xs text-maximally-blue mb-3 flex items-center gap-2">
+                      <span className="w-2 h-2 bg-maximally-blue"></span>
+                      VERIFICATION_REQUIRED
+                    </h3>
+                    <div className="flex justify-center">
+                      <Recaptcha
+                        ref={recaptchaRef}
+                        onVerify={handleCaptchaVerify}
+                        onError={handleCaptchaError}
+                        size="normal"
+                        className=""
+                      />
+                    </div>
+                    {captchaError && (
+                      <div className="minecraft-block bg-red-900/30 border-2 border-maximally-red p-2 mt-3">
+                        <div className="text-red-300 font-press-start text-xs" role="alert">⚠️ {captchaError}</div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  className="w-full pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-sm py-4 transition-colors border-4 border-maximally-red hover:border-maximally-yellow"
+                  data-testid="button-submit"
+                  disabled={loading}
+                >
+                  {loading ? 'LOADING...' : (isSignUp ? 'JOIN_LEAGUE' : 'ACCESS_DASHBOARD')}
+                </Button>
+
+              </form>
+
+              {/* OAuth Separator */}
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t-2 border-gray-700" />
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-black px-4 font-press-start text-xs text-gray-400">
+                    OR_CONNECT_WITH
+                  </span>
+                </div>
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-black dark:bg-black px-2 text-gray-400 dark:text-gray-400">
-                  Or sign in with
-                </span>
+
+              {/* OAuth Buttons */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <Button
+                  onClick={handleGoogleSignIn}
+                  className="pixel-button bg-white hover:bg-gray-100 text-black font-press-start text-xs py-3 border-2 border-gray-300 hover:border-maximally-red transition-colors flex items-center justify-center gap-2"
+                  data-testid="button-google-signin"
+                >
+                  <FcGoogle className="h-4 w-4" />
+                  <span className="hidden sm:inline">GOOGLE</span>
+                </Button>
+
+                <Button
+                  onClick={handleGithubSignIn}
+                  className="pixel-button bg-gray-800 hover:bg-black text-white font-press-start text-xs py-3 border-2 border-gray-700 hover:border-maximally-red transition-colors flex items-center justify-center gap-2"
+                  data-testid="button-github-signin"
+                >
+                  <FaGithub className="h-4 w-4" />
+                  <span className="hidden sm:inline">GITHUB</span>
+                </Button>
+              </div>
+
+              {/* Toggle Mode */}
+              <div className="text-center border-t-2 border-gray-800 pt-4">
+                <button
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setError(null);
+                    resetCaptcha();
+                  }}
+                  className="font-press-start text-xs text-gray-400 hover:text-maximally-yellow transition-colors"
+                  data-testid="button-toggle-mode"
+                >
+                  {isSignUp
+                    ? 'EXISTING_USER? → SIGN_IN'
+                    : 'NEW_USER? → JOIN_NOW'}
+                </button>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Button
-                variant="outline"
-                className="w-full bg-white dark:bg-white hover:bg-gray-100 dark:hover:bg-gray-100 text-black dark:text-black border-gray-300 dark:border-gray-300"
-                onClick={handleGoogleSignIn}
-                data-testid="button-google-signin"
-              >
-                <FcGoogle className="mr-2 h-5 w-5" />
-                Google
-              </Button>
-
-              <Button
-                variant="outline"
-                className="w-full bg-white dark:bg-white hover:bg-gray-100 dark:hover:bg-gray-100 text-black dark:text-black border-gray-300 dark:border-gray-300"
-                onClick={handleGithubSignIn}
-                data-testid="button-github-signin"
-              >
-                <FaGithub className="mr-2 h-5 w-5" />
-                GitHub
-              </Button>
-            </div>
-
-            <div className="text-center text-sm">
-              <button
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setError(null);
-                  resetCaptcha(); // Reset CAPTCHA when switching modes
-                }}
-                className="text-gray-400 dark:text-gray-400 hover:text-maximally-red dark:hover:text-maximally-red transition-colors"
-                data-testid="button-toggle-mode"
-              >
-                {isSignUp
-                  ? 'Already have an account? Sign in'
-                  : "Don't have an account? Sign up"}
-              </button>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </>
   );
