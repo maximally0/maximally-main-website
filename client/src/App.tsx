@@ -3,6 +3,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { AuthProvider } from './contexts/AuthContext';
 import {
   BrowserRouter as Router,
   Routes,
@@ -23,6 +24,9 @@ import Privacy from './pages/Privacy';
 import Story from './pages/Story';
 import About from './pages/About';
 import Profile from './pages/Profile';
+import AdminPanel from './pages/AdminPanel';
+import RequireAuth from '@/components/RequireAuth';
+import MyProfileRedirect from './pages/MyProfileRedirect';
 
 import ThankYou from './pages/ThankYou';
 import Bootcamps from '@/pages/Bootcamps';
@@ -130,6 +134,8 @@ import People from './pages/People';
 import PeopleCore from './pages/PeopleCore';
 import PeopleJudges from './pages/PeopleJudges';
 import Resources from './pages/Resources';
+import TestEmailValidation from './pages/TestEmailValidation';
+import CertificateVerification from './pages/CertificateVerification';
 
 const queryClient = new QueryClient();
 
@@ -174,14 +180,19 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <Router>
+          <AuthProvider>
+            <Router>
             <ScrollToTop />
 
             <Navbar />
             <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/test-email" element={<TestEmailValidation />} />
+            <Route path="/certificates/verify/:certificate_id" element={<CertificateVerification />} />
+<Route path="/profile" element={<MyProfileRedirect />} />
+            <Route path="/profile/:username" element={<Profile />} />
+            <Route path="/admin" element={<AdminPanel />} />
             <Route path="/bootcamps" element={<Navigate to="/" replace />} />
             <Route path="/makeathon" element={<Makeathon />} />
             {/* Team route removed */}
@@ -334,7 +345,7 @@ const App = () => {
             <Route path="/mfhop" element={<MFHOP />} />
             <Route path="/partner" element={<PartnerNetwork />} />
 
-            <Route path="/events" element={<Events />} />
+<Route path="/events" element={<Events />} />
             <Route
               path="/blog/makeathon-for-future"
               element={<MakeathonForFuture />}
@@ -488,7 +499,8 @@ const App = () => {
             {/* Catch all route for 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Router>
+            </Router>
+          </AuthProvider>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

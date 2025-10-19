@@ -1,141 +1,52 @@
-import { useState } from 'react';
-import { Award, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Award, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/lib/supabaseClient';
 
 interface Judge {
+  id: number;
   name: string;
-  role: string;
+  role_in_company: string;
   company: string;
+  display_order: number;
 }
 
 const PeopleJudges = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [judges, setJudges] = useState<Judge[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const itemsPerPage = 12;
 
-  const judges: Judge[] = [
-    {
-      name: "Rahul Chandra",
-      role: "Software Engineer",
-      company: "Deepmind"
-    },
-    {
-      name: "Krishna Ganeriwal",
-      role: "Senior Software Engineer",
-      company: "Meta Platforms Inc"
-    },
-    {
-      name: "Harpreet Kaur Chawla",
-      role: "Senior Software Engineer",
-      company: "Amazon"
-    },
-    {
-      name: "Nancy Al Kalach",
-      role: "Senior Salesforce Developer",
-      company: "Technology Professional"
-    },
-    {
-      name: "Prashanthi Matam",
-      role: "Senior MLOPS Engineer",
-      company: "Enterprise Technology"
-    },
-    {
-      name: "Nidhi Mahajan",
-      role: "Director of Business Strategy and Operations",
-      company: "Visa"
-    },
-    {
-      name: "Rama Mallika Kadali",
-      role: "Lead QA Engineer",
-      company: "Quality Engineering"
-    },
-    {
-      name: "Harshith Vaddiparthy",
-      role: "AI Product Engineer & Head of Growth",
-      company: "JustPaid.ai (YC W23)"
-    },
-    {
-      name: "Hassan Rehan",
-      role: "Senior IT Systems Engineer",
-      company: "General Motors"
-    },
-    {
-      name: "Kostyantyn Bondar",
-      role: "Founder & CEO",
-      company: "DarinX"
-    },
-    {
-      name: "Louis Demeslay",
-      role: "CTO",
-      company: "Zealy.io"
-    },
-    {
-      name: "Saket Ozarkar",
-      role: "Software Engineer",
-      company: "Replit"
-    },
-    {
-      name: "Nishanth Prakash",
-      role: "Senior Member of Technical Staff",
-      company: "Oracle Inc"
-    },
-    {
-      name: "Nikita Klimov",
-      role: "Sr. Software QA Engineer Contractor",
-      company: "ADP, Inc"
-    },
-    {
-      name: "Tanmay Kejriwal",
-      role: "Founder",
-      company: "MakeX"
-    },
-    {
-      name: "Raja Sekhar Rao Dheekonda",
-      role: "Distinguished Engineer",
-      company: "Dreadnode"
-    },
-    {
-      name: "Senthilkumaran Rajagopalan",
-      role: "Tech Lead Manager, Video Recommendations",
-      company: "Meta"
-    },
-    {
-      name: "Sahil Deshpande",
-      role: "Software Engineer",
-      company: "Meta"
-    },
-    {
-      name: "Karthik Ramamurthy",
-      role: "Engineering Lead",
-      company: "Mercury Financial"
-    },
-    {
-      name: "Venkataram Poosapati",
-      role: "Senior Data Engineer",
-      company: "Atlassian"
-    },
-    {
-      name: "Shreesh Agarwal",
-      role: "Sr. Business Analyst",
-      company: "McKinsey & Company"
-    },
-    {
-      name: "Rakesh Pullayikodi",
-      role: "Staff Software Engineer",
-      company: "Graphite Health"
-    },
-    {
-      name: "Ashwini Joshi",
-      role: "Senior Machine Learning Engineer",
-      company: "Warner Bros. Discovery"
-    },
-    {
-      name: "Vikranth Kumar Shivaa",
-      role: "Founding Engineer",
-      company: "Fig"
-    }
-  ];
+  // Fetch judges from database
+  useEffect(() => {
+    const fetchJudges = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        if (!supabase) throw new Error('Supabase client not available');
+        const db = supabase as any;
+        const { data, error: fetchError } = await db
+          .from('judges')
+          .select('*')
+          .order('display_order', { ascending: true }) as { data?: any[]; error?: any };
+
+        if (fetchError) {
+          setError('Failed to load judges. Please try again.');
+        } else {
+          setJudges(data || []);
+        }
+      } catch (err) {
+        setError('An unexpected error occurred. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJudges();
+  }, []);
 
   // Calculate pagination
   const totalPages = Math.ceil(judges.length / itemsPerPage);
@@ -232,14 +143,16 @@ const PeopleJudges = () => {
               </p>
               
               {/* Stats */}
-              <div className="flex justify-center gap-8 mb-8">
-                <div className="minecraft-block bg-maximally-red text-black px-4 py-2">
-                  <span className="font-press-start text-xs">{judges.length} JUDGES</span>
+              {!loading && !error && (
+                <div className="flex justify-center gap-8 mb-8">
+                  <div className="minecraft-block bg-maximally-red text-black px-4 py-2">
+                    <span className="font-press-start text-xs">{judges.length} JUDGES</span>
+                  </div>
+                  <div className="minecraft-block bg-maximally-yellow text-black px-4 py-2">
+                    <span className="font-press-start text-xs">20+ COMPANIES</span>
+                  </div>
                 </div>
-                <div className="minecraft-block bg-maximally-yellow text-black px-4 py-2">
-                  <span className="font-press-start text-xs">20+ COMPANIES</span>
-                </div>
-              </div>
+              )}
               
               {/* Back to People Button */}
               <Link
@@ -252,30 +165,62 @@ const PeopleJudges = () => {
 
             {/* Judges Grid Section */}
             <section id="judges-section">
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-                {currentJudges.map((judge, index) => (
-                  <div 
-                    key={index}
-                    className="pixel-card bg-black border-2 border-cyan-400 p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow group"
-                  >
-                    <div className="minecraft-block bg-cyan-400 w-10 h-10 mx-auto mb-4 flex items-center justify-center group-hover:bg-maximally-yellow transition-colors">
-                      <Award className="h-5 w-5 text-black" />
-                    </div>
-                    <h3 className="font-press-start text-sm mb-3 text-cyan-400 group-hover:text-maximally-yellow transition-colors text-center">
-                      {judge.name}
-                    </h3>
-                    <p className="font-jetbrains text-gray-300 text-xs mb-2 text-center">
-                      {judge.role}
-                    </p>
-                    <p className="font-jetbrains text-white font-bold text-xs text-center">
-                      {judge.company}
-                    </p>
+              {/* Loading State */}
+              {loading && (
+                <div className="text-center py-16">
+                  <div className="minecraft-block bg-cyan-400 text-black px-6 py-4 inline-block mb-4">
+                    <span className="font-press-start text-sm flex items-center gap-2 justify-center">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      LOADING JUDGES
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <p className="text-gray-400 font-jetbrains">Fetching our esteemed panel of judges...</p>
+                </div>
+              )}
+
+              {/* Error State */}
+              {error && !loading && (
+                <div className="text-center py-16">
+                  <div className="minecraft-block bg-red-600 text-white px-6 py-4 inline-block mb-4">
+                    <span className="font-press-start text-sm">ERROR LOADING JUDGES</span>
+                  </div>
+                  <p className="text-red-400 font-jetbrains mb-4">{error}</p>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="minecraft-block bg-cyan-400 text-black px-4 py-2 hover:bg-maximally-yellow transition-colors"
+                  >
+                    <span className="font-press-start text-xs">RETRY</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Judges Grid - Only show when data is loaded */}
+              {!loading && !error && (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+                  {currentJudges.map((judge) => (
+                    <div 
+                      key={judge.id}
+                      className="pixel-card bg-black border-2 border-cyan-400 p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow group"
+                    >
+                      <div className="minecraft-block bg-cyan-400 w-10 h-10 mx-auto mb-4 flex items-center justify-center group-hover:bg-maximally-yellow transition-colors">
+                        <Award className="h-5 w-5 text-black" />
+                      </div>
+                      <h3 className="font-press-start text-sm mb-3 text-cyan-400 group-hover:text-maximally-yellow transition-colors text-center">
+                        {judge.name}
+                      </h3>
+                      <p className="font-jetbrains text-gray-300 text-xs mb-2 text-center">
+                        {judge.role_in_company}
+                      </p>
+                      <p className="font-jetbrains text-white font-bold text-xs text-center">
+                        {judge.company}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Pagination */}
-              {totalPages > 1 && (
+              {!loading && !error && totalPages > 1 && (
                 <div className="flex justify-center items-center space-x-2 mb-8">
                   <button
                     onClick={() => goToPage(currentPage - 1)}

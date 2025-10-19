@@ -14,7 +14,10 @@ const Story = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const sectionIndex = parseInt(entry.target.getAttribute('data-section') || '0');
-            setVisibleSections(prev => [...new Set([...prev, sectionIndex])]);
+            setVisibleSections(prev => {
+              const newSet = new Set([...prev, sectionIndex]);
+              return Array.from(newSet);
+            });
           }
         });
       },
@@ -537,7 +540,7 @@ const Story = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes gradient {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }

@@ -5,7 +5,6 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
   return useQuery({
     queryKey: ['blogs', page, pageSize, search],
     queryFn: async (): Promise<{ data: BlogPost[]; total: number }> => {
-      // Return empty results if Supabase is not configured
       if (!supabase) {
         return { data: [], total: 0 };
       }
@@ -37,6 +36,13 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+    retry: (failureCount, error: any) => {
+      console.error(`⚠️ useBlogs retry attempt ${failureCount}:`, error);
+      // Only retry network errors, not configuration errors
+      if (failureCount >= 3) return false;
+      if (error?.message?.includes('not configured')) return false;
+      return true;
+    }
   });
 };
 

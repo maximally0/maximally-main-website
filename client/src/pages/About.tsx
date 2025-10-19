@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { 
   ArrowRight, 
   Globe, 
@@ -11,10 +12,28 @@ import {
   Zap,
   Heart,
   MapPin,
-  Mail
+  Mail,
+  Loader2
 } from 'lucide-react';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { supabase } from '@/lib/supabaseClient';
+
+// Interfaces for dynamic data
+interface CoreTeamMember {
+  id: number;
+  name: string;
+  role_in_company: string;
+  company?: string;
+  description?: string;
+}
+
+interface FeaturedJudge {
+  id: number;
+  name: string;
+  role_in_company: string;
+  company: string;
+}
 
 // Hero Section Component
 const HeroSection = () => {
@@ -192,46 +211,105 @@ const WhatWereBuilding = () => {
 
 // People Preview Component
 const PeoplePreview = () => {
-  // Core team data
-  const coreTeam = [
-    {
-      name: "Rishul Chanana",
-      role: "Founder & CEO",
-      organization: "Maximally",
-      description: "Building the future by creating a culture where young builders can thrive through high-stakes competitions."
-    },
-    {
-      name: "Drishti Arora", 
-      role: "Chief Operating Officer",
-      organization: "Maximally",
-      description: "Keeps Maximally's gears running smoothly, balancing scale with execution."
-    },
-    {
-      name: "Gautam Gambhir",
-      role: "Head of Engineering", 
-      organization: "Maximally",
-      description: "Architects the tech behind Maximally.in and pushes our platform to new heights."
-    }
-  ];
+  // State management for dynamic data
+  const [coreTeam, setCoreTeam] = useState<CoreTeamMember[]>([]);
+  const [featuredJudges, setFeaturedJudges] = useState<FeaturedJudge[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Featured judges
-  const featuredJudges = [
-    {
-      name: "Rahul Chandra",
-      role: "Software Engineer",
-      company: "DeepMind"
-    },
-    {
-      name: "Krishna Ganeriwal", 
-      role: "Senior Software Engineer",
-      company: "Meta"
-    },
-    {
-      name: "Nidhi Mahajan",
-      role: "Director of Business Strategy",
-      company: "Visa"
-    }
-  ];
+  // Fetch dashboard configuration and people/judges data
+  useEffect(() => {
+    const fetchPeopleData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Ensure supabase client is available
+        if (!supabase) throw new Error('Supabase client not available');
+        // First, fetch dashboard configuration
+        type DashboardRow = {
+          featured_core_id_1?: number | null;
+          featured_core_id_2?: number | null;
+          featured_core_id_3?: number | null;
+          featured_judge_id_1?: number | null;
+          featured_judge_id_2?: number | null;
+          featured_judge_id_3?: number | null;
+        };
+
+        const db = supabase as any;
+        const { data: dashboardData, error: dashboardError } = await db
+          .from('dashboard')
+          .select('featured_core_id_1, featured_core_id_2, featured_core_id_3, featured_judge_id_1, featured_judge_id_2, featured_judge_id_3')
+          .eq('id', 1)
+          .single() as { data?: DashboardRow; error?: any };
+
+        if (dashboardError) {
+          throw new Error(`Dashboard fetch failed: ${dashboardError.message}`);
+        }
+
+        // Extract core team IDs
+        const coreIds = [
+          dashboardData?.featured_core_id_1,
+          dashboardData?.featured_core_id_2,
+          dashboardData?.featured_core_id_3
+        ].filter(id => id !== null);
+
+        // Extract judge IDs
+        const judgeIds = [
+          dashboardData?.featured_judge_id_1,
+          dashboardData?.featured_judge_id_2,
+          dashboardData?.featured_judge_id_3
+        ].filter(id => id !== null);
+
+        // Fetch core team members
+        if (coreIds.length > 0) {
+          const { data: coreData, error: coreError } = await db
+            .from('people')
+            .select('id, name, role_in_company, company, description')
+            .in('id', coreIds) as { data?: any[]; error?: any };
+
+          if (coreError) {
+            throw new Error(`Core team fetch failed: ${coreError.message}`);
+          }
+
+          // Sort core team members by the order they appear in dashboard configuration
+          const coreDataArr: any[] = coreData || [];
+          const sortedCoreTeam = coreIds.map(id => 
+            coreDataArr.find(member => member.id === id)
+          ).filter(member => member !== undefined) as CoreTeamMember[];
+
+          setCoreTeam(sortedCoreTeam);
+        }
+
+        // Fetch featured judges
+        if (judgeIds.length > 0) {
+          const { data: judgeData, error: judgeError } = await db
+            .from('judges')
+            .select('id, name, role_in_company, company')
+            .in('id', judgeIds) as { data?: any[]; error?: any };
+
+          if (judgeError) {
+            throw new Error(`Judges fetch failed: ${judgeError.message}`);
+          }
+
+          // Sort judges by the order they appear in dashboard configuration
+          const judgeDataArr: any[] = judgeData || [];
+          const sortedJudges = judgeIds.map(id => 
+            judgeDataArr.find(judge => judge.id === id)
+          ).filter(judge => judge !== undefined) as FeaturedJudge[];
+
+          setFeaturedJudges(sortedJudges);
+        }
+
+      } catch (err: any) {
+        setError(err.message || 'Failed to load people data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPeopleData();
+  }, []);
 
   return (
     <section className="py-16 md:py-24 bg-black relative">
@@ -256,39 +334,80 @@ const PeoplePreview = () => {
             </h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {coreTeam.map((member, index) => (
-              <div key={index} className="pixel-card bg-black/90 border-2 border-maximally-red p-6 hover:scale-105 transition-all duration-300">
-                <div className="text-center">
-                  <div className="minecraft-block bg-maximally-red p-2 inline-block mb-4">
-                    <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
-                      <span className="font-press-start text-xs text-black">
-                        {member.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <h4 className="font-press-start text-sm text-white mb-2">
-                    {member.name}
-                  </h4>
-                  
-                  <p className="font-press-start text-xs text-maximally-red mb-3">
-                    {member.role}
-                  </p>
-                  
-                  <p className="font-jetbrains text-xs text-gray-300 leading-relaxed">
-                    {member.description}
-                  </p>
-                </div>
+          {/* Loading State */}
+          {loading && (
+            <div className="text-center py-12">
+              <div className="minecraft-block bg-maximally-red text-black px-6 py-4 inline-block mb-4">
+                <span className="font-press-start text-sm flex items-center gap-2 justify-center">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  LOADING CORE TEAM
+                </span>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <div className="text-center py-12">
+              <div className="minecraft-block bg-red-600 text-white px-6 py-4 inline-block mb-4">
+                <span className="font-press-start text-sm">ERROR LOADING TEAM</span>
+              </div>
+              <p className="text-red-400 font-jetbrains mb-4">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="minecraft-block bg-maximally-red text-black px-4 py-2 hover:bg-maximally-yellow transition-colors"
+              >
+                <span className="font-press-start text-xs">RETRY</span>
+              </button>
+            </div>
+          )}
+
+          {/* Core Team Grid - Only show when data is loaded */}
+          {!loading && !error && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              {coreTeam.map((member) => (
+                <div key={member.id} className="pixel-card bg-black/90 border-2 border-maximally-red p-6 hover:scale-105 transition-all duration-300">
+                  <div className="text-center">
+                    <div className="minecraft-block bg-maximally-red p-2 inline-block mb-4">
+                      <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
+                        <span className="font-press-start text-xs text-black">
+                          {member.name.split(' ').map(n => n[0]).join('')}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <h4 className="font-press-start text-sm text-white mb-2">
+                      {member.name}
+                    </h4>
+                    
+                    <p className="font-press-start text-xs text-maximally-red mb-3">
+                      {member.role_in_company}
+                    </p>
+                    
+                    {member.company && (
+                      <p className="font-jetbrains text-xs text-gray-400 mb-2">
+                        {member.company}
+                      </p>
+                    )}
+                    
+                    {member.description && (
+                      <p className="font-jetbrains text-xs text-gray-300 leading-relaxed">
+                        {member.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           
-          <div className="text-center">
-            <Link to="/people/core" className="pixel-button bg-maximally-red text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-yellow transition-colors inline-flex items-center">
-              SEE FULL TEAM <ArrowRight className="h-3 w-3 ml-2" />
-            </Link>
-          </div>
+          {!loading && !error && (
+            <div className="text-center">
+              <Link to="/people/core" className="pixel-button bg-maximally-red text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-yellow transition-colors inline-flex items-center">
+                SEE FULL TEAM <ArrowRight className="h-3 w-3 ml-2" />
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Judges Preview */}
@@ -302,35 +421,68 @@ const PeoplePreview = () => {
             </h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {featuredJudges.map((judge, index) => (
-              <div key={index} className="pixel-card bg-black/90 border-2 border-maximally-yellow p-6 hover:scale-105 transition-all duration-300">
-                <div className="text-center">
-                  <div className="minecraft-block bg-maximally-yellow p-2 inline-block mb-4">
-                    <Trophy className="h-5 w-5 text-black" />
-                  </div>
-                  
-                  <h4 className="font-press-start text-sm text-white mb-2">
-                    {judge.name}
-                  </h4>
-                  
-                  <p className="font-press-start text-xs text-maximally-yellow mb-1">
-                    {judge.role}
-                  </p>
-                  
-                  <p className="font-jetbrains text-xs text-gray-300">
-                    {judge.company}
-                  </p>
-                </div>
+          {/* Loading State for Judges */}
+          {loading && (
+            <div className="text-center py-12">
+              <div className="minecraft-block bg-maximally-yellow text-black px-6 py-4 inline-block mb-4">
+                <span className="font-press-start text-sm flex items-center gap-2 justify-center">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  LOADING FEATURED JUDGES
+                </span>
               </div>
-            ))}
-          </div>
-          
-          <div className="text-center">
-            <Link to="/people/judges" className="pixel-button bg-maximally-yellow text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-red transition-colors inline-flex items-center">
-              ALL JUDGES & MENTORS <ArrowRight className="h-3 w-3 ml-2" />
-            </Link>
-          </div>
+            </div>
+          )}
+
+          {/* Error State for Judges */}
+          {error && !loading && (
+            <div className="text-center py-12">
+              <div className="minecraft-block bg-red-600 text-white px-6 py-4 inline-block mb-4">
+                <span className="font-press-start text-sm">ERROR LOADING JUDGES</span>
+              </div>
+              <p className="text-red-400 font-jetbrains mb-4">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="minecraft-block bg-maximally-yellow text-black px-4 py-2 hover:bg-maximally-red transition-colors"
+              >
+                <span className="font-press-start text-xs">RETRY</span>
+              </button>
+            </div>
+          )}
+
+          {/* Featured Judges Grid - Only show when data is loaded */}
+          {!loading && !error && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {featuredJudges.map((judge) => (
+                  <div key={judge.id} className="pixel-card bg-black/90 border-2 border-maximally-yellow p-6 hover:scale-105 transition-all duration-300">
+                    <div className="text-center">
+                      <div className="minecraft-block bg-maximally-yellow p-2 inline-block mb-4">
+                        <Trophy className="h-5 w-5 text-black" />
+                      </div>
+                      
+                      <h4 className="font-press-start text-sm text-white mb-2">
+                        {judge.name}
+                      </h4>
+                      
+                      <p className="font-press-start text-xs text-maximally-yellow mb-1">
+                        {judge.role_in_company}
+                      </p>
+                      
+                      <p className="font-jetbrains text-xs text-gray-300">
+                        {judge.company}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="text-center">
+                <Link to="/people/judges" className="pixel-button bg-maximally-yellow text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-red transition-colors inline-flex items-center">
+                  ALL JUDGES & MENTORS <ArrowRight className="h-3 w-3 ml-2" />
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </section>

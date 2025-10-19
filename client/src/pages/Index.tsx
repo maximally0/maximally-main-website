@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   Users,
@@ -18,16 +18,31 @@ import {
   Rocket,
   Handshake,
   CheckCircle2,
-} from 'lucide-react';
-import { Link } from 'react-router-dom';
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
-import Footer from '@/components/Footer';
-import SEO from '@/components/SEO';
-import { supabase } from '@/lib/supabaseClient';
+import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
+import { supabase, supabasePublic } from "@/lib/supabaseClient";
+
+// Type definitions for hackathon data
+interface HackathonData {
+  id: number;
+  title: string;
+  subtitle?: string | null;
+  start_date?: string | null;
+  end_date?: string | null;
+  duration?: string | null;
+  location?: string | null;
+  focus_areas?: string[] | any;
+  devpost_url?: string | null;
+  devpost_register_url?: string | null;
+  registration_url?: string | null;
+}
 
 const Index = () => {
-  const [text, setText] = useState('');
-  const fullText = 'WE HOST HACKATHONS';
+  const [text, setText] = useState("");
+  const fullText = "WE HOST HACKATHONS";
   const [floatingPixels, setFloatingPixels] = useState<
     Array<{ id: number; x: number; y: number; delay: number }>
   >([]);
@@ -72,65 +87,203 @@ const Index = () => {
 
   useEffect(() => {
     const loadFeatured = async () => {
-      if (!supabase) return;
-      const { data: dashboardRow, error: dashErr } = await supabase
-        .from('dashboard')
-        .select('featured_hackathon_id')
-        .eq('id', 1)
-        .single();
-      if (dashErr || !dashboardRow) {
-        console.error('Failed to load dashboard row for featured hackathon', dashErr);
+      // Loading featured hackathon (debug logs removed)
+
+      if (!supabasePublic) {
+        console.warn(
+          "⚠️ Supabase public client not available, using default featured hackathon"
+        );
+        // Set a default featured hackathon
+        setFeatured({
+          title: "Maximally Hacktober",
+          subtitle:
+            "Build slow. Build loud. Finish strong. A month-long hackathon for builders who won't quit.",
+          start_date: "Oct 1, 2025",
+          end_date: "Oct 31, 2025",
+          duration: "1 month",
+          location: "Online",
+          tag: "Ongoing",
+          register_url: "https://maximallyhacktober.devpost.com/",
+          details_url: "https://maximally.in/hacktober",
+        });
         return;
       }
 
-      const rawId =
-        (dashboardRow as any).featured_hackathon_id
-      if (rawId === undefined || rawId === null || rawId === '') {
-        console.warn('No featured hackathon id found on dashboard row');
-        return;
-      }
-      const featuredId = typeof rawId === 'string' ? parseInt(rawId, 10) : Number(rawId);
-      if (Number.isNaN(featuredId)) {
-        console.warn('Featured hackathon id is not a valid number:', rawId);
-        return;
-      }
+      try {
+        // Use direct fetch to bypass Supabase client issues
+        const SUPABASE_URL = "https://vbjqqspfosgelxhhqlks.supabase.co";
+        const SUPABASE_ANON_KEY =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZianFxc3Bmb3NnZWx4aGhxbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjk2ODYsImV4cCI6MjA3MzAwNTY4Nn0.fpbf1kNT-qI54aaHS0-To3jrRKU91lgwINzHEC_wUis";
 
-      const { data: hack, error: hackErr } = await supabase
-        .from('hackathons')
-        .select('id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url')
-        .eq('id', featuredId)
-        .single();
-      if (hackErr || !hack) {
-        console.error('Failed to load hackathon by featured id', { featuredId, error: hackErr });
-        return;
-      }
+  // Step 1: Fetching dashboard via direct fetch
 
-      const firstTag = Array.isArray(hack.focus_areas)
-        ? String(hack.focus_areas[0] ?? '')
-        : (typeof hack.focus_areas === 'object' && hack.focus_areas !== null)
-          ? String(Object.values(hack.focus_areas as any)[0] ?? '')
-          : '';
-      console.log("Fetched hackathon:", hack);
-      setFeatured({
-        title: hack.title ?? 'FEATURED HACKATHON',
-        subtitle: hack.subtitle ?? null,
-        start_date: hack.start_date ?? null,
-        end_date: hack.end_date ?? null,
-        duration: hack.duration ?? null,
-        location: hack.location ?? null,
-        tag: firstTag || null,
-        register_url: hack.devpost_register_url ?? hack.registration_url ?? null,
-        details_url: hack.devpost_url ?? null,
-      });
+        const dashboardResponse = await fetch(
+          `${SUPABASE_URL}/rest/v1/dashboard?select=featured_hackathon_id&id=eq.1`,
+          {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!dashboardResponse.ok) {
+          throw new Error(
+            `Dashboard fetch failed: ${dashboardResponse.status}`
+          );
+        }
+
+        const dashboardData = await dashboardResponse.json();
+        const dashboardRow = dashboardData?.[0];
+
+  // Dashboard query result (debug logging removed)
+
+        if (!dashboardRow || !dashboardRow.featured_hackathon_id) {
+          console.error(
+            "❌ Failed to load dashboard row for featured hackathon"
+          );
+          // Falling back to latest hackathon
+          await loadLatestHackathon(); // Fallback to latest hackathon
+          return;
+        }
+
+    // Dashboard loaded
+        const rawId = dashboardRow.featured_hackathon_id;
+
+        if (rawId === undefined || rawId === null || rawId === "") {
+          console.warn("❌ No featured hackathon id found on dashboard row");
+          await loadLatestHackathon(); // Fallback to latest hackathon
+          return;
+        }
+
+        const featuredId = typeof rawId === "string" ? parseInt(rawId, 10) : Number(rawId);
+        // Featured ID processed
+
+        if (Number.isNaN(featuredId)) {
+          console.warn(
+            "❌ Featured hackathon id is not a valid number:",
+            rawId
+          );
+          await loadLatestHackathon(); // Fallback to latest hackathon
+          return;
+        }
+
+        // Get the featured hackathon via direct fetch
+  // Fetching hackathon by ID
+
+        const hackathonResponse = await fetch(
+          `${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,duration,location,focus_areas,devpost_url,devpost_register_url,registration_url&id=eq.${featuredId}`,
+          {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!hackathonResponse.ok) {
+          console.error("❌ Failed to load hackathon by featured id", {
+            featuredId,
+            status: hackathonResponse.status,
+          });
+          await loadLatestHackathon();
+          return;
+        }
+
+        const hackathonData = await hackathonResponse.json();
+        const hack = hackathonData?.[0] as HackathonData | undefined;
+
+        if (!hack) {
+          console.error("❌ No hackathon found for featured id", featuredId);
+          await loadLatestHackathon();
+          return;
+        }
+
+  // Raw hackathon data (debug logging removed)
+
+        const firstTag = Array.isArray(hack.focus_areas)
+          ? String(hack.focus_areas[0] ?? "")
+          : typeof hack.focus_areas === "object" && hack.focus_areas !== null
+          ? String(Object.values(hack.focus_areas as any)[0] ?? "")
+          : "";
+
+        const processedFeatured = {
+          title: hack.title ?? "FEATURED HACKATHON",
+          subtitle: hack.subtitle ?? null,
+          start_date: hack.start_date ?? null,
+          end_date: hack.end_date ?? null,
+          duration: hack.duration ?? null,
+          location: hack.location ?? null,
+          tag: firstTag || null,
+          register_url:
+            hack.devpost_register_url ?? hack.registration_url ?? null,
+          details_url: hack.devpost_url ?? null,
+        };
+
+    // Processed featured object (logging removed)
+    setFeatured(processedFeatured);
+      } catch (error) {
+        console.error("❌ Error loading featured hackathon:", error);
+        await loadLatestHackathon(); // Fallback to latest hackathon
+      }
+    };
+
+    // Fallback function to load the latest hackathon
+    const loadLatestHackathon = async () => {
+      if (!supabasePublic) return;
+      try {
+        const { data: latestData, error: latestErr } = await supabasePublic
+          .from("hackathons")
+          .select(
+            "id, title, subtitle, start_date, end_date, duration, location, focus_areas, devpost_url, devpost_register_url, registration_url"
+          )
+          .eq("is_active", true)
+          .order("created_at", { ascending: false })
+          .limit(1);
+        const latestHack = latestData?.[0] as HackathonData | undefined; // Get first row from array
+
+        if (!latestErr && latestHack) {
+          const firstTag = Array.isArray(latestHack.focus_areas)
+            ? String(latestHack.focus_areas[0] ?? "")
+            : "";
+
+          setFeatured({
+            title: latestHack.title ?? "LATEST HACKATHON",
+            subtitle: latestHack.subtitle ?? null,
+            start_date: latestHack.start_date ?? null,
+            end_date: latestHack.end_date ?? null,
+            duration: latestHack.duration ?? null,
+            location: latestHack.location ?? null,
+            tag: firstTag || null,
+            register_url:
+              latestHack.devpost_register_url ??
+              latestHack.registration_url ??
+              null,
+            details_url: latestHack.devpost_url ?? null,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load latest hackathon:", err);
+      }
     };
 
     loadFeatured();
     const sb = supabase;
     if (!sb) return;
     const channel = sb
-      .channel('realtime-featured-hackathon')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'dashboard' }, loadFeatured)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'hackathons' }, loadFeatured)
+      .channel("realtime-featured-hackathon")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "dashboard" },
+        loadFeatured
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "hackathons" },
+        loadFeatured
+      )
       .subscribe();
     return () => {
       sb.removeChannel(channel);
@@ -138,30 +291,30 @@ const Index = () => {
   }, []);
 
   const companies = [
-    'OpenAI',
-    'Meta',
-    'Amazon',
-    'Google',
-    'DeepMind',
-    'Intuit',
-    'Visa',
-    'Salesforce',
-    'FedEx',
-    'Atlassian',
-    'McKinsey',
-    'Replit',
-    'General Motors',
-    'Warner Bros. Discovery',
-    'Oracle',
-    'ADP',
-    'Graphite Health',
-    'Mercury Financial',
-    'Y Combinator',
-    'JustPaid.ai',
-    'Zealy.io',
-    'Fig',
-    'MakeX',
-    'DarinX',
+    "OpenAI",
+    "Meta",
+    "Amazon",
+    "Google",
+    "DeepMind",
+    "Intuit",
+    "Visa",
+    "Salesforce",
+    "FedEx",
+    "Atlassian",
+    "McKinsey",
+    "Replit",
+    "General Motors",
+    "Warner Bros. Discovery",
+    "Oracle",
+    "ADP",
+    "Graphite Health",
+    "Mercury Financial",
+    "Y Combinator",
+    "JustPaid.ai",
+    "Zealy.io",
+    "Fig",
+    "MakeX",
+    "DarinX",
   ];
 
   return (
@@ -172,12 +325,12 @@ const Index = () => {
         keywords="hackathon platform, AI-native, hacker culture, Grand Indian Hackathon Season, developer tools"
         canonicalUrl="https://maximally.in"
         structuredData={{
-          '@context': 'https://schema.org',
-          '@type': 'Organization',
-          name: 'Maximally',
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Maximally",
           description:
             "World's first AI-native hackathon platform built by hackers, for hackers",
-          url: 'https://maximally.in',
+          url: "https://maximally.in",
         }}
       />
 
@@ -215,7 +368,7 @@ const Index = () => {
               <div className="text-sm sm:text-lg md:text-xl lg:text-2xl font-press-start text-gray-300 mb-4 px-2">
                 <span className="text-maximally-red">
                   but not the boring ones
-                </span>{' '}
+                </span>{" "}
                 ⚡
               </div>
 
@@ -309,7 +462,7 @@ const Index = () => {
               <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red hover:border-maximally-yellow transition-all duration-500 p-6 sm:p-8 md:p-12 relative group overflow-hidden">
                 {/* Animated Border Glow */}
                 <div className="absolute inset-0 bg-gradient-to-r from-maximally-red via-maximally-yellow to-maximally-red opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500" />
-                
+
                 {/* Corner Decorations */}
                 <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
                 <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
@@ -319,18 +472,22 @@ const Index = () => {
                 <div className="relative z-10">
                   {/* Event Title */}
                   <div className="text-center mb-6 sm:mb-8">
-                  <div className="inline-block mb-4">
+                    <div className="inline-block mb-4">
                       <div className="minecraft-block bg-maximally-yellow text-maximally-black px-4 py-2 text-4xl sm:text-5xl md:text-6xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
                         ⚡
                       </div>
                     </div>
                     <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 minecraft-text">
                       <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:drop-shadow-[5px_5px_0px_rgba(255,215,0,0.5)] transition-all duration-300">
-                        {featured?.title ?? 'FEATURED HACKATHON'}
+                        {featured?.title ?? "FEATURED HACKATHON"}
                       </span>
                     </h2>
                     <p className="font-press-start text-xs sm:text-sm md:text-base text-maximally-yellow mb-4">
-                      {featured?.tag ? String(featured.tag).toUpperCase() : (featured?.duration ? featured.duration.toUpperCase() : '24-HOUR AI HACKATHON')}
+                      {featured?.tag
+                        ? String(featured.tag).toUpperCase()
+                        : featured?.duration
+                        ? featured.duration.toUpperCase()
+                        : "24-HOUR AI HACKATHON"}
                     </p>
                   </div>
 
@@ -347,18 +504,35 @@ const Index = () => {
                       </div>
                       <p className="font-press-start text-sm text-white">
                         {(() => {
-                          const s = featured?.start_date ? new Date(featured.start_date) : null;
-                          const e = featured?.end_date ? new Date(featured.end_date) : null;
-                          if (!s || !e || isNaN(s.getTime()) || isNaN(e.getTime())) return 'TBD';
-                          const month = s.toLocaleString('en-US', { month: 'short' }).toUpperCase();
-                          const range = s.getDate() === e.getDate() ? `${s.getDate()}` : `${s.getDate()}-${e.getDate()}`;
+                          const s = featured?.start_date
+                            ? new Date(featured.start_date)
+                            : null;
+                          const e = featured?.end_date
+                            ? new Date(featured.end_date)
+                            : null;
+                          if (
+                            !s ||
+                            !e ||
+                            isNaN(s.getTime()) ||
+                            isNaN(e.getTime())
+                          )
+                            return "TBD";
+                          const month = s
+                            .toLocaleString("en-US", { month: "short" })
+                            .toUpperCase();
+                          const range =
+                            s.getDate() === e.getDate()
+                              ? `${s.getDate()}`
+                              : `${s.getDate()}-${e.getDate()}`;
                           return `${month} ${range}`;
                         })()}
                       </p>
                       <p className="font-jetbrains text-xs text-gray-400 mt-1">
                         {(() => {
-                          const s = featured?.start_date ? new Date(featured.start_date) : null;
-                          if (!s || isNaN(s.getTime())) return '';
+                          const s = featured?.start_date
+                            ? new Date(featured.start_date)
+                            : null;
+                          if (!s || isNaN(s.getTime())) return "";
                           return s.getFullYear();
                         })()}
                       </p>
@@ -374,7 +548,9 @@ const Index = () => {
                         </span>
                       </div>
                       <p className="font-press-start text-sm text-white">
-                        {(featured?.duration ?? '24 hours').toString().toUpperCase()}
+                        {(featured?.duration ?? "24 hours")
+                          .toString()
+                          .toUpperCase()}
                       </p>
                       <p className="font-jetbrains text-xs text-gray-400 mt-1">
                         Non-stop
@@ -391,7 +567,9 @@ const Index = () => {
                         </span>
                       </div>
                       <p className="font-press-start text-sm text-white">
-                        {(featured?.location ?? 'Online').toString().toUpperCase()}
+                        {(featured?.location ?? "Online")
+                          .toString()
+                          .toUpperCase()}
                       </p>
                       <p className="font-jetbrains text-xs text-gray-400 mt-1">
                         Join anywhere
@@ -402,14 +580,15 @@ const Index = () => {
                   {/* Description */}
                   <div className="mb-8 text-center">
                     <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                      {featured?.subtitle ?? 'Build the next generation of AI applications in 24 hours.'}
+                      {featured?.subtitle ??
+                        "Build the next generation of AI applications in 24 hours."}
                     </p>
                   </div>
 
                   {/* CTA Buttons */}
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <Link
-                      to={featured?.register_url ?? '/events'}
+                      to={featured?.register_url ?? "/events"}
                       data-testid="button-featured-register"
                       className="pixel-button bg-maximally-red text-white group/btn flex items-center justify-center gap-2 hover:scale-110 transform transition-all hover:shadow-glow-red h-14 sm:h-16 px-8 sm:px-10 font-press-start text-sm sm:text-base relative overflow-hidden"
                     >
@@ -420,9 +599,9 @@ const Index = () => {
                     </Link>
 
                     <Link
-                      to={featured?.details_url ?? '/events'}
+                      to={featured?.details_url ?? "/events"}
                       data-testid="button-featured-details"
-                      className="pixel-button bg-black border-2 border-maximally-red text-maximally-red group/btn flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-white h-14 sm:h-16 px-8 sm:px-10 font-press-start text-sm sm:text-base"
+                      className="pixel-button bg-black border-2 border-maximally-red text-[#ffff] group/btn flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-black h-14 sm:h-16 px-8 sm:px-10 font-press-start text-sm sm:text-base"
                     >
                       <FileText className="h-5 w-5 sm:h-6 sm:w-6" />
                       <span>VIEW_DETAILS</span>
@@ -458,14 +637,14 @@ const Index = () => {
               {/* Event Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-4 lg:gap-6 mb-8 sm:mb-12">
                 {[
-                  { name: 'CODE HYPOTHESIS', date: 'SEP 2025', icon: '🧪' },
-                  { name: 'PROTOCOL 404', date: 'OCT 2025', icon: '⚡' },
-                  { name: 'PROJECT CODEGEN', date: 'OCT 2025', icon: '📝' },
-                  { name: 'HACKTOBER', date: 'OCT 2025', icon: '🍂' },
-                  { name: 'PROMPTSTORM', date: 'OCT 25-26', icon: '⚡' },
-                  { name: 'TECH ASSEMBLY', date: 'NOV 1-7', icon: '🎮' },
-                  { name: 'STEAL-A-THON', date: 'NOV 9-10', icon: '🔥' },
-                  { name: 'CODEPOCALYPSE', date: 'OCT 18-19', icon: '☢️' },
+                  { name: "CODE HYPOTHESIS", date: "SEP 2025", icon: "🧪" },
+                  { name: "PROTOCOL 404", date: "OCT 2025", icon: "⚡" },
+                  { name: "PROJECT CODEGEN", date: "OCT 2025", icon: "📝" },
+                  { name: "HACKTOBER", date: "OCT 2025", icon: "🍂" },
+                  { name: "PROMPTSTORM", date: "OCT 25-26", icon: "⚡" },
+                  { name: "TECH ASSEMBLY", date: "NOV 1-7", icon: "🎮" },
+                  { name: "STEAL-A-THON", date: "NOV 9-10", icon: "🔥" },
+                  { name: "CODEPOCALYPSE", date: "OCT 18-19", icon: "☢️" },
                 ]
                   .slice(0, 10)
                   .map((event, i) => (
@@ -504,7 +683,7 @@ const Index = () => {
         <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 relative overflow-hidden">
           {/* Animated Background Grid */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,215,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,215,0,0.03)_1px,transparent_1px)] bg-[size:40px_40px] animate-pulse" />
-          
+
           {/* Glowing Orbs */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-10 left-1/4 w-40 h-40 bg-maximally-yellow/20 blur-3xl rounded-full animate-pulse" />
@@ -522,7 +701,7 @@ const Index = () => {
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                   animationDelay: `${i * 0.5}s`,
-                  animationDuration: `${4 + i}s`
+                  animationDuration: `${4 + i}s`,
                 }}
               />
             ))}
@@ -539,17 +718,21 @@ const Index = () => {
                     <Sparkles className="h-5 w-5 animate-spin-slow" />
                   </span>
                 </div>
-                
+
                 <h2 className="font-press-start text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-8 minecraft-text">
                   <span className="text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:drop-shadow-[6px_6px_0px_rgba(255,215,0,0.5)] transition-all duration-300">
                     HOST WITH MAXIMALLY
                   </span>
                 </h2>
-                
+
                 <div className="max-w-4xl mx-auto mb-6">
                   <p className="text-gray-200 text-base sm:text-lg md:text-xl font-jetbrains leading-relaxed mb-4">
-                    Co-organize, feature, or partner with Maximally to host your hackathon — 
-                    <span className="text-maximally-yellow font-bold"> and we'll support you every step of the way.</span>
+                    Co-organize, feature, or partner with Maximally to host your
+                    hackathon —
+                    <span className="text-maximally-yellow font-bold">
+                      {" "}
+                      and we'll support you every step of the way.
+                    </span>
                   </p>
                   <div className="flex items-center justify-center gap-2 text-maximally-red">
                     <div className="h-px w-12 bg-maximally-red" />
@@ -557,22 +740,29 @@ const Index = () => {
                     <div className="h-px w-12 bg-maximally-red" />
                   </div>
                 </div>
-                
+
                 <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains">
-                  Join <span className="text-maximally-yellow font-bold">hundreds</span> of student, startup, and community hackathons worldwide.
+                  Join{" "}
+                  <span className="text-maximally-yellow font-bold">
+                    hundreds
+                  </span>{" "}
+                  of student, startup, and community hackathons worldwide.
                 </p>
               </div>
 
               {/* Benefits Grid - Enhanced */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden" data-testid="partner-benefit-1">
+                <div
+                  className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden"
+                  data-testid="partner-benefit-1"
+                >
                   {/* Animated Background */}
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
+
                   {/* Corner Accents */}
                   <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
+
                   <div className="relative z-10">
                     <div className="minecraft-block bg-gradient-to-br from-blue-600 to-blue-800 w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-blue-600/50 group-hover:animate-bounce">
                       <Globe className="h-8 w-8 text-white" />
@@ -596,12 +786,15 @@ const Index = () => {
                   </div>
                 </div>
 
-                <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden" data-testid="partner-benefit-2">
+                <div
+                  className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden"
+                  data-testid="partner-benefit-2"
+                >
                   <div className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
+
                   <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
+
                   <div className="relative z-10">
                     <div className="minecraft-block bg-gradient-to-br from-green-600 to-green-800 w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-green-600/50 group-hover:animate-bounce">
                       <Users className="h-8 w-8 text-white" />
@@ -625,12 +818,15 @@ const Index = () => {
                   </div>
                 </div>
 
-                <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden" data-testid="partner-benefit-3">
+                <div
+                  className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden"
+                  data-testid="partner-benefit-3"
+                >
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
+
                   <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute top-0 right-0 w-6 h-6 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  
+
                   <div className="relative z-10">
                     <div className="minecraft-block bg-gradient-to-br from-purple-600 to-purple-800 w-16 h-16 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-purple-600/50 group-hover:animate-bounce">
                       <Trophy className="h-8 w-8 text-white" />
@@ -659,13 +855,16 @@ const Index = () => {
               <div className="text-center">
                 <div className="pixel-card bg-gradient-to-r from-gray-900 via-black to-gray-900 border-2 border-maximally-yellow/50 p-8 mb-8 hover:border-maximally-yellow transition-all duration-300">
                   <p className="text-gray-300 text-base sm:text-lg font-jetbrains mb-2">
-                    <span className="text-maximally-yellow font-bold">250+ hackathons advised.</span> You're never doing it alone.
+                    <span className="text-maximally-yellow font-bold">
+                      250+ hackathons advised.
+                    </span>{" "}
+                    You're never doing it alone.
                   </p>
                   <p className="text-gray-400 text-sm font-jetbrains">
                     Whether you're a first-time organizer or returning host.
                   </p>
                 </div>
-                
+
                 <div className="flex flex-col sm:flex-row gap-6 justify-center">
                   <Link
                     to="/partner"
@@ -681,7 +880,7 @@ const Index = () => {
                   <Link
                     to="/partner"
                     data-testid="button-partner-guide"
-                    className="pixel-button bg-black border-4 border-maximally-red text-maximally-red group flex items-center justify-center gap-3 hover:scale-110 transform transition-all hover:bg-maximally-red hover:text-white hover:shadow-2xl hover:shadow-maximally-red/50 h-16 px-10 font-press-start text-sm sm:text-base"
+                    className="pixel-button bg-black border-2 border-maximally-red text-[#ffff] group/btn flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-black h-14 sm:h-16 px-8 sm:px-10 font-press-start text-sm sm:text-base"
                   >
                     <FileText className="h-6 w-6 group-hover:animate-pulse" />
                     <span>VIEW_GUIDE</span>
@@ -764,9 +963,7 @@ const Index = () => {
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
                 <div className="minecraft-block bg-gradient-to-r from-maximally-red to-red-700 text-white px-6 py-3 inline-block mb-6">
-                  <span className="font-press-start text-sm">
-                    🤝 MFHOP
-                  </span>
+                  <span className="font-press-start text-sm">🤝 MFHOP</span>
                 </div>
                 <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 minecraft-text">
                   <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
@@ -777,36 +974,42 @@ const Index = () => {
                   OF HACKATHON ORGANIZERS AND PARTNERS
                 </h3>
                 <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed mb-8 px-4">
-                  A global network of hackathon organizers working together to grow reach, share sponsors, and strengthen events.
+                  A global network of hackathon organizers working together to
+                  grow reach, share sponsors, and strengthen events.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                 {[
                   {
-                    title: 'Cross-Promotion',
-                    description: 'Share posts, newsletters, and reach new student bases.',
+                    title: "Cross-Promotion",
+                    description:
+                      "Share posts, newsletters, and reach new student bases.",
                     icon: <Globe className="h-6 w-6" />,
-                    color: 'bg-blue-600'
+                    color: "bg-blue-600",
                   },
                   {
-                    title: 'Sponsors & Partnerships',
-                    description: 'Exchange leads, pitch bigger packages together.',
+                    title: "Sponsors & Partnerships",
+                    description:
+                      "Exchange leads, pitch bigger packages together.",
                     icon: <Trophy className="h-6 w-6" />,
-                    color: 'bg-green-600'
+                    color: "bg-green-600",
                   },
                   {
-                    title: 'Judges & Mentors',
-                    description: 'Tap into a shared circuit of experienced names.',
+                    title: "Judges & Mentors",
+                    description:
+                      "Tap into a shared circuit of experienced names.",
                     icon: <Users className="h-6 w-6" />,
-                    color: 'bg-purple-600'
-                  }
+                    color: "bg-purple-600",
+                  },
                 ].map((benefit, i) => (
                   <div
                     key={i}
                     className="pixel-card bg-black border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105"
                   >
-                    <div className={`minecraft-block ${benefit.color} w-12 h-12 mx-auto mb-4 flex items-center justify-center text-white`}>
+                    <div
+                      className={`minecraft-block ${benefit.color} w-12 h-12 mx-auto mb-4 flex items-center justify-center text-white`}
+                    >
                       {benefit.icon}
                     </div>
                     <h4 className="font-press-start text-sm text-maximally-red mb-3 text-center">
@@ -822,11 +1025,17 @@ const Index = () => {
               <div className="text-center">
                 <div className="pixel-card bg-black border-2 border-maximally-red p-6 mb-8">
                   <p className="font-jetbrains text-gray-300 text-sm sm:text-base">
-                    MFHOP is an initiative led by Maximally to bring hackathon organizers out of silos. 
-                    <span className="text-maximally-red font-bold"> Membership is free</span>, and open to any organizer who has hosted at least one hackathon.
+                    MFHOP is an initiative led by Maximally to bring hackathon
+                    organizers out of silos.
+                    <span className="text-maximally-red font-bold">
+                      {" "}
+                      Membership is free
+                    </span>
+                    , and open to any organizer who has hosted at least one
+                    hackathon.
                   </p>
                 </div>
-                
+
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
                   <Link
                     to="/mfhop"

@@ -179,7 +179,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
   }
 
   // Prepare data for the reusable BlogPost component
-  const formattedDate = format(new Date(post.created_at), 'MMMM d, yyyy');
+  const formattedDate = post.created_at ? format(new Date(post.created_at), 'MMMM d, yyyy') : 'Unknown date';
   const readTime = calculateReadTime(post.content);
   const excerpt = generateExcerpt(post.content);
   const title = post.title;
@@ -463,15 +463,17 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
           📱 Share
         </button>
         <button 
-          onClick={() => {
+          onClick={(event) => {
             const url = getProductionUrl();
             navigator.clipboard.writeText(url);
             // Show a brief feedback message
-            const button = event.currentTarget;
+            const button = event.currentTarget as HTMLButtonElement;
             const originalText = button.textContent;
             button.textContent = '✅ Copied!';
             setTimeout(() => {
-              button.textContent = originalText;
+              if (originalText) {
+                button.textContent = originalText;
+              }
             }, 2000);
           }}
           className="pixel-border bg-maximally-black text-white px-4 py-2 font-press-start text-xs hover:bg-maximally-blue transition-colors duration-200"

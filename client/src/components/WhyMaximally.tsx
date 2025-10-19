@@ -20,7 +20,13 @@ const features = [
   }
 ];
 
-const EvolutionStep = ({ number, label, isActive }) => {
+interface EvolutionStepProps {
+  number: string;
+  label: string;
+  isActive: boolean;
+}
+
+const EvolutionStep = ({ number, label, isActive }: EvolutionStepProps) => {
   return (
     <div className={`flex flex-col items-center ${isActive ? "opacity-100" : "opacity-50"}`}>
       <div className={`w-12 h-12 pixel-border flex items-center justify-center ${

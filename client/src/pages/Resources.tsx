@@ -172,7 +172,7 @@ const Resources = () => {
                     Watch our latest videos, event highlights, and builder stories.
                   </p>
                   <a
-                    href="https://youtube.com/@maximally"
+                    href="https://www.youtube.com/@MaximallyYT"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block minecraft-block bg-red-500 text-black px-6 py-3 hover:bg-maximally-yellow transition-colors"

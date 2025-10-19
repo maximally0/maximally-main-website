@@ -589,7 +589,8 @@ const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { data: dynamicBlogData, isLoading: dynamicLoading } = useBlogs(1, 1000, '');
+  const { data: dynamicBlogData, isLoading: dynamicLoading, error: dynamicError } = useBlogs(1, 1000, '');
+  
   
   useEffect(() => {
     window.scrollTo(0, 0);
