@@ -60,7 +60,8 @@ export function isCaptchaRequired(): boolean {
   }
   
   // In development, check if CAPTCHA keys are configured
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  // const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const siteKey = "6LcLn-UrAAAAAGDc0mMRoAbqCkqJHb0b6wirzHId";
   
   // Allow disabling CAPTCHA in development with environment variable
   if (import.meta.env.VITE_DISABLE_CAPTCHA === 'true') {

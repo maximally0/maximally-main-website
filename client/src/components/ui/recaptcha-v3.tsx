@@ -22,7 +22,8 @@ const RecaptchaV3: React.FC<RecaptchaV3Props> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [scriptLoaded, setScriptLoaded] = useState(false);
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  // const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  const siteKey = "6LcLn-UrAAAAAGDc0mMRoAbqCkqJHb0b6wirzHId";
   const lastActionRef = useRef<string | null>(null);
 
   // Debug logging removed for production
