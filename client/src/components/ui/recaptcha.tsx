@@ -31,10 +31,7 @@ const RecaptchaComponent = forwardRef<RecaptchaRef, RecaptchaProps>(({
 }, ref) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   
-  // const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  const siteKey = "6LcLn-UrAAAAAGDc0mMRoAbqCkqJHb0b6wirzHId";
-  
-  // Removed debug logging for production
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
   
   if (!siteKey) {
     console.error('VITE_RECAPTCHA_SITE_KEY environment variable is not set');
