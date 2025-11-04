@@ -106,31 +106,30 @@ export default function Login() {
     captchaTokenRef.current = null;
   };
 
-  // Email validation check before signup
+  // Email validation check before signup (client-side only for static hosting)
   const validateEmailBeforeSignup = async (email: string): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/validate-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok || !data.success) {
+      // Basic client-side email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.trim())) {
+        setError('Please enter a valid email address');
         return false;
       }
+
+      // Check for common disposable email domains (basic list)
+      const disposableDomains = [
+        '10minutemail.com', 'tempmail.org', 'guerrillamail.com', 
+        'mailinator.com', 'throwaway.email', 'temp-mail.org'
+      ];
       
-      const validation = data.validation;
-      
-      // Check if email is valid (not disposable, has MX record, etc.)
-      if (!validation.isValid) {
-        setError(validation.issues?.[0] || 'Email validation failed');
+      const domain = email.split('@')[1]?.toLowerCase();
+      if (disposableDomains.includes(domain)) {
+        setError('Please use a permanent email address');
         return false;
       }
-      
+
+      // For static hosting, we'll do basic validation only
+      // In a full-stack deployment, this would validate with the backend
       return true;
     } catch (err: any) {
       console.error('Email validation error:', err);
