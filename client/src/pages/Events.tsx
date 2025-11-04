@@ -60,7 +60,7 @@ const Events = () => {
       
   // Starting hackathons fetch via direct fetch
       
-      const hackathonsResponse = await fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url&is_active=eq.true&order=created_at.desc`, {
+      const hackathonsResponse = await fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url,sort_order&is_active=eq.true&order=sort_order.asc,created_at.desc`, {
         headers: {
           'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,

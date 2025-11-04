@@ -96,54 +96,54 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
   };
 
   return (
-    <Card className="p-6 bg-gray-900 border-gray-800 hover:border-maximally-red transition-all duration-300 hover:shadow-lg hover:shadow-maximally-red/20">
-      <div className="flex flex-col md:flex-row gap-4">
+    <Card className="p-3 sm:p-4 md:p-6 bg-gray-900 border-gray-800 hover:border-maximally-red transition-all duration-300 hover:shadow-lg hover:shadow-maximally-red/20">
+      <div className="flex flex-col gap-3 sm:gap-4">
         <div className="flex-1">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h3 className="font-press-start text-sm text-maximally-red mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm text-maximally-red mb-1 sm:mb-2 break-words">
                 {certificate.hackathon_name}
               </h3>
-              <p className="text-gray-300 font-jetbrains">
+              <p className="text-gray-300 font-jetbrains text-[10px] sm:text-xs md:text-sm">
                 {certificate.type === 'judge' ? 'Judge Certificate' : 
                  certificate.position ? `${certificate.position} Certificate` : 'Participation Certificate'}
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               {certificate.status === 'active' ? (
-                <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                  <Shield className="w-3 h-3 mr-1" />
+                <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-[8px] sm:text-xs">
+                  <Shield className="w-2 h-2 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
                   Verified
                 </Badge>
               ) : (
-                <Badge className="bg-red-500/20 text-red-400 border-red-500/30">
+                <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-[8px] sm:text-xs">
                   Revoked
                 </Badge>
               )}
             </div>
           </div>
 
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <Calendar className="w-4 h-4" />
-              <span>Issued: {formatDate(certificate.created_at)}</span>
+          <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
+            <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs md:text-sm text-gray-400">
+              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="truncate">Issued: {formatDate(certificate.created_at)}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-400">
-              <Award className="w-4 h-4" />
-              <span>Certificate ID: {certificate.certificate_id}</span>
+            <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs md:text-sm text-gray-400">
+              <Award className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <span className="truncate">ID: {certificate.certificate_id}</span>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1 sm:gap-2">
             <a
               href={verificationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="pixel-button bg-maximally-red text-white text-xs px-3 py-2 flex items-center gap-2 hover:bg-maximally-red/90 transition-colors"
+              className="pixel-button bg-maximally-red text-white text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-maximally-red/90 transition-colors"
             >
-              <Shield className="w-3 h-3" />
+              <Shield className="w-2 h-2 sm:w-3 sm:h-3" />
               <span>VERIFY</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-2 h-2 sm:w-3 sm:h-3" />
             </a>
             
             {certificate.pdf_url && (
@@ -151,11 +151,11 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
                 href={certificate.pdf_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pixel-button bg-maximally-blue text-white text-xs px-3 py-2 flex items-center gap-2 hover:bg-maximally-blue/90 transition-colors"
+                className="pixel-button bg-maximally-blue text-white text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-maximally-blue/90 transition-colors"
               >
-                <Download className="w-3 h-3" />
+                <Download className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span>PDF</span>
-                <ExternalLink className="w-3 h-3" />
+                <ExternalLink className="w-2 h-2 sm:w-3 sm:h-3" />
               </a>
             )}
             
@@ -164,11 +164,11 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
                 href={certificate.jpg_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pixel-button bg-maximally-yellow text-maximally-black text-xs px-3 py-2 flex items-center gap-2 hover:bg-maximally-yellow/90 transition-colors"
+                className="pixel-button bg-maximally-yellow text-maximally-black text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-maximally-yellow/90 transition-colors"
               >
-                <Eye className="w-3 h-3" />
+                <Eye className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span>VIEW</span>
-                <ExternalLink className="w-3 h-3" />
+                <ExternalLink className="w-2 h-2 sm:w-3 sm:h-3" />
               </a>
             )}
           </div>
@@ -319,9 +319,10 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-xs px-4 py-3 transition-colors duration-300 flex items-center gap-2">
-          <Edit className="w-3 h-3" />
-          EDIT_PROFILE
+        <button className="pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300 flex items-center gap-1 sm:gap-2">
+          <Edit className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+          <span className="hidden sm:inline">EDIT_PROFILE</span>
+          <span className="sm:hidden">EDIT</span>
         </button>
       </DialogTrigger>
       <DialogContent className="max-w-3xl bg-black border-4 border-maximally-red max-h-[90vh] overflow-y-auto">
@@ -453,20 +454,49 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
 function DeleteAccountButton() {
   const [loading, setLoading] = useState(false);
   const handleDelete = async () => {
-    if (!confirm('This will permanently delete your account. Continue?')) return;
+    const confirmMessage = `⚠️ ACCOUNT DELETION WARNING ⚠️
+
+This will permanently delete:
+• Your profile information
+• Your certificates and achievements
+• Your avatar and files
+• All associated data
+
+Note: Your login credentials will remain active but all profile data will be permanently removed.
+
+Type "DELETE" to confirm:`;
+    
+    const userInput = prompt(confirmMessage);
+    if (userInput !== 'DELETE') {
+      alert('Account deletion cancelled. You must type "DELETE" exactly to confirm.');
+      return;
+    }
+    
     setLoading(true);
     try {
-      const { deleteAccountRequest, signOut } = await import('@/lib/supabaseClient');
-      await deleteAccountRequest();
-      await signOut();
+      const { deleteAccountRequest } = await import('@/lib/supabaseClient');
+      const result = await deleteAccountRequest();
+      
+      alert(result.message || 'Account deleted successfully');
+      
+      // Redirect to home page
       window.location.href = '/';
     } catch (e: any) {
-      alert(e?.message || 'Failed to delete account');
+      alert(`Failed to delete account: ${e?.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
   };
-  return <Button onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white" disabled={loading}>{loading ? 'Deleting...' : 'Delete Account'}</Button>;
+  
+  return (
+    <Button 
+      onClick={handleDelete} 
+      className="bg-red-600 hover:bg-red-700 text-white font-press-start text-xs px-4 py-3 border-2 border-red-500 hover:border-red-400 transition-colors" 
+      disabled={loading}
+    >
+      {loading ? 'DELETING...' : 'DELETE_ACCOUNT'}
+    </Button>
+  );
 }
 
 export default function Profile() {
@@ -627,9 +657,9 @@ export default function Profile() {
       ))}
       
       {/* Header */}
-      <div className="relative z-10 bg-gradient-to-br from-black via-red-950/10 to-black border-b-2 border-maximally-red/30 pt-24">
-        <div className="container mx-auto px-6 py-12">
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-12">
+      <div className="relative z-10 bg-gradient-to-br from-black via-red-950/10 to-black border-b-2 border-maximally-red/30 pt-16 sm:pt-20 lg:pt-24">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12">
+          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 sm:gap-8 lg:gap-12">
             {/* Avatar */}
             <div className="flex-shrink-0 relative">
               <div className="minecraft-block bg-maximally-red/20 border-4 border-maximally-red p-2 animate-[glow_2s_ease-in-out_infinite] hover:scale-105 transition-transform duration-300">
@@ -639,9 +669,9 @@ export default function Profile() {
                 <div className="absolute bottom-1 left-1 w-3 h-3 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
                 <div className="absolute bottom-1 right-1 w-3 h-3 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
                 
-                <Avatar className="w-24 h-24 lg:w-32 lg:h-32 border-4 border-maximally-yellow">
+                <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 border-2 sm:border-3 lg:border-4 border-maximally-yellow">
                   <AvatarImage src={userProfile.avatarUrl || ''} alt={userProfile.name || userProfile.username} />
-                  <AvatarFallback className="bg-maximally-red text-white text-2xl lg:text-4xl font-press-start">
+                  <AvatarFallback className="bg-maximally-red text-white text-sm sm:text-lg md:text-2xl lg:text-4xl font-press-start">
                     {(userProfile.name || userProfile.username || 'U').charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -649,11 +679,11 @@ export default function Profile() {
             </div>
 
             {/* Profile Info */}
-            <div className="flex-1 text-center lg:text-left space-y-6">
+            <div className="flex-1 text-center lg:text-left space-y-4 sm:space-y-6">
               {/* Name and Status */}
               <div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-3">
-                  <h1 className="font-press-start text-2xl lg:text-3xl text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:drop-shadow-[5px_5px_0px_rgba(255,215,0,0.5)] transition-all duration-300">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                  <h1 className="font-press-start text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:drop-shadow-[3px_3px_0px_rgba(255,215,0,0.5)] sm:hover:drop-shadow-[5px_5px_0px_rgba(255,215,0,0.5)] transition-all duration-300 break-words leading-tight">
                     {userProfile.name || userProfile.username}
                   </h1>
                   {dbProfile.role === 'admin' && (
@@ -663,13 +693,13 @@ export default function Profile() {
                     </div>
                   )}
                 </div>
-                <p className="text-maximally-yellow font-press-start text-sm mb-4">@{userProfile.username}</p>
+                <p className="text-maximally-yellow font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 break-all">@{userProfile.username}</p>
               </div>
 
               {/* Bio */}
               {userProfile.bio && (
-                <div className="bg-gray-900/50 border-2 border-gray-700/50 rounded-lg p-4">
-                  <p className="text-gray-300 font-jetbrains text-sm leading-relaxed">
+                <div className="bg-gray-900/50 border border-gray-700/50 sm:border-2 rounded-lg p-2 sm:p-3 md:p-4">
+                  <p className="text-gray-300 font-jetbrains text-[11px] sm:text-xs md:text-sm leading-relaxed break-words">
                     {userProfile.bio}
                   </p>
                 </div>
@@ -677,11 +707,11 @@ export default function Profile() {
 
               {/* Action Buttons */}
               {isOwner && (
-                <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                <div className="flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2 md:gap-3">
                   <EditProfileDialog profile={userProfile} onSave={handleSaveProfile} />
                   <button
                     onClick={async () => { await signOut(); window.location.href = '/'; }}
-                    className="pixel-button bg-maximally-yellow text-maximally-black hover:bg-maximally-yellow/90 font-press-start text-xs px-4 py-3 transition-colors duration-300"
+                    className="pixel-button bg-maximally-yellow text-maximally-black hover:bg-maximally-yellow/90 font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300"
                   >
                     LOGOUT
                   </button>
@@ -689,26 +719,26 @@ export default function Profile() {
               )}
 
               {/* Additional Info */}
-              <div className="space-y-4">
+              <div className="space-y-2 sm:space-y-3 md:space-y-4">
                 {userProfile.location && (
-                  <div className="flex items-center gap-3">
-                    <div className="minecraft-block bg-maximally-blue/20 border border-maximally-blue p-2">
-                      <MapPin className="h-4 w-4 text-maximally-blue" />
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="minecraft-block bg-maximally-blue/20 border border-maximally-blue p-1 sm:p-1.5 md:p-2 flex-shrink-0">
+                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-maximally-blue" />
                     </div>
-                    <div>
-                      <p className="font-press-start text-xs text-maximally-blue mb-1">LOCATION</p>
-                      <p className="font-jetbrains text-sm text-gray-300">{userProfile.location}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-maximally-blue mb-0.5 sm:mb-1">LOCATION</p>
+                      <p className="font-jetbrains text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.location}</p>
                     </div>
                   </div>
                 )}
                 {userProfile.email && (
-                  <div className="flex items-center gap-3">
-                    <div className="minecraft-block bg-maximally-yellow/20 border border-maximally-yellow p-2">
-                      <Mail className="h-4 w-4 text-maximally-yellow" />
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="minecraft-block bg-maximally-yellow/20 border border-maximally-yellow p-1 sm:p-1.5 md:p-2 flex-shrink-0">
+                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-maximally-yellow" />
                     </div>
-                    <div>
-                      <p className="font-press-start text-xs text-maximally-yellow mb-1">EMAIL</p>
-                      <p className="font-jetbrains text-sm text-gray-300 truncate">{userProfile.email}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-maximally-yellow mb-0.5 sm:mb-1">EMAIL</p>
+                      <p className="font-jetbrains text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.email}</p>
                     </div>
                   </div>
                 )}
@@ -716,15 +746,15 @@ export default function Profile() {
 
               {/* Social Links */}
               {(userProfile.github || userProfile.linkedin || userProfile.twitter || userProfile.website) && (
-                <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                <div className="flex flex-wrap justify-center lg:justify-start gap-1 sm:gap-1.5 md:gap-2">
                   {userProfile.github && (
                     <a
                       href={`https://github.com/${userProfile.github}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-red text-white font-press-start text-xs px-2 py-1 flex items-center gap-1 transition-all duration-300 hover:scale-105"
+                      className="pixel-button bg-gray-800 hover:bg-maximally-red text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
                     >
-                      <Github className="w-3 h-3" />
+                      <Github className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">GITHUB</span>
                     </a>
                   )}
@@ -733,9 +763,9 @@ export default function Profile() {
                       href={`https://linkedin.com/in/${userProfile.linkedin}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-blue text-white font-press-start text-xs px-2 py-1 flex items-center gap-1 transition-all duration-300 hover:scale-105"
+                      className="pixel-button bg-gray-800 hover:bg-maximally-blue text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
                     >
-                      <Linkedin className="w-3 h-3" />
+                      <Linkedin className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">LINKEDIN</span>
                     </a>
                   )}
@@ -744,9 +774,9 @@ export default function Profile() {
                       href={`https://twitter.com/${userProfile.twitter}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-yellow text-white hover:text-maximally-black font-press-start text-xs px-2 py-1 flex items-center gap-1 transition-all duration-300 hover:scale-105"
+                      className="pixel-button bg-gray-800 hover:bg-maximally-yellow text-white hover:text-maximally-black font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
                     >
-                      <Twitter className="w-3 h-3" />
+                      <Twitter className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">TWITTER</span>
                     </a>
                   )}
@@ -755,9 +785,9 @@ export default function Profile() {
                       href={userProfile.website.startsWith('http') ? userProfile.website : `https://${userProfile.website}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-green text-white font-press-start text-xs px-2 py-1 flex items-center gap-1 transition-all duration-300 hover:scale-105"
+                      className="pixel-button bg-gray-800 hover:bg-maximally-green text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
                     >
-                      <Globe className="w-3 h-3" />
+                      <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">WEBSITE</span>
                     </a>
                   )}
@@ -766,18 +796,18 @@ export default function Profile() {
 
               {/* Skills */}
               {userProfile.skills && userProfile.skills.length > 0 && (
-                <div className="mt-6">
-                  <div className="mb-4">
-                    <h3 className="font-press-start text-xs text-maximally-red mb-3 flex items-center gap-2">
-                      <span className="w-2 h-2 bg-maximally-red animate-pulse"></span>
+                <div className="mt-3 sm:mt-4 md:mt-6">
+                  <div className="mb-2 sm:mb-3 md:mb-4">
+                    <h3 className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-maximally-red mb-1.5 sm:mb-2 md:mb-3 flex items-center gap-1 sm:gap-2">
+                      <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 bg-maximally-red animate-pulse"></span>
                       SKILLS
                     </h3>
                   </div>
-                  <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                  <div className="flex flex-wrap justify-center lg:justify-start gap-1 sm:gap-1.5 md:gap-2">
                     {userProfile.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className="bg-gray-800/50 border border-maximally-red/30 text-gray-300 px-3 py-1 text-xs font-jetbrains rounded-sm"
+                        className="bg-gray-800/50 border border-maximally-red/30 text-gray-300 px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 text-[8px] sm:text-[10px] md:text-xs font-jetbrains rounded-sm break-words"
                       >
                         {skill}
                       </span>
@@ -791,41 +821,46 @@ export default function Profile() {
       </div>
 
       {/* Content Tabs Section */}
-      <section className="pt-24 pb-12 relative z-10 container mx-auto px-6">
+      <section className="pt-8 sm:pt-12 md:pt-16 lg:pt-24 pb-8 sm:pb-12 relative z-10 container mx-auto px-3 sm:px-4 lg:px-6">
         <Tabs defaultValue="overview" className="w-full">
           {/* Tabs Navigation */}
-          <div className="mb-8">
-            <TabsList className={`grid w-full ${isOwner ? 'grid-cols-5' : 'grid-cols-4'} bg-gray-900/50 border-4 border-maximally-red p-2 rounded-lg gap-2`}>
+          <div className="mb-4 sm:mb-6 md:mb-8">
+            <TabsList className={`grid w-full ${isOwner ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5' : 'grid-cols-2 sm:grid-cols-4'} bg-gray-900/50 border border-maximally-red sm:border-2 md:border-4 p-0.5 sm:p-1 md:p-2 rounded-lg gap-0.5 sm:gap-1 md:gap-2`}>
               <TabsTrigger 
                 value="overview" 
-                className="pixel-button bg-transparent hover:bg-maximally-red/20 text-gray-400 data-[state=active]:bg-maximally-red data-[state=active]:text-white font-press-start text-xs py-3 transition-all duration-300"
+                className="pixel-button bg-transparent hover:bg-maximally-red/20 text-gray-400 data-[state=active]:bg-maximally-red data-[state=active]:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs py-1.5 sm:py-2 md:py-3 transition-all duration-300"
               >
-                OVERVIEW
+                <span className="hidden sm:inline">OVERVIEW</span>
+                <span className="sm:hidden">INFO</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="certificates" 
-                className="pixel-button bg-transparent hover:bg-maximally-yellow/20 text-gray-400 data-[state=active]:bg-maximally-yellow data-[state=active]:text-maximally-black font-press-start text-xs py-3 transition-all duration-300"
+                className="pixel-button bg-transparent hover:bg-maximally-yellow/20 text-gray-400 data-[state=active]:bg-maximally-yellow data-[state=active]:text-maximally-black font-press-start text-[8px] sm:text-[10px] md:text-xs py-1.5 sm:py-2 md:py-3 transition-all duration-300"
               >
-                CERTIFICATES
+                <span className="hidden sm:inline">CERTIFICATES</span>
+                <span className="sm:hidden">CERTS</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="hackathons" 
-                className="pixel-button bg-transparent hover:bg-maximally-blue/20 text-gray-400 data-[state=active]:bg-maximally-blue data-[state=active]:text-white font-press-start text-xs py-3 transition-all duration-300"
+                className="pixel-button bg-transparent hover:bg-maximally-blue/20 text-gray-400 data-[state=active]:bg-maximally-blue data-[state=active]:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs py-1.5 sm:py-2 md:py-3 transition-all duration-300"
               >
-                HACKATHONS
+                <span className="hidden sm:inline">HACKATHONS</span>
+                <span className="sm:hidden">HACKS</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="achievements" 
-                className="pixel-button bg-transparent hover:bg-maximally-green/20 text-gray-400 data-[state=active]:bg-maximally-green data-[state=active]:text-white font-press-start text-xs py-3 transition-all duration-300"
+                className="pixel-button bg-transparent hover:bg-maximally-green/20 text-gray-400 data-[state=active]:bg-maximally-green data-[state=active]:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs py-1.5 sm:py-2 md:py-3 transition-all duration-300"
               >
-                ACHIEVEMENTS
+                <span className="hidden sm:inline">ACHIEVEMENTS</span>
+                <span className="sm:hidden">WINS</span>
               </TabsTrigger>
               {isOwner && (
                 <TabsTrigger 
                   value="settings" 
-                  className="pixel-button bg-transparent hover:bg-purple-600/20 text-gray-400 data-[state=active]:bg-purple-600 data-[state=active]:text-white font-press-start text-xs py-3 transition-all duration-300"
+                  className="pixel-button bg-transparent hover:bg-purple-600/20 text-gray-400 data-[state=active]:bg-purple-600 data-[state=active]:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs py-1.5 sm:py-2 md:py-3 transition-all duration-300"
                 >
-                  SETTINGS
+                  <span className="hidden sm:inline">SETTINGS</span>
+                  <span className="sm:hidden">SET</span>
                 </TabsTrigger>
               )}
             </TabsList>

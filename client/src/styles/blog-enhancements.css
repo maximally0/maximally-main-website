@@ -54,6 +54,83 @@
   color: #E50914;
 }
 
+/* Dark theme blog post styling */
+.blog-dark-theme {
+  background: #000;
+  color: #d1d5db;
+}
+
+.blog-dark-theme h1,
+.blog-dark-theme h2,
+.blog-dark-theme h3,
+.blog-dark-theme h4,
+.blog-dark-theme h5,
+.blog-dark-theme h6 {
+  color: #E50914;
+}
+
+.blog-dark-theme p,
+.blog-dark-theme li,
+.blog-dark-theme span {
+  color: #d1d5db;
+}
+
+.blog-dark-theme .lead {
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+.blog-dark-theme strong {
+  color: #ffffff;
+}
+
+.blog-dark-theme em {
+  color: #fbbf24;
+}
+
+.blog-dark-theme a {
+  color: #0066cc;
+}
+
+.blog-dark-theme a:hover {
+  color: #E50914;
+}
+
+.blog-dark-theme code {
+  background: #1f2937;
+  color: #10b981;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.blog-dark-theme pre {
+  background: #111827;
+  border: 1px solid #374151;
+}
+
+.blog-dark-theme blockquote {
+  border-left: 4px solid #E50914;
+  background: rgba(31, 41, 55, 0.5);
+  color: #d1d5db;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.blog-dark-theme .pixel-border {
+  border: 2px solid #374151;
+  background: rgba(31, 41, 55, 0.3);
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.blog-dark-theme .pixel-border h3 {
+  color: #fbbf24;
+}
+
+.blog-dark-theme ul li::marker {
+  color: #E50914;
+}
+
 /* Enhanced code blocks */
 .code-block-enhanced {
   position: relative;

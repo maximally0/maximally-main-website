@@ -405,23 +405,6 @@ export default function Login() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
-                    <span className="w-2 h-2 bg-maximally-green"></span>
-                    PASSWORD
-                  </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
-                    required
-                    data-testid="input-password"
-                  />
-                </div>
-
                 {isSignUp && (
                   <>
                     <div className="space-y-2">
@@ -457,24 +440,43 @@ export default function Login() {
                         data-testid="input-username"
                       />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
-                        <span className="w-2 h-2 bg-maximally-green"></span>
-                        CONFIRM_PASSWORD
-                      </Label>
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="••••••••"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
-                        required
-                        data-testid="input-confirm-password"
-                      />
-                    </div>
                   </>
+                )}
+
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
+                    <span className="w-2 h-2 bg-maximally-green"></span>
+                    PASSWORD
+                  </Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
+                    required
+                    data-testid="input-password"
+                  />
+                </div>
+
+                {isSignUp && (
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
+                      <span className="w-2 h-2 bg-maximally-green"></span>
+                      CONFIRM_PASSWORD
+                    </Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="••••••••"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
+                      required
+                      data-testid="input-confirm-password"
+                    />
+                  </div>
                 )}
 
                 {captchaRequired && (
