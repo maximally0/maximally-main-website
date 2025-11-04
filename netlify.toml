@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm run build:client"
   publish = "dist/public"
 
 [build.environment]
@@ -12,6 +12,7 @@
   to = "/makeathon"
   status = 301
 
+# Catch-all for SPA routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
