@@ -394,18 +394,19 @@ export async function ensureUserProfile(user: User): Promise<Profile | null> {
 export async function updateProfileMe(patch: UpdatableProfileFields) {
   if (!supabase) throw new Error('Supabase not configured');
   try {
-    const { data: s } = await supabase.auth.getSession();
-    const token = s.session?.access_token;
-    if (!token) throw new Error('Not authenticated');
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
 
-    const res = await fetch('/api/profile/update', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(patch),
-    });
-    const json = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(json?.message || 'Failed to update profile');
-    return json?.profile as Profile | undefined;
+    // For static hosting, update profile directly with Supabase
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(patch)
+      .eq('id', user.id)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+    return data as Profile | undefined;
   } catch (err) {
     console.error('updateProfileMe error:', err);
     throw err;
@@ -455,22 +456,13 @@ export async function changePassword(currentPassword: string, newPassword: strin
   if (!supabase) return {success: false, error: 'Supabase not configured'};
   
   try {
-    const { data } = await supabase.auth.getSession();
-    const token = data.session?.access_token;
-    if (!token) return {success: false, error: 'Not authenticated'};
-    
-    const res = await fetch('/api/auth/change-password', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ newPassword })
+    // For static hosting, use Supabase's built-in password update
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
     });
     
-    const result = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      return {success: false, error: result?.message || 'Failed to change password'};
+    if (error) {
+      return {success: false, error: error.message};
     }
     
     return {success: true};
@@ -484,39 +476,17 @@ export async function setPasswordForOAuthUser(newPassword: string): Promise<{suc
   if (!supabase) return {success: false, error: 'Supabase not configured'};
   
   try {
-    const { data } = await supabase.auth.getSession();
-    const token = data.session?.access_token;
-    if (!token) return {success: false, error: 'Not authenticated'};
-    
-    const res = await fetch('/api/auth/change-password', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ newPassword })
+    // For static hosting, use Supabase's built-in password update
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword,
+      data: {
+        has_password: true,
+        password_set_at: new Date().toISOString()
+      }
     });
     
-    const result = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      return {success: false, error: result?.message || 'Failed to set password'};
-    }
-    
-    // Update client-side user metadata immediately for UI consistency
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      const existingMetadata = user?.user_metadata || {};
-      
-      await supabase.auth.updateUser({
-        data: {
-          ...existingMetadata,
-          has_password: true,
-          password_set_at: new Date().toISOString()
-        }
-      });
-    } catch (metadataError) {
-      // Don't fail if metadata update fails, as password was already set
-      console.warn('Failed to update local user metadata:', metadataError);
+    if (error) {
+      return {success: false, error: error.message};
     }
     
     return {success: true};
@@ -799,16 +769,31 @@ export async function clearAvatar(): Promise<void> {
 // -------------------- Account Delete --------------------
 export async function deleteAccountRequest(): Promise<{ success: boolean; message?: string }> {
   if (!supabase) throw new Error('Supabase not configured');
-  const { data } = await supabase.auth.getSession();
-  const token = data.session?.access_token;
-  if (!token) throw new Error('Not authenticated');
+  
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Not authenticated');
 
-  const res = await fetch('/api/account/delete', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
-  });
+    // For static hosting, we can only delete the profile
+    // The auth user deletion requires admin privileges
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .delete()
+      .eq('id', user.id);
 
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(body?.message || 'Failed to delete account');
-  return body as any;
+    if (profileError) {
+      throw new Error('Failed to delete profile: ' + profileError.message);
+    }
+
+    // Sign out the user
+    await supabase.auth.signOut();
+
+    return { 
+      success: true, 
+      message: 'Profile deleted successfully. Note: Your authentication account still exists but your profile data has been removed.' 
+    };
+  } catch (err: any) {
+    console.error('deleteAccountRequest error:', err);
+    throw new Error(err.message || 'Failed to delete account');
+  }
 }
