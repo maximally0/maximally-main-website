@@ -57,7 +57,7 @@
 /* Dark theme blog post styling */
 .blog-dark-theme {
   background: #000;
-  color: #d1d5db;
+  color: #f3f4f6;
 }
 
 .blog-dark-theme h1,
@@ -71,8 +71,9 @@
 
 .blog-dark-theme p,
 .blog-dark-theme li,
-.blog-dark-theme span {
-  color: #d1d5db;
+.blog-dark-theme span,
+.blog-dark-theme div {
+  color: #f3f4f6;
 }
 
 .blog-dark-theme .lead {
@@ -80,16 +81,20 @@
   font-weight: 600;
 }
 
-.blog-dark-theme strong {
+.blog-dark-theme strong,
+.blog-dark-theme b {
   color: #ffffff;
+  font-weight: bold;
 }
 
-.blog-dark-theme em {
+.blog-dark-theme em,
+.blog-dark-theme i {
   color: #fbbf24;
 }
 
 .blog-dark-theme a {
   color: #0066cc;
+  text-decoration: underline;
 }
 
 .blog-dark-theme a:hover {
@@ -99,21 +104,31 @@
 .blog-dark-theme code {
   background: #1f2937;
   color: #10b981;
-  padding: 0.125rem 0.25rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
+  font-size: 0.875em;
 }
 
 .blog-dark-theme pre {
   background: #111827;
   border: 1px solid #374151;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.blog-dark-theme pre code {
+  background: transparent;
+  padding: 0;
 }
 
 .blog-dark-theme blockquote {
   border-left: 4px solid #E50914;
   background: rgba(31, 41, 55, 0.5);
-  color: #d1d5db;
+  color: #f3f4f6;
   padding: 1rem;
   margin: 1rem 0;
+  border-radius: 0.25rem;
 }
 
 .blog-dark-theme .pixel-border {
@@ -121,14 +136,45 @@
   background: rgba(31, 41, 55, 0.3);
   padding: 1rem;
   margin: 1rem 0;
+  border-radius: 0.5rem;
 }
 
 .blog-dark-theme .pixel-border h3 {
   color: #fbbf24;
 }
 
+.blog-dark-theme .pixel-border p,
+.blog-dark-theme .pixel-border li,
+.blog-dark-theme .pixel-border span {
+  color: #f3f4f6;
+}
+
 .blog-dark-theme ul li::marker {
   color: #E50914;
+}
+
+.blog-dark-theme ol li::marker {
+  color: #E50914;
+}
+
+/* Ensure all text elements have proper contrast */
+.prose-invert {
+  --tw-prose-body: #f3f4f6;
+  --tw-prose-headings: #E50914;
+  --tw-prose-lead: #fbbf24;
+  --tw-prose-links: #0066cc;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: #E50914;
+  --tw-prose-bullets: #E50914;
+  --tw-prose-hr: #374151;
+  --tw-prose-quotes: #f3f4f6;
+  --tw-prose-quote-borders: #E50914;
+  --tw-prose-captions: #f3f4f6;
+  --tw-prose-code: #10b981;
+  --tw-prose-pre-code: #10b981;
+  --tw-prose-pre-bg: #111827;
+  --tw-prose-th-borders: #374151;
+  --tw-prose-td-borders: #374151;
 }
 
 /* Enhanced code blocks */
