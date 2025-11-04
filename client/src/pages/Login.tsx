@@ -86,7 +86,6 @@ export default function Login() {
 
   // CAPTCHA handlers
   const handleCaptchaVerify = (token: string | null) => {
-    console.log('🔐 CAPTCHA verified with token:', token ? 'Token received' : 'No token');
     setCaptchaToken(token);
     captchaTokenRef.current = token;
     setCaptchaError(null);
