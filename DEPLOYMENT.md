@@ -2,19 +2,19 @@
 
 ## Environment Variables for Netlify
 
-Set these **exact** environment variables in your Netlify dashboard:
+Set these environment variables in your Netlify dashboard with your actual values:
 
 ### Required Environment Variables
 
 ```
-SUPABASE_URL=https://vbjqqspfosgelxhhqlks.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZianFxc3Bmb3NnZWx4aGhxbGtzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NzQyOTY4NiwiZXhwIjoyMDczMDA1Njg2fQ.Ne_NPgkBlsxd7wPV1Ta7a9OeMgjvm6SwbwO8eYN_z0E
-DATABASE_URL=postgresql://postgres:maximally0101database@db.vbjqqspfosgelxhhqlks.supabase.co:5432/postgres
-VITE_SUPABASE_URL=https://vbjqqspfosgelxhhqlks.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZianFxc3Bmb3NnZWx4aGhxbGtzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0Mjk2ODYsImV4cCI6MjA3MzAwNTY4Nn0.fpbf1kNT-qI54aaHS0-To3jrRKU91lgwINzHEC_wUis
-VITE_RECAPTCHA_SITE_KEY=6LcLn-UrAAAAAGDc0mMRoAbqCkqJHb0b6wirzHId
-RECAPTCHA_SECRET_KEY=6LcLn-UrAAAAAO-jx-QtVu7Orh2ry9b3ANCdpcuk
-SESSION_SECRET=maximally-session-secret-key-2025
+SUPABASE_URL=your_supabase_project_url
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+DATABASE_URL=your_database_connection_string
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_RECAPTCHA_SITE_KEY=your_recaptcha_site_key
+RECAPTCHA_SECRET_KEY=your_recaptcha_secret_key
+SESSION_SECRET=your_session_secret_key
 ```
 
 ## How to Set Environment Variables in Netlify
