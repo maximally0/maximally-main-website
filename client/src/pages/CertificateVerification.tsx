@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { AlertCircle, CheckCircle, XCircle, ExternalLink, Download, Eye } from 'lucide-react';
 import { Helmet } from 'react-helmet';
+import { supabase } from '@/lib/supabaseClient';
 
 interface CertificateData {
   participant_name: string;
@@ -37,14 +38,56 @@ const CertificateVerification: React.FC = () => {
       }
 
       try {
-        const response = await fetch(`/api/certificates/verify/${encodeURIComponent(certificate_id)}`);
-        const data = await response.json();
-
-        if (!response.ok && response.status !== 200) {
-          throw new Error(data.message || 'Failed to verify certificate');
+        // For static hosting, query Supabase directly
+        if (!supabase) {
+          throw new Error('Database connection not available');
         }
 
-        setVerification(data);
+        const { data: certificate, error: certError } = await supabase
+          .from('certificates')
+          .select('*')
+          .eq('certificate_id', certificate_id.toUpperCase())
+          .single();
+
+        if (certError || !certificate) {
+          setVerification({
+            success: true,
+            status: 'invalid_id',
+            message: 'Invalid certificate ID',
+            certificate_id: certificate_id.toUpperCase()
+          });
+        } else if (certificate.status !== 'active') {
+          setVerification({
+            success: true,
+            status: 'revoked',
+            message: 'This certificate has been revoked',
+            certificate_id: certificate_id.toUpperCase(),
+            certificate: {
+              participant_name: certificate.participant_name,
+              hackathon_name: certificate.hackathon_name,
+              type: certificate.type,
+              position: certificate.position,
+              created_at: certificate.created_at
+            }
+          });
+        } else {
+          setVerification({
+            success: true,
+            status: 'verified',
+            message: 'Certificate is verified and valid',
+            certificate_id: certificate_id.toUpperCase(),
+            certificate: {
+              participant_name: certificate.participant_name,
+              participant_email: certificate.participant_email,
+              hackathon_name: certificate.hackathon_name,
+              type: certificate.type,
+              position: certificate.position,
+              pdf_url: certificate.pdf_url,
+              jpg_url: certificate.jpg_url,
+              created_at: certificate.created_at
+            }
+          });
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred while verifying the certificate');
       } finally {

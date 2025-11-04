@@ -480,12 +480,78 @@ export default function Profile() {
   const { data: userCertificatesData, isLoading: certificatesLoading } = useQuery({
     queryKey: ['user-certificates', username],
     queryFn: async (): Promise<UserCertificatesData> => {
-      const response = await fetch(`/api/user/${username}/certificates`);
-      const result = await response.json();
-      if (!result.success) {
-        throw new Error(result.message || 'Failed to fetch user certificates');
+      if (!supabase || !username) {
+        throw new Error('Database connection not available');
       }
-      return result.data;
+
+      // Get certificates for the user
+      const { data: certificates, error: certError } = await supabase
+        .from('certificates')
+        .select('*')
+        .eq('maximally_username', username)
+        .order('created_at', { ascending: false });
+
+      if (certError) {
+        console.error('Error fetching certificates:', certError);
+        throw new Error('Failed to fetch certificates');
+      }
+
+      // Get hackathons from the certificates
+      const hackathonNames = [...new Set(certificates?.map(cert => cert.hackathon_name) || [])];
+      
+      // Get hackathon details from the hackathons table
+      const hackathonDetails = [];
+      if (hackathonNames.length > 0) {
+        for (const hackathonName of hackathonNames) {
+          const { data: hackathon } = await supabase
+            .from('hackathons')
+            .select('*')
+            .eq('title', hackathonName)
+            .single();
+          
+          if (hackathon) {
+            hackathonDetails.push(hackathon);
+          }
+        }
+      }
+
+      // Process achievements based on certificates
+      const achievements = [];
+      if (certificates) {
+        for (const cert of certificates) {
+          // Add judging achievements
+          if (cert.type === 'judge') {
+            achievements.push({
+              id: `judge_${cert.id}`,
+              title: `Judge - ${cert.hackathon_name}`,
+              description: `Successfully judged ${cert.hackathon_name}`,
+              icon: '⚖️',
+              earnedAt: cert.created_at,
+              type: 'judging'
+            });
+          }
+          
+          // Add winning achievements (if position is specified and not just "Participant")
+          if (cert.position && cert.position.toLowerCase() !== 'participant' && cert.type !== 'judge') {
+            achievements.push({
+              id: `winner_${cert.id}`,
+              title: `${cert.position} - ${cert.hackathon_name}`,
+              description: `Achieved ${cert.position} position in ${cert.hackathon_name}`,
+              icon: cert.position.toLowerCase().includes('1st') || cert.position.toLowerCase().includes('first') || cert.position.toLowerCase().includes('winner') ? '🏆' : 
+                    cert.position.toLowerCase().includes('2nd') || cert.position.toLowerCase().includes('second') ? '🥈' :
+                    cert.position.toLowerCase().includes('3rd') || cert.position.toLowerCase().includes('third') ? '🥉' : '🏅',
+              earnedAt: cert.created_at,
+              type: 'winning'
+            });
+          }
+        }
+      }
+
+      return {
+        certificates: certificates || [],
+        hackathons: hackathonDetails,
+        achievements: achievements
+      };
     },
     enabled: !!username,
     staleTime: 5 * 60 * 1000, // 5 minutes
