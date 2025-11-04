@@ -86,6 +86,7 @@ export default function Login() {
 
   // CAPTCHA handlers
   const handleCaptchaVerify = (token: string | null) => {
+    console.log('🔐 CAPTCHA verified with token:', token ? 'Token received' : 'No token');
     setCaptchaToken(token);
     captchaTokenRef.current = token;
     setCaptchaError(null);
@@ -147,24 +148,17 @@ export default function Login() {
 
     // Check CAPTCHA if required
     if (captchaRequired) {
-      // If no token yet, show immediate error and then attempt programmatic execution
-      if (!isValidCaptchaToken(captchaTokenRef.current)) {
-        // Show immediate error so user sees feedback right away
+      // Check both captchaToken state and captchaTokenRef for the token
+      const currentToken = captchaToken || captchaTokenRef.current;
+      
+      if (!isValidCaptchaToken(currentToken)) {
         setError('Please complete the CAPTCHA verification');
         setLoading(false);
-
-        // Still attempt to programmatically execute the invisible widget for convenience
-        try {
-          recaptchaRef.current?.execute();
-        } catch (err) {
-          console.warn('Recaptcha execute failed (maybe non-invisible widget):', err);
-        }
-
         return;
       }
 
-  // Verify CAPTCHA with backend before proceeding with authentication
-      const captchaResult = await verifyCaptcha(captchaTokenRef.current as string);
+      // Verify CAPTCHA with backend before proceeding with authentication
+      const captchaResult = await verifyCaptcha(currentToken as string);
       
       if (!captchaResult.success) {
         setError(captchaResult.message || 'CAPTCHA verification failed');
@@ -249,13 +243,15 @@ export default function Login() {
     
     // Check CAPTCHA if required
     if (captchaRequired) {
-      if (!isValidCaptchaToken(captchaToken)) {
+      const currentToken = captchaToken || captchaTokenRef.current;
+      
+      if (!isValidCaptchaToken(currentToken)) {
         setError('Please complete the CAPTCHA verification before signing in with Google');
         return;
       }
 
       // Verify CAPTCHA with backend
-      const captchaResult = await verifyCaptcha(captchaToken);
+      const captchaResult = await verifyCaptcha(currentToken);
       if (!captchaResult.success) {
         setError(captchaResult.message || 'CAPTCHA verification failed');
         resetCaptcha();
@@ -295,13 +291,15 @@ export default function Login() {
     
     // Check CAPTCHA if required
     if (captchaRequired) {
-      if (!isValidCaptchaToken(captchaToken)) {
+      const currentToken = captchaToken || captchaTokenRef.current;
+      
+      if (!isValidCaptchaToken(currentToken)) {
         setError('Please complete the CAPTCHA verification before signing in with GitHub');
         return;
       }
 
       // Verify CAPTCHA with backend
-      const captchaResult = await verifyCaptcha(captchaToken);
+      const captchaResult = await verifyCaptcha(currentToken);
       if (!captchaResult.success) {
         setError(captchaResult.message || 'CAPTCHA verification failed');
         resetCaptcha();
