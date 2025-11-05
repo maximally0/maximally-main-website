@@ -18,6 +18,11 @@ import {
   Rocket,
   Handshake,
   CheckCircle2,
+  Star,
+  Award,
+  Lightbulb,
+  Network,
+  GraduationCap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -1053,6 +1058,184 @@ const Index = () => {
                   >
                     <Users className="h-4 w-4" />
                     <span>APPLY_TO_JOIN</span>
+                    <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Become a Judge Section */}
+        <section className="py-20 relative bg-gradient-to-b from-black via-purple-950/10 to-black overflow-hidden">
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-10 right-10 w-20 h-20 bg-purple-600/20 blur-3xl rounded-full animate-pulse" />
+            <div className="absolute bottom-20 left-20 w-32 h-32 bg-maximally-yellow/20 blur-3xl rounded-full animate-pulse delay-700" />
+            <div className="absolute top-1/2 right-1/3 w-24 h-24 bg-purple-500/20 blur-3xl rounded-full animate-pulse delay-500" />
+          </div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-6xl mx-auto">
+              {/* Header */}
+              <div className="text-center mb-16">
+                <div className="minecraft-block bg-gradient-to-r from-purple-600 to-purple-800 text-white px-6 py-3 inline-block mb-6 animate-[glow_2s_ease-in-out_infinite]">
+                  <span className="font-press-start text-sm flex items-center gap-2 justify-center">
+                    <Star className="h-4 w-4 animate-spin-slow" />
+                    BECOME A JUDGE
+                    <Award className="h-4 w-4 animate-bounce" />
+                  </span>
+                </div>
+                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 minecraft-text">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-maximally-yellow to-purple-400 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    SHAPE THE FUTURE
+                  </span>
+                </h2>
+                <h3 className="font-press-start text-sm sm:text-base md:text-lg text-gray-300 mb-6">
+                  OF INNOVATION AND BUILDERS
+                </h3>
+                <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed mb-8 px-4">
+                  Join our global network of industry experts judging the next generation
+                  of builders. Share your expertise, discover talent, and give back to
+                  the hacker community.
+                </p>
+              </div>
+
+              {/* Benefits Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {[
+                  {
+                    title: "Give Back",
+                    description:
+                      "Mentor ambitious builders and shape the next generation of innovators.",
+                    icon: <GraduationCap className="h-6 w-6" />,
+                    color: "bg-purple-600",
+                  },
+                  {
+                    title: "Discover Talent",
+                    description:
+                      "Get early access to exceptional builders for your team or company.",
+                    icon: <Star className="h-6 w-6" />,
+                    color: "bg-blue-600",
+                  },
+                  {
+                    title: "Expand Network",
+                    description:
+                      "Connect with fellow judges from Meta, Google, Amazon, and beyond.",
+                    icon: <Network className="h-6 w-6" />,
+                    color: "bg-green-600",
+                  },
+                  {
+                    title: "Flexible Commitment",
+                    description:
+                      "Choose events that match your schedule and expertise areas.",
+                    icon: <Clock className="h-6 w-6" />,
+                    color: "bg-yellow-600",
+                  },
+                  {
+                    title: "Recognition",
+                    description:
+                      "Build your personal brand as an expert in the hacker ecosystem.",
+                    icon: <Award className="h-6 w-6" />,
+                    color: "bg-red-600",
+                  },
+                  {
+                    title: "Judge Perks",
+                    description:
+                      "Access exclusive judge lounges, swag, and networking events.",
+                    icon: <Sparkles className="h-6 w-6" />,
+                    color: "bg-cyan-600",
+                  },
+                ].map((benefit, i) => (
+                  <div
+                    key={i}
+                    className="pixel-card bg-black border-2 border-purple-600 p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105 group"
+                    data-testid={`benefit-card-${i}`}
+                  >
+                    <div
+                      className={`minecraft-block ${benefit.color} w-12 h-12 mx-auto mb-4 flex items-center justify-center text-white group-hover:animate-bounce`}
+                    >
+                      {benefit.icon}
+                    </div>
+                    <h4 className="font-press-start text-sm text-purple-400 mb-3 text-center group-hover:text-maximally-yellow transition-colors">
+                      {benefit.title.toUpperCase()}
+                    </h4>
+                    <p className="font-jetbrains text-gray-300 text-sm text-center">
+                      {benefit.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Info Card */}
+              <div className="text-center">
+                <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-purple-600 p-8 mb-8 relative group overflow-hidden">
+                  {/* Animated Border Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-maximally-yellow to-purple-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500" />
+
+                  {/* Corner Decorations */}
+                  <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
+                  <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
+                  <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
+                  <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
+
+                  <div className="relative z-10">
+                    <p className="font-jetbrains text-gray-300 text-sm sm:text-base mb-4">
+                      We're looking for engineers, designers, product managers, and
+                      domain experts who are passionate about innovation.
+                      <span className="text-purple-400 font-bold">
+                        {" "}
+                        No prior judging experience required
+                      </span>{" "}
+                      — just bring your expertise and enthusiasm for helping builders.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-3 mt-6">
+                      {[
+                        "AI/ML",
+                        "Product",
+                        "Design",
+                        "Backend",
+                        "Frontend",
+                        "Mobile",
+                        "DevOps",
+                        "Security",
+                        "Blockchain",
+                        "Hardware",
+                        "Education",
+                      ].map((expertise) => (
+                        <span
+                          key={expertise}
+                          className="pixel-button bg-purple-900/50 border-2 border-purple-600 text-purple-300 px-3 py-1 text-xs font-press-start hover:bg-purple-800 hover:border-maximally-yellow hover:text-maximally-yellow transition-all"
+                          data-testid={`expertise-tag-${expertise.toLowerCase().replace(/\//g, '-')}`}
+                        >
+                          {expertise}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* CTAs */}
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+                  <Link
+                    to="/people/judges"
+                    className="pixel-button bg-purple-600 text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-purple h-12 px-6 font-press-start text-xs sm:text-sm hover:bg-purple-700"
+                    data-testid="button-view-judges"
+                  >
+                    <Users className="h-4 w-4" />
+                    <span>MEET_OUR_JUDGES</span>
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+
+                  <a
+                    href="https://forms.gle/your-judge-application-form"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pixel-button bg-maximally-yellow text-maximally-black group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 px-6 font-press-start text-xs sm:text-sm"
+                    data-testid="button-apply-judge"
+                  >
+                    <Star className="h-4 w-4" />
+                    <span>APPLY_TO_JUDGE</span>
                     <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </a>
                 </div>
