@@ -4,12 +4,30 @@ import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import TierBadge from '@/components/judges/TierBadge';
 import VerificationIndicator from '@/components/judges/VerificationIndicator';
-import { getJudgeByUsername, getTierLabel } from '@/lib/judgesData';
+import { getTierLabel } from '@/lib/judgesData';
+import { useQuery } from '@tanstack/react-query';
+import type { Judge, JudgeEvent } from '@shared/schema';
 
 const JudgeProfile = () => {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
-  const judge = username ? getJudgeByUsername(username) : undefined;
+  
+  const { data: judge, isLoading } = useQuery<Judge & { topEventsJudged: JudgeEvent[] }>({
+    queryKey: ['/api/judges', username],
+    enabled: !!username,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="minecraft-block bg-cyan-400 text-black px-6 py-3 inline-block animate-pulse">
+            <span className="font-press-start text-sm">LOADING...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!judge) {
     return (
@@ -74,7 +92,7 @@ const JudgeProfile = () => {
                 <div className="text-center">
                   <div className="minecraft-block bg-gradient-to-br from-cyan-400 to-maximally-blue w-48 h-48 mx-auto overflow-hidden mb-4">
                     <img
-                      src={judge.profilePhoto}
+                      src={judge.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${judge.username}`}
                       alt={judge.fullName}
                       className="w-full h-full object-cover"
                     />
@@ -257,7 +275,7 @@ const JudgeProfile = () => {
                           <Award className="h-4 w-4 text-cyan-400" />
                           <span className="font-jetbrains text-sm text-gray-400">Events Judged</span>
                         </div>
-                        <VerificationIndicator verified={judge.verified.eventsJudged} size="sm" />
+                        <VerificationIndicator verified={judge.eventsJudgedVerified} size="sm" />
                       </div>
                       <div className="font-press-start text-2xl text-white">{judge.totalEventsJudged}</div>
                     </div>
@@ -268,7 +286,7 @@ const JudgeProfile = () => {
                           <Users className="h-4 w-4 text-cyan-400" />
                           <span className="font-jetbrains text-sm text-gray-400">Teams Evaluated</span>
                         </div>
-                        <VerificationIndicator verified={judge.verified.teamsEvaluated} size="sm" />
+                        <VerificationIndicator verified={judge.teamsEvaluatedVerified} size="sm" />
                       </div>
                       <div className="font-press-start text-2xl text-white">{judge.totalTeamsEvaluated}</div>
                     </div>
@@ -279,7 +297,7 @@ const JudgeProfile = () => {
                           <Clock className="h-4 w-4 text-cyan-400" />
                           <span className="font-jetbrains text-sm text-gray-400">Mentorship Hours</span>
                         </div>
-                        <VerificationIndicator verified={judge.verified.mentorshipHours} size="sm" />
+                        <VerificationIndicator verified={judge.mentorshipHoursVerified} size="sm" />
                       </div>
                       <div className="font-press-start text-2xl text-white">{judge.totalMentorshipHours}h</div>
                     </div>
@@ -291,7 +309,7 @@ const JudgeProfile = () => {
                             <Star className="h-4 w-4 text-yellow-400" />
                             <span className="font-jetbrains text-sm text-gray-400">Avg Rating</span>
                           </div>
-                          <VerificationIndicator verified={judge.verified.feedbackRating} size="sm" />
+                          <VerificationIndicator verified={judge.feedbackRatingVerified} size="sm" />
                         </div>
                         <div className="font-press-start text-2xl text-white">{judge.averageFeedbackRating}/5.0</div>
                       </div>

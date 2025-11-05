@@ -254,3 +254,91 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
 
 // Export as sampleHackathons for backward compatibility
 export const sampleHackathons = grandIndianHackathonSeason;
+
+export const judges = pgTable('judges', {
+  id: serial('id').primaryKey(),
+  username: text('username').notNull().unique(),
+  
+  fullName: text('full_name').notNull(),
+  profilePhoto: text('profile_photo'),
+  headline: text('headline').notNull(),
+  shortBio: text('short_bio').notNull(),
+  location: text('location').notNull(),
+  currentRole: text('current_role').notNull(),
+  company: text('company').notNull(),
+  
+  primaryExpertise: text('primary_expertise').array().notNull(),
+  secondaryExpertise: text('secondary_expertise').array().notNull().default([]),
+  
+  totalEventsJudged: integer('total_events_judged').notNull().default(0),
+  totalTeamsEvaluated: integer('total_teams_evaluated').notNull().default(0),
+  totalMentorshipHours: integer('total_mentorship_hours').notNull().default(0),
+  yearsOfExperience: integer('years_of_experience').notNull().default(0),
+  averageFeedbackRating: integer('average_feedback_rating'),
+  
+  eventsJudgedVerified: boolean('events_judged_verified').notNull().default(false),
+  teamsEvaluatedVerified: boolean('teams_evaluated_verified').notNull().default(false),
+  mentorshipHoursVerified: boolean('mentorship_hours_verified').notNull().default(false),
+  feedbackRatingVerified: boolean('feedback_rating_verified').notNull().default(false),
+  
+  linkedin: text('linkedin').notNull(),
+  github: text('github'),
+  twitter: text('twitter'),
+  website: text('website'),
+  
+  languagesSpoken: text('languages_spoken').array().notNull().default([]),
+  publicAchievements: text('public_achievements'),
+  mentorshipStatement: text('mentorship_statement').notNull(),
+  availabilityStatus: text('availability_status', { enum: ['available', 'not-available', 'seasonal'] }).notNull().default('available'),
+  
+  tier: text('tier', { enum: ['starter', 'verified', 'senior', 'chief', 'legacy'] }).notNull().default('starter'),
+  isPublished: boolean('is_published').notNull().default(false),
+  
+  email: text('email').notNull(),
+  phone: text('phone'),
+  resume: text('resume'),
+  proofOfJudging: text('proof_of_judging'),
+  timezone: text('timezone'),
+  calendarLink: text('calendar_link'),
+  compensationPreference: text('compensation_preference', { enum: ['volunteer', 'paid', 'negotiable'] }),
+  references: text('references'),
+  conflictOfInterest: text('conflict_of_interest'),
+  agreedToNDA: boolean('agreed_to_nda').notNull().default(false),
+  address: text('address'),
+  
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+export const judgeEvents = pgTable('judge_events', {
+  id: serial('id').primaryKey(),
+  judgeId: integer('judge_id').notNull(),
+  eventName: text('event_name').notNull(),
+  role: text('role').notNull(),
+  date: text('date').notNull(),
+  link: text('link'),
+  verified: boolean('verified').notNull().default(false),
+});
+
+export const insertJudgeSchema = createInsertSchema(judges, {
+  fullName: z.string().min(1, "Full name is required"),
+  headline: z.string().min(1, "Headline is required"),
+  shortBio: z.string().min(10, "Short bio must be at least 10 characters"),
+  location: z.string().min(1, "Location is required"),
+  currentRole: z.string().min(1, "Current role is required"),
+  company: z.string().min(1, "Company is required"),
+  primaryExpertise: z.array(z.string()).min(1, "At least one primary expertise is required"),
+  linkedin: z.string().url("Valid LinkedIn URL is required"),
+  github: z.string().url().optional(),
+  twitter: z.string().url().optional(),
+  website: z.string().url().optional(),
+  email: z.string().email("Valid email is required"),
+  mentorshipStatement: z.string().min(20, "Mentorship statement must be at least 20 characters"),
+  agreedToNDA: z.boolean().refine(val => val === true, "You must agree to the NDA"),
+}).omit({ id: true, createdAt: true });
+
+export const insertJudgeEventSchema = createInsertSchema(judgeEvents).omit({ id: true });
+
+export type InsertJudge = z.infer<typeof insertJudgeSchema>;
+export type Judge = typeof judges.$inferSelect;
+export type InsertJudgeEvent = z.infer<typeof insertJudgeEventSchema>;
+export type JudgeEvent = typeof judgeEvents.$inferSelect;

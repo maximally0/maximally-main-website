@@ -881,6 +881,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/judges", async (_req: Request, res: Response) => {
+    try {
+      const judges = await storage.getPublishedJudges();
+      return res.json(judges);
+    } catch (err: any) {
+      return res.status(500).json({ message: err?.message || 'Failed to fetch judges' });
+    }
+  });
+
+  app.get("/api/judges/:username", async (req: Request, res: Response) => {
+    try {
+      const { username } = req.params;
+      const judge = await storage.getJudgeByUsername(username);
+      
+      if (!judge || !judge.isPublished) {
+        return res.status(404).json({ message: 'Judge not found' });
+      }
+
+      const events = await storage.getJudgeEvents(judge.id);
+      
+      return res.json({ ...judge, topEventsJudged: events });
+    } catch (err: any) {
+      return res.status(500).json({ message: err?.message || 'Failed to fetch judge' });
+    }
+  });
+
+  app.post("/api/judges/apply", async (req: Request, res: Response) => {
+    try {
+      const body = req.body;
+      
+      const existingJudge = await storage.getJudgeByUsername(body.username);
+      if (existingJudge) {
+        return res.status(400).json({ message: 'Username already exists' });
+      }
+
+      const existingEmail = (await storage.getJudges()).find(j => j.email === body.email);
+      if (existingEmail) {
+        return res.status(400).json({ message: 'Email already registered' });
+      }
+
+      const judge = await storage.createJudge(body);
+      
+      if (body.topEventsJudged && Array.isArray(body.topEventsJudged)) {
+        for (const event of body.topEventsJudged) {
+          await storage.createJudgeEvent({
+            judgeId: judge.id,
+            eventName: event.eventName,
+            role: event.role,
+            date: event.date,
+            link: event.link || null,
+            verified: false,
+          });
+        }
+      }
+
+      return res.status(201).json({ 
+        message: 'Application submitted successfully',
+        judgeId: judge.id 
+      });
+    } catch (err: any) {
+      console.error('Judge application error:', err);
+      return res.status(500).json({ message: err?.message || 'Failed to submit application' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

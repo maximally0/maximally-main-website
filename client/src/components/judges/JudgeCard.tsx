@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { MapPin, Award, Users, Clock } from 'lucide-react';
 import TierBadge from './TierBadge';
 import VerificationIndicator from './VerificationIndicator';
-import type { Judge } from '@/lib/judgesData';
+import type { Judge } from '@shared/schema';
 
 interface JudgeCardProps {
   judge: Judge;
@@ -18,7 +18,7 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
       <div className="flex justify-center mb-4">
         <div className="minecraft-block bg-gradient-to-br from-cyan-400 to-maximally-blue w-20 h-20 mx-auto overflow-hidden group-hover:from-maximally-yellow group-hover:to-maximally-red transition-all">
           <img
-            src={judge.profilePhoto}
+            src={judge.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${judge.username}`}
             alt={judge.fullName}
             className="w-full h-full object-cover"
           />
@@ -68,7 +68,7 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Award className="h-3 w-3 text-cyan-400" />
-            {judge.verified.eventsJudged && <VerificationIndicator verified={true} size="sm" />}
+            {judge.eventsJudgedVerified && <VerificationIndicator verified={true} size="sm" />}
           </div>
           <div className="font-press-start text-xs text-cyan-400">{judge.totalEventsJudged}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Events</div>
@@ -77,7 +77,7 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Users className="h-3 w-3 text-cyan-400" />
-            {judge.verified.teamsEvaluated && <VerificationIndicator verified={true} size="sm" />}
+            {judge.teamsEvaluatedVerified && <VerificationIndicator verified={true} size="sm" />}
           </div>
           <div className="font-press-start text-xs text-cyan-400">{judge.totalTeamsEvaluated}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Teams</div>
@@ -86,7 +86,7 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Clock className="h-3 w-3 text-cyan-400" />
-            {judge.verified.mentorshipHours && <VerificationIndicator verified={true} size="sm" />}
+            {judge.mentorshipHoursVerified && <VerificationIndicator verified={true} size="sm" />}
           </div>
           <div className="font-press-start text-xs text-cyan-400">{judge.totalMentorshipHours}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Hours</div>

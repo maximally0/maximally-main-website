@@ -4,7 +4,9 @@ import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import { Link } from 'react-router-dom';
 import JudgeCard from '@/components/judges/JudgeCard';
-import { getPublishedJudges, type JudgeTier, type ExpertiseArea } from '@/lib/judgesData';
+import { type JudgeTier, type ExpertiseArea } from '@/lib/judgesData';
+import { useQuery } from '@tanstack/react-query';
+import type { Judge } from '@shared/schema';
 
 const PeopleJudges = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,8 +16,10 @@ const PeopleJudges = () => {
   const [showFilters, setShowFilters] = useState(false);
   const itemsPerPage = 12;
 
-  // Get all published judges from mock data
-  const allJudges = getPublishedJudges();
+  // Fetch judges from API
+  const { data: allJudges = [], isLoading } = useQuery<Judge[]>({
+    queryKey: ['/api/judges'],
+  });
 
   // All possible expertise areas for filter
   const expertiseAreas: ExpertiseArea[] = [
@@ -268,7 +272,17 @@ const PeopleJudges = () => {
 
             {/* Judges Grid Section */}
             <section id="judges-section">
-              {currentJudges.length > 0 ? (
+              {isLoading ? (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+                  {[...Array(8)].map((_, i) => (
+                    <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-700 p-6 animate-pulse">
+                      <div className="h-32 bg-gray-800 mb-4"></div>
+                      <div className="h-4 bg-gray-800 mb-2"></div>
+                      <div className="h-3 bg-gray-800"></div>
+                    </div>
+                  ))}
+                </div>
+              ) : currentJudges.length > 0 ? (
                 <>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
                     {currentJudges.map((judge) => (

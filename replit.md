@@ -93,6 +93,20 @@ The application follows a modern full-stack monolith approach with clear separat
 
 ## Changelog
 
+- November 5, 2025. **JUDGE SYSTEM IMPLEMENTATION**: Built complete judge system for Maximally platform
+  - Created judge database schema with public/private fields (profile photo, expertise, stats, NDA agreement)
+  - Implemented judge tier progression system: Starter → Verified → Senior → Chief → Legacy
+  - Built comprehensive API endpoints: GET /api/judges (list), GET /api/judges/:username (profile), POST /api/judges/apply (application)
+  - Created judge browse page (/people/judges) with search, filtering, and tier tabs
+  - Built individual judge profile pages (/people/judges/:username) with public/private info sections
+  - Implemented comprehensive judge application form (/judges/apply) with:
+    - Public Info section: username, bio, expertise, achievements, languages
+    - Private Info section: contact details, compensation preference, NDA agreement
+    - Dynamic top events array with add/remove functionality
+    - React Hook Form + Zod validation for all fields
+    - Comma-separated languages input that converts to array
+  - Fixed router compatibility (Wouter → React Router) for consistent navigation
+  - All judge pages integrated with backend storage and proper loading states
 - November 5, 2025. **GITHUB IMPORT SETUP**: Successfully configured fresh GitHub import for Replit environment
   - Installed all npm dependencies (616 packages)
   - Configured Vite development server to run on 0.0.0.0:5000 with strictPort for Replit proxy compatibility
