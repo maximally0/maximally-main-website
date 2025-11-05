@@ -1,4 +1,3 @@
-
 import BlogPost from '@/components/BlogPost';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
