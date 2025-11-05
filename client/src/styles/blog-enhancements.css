@@ -70,9 +70,12 @@
 }
 
 .blog-dark-theme p,
-.blog-dark-theme li,
+.blog-dark-theme li {
+  color: #ffffff;
+}
+
 .blog-dark-theme span {
-  color: #d1d5db;
+  color: inherit;
 }
 
 .blog-dark-theme .lead {
