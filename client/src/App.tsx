@@ -133,6 +133,7 @@ import PartnerNetwork from './pages/PartnerNetwork';
 import People from './pages/People';
 import PeopleCore from './pages/PeopleCore';
 import PeopleJudges from './pages/PeopleJudges';
+import JudgeProfile from './pages/JudgeProfile';
 import Resources from './pages/Resources';
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
@@ -339,6 +340,7 @@ const App = () => {
             <Route path="/people" element={<People />} />
             <Route path="/people/core" element={<PeopleCore />} />
             <Route path="/people/judges" element={<PeopleJudges />} />
+            <Route path="/judges/:username" element={<JudgeProfile />} />
             <Route path="/resources" element={<Resources />} />
             {/* Legacy redirect */}
             <Route path="/featured" element={<Navigate to="/people" replace />} />
