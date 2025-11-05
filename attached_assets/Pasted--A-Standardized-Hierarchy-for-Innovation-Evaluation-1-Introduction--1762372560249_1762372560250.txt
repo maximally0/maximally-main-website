@@ -1,0 +1,264 @@
+---
+
+### *A Standardized Hierarchy for Innovation Evaluation*
+
+---
+
+## **1. Introduction**
+
+The Maximally Judge Tier Framework defines the hierarchy, responsibilities, and criteria for all judges participating in Maximally-affiliated innovation events, hackathons, and programs.
+
+This structure ensures credibility, transparency, and consistency across all judging panels while maintaining pathways for professional growth within the ecosystem.
+
+The framework establishes **five distinct tiers** of judges, reflecting their experience, expertise, and leadership in innovation evaluation.
+
+---
+
+## **2. Objectives of the Tier System**
+
+1. **Standardization:**
+    
+    To establish a clear and consistent benchmark for judging quality across events.
+    
+2. **Credibility:**
+    
+    To ensure that participants are evaluated by qualified and proven experts.
+    
+3. **Progression:**
+    
+    To enable emerging mentors and professionals to grow into senior judging roles.
+    
+4. **Transparency:**
+    
+    To give organizers and participants clear visibility into a judge’s experience and authority.
+    
+5. **Recognition:**
+    
+    To honor individuals who contribute meaningfully to the innovation and builder ecosystem.
+    
+
+---
+
+## **3. Overview of Tiers**
+
+| Tier | Title | Description | Badge Color |
+| --- | --- | --- | --- |
+| **Level 1** | Starter Judge | Entry-level professionals or early mentors beginning their judging journey. | Green |
+| **Level 2** | Verified Judge | Experienced professionals with proven domain expertise and prior judging or mentoring experience. | Blue |
+| **Level 3** | Senior Judge | Established leaders with extensive professional or entrepreneurial backgrounds and consistent judging experience. | Purple |
+| **Level 4** | Chief Judge | Highly credible industry or academic leaders who oversee judging panels and set quality standards. | Gold |
+| **Level 5** | Legacy Judge | Distinguished figures recognized for exceptional contributions to innovation and mentorship over time. | Red |
+
+---
+
+## **4. Tier Descriptions and Criteria**
+
+### **Level 1 — Starter Judge**
+
+**Purpose:**
+
+To onboard emerging professionals who demonstrate strong potential, builder experience, and enthusiasm to mentor.
+
+**Typical Profile:**
+
+- Early-career professionals, recent graduates, or startup builders.
+- Individuals with hackathon or competition participation experience.
+
+**Primary Responsibilities:**
+
+- Assist senior judges during evaluations.
+- Review early-stage or beginner-level project submissions.
+- Learn evaluation frameworks and mentoring best practices.
+
+**Eligibility Criteria:**
+
+- Demonstrated experience in building, designing, or researching projects.
+- Strong motivation to mentor and contribute to the builder community.
+- Basic understanding of innovation and product development.
+
+**Advancement Requirements:**
+
+- Successful participation in at least two Maximally events.
+- Positive feedback from senior judges or organizers.
+
+---
+
+### **Level 2 — Verified Judge**
+
+**Purpose:**
+
+To engage established professionals and mentors capable of providing high-quality evaluation and guidance.
+
+**Typical Profile:**
+
+- Founders, engineers, researchers, designers, or educators with tangible achievements.
+- Individuals with prior judging or mentoring experience.
+
+**Primary Responsibilities:**
+
+- Evaluate submissions in official judging rounds.
+- Provide structured, actionable feedback to participants.
+- Represent Maximally standards during events.
+
+**Eligibility Criteria:**
+
+- At least 2–3 years of professional experience in a relevant field.
+- Evidence of judging, mentoring, or leadership in prior events.
+- Publicly verifiable professional presence (LinkedIn, website, portfolio).
+
+**Advancement Requirements:**
+
+- Judged 3 or more Maximally or partner events.
+- Demonstrated consistency, reliability, and feedback quality.
+
+---
+
+### **Level 3 — Senior Judge**
+
+**Purpose:**
+
+To appoint experienced professionals and innovators capable of leading judging tracks and mentoring new judges.
+
+**Typical Profile:**
+
+- Mid to senior-level professionals with 7+ years of experience.
+- Startup founders, senior engineers, or research leads.
+
+**Primary Responsibilities:**
+
+- Lead judging tracks and supervise Starter and Verified Judges.
+- Define and refine evaluation rubrics for specific tracks.
+- Mentor newer judges in assessment methodology and communication.
+
+**Eligibility Criteria:**
+
+- Minimum 7 years of professional experience or equivalent impact.
+- Prior involvement as a Verified Judge in at least 3 events.
+- Proven mentorship or leadership experience.
+- Recognized expertise in one or more domains (AI, design, systems, etc.).
+
+**Advancement Requirements:**
+
+- Nominated by existing Chief or Senior Judges.
+- Consistent record of quality feedback and participant satisfaction.
+
+---
+
+### **Level 4 — Chief Judge**
+
+**Purpose:**
+
+To oversee and maintain the integrity, ethics, and quality of the judging process at the highest professional level.
+
+**Typical Profile:**
+
+- Senior leaders, professors, investors, or founders with global or institutional credibility.
+- Individuals recognized for thought leadership and consistent innovation contributions.
+
+**Primary Responsibilities:**
+
+- Oversee entire event judging processes.
+- Ensure fairness, consistency, and adherence to Maximally judging standards.
+- Conduct judge training and orientation sessions.
+- Represent Maximally in conferences, publications, and media appearances.
+
+**Eligibility Criteria:**
+
+- 10+ years of experience or equivalent leadership impact.
+- Multiple verified judging experiences across events and institutions.
+- Endorsement from at least two Senior or Chief Judges.
+- Proven ethical conduct and mentoring record.
+
+**Advancement Requirements:**
+
+- Direct nomination and review by Maximally’s core team.
+- Demonstrated excellence in both judging and community contribution.
+
+---
+
+### **Level 5 — Legacy Judge**
+
+**Purpose:**
+
+To honor exceptional individuals whose long-term contributions have shaped the innovation and builder ecosystem.
+
+**Typical Profile:**
+
+- Founders, educators, or researchers who have led transformative work in technology, design, or education.
+- Mentors who have consistently supported Maximally’s mission over multiple years.
+
+**Primary Responsibilities:**
+
+- Serve as mentors and advisors to the judging community.
+- Guide the evolution of Maximally’s judging standards and frameworks.
+- Participate in special ceremonies, panels, and legacy initiatives.
+
+**Eligibility Criteria:**
+
+- Recognized global impact in technology, innovation, or education.
+- Proven history of ethical leadership, mentorship, and ecosystem building.
+- Selected by Maximally’s founding or executive committee.
+
+**Privileges:**
+
+- Lifetime recognition.
+- Permanent listing under the “Legacy Judges” section of Maximally’s website.
+- Access to exclusive events and strategic forums.
+
+---
+
+## **5. Advancement Pathway**
+
+Judges may advance through tiers based on demonstrated performance, verified experience, and contributions to Maximally events.
+
+**Advancement Factors:**
+
+- Number of events judged.
+- Quality of participant and organizer feedback.
+- Mentorship impact and initiative.
+- Peer recommendations.
+- Demonstrated alignment with Maximally’s mission and ethics.
+
+**Promotion Process:**
+
+1. Internal review by the Maximally judging committee.
+2. Verification of credentials and past event participation.
+3. Optional nomination from higher-tier judges.
+4. Formal confirmation and public tier update.
+
+---
+
+## **6. Governance and Review**
+
+- The **Maximally Judging Committee** oversees verification, tier promotion, and conflict resolution.
+- All judges are subject to periodic review to ensure continued compliance with Maximally’s standards.
+- Ethical breaches, inactivity, or repeated participant complaints may result in demotion or suspension.
+- Tier assignments are at the discretion of Maximally and may be adjusted based on evolving standards.
+
+---
+
+## **7. Visual Identity and Representation**
+
+Each tier will have a corresponding **badge color** and **title display** on the official judge profile.
+
+| Tier | Title | Color | Example Display |
+| --- | --- | --- | --- |
+| Level 1 | Starter Judge | Green | “Starter Judge — Emerging Mentor” |
+| Level 2 | Verified Judge | Blue | “Verified Judge — Product & Innovation” |
+| Level 3 | Senior Judge | Purple | “Senior Judge — AI & Systems” |
+| Level 4 | Chief Judge | Gold | “Chief Judge — Global Innovation Panel” |
+| Level 5 | Legacy Judge | Red | “Legacy Judge — Lifetime Contributor” |
+
+---
+
+## **8. Closing Statement**
+
+The **Maximally Judge Tier Framework** establishes a global benchmark for credibility and mentorship in the innovation ecosystem.
+
+It creates an inclusive yet meritocratic structure — allowing emerging builders to grow into respected evaluators while ensuring that the most credible minds continue to set the standard.
+
+Every Maximally Judge represents more than expertise.
+
+They embody the shared belief that *innovation deserves to be judged by those who’ve built before.*
+
+---
