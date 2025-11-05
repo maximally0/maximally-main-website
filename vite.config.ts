@@ -29,6 +29,9 @@ export default defineConfig(async ({ mode }) => {
       emptyOutDir: true,
     },
     server: {
+      host: '0.0.0.0',
+      port: 5173,
+      strictPort: false,
       hmr: {
         overlay: false,
       },
