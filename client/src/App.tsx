@@ -27,6 +27,7 @@ import Profile from './pages/Profile';
 import AdminPanel from './pages/AdminPanel';
 import RequireAuth from '@/components/RequireAuth';
 import MyProfileRedirect from './pages/MyProfileRedirect';
+import Judges from './pages/Judges';
 
 import ThankYou from './pages/ThankYou';
 import Bootcamps from '@/pages/Bootcamps';
@@ -329,6 +330,7 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/story" element={<Story />} />
             <Route path="/about" element={<About />} />
+            <Route path="/judges" element={<Judges />} />
             <Route path="/support" element={<Support />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />

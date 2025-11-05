@@ -80,6 +80,14 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/judges"
+                  className="hover:text-maximally-yellow transition-colors block"
+                >
+                  Become a Judge
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/mfhop"
                   className="hover:text-maximally-yellow transition-colors block"
                 >
