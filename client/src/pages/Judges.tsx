@@ -179,25 +179,25 @@ const Judges = () => {
                 icon: <Rocket className="h-12 w-12" />,
                 title: "Built Something Real.",
                 description: "People who've shipped, scaled, or led something that mattered.",
-                color: "maximally-red",
+                bgClass: "bg-maximally-red",
               },
               {
                 icon: <Users className="h-12 w-12" />,
                 title: "Teach and Mentor.",
                 description: "Builders who lift others with insight, not just opinion.",
-                color: "maximally-yellow",
+                bgClass: "bg-maximally-yellow",
               },
               {
                 icon: <Target className="h-12 w-12" />,
                 title: "Think Systems, Not Scores.",
                 description: "Evaluation rooted in frameworks, not bias.",
-                color: "green-500",
+                bgClass: "bg-green-500",
               },
               {
                 icon: <Award className="h-12 w-12" />,
                 title: "Represent the 0.1%.",
                 description: "The best of the best — globally verified and publicly visible.",
-                color: "purple-500",
+                bgClass: "bg-purple-500",
               },
             ].map((item, index) => (
               <motion.div
@@ -208,7 +208,7 @@ const Judges = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="pixel-card bg-black border-2 border-white p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-red"
               >
-                <div className={`minecraft-block bg-${item.color} text-black w-16 h-16 mx-auto mb-4 flex items-center justify-center`}>
+                <div className={`minecraft-block ${item.bgClass} text-black w-16 h-16 mx-auto mb-4 flex items-center justify-center`}>
                   {item.icon}
                 </div>
                 <h3 className="font-press-start text-sm mb-4 text-white">
