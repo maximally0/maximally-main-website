@@ -93,6 +93,18 @@ The application follows a modern full-stack monolith approach with clear separat
 
 ## Changelog
 
+- November 5, 2025. **BECOME A MAXIMALLY JUDGE PAGE**: Created comprehensive judge recruitment and credibility system page
+  - Built complete `/judges` page with 8 sections following detailed specification
+  - Sections include: Hero, Why This Exists, What Makes a Judge, How It Works, Judge Profile, For Organizers, The Vision, Join the Standard
+  - Implemented cinematic design with red/gold/black color palette, pixel fonts (Press Start 2P, JetBrains Mono)
+  - Added Framer Motion animations for scroll-triggered reveals and floating pixel backgrounds
+  - All CTAs link to Tally form (https://tally.so/r/wkjbE9) for judge applications
+  - Included SEO optimization with proper meta tags and keywords
+  - Responsive design with mobile-first approach and proper breakpoints
+  - Added "Become a Judge" link to Footer Community section
+  - Route configured at `/judges` in App.tsx
+  - Fixed Tailwind dynamic class issue by using explicit bgClass properties
+  - Page showcases Maximally's vision of building a global credibility layer for innovation judging
 - September 30, 2025. **REPLIT ENVIRONMENT SETUP**: Configured application for Replit environment
   - Made Supabase integration optional to allow app to run without external database credentials
   - Modified `supabaseClient.ts` to gracefully handle missing environment variables
