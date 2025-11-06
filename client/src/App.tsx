@@ -133,6 +133,7 @@ import PartnerNetwork from './pages/PartnerNetwork';
 import People from './pages/People';
 import PeopleCore from './pages/PeopleCore';
 import PeopleJudges from './pages/PeopleJudges';
+import Judges from './pages/Judges';
 import JudgeProfile from './pages/JudgeProfile';
 import JudgeApplicationForm from './pages/JudgeApplicationForm';
 import Resources from './pages/Resources';
@@ -341,6 +342,7 @@ const App = () => {
             <Route path="/people" element={<People />} />
             <Route path="/people/core" element={<PeopleCore />} />
             <Route path="/people/judges" element={<PeopleJudges />} />
+            <Route path="/judges" element={<Judges />} />
             <Route path="/judges/:username" element={<JudgeProfile />} />
             <Route path="/judges/apply" element={<JudgeApplicationForm />} />
             <Route path="/resources" element={<Resources />} />

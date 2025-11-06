@@ -1179,7 +1179,7 @@ const Index = () => {
                   </Link>
 
                   <Link
-                    to="/judges/apply"
+                    to="/judges"
                     className="pixel-button bg-maximally-yellow text-maximally-black group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 px-6 font-press-start text-xs sm:text-sm"
                     data-testid="button-apply-judge"
                   >
