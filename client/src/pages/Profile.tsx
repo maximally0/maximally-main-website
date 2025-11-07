@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail, Loader2, Download, ExternalLink, Award, Eye, Shield, Star, AlertCircle } from 'lucide-react';
+import JudgeBadge from '@/components/judges/JudgeBadge';
 import { format } from 'date-fns';
 import type { Achievement, SelectHackathon } from '@shared/schema';
 import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut } from '@/lib/supabaseClient';
@@ -587,6 +588,24 @@ export default function Profile() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
+  // Fetch judge information if user is a judge
+  const { data: judgeData } = useQuery({
+    queryKey: ['judge-info', username],
+    queryFn: async () => {
+      if (!username || dbProfile?.role !== 'judge') return null;
+      
+      try {
+        const response = await fetch(`/api/judges/${username}`);
+        if (!response.ok) return null;
+        
+        return response.json();
+      } catch {
+        return null;
+      }
+    },
+    enabled: !!username && dbProfile?.role === 'judge'
+  });
+
   if (profileLoading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-red-500" /></div>;
   if (!dbProfile) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -692,6 +711,14 @@ export default function Profile() {
                       <span>ADMIN</span>
                     </div>
                   )}
+                  {dbProfile.role === 'judge' && judgeData && (
+                    <JudgeBadge 
+                      tier={judgeData.tier} 
+                      size="md" 
+                      showLabel={true}
+                      className="animate-pulse"
+                    />
+                  )}
                 </div>
                 <p className="text-maximally-yellow font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 break-all">@{userProfile.username}</p>
               </div>
@@ -709,6 +736,15 @@ export default function Profile() {
               {isOwner && (
                 <div className="flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2 md:gap-3">
                   <EditProfileDialog profile={userProfile} onSave={handleSaveProfile} />
+                  {dbProfile.role === 'judge' && (
+                    <a
+                      href={`/judge/${userProfile.username}`}
+                      className="pixel-button bg-cyan-600 text-white hover:bg-cyan-700 font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300 flex items-center gap-2"
+                    >
+                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                      VIEW_JUDGE_PROFILE
+                    </a>
+                  )}
                   <button
                     onClick={async () => { await signOut(); window.location.href = '/'; }}
                     className="pixel-button bg-maximally-yellow text-maximally-black hover:bg-maximally-yellow/90 font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300"
@@ -868,38 +904,44 @@ export default function Profile() {
 
           <TabsContent value="overview" className="space-y-8">
             {/* Stats Dashboard */}
-            <div className="bg-gray-900/50 border-2 border-maximally-red/50 rounded-lg p-6">
+            <div className="minecraft-block bg-black border-2 border-maximally-red p-6">
               <h3 className="font-press-start text-sm text-maximally-red mb-6 flex items-center gap-2">
                 <Trophy className="w-4 h-4" />
                 STATS_OVERVIEW
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-maximally-red/10 border-2 border-maximally-red/30 rounded-lg p-4 text-center hover:border-maximally-red transition-colors">
-                  <Award className="w-12 h-12 text-maximally-red mx-auto mb-3" />
-                  <div className="font-press-start text-2xl text-maximally-red mb-1">
+                <div className="minecraft-block bg-gray-900 border-2 border-maximally-red p-6 text-center hover:border-maximally-yellow hover:scale-105 transition-all duration-300 group">
+                  <div className="minecraft-block bg-maximally-red w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:animate-bounce">
+                    <Award className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="font-press-start text-3xl text-maximally-red mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.certificates?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-maximally-red/80">CERTIFICATES</div>
-                  <div className="font-jetbrains text-xs text-gray-400 mt-1">Total earned</div>
+                  <div className="font-press-start text-xs text-maximally-red mb-1">CERTIFICATES</div>
+                  <div className="font-jetbrains text-xs text-gray-400">Total earned</div>
                 </div>
                 
-                <div className="bg-maximally-blue/10 border-2 border-maximally-blue/30 rounded-lg p-4 text-center hover:border-maximally-blue transition-colors">
-                  <Trophy className="w-12 h-12 text-maximally-blue mx-auto mb-3" />
-                  <div className="font-press-start text-2xl text-maximally-blue mb-1">
+                <div className="minecraft-block bg-gray-900 border-2 border-maximally-blue p-6 text-center hover:border-cyan-400 hover:scale-105 transition-all duration-300 group">
+                  <div className="minecraft-block bg-maximally-blue w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:animate-bounce">
+                    <Trophy className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="font-press-start text-3xl text-maximally-blue mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.hackathons?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-maximally-blue/80">HACKATHONS</div>
-                  <div className="font-jetbrains text-xs text-gray-400 mt-1">Participated</div>
+                  <div className="font-press-start text-xs text-maximally-blue mb-1">HACKATHONS</div>
+                  <div className="font-jetbrains text-xs text-gray-400">Participated</div>
                 </div>
                 
-                <div className="bg-maximally-yellow/10 border-2 border-maximally-yellow/30 rounded-lg p-4 text-center hover:border-maximally-yellow transition-colors">
-                  <Star className="w-12 h-12 text-maximally-yellow mx-auto mb-3" />
-                  <div className="font-press-start text-2xl text-maximally-yellow mb-1">
+                <div className="minecraft-block bg-gray-900 border-2 border-maximally-yellow p-6 text-center hover:border-orange-400 hover:scale-105 transition-all duration-300 group">
+                  <div className="minecraft-block bg-maximally-yellow w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:animate-bounce">
+                    <Star className="w-8 h-8 text-black" />
+                  </div>
+                  <div className="font-press-start text-3xl text-maximally-yellow mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.achievements?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-maximally-yellow/80">ACHIEVEMENTS</div>
-                  <div className="font-jetbrains text-xs text-gray-400 mt-1">Unlocked</div>
+                  <div className="font-press-start text-xs text-maximally-yellow mb-1">ACHIEVEMENTS</div>
+                  <div className="font-jetbrains text-xs text-gray-400">Unlocked</div>
                 </div>
               </div>
             </div>

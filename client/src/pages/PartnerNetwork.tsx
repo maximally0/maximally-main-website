@@ -193,7 +193,9 @@ const PartnerNetwork = () => {
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <a
-                  href="#apply"
+                  href="https://forms.gle/Pcxr6vDVuN9GLjav5"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   data-testid="button-apply-partner"
                   className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-3 hover:scale-110 transform transition-all hover:shadow-2xl hover:shadow-maximally-red/50 h-16 px-10 font-press-start text-sm sm:text-base relative overflow-hidden"
                 >
@@ -206,7 +208,7 @@ const PartnerNetwork = () => {
                 <a
                   href="#benefits"
                   data-testid="button-learn-benefits"
-                  className="pixel-button bg-black border-4 border-maximally-red text-maximally-red group flex items-center justify-center gap-3 hover:scale-110 transform transition-all hover:bg-maximally-red hover:text-white hover:shadow-2xl hover:shadow-maximally-red/50 h-16 px-10 font-press-start text-sm sm:text-base"
+                  className="pixel-button bg-black border-4 border-maximally-red text-white group flex items-center justify-center gap-3 hover:scale-110 transform transition-all hover:bg-maximally-red hover:text-black hover:shadow-2xl hover:shadow-maximally-red/50 h-16 px-10 font-press-start text-sm sm:text-base"
                 >
                   <Book className="h-6 w-6 group-hover:animate-pulse" />
                   <span>LEARN_MORE</span>
@@ -429,7 +431,7 @@ const PartnerNetwork = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="https://forms.gle/partnership"
+                  href="https://forms.gle/Pcxr6vDVuN9GLjav5"
                   target="_blank"
                   rel="noopener noreferrer"
                   data-testid="button-apply-now"
@@ -443,7 +445,7 @@ const PartnerNetwork = () => {
                 <Link
                   href="/contact"
                   data-testid="button-contact"
-                  className="pixel-button bg-black border-2 border-maximally-red text-maximally-red group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-white h-16 px-10 font-press-start text-base"
+                  className="pixel-button bg-black border-2 border-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-black h-16 px-10 font-press-start text-base"
                 >
                   <MessageSquare className="h-6 w-6" />
                   <span>CONTACT_US</span>

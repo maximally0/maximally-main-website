@@ -11,17 +11,25 @@ interface JudgeCardProps {
 const JudgeCard = ({ judge }: JudgeCardProps) => {
   return (
     <Link
-      to={`/judges/${judge.username}`}
-      className="pixel-card bg-black border-2 border-cyan-400 p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow group block"
+      to={`/judge/${judge.username}`}
+      className="pixel-card bg-black p-6 hover:scale-105 transition-all duration-300 group block"
     >
       {/* Profile Photo */}
       <div className="flex justify-center mb-4">
         <div className="minecraft-block bg-gradient-to-br from-cyan-400 to-maximally-blue w-20 h-20 mx-auto overflow-hidden group-hover:from-maximally-yellow group-hover:to-maximally-red transition-all">
-          <img
-            src={judge.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${judge.username}`}
-            alt={judge.fullName}
-            className="w-full h-full object-cover"
-          />
+          {judge.profilePhoto ? (
+            <img
+              src={judge.profilePhoto}
+              alt={judge.fullName}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <span className="font-press-start text-2xl text-white">
+                {judge.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 

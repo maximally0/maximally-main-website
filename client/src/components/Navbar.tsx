@@ -6,19 +6,35 @@ import { useAuth } from "@/contexts/AuthContext";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 10) {
+      const currentScrollY = window.scrollY;
+      
+      // Update scrolled state for styling
+      if (currentScrollY > 10) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
+
+      // Hide/show navbar based on scroll direction
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down & past 100px - hide navbar
+        setIsVisible(false);
+      } else {
+        // Scrolling up - show navbar
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -32,10 +48,17 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
   
   const isLoggedIn = !!user && !loading;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : '/profile';
+
+  // Refresh profile when user changes to ensure judge role is detected
+  useEffect(() => {
+    if (user && !loading) {
+      refreshProfile();
+    }
+  }, [user?.id]);
 
   const menuItems = [
     { path: "/", label: "HOME", color: "#E50914" },
@@ -46,7 +69,9 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${
+      isVisible ? 'top-0' : '-top-24'
+    } ${
       isScrolled ? "py-2 sm:py-2 bg-black/95 backdrop-blur-md border-b-2 border-maximally-red shadow-lg" : "py-3 sm:py-3 bg-black/80 backdrop-blur-xl shadow-lg lg:shadow-none lg:backdrop-blur-sm lg:bg-black/90"
     }`}>
       <div className="container mx-auto px-4">
@@ -77,13 +102,24 @@ const Navbar = () => {
                 LOADING...
               </div>
             ) : isLoggedIn ? (
-              <a
-                href={profileUrl}
-                className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
-                data-testid="button-profile"
-              >
-                PROFILE
-              </a>
+              <div className="flex items-center gap-2">
+                {profile?.role === 'judge' && (
+                  <a
+                    href="/judge-dashboard"
+                    className="pixel-button bg-maximally-red border-2 border-gray-700 text-white hover:border-maximally-yellow hover:bg-maximally-yellow hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                    data-testid="button-judge-dashboard"
+                  >
+                    JUDGE
+                  </a>
+                )}
+                <a
+                  href={profileUrl}
+                  className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                  data-testid="button-profile"
+                >
+                  PROFILE
+                </a>
+              </div>
             ) : (
               <a
                 href="/login"
@@ -128,14 +164,26 @@ const Navbar = () => {
                     LOADING...
                   </div>
                 ) : isLoggedIn ? (
-                  <a
-                    href={profileUrl}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
-                    data-testid="button-profile-mobile"
-                  >
-                    PROFILE
-                  </a>
+                  <div className="space-y-4">
+                    {profile?.role === 'judge' && (
+                      <a
+                        href="/judge-dashboard"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="pixel-button bg-maximally-red text-white font-press-start text-center py-4 px-6 hover:bg-maximally-yellow hover:text-black transition-all duration-300 hover:scale-105 block"
+                        data-testid="button-judge-dashboard-mobile"
+                      >
+                        JUDGE DASHBOARD
+                      </a>
+                    )}
+                    <a
+                      href={profileUrl}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105 block"
+                      data-testid="button-profile-mobile"
+                    >
+                      PROFILE
+                    </a>
+                  </div>
                 ) : (
                   <a
                     href="/login"

@@ -1,4 +1,5 @@
 import { users, type User, type InsertUser, judges, type Judge, type InsertJudge, judgeEvents, type JudgeEvent, type InsertJudgeEvent } from "@shared/schema";
+import { SupabaseStorage } from "./supabase-storage";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -128,4 +129,43 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Simple storage initialization that happens after environment variables are loaded
+let _storage: IStorage | null = null;
+
+function getStorage(): IStorage {
+  if (_storage) {
+    return _storage;
+  }
+
+  try {
+    console.log('🔍 Initializing storage...');
+    console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'SET' : 'NOT SET');
+    console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET');
+    
+    if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      console.log('🔄 Attempting to initialize Supabase storage...');
+      _storage = new SupabaseStorage();
+      console.log('✅ Using Supabase storage for judges system');
+    } else {
+      console.log('⚠️  Using memory storage - set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for persistent storage');
+      _storage = new MemStorage();
+    }
+  } catch (error) {
+    console.error('❌ Failed to initialize Supabase storage, falling back to memory storage:', error);
+    _storage = new MemStorage();
+  }
+
+  return _storage;
+}
+
+export const storage = {
+  getUser: (id: number) => getStorage().getUser(id),
+  getUserByUsername: (username: string) => getStorage().getUserByUsername(username),
+  createUser: (user: InsertUser) => getStorage().createUser(user),
+  getJudges: () => getStorage().getJudges(),
+  getPublishedJudges: () => getStorage().getPublishedJudges(),
+  getJudgeByUsername: (username: string) => getStorage().getJudgeByUsername(username),
+  createJudge: (judge: InsertJudge) => getStorage().createJudge(judge),
+  getJudgeEvents: (judgeId: number) => getStorage().getJudgeEvents(judgeId),
+  createJudgeEvent: (event: InsertJudgeEvent) => getStorage().createJudgeEvent(event),
+};

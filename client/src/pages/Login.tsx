@@ -206,8 +206,17 @@ export default function Login() {
           return;
         }
   // Sign up successful
-        // Redirect to home page after successful signup
-        navigate('/');
+        // If email confirmation is required, there may be no session yet.
+        try {
+          const { data: { session } } = await supabase!.auth.getSession();
+          if (!session) {
+            navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+          } else {
+            navigate('/');
+          }
+        } catch {
+          navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+        }
       } else {
   // Attempting to sign in user
         const result = await signIn(email, password);
@@ -458,6 +467,17 @@ export default function Login() {
                     required
                     data-testid="input-password"
                   />
+                  {!isSignUp && (
+                    <div className="text-right mt-1">
+                      <button
+                        type="button"
+                        onClick={() => navigate('/forgot-password')}
+                        className="font-press-start text-xs text-gray-400 hover:text-maximally-blue"
+                      >
+                        FORGOT_PASSWORD?
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {isSignUp && (

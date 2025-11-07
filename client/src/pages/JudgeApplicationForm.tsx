@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Info, Loader2, Plus, X } from 'lucide-react';
@@ -22,11 +23,24 @@ interface JudgeEvent {
 
 const JudgeApplicationForm = () => {
   const navigate = useNavigate();
+  const { user, profile, loading: authLoading } = useAuth();
   const [formSection, setFormSection] = useState<'public' | 'private'>('public');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [topEventsJudged, setTopEventsJudged] = useState<JudgeEvent[]>([]);
   const [languagesInput, setLanguagesInput] = useState('');
   const { toast } = useToast();
+
+  // Require login to access this form
+  useEffect(() => {
+    if (!authLoading && !user) {
+      toast({
+        title: "Login Required",
+        description: "You must be logged in to apply as a judge.",
+        variant: "destructive"
+      });
+      navigate('/login');
+    }
+  }, [user, authLoading, navigate, toast]);
 
   const expertiseAreas: ExpertiseArea[] = [
     'AI', 'Product', 'Systems', 'Education', 'Design', 'Backend',
@@ -66,6 +80,56 @@ const JudgeApplicationForm = () => {
       agreedToNDA: false,
     },
   });
+
+  // Auto-fill form with profile data
+  useEffect(() => {
+    if (profile && user) {
+      console.log('Auto-filling form with profile data:', profile);
+      
+      // Helper to format social URLs
+      const formatSocialUrl = (username: string | null | undefined, platform: 'linkedin' | 'github' | 'twitter'): string => {
+        if (!username) return '';
+        const cleanUsername = username.replace(/^@/, '').trim();
+        if (!cleanUsername) return '';
+        
+        // If it's already a URL, return it
+        if (cleanUsername.startsWith('http://') || cleanUsername.startsWith('https://')) {
+          return cleanUsername;
+        }
+        
+        // Otherwise, construct the URL
+        const baseUrls = {
+          linkedin: 'https://linkedin.com/in/',
+          github: 'https://github.com/',
+          twitter: 'https://twitter.com/'
+        };
+        return baseUrls[platform] + cleanUsername;
+      };
+
+      // Set form values from profile (only fields that exist in Profile type)
+      if (profile.username) form.setValue('username', profile.username);
+      if (profile.full_name) form.setValue('fullName', profile.full_name);
+      if (profile.avatar_url) form.setValue('profilePhoto', profile.avatar_url);
+      if (profile.location) form.setValue('location', profile.location);
+      if (profile.bio) form.setValue('shortBio', profile.bio);
+      if (user.email) form.setValue('email', user.email);
+      
+      // Set social links
+      const linkedinUrl = formatSocialUrl(profile.linkedin_username, 'linkedin');
+      const githubUrl = formatSocialUrl(profile.github_username, 'github');
+      const twitterUrl = formatSocialUrl(profile.twitter_username, 'twitter');
+      
+      if (linkedinUrl) form.setValue('linkedin', linkedinUrl);
+      if (githubUrl) form.setValue('github', githubUrl);
+      if (twitterUrl) form.setValue('twitter', twitterUrl);
+      if (profile.website_url) form.setValue('website', profile.website_url);
+      
+      toast({
+        title: "Profile Data Loaded",
+        description: "Your profile information has been auto-filled. Please review and complete the remaining fields.",
+      });
+    }
+  }, [profile, user, form, toast]);
 
   const addEvent = () => {
     setTopEventsJudged([...topEventsJudged, { eventName: '', role: '', date: '', link: '' }]);
@@ -227,7 +291,7 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">USERNAME *</label>
+                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">MAXIMALLY USERNAME *</label>
                       <input
                         {...form.register('username')}
                         type="text"
@@ -235,7 +299,7 @@ const JudgeApplicationForm = () => {
                         className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
                         data-testid="input-username"
                       />
-                      <p className="font-jetbrains text-gray-500 text-xs mt-1">This will be your profile URL: maximally.org/judges/your-username</p>
+                      <p className="font-jetbrains text-gray-500 text-xs mt-1">Enter your existing Maximally username. This will link your judge profile to your account.</p>
                       {form.formState.errors.username && (
                         <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.username.message}</p>
                       )}

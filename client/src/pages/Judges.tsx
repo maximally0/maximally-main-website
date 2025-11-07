@@ -76,7 +76,7 @@ const Judges = () => {
         <div className="fixed inset-0 bg-black" />
         <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
 
-        <main className="relative z-10">
+        <main className="relative z-10 pt-24">
           <section className="container mx-auto px-4 py-20">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16">
@@ -235,7 +235,7 @@ const Judges = () => {
               </section>
 
               <section className="mb-20">
-                <div className="minecraft-block bg-gradient-to-r from-maximally-red/20 to-maximally-yellow/20 border-2 border-maximally-yellow p-8 text-center">
+                <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-yellow p-8 text-center">
                   <h2 className="font-press-start text-2xl md:text-3xl text-maximally-yellow mb-6" data-testid="heading-standard">
                     THE STANDARD
                   </h2>

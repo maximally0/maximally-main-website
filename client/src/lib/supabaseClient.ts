@@ -24,6 +24,17 @@ const getEnvVar = (key: string): string | undefined => {
 const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
 const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
 
+// Public base URL used for auth redirects (prod/staging friendly)
+const publicBaseUrl = getEnvVar('VITE_PUBLIC_BASE_URL');
+
+function getBaseUrl(): string | undefined {
+  // Prefer explicit base URL if provided
+  if (publicBaseUrl) return publicBaseUrl;
+  // Fallback to window origin in browser
+  if (typeof window !== 'undefined' && window.location?.origin) return window.location.origin;
+  return undefined;
+}
+
 // Development environment logging removed
 
 // Create single instance with proper configuration to prevent multiple instances
@@ -496,6 +507,35 @@ export async function setPasswordForOAuthUser(newPassword: string): Promise<{suc
   }
 }
 
+// -------------------- Password Reset (Forgot/Recover) --------------------
+// Triggers a password reset email via Supabase. SMTP is managed in Supabase (e.g. Resend).
+export async function requestPasswordReset(email: string, redirectTo?: string): Promise<{ success: boolean; error?: string }>{
+  if (!supabase) return { success: false, error: 'Supabase not configured' };
+  try {
+    const base = redirectTo || (getBaseUrl() ? `${getBaseUrl()}/reset-password` : undefined);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, base ? { redirectTo: base } : undefined as any);
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    console.error('requestPasswordReset error:', err);
+    return { success: false, error: err.message || 'Failed to send reset email' };
+  }
+}
+
+// Completes the password reset once the user landed back from the email link.
+// Supabase sets a temporary recovery session on redirect; updateUser uses that session.
+export async function completePasswordReset(newPassword: string): Promise<{ success: boolean; error?: string }>{
+  if (!supabase) return { success: false, error: 'Supabase not configured' };
+  try {
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    console.error('completePasswordReset error:', err);
+    return { success: false, error: err.message || 'Failed to reset password' };
+  }
+}
+
 export async function checkIfUserHasPassword(): Promise<boolean> {
   if (!supabase) return false;
   
@@ -534,6 +574,31 @@ export async function signInWithEmailPassword(email: string, password: string) {
   } catch (err) {
     console.error('signInWithEmailPassword error:', err);
     throw err;
+  }
+}
+
+// -------------------- Email OTP (signup verification) --------------------
+export async function verifyEmailOtp(email: string, token: string): Promise<{ success: boolean; error?: string }>{
+  if (!supabase) return { success: false, error: 'Supabase not configured' };
+  try {
+    const { error } = await supabase.auth.verifyOtp({ email, token, type: 'signup' });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    console.error('verifyEmailOtp error:', err);
+    return { success: false, error: err.message || 'Failed to verify code' };
+  }
+}
+
+export async function resendEmailOtp(email: string): Promise<{ success: boolean; error?: string }>{
+  if (!supabase) return { success: false, error: 'Supabase not configured' };
+  try {
+    const { error } = await (supabase as any).auth.resend({ type: 'signup', email });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    console.error('resendEmailOtp error:', err);
+    return { success: false, error: err.message || 'Failed to resend code' };
   }
 }
 
@@ -602,7 +667,7 @@ export async function signUpWithEmailPassword(payload: SignUpPayload) {
   }
   try {
     const { email, password, name, username } = payload;
-    const { data, error } = await supabase.auth.signUp({ email, password });
+const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: getBaseUrl() } });
     if (error) throw error;
 
     let user = data.user;

@@ -12,8 +12,35 @@ const JudgeProfile = () => {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
   
+  // Get current user to check if they're an admin
+  const { data: currentUser } = useQuery({
+    queryKey: ['auth:me'],
+    queryFn: async () => {
+      const token = localStorage.getItem('auth_token');
+      if (!token) return null;
+      
+      const response = await fetch('/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) return null;
+      return response.json();
+    }
+  });
+  
+  const isAdmin = currentUser?.profile?.role === 'admin';
+  
   const { data: judge, isLoading } = useQuery<Judge & { topEventsJudged: JudgeEvent[] }>({
     queryKey: ['/api/judges', username],
+    queryFn: async () => {
+      const response = await fetch(`/api/judges/${username}`);
+      if (!response.ok) {
+        throw new Error('Judge not found');
+      }
+      return response.json();
+    },
     enabled: !!username,
   });
 
@@ -91,11 +118,19 @@ const JudgeProfile = () => {
                 {/* Photo & Tier */}
                 <div className="text-center">
                   <div className="minecraft-block bg-gradient-to-br from-cyan-400 to-maximally-blue w-48 h-48 mx-auto overflow-hidden mb-4">
-                    <img
-                      src={judge.profilePhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${judge.username}`}
-                      alt={judge.fullName}
-                      className="w-full h-full object-cover"
-                    />
+                    {judge.profilePhoto ? (
+                      <img
+                        src={judge.profilePhoto}
+                        alt={judge.fullName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="font-press-start text-6xl text-white">
+                          {judge.fullName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <TierBadge tier={judge.tier} size="md" />
                   <div className={`minecraft-block ${availabilityColors[judge.availabilityStatus]} border-2 px-3 py-2 mt-4 inline-flex items-center gap-2`}>
@@ -265,6 +300,48 @@ const JudgeProfile = () => {
 
               {/* Sidebar */}
               <div className="space-y-8">
+                {/* Admin Only - Private Information */}
+                {isAdmin && (
+                  <section className="pixel-card bg-red-900/20 border-2 border-red-500 p-6">
+                    <h2 className="font-press-start text-sm mb-4 text-red-400 flex items-center gap-2">
+                      <Shield className="h-4 w-4" />
+                      ADMIN ONLY - PRIVATE DATA
+                    </h2>
+                    <div className="space-y-3 text-sm">
+                      {judge.email && (
+                        <div>
+                          <span className="text-gray-400">Email:</span>
+                          <div className="font-jetbrains text-white break-all">{judge.email}</div>
+                        </div>
+                      )}
+                      {judge.phone && (
+                        <div>
+                          <span className="text-gray-400">Phone:</span>
+                          <div className="font-jetbrains text-white">{judge.phone}</div>
+                        </div>
+                      )}
+                      {judge.address && (
+                        <div>
+                          <span className="text-gray-400">Address:</span>
+                          <div className="font-jetbrains text-white">{judge.address}</div>
+                        </div>
+                      )}
+                      {judge.timezone && (
+                        <div>
+                          <span className="text-gray-400">Timezone:</span>
+                          <div className="font-jetbrains text-white">{judge.timezone}</div>
+                        </div>
+                      )}
+                      {judge.compensationPreference && (
+                        <div>
+                          <span className="text-gray-400">Compensation:</span>
+                          <div className="font-jetbrains text-white capitalize">{judge.compensationPreference}</div>
+                        </div>
+                      )}
+                    </div>
+                  </section>
+                )}
+                
                 {/* Stats Card */}
                 <section className="pixel-card bg-gray-900 border-2 border-maximally-red p-6">
                   <h2 className="font-press-start text-lg mb-4 text-maximally-red">STATS</h2>

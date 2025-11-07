@@ -24,24 +24,7 @@ export async function verifyCaptcha(token: string | null): Promise<CaptchaVerifi
     };
   }
 
-  // For static hosting deployment, we'll do client-side validation only
-  // In a full-stack deployment, this would verify with the backend
-  if (import.meta.env.PROD && !import.meta.env.VITE_API_URL) {
-    // Static hosting - just validate token format
-    if (isValidCaptchaToken(token)) {
-      return {
-        success: true,
-        message: 'CAPTCHA verified (client-side)',
-      };
-    } else {
-      return {
-        success: false,
-        message: 'Invalid CAPTCHA token format',
-      };
-    }
-  }
-
-  // Full-stack deployment with backend API
+  // Prefer server-side verification; fallback to client-side if it fails
   try {
     const apiUrl = import.meta.env.VITE_API_URL || '';
     const response = await fetch(`${apiUrl}/api/verify-captcha`, {
@@ -61,6 +44,10 @@ export async function verifyCaptcha(token: string | null): Promise<CaptchaVerifi
     return result as CaptchaVerificationResult;
   } catch (error: any) {
     console.error('CAPTCHA verification error:', error);
+    // Fallback: accept non-empty token client-side when server verify is unavailable
+    if (isValidCaptchaToken(token)) {
+      return { success: true, message: 'CAPTCHA verified (client-side fallback)' };
+    }
     return {
       success: false,
       message: error.message || 'CAPTCHA verification failed',

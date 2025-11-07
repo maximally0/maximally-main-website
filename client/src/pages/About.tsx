@@ -30,8 +30,8 @@ interface CoreTeamMember {
 
 interface FeaturedJudge {
   id: number;
-  name: string;
-  role_in_company: string;
+  full_name: string;
+  role_title: string;
   company: string;
 }
 
@@ -285,7 +285,7 @@ const PeoplePreview = () => {
         if (judgeIds.length > 0) {
           const { data: judgeData, error: judgeError } = await db
             .from('judges')
-            .select('id, name, role_in_company, company')
+            .select('id, full_name, role_title, company')
             .in('id', judgeIds) as { data?: any[]; error?: any };
 
           if (judgeError) {
@@ -461,11 +461,11 @@ const PeoplePreview = () => {
                       </div>
                       
                       <h4 className="font-press-start text-sm text-white mb-2">
-                        {judge.name}
+                        {judge.full_name}
                       </h4>
                       
                       <p className="font-press-start text-xs text-maximally-yellow mb-1">
-                        {judge.role_in_company}
+                        {judge.role_title}
                       </p>
                       
                       <p className="font-jetbrains text-xs text-gray-300">

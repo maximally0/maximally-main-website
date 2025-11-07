@@ -74,7 +74,7 @@ const Contact = () => {
                 },
                 {
                   name: "Drishti Arora",
-                  phone: "+91 88375 12713",
+                  phone: "-",
                   email: "drishti@maximally.in",
                 },
               ].map((contact, index) => (

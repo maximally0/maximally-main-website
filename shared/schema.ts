@@ -263,8 +263,8 @@ export const judges = pgTable('judges', {
   profilePhoto: text('profile_photo'),
   headline: text('headline').notNull(),
   shortBio: text('short_bio').notNull(),
-  location: text('location').notNull(),
-  currentRole: text('current_role').notNull(),
+  location: text('judge_location').notNull(),
+  currentRole: text('role_title').notNull(),
   company: text('company').notNull(),
   
   primaryExpertise: text('primary_expertise').array().notNull(),
@@ -301,7 +301,7 @@ export const judges = pgTable('judges', {
   timezone: text('timezone'),
   calendarLink: text('calendar_link'),
   compensationPreference: text('compensation_preference', { enum: ['volunteer', 'paid', 'negotiable'] }),
-  references: text('references'),
+  references: text('judge_references'),
   conflictOfInterest: text('conflict_of_interest'),
   agreedToNDA: boolean('agreed_to_nda').notNull().default(false),
   address: text('address'),
@@ -313,13 +313,14 @@ export const judgeEvents = pgTable('judge_events', {
   id: serial('id').primaryKey(),
   judgeId: integer('judge_id').notNull(),
   eventName: text('event_name').notNull(),
-  role: text('role').notNull(),
-  date: text('date').notNull(),
-  link: text('link'),
+  role: text('event_role').notNull(),
+  date: text('event_date').notNull(),
+  link: text('event_link'),
   verified: boolean('verified').notNull().default(false),
 });
 
 export const insertJudgeSchema = createInsertSchema(judges, {
+  username: z.string().min(3, "Maximally username is required (minimum 3 characters)").max(30, "Username must be less than 30 characters"),
   fullName: z.string().min(1, "Full name is required"),
   headline: z.string().min(1, "Headline is required"),
   shortBio: z.string().min(10, "Short bio must be at least 10 characters"),

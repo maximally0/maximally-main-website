@@ -16,6 +16,9 @@ import Navbar from '@/components/Navbar';
 
 import Index from './pages/Index';
 import Login from './pages/Login';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerifyEmail from './pages/VerifyEmail';
 import Makeathon from './pages/Makeathon';
 import Contact from './pages/Contact';
 import Support from './pages/Support';
@@ -136,6 +139,7 @@ import PeopleJudges from './pages/PeopleJudges';
 import Judges from './pages/Judges';
 import JudgeProfile from './pages/JudgeProfile';
 import JudgeApplicationForm from './pages/JudgeApplicationForm';
+import JudgeDashboard from './pages/JudgeDashboard';
 import Resources from './pages/Resources';
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
@@ -190,7 +194,10 @@ const App = () => {
             <Navbar />
             <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
+<Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+<Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/test-email" element={<TestEmailValidation />} />
             <Route path="/certificates/verify/:certificate_id" element={<CertificateVerification />} />
 <Route path="/profile" element={<MyProfileRedirect />} />
@@ -343,8 +350,9 @@ const App = () => {
             <Route path="/people/core" element={<PeopleCore />} />
             <Route path="/people/judges" element={<PeopleJudges />} />
             <Route path="/judges" element={<Judges />} />
-            <Route path="/judges/:username" element={<JudgeProfile />} />
+            <Route path="/judge/:username" element={<JudgeProfile />} />
             <Route path="/judges/apply" element={<JudgeApplicationForm />} />
+            <Route path="/judge-dashboard" element={<JudgeDashboard />} />
             <Route path="/resources" element={<Resources />} />
             {/* Legacy redirect */}
             <Route path="/featured" element={<Navigate to="/people" replace />} />
