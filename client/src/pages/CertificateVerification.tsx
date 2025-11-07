@@ -56,35 +56,37 @@ const CertificateVerification: React.FC = () => {
             message: 'Invalid certificate ID',
             certificate_id: certificate_id.toUpperCase()
           });
-        } else if (certificate.status !== 'active') {
+        } else if ((certificate as any).status !== 'active') {
+          const cert = certificate as any;
           setVerification({
             success: true,
             status: 'revoked',
             message: 'This certificate has been revoked',
             certificate_id: certificate_id.toUpperCase(),
             certificate: {
-              participant_name: certificate.participant_name,
-              hackathon_name: certificate.hackathon_name,
-              type: certificate.type,
-              position: certificate.position,
-              created_at: certificate.created_at
+              participant_name: cert.participant_name,
+              hackathon_name: cert.hackathon_name,
+              type: cert.type,
+              position: cert.position,
+              created_at: cert.created_at
             }
           });
         } else {
+          const cert = certificate as any;
           setVerification({
             success: true,
             status: 'verified',
             message: 'Certificate is verified and valid',
             certificate_id: certificate_id.toUpperCase(),
             certificate: {
-              participant_name: certificate.participant_name,
-              participant_email: certificate.participant_email,
-              hackathon_name: certificate.hackathon_name,
-              type: certificate.type,
-              position: certificate.position,
-              pdf_url: certificate.pdf_url,
-              jpg_url: certificate.jpg_url,
-              created_at: certificate.created_at
+              participant_name: cert.participant_name,
+              participant_email: cert.participant_email,
+              hackathon_name: cert.hackathon_name,
+              type: cert.type,
+              position: cert.position,
+              pdf_url: cert.pdf_url,
+              jpg_url: cert.jpg_url,
+              created_at: cert.created_at
             }
           });
         }

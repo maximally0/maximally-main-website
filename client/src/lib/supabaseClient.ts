@@ -92,7 +92,7 @@ export type Profile = {
   linkedin_username: string | null;
   twitter_username: string | null;
   website_url: string | null;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'judge';
   is_verified: boolean | null;
   preferences: any | null;
   created_at?: string | null;
@@ -409,7 +409,7 @@ export async function updateProfileMe(patch: UpdatableProfileFields) {
     if (!user) throw new Error('Not authenticated');
 
     // For static hosting, update profile directly with Supabase
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('profiles')
       .update(patch)
       .eq('id', user.id)
@@ -872,7 +872,7 @@ export async function deleteAccountRequest(): Promise<{ success: boolean; messag
     // Try to delete the user from auth (this requires admin privileges)
     // Since we can't delete from client-side, we'll use a database function
     try {
-      const { error: deleteUserError } = await supabase.rpc('delete_user_account', {
+      const { error: deleteUserError } = await (supabase as any).rpc('delete_user_account', {
         user_id: user.id
       });
       

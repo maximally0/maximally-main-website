@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { MapPin, Building2, Globe, Linkedin, Github, Twitter, Award, Users, Clock, Star, ArrowLeft, Calendar, ExternalLink, Languages, Mail } from 'lucide-react';
+import { MapPin, Building2, Globe, Linkedin, Github, Twitter, Award, Users, Clock, Star, ArrowLeft, Calendar, ExternalLink, Languages, Mail, Shield } from 'lucide-react';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import TierBadge from '@/components/judges/TierBadge';

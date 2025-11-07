@@ -84,6 +84,7 @@ export class MemStorage implements IStorage {
       ...insertJudge,
       id,
       createdAt: new Date(),
+      tier: insertJudge.tier ?? 'starter',
       github: insertJudge.github ?? null,
       twitter: insertJudge.twitter ?? null,
       website: insertJudge.website ?? null,
@@ -105,6 +106,12 @@ export class MemStorage implements IStorage {
       totalMentorshipHours: insertJudge.totalMentorshipHours ?? 0,
       yearsOfExperience: insertJudge.yearsOfExperience ?? 0,
       languagesSpoken: insertJudge.languagesSpoken ?? [],
+      eventsJudgedVerified: insertJudge.eventsJudgedVerified ?? false,
+      teamsEvaluatedVerified: insertJudge.teamsEvaluatedVerified ?? false,
+      mentorshipHoursVerified: insertJudge.mentorshipHoursVerified ?? false,
+      feedbackRatingVerified: insertJudge.feedbackRatingVerified ?? false,
+      availabilityStatus: insertJudge.availabilityStatus ?? 'available',
+      isPublished: insertJudge.isPublished !== undefined ? insertJudge.isPublished : true,
     };
     this.judges.set(id, judge);
     return judge;

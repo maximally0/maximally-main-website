@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { verifyEmailOtp, resendEmailOtp, getSession } from '@/lib/supabaseClient';
 import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
 import { isCaptchaRequired, verifyCaptcha } from '@/lib/captcha';

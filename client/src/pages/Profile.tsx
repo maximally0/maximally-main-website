@@ -23,7 +23,7 @@ interface Certificate {
   id: string;
   certificate_id: string;
   participant_name: string;
-  participant_email?: string;
+  participant_email: string;
   hackathon_name: string;
   type: string;
   position?: string;
@@ -31,7 +31,7 @@ interface Certificate {
   jpg_url?: string;
   status: string;
   created_at: string;
-  maximally_username: string;
+  maximally_username?: string;
 }
 
 interface UserAchievement {
@@ -52,6 +52,15 @@ interface HackathonDetails {
   location?: string;
   cover_image?: string;
   slug: string;
+}
+
+interface UserAchievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  earnedAt: string;
+  type: 'judging' | 'winning';
 }
 
 interface UserCertificatesData {
@@ -527,11 +536,13 @@ export default function Profile() {
         throw new Error('Failed to fetch certificates');
       }
 
+      const typedCertificates = (certificates || []) as Certificate[];
+
       // Get hackathons from the certificates
-      const hackathonNames = [...new Set(certificates?.map(cert => cert.hackathon_name) || [])];
+      const hackathonNames = Array.from(new Set(typedCertificates.map(cert => cert.hackathon_name)));
       
       // Get hackathon details from the hackathons table
-      const hackathonDetails = [];
+      const hackathonDetails: HackathonDetails[] = [];
       if (hackathonNames.length > 0) {
         for (const hackathonName of hackathonNames) {
           const { data: hackathon } = await supabase
@@ -541,15 +552,15 @@ export default function Profile() {
             .single();
           
           if (hackathon) {
-            hackathonDetails.push(hackathon);
+            hackathonDetails.push(hackathon as any);
           }
         }
       }
 
       // Process achievements based on certificates
-      const achievements = [];
-      if (certificates) {
-        for (const cert of certificates) {
+      const achievements: UserAchievement[] = [];
+      if (typedCertificates) {
+        for (const cert of typedCertificates) {
           // Add judging achievements
           if (cert.type === 'judge') {
             achievements.push({
@@ -579,7 +590,7 @@ export default function Profile() {
       }
 
       return {
-        certificates: certificates || [],
+        certificates: typedCertificates,
         hackathons: hackathonDetails,
         achievements: achievements
       };
@@ -956,7 +967,7 @@ export default function Profile() {
                   </h3>
                   {userCertificatesData.certificates.length > 3 && (
                     <button 
-                      onClick={() => document.querySelector('[value="certificates"]')?.click()}
+                      onClick={() => (document.querySelector('[value="certificates"]') as HTMLElement)?.click()}
                       className="pixel-button bg-maximally-blue hover:bg-maximally-blue/90 text-white font-press-start text-xs px-3 py-2 transition-colors"
                     >
                       VIEW_ALL
