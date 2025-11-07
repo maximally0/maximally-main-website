@@ -2018,6 +2018,78 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public endpoint to get all published judges
+  app.get("/api/judges", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      // Rate limiting - 30 requests per IP per minute
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      if (!rateLimit(clientIP, 'judges:list', 30, 60_000)) {
+        return res.status(429).json({ success: false, message: 'Too many requests' });
+      }
+
+      console.log('📋 Fetching judges from Supabase...');
+
+      // Get all published judges
+      const { data: judges, error: judgesError } = await supabaseAdmin
+        .from('judges')
+        .select('*')
+        .eq('is_published', true)
+        .order('tier', { ascending: false });
+
+      if (judgesError) {
+        console.error('❌ Error fetching judges:', judgesError);
+        return res.status(500).json({ success: false, message: 'Failed to fetch judges' });
+      }
+
+      console.log(`✅ Found ${judges?.length || 0} published judges`);
+
+      // Transform to match frontend Judge type
+      const transformedJudges = (judges || []).map((judge: any) => ({
+        id: judge.id,
+        username: judge.username,
+        fullName: judge.full_name,
+        profilePhoto: judge.profile_photo,
+        headline: judge.headline,
+        shortBio: judge.short_bio,
+        location: judge.judge_location,
+        currentRole: judge.role_title,
+        company: judge.company,
+        primaryExpertise: judge.primary_expertise || [],
+        secondaryExpertise: judge.secondary_expertise || [],
+        totalEventsJudged: judge.total_events_judged || 0,
+        totalTeamsEvaluated: judge.total_teams_evaluated || 0,
+        totalMentorshipHours: judge.total_mentorship_hours || 0,
+        yearsOfExperience: judge.years_of_experience || 0,
+        averageFeedbackRating: judge.average_feedback_rating,
+        eventsJudgedVerified: judge.events_judged_verified || false,
+        teamsEvaluatedVerified: judge.teams_evaluated_verified || false,
+        mentorshipHoursVerified: judge.mentorship_hours_verified || false,
+        feedbackRatingVerified: judge.feedback_rating_verified || false,
+        linkedin: judge.linkedin,
+        github: judge.github,
+        twitter: judge.twitter,
+        website: judge.website,
+        languagesSpoken: judge.languages_spoken || [],
+        publicAchievements: judge.public_achievements,
+        mentorshipStatement: judge.mentorship_statement,
+        availabilityStatus: judge.availability_status || 'available',
+        tier: judge.tier || 'starter',
+        isPublished: judge.is_published || false,
+        createdAt: judge.created_at
+      }));
+
+      return res.json(transformedJudges);
+    } catch (err: any) {
+      console.error('❌ Get judges error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch judges' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
