@@ -2043,10 +2043,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (judgesError) {
         console.error('❌ Error fetching judges:', judgesError);
-        return res.status(500).json({ success: false, message: 'Failed to fetch judges' });
+        console.error('❌ Error details:', JSON.stringify(judgesError, null, 2));
+        return res.status(500).json({ success: false, message: 'Failed to fetch judges', error: judgesError.message });
       }
 
       console.log(`✅ Found ${judges?.length || 0} published judges`);
+      if (judges && judges.length > 0) {
+        console.log('📊 Sample judge data:', JSON.stringify(judges[0], null, 2));
+      }
 
       // Transform to match frontend Judge type
       const transformedJudges = (judges || []).map((judge: any) => ({

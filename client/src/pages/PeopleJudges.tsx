@@ -16,10 +16,69 @@ const PeopleJudges = () => {
   const [showFilters, setShowFilters] = useState(false);
   const itemsPerPage = 12;
 
-  // Fetch judges from API
-  const { data: apiJudges = [], isLoading } = useQuery<Judge[]>({
-    queryKey: ['/api/judges'],
-    queryFn: () => fetch('/api/judges').then(res => res.json()),
+  // Fetch judges directly from Supabase (since Netlify is static hosting)
+  const { data: apiJudges = [], isLoading, error } = useQuery<Judge[]>({
+    queryKey: ['judges'],
+    queryFn: async () => {
+      console.log('🔍 Fetching judges from Supabase...');
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      
+      if (!supabaseUrl || !supabaseKey) {
+        console.error('❌ Supabase credentials not found');
+        return [];
+      }
+
+      const response = await fetch(`${supabaseUrl}/rest/v1/judges?is_published=eq.true&order=tier.desc`, {
+        headers: {
+          'apikey': supabaseKey,
+          'Authorization': `Bearer ${supabaseKey}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error('❌ Failed to fetch judges:', response.status);
+        return [];
+      }
+
+      const data = await response.json();
+      console.log('✅ Fetched judges:', data.length);
+
+      // Transform Supabase data to match Judge type
+      return data.map((judge: any) => ({
+        id: judge.id,
+        username: judge.username,
+        fullName: judge.full_name,
+        profilePhoto: judge.profile_photo,
+        headline: judge.headline,
+        shortBio: judge.short_bio,
+        location: judge.judge_location,
+        currentRole: judge.role_title,
+        company: judge.company,
+        primaryExpertise: judge.primary_expertise || [],
+        secondaryExpertise: judge.secondary_expertise || [],
+        totalEventsJudged: judge.total_events_judged || 0,
+        totalTeamsEvaluated: judge.total_teams_evaluated || 0,
+        totalMentorshipHours: judge.total_mentorship_hours || 0,
+        yearsOfExperience: judge.years_of_experience || 0,
+        averageFeedbackRating: judge.average_feedback_rating,
+        eventsJudgedVerified: judge.events_judged_verified || false,
+        teamsEvaluatedVerified: judge.teams_evaluated_verified || false,
+        mentorshipHoursVerified: judge.mentorship_hours_verified || false,
+        feedbackRatingVerified: judge.feedback_rating_verified || false,
+        linkedin: judge.linkedin,
+        github: judge.github,
+        twitter: judge.twitter,
+        website: judge.website,
+        languagesSpoken: judge.languages_spoken || [],
+        publicAchievements: judge.public_achievements,
+        mentorshipStatement: judge.mentorship_statement,
+        availabilityStatus: judge.availability_status || 'available',
+        tier: judge.tier || 'starter',
+        isPublished: judge.is_published || false,
+        createdAt: judge.created_at,
+      }));
+    },
   });
 
   // Use API data directly

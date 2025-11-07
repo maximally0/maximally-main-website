@@ -81,7 +81,7 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
           <div className="font-press-start text-xs text-cyan-400">{judge.totalEventsJudged}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Events</div>
         </div>
-        
+
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Users className="h-3 w-3 text-cyan-400" />
@@ -90,7 +90,7 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
           <div className="font-press-start text-xs text-cyan-400">{judge.totalTeamsEvaluated}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Teams</div>
         </div>
-        
+
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
             <Clock className="h-3 w-3 text-cyan-400" />
