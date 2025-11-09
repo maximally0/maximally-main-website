@@ -77,7 +77,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const verificationResult = await verificationResponse.json();
 
       if (!verificationResult.success) {
-        console.log('CAPTCHA verification failed:', verificationResult['error-codes']);
         return res.json({
           success: false,
           message: 'CAPTCHA verification failed',
@@ -89,21 +88,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (verificationResult.score !== undefined) {
         const minimumScore = 0.3; // Lowered threshold for better user experience
         if (verificationResult.score < minimumScore) {
-          console.log(`CAPTCHA score too low: ${verificationResult.score}`);
           return res.json({
             success: false,
             message: 'Security verification failed. Please try again.',
             score: verificationResult.score
           });
         }
-        console.log(`CAPTCHA v3 score: ${verificationResult.score} (threshold: ${minimumScore})`);
       }
-
-      console.log('CAPTCHA verification successful', {
-        hostname: verificationResult.hostname,
-        score: verificationResult.score,
-        action: verificationResult.action
-      });
 
       return res.json({
         success: true,
@@ -290,20 +281,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         username?: string;
       };
 
-      console.log('📝 Signup request data:', {
-        email: email?.slice(0, 5) + '***',
-        name: name,
-        username: username,
-        hasPassword: !!password
-      });
-      console.log('🔍 Raw request body:', JSON.stringify(req.body, null, 2));
-      console.log('🔍 Username analysis:', {
-        raw: req.body.username,
-        type: typeof req.body.username,
-        length: req.body.username?.length,
-        trimmed: req.body.username?.trim()
-      });
-
       // Basic input validation
       if (!email || typeof email !== 'string') {
         return res.status(400).json({ success: false, message: 'Email is required' });
@@ -322,12 +299,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { validateEmail } = await import('../shared/emailValidation');
 
       // Validate email comprehensively
-      console.log('🔍 Validating email:', email);
       const emailValidation = await validateEmail(email);
-      console.log('📧 Email validation result:', JSON.stringify(emailValidation, null, 2));
 
       if (!emailValidation.isValid) {
-        console.log('❌ Email validation failed:', emailValidation.issues);
         return res.status(400).json({
           success: false,
           message: emailValidation.issues[0] || 'Invalid email address',
@@ -338,9 +312,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         });
       }
-
-      console.log('✅ Email validation passed');
-
 
       // Create user with admin client (bypasses email confirmation if configured)
       const { data: userData, error: createError } = await (supabaseAdmin as any).auth.admin.createUser({
@@ -376,8 +347,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Note: This project uses Drizzle ORM with local database, not Supabase profiles table
       // The user creation in Supabase auth is sufficient for now
       // Profile creation would need to be handled through your Drizzle schema if needed
-
-      console.log('✅ User created successfully in Supabase auth:', user.email);
 
       return res.json({
         success: true,
@@ -733,7 +702,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .eq('userId', userId);
         hackathons = hackathonData || [];
       } catch (error) {
-        console.log('No hackathon data available or table does not exist');
+        // No hackathon data available or table does not exist
       }
 
       try {
@@ -743,7 +712,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .eq('userId', userId);
         achievements = achievementData || [];
       } catch (error) {
-        console.log('No achievement data available or table does not exist');
+        // No achievement data available or table does not exist
       }
 
       const exportData = {
@@ -1150,7 +1119,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Clean username by removing @ symbol if present
       const cleanUsername = appData2.username.replace(/^@/, '');
-      console.log(`Looking up profile for username: ${cleanUsername} (original: ${appData2.username})`);
 
       // Find or create user profile and promote to judge role
       const { data: userProfile, error: userProfileError } = await supabaseAdmin
@@ -1163,8 +1131,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (!userProfile) {
         // Profile doesn't exist - create one
-        console.log(`Creating profile for judge application username: ${cleanUsername}`);
-        
         const { data: newProfile, error: createProfileError } = await (supabaseAdmin as any)
           .from('profiles')
           .insert({
@@ -1186,7 +1152,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         // Profile exists - update role to judge
         profileUserId = (userProfile as any).id;
-        
+
         const { error: roleUpdateError } = await (supabaseAdmin as any)
           .from('profiles')
           .update({
@@ -1611,15 +1577,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const profileData = profile as any;
-      console.log('Judge dashboard access attempt:', {
-        userId,
-        username: profileData.username,
-        role: profileData.role,
-        email: profileData.email
-      });
 
       if (profileData.role !== 'judge') {
-        console.log('Access denied - user role is:', profileData.role, 'but judge role required');
         return res.status(403).json({
           success: false,
           message: 'Access denied. Judge role required.',
@@ -1874,7 +1833,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .single();
 
       if (profileError || !profile || (profile as any).role !== 'judge') {
-        console.log('Judge profile access denied:', { userId, role: (profile as any)?.role });
         return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
       }
 
@@ -1886,7 +1844,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .single();
 
       if (judgeError || !judge) {
-        console.log('Judge data not found for user:', userId);
         return res.status(404).json({ success: false, message: 'Judge profile not found' });
       }
 
@@ -2032,8 +1989,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(429).json({ success: false, message: 'Too many requests' });
       }
 
-      console.log('📋 Fetching judges from Supabase...');
-
       // Get all published judges
       const { data: judges, error: judgesError } = await supabaseAdmin
         .from('judges')
@@ -2042,14 +1997,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .order('tier', { ascending: false });
 
       if (judgesError) {
-        console.error('❌ Error fetching judges:', judgesError);
-        console.error('❌ Error details:', JSON.stringify(judgesError, null, 2));
+        console.error('Error fetching judges:', judgesError);
         return res.status(500).json({ success: false, message: 'Failed to fetch judges', error: judgesError.message });
-      }
-
-      console.log(`✅ Found ${judges?.length || 0} published judges`);
-      if (judges && judges.length > 0) {
-        console.log('📊 Sample judge data:', JSON.stringify(judges[0], null, 2));
       }
 
       // Transform to match frontend Judge type

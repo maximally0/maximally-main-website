@@ -590,8 +590,8 @@ const Blog = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const { data: dynamicBlogData, isLoading: dynamicLoading, error: dynamicError } = useBlogs(1, 1000, '');
-  
-  
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -634,9 +634,9 @@ const Blog = () => {
 
   const filteredPosts = useMemo(() => {
     if (!debouncedSearchTerm.trim()) return allPosts;
-    
+
     const searchLower = debouncedSearchTerm.toLowerCase();
-    return allPosts.filter(post => 
+    return allPosts.filter(post =>
       post.title.toLowerCase().includes(searchLower) ||
       post.excerpt.toLowerCase().includes(searchLower) ||
       post.category.toLowerCase().includes(searchLower)
@@ -687,7 +687,7 @@ const Blog = () => {
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24">
-      <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl text-maximally-black mb-6 sm:mb-8 text-center leading-tight">
+      <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl text-gray-300 mb-6 sm:mb-8 text-center leading-tight">
         &gt;&gt; Maximally Blog_
       </h1>
 
@@ -715,21 +715,21 @@ const Blog = () => {
                       <div className="relative w-full pixel-border bg-gray-200" style={{ aspectRatio: '16/9' }}></div>
                     </div>
                   )}
-                  
+
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
                     <div className="pixel-border bg-gray-200 h-6 w-20"></div>
                     <div className="pixel-border bg-gray-200 h-4 w-24"></div>
                     <div className="pixel-border bg-gray-200 h-4 w-16"></div>
                   </div>
-                  
+
                   <div className="pixel-border bg-gray-200 h-6 w-3/4 mb-3"></div>
-                  
+
                   <div className="space-y-2 mb-4">
                     <div className="pixel-border bg-gray-200 h-4 w-full"></div>
                     <div className="pixel-border bg-gray-200 h-4 w-2/3"></div>
                     <div className="pixel-border bg-gray-200 h-4 w-1/2"></div>
                   </div>
-                  
+
                   <div className="pixel-border bg-gray-200 h-6 w-24"></div>
                 </div>
               </div>
@@ -739,7 +739,7 @@ const Blog = () => {
 
         {/* Results count */}
         {!dynamicLoading && (
-          <div className="mb-6 font-jetbrains text-sm sm:text-base text-maximally-black/60">
+          <div className="mb-6 font-jetbrains text-sm sm:text-base text-gray-400">
             {filteredPosts.length > 0 ? (
               <>
                 Showing {((currentPage - 1) * POSTS_PER_PAGE) + 1}-{Math.min(currentPage * POSTS_PER_PAGE, filteredPosts.length)} of {filteredPosts.length} posts
@@ -775,7 +775,7 @@ const Blog = () => {
               No posts found
             </h3>
             <p className="font-jetbrains text-maximally-black/70 mb-6">
-              {debouncedSearchTerm 
+              {debouncedSearchTerm
                 ? `No posts match your search for "${debouncedSearchTerm}"`
                 : "No posts available at the moment"}
             </p>
@@ -794,7 +794,7 @@ const Blog = () => {
         {/* Pagination */}
         {!dynamicLoading && totalPages > 1 && (
           <div className="flex flex-col items-center gap-4 sm:gap-6 mt-12 mb-8 pt-8 border-t border-maximally-black/10">
-            
+
             <div className="flex items-center justify-center gap-1 sm:gap-2 order-1 sm:order-2 w-full sm:w-auto">
               {/* First Page Button */}
               <Button
@@ -808,7 +808,7 @@ const Blog = () => {
                 <ChevronsLeft className="h-4 w-4" />
                 <span className="hidden sm:inline ml-1">First</span>
               </Button>
-              
+
               {/* Previous Page Button */}
               <Button
                 onClick={handlePrevPage}
@@ -821,7 +821,7 @@ const Blog = () => {
                 <ChevronLeft className="h-4 w-4" />
                 <span className="hidden sm:inline ml-1">Prev</span>
               </Button>
-              
+
               {/* Current Page Indicator */}
               <div className="pixel-border bg-maximally-red text-white px-3 sm:px-4 py-2 font-press-start text-xs sm:text-sm min-h-[44px] flex items-center shadow-lg">
                 <span className="hidden sm:inline">Page </span>
@@ -829,7 +829,7 @@ const Blog = () => {
                 <span className="hidden sm:inline">of {totalPages}</span>
                 <span className="sm:hidden">/{totalPages}</span>
               </div>
-              
+
               {/* Next Page Button */}
               <Button
                 onClick={handleNextPage}
@@ -842,7 +842,7 @@ const Blog = () => {
                 <span className="hidden sm:inline mr-1">Next</span>
                 <ChevronRight className="h-4 w-4" />
               </Button>
-              
+
               {/* Last Page Button */}
               <Button
                 onClick={handleLastPage}
@@ -859,10 +859,10 @@ const Blog = () => {
           </div>
         )}
       </div>
-      
+
       {/* Spacer before footer */}
       <div className="mt-16 sm:mt-20 md:mt-24"></div>
-      
+
       <Footer />
     </div>
   );

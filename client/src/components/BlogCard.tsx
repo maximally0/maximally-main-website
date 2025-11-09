@@ -12,19 +12,19 @@ export interface BlogCardProps {
   authorName?: string;
 }
 
-const BlogCard = ({ 
-  title, 
-  excerpt, 
-  date, 
-  readTime, 
-  category, 
-  link, 
-  coverImage, 
-  authorName 
+const BlogCard = ({
+  title,
+  excerpt,
+  date,
+  readTime,
+  category,
+  link,
+  coverImage,
+  authorName
 }: BlogCardProps) => {
   return (
     <Link to={link} className="block">
-      <article className="pixel-border bg-white p-4 sm:p-5 md:p-6 lg:p-8 shadow-md hover:shadow-xl md:hover:shadow-2xl hover:transform hover:scale-[1.01] md:hover:scale-[1.02] hover:-translate-y-0.5 md:hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
+      <article className="pixel-border bg-[#1a1a1a] p-4 sm:p-5 md:p-6 lg:p-8 shadow-md hover:shadow-xl md:hover:shadow-2xl hover:transform hover:scale-[1.01] md:hover:scale-[1.02] hover:-translate-y-0.5 md:hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden">
         {/* Cover Image */}
         {coverImage && (
           <div className="mb-4">
@@ -45,7 +45,7 @@ const BlogCard = ({
           <span className="text-xs sm:text-sm font-press-start text-maximally-blue bg-maximally-blue/10 px-3 py-2 rounded inline-block w-fit">
             {category}
           </span>
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-maximally-black/60 text-xs sm:text-sm font-jetbrains">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-maximally-blue text-xs sm:text-sm font-jetbrains">
             <div className="flex items-center gap-2">
               <CalendarDays className="h-4 w-4 flex-shrink-0" />
               <span>{date}</span>
@@ -57,11 +57,11 @@ const BlogCard = ({
           </div>
         </div>
 
-        <h2 className="font-press-start text-base sm:text-lg md:text-xl mb-3 sm:mb-4 text-maximally-black leading-tight break-words">
+        <h2 className="font-press-start text-base sm:text-lg md:text-xl mb-3 sm:mb-4 text-white leading-tight break-words">
           {title}
         </h2>
 
-        <p className="font-jetbrains text-sm sm:text-base md:text-base text-maximally-black/70 mb-4 sm:mb-6 leading-relaxed">
+        <p className="font-jetbrains text-sm sm:text-base md:text-base text-gray-300 mb-4 sm:mb-6 leading-relaxed">
           {excerpt}
         </p>
 
