@@ -331,11 +331,10 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300 flex items-center gap-1 sm:gap-2">
+        <Button className="pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 py-1.5 sm:py-1.5 md:py-2 transition-colors duration-300 flex items-center gap-1 sm:gap-2" data-testid="button-edit-profile">
           <Edit className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-          <span className="hidden sm:inline">EDIT_PROFILE</span>
-          <span className="sm:hidden">EDIT</span>
-        </button>
+          <span>EDIT</span>
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w-3xl bg-black border-4 border-maximally-red max-h-[90vh] overflow-y-auto">
         <DialogHeader className="border-b border-maximally-red/30 pb-4 mb-6">
@@ -829,10 +828,10 @@ export default function Profile() {
                     {userProfile.name || userProfile.username}
                   </h1>
                   {dbProfile.role === 'admin' && (
-                    <div className="minecraft-block bg-maximally-yellow text-maximally-black px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
-                      <Shield className="w-4 h-4 animate-pulse" />
+                    <Badge className="bg-maximally-yellow text-maximally-black px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-press-start inline-flex items-center gap-1 border-maximally-yellow">
+                      <Shield className="w-2.5 h-2.5 sm:w-3 sm:h-3 animate-pulse" />
                       <span>ADMIN</span>
-                    </div>
+                    </Badge>
                   )}
                   {dbProfile.role === 'judge' && judgeData && (
                     <JudgeBadge 
@@ -868,7 +867,7 @@ export default function Profile() {
                       VIEW_JUDGE_PROFILE
                     </a>
                   )}
-                  <button
+                  <Button
                     onClick={async () => {
                       try {
                         
@@ -885,20 +884,19 @@ export default function Profile() {
                         });
                       }
                     }}
-                    className="pixel-button bg-maximally-yellow text-maximally-black hover:bg-maximally-yellow/90 font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300"
+                    className="pixel-button bg-maximally-yellow text-maximally-black hover:bg-maximally-yellow/90 font-press-start text-[10px] sm:text-xs px-2 sm:px-3 py-1.5 sm:py-1.5 md:py-2 transition-colors duration-300"
+                    data-testid="button-logout"
                   >
                     LOGOUT
-                  </button>
+                  </Button>
                 </div>
               )}
 
               {/* Additional Info */}
               <div className="space-y-2 sm:space-y-3 md:space-y-4">
                 {userProfile.location && (
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="minecraft-block bg-maximally-blue/20 border border-maximally-blue p-1 sm:p-1.5 md:p-2 flex-shrink-0">
-                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-maximally-blue" />
-                    </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-maximally-blue flex-shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-maximally-blue mb-0.5 sm:mb-1">LOCATION</p>
                       <p className="font-jetbrains text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.location}</p>
@@ -906,10 +904,8 @@ export default function Profile() {
                   </div>
                 )}
                 {userProfile.email && (
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="minecraft-block bg-maximally-yellow/20 border border-maximally-yellow p-1 sm:p-1.5 md:p-2 flex-shrink-0">
-                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-maximally-yellow" />
-                    </div>
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-maximally-yellow flex-shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-maximally-yellow mb-0.5 sm:mb-1">EMAIL</p>
                       <p className="font-jetbrains text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.email}</p>
@@ -920,16 +916,17 @@ export default function Profile() {
 
               {/* Social Links */}
               {(userProfile.github || userProfile.linkedin || userProfile.twitter || userProfile.website) && (
-                <div className="flex flex-wrap justify-center lg:justify-start gap-1 sm:gap-1.5 md:gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 max-w-md lg:max-w-none mx-auto lg:mx-0">
                   {userProfile.github && (
                     <a
                       href={`https://github.com/${userProfile.github}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-red text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
+                      className="flex flex-col items-center justify-center min-h-[64px] sm:min-h-[72px] rounded-md border-2 border-gray-700 bg-gray-800 hover:bg-maximally-red hover:border-maximally-red text-white font-press-start text-[10px] sm:text-xs gap-1.5 transition-all duration-300 hover:scale-105 p-2"
+                      data-testid="link-github"
                     >
-                      <Github className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                      <span className="hidden sm:inline">GITHUB</span>
+                      <Github className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span>GITHUB</span>
                     </a>
                   )}
                   {userProfile.linkedin && (
@@ -937,10 +934,11 @@ export default function Profile() {
                       href={`https://linkedin.com/in/${userProfile.linkedin}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-blue text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
+                      className="flex flex-col items-center justify-center min-h-[64px] sm:min-h-[72px] rounded-md border-2 border-gray-700 bg-gray-800 hover:bg-maximally-blue hover:border-maximally-blue text-white font-press-start text-[10px] sm:text-xs gap-1.5 transition-all duration-300 hover:scale-105 p-2"
+                      data-testid="link-linkedin"
                     >
-                      <Linkedin className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                      <span className="hidden sm:inline">LINKEDIN</span>
+                      <Linkedin className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span>LINKEDIN</span>
                     </a>
                   )}
                   {userProfile.twitter && (
@@ -948,10 +946,11 @@ export default function Profile() {
                       href={`https://twitter.com/${userProfile.twitter}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-yellow text-white hover:text-maximally-black font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
+                      className="flex flex-col items-center justify-center min-h-[64px] sm:min-h-[72px] rounded-md border-2 border-gray-700 bg-gray-800 hover:bg-maximally-yellow hover:border-maximally-yellow text-white hover:text-maximally-black font-press-start text-[10px] sm:text-xs gap-1.5 transition-all duration-300 hover:scale-105 p-2"
+                      data-testid="link-twitter"
                     >
-                      <Twitter className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                      <span className="hidden sm:inline">TWITTER</span>
+                      <Twitter className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span>TWITTER</span>
                     </a>
                   )}
                   {userProfile.website && (
@@ -959,10 +958,11 @@ export default function Profile() {
                       href={userProfile.website.startsWith('http') ? userProfile.website : `https://${userProfile.website}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="pixel-button bg-gray-800 hover:bg-maximally-green text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105"
+                      className="flex flex-col items-center justify-center min-h-[64px] sm:min-h-[72px] rounded-md border-2 border-gray-700 bg-gray-800 hover:bg-maximally-green hover:border-maximally-green text-white font-press-start text-[10px] sm:text-xs gap-1.5 transition-all duration-300 hover:scale-105 p-2"
+                      data-testid="link-website"
                     >
-                      <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-                      <span className="hidden sm:inline">WEBSITE</span>
+                      <Globe className="w-5 h-5 sm:w-6 sm:h-6" />
+                      <span>WEBSITE</span>
                     </a>
                   )}
                 </div>
@@ -971,7 +971,7 @@ export default function Profile() {
               {/* Skills */}
               {userProfile.skills && userProfile.skills.length > 0 && (
                 <div className="mt-3 sm:mt-4 md:mt-6">
-                  <div className="mb-2 sm:mb-3 md:mb-4">
+                  <div className="mb-2 sm:mb-3 md:mb-4 flex justify-center lg:justify-start">
                     <h3 className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-maximally-red mb-1.5 sm:mb-2 md:mb-3 flex items-center gap-1 sm:gap-2">
                       <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 bg-maximally-red animate-pulse"></span>
                       SKILLS
@@ -1040,46 +1040,46 @@ export default function Profile() {
             </TabsList>
           </div>
 
-          <TabsContent value="overview" className="space-y-8">
+          <TabsContent value="overview" className="space-y-8 min-h-0">
             {/* Stats Dashboard */}
-            <div className="minecraft-block bg-black border-2 border-maximally-red p-6">
-              <h3 className="font-press-start text-sm text-maximally-red mb-6 flex items-center gap-2">
+            <div className="minecraft-block bg-black border-2 border-maximally-red p-4 sm:p-6 relative z-20">
+              <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-4 sm:mb-6 flex items-center gap-2">
                 <Trophy className="w-4 h-4" />
                 STATS_OVERVIEW
               </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="minecraft-block bg-gray-900 border-2 border-maximally-red p-6 text-center hover:border-maximally-yellow hover:scale-105 transition-all duration-300 group">
-                  <div className="minecraft-block bg-maximally-red w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:animate-bounce">
-                    <Award className="w-8 h-8 text-white" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 min-w-0">
+                <div className="minecraft-block bg-gray-900 border-2 border-maximally-red p-4 sm:p-6 text-center hover:border-maximally-yellow hover:scale-105 transition-all duration-300 group min-w-0">
+                  <div className="minecraft-block bg-maximally-red w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 flex items-center justify-center group-hover:animate-bounce">
+                    <Award className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                   </div>
-                  <div className="font-press-start text-3xl text-maximally-red mb-2">
+                  <div className="font-press-start text-2xl sm:text-3xl text-maximally-red mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.certificates?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-maximally-red mb-1">CERTIFICATES</div>
-                  <div className="font-jetbrains text-xs text-gray-400">Total earned</div>
+                  <div className="font-press-start text-[10px] sm:text-xs text-maximally-red mb-1">CERTIFICATES</div>
+                  <div className="font-jetbrains text-[10px] sm:text-xs text-gray-400">Total earned</div>
                 </div>
                 
-                <div className="minecraft-block bg-gray-900 border-2 border-maximally-blue p-6 text-center hover:border-cyan-400 hover:scale-105 transition-all duration-300 group">
-                  <div className="minecraft-block bg-maximally-blue w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:animate-bounce">
-                    <Trophy className="w-8 h-8 text-white" />
+                <div className="minecraft-block bg-gray-900 border-2 border-maximally-blue p-4 sm:p-6 text-center hover:border-cyan-400 hover:scale-105 transition-all duration-300 group min-w-0">
+                  <div className="minecraft-block bg-maximally-blue w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 flex items-center justify-center group-hover:animate-bounce">
+                    <Trophy className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                   </div>
-                  <div className="font-press-start text-3xl text-maximally-blue mb-2">
+                  <div className="font-press-start text-2xl sm:text-3xl text-maximally-blue mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.hackathons?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-maximally-blue mb-1">HACKATHONS</div>
-                  <div className="font-jetbrains text-xs text-gray-400">Participated</div>
+                  <div className="font-press-start text-[10px] sm:text-xs text-maximally-blue mb-1">HACKATHONS</div>
+                  <div className="font-jetbrains text-[10px] sm:text-xs text-gray-400">Participated</div>
                 </div>
                 
-                <div className="minecraft-block bg-gray-900 border-2 border-maximally-yellow p-6 text-center hover:border-orange-400 hover:scale-105 transition-all duration-300 group">
-                  <div className="minecraft-block bg-maximally-yellow w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:animate-bounce">
-                    <Star className="w-8 h-8 text-black" />
+                <div className="minecraft-block bg-gray-900 border-2 border-maximally-yellow p-4 sm:p-6 text-center hover:border-orange-400 hover:scale-105 transition-all duration-300 group min-w-0">
+                  <div className="minecraft-block bg-maximally-yellow w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 flex items-center justify-center group-hover:animate-bounce">
+                    <Star className="w-6 h-6 sm:w-8 sm:h-8 text-black" />
                   </div>
-                  <div className="font-press-start text-3xl text-maximally-yellow mb-2">
+                  <div className="font-press-start text-2xl sm:text-3xl text-maximally-yellow mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.achievements?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-maximally-yellow mb-1">ACHIEVEMENTS</div>
-                  <div className="font-jetbrains text-xs text-gray-400">Unlocked</div>
+                  <div className="font-press-start text-[10px] sm:text-xs text-maximally-yellow mb-1">ACHIEVEMENTS</div>
+                  <div className="font-jetbrains text-[10px] sm:text-xs text-gray-400">Unlocked</div>
                 </div>
               </div>
             </div>
@@ -1110,19 +1110,19 @@ export default function Profile() {
             )}
           </TabsContent>
 
-          <TabsContent value="certificates" className="space-y-6">
+          <TabsContent value="certificates" className="space-y-6 min-h-0">
             {certificatesLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-8 h-8 animate-spin text-maximally-red" />
               </div>
             ) : userCertificatesData?.certificates && userCertificatesData.certificates.length > 0 ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-press-start text-lg text-maximally-red">
+              <div className="space-y-4 min-w-0">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <h3 className="font-press-start text-sm sm:text-base md:text-lg text-maximally-red">
                     CERTIFICATES ({userCertificatesData.certificates.length})
                   </h3>
                 </div>
-                <div className="grid gap-6">
+                <div className="grid gap-4 sm:gap-6 min-w-0">
                   {userCertificatesData.certificates.map((certificate) => (
                     <CertificateCard key={certificate.id} certificate={certificate} />
                   ))}
