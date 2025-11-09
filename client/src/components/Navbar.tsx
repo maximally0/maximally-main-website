@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Menu, X, Terminal } from "lucide-react";
+import { Menu, X, Terminal, Mail } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
+import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,7 +13,7 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Update scrolled state for styling
       if (currentScrollY > 10) {
         setIsScrolled(true);
@@ -49,9 +50,11 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   const { user, profile, loading, refreshProfile } = useAuth();
-  
+  const { unreadCount } = useJudgeUnreadCount();
+
   const isLoggedIn = !!user && !loading;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : '/profile';
+  const isJudge = profile?.role === 'judge';
 
   // Refresh profile when user changes to ensure judge role is detected
   useEffect(() => {
@@ -69,11 +72,9 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${
-      isVisible ? 'top-0' : '-top-24'
-    } ${
-      isScrolled ? "py-2 sm:py-2 bg-black/95 backdrop-blur-md border-b-2 border-maximally-red shadow-lg" : "py-3 sm:py-3 bg-black/80 backdrop-blur-xl shadow-lg lg:shadow-none lg:backdrop-blur-sm lg:bg-black/90"
-    }`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isVisible ? 'top-0' : '-top-24'
+      } ${isScrolled ? "py-2 sm:py-2 bg-black/95 backdrop-blur-md border-b-2 border-maximally-red shadow-lg" : "py-3 sm:py-3 bg-black/80 backdrop-blur-xl shadow-lg lg:shadow-none lg:backdrop-blur-sm lg:bg-black/90"
+      }`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -102,24 +103,41 @@ const Navbar = () => {
                 LOADING...
               </div>
             ) : isLoggedIn ? (
-              <div className="flex items-center gap-2">
-                {profile?.role === 'judge' && (
-                  <a
-                    href="/judge-dashboard"
-                    className="pixel-button bg-maximally-red border-2 border-gray-700 text-white hover:border-maximally-yellow hover:bg-maximally-yellow hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
-                    data-testid="button-judge-dashboard"
-                  >
-                    JUDGE
-                  </a>
+              <>
+                {isJudge && (
+                  <>
+                    <a
+                      href="/judge-dashboard"
+                      className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2 ml-1"
+                      data-testid="button-judge-dashboard"
+                    >
+                      JUDGE
+                    </a>
+                    <a
+                      href="/judge-inbox"
+                      className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-cyan-400 hover:bg-cyan-400 hover:text-black transition-all duration-200 font-press-start text-xs relative flex items-center justify-center ml-1 aspect-square"
+                      style={{ padding: '10px' }}
+                      data-testid="button-judge-inbox"
+                      aria-label={`Judge inbox${unreadCount > 0 ? ` - ${unreadCount} unread` : ''}`}
+                      title={`Judge Inbox${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
+                    >
+                      <Mail className="h-4 w-4" />
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-maximally-red text-maximally-yellow text-[10px] font-press-start px-[3px] py-[1px] rounded-sm min-w-[16px] text-center leading-none">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
+                    </a>
+                  </>
                 )}
                 <a
                   href={profileUrl}
-                  className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                  className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2 ml-1"
                   data-testid="button-profile"
                 >
                   PROFILE
                 </a>
-              </div>
+              </>
             ) : (
               <a
                 href="/login"
@@ -134,7 +152,7 @@ const Navbar = () => {
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="flex items-center space-x-2 lg:hidden">
             {/* Mobile Menu Toggle */}
-            <button 
+            <button
               className="pixel-button bg-maximally-red text-black p-2 hover:bg-maximally-yellow transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
@@ -165,15 +183,30 @@ const Navbar = () => {
                   </div>
                 ) : isLoggedIn ? (
                   <div className="space-y-4">
-                    {profile?.role === 'judge' && (
-                      <a
-                        href="/judge-dashboard"
-                        onClick={() => setIsMenuOpen(false)}
-                        className="pixel-button bg-maximally-red text-white font-press-start text-center py-4 px-6 hover:bg-maximally-yellow hover:text-black transition-all duration-300 hover:scale-105 block"
-                        data-testid="button-judge-dashboard-mobile"
-                      >
-                        JUDGE DASHBOARD
-                      </a>
+                    {isJudge && (
+                      <>
+                        <a
+                          href="/judge-dashboard"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="pixel-button bg-maximally-red text-white font-press-start text-center py-4 px-6 hover:bg-maximally-yellow hover:text-black transition-all duration-300 hover:scale-105 block"
+                          data-testid="button-judge-dashboard-mobile"
+                        >
+                          JUDGE DASHBOARD
+                        </a>
+                        <a
+                          href="/judge-inbox"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="pixel-button bg-cyan-600 text-white font-press-start text-center py-4 px-6 hover:bg-cyan-700 transition-all duration-300 hover:scale-105 block relative"
+                          data-testid="button-judge-inbox-mobile"
+                        >
+                          JUDGE INBOX
+                          {unreadCount > 0 && (
+                            <span className="ml-2 bg-maximally-red text-maximally-yellow text-xs font-press-start px-2 py-0.5 rounded-sm">
+                              {unreadCount > 99 ? '99+' : unreadCount}
+                            </span>
+                          )}
+                        </a>
+                      </>
                     )}
                     <a
                       href={profileUrl}

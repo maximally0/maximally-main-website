@@ -19,11 +19,14 @@ import {
   LogOut,
   Shield,
   Crown,
-  Flame
+  Flame,
+  Mail
 } from 'lucide-react';
+import { useJudgeUnreadCount } from '@/hooks/useJudgeUnreadCount';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import AddEventModal from '@/components/judges/AddEventModal';
+import EditEventModal from '@/components/judges/EditEventModal';
 import PixelLoader from '@/components/PixelLoader';
 import { getAuthToken, getAuthHeaders } from '@/lib/auth';
 
@@ -71,7 +74,7 @@ interface HackathonJudged {
 
 const JudgeDashboard = () => {
   const navigate = useNavigate();
-  const { user, profile, loading: authLoading, refreshProfile } = useAuth();
+  const { user, profile, loading: authLoading, refreshProfile, signOut } = useAuth();
   const [judgeProfile, setJudgeProfile] = useState<JudgeProfile | null>(null);
   const [judgeEvents, setJudgeEvents] = useState<JudgeEvent[]>([]);
   const [hackathonsJudged, setHackathonsJudged] = useState<HackathonJudged[]>([]);
@@ -79,7 +82,11 @@ const JudgeDashboard = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'events' | 'profile' | 'settings'>('overview');
   const [showAddEventModal, setShowAddEventModal] = useState(false);
+  const [showEditEventModal, setShowEditEventModal] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<JudgeEvent | null>(null);
   const [addingEvent, setAddingEvent] = useState(false);
+  const [editingEventLoading, setEditingEventLoading] = useState(false);
+  const { unreadCount } = useJudgeUnreadCount();
 
   useEffect(() => {
     const fetchJudgeData = async () => {
@@ -89,6 +96,19 @@ const JudgeDashboard = () => {
       // Check if user is authenticated
       if (!user) {
         navigate('/login');
+        return;
+      }
+
+      // Wait for profile to load
+      if (!profile) {
+        
+        return;
+      }
+
+      // Check if user is a judge
+      if (profile.role !== 'judge') {
+        
+        navigate('/');
         return;
       }
 
@@ -106,8 +126,8 @@ const JudgeDashboard = () => {
           }
           if (response.status === 403) {
             // Check if profile role is outdated
-            console.log('Current profile role:', profile?.role);
-            console.log('API says no judge permissions - profile might be outdated');
+            
+            
             setError('You do not have judge permissions. Please apply to become a judge first. If you recently became a judge, try refreshing the page.');
             return;
           }
@@ -115,9 +135,29 @@ const JudgeDashboard = () => {
         }
 
         const data = await response.json();
+        
         setJudgeProfile(data.profile);
-        setHackathonsJudged(data.events || []);
-        setJudgeEvents(data.events || []);
+        
+        // Map events to correct format
+        const mappedEvents = (data.events || []).map((event: any) => ({
+          id: event.id,
+          eventName: event.event_name || event.eventName,
+          role: event.event_role || event.role,
+          date: event.event_date || event.date,
+          link: event.event_link || event.link,
+          verified: event.verified || false
+        }));
+        
+        setJudgeEvents(mappedEvents);
+        setHackathonsJudged(mappedEvents.map((event: any) => ({
+          id: event.id,
+          name: event.eventName,
+          date: event.date,
+          role: event.role,
+          teamsEvaluated: 0,
+          hoursSpent: 0,
+          verified: event.verified
+        })));
 
         setLoading(false);
       } catch (err) {
@@ -192,16 +232,27 @@ const JudgeDashboard = () => {
       if (updatedResponse.ok) {
         const data = await updatedResponse.json();
         setJudgeProfile(data.profile);
-        setHackathonsJudged(data.events.map((event: any) => ({
+        
+        // Map events to correct format
+        const mappedEvents = (data.events || []).map((event: any) => ({
           id: event.id,
-          name: event.event_name,
-          date: event.event_date,
-          role: event.event_role,
-          teamsEvaluated: eventData.teamsEvaluated || 0,
-          hoursSpent: eventData.hoursSpent || 0,
+          eventName: event.event_name || event.eventName,
+          role: event.event_role || event.role,
+          date: event.event_date || event.date,
+          link: event.event_link || event.link,
+          verified: event.verified || false
+        }));
+        
+        setJudgeEvents(mappedEvents);
+        setHackathonsJudged(mappedEvents.map((event: any) => ({
+          id: event.id,
+          name: event.eventName,
+          date: event.date,
+          role: event.role,
+          teamsEvaluated: 0,
+          hoursSpent: 0,
           verified: event.verified
         })));
-        setJudgeEvents(data.events);
       }
 
       setShowAddEventModal(false);
@@ -210,6 +261,72 @@ const JudgeDashboard = () => {
       setError('Failed to add event. Please try again.');
     } finally {
       setAddingEvent(false);
+    }
+  };
+
+  const handleEditEvent = (event: JudgeEvent) => {
+    setEditingEvent(event);
+    setShowEditEventModal(true);
+  };
+
+  const handleEditEventSubmit = async (eventId: string, eventData: any) => {
+    setEditingEventLoading(true);
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/judge/events/${eventId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({
+          event_name: eventData.eventName,
+          event_role: eventData.role,
+          event_date: eventData.date,
+          event_link: eventData.link || null
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update event');
+      }
+
+      // Refresh the data
+      const updatedHeaders = await getAuthHeaders();
+      const updatedResponse = await fetch('/api/judge/profile', {
+        headers: updatedHeaders
+      });
+
+      if (updatedResponse.ok) {
+        const data = await updatedResponse.json();
+        setJudgeProfile(data.profile);
+        
+        // Map events to correct format
+        const mappedEvents = (data.events || []).map((event: any) => ({
+          id: event.id,
+          eventName: event.event_name || event.eventName,
+          role: event.event_role || event.role,
+          date: event.event_date || event.date,
+          link: event.event_link || event.link,
+          verified: event.verified || false
+        }));
+        
+        setJudgeEvents(mappedEvents);
+        setHackathonsJudged(mappedEvents.map((event: any) => ({
+          id: event.id,
+          name: event.eventName,
+          date: event.date,
+          role: event.role,
+          teamsEvaluated: 0,
+          hoursSpent: 0,
+          verified: event.verified
+        })));
+      }
+
+      setShowEditEventModal(false);
+      setEditingEvent(null);
+    } catch (err) {
+      console.error('Failed to update event:', err);
+      setError('Failed to update event. Please try again.');
+    } finally {
+      setEditingEventLoading(false);
     }
   };
 
@@ -226,12 +343,20 @@ const JudgeDashboard = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('auth_token');
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      localStorage.removeItem('auth_token');
+      navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Still navigate even if there's an error
+      localStorage.removeItem('auth_token');
+      navigate('/');
+    }
   };
 
-  if (loading) {
+  if (loading || authLoading || (user && !profile)) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <PixelLoader text="LOADING JUDGE DASHBOARD" size="lg" />
@@ -335,6 +460,20 @@ const JudgeDashboard = () => {
                   {tab.label}
                 </button>
               ))}
+              
+              {/* Inbox Button with Badge */}
+              <button
+                onClick={() => navigate('/judge-inbox')}
+                className="pixel-button px-4 py-2 font-press-start text-xs flex items-center gap-2 bg-gray-800 text-gray-300 hover:bg-gray-700 relative"
+              >
+                <Mail className="h-4 w-4" />
+                INBOX
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-maximally-red text-maximally-yellow text-xs font-press-start px-2 py-0.5 rounded-sm">
+                    {unreadCount > 99 ? '99+' : unreadCount}
+                  </span>
+                )}
+              </button>
             </div>
 
             {/* Overview Tab */}
@@ -401,44 +540,43 @@ const JudgeDashboard = () => {
                   </div>
 
                   <div className="space-y-4">
-                    {hackathonsJudged.slice(0, 3).map((event) => (
-                      <div key={event.id} className="minecraft-block bg-black/50 border border-gray-700 p-4">
-                        <div className="flex items-start justify-between">
+                    {judgeEvents.slice(0, 3).map((event) => (
+                      <div key={event.id} className="minecraft-block bg-gray-800 border border-gray-600 p-4 hover:border-cyan-400 transition-colors">
+                        <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <h3 className="font-press-start text-sm text-white">{event.name}</h3>
+                            <h3 className="font-jetbrains text-white font-bold flex items-center gap-2 mb-1">
+                              {event.link ? (
+                                <a href={event.link} target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
+                                  {event.eventName}
+                                </a>
+                              ) : (
+                                event.eventName
+                              )}
                               {event.verified && <CheckCircle2 className="h-4 w-4 text-green-400" />}
-                            </div>
-                            <div className="flex items-center gap-4 text-xs font-jetbrains text-gray-400">
-                              <span>{event.role}</span>
-                              <span>{new Date(event.date).toLocaleDateString()}</span>
-                              <span>{event.teamsEvaluated} teams</span>
-                              <span>{event.hoursSpent}h</span>
-                            </div>
+                            </h3>
+                            <p className="font-jetbrains text-gray-400 text-sm">{event.role}</p>
                           </div>
-                          <button className="pixel-button bg-gray-700 text-white px-3 py-1 text-xs hover:bg-gray-600">
-                            <Eye className="h-3 w-3" />
-                          </button>
                         </div>
+                        <p className="font-jetbrains text-gray-500 text-xs">{event.date}</p>
                       </div>
                     ))}
                   </div>
 
-                  {hackathonsJudged.length > 3 && (
+                  {judgeEvents.length > 3 && (
                     <div className="text-center mt-4">
                       <button
                         onClick={() => setActiveTab('events')}
                         className="font-jetbrains text-cyan-400 hover:text-cyan-300 text-sm"
                       >
-                        View all {hackathonsJudged.length} events →
+                        View all {judgeEvents.length} events →
                       </button>
                     </div>
                   )}
                 </div>
 
-                {/* Tier Progress */}
+                {/* Current Tier Status */}
                 <div className="minecraft-block bg-gray-900/50 border-2 border-purple-400 p-6">
-                  <h2 className="font-press-start text-xl text-purple-400 mb-6">TIER PROGRESS</h2>
+                  <h2 className="font-press-start text-xl text-purple-400 mb-6">CURRENT TIER</h2>
                   
                   <div className="mb-6">
                     <div className="flex items-center gap-3 mb-2">
@@ -446,21 +584,6 @@ const JudgeDashboard = () => {
                       <span className="font-press-start text-lg text-white">{tierInfo.label}</span>
                     </div>
                     <p className="font-jetbrains text-gray-300 text-sm">{tierInfo.description}</p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="font-jetbrains text-sm text-gray-300">Events Judged</span>
-                      <span className="font-jetbrains text-sm text-cyan-400">
-                        {judgeProfile.totalEventsJudged}/15 (Next: Senior)
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div 
-                        className="bg-cyan-400 h-2 rounded-full" 
-                        style={{ width: `${Math.min((judgeProfile.totalEventsJudged / 15) * 100, 100)}%` }}
-                      ></div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -481,50 +604,36 @@ const JudgeDashboard = () => {
                 </div>
 
                 <div className="grid gap-4">
-                  {hackathonsJudged.map((event) => (
-                    <div key={event.id} className="minecraft-block bg-gray-900/50 border-2 border-gray-700 p-6 hover:border-cyan-400 transition-colors">
-                      <div className="flex items-start justify-between mb-4">
+                  {judgeEvents.map((event) => (
+                    <div key={event.id} className="minecraft-block bg-gray-800 border border-gray-600 p-4 hover:border-cyan-400 transition-colors">
+                      <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="font-press-start text-lg text-white">{event.name}</h3>
-                            {event.verified ? (
-                              <CheckCircle2 className="h-5 w-5 text-green-400" />
+                          <h3 className="font-jetbrains text-white font-bold flex items-center gap-2 mb-1">
+                            {event.link ? (
+                              <a href={event.link} target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
+                                {event.eventName}
+                              </a>
                             ) : (
-                              <AlertCircle className="h-5 w-5 text-yellow-400" />
+                              event.eventName
                             )}
-                          </div>
-                          <p className="font-jetbrains text-gray-300 mb-3">{event.role}</p>
+                            {event.verified ? (
+                              <CheckCircle2 className="h-4 w-4 text-green-400" />
+                            ) : (
+                              <AlertCircle className="h-4 w-4 text-yellow-400" />
+                            )}
+                          </h3>
+                          <p className="font-jetbrains text-gray-400 text-sm">{event.role}</p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <button className="pixel-button bg-cyan-600 text-white px-3 py-2 text-xs hover:bg-cyan-700">
+                          <button 
+                            onClick={() => handleEditEvent(event)}
+                            className="pixel-button bg-cyan-600 text-white px-3 py-2 text-xs hover:bg-cyan-700"
+                          >
                             <Edit3 className="h-3 w-3" />
                           </button>
-                          <button className="pixel-button bg-gray-700 text-white px-3 py-2 text-xs hover:bg-gray-600">
-                            <Eye className="h-3 w-3" />
-                          </button>
                         </div>
                       </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div>
-                          <span className="font-jetbrains text-gray-400">Date:</span>
-                          <div className="font-jetbrains text-white">{new Date(event.date).toLocaleDateString()}</div>
-                        </div>
-                        <div>
-                          <span className="font-jetbrains text-gray-400">Teams:</span>
-                          <div className="font-jetbrains text-white">{event.teamsEvaluated}</div>
-                        </div>
-                        <div>
-                          <span className="font-jetbrains text-gray-400">Hours:</span>
-                          <div className="font-jetbrains text-white">{event.hoursSpent}</div>
-                        </div>
-                        <div>
-                          <span className="font-jetbrains text-gray-400">Status:</span>
-                          <div className={`font-jetbrains ${event.verified ? 'text-green-400' : 'text-yellow-400'}`}>
-                            {event.verified ? 'Verified' : 'Pending'}
-                          </div>
-                        </div>
-                      </div>
+                      <p className="font-jetbrains text-gray-500 text-xs">{event.date}</p>
                     </div>
                   ))}
                 </div>
@@ -666,6 +775,18 @@ const JudgeDashboard = () => {
         onClose={() => setShowAddEventModal(false)}
         onSubmit={handleAddEventSubmit}
         isLoading={addingEvent}
+      />
+
+      {/* Edit Event Modal */}
+      <EditEventModal
+        isOpen={showEditEventModal}
+        onClose={() => {
+          setShowEditEventModal(false);
+          setEditingEvent(null);
+        }}
+        onSubmit={handleEditEventSubmit}
+        isLoading={editingEventLoading}
+        event={editingEvent}
       />
     </>
   );

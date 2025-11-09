@@ -41,9 +41,7 @@ export function logEnvironmentStatus(): void {
   const { isValid, missing, config } = validateEnvironment();
 
   if (isValid) {
-    console.log('✅ Disposable email prevention system - Environment configured correctly');
-    console.log('🔑 SUPABASE_URL:', config?.SUPABASE_URL ? 'Present' : 'Missing');
-    console.log('🔑 SUPABASE_SERVICE_ROLE_KEY:', config?.SUPABASE_SERVICE_ROLE_KEY ? 'Present (hidden)' : 'Missing');
+    // Environment configured correctly
   } else {
     console.error('❌ Disposable email prevention system - Missing required environment variables:');
     missing.forEach(key => {

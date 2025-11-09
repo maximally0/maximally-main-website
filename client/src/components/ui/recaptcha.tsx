@@ -72,7 +72,7 @@ const RecaptchaComponent = forwardRef<RecaptchaRef, RecaptchaProps>(({
   // For future extensibility with hCaptcha
   if (provider === 'hcaptcha') {
     // This would be implemented when adding hCaptcha support
-    console.warn('hCaptcha not yet implemented');
+    
     return null;
   }
 

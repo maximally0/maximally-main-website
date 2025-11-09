@@ -16,6 +16,34 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// CORS middleware - allow admin panel to make requests
+app.use((_req: Request, res: Response, next: NextFunction) => {
+  // Allow requests from admin panel (localhost:5173) and main app
+  const allowedOrigins = [
+    'http://localhost:5173', // Admin panel
+    'http://localhost:5002', // Main website
+    'http://localhost:5001', // Main website alternate port
+    'https://maximally.in',
+    'https://maximally-admin-panel.vercel.app'
+  ];
+
+  const origin = _req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // Handle preflight requests
+  if (_req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
 // Basic security headers without adding deps
 app.use((_req: Request, res: Response, next: NextFunction) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -96,7 +124,7 @@ app.use((req, res, next) => {
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT || 5001;
   server.listen({
     port,
     host: "0.0.0.0",

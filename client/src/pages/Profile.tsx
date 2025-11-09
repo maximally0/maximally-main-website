@@ -15,9 +15,11 @@ import JudgeBadge from '@/components/judges/JudgeBadge';
 import { format } from 'date-fns';
 import type { Achievement, SelectHackathon } from '@shared/schema';
 import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut } from '@/lib/supabaseClient';
+import { useAuth } from '@/contexts/AuthContext';
 import UsernameSettings from '@/components/UsernameSettings';
 import PasswordSettings from '@/components/PasswordSettings';
 import ExportDataButton from '@/components/ExportDataButton';
+import { useToast } from '@/hooks/use-toast';
 
 interface Certificate {
   id: string;
@@ -463,22 +465,17 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
 
 function DeleteAccountButton() {
   const [loading, setLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmText, setConfirmText] = useState('');
+  const { toast } = useToast();
+  
   const handleDelete = async () => {
-    const confirmMessage = `⚠️ ACCOUNT DELETION WARNING ⚠️
-
-This will permanently delete:
-• Your profile information
-• Your certificates and achievements
-• Your avatar and files
-• All associated data
-
-Note: Your login credentials will remain active but all profile data will be permanently removed.
-
-Type "DELETE" to confirm:`;
-    
-    const userInput = prompt(confirmMessage);
-    if (userInput !== 'DELETE') {
-      alert('Account deletion cancelled. You must type "DELETE" exactly to confirm.');
+    if (confirmText !== 'DELETE') {
+      toast({
+        title: "Confirmation Required",
+        description: 'You must type "DELETE" exactly to confirm account deletion.',
+        variant: "destructive",
+      });
       return;
     }
     
@@ -487,34 +484,117 @@ Type "DELETE" to confirm:`;
       const { deleteAccountRequest } = await import('@/lib/supabaseClient');
       const result = await deleteAccountRequest();
       
-      alert(result.message || 'Account deleted successfully');
+      toast({
+        title: "Account Deleted",
+        description: result.message || 'Your account has been permanently deleted.',
+      });
       
       // Redirect to home page
-      window.location.href = '/';
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
     } catch (e: any) {
-      alert(`Failed to delete account: ${e?.message || 'Unknown error'}`);
+      toast({
+        title: "Deletion Failed",
+        description: e?.message || 'Failed to delete account. Please try again.',
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
+      setConfirmOpen(false);
+      setConfirmText('');
     }
   };
   
   return (
-    <Button 
-      onClick={handleDelete} 
-      className="bg-red-600 hover:bg-red-700 text-white font-press-start text-xs px-4 py-3 border-2 border-red-500 hover:border-red-400 transition-colors" 
-      disabled={loading}
-    >
-      {loading ? 'DELETING...' : 'DELETE_ACCOUNT'}
-    </Button>
+    <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+      <DialogTrigger asChild>
+        <Button 
+          className="bg-red-600 hover:bg-red-700 text-white font-press-start text-xs px-4 py-3 border-2 border-red-500 hover:border-red-400 transition-colors"
+        >
+          DELETE_ACCOUNT
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-black border-4 border-red-600">
+        <DialogHeader>
+          <DialogTitle className="text-red-500 font-press-start text-lg flex items-center gap-2">
+            <AlertCircle className="w-5 h-5" />
+            CONFIRM ACCOUNT DELETION
+          </DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="bg-red-900/20 border-2 border-red-500/50 p-4 rounded">
+            <p className="text-red-400 font-jetbrains text-sm mb-3">
+              ⚠️ This action cannot be undone. This will permanently delete:
+            </p>
+            <ul className="text-gray-300 font-jetbrains text-sm space-y-1 ml-4">
+              <li>• Your profile information</li>
+              <li>• Your certificates and achievements</li>
+              <li>• Your avatar and files</li>
+              <li>• All associated data</li>
+            </ul>
+          </div>
+          
+          <div>
+            <Label htmlFor="confirm" className="text-gray-300 font-press-start text-xs mb-2 block">
+              Type "DELETE" to confirm:
+            </Label>
+            <Input
+              id="confirm"
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+              className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-red-500"
+              placeholder="DELETE"
+            />
+          </div>
+          
+          <div className="flex gap-2 pt-2">
+            <Button
+              onClick={handleDelete}
+              disabled={loading || confirmText !== 'DELETE'}
+              className="bg-red-600 hover:bg-red-700 text-white font-press-start text-xs flex-1"
+            >
+              {loading ? 'DELETING...' : 'CONFIRM DELETE'}
+            </Button>
+            <Button
+              onClick={() => {
+                setConfirmOpen(false);
+                setConfirmText('');
+              }}
+              variant="outline"
+              className="font-press-start text-xs"
+              disabled={loading}
+            >
+              CANCEL
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
   const queryClient = useQueryClient();
+  const { user: authUser, profile: authProfile, refreshProfile } = useAuth();
+  const { toast } = useToast();
 
   const { data: currentCtx } = useQuery({ queryKey: ['auth:me'], queryFn: getCurrentUserWithProfile });
-  const { data: dbProfile, isLoading: profileLoading } = useQuery({ queryKey: ['profile', username], queryFn: () => getProfileByUsername(username!), enabled: !!username });
+  const { data: dbProfile, isLoading: profileLoading, error: profileError } = useQuery({ 
+    queryKey: ['profile', username], 
+    queryFn: async () => {
+      
+      const result = await getProfileByUsername(username!);
+      
+      return result;
+    }, 
+    enabled: !!username,
+    retry: false,
+    staleTime: 0 // Disable caching for debugging
+  });
+  
+  
   
   // Fetch user certificates, hackathons, and achievements
   const { data: userCertificatesData, isLoading: certificatesLoading } = useQuery({
@@ -641,25 +721,57 @@ export default function Profile() {
     avatarUrl: dbProfile.avatar_url ?? null,
   };
 
-  const isOwner = currentCtx?.user?.id === dbProfile.id;
+  // Check ownership using multiple sources for reliability
+  // 1. Try from query data (getCurrentUserWithProfile)
+  // 2. Fallback to AuthContext user (faster, already loaded)
+  // 3. Fallback to AuthContext profile username match
+  const isOwner = currentCtx?.user?.id === dbProfile.id || 
+                  authUser?.id === dbProfile.id || 
+                  (authProfile?.username && authProfile.username === dbProfile.username);
 
   const handleSaveProfile = async (updatedProfile: Partial<ProfileUI>) => {
-    // Map UI field names to database field names
-    const dbFields = {
-      full_name: updatedProfile.name,
-      bio: updatedProfile.bio,
-      location: updatedProfile.location,
-      skills: updatedProfile.skills?.filter(skill => skill.trim() !== ''),
-      github_username: updatedProfile.github,
-      linkedin_username: updatedProfile.linkedin,
-      twitter_username: updatedProfile.twitter,
-      website_url: updatedProfile.website,
-      avatar_url: updatedProfile.avatarUrl ?? null
-    };
-    
-  // Saving profile (debug logging removed)
-    await updateProfileMe(dbFields);
-    await queryClient.invalidateQueries({ queryKey: ['profile', username] });
+    try {
+      
+      
+      // Map UI field names to database field names
+      const dbFields = {
+        full_name: updatedProfile.name,
+        bio: updatedProfile.bio,
+        location: updatedProfile.location,
+        skills: updatedProfile.skills?.filter(skill => skill.trim() !== ''),
+        github_username: updatedProfile.github,
+        linkedin_username: updatedProfile.linkedin,
+        twitter_username: updatedProfile.twitter,
+        website_url: updatedProfile.website,
+        avatar_url: updatedProfile.avatarUrl ?? null
+      };
+      
+      
+      
+      const result = await updateProfileMe(dbFields);
+      
+      
+      // Invalidate queries to refetch data
+      await queryClient.invalidateQueries({ queryKey: ['profile', username] });
+      await queryClient.invalidateQueries({ queryKey: ['auth:me'] });
+      
+      // Refresh the profile in AuthContext
+      
+      await refreshProfile();
+      
+      // Show success feedback
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+      });
+    } catch (error: any) {
+      
+      toast({
+        title: "Update Failed",
+        description: error.message || 'Failed to update profile. Please try again.',
+        variant: "destructive",
+      });
+    }
   };
 
   // Fetch hackathons & achievements here (same query logic as your current code)
@@ -757,7 +869,22 @@ export default function Profile() {
                     </a>
                   )}
                   <button
-                    onClick={async () => { await signOut(); window.location.href = '/'; }}
+                    onClick={async () => {
+                      try {
+                        
+                        await signOut();
+                        
+                        // Force a hard refresh to clear all state
+                        window.location.href = '/';
+                      } catch (error: any) {
+                        
+                        toast({
+                          title: "Logout Failed",
+                          description: "Failed to logout. Please try again.",
+                          variant: "destructive",
+                        });
+                      }
+                    }}
                     className="pixel-button bg-maximally-yellow text-maximally-black hover:bg-maximally-yellow/90 font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300"
                   >
                     LOGOUT

@@ -69,7 +69,7 @@ const Events = () => {
       });
       
       if (!hackathonsResponse.ok) {
-        console.error('❌ Error fetching hackathons:', hackathonsResponse.status);
+        
   // Falling back to hardcoded hackathon data
         setHackathons(grandIndianHackathonSeason);
         return;
@@ -114,7 +114,7 @@ const Events = () => {
   // Events: Mapped hackathons (logging removed)
   setHackathons(mapped);
     } catch (err) {
-      console.error('❌ Failed to fetch hackathons from Supabase:', err);
+      
   // Using fallback hackathon data due to connection error
       setHackathons(grandIndianHackathonSeason);
     }
@@ -151,7 +151,14 @@ const Events = () => {
   const filterOptions = useMemo(() => {
     const uniqueLocations = Array.from(new Set(hackathons.map(h => h.location))).sort();
     const uniqueStatuses = Array.from(new Set(hackathons.map(h => h.status))).sort();
-    const uniqueLengths = Array.from(new Set(hackathons.map(h => h.length))).sort();
+    const allUniqueLengths = Array.from(new Set(hackathons.map(h => h.length)));
+    
+    // Only show specific duration options
+    const allowedDurations = ['24 hours', '48 hours', '7 days', '1 month'];
+    const uniqueLengths = allowedDurations.filter(duration => 
+      allUniqueLengths.some(length => length.toLowerCase().includes(duration.toLowerCase()))
+    );
+    
     const uniqueTags = Array.from(new Set(hackathons.flatMap(h => h.tags))).sort();
     
     return {

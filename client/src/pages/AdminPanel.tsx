@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { getCurrentUserWithProfile } from '@/lib/supabaseClient';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CheckCircle, XCircle, Clock, User, Mail, MapPin, Building, Calendar, ExternalLink, ArrowUp } from 'lucide-react';
+import { getAuthHeaders } from '@/lib/auth';
+import { useToast } from '@/hooks/use-toast';
 
 interface JudgeApplication {
   id: number;
@@ -51,6 +53,7 @@ interface JudgeApplication {
 export default function AdminPanel() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [selectedApplication, setSelectedApplication] = useState<JudgeApplication | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
@@ -77,9 +80,10 @@ export default function AdminPanel() {
   const handleApprove = async (applicationId: number, tier: string = 'starter') => {
     try {
       setActionLoading(`approve-${applicationId}`);
+      const headers = await getAuthHeaders();
       const response = await fetch(`/api/admin/judge-applications/${applicationId}/approve`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ tier })
       });
 
@@ -91,7 +95,11 @@ export default function AdminPanel() {
       setSelectedApplication(null);
     } catch (error) {
       console.error('Error approving application:', error);
-      alert('Failed to approve application');
+      toast({
+        title: "Approval Failed",
+        description: "Failed to approve application. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setActionLoading(null);
     }
@@ -100,9 +108,10 @@ export default function AdminPanel() {
   const handleReject = async (applicationId: number, reason: string) => {
     try {
       setActionLoading(`reject-${applicationId}`);
+      const headers = await getAuthHeaders();
       const response = await fetch(`/api/admin/judge-applications/${applicationId}/reject`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ reason })
       });
 
@@ -114,7 +123,11 @@ export default function AdminPanel() {
       setSelectedApplication(null);
     } catch (error) {
       console.error('Error rejecting application:', error);
-      alert('Failed to reject application');
+      toast({
+        title: "Rejection Failed",
+        description: "Failed to reject application. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setActionLoading(null);
     }

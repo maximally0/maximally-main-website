@@ -9,34 +9,30 @@ export default function MyProfileRedirect() {
   useEffect(() => {
     (async () => {
       try {
-        // Add timeout to prevent hanging
-        const profilePromise = getCurrentUserWithProfile();
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Profile loading timeout')), 8000)
-        );
         
-        const ctx = await Promise.race([profilePromise, timeoutPromise]) as any;
         
-        // MyProfileRedirect: context loaded (debug logs removed)
+        const ctx = await getCurrentUserWithProfile();
+        
+        
         
         if (!ctx) {
-          // No user context, redirecting to login
+          
           navigate('/login', { replace: true });
           return;
         }
         
         if (!ctx.profile?.username) {
-          console.error('❌ MyProfileRedirect: No username in profile! Profile:', ctx.profile);
+          
           const fallback = ctx.user?.email?.split('@')[0] || 'me';
-          console.warn('⚠️ MyProfileRedirect: Using fallback username:', fallback);
+          
           navigate(`/profile/${fallback}`, { replace: true });
           return;
         }
         
-  // Redirecting to profile
+        
         navigate(`/profile/${ctx.profile.username}`, { replace: true });
       } catch (error: any) {
-        console.error('❌ MyProfileRedirect: Error loading profile, redirecting to home:', error.message);
+        
         // If profile loading fails, redirect to home page instead of staying stuck
         navigate('/', { replace: true });
       } finally {

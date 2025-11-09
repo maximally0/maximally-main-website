@@ -145,20 +145,20 @@ function getStorage(): IStorage {
   }
 
   try {
-    console.log('🔍 Initializing storage...');
-    console.log('SUPABASE_URL:', process.env.SUPABASE_URL ? 'SET' : 'NOT SET');
-    console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET');
+    
+    
+    
     
     if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      console.log('🔄 Attempting to initialize Supabase storage...');
+      
       _storage = new SupabaseStorage();
-      console.log('✅ Using Supabase storage for judges system');
+      
     } else {
-      console.log('⚠️  Using memory storage - set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for persistent storage');
+      
       _storage = new MemStorage();
     }
   } catch (error) {
-    console.error('❌ Failed to initialize Supabase storage, falling back to memory storage:', error);
+    
     _storage = new MemStorage();
   }
 

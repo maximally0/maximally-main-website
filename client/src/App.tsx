@@ -140,6 +140,7 @@ import Judges from './pages/Judges';
 import JudgeProfile from './pages/JudgeProfile';
 import JudgeApplicationForm from './pages/JudgeApplicationForm';
 import JudgeDashboard from './pages/JudgeDashboard';
+import JudgeInbox from './pages/JudgeInbox';
 import Resources from './pages/Resources';
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
@@ -353,6 +354,7 @@ const App = () => {
             <Route path="/judge/:username" element={<JudgeProfile />} />
             <Route path="/judges/apply" element={<JudgeApplicationForm />} />
             <Route path="/judge-dashboard" element={<JudgeDashboard />} />
+            <Route path="/judge-inbox" element={<JudgeInbox />} />
             <Route path="/resources" element={<Resources />} />
             {/* Legacy redirect */}
             <Route path="/featured" element={<Navigate to="/people" replace />} />

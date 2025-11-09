@@ -29,7 +29,7 @@ const RecaptchaV3: React.FC<RecaptchaV3Props> = ({
 
   const executeRecaptcha = async () => {
     if (!siteKey) {
-      console.warn('reCAPTCHA site key missing, skipping execution');
+      
       onVerify(null);
       return;
     }
@@ -47,7 +47,7 @@ const RecaptchaV3: React.FC<RecaptchaV3Props> = ({
     // Defensive: ensure grecaptcha exists and has execute function
     const readyToExecute = !!window.grecaptcha && typeof window.grecaptcha.execute === 'function';
     if (!readyToExecute) {
-      console.warn('reCAPTCHA not ready yet - will retry shortly');
+      
       // Try a few times with backoff before giving up
       let attempts = 0;
       const maxAttempts = 3;

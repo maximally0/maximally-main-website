@@ -7,30 +7,25 @@ import VerificationIndicator from '@/components/judges/VerificationIndicator';
 import { getTierLabel } from '@/lib/judgesData';
 import { useQuery } from '@tanstack/react-query';
 import type { Judge, JudgeEvent } from '@shared/schema';
+import { useAuth } from '@/contexts/AuthContext';
 
 const JudgeProfile = () => {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
+  const { user, profile } = useAuth();
   
-  // Get current user to check if they're an admin
-  const { data: currentUser } = useQuery({
-    queryKey: ['auth:me'],
-    queryFn: async () => {
-      const token = localStorage.getItem('auth_token');
-      if (!token) return null;
-      
-      const response = await fetch('/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) return null;
-      return response.json();
-    }
-  });
+  // Check if user is admin or viewing their own profile
+  const isAdmin = profile?.role === 'admin';
+  const isOwnProfile = profile?.username === username;
   
-  const isAdmin = currentUser?.profile?.role === 'admin';
+  // Debug logging
+  
+  
+  
+  
+  
+  
+  
   
   const { data: judge, isLoading } = useQuery<Judge & { topEventsJudged: JudgeEvent[] }>({
     queryKey: ['/api/judges', username],
@@ -300,12 +295,12 @@ const JudgeProfile = () => {
 
               {/* Sidebar */}
               <div className="space-y-8">
-                {/* Admin Only - Private Information */}
-                {isAdmin && (
+                {/* Private Information - Admin or Own Profile */}
+                {(isAdmin || isOwnProfile) && (
                   <section className="pixel-card bg-red-900/20 border-2 border-red-500 p-6">
                     <h2 className="font-press-start text-sm mb-4 text-red-400 flex items-center gap-2">
                       <Shield className="h-4 w-4" />
-                      ADMIN ONLY - PRIVATE DATA
+                      {isAdmin ? 'ADMIN VIEW - PRIVATE DATA' : 'YOUR PRIVATE DATA'}
                     </h2>
                     <div className="space-y-3 text-sm">
                       {judge.email && (

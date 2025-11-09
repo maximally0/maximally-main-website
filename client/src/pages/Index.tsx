@@ -95,9 +95,7 @@ const Index = () => {
       // Loading featured hackathon (debug logs removed)
 
       if (!supabasePublic) {
-        console.warn(
-          "⚠️ Supabase public client not available, using default featured hackathon"
-        );
+        
         // Set a default featured hackathon
         setFeatured({
           title: "Maximally Hacktober",
@@ -156,7 +154,7 @@ const Index = () => {
         const rawId = dashboardRow.featured_hackathon_id;
 
         if (rawId === undefined || rawId === null || rawId === "") {
-          console.warn("❌ No featured hackathon id found on dashboard row");
+          
           await loadLatestHackathon(); // Fallback to latest hackathon
           return;
         }
@@ -165,10 +163,7 @@ const Index = () => {
         // Featured ID processed
 
         if (Number.isNaN(featuredId)) {
-          console.warn(
-            "❌ Featured hackathon id is not a valid number:",
-            rawId
-          );
+          
           await loadLatestHackathon(); // Fallback to latest hackathon
           return;
         }
@@ -188,10 +183,7 @@ const Index = () => {
         );
 
         if (!hackathonResponse.ok) {
-          console.error("❌ Failed to load hackathon by featured id", {
-            featuredId,
-            status: hackathonResponse.status,
-          });
+          
           await loadLatestHackathon();
           return;
         }
@@ -200,7 +192,7 @@ const Index = () => {
         const hack = hackathonData?.[0] as HackathonData | undefined;
 
         if (!hack) {
-          console.error("❌ No hackathon found for featured id", featuredId);
+          
           await loadLatestHackathon();
           return;
         }
@@ -229,7 +221,7 @@ const Index = () => {
     // Processed featured object (logging removed)
     setFeatured(processedFeatured);
       } catch (error) {
-        console.error("❌ Error loading featured hackathon:", error);
+        
         await loadLatestHackathon(); // Fallback to latest hackathon
       }
     };

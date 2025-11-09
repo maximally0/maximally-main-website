@@ -61,7 +61,7 @@ export function EmailInput({
       // Use the quick validation function that works in browser
       return validateEmailQuick(email);
     } catch (error) {
-      console.warn('Client-side email validation failed:', error);
+      
       return {
         isValid: false,
         domain: '',

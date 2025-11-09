@@ -7,6 +7,7 @@ import JudgeCard from '@/components/judges/JudgeCard';
 import { type JudgeTier, type ExpertiseArea } from '@/lib/judgesData';
 import { useQuery } from '@tanstack/react-query';
 import type { Judge } from '@shared/schema';
+import { supabasePublic } from '@/lib/supabaseClient';
 
 const PeopleJudges = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,36 +17,24 @@ const PeopleJudges = () => {
   const [showFilters, setShowFilters] = useState(false);
   const itemsPerPage = 12;
 
-  // Fetch judges directly from Supabase (since Netlify is static hosting)
+  // Fetch judges via Supabase client (RLS-aware) and only published ones
   const { data: apiJudges = [], isLoading, error } = useQuery<Judge[]>({
     queryKey: ['judges'],
     queryFn: async () => {
-      console.log('🔍 Fetching judges from Supabase...');
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      
-      if (!supabaseUrl || !supabaseKey) {
-        console.error('❌ Supabase credentials not found');
+      if (!supabasePublic) {
+        
         return [];
       }
-
-      const response = await fetch(`${supabaseUrl}/rest/v1/judges?is_published=eq.true&order=tier.desc`, {
-        headers: {
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-        },
-      });
-
-      if (!response.ok) {
-        console.error('❌ Failed to fetch judges:', response.status);
-        return [];
+      const { data, error } = await (supabasePublic as any)
+        .from('judges')
+        .select('*')
+        .eq('is_published', true);
+      if (error) {
+        
+        throw new Error(error.message);
       }
-
-      const data = await response.json();
-      console.log('✅ Fetched judges:', data.length);
-
-      // Transform Supabase data to match Judge type
-      return data.map((judge: any) => ({
+      const rows = data || [];
+      return rows.map((judge: any) => ({
         id: judge.id,
         username: judge.username,
         fullName: judge.full_name,

@@ -84,7 +84,7 @@ const JudgeApplicationForm = () => {
   // Auto-fill form with profile data
   useEffect(() => {
     if (profile && user) {
-      console.log('Auto-filling form with profile data:', profile);
+      
       
       // Helper to format social URLs
       const formatSocialUrl = (username: string | null | undefined, platform: 'linkedin' | 'github' | 'twitter'): string => {

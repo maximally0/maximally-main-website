@@ -157,7 +157,6 @@ export default function Login() {
 
       // For now, skip backend verification since we're on static hosting
       // The CAPTCHA token presence is sufficient for client-side validation
-      console.log('CAPTCHA token validated client-side');
     }
 
     // Validation
@@ -251,7 +250,6 @@ export default function Login() {
       }
 
       // For now, skip backend verification since we're on static hosting
-      console.log('CAPTCHA token validated client-side for Google OAuth');
     }
     
     try {
@@ -294,7 +292,6 @@ export default function Login() {
       }
 
       // For now, skip backend verification since we're on static hosting
-      console.log('CAPTCHA token validated client-side for GitHub OAuth');
     }
     
     try {
