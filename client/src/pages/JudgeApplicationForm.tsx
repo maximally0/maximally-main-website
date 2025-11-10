@@ -84,7 +84,7 @@ const JudgeApplicationForm = () => {
   // Auto-fill form with profile data
   useEffect(() => {
     if (profile && user) {
-      
+      let hasAutoFilledData = false;
       
       // Helper to format social URLs
       const formatSocialUrl = (username: string | null | undefined, platform: 'linkedin' | 'github' | 'twitter'): string => {
@@ -107,29 +107,57 @@ const JudgeApplicationForm = () => {
       };
 
       // Set form values from profile (only fields that exist in Profile type)
-      if (profile.username) form.setValue('username', profile.username);
+      // Username is automatically set from the logged-in user's profile
+      if (profile.username) {
+        form.setValue('username', profile.username);
+        hasAutoFilledData = true;
+      }
       if (profile.full_name) form.setValue('fullName', profile.full_name);
       if (profile.avatar_url) form.setValue('profilePhoto', profile.avatar_url);
       if (profile.location) form.setValue('location', profile.location);
       if (profile.bio) form.setValue('shortBio', profile.bio);
       if (user.email) form.setValue('email', user.email);
       
-      // Set social links
+      // Set social links (use empty string for optional fields if not available)
       const linkedinUrl = formatSocialUrl(profile.linkedin_username, 'linkedin');
       const githubUrl = formatSocialUrl(profile.github_username, 'github');
       const twitterUrl = formatSocialUrl(profile.twitter_username, 'twitter');
       
       if (linkedinUrl) form.setValue('linkedin', linkedinUrl);
-      if (githubUrl) form.setValue('github', githubUrl);
-      if (twitterUrl) form.setValue('twitter', twitterUrl);
-      if (profile.website_url) form.setValue('website', profile.website_url);
+      form.setValue('github', githubUrl || '');
+      form.setValue('twitter', twitterUrl || '');
+      form.setValue('website', profile.website_url || '');
       
-      toast({
-        title: "Profile Data Loaded",
-        description: "Your profile information has been auto-filled. Please review and complete the remaining fields.",
-      });
+      if (hasAutoFilledData) {
+        toast({
+          title: "Profile Data Loaded",
+          description: "Your profile information has been auto-filled. Please review and complete the remaining fields.",
+        });
+      }
     }
   }, [profile, user, form, toast]);
+
+  // Auto-generate headline from currentRole, company, and location
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      // Only update headline when one of the relevant fields changes
+      if (name === 'currentRole' || name === 'company' || name === 'location') {
+        const { currentRole, company, location, headline: currentHeadline } = value;
+        
+        // Generate new headline
+        let newHeadline = '';
+        if (currentRole && company && location) {
+          newHeadline = `${currentRole} @ ${company}, ${location}`;
+        }
+        
+        // Only update if the headline actually changed to prevent infinite loop
+        if (newHeadline !== currentHeadline) {
+          form.setValue('headline', newHeadline, { shouldValidate: false });
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   const addEvent = () => {
     setTopEventsJudged([...topEventsJudged, { eventName: '', role: '', date: '', link: '' }]);
@@ -149,8 +177,12 @@ const JudgeApplicationForm = () => {
     try {
       setIsSubmitting(true);
 
+      // Ensure optional URL fields are either valid URLs or undefined (not empty strings)
       const submitData = {
         ...data,
+        github: data.github && data.github.trim() !== '' ? data.github : undefined,
+        twitter: data.twitter && data.twitter.trim() !== '' ? data.twitter : undefined,
+        website: data.website && data.website.trim() !== '' ? data.website : undefined,
         topEventsJudged: topEventsJudged.filter(event => 
           event.eventName && event.role && event.date
         ),
@@ -287,36 +319,6 @@ const JudgeApplicationForm = () => {
                       />
                       {form.formState.errors.fullName && (
                         <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.fullName.message}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">MAXIMALLY USERNAME *</label>
-                      <input
-                        {...form.register('username')}
-                        type="text"
-                        placeholder="john-doe"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
-                        data-testid="input-username"
-                      />
-                      <p className="font-jetbrains text-gray-500 text-xs mt-1">Enter your existing Maximally username. This will link your judge profile to your account.</p>
-                      {form.formState.errors.username && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.username.message}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">HEADLINE *</label>
-                      <input
-                        {...form.register('headline')}
-                        type="text"
-                        placeholder="Senior Product Manager · AI Systems · Google"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
-                        data-testid="input-headline"
-                      />
-                      <p className="font-jetbrains text-gray-500 text-xs mt-1">Keep it concise. Example: "Chief Judge · Blockchain · Ethereum Foundation"</p>
-                      {form.formState.errors.headline && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.headline.message}</p>
                       )}
                     </div>
 
