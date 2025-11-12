@@ -1,6 +1,7 @@
 [build]
   command = "npm run build:client"
   publish = "dist/public"
+  functions = "netlify/functions"
 
 [build.environment]
   # Allow VITE_ prefixed environment variables to be in build output
@@ -12,7 +13,13 @@
   to = "/makeathon"
   status = 301
 
-# Catch-all for SPA routing
+# API redirects to Netlify Functions
+[[redirects]]
+  from = "/api/judges/apply"
+  to = "/.netlify/functions/judges-apply"
+  status = 200
+
+# Catch-all for SPA routing (must be last)
 [[redirects]]
   from = "/*"
   to = "/index.html"
