@@ -13,12 +13,17 @@ export async function apiRequest<T = any>(
   url: string,
   options?: RequestInit
 ): Promise<T> {
-  const response = await fetch(url, {
+  // Use API base URL from environment variable, fallback to relative URL for local dev
+  const apiBaseUrl = import.meta.env.VITE_API_URL || '';
+  const fullUrl = url.startsWith('http') ? url : `${apiBaseUrl}${url}`;
+  
+  const response = await fetch(fullUrl, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers,
     },
+    credentials: 'include', // Include cookies for session
   });
 
   if (!response.ok) {
