@@ -1,11 +1,27 @@
-import { Handler } from '@netlify/functions';
-import { createClient } from '@supabase/supabase-js';
+const { createClient } = require('@supabase/supabase-js');
 
-export const handler: Handler = async (event) => {
+exports.handler = async (event) => {
+  // CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  };
+
+  // Handle preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers,
+      body: '',
+    };
+  }
+
   // Only allow POST requests
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ message: 'Method not allowed' }),
     };
   }
@@ -17,6 +33,7 @@ export const handler: Handler = async (event) => {
     if (!supabaseUrl || !supabaseServiceKey) {
       return {
         statusCode: 500,
+        headers,
         body: JSON.stringify({ message: 'Server is not configured for Supabase' }),
       };
     }
@@ -31,6 +48,7 @@ export const handler: Handler = async (event) => {
     if (!body.username || !body.fullName || !body.email) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ message: 'Missing required fields: username, fullName, email' }),
       };
     }
@@ -45,6 +63,7 @@ export const handler: Handler = async (event) => {
     if (existingUsername) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ message: 'Username already exists in applications' }),
       };
     }
@@ -59,6 +78,7 @@ export const handler: Handler = async (event) => {
     if (existingEmail) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ message: 'Email already registered in applications' }),
       };
     }
@@ -73,6 +93,7 @@ export const handler: Handler = async (event) => {
     if (existingJudge) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ message: 'You are already a registered judge or have a pending application' }),
       };
     }
@@ -127,6 +148,7 @@ export const handler: Handler = async (event) => {
       console.error('Application insert error:', applicationError);
       return {
         statusCode: 500,
+        headers,
         body: JSON.stringify({ message: `Failed to submit application: ${applicationError.message}` }),
       };
     }
@@ -134,8 +156,8 @@ export const handler: Handler = async (event) => {
     // Add judge events if provided
     if (body.topEventsJudged && Array.isArray(body.topEventsJudged)) {
       const events = body.topEventsJudged
-        .filter((event: any) => event.eventName && event.role && event.date)
-        .map((event: any) => ({
+        .filter((event) => event.eventName && event.role && event.date)
+        .map((event) => ({
           application_id: application.id,
           event_name: event.eventName,
           event_role: event.role,
@@ -157,15 +179,17 @@ export const handler: Handler = async (event) => {
 
     return {
       statusCode: 201,
+      headers,
       body: JSON.stringify({
         message: 'Application submitted successfully! We will review your application and get back to you soon.',
         applicationId: application.id
       }),
     };
-  } catch (err: any) {
+  } catch (err) {
     console.error('Judge application error:', err);
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ message: err?.message || 'Failed to submit application' }),
     };
   }
