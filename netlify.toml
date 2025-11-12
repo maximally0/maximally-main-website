@@ -8,6 +8,13 @@
   # These are meant to be public client-side variables
   SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY,VITE_RECAPTCHA_SITE_KEY"
 
+[dev]
+  framework = "#custom"
+  command = "npm run dev"
+  targetPort = 5002
+  port = 8888
+  publish = "dist/public"
+
 [[redirects]]
   from = "/bootcamps"
   to = "/makeathon"

@@ -18,3 +18,5 @@ server/.env.local
 
 create_envs_mainweb.bat
 netlify-env-variables.txt
+# Local Netlify folder
+.netlify
