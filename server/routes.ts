@@ -894,33 +894,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check for existing username in applications
-      const { data: existingUsername } = await supabaseAdmin
+      const { data: existingUsername, error: usernameCheckError } = await supabaseAdmin
         .from('judge_applications')
         .select('id')
         .eq('username', body.username)
-        .single();
+        .maybeSingle();
 
       if (existingUsername) {
         return res.status(400).json({ message: 'Username already exists in applications' });
       }
 
       // Check for existing email in applications
-      const { data: existingEmail } = await supabaseAdmin
+      const { data: existingEmail, error: emailCheckError } = await supabaseAdmin
         .from('judge_applications')
         .select('id')
         .eq('email', body.email)
-        .single();
+        .maybeSingle();
 
       if (existingEmail) {
         return res.status(400).json({ message: 'Email already registered in applications' });
       }
 
       // Check if already approved as judge
-      const { data: existingJudge } = await supabaseAdmin
+      const { data: existingJudge, error: judgeCheckError } = await supabaseAdmin
         .from('judges')
         .select('id')
         .or(`username.eq.${body.username},email.eq.${body.email}`)
-        .single();
+        .maybeSingle();
 
       if (existingJudge) {
         return res.status(400).json({ message: 'You are already a registered judge or have a pending application' });

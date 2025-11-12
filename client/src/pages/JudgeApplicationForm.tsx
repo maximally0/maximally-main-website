@@ -177,6 +177,17 @@ const JudgeApplicationForm = () => {
     try {
       setIsSubmitting(true);
 
+      // Validate required fields before submission
+      if (!data.username || data.username.trim() === '') {
+        toast({
+          title: 'Missing Username',
+          description: 'Please enter your Maximally username.',
+          variant: 'destructive',
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       // Ensure optional URL fields are either valid URLs or undefined (not empty strings)
       const submitData = {
         ...data,
@@ -187,6 +198,8 @@ const JudgeApplicationForm = () => {
           event.eventName && event.role && event.date
         ),
       };
+
+      console.log('Submitting judge application:', submitData);
 
       await apiRequest('/api/judges/apply', {
         method: 'POST',
@@ -202,6 +215,7 @@ const JudgeApplicationForm = () => {
         navigate('/people/judges');
       }, 2000);
     } catch (error: any) {
+      console.error('Judge application submission error:', error);
       toast({
         title: 'Submission Failed',
         description: error.message || 'There was an error submitting your application. Please try again.',
