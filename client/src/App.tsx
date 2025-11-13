@@ -25,7 +25,6 @@ import Support from './pages/Support';
 import BecomeASupporter from './pages/BecomeASupporter';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
-import Story from './pages/Story';
 import About from './pages/About';
 import Profile from './pages/Profile';
 import AdminPanel from './pages/AdminPanel';
@@ -339,7 +338,6 @@ const App = () => {
             {/* Removed wall-of-progressive-schools route */}
             <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/story" element={<Story />} />
             <Route path="/about" element={<About />} />
             <Route path="/support" element={<Support />} />
             <Route path="/become-a-supporter" element={<BecomeASupporter />} />

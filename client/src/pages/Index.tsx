@@ -609,71 +609,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Grand Indian Hackathon Season Section */}
-        <section className="py-20 relative">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              {/* Section Header */}
-              <div className="text-center mb-16">
-                <div className="minecraft-block bg-gradient-to-r from-orange-500 to-red-500 text-black px-6 py-3 inline-block mb-6">
-                  <span className="font-press-start text-sm">
-                    🇮🇳 GRAND INDIAN HACKATHON SEASON 2025
-                  </span>
-                </div>
-                <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                    10 HACKATHONS
-                  </span>
-                </h2>
-                <p className="text-gray-300 text-sm sm:text-lg md:text-xl font-press-start px-4">
-                  September → November • India's Biggest Hackathon Season
-                </p>
-              </div>
 
-              {/* Event Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-4 lg:gap-6 mb-8 sm:mb-12">
-                {[
-                  { name: "CODE HYPOTHESIS", date: "SEP 2025", icon: "🧪" },
-                  { name: "PROTOCOL 404", date: "OCT 2025", icon: "⚡" },
-                  { name: "PROJECT CODEGEN", date: "OCT 2025", icon: "📝" },
-                  { name: "HACKTOBER", date: "OCT 2025", icon: "🍂" },
-                  { name: "PROMPTSTORM", date: "OCT 25-26", icon: "⚡" },
-                  { name: "TECH ASSEMBLY", date: "NOV 1-7", icon: "🎮" },
-                  { name: "STEAL-A-THON", date: "NOV 9-10", icon: "🔥" },
-                  { name: "CODEPOCALYPSE", date: "OCT 18-19", icon: "☢️" },
-                ]
-                  .slice(0, 10)
-                  .map((event, i) => (
-                    <div
-                      key={i}
-                      className="pixel-card bg-gray-900 border-2 border-maximally-red hover:border-maximally-yellow transition-all duration-300 hover:scale-105 p-4 sm:p-3 lg:p-4 min-h-[120px] sm:min-h-[100px] flex flex-col justify-center"
-                    >
-                      <div className="text-2xl sm:text-xl lg:text-2xl mb-3 sm:mb-2 text-center">
-                        {event.icon}
-                      </div>
-                      <div className="font-press-start text-sm sm:text-xs lg:text-sm text-maximally-red text-center mb-2 sm:mb-1 leading-tight">
-                        {event.name}
-                      </div>
-                      <div className="font-press-start text-xs sm:text-[10px] lg:text-xs text-gray-400 text-center leading-tight">
-                        {event.date}
-                      </div>
-                    </div>
-                  ))}
-              </div>
-
-              <div className="text-center">
-                <Link
-                  to="/events"
-                  className="pixel-button bg-maximally-red text-white inline-flex items-center gap-2 px-8 py-4 font-press-start hover:scale-105 transition-all duration-300"
-                >
-                  <Calendar className="h-5 w-5" />
-                  <span>VIEW_ALL_EVENTS</span>
-                  <ArrowRight className="h-5 w-5" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Partner Network Section */}
         <section className="py-20 bg-gradient-to-b from-gray-900 via-black to-gray-900 relative overflow-hidden">
@@ -887,71 +823,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="py-20 bg-gradient-to-b from-black via-gray-900 to-black relative">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-12 sm:mb-16 minecraft-text px-4">
-                <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                  BUILT GLOBAL. MADE FOR BUILDERS.
-                </span>
-              </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                <div className="text-center">
-                  <div className="pixel-card bg-black border-2 border-maximally-red p-8 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow">
-                    <div className="minecraft-block bg-maximally-red w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                      <Globe className="h-8 w-8 text-black" />
-                    </div>
-                    <h3 className="font-press-start text-lg text-maximally-red mb-2">
-                      GLOBAL
-                    </h3>
-                    <p className="font-jetbrains text-gray-300">
-                      Borderless innovation for builders worldwide
-                    </p>
-                  </div>
-                </div>
-
-                <div className="text-center">
-                  <div className="pixel-card bg-black border-2 border-maximally-red p-8 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow">
-                    <div className="minecraft-block bg-maximally-red w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                      <Terminal className="h-8 w-8 text-black" />
-                    </div>
-                    <h3 className="font-press-start text-lg text-maximally-red mb-2">
-                      DIGITAL
-                    </h3>
-                    <p className="font-jetbrains text-gray-300">
-                      Internet-native events for digital builders
-                    </p>
-                  </div>
-                </div>
-
-                <div className="text-center">
-                  <div className="pixel-card bg-black border-2 border-maximally-red p-8 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow">
-                    <div className="minecraft-block bg-maximally-red w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                      <Zap className="h-8 w-8 text-black" />
-                    </div>
-                    <h3 className="font-press-start text-lg text-maximally-red mb-2">
-                      FAST
-                    </h3>
-                    <p className="font-jetbrains text-gray-300">
-                      High-pressure sprints for real proof of work
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-center mt-16">
-                <p className="font-jetbrains text-sm sm:text-base md:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed px-4">
-                  At Maximally, we believe innovation has no borders — and no
-                  traditional limits. Whether you're from a major city or a
-                  small town, if you're building bold things,
-                  <span className="text-maximally-red"> you belong here</span>.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* MFHOP Section */}
         <section className="py-20 relative bg-gradient-to-b from-gray-900 to-black">

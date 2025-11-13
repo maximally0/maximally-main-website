@@ -28,7 +28,9 @@ const PeopleJudges = () => {
       const { data, error } = await (supabasePublic as any)
         .from('judges')
         .select('*')
-        .eq('is_published', true);
+        .eq('is_published', true)
+        .order('sort_order', { ascending: true })
+        .order('created_at', { ascending: false });
       if (error) {
         
         throw new Error(error.message);

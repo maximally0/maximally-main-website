@@ -53,6 +53,7 @@ export class SupabaseStorage implements IStorage {
     const { data, error } = await this.supabase
       .from('judges')
       .select('*')
+      .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false });
 
     if (error) throw new Error(`Failed to fetch judges: ${error.message}`);
@@ -64,6 +65,8 @@ export class SupabaseStorage implements IStorage {
       .from('judges')
       .select('*')
       .eq('is_published', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false })
       .order('tier', { ascending: false }) // Legacy first, then Chief, Senior, etc.
       .order('total_events_judged', { ascending: false });
 
@@ -309,7 +312,9 @@ export class SupabaseStorage implements IStorage {
     let supabaseQuery = this.supabase
       .from('judges')
       .select('*')
-      .eq('is_published', true);
+      .eq('is_published', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
 
     // Add text search
     if (query) {

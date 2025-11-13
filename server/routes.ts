@@ -1511,7 +1511,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get all judges
       const { data: judges, error: fetchError } = await supabaseAdmin
         .from('judges')
-        .select('*');
+        .select('*')
+        .order('sort_order', { ascending: true })
+        .order('created_at', { ascending: false });
 
       if (fetchError) {
         return res.status(500).json({ message: `Failed to fetch judges: ${fetchError.message}` });
@@ -1994,7 +1996,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .from('judges')
         .select('*')
         .eq('is_published', true)
-        .order('tier', { ascending: false });
+        .order('sort_order', { ascending: true })
+        .order('created_at', { ascending: false });
 
       if (judgesError) {
         console.error('Error fetching judges:', judgesError);
