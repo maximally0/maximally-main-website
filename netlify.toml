@@ -1,29 +1,23 @@
 [build]
   command = "npm run build"
   publish = "dist/public"
-  functions = "functions"
+  functions = "netlify/functions"
 
 [build.environment]
   # Allow VITE_ prefixed environment variables to be in build output
   # These are meant to be public client-side variables
   SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY,VITE_RECAPTCHA_SITE_KEY"
-
-[dev]
-  framework = "#custom"
-  command = "npm run dev"
-  targetPort = 5002
-  port = 8888
-  publish = "dist/public"
+  NODE_VERSION = "20"
 
 [[redirects]]
   from = "/bootcamps"
   to = "/makeathon"
   status = 301
 
-# API redirects to Netlify Functions
+# Route all API calls to the serverless function
 [[redirects]]
-  from = "/api/judges/apply"
-  to = "/.netlify/functions/judges-apply"
+  from = "/api/*"
+  to = "/.netlify/functions/api"
   status = 200
 
 # Catch-all for SPA routing (must be last)

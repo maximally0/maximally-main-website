@@ -2043,6 +2043,242 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Judge Messages API Endpoints
+  app.get("/api/judge/messages", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      // Get user profile to check if they're a judge
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('username, role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(404).json({ success: false, message: 'Profile not found' });
+      }
+
+      const profileData = profile as any;
+
+      if (profileData.role !== 'judge') {
+        return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
+      }
+
+      // Build query
+      let query = supabaseAdmin
+        .from('judge_messages')
+        .select(`
+          *,
+          judge_message_reads!left(read_at)
+        `)
+        .eq('recipient_username', profileData.username);
+
+      // Apply filters from query params
+      if (req.query.subject) {
+        query = query.eq('subject', req.query.subject);
+      }
+      if (req.query.priority) {
+        query = query.eq('priority', req.query.priority);
+      }
+      if (req.query.read !== undefined) {
+        if (req.query.read === 'true') {
+          query = query.not('judge_message_reads', 'is', null);
+        } else {
+          query = query.is('judge_message_reads', null);
+        }
+      }
+      if (req.query.from) {
+        query = query.gte('created_at', req.query.from);
+      }
+      if (req.query.to) {
+        query = query.lte('created_at', req.query.to);
+      }
+
+      // Pagination
+      const limit = parseInt(req.query.limit as string) || 50;
+      const offset = parseInt(req.query.offset as string) || 0;
+      query = query.range(offset, offset + limit - 1);
+
+      // Order by created_at desc
+      query = query.order('created_at', { ascending: false });
+
+      const { data: messages, error: messagesError } = await query;
+
+      if (messagesError) {
+        console.error('Error fetching judge messages:', messagesError);
+        return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
+      }
+
+      // Transform messages to include read status
+      const transformedMessages = (messages || []).map((msg: any) => ({
+        id: msg.id,
+        recipientUsername: msg.recipient_username,
+        subject: msg.subject,
+        message: msg.message,
+        priority: msg.priority,
+        createdAt: msg.created_at,
+        readAt: msg.judge_message_reads?.[0]?.read_at || null
+      }));
+
+      return res.json({
+        success: true,
+        messages: transformedMessages,
+        total: transformedMessages.length
+      });
+    } catch (err: any) {
+      console.error('Judge messages fetch error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch messages' });
+    }
+  });
+
+  app.get("/api/judge/messages/unread-count", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      // Get user profile to check if they're a judge
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('username, role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(404).json({ success: false, message: 'Profile not found' });
+      }
+
+      const profileData = profile as any;
+
+      if (profileData.role !== 'judge') {
+        return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
+      }
+
+      // Count unread messages
+      const { count, error: countError } = await supabaseAdmin
+        .from('judge_messages')
+        .select('id', { count: 'exact', head: true })
+        .eq('recipient_username', profileData.username)
+        .not('id', 'in', 
+          supabaseAdmin
+            .from('judge_message_reads')
+            .select('message_id')
+            .eq('judge_username', profileData.username)
+        );
+
+      if (countError) {
+        console.error('Error counting unread messages:', countError);
+        return res.status(500).json({ success: false, message: 'Failed to count unread messages' });
+      }
+
+      return res.json({
+        success: true,
+        count: count || 0
+      });
+    } catch (err: any) {
+      console.error('Unread count fetch error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch unread count' });
+    }
+  });
+
+  app.post("/api/judge/messages/:id/read", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      // Get user profile to check if they're a judge
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('username, role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(404).json({ success: false, message: 'Profile not found' });
+      }
+
+      const profileData = profile as any;
+
+      if (profileData.role !== 'judge') {
+        return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
+      }
+
+      const messageId = parseInt(req.params.id);
+
+      // Verify the message belongs to this judge
+      const { data: message, error: messageError } = await supabaseAdmin
+        .from('judge_messages')
+        .select('id, recipient_username')
+        .eq('id', messageId)
+        .single();
+
+      if (messageError || !message) {
+        return res.status(404).json({ success: false, message: 'Message not found' });
+      }
+
+      const messageData = message as any;
+
+      if (messageData.recipient_username !== profileData.username) {
+        return res.status(403).json({ success: false, message: 'Access denied' });
+      }
+
+      // Mark as read (upsert to avoid duplicates)
+      const { error: readError } = await supabaseAdmin
+        .from('judge_message_reads')
+        .upsert({
+          message_id: messageId,
+          judge_username: profileData.username,
+          read_at: new Date().toISOString()
+        }, {
+          onConflict: 'message_id,judge_username'
+        });
+
+      if (readError) {
+        console.error('Error marking message as read:', readError);
+        return res.status(500).json({ success: false, message: 'Failed to mark message as read' });
+      }
+
+      return res.json({
+        success: true,
+        message: 'Message marked as read'
+      });
+    } catch (err: any) {
+      console.error('Mark message read error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to mark message as read' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
