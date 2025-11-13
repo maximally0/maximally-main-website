@@ -28,7 +28,7 @@ const Footer = () => {
             MAXIMALLY
           </h2>
           <p className="font-jetbrains text-gray-300 max-w-2xl mx-auto text-sm md:text-base lg:text-lg px-2">
-            The global hackathon league for teen builders, creators, and
+            The global hackathon league for builders, creators, and
             innovators. High-stakes events for ambitious youth worldwide.
           </p>
         </div>
