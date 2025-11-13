@@ -1,0 +1,182 @@
+Perfect. Here’s the **full page blueprint + final copy** for
+**maximally.in/become-a-supporter**
+exactly in your tone, your mission, your chaotic-fast Maximally energy.
+
+This is the version you can **directly paste into your site** or turn into UI sections.
+
+---
+
+# 🔥 **BECOME A SUPPORTER**
+
+### Help us host crazier hackathons. Help us push hacker culture to every corner of the world.
+
+---
+
+# 🌍 **Why This Exists**
+
+Maximally is building the world’s most powerful hackathon ecosystem — a global OS for hackathons.
+
+We help schools, colleges, startups, and communities run **insane, high-energy hackathons** with:
+
+* full-stack infra
+* submissions + judging systems
+* sponsors + mentors
+* branding + ops
+* templates + playbooks
+* MFHOP federation access
+
+We’ve already hosted and co-organized 10+ global hackathons, brought thousands of builders together, and partnered with judges from Google, Microsoft, Meta, AWS, McKinsey, Warner Bros Discovery, and more.
+
+Now we want to **scale this globally** — bigger events, wilder formats, more locations, more opportunities.
+
+And we want **you** to be part of the movement.
+
+---
+
+# 🎖️ **Become a Supporter (Individuals)**
+
+Support Maximally → become an **Advisor-like supporter** → help us build crazier shit.
+
+When you support Maximally, you’re not “donating.”
+You’re joining the internal circle that helps shape hackathons, events, formats, partnerships, and the future of hacker culture.
+
+### 💛 **Supporter Tiers (Individuals)**
+
+(Every tier redirects to our BuyMeACoffee link on click.)
+
+---
+
+## ⭐ **Supporter — $100**
+
+You get:
+
+* Listed on the **Maximally Supporter Wall**
+* Supporter badge (LinkedIn-ready)
+* Early access to all hackathons
+* Access to the Maximally Community + private supporter channels
+* Invitation to monthly supporter calls
+* Ability to **advise on formats, themes, and new ideas** (light advisory role)
+
+**Button:** *Support – $100* → redirect to BuyMeACoffee
+
+---
+
+## ⭐⭐ **Super Supporter — $150**
+
+Everything above +
+
+* Featured profile on Supporter Wall (photo + 1-line)
+* Priority invitation to co-review shortlists
+* Access to MFHOP resources & organizer playbooks
+* Quarterly “Advisor Circle” meet-up
+* Ability to **influence the direction of upcoming hackathons**
+
+**Button:** *Support – $150* → redirect to BuyMeACoffee
+
+---
+
+## ⭐⭐⭐ **Champion Supporter — $200**
+
+Everything in Super Supporter +
+
+* Featured as **Champion** on a hackathon webpage
+* Optional “Advisor Spotlight” on our Instagram
+* 1× 15-minute “build hackathons with us” call
+* Access to our mentors/judges pipeline
+* Ability to **advise more deeply on the Maximally roadmap**
+
+**Button:** *Support – $200* → redirect to BuyMeACoffee
+
+---
+
+# 🏢 **Sponsor Packages (For Companies / Startups)**
+
+For companies that want branding, presence, and visibility across the Maximally ecosystem + MFHOP network.
+
+All packages redirect to BuyMeACoffee for payment.
+
+---
+
+## 🟨 **Starter Sponsor — $1500**
+
+* Logo on event page
+* Mention in newsletter & socials
+* Recruiter access to top performers
+* Sponsor certificate
+* Inclusion in MFHOP partner database
+
+**Button:** *Sponsor – $1500*
+
+---
+
+## 🟥 **Growth Sponsor — $3500**
+
+Everything in Starter +
+
+* Dedicated prize track
+* Judge/mentor slot
+* Branding in opening + closing ceremony
+* Feature on Maximally’s Instagram + LinkedIn
+
+**Button:** *Sponsor – $3500*
+
+---
+
+## 🟦 **Flagship Sponsor — $7500**
+
+Everything in Growth +
+
+* Category naming rights
+* Full integration into hackathon experience
+* Access to participant resumes (opt-in)
+* Full brand pack across mailers + content
+* Year-long MFHOP partnership access
+
+**Button:** *Sponsor – $7500*
+
+---
+
+## 🖤 **Custom Partnership**
+
+If your org wants something larger or multi-event:
+
+**Button:** *Get Custom Pricing* → mailto:hello@maximally.in
+
+---
+
+# 💌 **Don’t Want to Support Monetarily? Still Join Us.**
+
+You can support hacker culture by contributing:
+
+* credits (AI tools, hosting, APIs)
+* swag
+* workspace access
+* marketing reach
+* mentorship
+* judge roles
+* community partnerships
+
+Email us at **[hello@maximally.in](mailto:hello@maximally.in)** to be part of this.
+
+---
+
+# 🧩 **Call to Action Section**
+
+**“We’re building the future of hackathons.
+If you’ve ever believed in hacker culture, builder energy, or global communities —
+come build this with us.”**
+
+**Buttons:**
+
+* *Support Individually*
+* *Sponsor as a Company*
+* *Contact Us* (mailto:hello@maximally.in)
+
+---
+
+If you want, I can now:
+✓ convert this into a **pixel-style UI layout**
+✓ write **React/Next.js code** for the page
+✓ create **the actual CTA buttons + BuyMeACoffee link embeds**
+
+Just tell me the format.
