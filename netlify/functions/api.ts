@@ -365,7 +365,7 @@ app.post("/api/judge/messages/:id/read", async (req: Request, res: Response) => 
     }
 
     // Mark as read
-    const { error: updateError } = await supabaseAdmin
+    const { error: updateError } = await (supabaseAdmin as any)
       .from('judge_message_recipients')
       .update({
         is_read: true,
