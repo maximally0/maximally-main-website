@@ -105,6 +105,14 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/resources"
+                  className="hover:text-green-400 transition-colors block"
+                >
+                  Resources
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/people"
                   className="hover:text-green-400 transition-colors block"
                 >
@@ -126,14 +134,6 @@ const Footer = () => {
                   className="hover:text-blue-400 transition-colors block"
                 >
                   About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/story"
-                  className="hover:text-blue-400 transition-colors block"
-                >
-                  Our Story
                 </Link>
               </li>
               <li>
