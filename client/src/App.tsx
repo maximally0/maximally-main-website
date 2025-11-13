@@ -159,18 +159,18 @@ const ScrollToTop = () => {
 const App = () => {
   useEffect(() => {
     // Set default meta tags
-    document.title = 'Maximally - Learn Real-World Skills for Indian Teenagers';
+    document.title = 'Maximally - Learn Real-World Skills for Indian Students';
     document
       .querySelector('meta[name="description"]')
       ?.setAttribute(
         'content',
-        "Join India's premier skill development platform for teenagers. Learn AI, Digital Marketing, Public Speaking & more through hands-on bootcamps."
+        "Join India's premier skill development platform for students. Learn AI, Digital Marketing, Public Speaking & more through hands-on bootcamps."
       );
     document
       .querySelector('meta[name="keywords"]')
       ?.setAttribute(
         'content',
-        'teen education India, skill development, digital marketing, AI courses, public speaking, entrepreneurship, Indian students'
+        'student education India, skill development, digital marketing, AI courses, public speaking, entrepreneurship, Indian students'
       );
 
     // Add robots meta tag

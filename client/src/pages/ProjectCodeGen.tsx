@@ -23,8 +23,8 @@ const ProjectCodeGen = () => {
     <>
       <SEO
         title="Project CodeGen - 48-Hour Playful Hackathon | October 11-12, 2025"
-        description="Build like you're 6. Ship like you're 16. A 48-hour hackathon for builders who play. October 11-12, 2025 - Online hackathon for creative teen builders."
-        keywords="project codegen, playful hackathon, teen builders, creative coding, october 2025, fun programming, kid-friendly hackathon"
+        description="Build like you're 6. Ship like you're 16. A 48-hour hackathon for builders who play. October 11-12, 2025 - Online hackathon for creative young builders."
+        keywords="project codegen, playful hackathon, young builders, creative coding, october 2025, fun programming, kid-friendly hackathon"
         canonicalUrl="https://maximally.in/project-codegen"
       />
       
@@ -262,7 +262,7 @@ const ProjectCodeGen = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { icon: "👶", text: "Teen builders", color: "bg-red-200 border-red-400" },
+                { icon: "👶", text: "Young builders", color: "bg-red-200 border-red-400" },
                 { icon: "🌟", text: "First-timers", color: "bg-yellow-200 border-yellow-400" },
                 { icon: "🎨", text: "Designers + no-coders", color: "bg-blue-200 border-blue-400" },
                 { icon: "🐱", text: "Scratch veterans", color: "bg-green-200 border-green-400" },

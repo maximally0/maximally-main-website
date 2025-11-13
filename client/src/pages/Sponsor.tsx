@@ -11,21 +11,21 @@ const Sponsor = () => {
     <>
       <SEO 
         title="Sponsor Maximally Summer Bootcamp 2025 | Partner With Us"
-        description="Partner with Maximally to empower India's most ambitious teens. Reach 1000+ engaged learners through our Summer Bootcamp 2025. Multiple sponsorship tiers available."
-        keywords="summer bootcamp sponsorship, teen education sponsorship, youth empowerment india, maximally partnership"
+        description="Partner with Maximally to empower India's most ambitious students. Reach 1000+ engaged learners through our Summer Bootcamp 2025. Multiple sponsorship tiers available."
+        keywords="summer bootcamp sponsorship, student education sponsorship, youth empowerment india, maximally partnership"
       />
       
       <main className="max-w-6xl mx-auto px-4 py-12">
         {/* Hero */}
         <section className="text-center mb-16">
           <h1 className="font-press-start text-3xl mb-4">⚡️ Sponsor Maximally Summer Bootcamp 2025</h1>
-          <p className="font-jetbrains text-xl mb-8">Empowering India's most ambitious teens to learn, build & lead.</p>
+          <p className="font-jetbrains text-xl mb-8">Empowering India's most ambitious students to learn, build & lead.</p>
         </section>
 
         {/* About */}
         <section className="mb-16 pixel-border p-6">
           <p className="font-jetbrains text-lg">
-            Maximally is a youth-led platform helping ambitious teens (ages 13–20) across India learn real-world skills through immersive online bootcamps in entrepreneurship, public speaking, AI, marketing & more.
+            Maximally is a youth-led platform helping ambitious students (ages 13–20) across India learn real-world skills through immersive online bootcamps in entrepreneurship, public speaking, AI, marketing & more.
           </p>
         </section>
 
@@ -37,7 +37,7 @@ const Sponsor = () => {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">🎯</span>
-                  <span className="font-jetbrains">Access to 1000+ engaged teen learners</span>
+                  <span className="font-jetbrains">Access to 1000+ engaged student learners</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">🚀</span>
@@ -84,7 +84,7 @@ const Sponsor = () => {
               <ul className="space-y-4">
                 <li className="flex items-center gap-3">
                   <span className="text-2xl">💬</span>
-                  <span className="font-jetbrains">Active teen community via Discord</span>
+                  <span className="font-jetbrains">Active student community via Discord</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <span className="text-2xl">📲</span>

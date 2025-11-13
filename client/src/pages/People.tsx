@@ -62,7 +62,7 @@ const People = () => {
                     CORE TEAM
                   </h2>
                   <p className="font-jetbrains text-gray-300 text-center leading-relaxed">
-                    Meet our advisors, organizing board, developers, and active contributors building the future of teen hackathons.
+                    Meet our advisors, organizing board, developers, and active contributors building the future of student hackathons.
                   </p>
                   <div className="mt-6 text-center">
                     <div className="inline-block minecraft-block bg-maximally-red text-black px-4 py-2 group-hover:bg-maximally-yellow transition-colors">

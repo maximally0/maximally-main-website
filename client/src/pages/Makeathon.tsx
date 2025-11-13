@@ -169,7 +169,7 @@ const Makeathon = () => {
         <div className="container mx-auto text-center">
           <h2 className="font-press-start text-3xl mb-8">👥 Who Participated</h2>
           <p className="font-jetbrains text-xl mb-6">
-            The Startup Makeathon was for teen builders, creators, and first-time founders.
+            The Startup Makeathon was for young builders, creators, and first-time founders.
           </p>
           <div className="space-y-4">
             <p className="font-jetbrains text-xl">

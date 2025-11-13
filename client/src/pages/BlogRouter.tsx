@@ -509,7 +509,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
                 About {post.author_name}
               </h3>
               <p className="font-jetbrains text-maximally-black/70 text-sm leading-relaxed">
-                Content creator at Maximally, passionate about empowering the next generation of teen entrepreneurs and innovators.
+                Content creator at Maximally, passionate about empowering the next generation of young entrepreneurs and innovators.
               </p>
               <div className="mt-3 flex gap-2">
                 <span className="pixel-border bg-maximally-blue text-white px-2 py-1 font-press-start text-xs">
@@ -535,14 +535,14 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
             className="pixel-border bg-maximally-red hover:bg-maximally-red/80 hover:scale-105 transition-all duration-200 p-4 block no-underline"
           >
             <div className="font-press-start text-xs text-white mb-2">📚 Browse All Posts</div>
-            <div className="font-jetbrains text-white/80 text-sm">Explore more articles about teen entrepreneurship and innovation</div>
+            <div className="font-jetbrains text-white/80 text-sm">Explore more articles about entrepreneurship and innovation</div>
           </Link>
           <Link 
             to="/events" 
             className="pixel-border bg-maximally-blue hover:bg-maximally-blue/80 hover:scale-105 transition-all duration-200 p-4 block no-underline"
           >
             <div className="font-press-start text-xs text-white mb-2">🚀 Join Our Events</div>
-            <div className="font-jetbrains text-white/80 text-sm">Participate in hackathons and makeathons for teen innovators</div>
+            <div className="font-jetbrains text-white/80 text-sm">Participate in hackathons and makeathons for young innovators</div>
           </Link>
         </div>
       </div>
@@ -553,7 +553,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
           💬 Join Our Discord
         </h3>
         <p className="font-jetbrains text-maximally-black/70 mb-6 text-sm">
-          Connect with fellow teen entrepreneurs, get real-time updates, and join the conversation in our vibrant community.
+          Connect with fellow young entrepreneurs, get real-time updates, and join the conversation in our vibrant community.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <a 
@@ -568,7 +568,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
             Join Discord
           </a>
           <div className="font-jetbrains text-maximally-black/60 text-xs">
-            🔥 5000+ teen builders already connected
+            🔥 5000+ young builders already connected
           </div>
         </div>
       </div>
@@ -584,7 +584,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
         description={excerpt}
         image={post.cover_image || "https://maximally.in/og-thumbnail.png"}
         article={true}
-        keywords={`${title}, teen entrepreneurs, startup, hackathon, Maximally`}
+        keywords={`${title}, young entrepreneurs, startup, hackathon, Maximally`}
         canonicalUrl={canonicalUrl}
         structuredData={structuredData}
       />

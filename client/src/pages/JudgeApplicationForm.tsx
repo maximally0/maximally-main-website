@@ -230,7 +230,7 @@ const JudgeApplicationForm = () => {
     <>
       <SEO
         title="Apply to be a Judge | Maximally"
-        description="Join the global network of elite judges at Maximally. Help evaluate the next generation of teen builders."
+        description="Join the global network of elite judges at Maximally. Help evaluate the next generation of young builders."
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -271,7 +271,7 @@ const JudgeApplicationForm = () => {
                 </span>
               </h1>
               <p className="text-gray-300 text-lg md:text-xl font-jetbrains max-w-3xl mx-auto leading-relaxed mb-8">
-                Become part of the global network of industry experts who shape the future of teen innovation.
+                Become part of the global network of industry experts who shape the future of student innovation.
               </p>
 
               <div className="pixel-card bg-blue-900/30 border-2 border-blue-400 p-6 mb-8 max-w-3xl mx-auto">

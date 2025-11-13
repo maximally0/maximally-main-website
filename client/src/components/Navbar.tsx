@@ -1,14 +1,23 @@
-import { useState, useEffect } from "react";
-import { Menu, X, Terminal, Mail } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Menu, X, Terminal, Mail, ChevronDown, User, LogOut } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
+
+// Pixelated User Icon Component
+const PixelUserIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
+  <svg fill="currentColor" viewBox="0 0 22 22" className={className} xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 2H18V3H19V4H20V18H19V19H18V20H4V19H3V18H2V4H3V3H4V2M4 16H5V15H7V14H15V15H17V16H18V5H17V4H5V5H4V16M16 18V17H14V16H8V17H6V18H16M9 5H13V6H14V7H15V11H14V12H13V13H9V12H8V11H7V7H8V6H9V5M12 8V7H10V8H9V10H10V11H12V10H13V8H12Z" />
+  </svg>
+);
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,6 +72,24 @@ const Navbar = () => {
     }
   }, [user?.id]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+    setProfileDropdownOpen(false);
+    window.location.href = '/';
+  };
+
   const menuItems = [
     { path: "/", label: "HOME", color: "#E50914" },
     { path: "/events", label: "EVENTS", color: "#E50914" },
@@ -73,7 +100,7 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${isVisible ? 'top-0' : '-top-24'
-      } ${isScrolled ? "py-2 sm:py-2 bg-black/95 backdrop-blur-md border-b-2 border-maximally-red shadow-lg" : "py-3 sm:py-3 bg-black/80 backdrop-blur-xl shadow-lg lg:shadow-none lg:backdrop-blur-sm lg:bg-black/90"
+      } ${isScrolled ? "py-3 bg-black/98 backdrop-blur-md border-b border-maximally-red/30 shadow-lg" : "py-4 bg-black/95 backdrop-blur-md border-b border-gray-800/50"
       }`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
@@ -88,18 +115,19 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-2">
             {menuItems.map((item) => (
               <a
                 key={item.path}
                 href={item.path}
-                className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group"
               >
                 {item.label}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-red transition-all duration-200 group-hover:w-full"></span>
               </a>
             ))}
             {loading ? (
-              <div className="pixel-button bg-black border-2 border-gray-700 text-gray-500 font-press-start text-xs px-4 py-2">
+              <div className="font-press-start text-xs px-4 py-2 text-gray-500">
                 LOADING...
               </div>
             ) : isLoggedIn ? (
@@ -108,43 +136,87 @@ const Navbar = () => {
                   <>
                     <a
                       href="/judge-dashboard"
-                      className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2 ml-1"
+                      className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group ml-2"
                       data-testid="button-judge-dashboard"
                     >
                       JUDGE
+                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-red transition-all duration-200 group-hover:w-full"></span>
                     </a>
                     <a
                       href="/judge-inbox"
-                      className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-cyan-400 hover:bg-cyan-400 hover:text-black transition-all duration-200 font-press-start text-xs relative flex items-center justify-center ml-1 aspect-square"
-                      style={{ padding: '10px' }}
+                      className="relative p-2 text-white hover:text-cyan-400 transition-colors duration-200 ml-2"
                       data-testid="button-judge-inbox"
                       aria-label={`Judge inbox${unreadCount > 0 ? ` - ${unreadCount} unread` : ''}`}
                       title={`Judge Inbox${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
                     >
-                      <Mail className="h-4 w-4" />
+                      <Mail className="h-5 w-5" />
                       {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-maximally-red text-maximally-yellow text-[10px] font-press-start px-[3px] py-[1px] rounded-sm min-w-[16px] text-center leading-none">
+                        <span className="absolute -top-1 -right-1 bg-maximally-red text-white text-[10px] font-press-start px-1.5 py-0.5 rounded-sm min-w-[18px] text-center leading-none shadow-lg">
                           {unreadCount > 99 ? '99+' : unreadCount}
                         </span>
                       )}
                     </a>
                   </>
                 )}
-                <a
-                  href={profileUrl}
-                  className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2 ml-1"
-                  data-testid="button-profile"
-                >
-                  PROFILE
-                </a>
+                <div className="relative ml-4" ref={profileDropdownRef}>
+                  <button
+                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                    className="group relative"
+                    data-testid="button-profile-dropdown"
+                    aria-label="User profile"
+                  >
+                    {profile?.avatar_url ? (
+                      <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-maximally-red transition-colors duration-200 overflow-hidden" style={{ imageRendering: 'pixelated' }}>
+                        <img 
+                          src={profile.avatar_url} 
+                          alt={profile.username || 'User'} 
+                          className="w-full h-full object-cover"
+                          style={{ imageRendering: 'pixelated' }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 minecraft-block border-2 group-hover:border-maximally-red transition-colors duration-200 flex items-center justify-center" style={{ backgroundColor: '#121212', borderColor: '#2a2a2a' }}>
+                        <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-maximally-red transition-colors duration-200" />
+                      </div>
+                    )}
+                  </button>
+                  {profileDropdownOpen && (
+                    <div className="absolute right-0 mt-3 w-56 minecraft-block border-2 border-maximally-red shadow-2xl shadow-maximally-red/30 z-50 overflow-hidden" style={{ backgroundColor: '#0a0a0a' }}>
+                      <div className="px-5 py-4 border-b-2 border-maximally-red/40" style={{ backgroundColor: '#121212' }}>
+                        <p className="font-press-start text-[9px] text-gray-500 mb-1.5">SIGNED IN AS</p>
+                        <p className="font-press-start text-xs text-white truncate">{profile?.username?.toUpperCase() || 'USER'}</p>
+                      </div>
+                      <div className="py-2">
+                        <a
+                          href={profileUrl}
+                          className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-maximally-red hover:text-black transition-all duration-200 group"
+                          onClick={() => setProfileDropdownOpen(false)}
+                        >
+                          <User className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                          <span>MY PROFILE</span>
+                        </a>
+                        <button
+                          onClick={handleSignOut}
+                          className="w-full flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-maximally-red hover:text-black transition-all duration-200 group"
+                        >
+                          <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                          <span>SIGN OUT</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
               <a
                 href="/login"
-                className="pixel-button bg-black border-2 border-gray-700 text-white hover:border-maximally-red hover:bg-maximally-red hover:text-black transition-all duration-200 font-press-start text-xs px-4 py-2"
+                className="group ml-4"
                 data-testid="button-join"
+                aria-label="Sign in"
               >
-                JOIN
+                <div className="w-10 h-10 minecraft-block border-2 group-hover:border-maximally-red transition-colors duration-200 flex items-center justify-center" style={{ backgroundColor: '#121212', borderColor: '#2a2a2a' }}>
+                  <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-maximally-red transition-colors duration-200" />
+                </div>
               </a>
             )}
           </div>
