@@ -153,16 +153,18 @@ app.get("/api/judge/profile", async (req: Request, res: Response) => {
 app.get("/api/judge/messages", async (req: Request, res: Response) => {
   try {
     if (!supabaseAdmin) {
-      return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      return res.status(500).json({ items: [], total: 0, error: "Server is not configured for Supabase" });
     }
 
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
-      return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      return res.status(401).json({ items: [], total: 0, error: 'Missing bearer token' });
     }
     const token = authHeader.toString().slice('Bearer '.length);
     const userId = await bearerUserId(supabaseAdmin as any, token);
-    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    if (!userId) {
+      return res.status(401).json({ items: [], total: 0, error: 'Invalid token' });
+    }
 
     // Get user profile
     const { data: profile, error: profileError } = await supabaseAdmin
@@ -172,32 +174,31 @@ app.get("/api/judge/messages", async (req: Request, res: Response) => {
       .single();
 
     if (profileError || !profile) {
-      return res.status(404).json({ success: false, message: 'Profile not found' });
+      return res.status(404).json({ items: [], total: 0, error: 'Profile not found' });
     }
 
     const profileData = profile as any;
 
     if (profileData.role !== 'judge') {
-      return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
+      return res.status(403).json({ items: [], total: 0, error: 'Access denied. Judge role required.' });
     }
 
     // Get message recipients for this judge
-    const { data: recipients, error: recipientsError } = await supabaseAdmin
+    const { data: recipients, error: recipientsError} = await supabaseAdmin
       .from('judge_message_recipients')
       .select('message_id, is_read, read_at')
       .eq('judge_username', profileData.username);
 
     if (recipientsError) {
       console.error('Error fetching recipients:', recipientsError);
-      return res.status(500).json({ success: false, message: 'Failed to fetch message recipients' });
+      return res.status(500).json({ items: [], total: 0, error: 'Failed to fetch message recipients' });
     }
 
     const messageIds = (recipients || []).map((r: any) => r.message_id);
     
     if (messageIds.length === 0) {
       return res.json({
-        success: true,
-        messages: [],
+        items: [],
         total: 0
       });
     }
@@ -227,7 +228,7 @@ app.get("/api/judge/messages", async (req: Request, res: Response) => {
 
     if (messagesError) {
       console.error('Error fetching judge messages:', messagesError);
-      return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
+      return res.status(500).json({ items: [], total: 0, error: 'Failed to fetch messages' });
     }
 
     // Create a map of message read status
@@ -260,7 +261,7 @@ app.get("/api/judge/messages", async (req: Request, res: Response) => {
     });
   } catch (err: any) {
     console.error('Judge messages fetch error:', err);
-    return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch messages' });
+    return res.status(500).json({ items: [], total: 0, error: err?.message || 'Failed to fetch messages' });
   }
 });
 

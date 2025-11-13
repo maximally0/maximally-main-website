@@ -2091,8 +2091,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (messageIds.length === 0) {
         return res.json({
-          success: true,
-          messages: [],
+          items: [],
           total: 0
         });
       }
