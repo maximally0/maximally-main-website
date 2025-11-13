@@ -530,17 +530,35 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
 
     const { username } = req.params;
 
-    // Get judge data
+    console.log('Fetching judge with username:', username);
+
+    // Get judge data - use ilike for case-insensitive matching
     const { data: judge, error: judgeError } = await supabaseAdmin
       .from('judges')
       .select('*')
-      .eq('username', username)
+      .ilike('username', username)
       .eq('is_published', true)
       .single();
 
-    if (judgeError || !judge) {
+    if (judgeError) {
+      console.error('Judge fetch error:', judgeError);
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Judge not found',
+        debug: {
+          username,
+          error: judgeError.message,
+          code: judgeError.code
+        }
+      });
+    }
+
+    if (!judge) {
+      console.log('No judge found for username:', username);
       return res.status(404).json({ success: false, message: 'Judge not found' });
     }
+
+    console.log('Judge found:', judge);
 
     // Get top events
     const { data: events, error: eventsError } = await supabaseAdmin
@@ -552,7 +570,7 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
 
     const judgeData = judge as any;
 
-    return res.json({
+    const response = {
       id: judgeData.id,
       username: judgeData.username,
       fullName: judgeData.full_name,
@@ -569,17 +587,35 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
       totalMentorshipHours: judgeData.total_mentorship_hours || 0,
       yearsOfExperience: judgeData.years_of_experience || 0,
       averageFeedbackRating: judgeData.average_feedback_rating,
+      eventsJudgedVerified: judgeData.events_judged_verified || false,
+      teamsEvaluatedVerified: judgeData.teams_evaluated_verified || false,
+      mentorshipHoursVerified: judgeData.mentorship_hours_verified || false,
+      feedbackRatingVerified: judgeData.feedback_rating_verified || false,
       linkedin: judgeData.linkedin,
       github: judgeData.github,
       twitter: judgeData.twitter,
       website: judgeData.website,
+      email: judgeData.email,
+      phone: judgeData.phone,
+      address: judgeData.address,
+      timezone: judgeData.timezone,
+      compensationPreference: judgeData.compensation_preference,
       languagesSpoken: judgeData.languages_spoken || [],
       publicAchievements: judgeData.public_achievements,
       mentorshipStatement: judgeData.mentorship_statement,
       availabilityStatus: judgeData.availability_status || 'available',
       tier: judgeData.tier || 'starter',
-      topEventsJudged: events || []
-    });
+      topEventsJudged: (events || []).map((e: any) => ({
+        eventName: e.event_name,
+        role: e.event_role,
+        date: e.event_date,
+        link: e.event_link,
+        verified: e.verified || false
+      }))
+    };
+
+    console.log('Returning judge data for:', username);
+    return res.json(response);
   } catch (err: any) {
     console.error('Judge fetch error:', err);
     return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch judge' });

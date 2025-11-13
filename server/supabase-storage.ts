@@ -124,7 +124,7 @@ export class SupabaseStorage implements IStorage {
     const { data, error } = await this.supabase
       .from('judges')
       .select('*')
-      .eq('username', username)
+      .ilike('username', username)
       .single();
 
     if (error || !data) return undefined;
@@ -133,7 +133,7 @@ export class SupabaseStorage implements IStorage {
     const { data: profileData } = await (this.supabase as any)
       .from('profiles')
       .select('avatar_url')
-      .eq('username', username)
+      .ilike('username', username)
       .single();
 
     // Use profile avatar if available, otherwise use judge's profile_photo
