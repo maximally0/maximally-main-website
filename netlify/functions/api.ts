@@ -181,18 +181,37 @@ app.get("/api/judge/messages", async (req: Request, res: Response) => {
       return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
     }
 
-    // Build query
+    // Get message recipients for this judge
+    const { data: recipients, error: recipientsError } = await supabaseAdmin
+      .from('judge_message_recipients')
+      .select('message_id, is_read, read_at')
+      .eq('judge_username', profileData.username);
+
+    if (recipientsError) {
+      console.error('Error fetching recipients:', recipientsError);
+      return res.status(500).json({ success: false, message: 'Failed to fetch message recipients' });
+    }
+
+    const messageIds = (recipients || []).map((r: any) => r.message_id);
+    
+    if (messageIds.length === 0) {
+      return res.json({
+        success: true,
+        messages: [],
+        total: 0
+      });
+    }
+
+    // Get messages
     let query = supabaseAdmin
       .from('judge_messages')
-      .select(`
-        *,
-        judge_message_reads!left(read_at)
-      `)
-      .eq('recipient_username', profileData.username);
+      .select('*')
+      .in('id', messageIds)
+      .eq('status', 'sent');
 
     // Apply filters
     if (req.query.subject) {
-      query = query.eq('subject', req.query.subject);
+      query = query.ilike('subject', `%${req.query.subject}%`);
     }
     if (req.query.priority) {
       query = query.eq('priority', req.query.priority);
@@ -211,15 +230,25 @@ app.get("/api/judge/messages", async (req: Request, res: Response) => {
       return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
     }
 
-    const transformedMessages = (messages || []).map((msg: any) => ({
-      id: msg.id,
-      recipientUsername: msg.recipient_username,
-      subject: msg.subject,
-      message: msg.message,
-      priority: msg.priority,
-      createdAt: msg.created_at,
-      readAt: msg.judge_message_reads?.[0]?.read_at || null
-    }));
+    // Create a map of message read status
+    const readStatusMap = new Map();
+    (recipients || []).forEach((r: any) => {
+      readStatusMap.set(r.message_id, { isRead: r.is_read, readAt: r.read_at });
+    });
+
+    const transformedMessages = (messages || []).map((msg: any) => {
+      const readStatus = readStatusMap.get(msg.id) || { isRead: false, readAt: null };
+      return {
+        id: msg.id,
+        subject: msg.subject,
+        message: msg.content,
+        priority: msg.priority,
+        createdAt: msg.created_at,
+        sentAt: msg.sent_at,
+        sentByName: msg.sent_by_name,
+        readAt: readStatus.readAt
+      };
+    });
 
     return res.json({
       success: true,
@@ -264,34 +293,21 @@ app.get("/api/judge/messages/unread-count", async (req: Request, res: Response) 
       return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
     }
 
-    // Get all messages for this judge
-    const { data: allMessages, error: messagesError } = await supabaseAdmin
-      .from('judge_messages')
-      .select('id')
-      .eq('recipient_username', profileData.username);
+    // Count unread messages for this judge
+    const { count, error: countError } = await supabaseAdmin
+      .from('judge_message_recipients')
+      .select('*', { count: 'exact', head: true })
+      .eq('judge_username', profileData.username)
+      .eq('is_read', false);
 
-    if (messagesError) {
-      console.error('Error fetching messages:', messagesError);
-      return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
+    if (countError) {
+      console.error('Error counting unread messages:', countError);
+      return res.status(500).json({ success: false, message: 'Failed to count unread messages' });
     }
-
-    // Get read messages
-    const { data: readMessages, error: readError } = await supabaseAdmin
-      .from('judge_message_reads')
-      .select('message_id')
-      .eq('judge_username', profileData.username);
-
-    if (readError) {
-      console.error('Error fetching read messages:', readError);
-      return res.status(500).json({ success: false, message: 'Failed to fetch read messages' });
-    }
-
-    const readMessageIds = new Set((readMessages || []).map((r: any) => r.message_id));
-    const unreadCount = (allMessages || []).filter((m: any) => !readMessageIds.has(m.id)).length;
 
     return res.json({
       success: true,
-      count: unreadCount
+      count: count || 0
     });
   } catch (err: any) {
     console.error('Unread count fetch error:', err);
@@ -333,36 +349,30 @@ app.post("/api/judge/messages/:id/read", async (req: Request, res: Response) => 
 
     const messageId = parseInt(req.params.id);
 
-    // Verify the message belongs to this judge
-    const { data: message, error: messageError } = await supabaseAdmin
-      .from('judge_messages')
-      .select('id, recipient_username')
-      .eq('id', messageId)
+    // Verify the recipient record exists for this judge
+    const { data: recipient, error: recipientError } = await supabaseAdmin
+      .from('judge_message_recipients')
+      .select('id')
+      .eq('message_id', messageId)
+      .eq('judge_username', profileData.username)
       .single();
 
-    if (messageError || !message) {
-      return res.status(404).json({ success: false, message: 'Message not found' });
-    }
-
-    const messageData = message as any;
-
-    if (messageData.recipient_username !== profileData.username) {
-      return res.status(403).json({ success: false, message: 'Access denied' });
+    if (recipientError || !recipient) {
+      return res.status(404).json({ success: false, message: 'Message not found for this judge' });
     }
 
     // Mark as read
-    const { error: readError } = await (supabaseAdmin as any)
-      .from('judge_message_reads')
-      .upsert({
-        message_id: messageId,
-        judge_username: profileData.username,
+    const { error: updateError } = await supabaseAdmin
+      .from('judge_message_recipients')
+      .update({
+        is_read: true,
         read_at: new Date().toISOString()
-      }, {
-        onConflict: 'message_id,judge_username'
-      });
+      })
+      .eq('message_id', messageId)
+      .eq('judge_username', profileData.username);
 
-    if (readError) {
-      console.error('Error marking message as read:', readError);
+    if (updateError) {
+      console.error('Error marking message as read:', updateError);
       return res.status(500).json({ success: false, message: 'Failed to mark message as read' });
     }
 

@@ -2059,7 +2059,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = await bearerUserId(supabaseAdmin as any, token);
       if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
 
-      // Get user profile to check if they're a judge
+      // Get user profile
       const { data: profile, error: profileError } = await supabaseAdmin
         .from('profiles')
         .select('username, role')
@@ -2076,42 +2076,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
       }
 
-      // Build query
+      // Get message recipients for this judge
+      const { data: recipients, error: recipientsError } = await supabaseAdmin
+        .from('judge_message_recipients')
+        .select('message_id, is_read, read_at')
+        .eq('judge_username', profileData.username);
+
+      if (recipientsError) {
+        console.error('Error fetching recipients:', recipientsError);
+        return res.status(500).json({ success: false, message: 'Failed to fetch message recipients' });
+      }
+
+      const messageIds = (recipients || []).map((r: any) => r.message_id);
+      
+      if (messageIds.length === 0) {
+        return res.json({
+          success: true,
+          messages: [],
+          total: 0
+        });
+      }
+
+      // Get messages
       let query = supabaseAdmin
         .from('judge_messages')
-        .select(`
-          *,
-          judge_message_reads!left(read_at)
-        `)
-        .eq('recipient_username', profileData.username);
+        .select('*')
+        .in('id', messageIds)
+        .eq('status', 'sent');
 
-      // Apply filters from query params
+      // Apply filters
       if (req.query.subject) {
-        query = query.eq('subject', req.query.subject);
+        query = query.ilike('subject', `%${req.query.subject}%`);
       }
       if (req.query.priority) {
         query = query.eq('priority', req.query.priority);
-      }
-      if (req.query.read !== undefined) {
-        if (req.query.read === 'true') {
-          query = query.not('judge_message_reads', 'is', null);
-        } else {
-          query = query.is('judge_message_reads', null);
-        }
-      }
-      if (req.query.from) {
-        query = query.gte('created_at', req.query.from);
-      }
-      if (req.query.to) {
-        query = query.lte('created_at', req.query.to);
       }
 
       // Pagination
       const limit = parseInt(req.query.limit as string) || 50;
       const offset = parseInt(req.query.offset as string) || 0;
       query = query.range(offset, offset + limit - 1);
-
-      // Order by created_at desc
       query = query.order('created_at', { ascending: false });
 
       const { data: messages, error: messagesError } = await query;
@@ -2121,16 +2125,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
       }
 
-      // Transform messages to include read status
-      const transformedMessages = (messages || []).map((msg: any) => ({
-        id: msg.id,
-        recipientUsername: msg.recipient_username,
-        subject: msg.subject,
-        message: msg.message,
-        priority: msg.priority,
-        createdAt: msg.created_at,
-        readAt: msg.judge_message_reads?.[0]?.read_at || null
-      }));
+      // Create a map of message read status
+      const readStatusMap = new Map();
+      (recipients || []).forEach((r: any) => {
+        readStatusMap.set(r.message_id, { isRead: r.is_read, readAt: r.read_at });
+      });
+
+      const transformedMessages = (messages || []).map((msg: any) => {
+        const readStatus = readStatusMap.get(msg.id) || { isRead: false, readAt: null };
+        return {
+          id: msg.id,
+          subject: msg.subject,
+          message: msg.content,
+          priority: msg.priority,
+          createdAt: msg.created_at,
+          sentAt: msg.sent_at,
+          sentByName: msg.sent_by_name,
+          readAt: readStatus.readAt
+        };
+      });
 
       return res.json({
         success: true,
@@ -2158,7 +2171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = await bearerUserId(supabaseAdmin as any, token);
       if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
 
-      // Get user profile to check if they're a judge
+      // Get user profile
       const { data: profile, error: profileError } = await supabaseAdmin
         .from('profiles')
         .select('username, role')
@@ -2175,17 +2188,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
       }
 
-      // Count unread messages
+      // Count unread messages for this judge
       const { count, error: countError } = await supabaseAdmin
-        .from('judge_messages')
-        .select('id', { count: 'exact', head: true })
-        .eq('recipient_username', profileData.username)
-        .not('id', 'in', 
-          supabaseAdmin
-            .from('judge_message_reads')
-            .select('message_id')
-            .eq('judge_username', profileData.username)
-        );
+        .from('judge_message_recipients')
+        .select('*', { count: 'exact', head: true })
+        .eq('judge_username', profileData.username)
+        .eq('is_read', false);
 
       if (countError) {
         console.error('Error counting unread messages:', countError);
@@ -2217,7 +2225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = await bearerUserId(supabaseAdmin as any, token);
       if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
 
-      // Get user profile to check if they're a judge
+      // Get user profile
       const { data: profile, error: profileError } = await supabaseAdmin
         .from('profiles')
         .select('username, role')
@@ -2236,36 +2244,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const messageId = parseInt(req.params.id);
 
-      // Verify the message belongs to this judge
-      const { data: message, error: messageError } = await supabaseAdmin
-        .from('judge_messages')
-        .select('id, recipient_username')
-        .eq('id', messageId)
+      // Verify the recipient record exists for this judge
+      const { data: recipient, error: recipientError } = await supabaseAdmin
+        .from('judge_message_recipients')
+        .select('id')
+        .eq('message_id', messageId)
+        .eq('judge_username', profileData.username)
         .single();
 
-      if (messageError || !message) {
-        return res.status(404).json({ success: false, message: 'Message not found' });
+      if (recipientError || !recipient) {
+        return res.status(404).json({ success: false, message: 'Message not found for this judge' });
       }
 
-      const messageData = message as any;
-
-      if (messageData.recipient_username !== profileData.username) {
-        return res.status(403).json({ success: false, message: 'Access denied' });
-      }
-
-      // Mark as read (upsert to avoid duplicates)
-      const { error: readError } = await supabaseAdmin
-        .from('judge_message_reads')
-        .upsert({
-          message_id: messageId,
-          judge_username: profileData.username,
+      // Mark as read
+      const { error: updateError } = await supabaseAdmin
+        .from('judge_message_recipients')
+        .update({
+          is_read: true,
           read_at: new Date().toISOString()
-        }, {
-          onConflict: 'message_id,judge_username'
-        });
+        })
+        .eq('message_id', messageId)
+        .eq('judge_username', profileData.username);
 
-      if (readError) {
-        console.error('Error marking message as read:', readError);
+      if (updateError) {
+        console.error('Error marking message as read:', updateError);
         return res.status(500).json({ success: false, message: 'Failed to mark message as read' });
       }
 
