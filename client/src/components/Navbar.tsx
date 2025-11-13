@@ -98,27 +98,27 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${isVisible ? 'top-0' : '-top-24'
-      } ${isScrolled ? "py-3 bg-black/98 backdrop-blur-md border-b border-maximally-red/30 shadow-lg" : "py-4 bg-black/95 backdrop-blur-md border-b border-gray-800/50"
+      } ${isScrolled ? "py-2 sm:py-3 bg-black/98 backdrop-blur-md border-b border-maximally-red/30 shadow-lg" : "py-3 sm:py-4 bg-black/95 backdrop-blur-md border-b border-gray-800/50"
       }`}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <a href="/" className="flex items-center group">
-            <div className="minecraft-block bg-maximally-red p-2 mr-3 group-hover:bg-maximally-yellow transition-colors">
-              <Terminal className="h-6 w-6 text-black" />
+            <div className="minecraft-block bg-maximally-red p-1.5 sm:p-2 mr-2 sm:mr-3 group-hover:bg-maximally-yellow transition-colors">
+              <Terminal className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-black" />
             </div>
-            <span className="font-press-start text-white text-lg group-hover:text-maximally-red transition-colors">
+            <span className="font-press-start text-white text-xs sm:text-sm md:text-base lg:text-lg group-hover:text-maximally-red transition-colors">
               MAXIMALLY
             </span>
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-2">
+          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {menuItems.map((item) => (
               <a
                 key={item.path}
                 href={item.path}
-                className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group"
+                className="relative font-press-start text-[10px] lg:text-xs px-2 lg:px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group"
               >
                 {item.label}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-red transition-all duration-200 group-hover:w-full"></span>
@@ -220,29 +220,30 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}
-          <div className="flex items-center space-x-2 lg:hidden">
+          <div className="flex items-center space-x-2 md:hidden">
             {/* Mobile Menu Toggle */}
             <button
-              className="pixel-button bg-maximally-red text-black p-2 hover:bg-maximally-yellow transition-colors"
+              className="pixel-button bg-maximally-red text-black p-1.5 sm:p-2 hover:bg-maximally-yellow transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden fixed inset-0 top-[70px] bg-black z-40">
+          <div className="md:hidden fixed inset-0 top-[60px] sm:top-[70px] bg-black z-40">
             <div className="pixel-grid-bg absolute inset-0 opacity-20"></div>
-            <div className="container mx-auto px-4 py-8 relative z-10">
-              <div className="grid grid-cols-1 gap-4 max-w-sm mx-auto">
+            <div className="container mx-auto px-4 py-6 sm:py-8 relative z-10">
+              <div className="grid grid-cols-1 gap-3 sm:gap-4 max-w-sm mx-auto">
                 {menuItems.map((item) => (
                   <a
                     key={item.path}
                     href={item.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className="pixel-button bg-maximally-red text-black font-press-start text-center py-4 px-6 hover:bg-maximally-yellow transition-all duration-300 hover:scale-105"
+                    className="pixel-button bg-maximally-red text-black font-press-start text-center py-3 sm:py-4 px-4 sm:px-6 text-xs sm:text-sm hover:bg-maximally-yellow transition-all duration-300 hover:scale-105"
                   >
                     {item.label}
                   </a>
