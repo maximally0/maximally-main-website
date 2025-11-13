@@ -21,7 +21,6 @@ import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import Makeathon from './pages/Makeathon';
 import Contact from './pages/Contact';
-import Support from './pages/Support';
 import BecomeASupporter from './pages/BecomeASupporter';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
@@ -339,7 +338,6 @@ const App = () => {
             <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
-            <Route path="/support" element={<Support />} />
             <Route path="/become-a-supporter" element={<BecomeASupporter />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />

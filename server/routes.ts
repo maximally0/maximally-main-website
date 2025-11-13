@@ -2266,7 +2266,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .update({
           is_read: true,
           read_at: new Date().toISOString()
-        })
+        } as any)
         .eq('message_id', messageId)
         .eq('judge_username', profileData.username);
 

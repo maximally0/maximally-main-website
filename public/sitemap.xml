@@ -72,11 +72,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maximally.in/support</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://maximally.in/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

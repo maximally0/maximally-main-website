@@ -147,20 +147,12 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support & Legal */}
+          {/* Legal */}
           <div className="pixel-card bg-black border-2 border-purple-500 p-3 sm:p-4 md:p-5 h-fit col-span-2 sm:col-span-1">
             <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 md:mb-6 text-purple-400 flex items-center gap-1.5 sm:gap-2">
-              <span>⚖️</span> SUPPORT
+              <span>⚖️</span> LEGAL
             </h3>
             <ul className="space-y-1.5 sm:space-y-2 md:space-y-3 font-jetbrains text-white text-[10px] sm:text-xs md:text-sm grid grid-cols-2 sm:grid-cols-1 gap-x-4 sm:gap-x-0">
-              <li>
-                <Link
-                  to="/support"
-                  className="hover:text-purple-400 transition-colors block"
-                >
-                  Help Center
-                </Link>
-              </li>
               <li>
                 <Link
                   to="/privacy"
