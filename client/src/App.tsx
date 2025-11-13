@@ -3,7 +3,7 @@ import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import {
   BrowserRouter as Router,
   Routes,
@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom';
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
+import { LoadingBar } from '@/components/LoadingBar';
 
 import Index from './pages/Index';
 import Login from './pages/Login';
@@ -154,6 +155,339 @@ const ScrollToTop = () => {
   return null;
 };
 
+const AppContent = () => {
+  const { loading } = useAuth();
+  
+  return (
+    <>
+      <LoadingBar isLoading={loading} />
+      <ScrollToTop />
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/test-email" element={<TestEmailValidation />} />
+        <Route path="/certificates/verify/:certificate_id" element={<CertificateVerification />} />
+        <Route path="/profile" element={<MyProfileRedirect />} />
+        <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/bootcamps" element={<Navigate to="/" replace />} />
+        <Route path="/makeathon" element={<Makeathon />} />
+        {/* Team route removed */}
+
+        <Route path="/blog" element={<Blog />} />
+
+        {/* Partnership Blog Posts */}
+        <Route
+          path="/blog/masters-union-partnership"
+          element={<MastersUnionPartnership />}
+        />
+
+        {/* AI Shipathon Blog Posts */}
+        <Route
+          path="/blog/maximally-ai-shipathon-guide"
+          element={<MaximallyAIShipathonGuide />}
+        />
+        <Route
+          path="/blog/top-ai-hackathons-students-2025"
+          element={<TopAIHackathonsStudents2025 />}
+        />
+        <Route
+          path="/blog/no-code-ai-shipathon"
+          element={<NoCodeAIShipathon />}
+        />
+        <Route
+          path="/blog/first-ai-project-48-hours"
+          element={<FirstAIProject48Hours />}
+        />
+
+        <Route
+          path="/blog/summer-programs-2025"
+          element={<SummerPrograms2025 />}
+        />
+        <Route
+          path="/blog/summer-bootcamps-2025"
+          element={<SummerBootcamps2025 />}
+        />
+        <Route
+          path="/blog/maximally-leangap-2025"
+          element={<MaximallyLeangap2025 />}
+        />
+        <Route
+          path="/blog/summer-break-2025"
+          element={<SummerBreak2025 />}
+        />
+        <Route
+          path="/blog/real-world-skills-2025"
+          element={<RealWorldSkills2025 />}
+        />
+        <Route
+          path="/blog/school-vs-life-2025"
+          element={<SchoolVsLife2025 />}
+        />
+        <Route
+          path="/blog/online-courses-2025"
+          element={<OnlineCourses2025 />}
+        />
+        <Route
+          path="/blog/internships-2025"
+          element={<Internships2025 />}
+        />
+        <Route path="/blog/teen-business" element={<TeenBusiness />} />
+        <Route
+          path="/blog/ai-for-teenagers-no-code"
+          element={<AIforTeens />}
+        />
+        <Route
+          path="/blog/teen-startup-journey-student-story"
+          element={<TeenStartupJourney />}
+        />
+        <Route
+          path="/blog/no-code-tools-for-teen-creators"
+          element={<NoCodeTools />}
+        />
+        <Route
+          path="/blog/digital-marketing-for-high-schoolers"
+          element={<DigitalMarketingGuide />}
+        />
+        <Route
+          path="/blog/public-speaking-for-teens-guide"
+          element={<PublicSpeakingGuide />}
+        />
+        <Route
+          path="/blog/real-world-skills-for-teens"
+          element={<RealWorldSkillsForTeens />}
+        />
+        <Route
+          path="/blog/instagram-personal-brand-teens-2025"
+          element={<InstagramPersonalBranding />}
+        />
+        <Route
+          path="/blog/first-pitch-tips-for-teens"
+          element={<PitchingTipsForTeens />}
+        />
+        <Route
+          path="/blog/side-hustle-to-startup-teen-success"
+          element={<SideHustleToStartup />}
+        />
+        <Route
+          path="/blog/gen-z-influencer-guide"
+          element={<GenZInfluencer />}
+        />
+        <Route
+          path="/blog/teen-entrepreneurship-bootcamp-experience"
+          element={<TeenEntrepreneurshipBootcamp />}
+        />
+        <Route
+          path="/blog/passion-project-to-business"
+          element={<PassionProjectToBusiness />}
+        />
+        <Route
+          path="/blog/learn-ai-in-7-days-teens"
+          element={<LearnAIInSevenDays />}
+        />
+        <Route
+          path="/blog/online-branding-tips-for-students"
+          element={<OnlineBrandingTips />}
+        />
+        <Route
+          path="/blog/teen-entrepreneurs-india-future"
+          element={<TeenEntrepreneursIndia />}
+        />
+        <Route
+          path="/blog/youtube-vs-startup-for-teens"
+          element={<YoutubeVsStartup />}
+        />
+        <Route
+          path="/blog/top-careers-for-teen-innovators"
+          element={<TopCareersForTeens />}
+        />
+        {/* Removed wall-of-progressive-schools route */}
+        <Route path="/thank-you" element={<ThankYou />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/become-a-supporter" element={<BecomeASupporter />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+
+        {/* Community redirect to Discord */}
+        <Route path="/community" element={<CommunityRedirect />} />
+
+        <Route path="/people" element={<People />} />
+        <Route path="/people/core" element={<PeopleCore />} />
+        <Route path="/people/judges" element={<PeopleJudges />} />
+        <Route path="/judges" element={<Judges />} />
+        <Route path="/judge/:username" element={<JudgeProfile />} />
+        <Route path="/judges/apply" element={<JudgeApplicationForm />} />
+        <Route path="/judge-dashboard" element={<JudgeDashboard />} />
+        <Route path="/judge-inbox" element={<JudgeInbox />} />
+        <Route path="/resources" element={<Resources />} />
+        {/* Legacy redirect */}
+        <Route path="/featured" element={<Navigate to="/people" replace />} />
+        <Route path="/mfhop" element={<MFHOP />} />
+        <Route path="/partner" element={<PartnerNetwork />} />
+
+        <Route path="/events" element={<Events />} />
+        <Route
+          path="/blog/makeathon-for-future"
+          element={<MakeathonForFuture />}
+        />
+        <Route
+          path="/blog/startups-through-maximally"
+          element={<StartupsThroughMaximally />}
+        />
+        <Route
+          path="/blog/maximally-makeathons-for-teachers"
+          element={<MaximallyMakeathonsForTeachers />}
+        />
+        <Route
+          path="/blog/level-up-your-game-with-maximally"
+          element={<LevelUpYourGameWithMaximally />}
+        />
+        <Route
+          path="/blog/transforming-education-with-maximally"
+          element={<TransformingEducationWithMaximally />}
+        />
+        <Route
+          path="/blog/can-teens-launch-startups"
+          element={<CanTeensLaunchStartups />}
+        />
+        <Route
+          path="/blog/dorm-to-startup-2025"
+          element={<DormToStartup2025 />}
+        />
+        <Route
+          path="/blog/school-innovation-roi"
+          element={<SchoolInnovationROI />}
+        />
+        <Route
+          path="/blog/senior-dev-as-mentors"
+          element={<TechMentoringBenefits />}
+        />
+        <Route
+          path="/blog/no-code-future"
+          element={<NoCodingNoProblem />}
+        />
+        <Route
+          path="/blog/makeathon-for-career"
+          element={<CareerChangeThroughMakeathons />}
+        />
+        <Route
+          path="/blog/power-of-mentorship"
+          element={<PowerOfMentorship />}
+        />
+        <Route
+          path="/blog/makeathons-future-education"
+          element={<MakeathonsFutureEducation />}
+        />
+        <Route
+          path="/blog/girls-breaking-barriers-stem"
+          element={<GirlsBreakingBarriersSTEM />}
+        />
+        <Route
+          path="/blog/top-life-skills-teens"
+          element={<TopLifeSkillsTeens />}
+        />
+        <Route
+          path="/blog/maximally-teaches-tools"
+          element={<MaximallyTeachesTools />}
+        />
+        <Route
+          path="/blog/parents-support-makeathon"
+          element={<ParentsSupport />}
+        />
+        <Route
+          path="/blog/makeathon-faq-maximally"
+          element={<MakeathonFAQ />}
+        />
+        <Route
+          path="/blog/teamwork-leadership-maximally"
+          element={<BuildingTeamworkLeadership />}
+        />
+        {/* Removed shipathon route */}
+        <Route path="/codehypothesis" element={<CodeHypothesis />} />
+        <Route path="/protocol-404" element={<Protocol404 />} />
+        <Route path="/project-codegen" element={<ProjectCodeGen />} />
+        <Route path="/promptstorm" element={<PromptStorm />} />
+        <Route path="/steal-a-thon" element={<StealAThon />} />
+        <Route path="/codepocalypse" element={<Codepocalypse />} />
+        <Route
+          path="/grand-tech-assembly"
+          element={<GrandTechAssembly />}
+        />
+        <Route path="/hacktober" element={<Hacktober />} />
+
+        {/* Event Reports */}
+        <Route path="/makeathon-report" element={<MakeathonReport />} />
+        <Route path="/shipathon-report" element={<ShipathonReport />} />
+
+        {/* Code Hypothesis Blog Posts */}
+        <Route
+          path="/blog/why-hackathons-got-boring-code-hypothesis"
+          element={<WhyHackathonsGotBoring />}
+        />
+        <Route
+          path="/blog/science-wild-ideas-code-hypothesis"
+          element={<ScienceWildIdeas />}
+        />
+        <Route
+          path="/blog/no-pitch-decks-gatekeeping-chaos"
+          element={<NoPitchDecksGatekeepingChaos />}
+        />
+        <Route
+          path="/blog/survive-code-hypothesis-24-hours"
+          element={<SurviveCodeHypothesis24Hours />}
+        />
+
+        {/* Protocol 404 Blog Posts */}
+        <Route
+          path="/blog/protocol-404-when-system-broken"
+          element={<Protocol404WhenSystemBroken />}
+        />
+        <Route
+          path="/blog/protocol-404-future-problem-solving"
+          element={<Protocol404FutureOfProblemSolving />}
+        />
+        <Route
+          path="/blog/protocol-404-hacker-shortcut"
+          element={<Protocol404HackerShortcut />}
+        />
+        <Route
+          path="/blog/protocol-404-future-of-hackathons"
+          element={<Protocol404FutureOfHackathons />}
+        />
+
+        {/* Project CodeGen Blog Posts */}
+        <Route
+          path="/blog/project-codegen-play-future"
+          element={<ProjectCodeGenPlayFuture />}
+        />
+        <Route
+          path="/blog/project-codegen-redefining-collaboration"
+          element={<ProjectCodeGenRedefiningCollaboration />}
+        />
+        <Route
+          path="/blog/project-codegen-idea-to-execution"
+          element={<ProjectCodeGenIdeaToExecution />}
+        />
+        <Route
+          path="/blog/project-codegen-beyond-hackathons"
+          element={<ProjectCodeGenBeyondHackathons />}
+        />
+
+        {/* Dynamic blog route - must be after all static routes */}
+        <Route path="/blog/:slug" element={<BlogRouter />} />
+
+        {/* Catch all route for 404 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
+  );
+};
+
 const App = () => {
   useEffect(() => {
     // Set default meta tags
@@ -189,330 +523,7 @@ const App = () => {
           <Sonner />
           <AuthProvider>
             <Router>
-            <ScrollToTop />
-
-            <Navbar />
-            <Routes>
-            <Route path="/" element={<Index />} />
-<Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-<Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
-            <Route path="/test-email" element={<TestEmailValidation />} />
-            <Route path="/certificates/verify/:certificate_id" element={<CertificateVerification />} />
-<Route path="/profile" element={<MyProfileRedirect />} />
-            <Route path="/profile/:username" element={<Profile />} />
-            <Route path="/admin" element={<AdminPanel />} />
-            <Route path="/bootcamps" element={<Navigate to="/" replace />} />
-            <Route path="/makeathon" element={<Makeathon />} />
-            {/* Team route removed */}
-
-            <Route path="/blog" element={<Blog />} />
-
-            {/* Partnership Blog Posts */}
-            <Route
-              path="/blog/masters-union-partnership"
-              element={<MastersUnionPartnership />}
-            />
-
-            {/* AI Shipathon Blog Posts */}
-            <Route
-              path="/blog/maximally-ai-shipathon-guide"
-              element={<MaximallyAIShipathonGuide />}
-            />
-            <Route
-              path="/blog/top-ai-hackathons-students-2025"
-              element={<TopAIHackathonsStudents2025 />}
-            />
-            <Route
-              path="/blog/no-code-ai-shipathon"
-              element={<NoCodeAIShipathon />}
-            />
-            <Route
-              path="/blog/first-ai-project-48-hours"
-              element={<FirstAIProject48Hours />}
-            />
-
-            <Route
-              path="/blog/summer-programs-2025"
-              element={<SummerPrograms2025 />}
-            />
-            <Route
-              path="/blog/summer-bootcamps-2025"
-              element={<SummerBootcamps2025 />}
-            />
-            <Route
-              path="/blog/maximally-leangap-2025"
-              element={<MaximallyLeangap2025 />}
-            />
-            <Route
-              path="/blog/summer-break-2025"
-              element={<SummerBreak2025 />}
-            />
-            <Route
-              path="/blog/real-world-skills-2025"
-              element={<RealWorldSkills2025 />}
-            />
-            <Route
-              path="/blog/school-vs-life-2025"
-              element={<SchoolVsLife2025 />}
-            />
-            <Route
-              path="/blog/online-courses-2025"
-              element={<OnlineCourses2025 />}
-            />
-            <Route
-              path="/blog/internships-2025"
-              element={<Internships2025 />}
-            />
-            <Route path="/blog/teen-business" element={<TeenBusiness />} />
-            <Route
-              path="/blog/ai-for-teenagers-no-code"
-              element={<AIforTeens />}
-            />
-            <Route
-              path="/blog/teen-startup-journey-student-story"
-              element={<TeenStartupJourney />}
-            />
-            <Route
-              path="/blog/no-code-tools-for-teen-creators"
-              element={<NoCodeTools />}
-            />
-            <Route
-              path="/blog/digital-marketing-for-high-schoolers"
-              element={<DigitalMarketingGuide />}
-            />
-            <Route
-              path="/blog/public-speaking-for-teens-guide"
-              element={<PublicSpeakingGuide />}
-            />
-            <Route
-              path="/blog/real-world-skills-for-teens"
-              element={<RealWorldSkillsForTeens />}
-            />
-            <Route
-              path="/blog/instagram-personal-brand-teens-2025"
-              element={<InstagramPersonalBranding />}
-            />
-            <Route
-              path="/blog/first-pitch-tips-for-teens"
-              element={<PitchingTipsForTeens />}
-            />
-            <Route
-              path="/blog/side-hustle-to-startup-teen-success"
-              element={<SideHustleToStartup />}
-            />
-            <Route
-              path="/blog/gen-z-influencer-guide"
-              element={<GenZInfluencer />}
-            />
-            <Route
-              path="/blog/teen-entrepreneurship-bootcamp-experience"
-              element={<TeenEntrepreneurshipBootcamp />}
-            />
-            <Route
-              path="/blog/passion-project-to-business"
-              element={<PassionProjectToBusiness />}
-            />
-            <Route
-              path="/blog/learn-ai-in-7-days-teens"
-              element={<LearnAIInSevenDays />}
-            />
-            <Route
-              path="/blog/online-branding-tips-for-students"
-              element={<OnlineBrandingTips />}
-            />
-            <Route
-              path="/blog/teen-entrepreneurs-india-future"
-              element={<TeenEntrepreneursIndia />}
-            />
-            <Route
-              path="/blog/youtube-vs-startup-for-teens"
-              element={<YoutubeVsStartup />}
-            />
-            <Route
-              path="/blog/top-careers-for-teen-innovators"
-              element={<TopCareersForTeens />}
-            />
-            {/* Removed wall-of-progressive-schools route */}
-            <Route path="/thank-you" element={<ThankYou />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/become-a-supporter" element={<BecomeASupporter />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-
-            {/* Community redirect to Discord */}
-            <Route path="/community" element={<CommunityRedirect />} />
-
-            <Route path="/people" element={<People />} />
-            <Route path="/people/core" element={<PeopleCore />} />
-            <Route path="/people/judges" element={<PeopleJudges />} />
-            <Route path="/judges" element={<Judges />} />
-            <Route path="/judge/:username" element={<JudgeProfile />} />
-            <Route path="/judges/apply" element={<JudgeApplicationForm />} />
-            <Route path="/judge-dashboard" element={<JudgeDashboard />} />
-            <Route path="/judge-inbox" element={<JudgeInbox />} />
-            <Route path="/resources" element={<Resources />} />
-            {/* Legacy redirect */}
-            <Route path="/featured" element={<Navigate to="/people" replace />} />
-            <Route path="/mfhop" element={<MFHOP />} />
-            <Route path="/partner" element={<PartnerNetwork />} />
-
-<Route path="/events" element={<Events />} />
-            <Route
-              path="/blog/makeathon-for-future"
-              element={<MakeathonForFuture />}
-            />
-            <Route
-              path="/blog/startups-through-maximally"
-              element={<StartupsThroughMaximally />}
-            />
-            <Route
-              path="/blog/maximally-makeathons-for-teachers"
-              element={<MaximallyMakeathonsForTeachers />}
-            />
-            <Route
-              path="/blog/level-up-your-game-with-maximally"
-              element={<LevelUpYourGameWithMaximally />}
-            />
-            <Route
-              path="/blog/transforming-education-with-maximally"
-              element={<TransformingEducationWithMaximally />}
-            />
-            <Route
-              path="/blog/can-teens-launch-startups"
-              element={<CanTeensLaunchStartups />}
-            />
-            <Route
-              path="/blog/dorm-to-startup-2025"
-              element={<DormToStartup2025 />}
-            />
-            <Route
-              path="/blog/school-innovation-roi"
-              element={<SchoolInnovationROI />}
-            />
-            <Route
-              path="/blog/senior-dev-as-mentors"
-              element={<TechMentoringBenefits />}
-            />
-            <Route
-              path="/blog/no-code-future"
-              element={<NoCodingNoProblem />}
-            />
-            <Route
-              path="/blog/makeathon-for-career"
-              element={<CareerChangeThroughMakeathons />}
-            />
-            <Route
-              path="/blog/power-of-mentorship"
-              element={<PowerOfMentorship />}
-            />
-            <Route
-              path="/blog/makeathons-future-education"
-              element={<MakeathonsFutureEducation />}
-            />
-            <Route
-              path="/blog/girls-breaking-barriers-stem"
-              element={<GirlsBreakingBarriersSTEM />}
-            />
-            <Route
-              path="/blog/top-life-skills-teens"
-              element={<TopLifeSkillsTeens />}
-            />
-            <Route
-              path="/blog/maximally-teaches-tools"
-              element={<MaximallyTeachesTools />}
-            />
-            <Route
-              path="/blog/parents-support-makeathon"
-              element={<ParentsSupport />}
-            />
-            <Route
-              path="/blog/makeathon-faq-maximally"
-              element={<MakeathonFAQ />}
-            />
-            <Route
-              path="/blog/teamwork-leadership-maximally"
-              element={<BuildingTeamworkLeadership />}
-            />
-            {/* Removed shipathon route */}
-            <Route path="/codehypothesis" element={<CodeHypothesis />} />
-            <Route path="/protocol-404" element={<Protocol404 />} />
-            <Route path="/project-codegen" element={<ProjectCodeGen />} />
-            <Route path="/promptstorm" element={<PromptStorm />} />
-            <Route path="/steal-a-thon" element={<StealAThon />} />
-            <Route path="/codepocalypse" element={<Codepocalypse />} />
-            <Route
-              path="/grand-tech-assembly"
-              element={<GrandTechAssembly />}
-            />
-            <Route path="/hacktober" element={<Hacktober />} />
-
-            {/* Event Reports */}
-            <Route path="/makeathon-report" element={<MakeathonReport />} />
-            <Route path="/shipathon-report" element={<ShipathonReport />} />
-
-            {/* Code Hypothesis Blog Posts */}
-            <Route
-              path="/blog/why-hackathons-got-boring-code-hypothesis"
-              element={<WhyHackathonsGotBoring />}
-            />
-            <Route
-              path="/blog/science-wild-ideas-code-hypothesis"
-              element={<ScienceWildIdeas />}
-            />
-            <Route
-              path="/blog/no-pitch-decks-gatekeeping-chaos"
-              element={<NoPitchDecksGatekeepingChaos />}
-            />
-            <Route
-              path="/blog/survive-code-hypothesis-24-hours"
-              element={<SurviveCodeHypothesis24Hours />}
-            />
-
-            {/* Protocol 404 Blog Posts */}
-            <Route
-              path="/blog/protocol-404-when-system-broken"
-              element={<Protocol404WhenSystemBroken />}
-            />
-            <Route
-              path="/blog/protocol-404-future-problem-solving"
-              element={<Protocol404FutureOfProblemSolving />}
-            />
-            <Route
-              path="/blog/protocol-404-hacker-shortcut"
-              element={<Protocol404HackerShortcut />}
-            />
-            <Route
-              path="/blog/protocol-404-future-of-hackathons"
-              element={<Protocol404FutureOfHackathons />}
-            />
-
-            {/* Project CodeGen Blog Posts */}
-            <Route
-              path="/blog/project-codegen-play-future"
-              element={<ProjectCodeGenPlayFuture />}
-            />
-            <Route
-              path="/blog/project-codegen-redefining-collaboration"
-              element={<ProjectCodeGenRedefiningCollaboration />}
-            />
-            <Route
-              path="/blog/project-codegen-idea-to-execution"
-              element={<ProjectCodeGenIdeaToExecution />}
-            />
-            <Route
-              path="/blog/project-codegen-beyond-hackathons"
-              element={<ProjectCodeGenBeyondHackathons />}
-            />
-
-            {/* Dynamic blog route - must be after all static routes */}
-            <Route path="/blog/:slug" element={<BlogRouter />} />
-
-            {/* Catch all route for 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <AppContent />
             </Router>
           </AuthProvider>
         </TooltipProvider>

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Terminal, Mail, ChevronDown, User, LogOut } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,6 +19,7 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -87,7 +89,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await signOut();
     setProfileDropdownOpen(false);
-    window.location.href = '/';
+    navigate('/');
   };
 
   const menuItems = [
@@ -103,26 +105,26 @@ const Navbar = () => {
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <a href="/" className="flex items-center group">
+          <Link to="/" className="flex items-center group">
             <div className="minecraft-block bg-maximally-red p-1.5 sm:p-2 mr-2 sm:mr-3 group-hover:bg-maximally-yellow transition-colors">
               <Terminal className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-black" />
             </div>
             <span className="font-press-start text-white text-xs sm:text-sm md:text-base lg:text-lg group-hover:text-maximally-red transition-colors">
               MAXIMALLY
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {menuItems.map((item) => (
-              <a
+              <Link
                 key={item.path}
-                href={item.path}
+                to={item.path}
                 className="relative font-press-start text-[10px] lg:text-xs px-2 lg:px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group"
               >
                 {item.label}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-red transition-all duration-200 group-hover:w-full"></span>
-              </a>
+              </Link>
             ))}
             {loading ? (
               <div className="font-press-start text-xs px-4 py-2 text-gray-500">
@@ -132,16 +134,16 @@ const Navbar = () => {
               <>
                 {isJudge && (
                   <>
-                    <a
-                      href="/judge-dashboard"
+                    <Link
+                      to="/judge-dashboard"
                       className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group ml-2"
                       data-testid="button-judge-dashboard"
                     >
                       JUDGE
                       <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-red transition-all duration-200 group-hover:w-full"></span>
-                    </a>
-                    <a
-                      href="/judge-inbox"
+                    </Link>
+                    <Link
+                      to="/judge-inbox"
                       className="relative p-2 text-white hover:text-cyan-400 transition-colors duration-200 ml-2"
                       data-testid="button-judge-inbox"
                       aria-label={`Judge inbox${unreadCount > 0 ? ` - ${unreadCount} unread` : ''}`}
@@ -153,7 +155,7 @@ const Navbar = () => {
                           {unreadCount > 99 ? '99+' : unreadCount}
                         </span>
                       )}
-                    </a>
+                    </Link>
                   </>
                 )}
                 <div className="relative ml-4" ref={profileDropdownRef}>
@@ -185,14 +187,14 @@ const Navbar = () => {
                         <p className="font-press-start text-xs text-white truncate">{profile?.username?.toUpperCase() || 'USER'}</p>
                       </div>
                       <div className="py-2">
-                        <a
-                          href={profileUrl}
+                        <Link
+                          to={profileUrl}
                           className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-maximally-red hover:text-black transition-all duration-200 group"
                           onClick={() => setProfileDropdownOpen(false)}
                         >
                           <User className="h-4 w-4 group-hover:scale-110 transition-transform" />
                           <span>MY PROFILE</span>
-                        </a>
+                        </Link>
                         <button
                           onClick={handleSignOut}
                           className="w-full flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-maximally-red hover:text-black transition-all duration-200 group"
@@ -206,8 +208,8 @@ const Navbar = () => {
                 </div>
               </>
             ) : (
-              <a
-                href="/login"
+              <Link
+                to="/login"
                 className="group ml-4"
                 data-testid="button-join"
                 aria-label="Sign in"
@@ -215,7 +217,7 @@ const Navbar = () => {
                 <div className="w-10 h-10 minecraft-block border-2 group-hover:border-maximally-red transition-colors duration-200 flex items-center justify-center" style={{ backgroundColor: '#121212', borderColor: '#2a2a2a' }}>
                   <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-maximally-red transition-colors duration-200" />
                 </div>
-              </a>
+              </Link>
             )}
           </div>
 
@@ -239,14 +241,14 @@ const Navbar = () => {
             <div className="container mx-auto px-4 py-6 sm:py-8 relative z-10">
               <div className="grid grid-cols-1 gap-3 sm:gap-4 max-w-sm mx-auto">
                 {menuItems.map((item) => (
-                  <a
+                  <Link
                     key={item.path}
-                    href={item.path}
+                    to={item.path}
                     onClick={() => setIsMenuOpen(false)}
                     className="pixel-button bg-maximally-red text-black font-press-start text-center py-3 sm:py-4 px-4 sm:px-6 text-xs sm:text-sm hover:bg-maximally-yellow transition-all duration-300 hover:scale-105"
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 ))}
                 {loading ? (
                   <div className="pixel-button bg-gray-600 text-gray-400 font-press-start text-center py-4 px-6">
@@ -256,16 +258,16 @@ const Navbar = () => {
                   <div className="space-y-4">
                     {isJudge && (
                       <>
-                        <a
-                          href="/judge-dashboard"
+                        <Link
+                          to="/judge-dashboard"
                           onClick={() => setIsMenuOpen(false)}
                           className="pixel-button bg-maximally-red text-white font-press-start text-center py-4 px-6 hover:bg-maximally-yellow hover:text-black transition-all duration-300 hover:scale-105 block"
                           data-testid="button-judge-dashboard-mobile"
                         >
                           JUDGE DASHBOARD
-                        </a>
-                        <a
-                          href="/judge-inbox"
+                        </Link>
+                        <Link
+                          to="/judge-inbox"
                           onClick={() => setIsMenuOpen(false)}
                           className="pixel-button bg-cyan-600 text-white font-press-start text-center py-4 px-6 hover:bg-cyan-700 transition-all duration-300 hover:scale-105 block relative"
                           data-testid="button-judge-inbox-mobile"
@@ -276,27 +278,27 @@ const Navbar = () => {
                               {unreadCount > 99 ? '99+' : unreadCount}
                             </span>
                           )}
-                        </a>
+                        </Link>
                       </>
                     )}
-                    <a
-                      href={profileUrl}
+                    <Link
+                      to={profileUrl}
                       onClick={() => setIsMenuOpen(false)}
                       className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105 block"
                       data-testid="button-profile-mobile"
                     >
                       PROFILE
-                    </a>
+                    </Link>
                   </div>
                 ) : (
-                  <a
-                    href="/login"
+                  <Link
+                    to="/login"
                     onClick={() => setIsMenuOpen(false)}
                     className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
                     data-testid="button-join-mobile"
                   >
                     JOIN
-                  </a>
+                  </Link>
                 )}
               </div>
             </div>

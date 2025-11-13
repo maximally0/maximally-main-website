@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maximally Loading Bar Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #E50914;
+        }
+
+        .demo-section {
+            background: #2a2a2a;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .demo-section h2 {
+            color: #E50914;
+            margin-bottom: 20px;
+        }
+
+        /* Loading Bar Styles */
+        .loading-bar-container {
+            position: relative;
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: #E50914;
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+            transition: width 0.3s ease-out;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #E50914;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #b8070f;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .info-box {
+            background: #333;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            border-left: 4px solid #E50914;
+        }
+
+        .code-block {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            overflow-x: auto;
+        }
+
+        code {
+            color: #E50914;
+            font-family: 'Courier New', monospace;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .feature-list li:before {
+            content: "✓ ";
+            color: #E50914;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .status.loading {
+            background: #E50914;
+        }
+
+        .status.complete {
+            background: #00CED1;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🎬 Maximally Loading Bar - Live Demo</h1>
+
+        <div class="demo-section">
+            <h2>Interactive Demo</h2>
+            <p>Click the buttons below to see the loading bar in action:</p>
+            
+            <div class="loading-bar-container">
+                <div class="loading-bar" id="loadingBar" style="width: 0%"></div>
+            </div>
+
+            <div class="button-group">
+                <button onclick="simulateNavigation()">🔄 Simulate Page Navigation</button>
+                <button onclick="simulateAuth()">🔐 Simulate Login/Profile Load</button>
+                <button onclick="simulateAPI()">📡 Simulate API Call</button>
+                <button onclick="simulateLongLoad()">⏱️ Simulate Long Load</button>
+            </div>
+
+            <div class="info-box">
+                <strong>Status:</strong> <span id="status">Ready</span>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>✨ Features Implemented</h2>
+            <ul class="feature-list">
+                <li>YouTube-style loading bar at the top of the page</li>
+                <li>Maximally red color (#E50914) with glow effect</li>
+                <li>Automatic tracking of page navigation</li>
+                <li>Shows during Supabase profile loading</li>
+                <li>Tracks all React Query API calls</li>
+                <li>Smooth animations and transitions</li>
+                <li>No full page reloads - true SPA experience</li>
+                <li>Works automatically - zero configuration</li>
+            </ul>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎯 How It Works</h2>
+            <div class="code-block">
+                <code>
+// The loading bar tracks:<br>
+1. Route changes (useLocation from react-router-dom)<br>
+2. Auth loading state (useAuth context)<br>
+3. React Query fetching (useIsFetching)<br>
+4. React Query mutations (useIsMutating)<br>
+<br>
+// Progress flow:<br>
+0% → 30% → 60% → 90% → 100% → Fade out
+                </code>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>📁 Files Modified</h2>
+            <div class="info-box">
+                <strong>New:</strong> client/src/components/LoadingBar.tsx<br>
+                <strong>Modified:</strong> client/src/App.tsx
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>🚀 Usage</h2>
+            <p>The loading bar works automatically! It will show during:</p>
+            <ul class="feature-list">
+                <li>Clicking navigation links (Home, Blog, About, etc.)</li>
+                <li>Login and signup operations</li>
+                <li>Profile page loading from Supabase</li>
+                <li>Any API calls or data fetching</li>
+                <li>Form submissions</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const loadingBar = document.getElementById('loadingBar');
+        const status = document.getElementById('status');
+        let currentAnimation = null;
+
+        function animateProgress(duration, label) {
+            if (currentAnimation) clearInterval(currentAnimation);
+            
+            status.textContent = label;
+            let progress = 0;
+            loadingBar.style.width = '0%';
+
+            currentAnimation = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.random() * 15;
+                    if (progress > 90) progress = 90;
+                    loadingBar.style.width = progress + '%';
+                } else {
+                    clearInterval(currentAnimation);
+                    setTimeout(() => {
+                        loadingBar.style.width = '100%';
+                        setTimeout(() => {
+                            loadingBar.style.width = '0%';
+                            status.textContent = 'Complete! ✓';
+                            setTimeout(() => {
+                                status.textContent = 'Ready';
+                            }, 1000);
+                        }, 200);
+                    }, 500);
+                }
+            }, 100);
+        }
+
+        function simulateNavigation() {
+            animateProgress(500, 'Navigating to new page...');
+        }
+
+        function simulateAuth() {
+            animateProgress(1500, 'Loading profile from Supabase...');
+        }
+
+        function simulateAPI() {
+            animateProgress(800, 'Fetching data from API...');
+        }
+
+        function simulateLongLoad() {
+            animateProgress(3000, 'Loading large dataset...');
+        }
+    </script>
+</body>
+</html>
