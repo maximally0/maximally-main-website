@@ -9,7 +9,12 @@ import {
   ExternalLink,
   Star,
   Gift,
-  Target
+  Target,
+  DollarSign,
+  Shield,
+  CheckCircle2,
+  MessageCircle,
+  Globe
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -124,6 +129,123 @@ const WhyThisExists = () => {
   );
 };
 
+const FounderNote = () => {
+  return (
+    <section className="bg-black text-white py-20 relative">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      
+      <div className="max-w-5xl mx-auto px-4 relative z-10">
+        <div className="pixel-card bg-black/90 border-2 border-maximally-yellow p-8 md:p-12">
+          <div className="flex items-center gap-3 mb-6">
+            <MessageCircle className="h-8 w-8 text-maximally-yellow" />
+            <h2 className="font-press-start text-xl md:text-2xl text-maximally-yellow">
+              FROM THE FOUNDER
+            </h2>
+          </div>
+          
+          <div className="space-y-4">
+            <p className="font-jetbrains text-gray-300 text-lg leading-relaxed italic">
+              "I started Maximally because hackathons changed my life. Everything we've done so far has been 
+              built without budget — just energy and creativity.
+            </p>
+            
+            <p className="font-jetbrains text-gray-300 text-lg leading-relaxed italic">
+              If you support us today, you're helping fuel something that I genuinely believe will become 
+              the largest hackathon network in the world.
+            </p>
+            
+            <p className="font-jetbrains text-gray-300 text-lg leading-relaxed italic">
+              And I promise: we'll use your support to build the craziest, most creative events ever."
+            </p>
+            
+            <p className="font-jetbrains text-maximally-red text-xl font-bold pt-4">
+              — Rishul Chanana, Founder
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TheMovement = () => {
+  return (
+    <section className="bg-black text-white py-20">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-8 md:p-12 text-center">
+          <Globe className="h-12 w-12 text-maximally-red mx-auto mb-6" />
+          
+          <h2 className="font-press-start text-2xl md:text-3xl text-maximally-red mb-8">
+            THE MOVEMENT
+          </h2>
+          
+          <p className="font-jetbrains text-gray-300 text-lg md:text-xl leading-relaxed max-w-4xl mx-auto">
+            We want a world where hackathons become a cultural phenomenon — not just a college event. 
+            We want more builders, more chaos, more creativity, more making. 
+            <span className="text-maximally-red font-bold"> Your support helps us bring hackathons to cities, villages, schools, 
+            colleges, communities, and online spaces across the world.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const WhatYouFunding = () => {
+  const breakdown = [
+    { percentage: 40, label: "Prize Pools", borderColor: "border-maximally-red", textColor: "text-maximally-red" },
+    { percentage: 20, label: "Infra & Tools", borderColor: "border-maximally-yellow", textColor: "text-maximally-yellow" },
+    { percentage: 15, label: "Branding + Content", borderColor: "border-green-500", textColor: "text-green-500" },
+    { percentage: 15, label: "Judges & Mentors", borderColor: "border-blue-500", textColor: "text-blue-500" },
+    { percentage: 10, label: "Outreach & Partnerships", borderColor: "border-purple-500", textColor: "text-purple-500" }
+  ];
+
+  return (
+    <section className="bg-black text-white py-20 relative">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      
+      <div className="max-w-6xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-red mb-4">
+            WHAT YOU'RE ACTUALLY FUNDING
+          </h2>
+          <p className="font-jetbrains text-gray-300 text-lg">
+            Complete transparency. Here's exactly where supporter money goes:
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-5 gap-6">
+          {breakdown.map((item, idx) => (
+            <Card 
+              key={idx}
+              className={`bg-black border-2 ${item.borderColor} p-6 text-center hover-elevate`}
+              data-testid={`card-funding-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
+            >
+              <div className="mb-4">
+                <DollarSign className={`h-8 w-8 ${item.textColor} mx-auto`} />
+              </div>
+              
+              <p className={`font-press-start text-4xl ${item.textColor} mb-3`}>
+                {item.percentage}%
+              </p>
+              
+              <p className="font-jetbrains text-gray-300 text-sm">
+                {item.label}
+              </p>
+            </Card>
+          ))}
+        </div>
+        
+        <div className="mt-8 text-center">
+          <p className="font-jetbrains text-gray-400 text-sm italic">
+            This builds trust. We're not pocketing it — we're building the ecosystem.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const IndividualTiers = () => {
   const tiers = [
     {
@@ -138,7 +260,8 @@ const IndividualTiers = () => {
         "Invitation to monthly supporter calls",
         "Ability to advise on formats, themes, and new ideas (light advisory role)"
       ],
-      color: "maximally-red"
+      starColor: "fill-maximally-red text-maximally-red",
+      priceColor: "text-maximally-red"
     },
     {
       name: "SUPER SUPPORTER",
@@ -152,7 +275,8 @@ const IndividualTiers = () => {
         "Quarterly 'Advisor Circle' meet-up",
         "Ability to influence the direction of upcoming hackathons"
       ],
-      color: "maximally-yellow",
+      starColor: "fill-maximally-yellow text-maximally-yellow",
+      priceColor: "text-maximally-yellow",
       featured: true
     },
     {
@@ -167,7 +291,8 @@ const IndividualTiers = () => {
         "Access to our mentors/judges pipeline",
         "Ability to advise more deeply on the Maximally roadmap"
       ],
-      color: "green-500"
+      starColor: "fill-green-500 text-green-500",
+      priceColor: "text-green-500"
     }
   ];
 
@@ -202,7 +327,7 @@ const IndividualTiers = () => {
               
               <div className="flex items-center gap-2 mb-4">
                 {Array.from({ length: tier.stars }).map((_, i) => (
-                  <Star key={i} className={`h-5 w-5 fill-${tier.color} text-${tier.color}`} />
+                  <Star key={i} className={`h-5 w-5 ${tier.starColor}`} />
                 ))}
               </div>
               
@@ -210,7 +335,7 @@ const IndividualTiers = () => {
                 {tier.name}
               </h3>
               
-              <p className={`font-press-start text-3xl text-${tier.color} mb-6`}>
+              <p className={`font-press-start text-3xl ${tier.priceColor} mb-6`}>
                 {tier.price}
               </p>
               
@@ -245,12 +370,58 @@ const IndividualTiers = () => {
   );
 };
 
+const AdvisorCircle = () => {
+  const advisorRoles = [
+    { icon: Zap, text: "Brainstorm new formats" },
+    { icon: Trophy, text: "Vote on themes/logos" },
+    { icon: Users, text: "Suggest global judges" },
+    { icon: Heart, text: "Propose communities to partner with" },
+    { icon: Target, text: "Build new hackathon verticals" },
+    { icon: Gift, text: "Experiment with crazy new ideas" }
+  ];
+
+  return (
+    <section className="bg-black text-white py-20">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-yellow mb-4">
+            WHAT IS THE ADVISOR CIRCLE?
+          </h2>
+          <p className="font-jetbrains text-gray-300 text-lg max-w-3xl mx-auto">
+            When you become a supporter, you're not just donating — you become an advisor helping shape the future.
+          </p>
+        </div>
+        
+        <div className="pixel-card bg-black/80 border-2 border-maximally-yellow p-8 md:p-12">
+          <p className="font-jetbrains text-gray-300 text-lg mb-8 text-center">
+            <span className="text-maximally-yellow font-bold">Advisor Circle members</span> help us:
+          </p>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            {advisorRoles.map((role, idx) => (
+              <div key={idx} className="flex items-center gap-3 bg-black/50 border border-maximally-yellow/30 p-4">
+                <role.icon className="h-6 w-6 text-maximally-yellow flex-shrink-0" />
+                <span className="font-jetbrains text-gray-300">{role.text}</span>
+              </div>
+            ))}
+          </div>
+          
+          <p className="font-jetbrains text-gray-400 text-center mt-8 italic">
+            Your supporter tier isn't just symbolic — it makes you useful in shaping hacker culture.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const SponsorPackages = () => {
   const packages = [
     {
       name: "STARTER SPONSOR",
       price: "$1,500",
-      color: "maximally-yellow",
+      iconColor: "text-maximally-yellow",
+      priceColor: "text-maximally-yellow",
       benefits: [
         "Logo on event page",
         "Mention in newsletter & socials",
@@ -262,7 +433,8 @@ const SponsorPackages = () => {
     {
       name: "GROWTH SPONSOR",
       price: "$3,500",
-      color: "maximally-red",
+      iconColor: "text-maximally-red",
+      priceColor: "text-maximally-red",
       benefits: [
         "Everything in Starter +",
         "Dedicated prize track",
@@ -275,7 +447,8 @@ const SponsorPackages = () => {
     {
       name: "FLAGSHIP SPONSOR",
       price: "$7,500",
-      color: "blue-500",
+      iconColor: "text-blue-500",
+      priceColor: "text-blue-500",
       benefits: [
         "Everything in Growth +",
         "Category naming rights",
@@ -315,14 +488,14 @@ const SponsorPackages = () => {
               )}
               
               <div className="mb-4">
-                <Building2 className={`h-8 w-8 text-${pkg.color}`} />
+                <Building2 className={`h-8 w-8 ${pkg.iconColor}`} />
               </div>
               
               <h3 className="font-press-start text-xl text-white mb-2">
                 {pkg.name}
               </h3>
               
-              <p className={`font-press-start text-3xl text-${pkg.color} mb-6`}>
+              <p className={`font-press-start text-3xl ${pkg.priceColor} mb-6`}>
                 {pkg.price}
               </p>
               
@@ -369,6 +542,28 @@ const SponsorPackages = () => {
                 data-testid="button-custom-pricing"
               >
                 GET CUSTOM PRICING
+                <Mail className="ml-2 h-4 w-4" />
+              </Button>
+            </a>
+          </div>
+        </Card>
+        
+        <Card className="bg-black border-2 border-green-500 p-8 mt-8 hover-elevate" data-testid="card-talk-to-us">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="font-press-start text-xl text-green-500 mb-3">
+                WANT A CALL BEFORE SPONSORING?
+              </h3>
+              <p className="font-jetbrains text-gray-300 text-lg">
+                Some people want to ask questions before paying $1500+. We get it.
+              </p>
+            </div>
+            <a href="mailto:hello@maximally.in">
+              <Button 
+                className="bg-green-500 hover:bg-green-600 text-white font-press-start whitespace-nowrap"
+                data-testid="button-talk-to-us"
+              >
+                EMAIL US FIRST
                 <Mail className="ml-2 h-4 w-4" />
               </Button>
             </a>
@@ -430,6 +625,90 @@ const NonMonetarySupport = () => {
               </Button>
             </a>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TrustAndSafety = () => {
+  const faqs = [
+    { q: "Is payment secure?", a: "Yes, all payments are processed through BuyMeACoffee's secure platform." },
+    { q: "Is this a donation?", a: "No — you're supporting an ecosystem + receiving tangible benefits and advisor privileges." },
+    { q: "Is it refundable?", a: "No, but perks are delivered instantly upon payment." },
+    { q: "Will I get a certificate?", a: "Yes, digital certificate + verifiable supporter badge." },
+    { q: "Can I support anonymously?", a: "Yes, you can choose to remain anonymous." }
+  ];
+
+  return (
+    <section className="bg-black text-white py-20">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <Shield className="h-12 w-12 text-green-500 mx-auto mb-4" />
+          <h2 className="font-press-start text-2xl md:text-4xl text-green-500 mb-4">
+            TRUST + SAFETY
+          </h2>
+        </div>
+        
+        <div className="space-y-4">
+          {faqs.map((faq, idx) => (
+            <Card key={idx} className="bg-black border-2 border-green-500/30 p-6 hover-elevate" data-testid={`faq-${idx}`}>
+              <h3 className="font-press-start text-lg text-green-500 mb-2">
+                {faq.q}
+              </h3>
+              <p className="font-jetbrains text-gray-300">
+                {faq.a}
+              </p>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const SupporterOnboarding = () => {
+  const steps = [
+    { icon: Mail, text: "You get an email confirmation" },
+    { icon: Users, text: "You get community access to private supporter channels" },
+    { icon: Trophy, text: "Your name goes on the Maximally Supporter Wall" },
+    { icon: Gift, text: "You get an advisor welcome packet" },
+    { icon: CheckCircle2, text: "You get all your tier perks activated" }
+  ];
+
+  return (
+    <section className="bg-black text-white py-20 relative">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      
+      <div className="max-w-6xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-yellow mb-4">
+            WHAT HAPPENS AFTER YOU SUPPORT?
+          </h2>
+          <p className="font-jetbrains text-gray-300 text-lg">
+            Your onboarding is instant. Here's what you get immediately:
+          </p>
+        </div>
+        
+        <div className="pixel-card bg-black/80 border-2 border-maximally-yellow p-8 md:p-12">
+          <div className="space-y-4">
+            {steps.map((step, idx) => (
+              <div key={idx} className="flex items-start gap-4">
+                <div className="minecraft-block bg-maximally-yellow p-2 flex-shrink-0">
+                  <step.icon className="h-6 w-6 text-black" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-jetbrains text-gray-300 text-lg">
+                    {idx + 1}. {step.text}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <p className="font-jetbrains text-gray-400 text-center mt-8 italic">
+            This builds assurance. You know exactly what to expect.
+          </p>
         </div>
       </div>
     </section>
@@ -511,13 +790,19 @@ export default function BecomeASupporter() {
       <div className="min-h-screen bg-black">
         <HeroSection />
         <WhyThisExists />
+        <FounderNote />
+        <TheMovement />
+        <WhatYouFunding />
         <div id="individual-supporters">
           <IndividualTiers />
         </div>
+        <AdvisorCircle />
         <div id="sponsor-packages">
           <SponsorPackages />
         </div>
         <NonMonetarySupport />
+        <TrustAndSafety />
+        <SupporterOnboarding />
         <CTASection />
         <Footer />
       </div>
