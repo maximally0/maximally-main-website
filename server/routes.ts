@@ -2128,26 +2128,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create a map of message read status
       const readStatusMap = new Map();
       (recipients || []).forEach((r: any) => {
-        readStatusMap.set(r.message_id, { isRead: r.is_read, readAt: r.read_at });
+        readStatusMap.set(r.message_id, { is_read: r.is_read, read_at: r.read_at });
       });
 
       const transformedMessages = (messages || []).map((msg: any) => {
-        const readStatus = readStatusMap.get(msg.id) || { isRead: false, readAt: null };
+        const readStatus = readStatusMap.get(msg.id) || { is_read: false, read_at: null };
         return {
           id: msg.id,
           subject: msg.subject,
-          message: msg.content,
+          content: msg.content,
           priority: msg.priority,
-          createdAt: msg.created_at,
-          sentAt: msg.sent_at,
-          sentByName: msg.sent_by_name,
-          readAt: readStatus.readAt
+          created_at: msg.created_at,
+          sent_at: msg.sent_at,
+          sent_by_name: msg.sent_by_name,
+          sent_by_email: msg.sent_by_email,
+          recipient: {
+            is_read: readStatus.is_read,
+            read_at: readStatus.read_at
+          }
         };
       });
 
       return res.json({
-        success: true,
-        messages: transformedMessages,
+        items: transformedMessages,
         total: transformedMessages.length
       });
     } catch (err: any) {
@@ -2201,8 +2204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       return res.json({
-        success: true,
-        count: count || 0
+        unread: count || 0
       });
     } catch (err: any) {
       console.error('Unread count fetch error:', err);
