@@ -21,7 +21,7 @@
 # Route all API calls to the serverless function
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api"
+  to = "/.netlify/functions/api/:splat"
   status = 200
 
 # Catch-all for SPA routing (must be last)
