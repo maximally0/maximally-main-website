@@ -521,6 +521,74 @@ app.post("/api/judges/apply", async (req: Request, res: Response) => {
   }
 });
 
+// Get all published judges (public endpoint)
+app.get("/api/judges", async (_req: Request, res: Response) => {
+  try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+    }
+
+    console.log('Fetching all published judges');
+
+    // Get all published judges
+    const { data: judges, error: judgesError } = await supabaseAdmin
+      .from('judges')
+      .select('*')
+      .eq('is_published', true)
+      .order('sort_order', { ascending: true })
+      .order('created_at', { ascending: false });
+
+    if (judgesError) {
+      console.error('Judges fetch error:', judgesError);
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Failed to fetch judges',
+        error: judgesError.message
+      });
+    }
+
+    const judgesList = (judges || []).map((judgeData: any) => ({
+      id: judgeData.id,
+      username: judgeData.username,
+      fullName: judgeData.full_name,
+      profilePhoto: judgeData.profile_photo,
+      headline: judgeData.headline,
+      shortBio: judgeData.short_bio,
+      location: judgeData.judge_location,
+      currentRole: judgeData.role_title,
+      company: judgeData.company,
+      primaryExpertise: judgeData.primary_expertise || [],
+      secondaryExpertise: judgeData.secondary_expertise || [],
+      totalEventsJudged: judgeData.total_events_judged || 0,
+      totalTeamsEvaluated: judgeData.total_teams_evaluated || 0,
+      totalMentorshipHours: judgeData.total_mentorship_hours || 0,
+      yearsOfExperience: judgeData.years_of_experience || 0,
+      averageFeedbackRating: judgeData.average_feedback_rating,
+      eventsJudgedVerified: judgeData.events_judged_verified || false,
+      teamsEvaluatedVerified: judgeData.teams_evaluated_verified || false,
+      mentorshipHoursVerified: judgeData.mentorship_hours_verified || false,
+      feedbackRatingVerified: judgeData.feedback_rating_verified || false,
+      linkedin: judgeData.linkedin,
+      github: judgeData.github,
+      twitter: judgeData.twitter,
+      website: judgeData.website,
+      languagesSpoken: judgeData.languages_spoken || [],
+      publicAchievements: judgeData.public_achievements,
+      mentorshipStatement: judgeData.mentorship_statement,
+      availabilityStatus: judgeData.availability_status || 'available',
+      tier: judgeData.tier || 'starter',
+      isPublished: judgeData.is_published || false,
+      createdAt: judgeData.created_at
+    }));
+
+    console.log(`Returning ${judgesList.length} published judges`);
+    return res.json(judgesList);
+  } catch (err: any) {
+    console.error('Judges fetch error:', err);
+    return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch judges' });
+  }
+});
+
 // Get judge by username (public endpoint)
 app.get("/api/judges/:username", async (req: Request, res: Response) => {
   try {
@@ -605,6 +673,7 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
       mentorshipStatement: judgeData.mentorship_statement,
       availabilityStatus: judgeData.availability_status || 'available',
       tier: judgeData.tier || 'starter',
+      isPublished: judgeData.is_published || false,
       topEventsJudged: (events || []).map((e: any) => ({
         eventName: e.event_name,
         role: e.event_role,
