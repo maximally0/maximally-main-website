@@ -131,6 +131,11 @@ import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 // MFHOP
 import MFHOP from './pages/MFHOP';
 import PartnerNetwork from './pages/PartnerNetwork';
+import HostHackathon from './pages/HostHackathon';
+import CreateHackathon from './pages/CreateHackathon';
+import OrganizerDashboard from './pages/OrganizerDashboard';
+import EditHackathon from './pages/EditHackathon';
+import PublicHackathon from './pages/PublicHackathon';
 
 // People pages
 import People from './pages/People';
@@ -329,6 +334,11 @@ const AppContent = () => {
         <Route path="/featured" element={<Navigate to="/people" replace />} />
         <Route path="/mfhop" element={<MFHOP />} />
         <Route path="/partner" element={<PartnerNetwork />} />
+        <Route path="/host-hackathon" element={<HostHackathon />} />
+        <Route path="/create-hackathon" element={<CreateHackathon />} />
+        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
+        <Route path="/organizer/hackathons/:id" element={<EditHackathon />} />
+        <Route path="/hackathon/:slug" element={<PublicHackathon />} />
 
         <Route path="/events" element={<Events />} />
         <Route

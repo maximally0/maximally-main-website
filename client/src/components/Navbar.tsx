@@ -94,6 +94,7 @@ const Navbar = () => {
 
   const menuItems = [
     { path: "/events", label: "JOIN A HACKATHON", color: "#E50914" },
+    { path: "/host-hackathon", label: "HOST A HACKATHON", color: "#FFD700" },
     { path: "/contact", label: "CONTACT", color: "#FF2B2B" }
   ];
 

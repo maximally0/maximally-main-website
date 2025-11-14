@@ -2,6 +2,8 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { createClient } from "@supabase/supabase-js";
+import { registerOrganizerRoutes } from "./routes/organizer";
+import { registerAdminHackathonRoutes } from "./routes/admin-hackathons";
 
 // Simple per-user rate limiter (token bucket) in memory
 const rateBuckets = new Map<string, { tokens: number; last: number }>();
@@ -2282,6 +2284,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (err: any) {
       console.error('Mark message read error:', err);
       return res.status(500).json({ success: false, message: err?.message || 'Failed to mark message as read' });
+    }
+  });
+
+  // Register organizer routes
+  registerOrganizerRoutes(app);
+  
+  // Register admin hackathon management routes
+  registerAdminHackathonRoutes(app);
+
+  // Public hackathon routes
+  app.get("/api/hackathons/:slug", async (req: Request, res: Response) => {
+    try {
+      const { slug } = req.params;
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+
+      const { data, error } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('*')
+        .eq('slug', slug)
+        .eq('status', 'published')
+        .single();
+
+      if (error || !data) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  app.post("/api/hackathons/:slug/view", async (req: Request, res: Response) => {
+    try {
+      const { slug } = req.params;
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+
+      await supabaseAdmin.rpc('increment_hackathon_views', { hackathon_slug: slug });
+
+      return res.json({ success: true });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
     }
   });
 
