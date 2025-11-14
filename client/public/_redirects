@@ -2,6 +2,7 @@
 /bootcamps /makeathon 301
 
 # API redirects - must come before catch-all
+/api/judges/apply /.netlify/functions/judges 200
 /api/judges/* /.netlify/functions/judges/:splat 200
 /api/judges /.netlify/functions/judges 200
 /api/* /.netlify/functions/api/:splat 200
