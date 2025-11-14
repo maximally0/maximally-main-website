@@ -11,7 +11,7 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["express", "serverless-http", "@supabase/supabase-js"]
+  included_files = ["netlify/functions/**"]
 
 [[redirects]]
   from = "/bootcamps"
