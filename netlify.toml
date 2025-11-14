@@ -18,7 +18,18 @@
   to = "/makeathon"
   status = 301
 
-# Route all API calls to the serverless function
+# Route judge API calls to judges function
+[[redirects]]
+  from = "/api/judges/*"
+  to = "/.netlify/functions/judges/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/api/judges"
+  to = "/.netlify/functions/judges"
+  status = 200
+
+# Route all other API calls to the serverless function
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
