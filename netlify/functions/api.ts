@@ -692,5 +692,3 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
 });
 
 export const handler = serverless(app);
-e x p o r t   c o n s t   h a n d l e r   =   s e r v e r l e s s ( a p p ) ;  
- 
