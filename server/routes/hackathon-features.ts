@@ -429,8 +429,6 @@ export function registerHackathonFeatureRoutes(app: Express) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
-}
-
 
   // ============================================================================
   // SUBMISSION MILESTONES
