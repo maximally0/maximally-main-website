@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Plus, Calendar, MapPin, Users, Eye, Clock, Edit, Trash2, Send } from 'lucide-react';
+import { Plus, Calendar, MapPin, Users, Eye, Clock, Edit, Trash2, Send, Copy } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 import Footer from '@/components/Footer';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 interface Hackathon {
   id: number;
@@ -27,6 +28,7 @@ export default function OrganizerDashboard() {
   const { toast } = useToast();
   const [hackathons, setHackathons] = useState<Hackathon[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; id: number | null }>({ show: false, id: null });
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -56,10 +58,15 @@ export default function OrganizerDashboard() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this hackathon? This action cannot be undone.')) {
-      return;
-    }
+  const handleDeleteClick = (id: number) => {
+    setDeleteConfirm({ show: true, id });
+  };
+
+  const handleDeleteConfirm = async () => {
+    const id = deleteConfirm.id;
+    setDeleteConfirm({ show: false, id: null });
+    
+    if (!id) return;
 
     try {
       const headers = await getAuthHeaders();
@@ -86,6 +93,34 @@ export default function OrganizerDashboard() {
     }
   };
 
+  const handleClone = async (id: number) => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${id}/clone`, {
+        method: 'POST',
+        headers,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Hackathon Cloned!",
+          description: "A copy has been created as a draft. You can now edit it.",
+        });
+        fetchHackathons();
+      } else {
+        throw new Error(data.message || 'Failed to clone hackathon');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || 'Failed to clone hackathon',
+        variant: "destructive",
+      });
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const styles = {
       draft: 'bg-gray-600 text-white',
@@ -104,8 +139,34 @@ export default function OrganizerDashboard() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="font-press-start text-maximally-red">LOADING...</div>
+      <div className="min-h-screen bg-black text-white pt-24 pb-12">
+        <div className="container mx-auto px-4">
+          <div className="animate-pulse space-y-8">
+            {/* Header skeleton */}
+            <div className="space-y-4">
+              <div className="h-10 w-80 bg-gray-800 rounded"></div>
+              <div className="h-4 w-64 bg-gray-800 rounded"></div>
+            </div>
+
+            {/* Button skeleton */}
+            <div className="h-14 w-64 bg-gray-800 rounded"></div>
+
+            {/* Cards skeleton */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+                  <div className="h-6 w-48 bg-gray-800 rounded mb-4"></div>
+                  <div className="h-4 w-32 bg-gray-800 rounded mb-2"></div>
+                  <div className="h-4 w-40 bg-gray-800 rounded mb-4"></div>
+                  <div className="flex gap-2">
+                    <div className="h-10 w-20 bg-gray-800 rounded"></div>
+                    <div className="h-10 w-20 bg-gray-800 rounded"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -189,9 +250,16 @@ export default function OrganizerDashboard() {
                         <Edit className="h-4 w-4 inline mr-1" />
                         EDIT
                       </Link>
+                      <button
+                        onClick={() => handleClone(hackathon.id)}
+                        className="pixel-button bg-cyan-600 text-white px-3 py-2 hover:bg-cyan-700 transition-colors"
+                        title="Clone hackathon"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
                       {hackathon.status === 'draft' && (
                         <button
-                          onClick={() => handleDelete(hackathon.id)}
+                          onClick={() => handleDeleteClick(hackathon.id)}
                           className="pixel-button bg-red-600 text-white px-3 py-2 hover:bg-red-700 transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -258,18 +326,40 @@ export default function OrganizerDashboard() {
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="space-y-2">
+                      <div className="flex gap-2">
+                        <Link
+                          to={`/hackathon/${hackathon.slug}`}
+                          className="flex-1 pixel-button bg-green-600 text-white text-center py-2 font-press-start text-xs hover:bg-green-700 transition-colors"
+                        >
+                          VIEW_PAGE
+                        </Link>
+                        <Link
+                          to={`/organizer/hackathons/${hackathon.id}`}
+                          className="pixel-button bg-maximally-yellow text-black px-3 py-2 hover:bg-maximally-red hover:text-white transition-colors"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Link>
+                        <button
+                          onClick={() => handleClone(hackathon.id)}
+                          className="pixel-button bg-cyan-600 text-white px-3 py-2 hover:bg-cyan-700 transition-colors"
+                          title="Clone hackathon"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteClick(hackathon.id)}
+                          className="pixel-button bg-red-600 text-white px-3 py-2 hover:bg-red-700 transition-colors"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                       <Link
-                        to={`/hackathon/${hackathon.slug}`}
-                        className="flex-1 pixel-button bg-green-600 text-white text-center py-2 font-press-start text-xs hover:bg-green-700 transition-colors"
+                        to={`/organizer/hackathons/${hackathon.id}/manage`}
+                        className="w-full pixel-button bg-purple-600 text-white text-center py-2 font-press-start text-xs hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
                       >
-                        VIEW_PAGE
-                      </Link>
-                      <Link
-                        to={`/organizer/hackathons/${hackathon.id}`}
-                        className="pixel-button bg-maximally-yellow text-black px-3 py-2 hover:bg-maximally-red hover:text-white transition-colors"
-                      >
-                        <Edit className="h-4 w-4" />
+                        <Users className="h-4 w-4" />
+                        MANAGE_HACKATHON
                       </Link>
                     </div>
                   </div>
@@ -302,6 +392,18 @@ export default function OrganizerDashboard() {
       </div>
 
       <Footer />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDialog
+        open={deleteConfirm.show}
+        onOpenChange={(show) => setDeleteConfirm({ show, id: null })}
+        title="DELETE HACKATHON"
+        description="Are you sure you want to delete this hackathon? This action cannot be undone and all data will be permanently lost."
+        confirmText="DELETE"
+        cancelText="CANCEL"
+        onConfirm={handleDeleteConfirm}
+        variant="destructive"
+      />
     </>
   );
 }

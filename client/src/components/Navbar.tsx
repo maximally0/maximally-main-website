@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, Terminal, Mail, ChevronDown, User, LogOut } from "lucide-react";
+import { Menu, X, Terminal, Mail, ChevronDown, User, LogOut, Bell } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
+// import NotificationPanel from "./NotificationPanel"; // REMOVED - Notification system disabled
+import { getAuthHeaders } from "@/lib/auth";
 
 // Pixelated User Icon Component
 const PixelUserIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
@@ -18,8 +20,14 @@ const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  // const [notificationPanelOpen, setNotificationPanelOpen] = useState(false); // REMOVED
+  const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // Get user and profile first
+  const { user, profile, loading, refreshProfile } = useAuth();
+  const { unreadCount } = useJudgeUnreadCount();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,6 +56,29 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  const fetchUnreadCount = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch('/api/notifications/unread-count', { headers });
+      const data = await response.json();
+      if (data.success) {
+        setNotificationUnreadCount(data.count);
+      }
+    } catch (error) {
+      console.error('Error fetching unread count:', error);
+    }
+  };
+
+  // Fetch unread notification count
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+      // Poll every 30 seconds
+      const interval = setInterval(fetchUnreadCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
@@ -60,12 +91,13 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  const { user, profile, loading, refreshProfile } = useAuth();
-  const { unreadCount } = useJudgeUnreadCount();
+  // Debug: Log profile data
+  console.log('Navbar profile data:', { username: profile?.username, email: user?.email, fullProfile: profile });
 
   const isLoggedIn = !!user && !loading;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : '/profile';
   const isJudge = profile?.role === 'judge';
+  const isOrganizer = (profile?.role as string) === 'organizer';
 
   // Refresh profile when user changes to ensure judge role is detected
   useEffect(() => {
@@ -99,9 +131,15 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isVisible ? 'top-0' : '-top-24'
-      } ${isScrolled ? "py-2 sm:py-3 bg-black/98 backdrop-blur-md border-b border-maximally-red/30 shadow-lg" : "py-3 sm:py-4 bg-black/95 backdrop-blur-md border-b border-gray-800/50"
-      }`}>
+    <nav 
+      style={{
+        transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+        transition: 'transform 0.3s ease-in-out'
+      }}
+      className={`fixed top-0 w-full z-50 ${
+        isScrolled ? "py-2 sm:py-3 bg-black/98 backdrop-blur-md border-b border-maximally-red/30 shadow-lg" : "py-3 sm:py-4 bg-black/95 backdrop-blur-md border-b border-gray-800/50"
+      }`}
+    >
       <div className="container mx-auto px-3 sm:px-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
@@ -158,6 +196,30 @@ const Navbar = () => {
                     </Link>
                   </>
                 )}
+                {isOrganizer && (
+                  <Link
+                    to="/organizer/dashboard"
+                    className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-yellow transition-colors duration-200 group ml-2"
+                    data-testid="button-organizer-dashboard"
+                  >
+                    ORGANIZER
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-yellow transition-all duration-200 group-hover:w-full"></span>
+                  </Link>
+                )}
+                {/* Notification Bell - DISABLED */}
+                {/* <button
+                  onClick={() => setNotificationPanelOpen(true)}
+                  className="relative p-2 text-white hover:text-maximally-yellow transition-colors duration-200 ml-2"
+                  aria-label={`Notifications${notificationUnreadCount > 0 ? ` - ${notificationUnreadCount} unread` : ''}`}
+                  title={`Notifications${notificationUnreadCount > 0 ? ` (${notificationUnreadCount} unread)` : ''}`}
+                >
+                  <Bell className="h-5 w-5" />
+                  {notificationUnreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-maximally-red text-white text-[10px] font-press-start px-1.5 py-0.5 rounded-sm min-w-[18px] text-center leading-none shadow-lg animate-pulse">
+                      {notificationUnreadCount > 99 ? '99+' : notificationUnreadCount}
+                    </span>
+                  )}
+                </button> */}
                 <div className="relative ml-4" ref={profileDropdownRef}>
                   <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
@@ -169,14 +231,27 @@ const Navbar = () => {
                       <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-maximally-red transition-colors duration-200 overflow-hidden" style={{ imageRendering: 'pixelated' }}>
                         <img 
                           src={profile.avatar_url} 
-                          alt={profile.username || 'User'} 
+                          alt={profile.username || user?.email || 'User'} 
                           className="w-full h-full object-cover"
                           style={{ imageRendering: 'pixelated' }}
+                          onError={(e) => {
+                            // Fallback if image fails to load
+                            e.currentTarget.style.display = 'none';
+                            if (e.currentTarget.parentElement) {
+                              e.currentTarget.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-maximally-red text-white font-press-start text-lg">${(profile?.username || user?.email || 'U')[0].toUpperCase()}</div>`;
+                            }
+                          }}
                         />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 minecraft-block border-2 group-hover:border-maximally-red transition-colors duration-200 flex items-center justify-center" style={{ backgroundColor: '#121212', borderColor: '#2a2a2a' }}>
-                        <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-maximally-red transition-colors duration-200" />
+                      <div className="w-10 h-10 minecraft-block border-2 group-hover:border-maximally-red transition-colors duration-200 flex items-center justify-center bg-maximally-red/20" style={{ borderColor: '#2a2a2a' }}>
+                        {profile?.username || user?.email ? (
+                          <span className="font-press-start text-lg text-maximally-red">
+                            {(profile?.username || user?.email || 'U')[0].toUpperCase()}
+                          </span>
+                        ) : (
+                          <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-maximally-red transition-colors duration-200" />
+                        )}
                       </div>
                     )}
                   </button>
@@ -184,9 +259,10 @@ const Navbar = () => {
                     <div className="absolute right-0 mt-3 w-56 minecraft-block border-2 border-maximally-red shadow-2xl shadow-maximally-red/30 z-50 overflow-hidden" style={{ backgroundColor: '#0a0a0a' }}>
                       <div className="px-5 py-4 border-b-2 border-maximally-red/40" style={{ backgroundColor: '#121212' }}>
                         <p className="font-press-start text-[9px] text-gray-500 mb-1.5">SIGNED IN AS</p>
-                        <p className="font-press-start text-xs text-white truncate">{profile?.username?.toUpperCase() || 'USER'}</p>
-                      </div>
-                      <div className="py-2">
+                        <p className="font-press-start text-xs text-white truncate">
+                          {profile?.username ? `@${profile.username}` : (user?.email?.split('@')[0]?.toUpperCase() || 'USER')}
+                        </p>
+                      </div>                      <div className="py-2">
                         <Link
                           to={profileUrl}
                           className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-maximally-red hover:text-black transition-all duration-200 group"
@@ -281,6 +357,16 @@ const Navbar = () => {
                         </Link>
                       </>
                     )}
+                    {isOrganizer && (
+                      <Link
+                        to="/organizer/dashboard"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red hover:text-white transition-all duration-300 hover:scale-105 block"
+                        data-testid="button-organizer-dashboard-mobile"
+                      >
+                        ORGANIZER DASHBOARD
+                      </Link>
+                    )}
                     <Link
                       to={profileUrl}
                       onClick={() => setIsMenuOpen(false)}
@@ -305,6 +391,12 @@ const Navbar = () => {
           </div>
         )}
       </div>
+
+      {/* Notification Panel - DISABLED */}
+      {/* <NotificationPanel
+        isOpen={notificationPanelOpen}
+        onClose={() => setNotificationPanelOpen(false)}
+      /> */}
     </nav>
   );
 };

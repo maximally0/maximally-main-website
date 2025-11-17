@@ -24,6 +24,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/contexts/AuthContext';
+import { getAuthHeaders } from '@/lib/auth';
 
 const HostHackathon = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ const HostHackathon = () => {
   const [floatingPixels, setFloatingPixels] = useState<
     Array<{ id: number; x: number; y: number; delay: number }>
   >([]);
+  const [hasHackathons, setHasHackathons] = useState(false);
+  const [checkingHackathons, setCheckingHackathons] = useState(true);
 
   useEffect(() => {
     // Generate floating pixels
@@ -43,10 +46,36 @@ const HostHackathon = () => {
     setFloatingPixels(pixels);
   }, []);
 
+  useEffect(() => {
+    // Check if user has hackathons
+    const checkHackathons = async () => {
+      if (!authLoading) {
+        if (user) {
+          try {
+            const headers = await getAuthHeaders();
+            const response = await fetch('/api/organizer/hackathons', { headers });
+            const data = await response.json();
+            if (data.success && data.data && data.data.length > 0) {
+              setHasHackathons(true);
+            }
+          } catch (error) {
+            console.error('Error checking hackathons:', error);
+          }
+        }
+        setCheckingHackathons(false);
+      }
+    };
+
+    checkHackathons();
+  }, [user, authLoading]);
+
   const handleGetStarted = () => {
     if (!user) {
       // Redirect to login if not authenticated
       navigate('/login?redirect=/create-hackathon');
+    } else if (hasHackathons) {
+      // Navigate to dashboard if user has hackathons
+      navigate('/organizer/dashboard');
     } else {
       // Navigate to create hackathon page
       navigate('/create-hackathon');
@@ -196,12 +225,21 @@ const HostHackathon = () => {
               <div className="flex flex-col xs:flex-row gap-4 xs:gap-6 justify-center mb-8 sm:mb-12 md:mb-16 px-4">
                 <button
                   onClick={handleGetStarted}
-                  disabled={authLoading}
+                  disabled={authLoading || checkingHackathons}
                   className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-12 xs:h-14 sm:h-16 px-6 xs:px-8 sm:px-10 font-press-start text-xs xs:text-sm sm:text-base relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="absolute inset-0 bg-maximally-yellow opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-                  <Rocket className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:animate-bounce" />
-                  <span>{authLoading ? 'LOADING...' : 'GET_STARTED'}</span>
+                  {user && hasHackathons ? (
+                    <>
+                      <BarChart3 className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:animate-bounce" />
+                      <span>{checkingHackathons ? 'LOADING...' : 'MY_DASHBOARD'}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Rocket className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:animate-bounce" />
+                      <span>{authLoading || checkingHackathons ? 'LOADING...' : 'GET_STARTED'}</span>
+                    </>
+                  )}
                   <ArrowRight className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:translate-x-2 transition-transform" />
                 </button>
 

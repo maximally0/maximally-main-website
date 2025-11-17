@@ -15,13 +15,16 @@ import {
   Plus,
   X,
   Clock,
-  Sparkles
+  Sparkles,
+  CheckCircle
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
+import TimelineManager from '@/components/TimelineManager';
 
 interface HackathonData {
   id: number;
@@ -43,6 +46,7 @@ interface HackathonData {
   communication_channel?: string;
   communication_link?: string;
   tracks?: string;
+  themes?: string[];
   open_innovation?: boolean;
   total_prize_pool?: string;
   prize_breakdown?: string;
@@ -56,7 +60,14 @@ interface HackathonData {
   submission_platform_link?: string;
   contact_email?: string;
   key_rules?: string;
+  rules_content?: string;
+  eligibility_criteria?: string;
+  submission_guidelines?: string;
+  judging_process?: string;
   code_of_conduct?: string;
+  sponsors?: string[];
+  partners?: string[];
+  faqs?: string;
   promo_video_link?: string;
   cover_image?: string;
   status: string;
@@ -71,15 +82,18 @@ export default function EditHackathon() {
   const [saving, setSaving] = useState(false);
   const [hackathon, setHackathon] = useState<HackathonData | null>(null);
   const [activeTab, setActiveTab] = useState('basic');
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
 
+  // Only redirect on initial load, not on subsequent auth changes
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!authLoading && !user && !hackathon) {
       navigate('/login?redirect=/organizer/dashboard');
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigate, hackathon]);
 
   useEffect(() => {
-    if (user && id) {
+    // Only fetch if we don't have hackathon data yet
+    if (user && id && !hackathon) {
       fetchHackathon();
     }
   }, [user, id]);
@@ -91,7 +105,8 @@ export default function EditHackathon() {
       const data = await response.json();
 
       if (data.success) {
-        setHackathon(data.data);
+        // Only set hackathon if we don't already have data (prevent overwriting user edits)
+        setHackathon(prev => prev ? prev : data.data);
       } else {
         toast({
           title: "Error",
@@ -132,6 +147,13 @@ export default function EditHackathon() {
           description: "Your changes have been saved.",
         });
         setHackathon(data.data);
+      } else if (data.requiresEditRequest) {
+        // Published hackathon - need to submit edit request
+        toast({
+          title: "Edit Request Required",
+          description: "This hackathon is published. Please submit an edit request.",
+          variant: "destructive",
+        });
       } else {
         throw new Error(data.message || 'Failed to save');
       }
@@ -146,11 +168,71 @@ export default function EditHackathon() {
     }
   };
 
-  const handleRequestPublish = async () => {
-    if (!confirm('Request publication? Your hackathon will be reviewed by our team.')) return;
+  const handleRequestEdit = async () => {
+    if (!hackathon) return;
 
+    setSaving(true);
     try {
       const headers = await getAuthHeaders();
+      console.log('Submitting edit request for hackathon:', id);
+      console.log('Changes:', hackathon);
+      
+      const response = await fetch(`/api/organizer/hackathons/${id}/request-edit`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          changes: hackathon,
+          reason: 'Update hackathon information'
+        }),
+      });
+
+      console.log('Edit request response status:', response.status);
+      const data = await response.json();
+      console.log('Edit request response data:', data);
+
+      if (response.ok) {
+        toast({
+          title: "Edit Request Submitted!",
+          description: "Your edit request has been sent to admins for review.",
+        });
+        navigate('/organizer/dashboard');
+      } else {
+        throw new Error(data.message || 'Failed to submit edit request');
+      }
+    } catch (error: any) {
+      console.error('Edit request error:', error);
+      toast({
+        title: "Error",
+        description: error.message || 'Failed to submit edit request',
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleRequestPublish = async () => {
+    setShowPublishConfirm(false);
+    
+    if (!hackathon) return;
+
+    try {
+      setSaving(true);
+      const headers = await getAuthHeaders();
+      
+      // First, save the current changes
+      const saveResponse = await fetch(`/api/organizer/hackathons/${id}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify(hackathon),
+      });
+
+      if (!saveResponse.ok) {
+        const saveData = await saveResponse.json();
+        throw new Error(saveData.message || 'Failed to save changes before publishing');
+      }
+
+      // Then request publication
       const response = await fetch(`/api/organizer/hackathons/${id}/request-publish`, {
         method: 'POST',
         headers,
@@ -173,6 +255,8 @@ export default function EditHackathon() {
         description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -204,7 +288,11 @@ export default function EditHackathon() {
     { id: 'schedule', label: 'SCHEDULE', icon: Calendar },
     { id: 'participation', label: 'PARTICIPATION', icon: Users },
     { id: 'prizes', label: 'PRIZES', icon: Trophy },
+    { id: 'rules', label: 'RULES', icon: Sparkles },
+    { id: 'tracks', label: 'TRACKS', icon: Zap },
+    { id: 'sponsors', label: 'SPONSORS', icon: Trophy },
     { id: 'links', label: 'LINKS', icon: LinkIcon },
+    { id: 'timeline', label: 'TIMELINE', icon: Clock },
   ];
 
   const canPublish = hackathon.status === 'draft' || hackathon.status === 'rejected';
@@ -229,10 +317,10 @@ export default function EditHackathon() {
           <div className="mb-8">
             <button
               onClick={() => navigate('/organizer/dashboard')}
-              className="pixel-button bg-gray-700 text-white flex items-center gap-2 px-4 py-2 font-press-start text-xs hover:bg-gray-600 transition-colors mb-6"
+              className="flex items-center gap-2 text-gray-400 hover:text-maximally-red font-press-start text-xs transition-all duration-300 group mb-6"
             >
-              <ArrowLeft className="h-4 w-4" />
-              BACK_TO_DASHBOARD
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 group-hover:scale-110 transition-all" />
+              <span>BACK_TO_DASHBOARD</span>
             </button>
 
             <div className="pixel-card bg-gradient-to-r from-gray-900 to-black border-4 border-maximally-red p-6 mb-6">
@@ -256,25 +344,38 @@ export default function EditHackathon() {
                 </div>
 
                 <div className="flex gap-3">
-                  <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="pixel-button bg-maximally-yellow text-black flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white transition-colors disabled:opacity-50"
-                  >
-                    <Save className="h-4 w-4" />
-                    {saving ? 'SAVING...' : 'SAVE'}
-                  </button>
-
-                  {canPublish && (
+                  {hackathon.status === 'published' ? (
                     <button
-                      onClick={handleRequestPublish}
-                      disabled={!requiredFieldsFilled}
-                      className="pixel-button bg-maximally-red text-white flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      title={!requiredFieldsFilled ? 'Please fill in Name, Description, Start Date, and End Date' : 'Request publication'}
+                      onClick={handleRequestEdit}
+                      disabled={saving}
+                      className="pixel-button bg-maximally-yellow text-black flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white transition-colors disabled:opacity-50"
                     >
                       <Send className="h-4 w-4" />
-                      PUBLISH
+                      {saving ? 'SUBMITTING...' : 'REQUEST_EDIT'}
                     </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="pixel-button bg-maximally-yellow text-black flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white transition-colors disabled:opacity-50"
+                      >
+                        <Save className="h-4 w-4" />
+                        {saving ? 'SAVING...' : 'SAVE'}
+                      </button>
+
+                      {canPublish && (
+                        <button
+                          onClick={() => setShowPublishConfirm(true)}
+                          disabled={!requiredFieldsFilled}
+                          className="pixel-button bg-maximally-red text-white flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          title={!requiredFieldsFilled ? 'Please fill in Name, Description, Start Date, and End Date' : 'Request publication'}
+                        >
+                          <Send className="h-4 w-4" />
+                          PUBLISH
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -291,90 +392,96 @@ export default function EditHackathon() {
             </div>
           )}
 
-          {/* Tabs */}
-          <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+          {/* Tabs - Maximally Style */}
+          <div className="flex gap-0 mb-8 overflow-x-auto pb-6">
             {tabs.map((tab) => {
               const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-sm whitespace-nowrap transition-all duration-200 ${
-                    activeTab === tab.id
-                      ? 'bg-gradient-to-r from-maximally-red to-red-600 text-white shadow-lg shadow-maximally-red/30'
-                      : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300'
+                  className={`relative flex items-center justify-center gap-2 px-6 py-4 font-press-start text-xs whitespace-nowrap transition-all border-b-4 ${
+                    isActive
+                      ? 'bg-maximally-red text-white border-maximally-yellow shadow-lg shadow-maximally-red/50'
+                      : 'bg-gray-900 text-gray-400 border-transparent hover:bg-gray-800 hover:text-gray-300'
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
-                  {tab.label}
+                  <Icon className={`h-5 w-5 ${isActive ? 'animate-pulse' : ''}`} />
+                  <span>{tab.label}</span>
+                  {isActive && (
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-maximally-yellow rotate-45" />
+                  )}
                 </button>
               );
             })}
           </div>
 
           {/* Content */}
-          <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-800 rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-2xl">
-            {/* Subtle gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-maximally-red/5 to-transparent pointer-events-none" />
+          <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-6 sm:p-8 relative overflow-hidden group">
+            {/* Animated glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-maximally-red via-maximally-yellow to-maximally-red opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500" />
             
-            {/* Corner accents */}
-            <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-maximally-red/20 rounded-tl-2xl" />
-            <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-maximally-red/20 rounded-br-2xl" />
+            {/* Corner decorations */}
+            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
+            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
 
             <div className="relative z-10">
               {/* Basic Info Tab */}
               {activeTab === 'basic' && (
                 <div className="space-y-8">
-                  <div className="bg-maximally-yellow/10 border border-maximally-yellow/30 rounded-xl p-4 mb-6">
-                    <p className="text-sm text-gray-300">
+                  <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
+                    <p className="font-jetbrains text-sm text-gray-300">
                       💡 <span className="text-maximally-yellow font-bold">Tip:</span> Make your hackathon stand out with a compelling name and description. This is what participants will see first!
                     </p>
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block flex items-center gap-2">
-                      <Zap className="h-4 w-4 text-maximally-red" />
-                      Hackathon Name *
+                    <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                      <Zap className="h-4 w-4" />
+                      HACKATHON NAME *
                     </label>
                     <input
                       type="text"
                       value={hackathon.hackathon_name}
                       onChange={(e) => updateField('hackathon_name', e.target.value)}
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-maximally-yellow outline-none transition-colors"
                       placeholder="e.g., AI Innovation Hackathon 2025"
                     />
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block flex items-center gap-2">
-                      <Sparkles className="h-4 w-4 text-maximally-red" />
-                      Tagline
+                    <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                      <Sparkles className="h-4 w-4" />
+                      TAGLINE
                     </label>
                     <input
                       type="text"
                       value={hackathon.tagline || ''}
                       onChange={(e) => updateField('tagline', e.target.value)}
                       placeholder="A catchy one-liner that captures your hackathon's essence"
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none transition-colors"
                     />
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-gray-500 mt-2 font-jetbrains">
                       Example: "Build the future of AI in 48 hours"
                     </p>
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block flex items-center gap-2">
-                      <FileText className="h-4 w-4 text-maximally-red" />
-                      Description
+                    <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      DESCRIPTION
                     </label>
                     <textarea
                       value={hackathon.description || ''}
                       onChange={(e) => updateField('description', e.target.value)}
                       rows={10}
                       placeholder="Tell participants what makes your hackathon special. Include:&#10;• What they'll build&#10;• Who should participate&#10;• What they'll learn&#10;• Why they should join"
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none resize-none leading-relaxed placeholder:text-gray-500"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none leading-relaxed"
                     />
-                    <p className="text-xs text-gray-500 mt-2">
+                    <p className="text-xs text-gray-500 mt-2 font-jetbrains">
                       {hackathon.description?.length || 0} characters
                     </p>
                   </div>
@@ -384,44 +491,44 @@ export default function EditHackathon() {
               {/* Schedule Tab */}
               {activeTab === 'schedule' && (
                 <div className="space-y-8">
-                  <div className="bg-maximally-yellow/10 border border-maximally-yellow/30 rounded-xl p-4 mb-6">
-                    <p className="text-sm text-gray-300">
+                  <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
+                    <p className="font-jetbrains text-sm text-gray-300">
                       📅 <span className="text-maximally-yellow font-bold">Tip:</span> Choose dates carefully! Make sure to give participants enough time to build something amazing.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="text-sm font-semibold text-gray-200 mb-3 block flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-maximally-red" />
-                        Start Date & Time *
+                      <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        START DATE & TIME *
                       </label>
                       <input
                         type="datetime-local"
                         value={hackathon.start_date?.slice(0, 16)}
                         onChange={(e) => updateField('start_date', e.target.value)}
-                        className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all"
+                        className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-maximally-yellow outline-none transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="text-sm font-semibold text-gray-200 mb-3 block flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-maximally-red" />
-                        End Date & Time *
+                      <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        END DATE & TIME *
                       </label>
                       <input
                         type="datetime-local"
                         value={hackathon.end_date?.slice(0, 16)}
                         onChange={(e) => updateField('end_date', e.target.value)}
-                        className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all"
+                        className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-maximally-yellow outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-maximally-red" />
-                      Format *
+                    <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      FORMAT *
                     </label>
                     <div className="grid grid-cols-3 gap-4">
                       {['online', 'offline', 'hybrid'].map((format) => (
@@ -429,46 +536,36 @@ export default function EditHackathon() {
                           key={format}
                           type="button"
                           onClick={() => updateField('format', format)}
-                          className={`py-3.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
+                          className={`pixel-button py-4 font-press-start text-sm transition-colors ${
                             hackathon.format === format
-                              ? 'bg-gradient-to-r from-maximally-red to-red-600 text-white shadow-lg shadow-maximally-red/30'
-                              : 'bg-gray-800/50 text-gray-400 hover:bg-gray-700/50 hover:text-gray-300'
+                              ? 'bg-maximally-red text-white'
+                              : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                           }`}
                         >
-                          {format.charAt(0).toUpperCase() + format.slice(1)}
+                          {format.toUpperCase()}
                         </button>
                       ))}
                     </div>
                   </div>
 
                   {(hackathon.format === 'offline' || hackathon.format === 'hybrid') && (
-                    <div className="bg-maximally-yellow/10 border border-maximally-yellow/30 rounded-xl p-6">
-                      <label className="text-sm font-semibold text-maximally-yellow mb-3 block">
-                        Venue Address
+                    <div className="pixel-card bg-maximally-yellow/10 border-2 border-maximally-yellow p-6">
+                      <label className="font-press-start text-sm text-maximally-yellow mb-3 block">
+                        VENUE ADDRESS
                       </label>
                       <input
                         type="text"
                         value={hackathon.venue || ''}
                         onChange={(e) => updateField('venue', e.target.value)}
                         placeholder="Full venue address with city and state"
-                        className="w-full bg-gray-800/50 border border-maximally-yellow/50 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-yellow focus:ring-2 focus:ring-maximally-yellow/20 outline-none transition-all placeholder:text-gray-500"
+                        className="w-full pixel-card bg-black border-2 border-maximally-yellow text-white px-6 py-4 font-jetbrains focus:border-maximally-red outline-none transition-colors"
                       />
                     </div>
                   )}
 
-                  <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-maximally-red" />
-                      Registration Deadline
-                    </label>
-                    <input
-                      type="datetime-local"
-                      value={hackathon.registration_deadline?.slice(0, 16) || ''}
-                      onChange={(e) => updateField('registration_deadline', e.target.value)}
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all"
-                    />
-                    <p className="text-xs text-gray-500 mt-2">
-                      Leave empty if registration stays open until the event starts
+                  <div className="pixel-card bg-blue-900/20 border-2 border-blue-500 p-4">
+                    <p className="font-jetbrains text-sm text-blue-300">
+                      💡 <span className="text-blue-400 font-bold">Note:</span> Registration timing is now controlled by the Timeline tab. Set registration open/close dates there for strict enforcement.
                     </p>
                   </div>
                 </div>
@@ -479,84 +576,84 @@ export default function EditHackathon() {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                      Min Team Size
+                    <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                      MIN TEAM SIZE
                     </label>
                     <input
                       type="number"
                       value={hackathon.team_size_min || 1}
                       onChange={(e) => updateField('team_size_min', parseInt(e.target.value))}
                       min="1"
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                      Max Team Size
+                    <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                      MAX TEAM SIZE
                     </label>
                     <input
                       type="number"
                       value={hackathon.team_size_max || 4}
                       onChange={(e) => updateField('team_size_max', parseInt(e.target.value))}
                       min="1"
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                      Registration Fee (₹)
+                    <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                      REGISTRATION FEE (₹)
                     </label>
                     <input
                       type="number"
                       value={hackathon.registration_fee || 0}
                       onChange={(e) => updateField('registration_fee', parseInt(e.target.value))}
                       min="0"
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                     />
-                    <p className="text-xs text-gray-500 mt-2">0 = Free</p>
+                    <p className="text-xs text-gray-500 mt-1 font-jetbrains">0 = Free</p>
                   </div>
 
                   <div>
-                    <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                      Max Participants
+                    <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                      MAX PARTICIPANTS
                     </label>
                     <input
                       type="number"
                       value={hackathon.max_participants || ''}
                       onChange={(e) => updateField('max_participants', e.target.value ? parseInt(e.target.value) : null)}
                       placeholder="Leave empty for unlimited"
-                      className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    Communication Channel
+                  <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                    COMMUNICATION CHANNEL
                   </label>
                   <input
                     type="text"
                     value={hackathon.communication_channel || ''}
                     onChange={(e) => updateField('communication_channel', e.target.value)}
                     placeholder="e.g., Discord, WhatsApp, Slack"
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    Communication Link
+                  <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                    COMMUNICATION LINK
                   </label>
                   <input
                     type="url"
                     value={hackathon.communication_link || ''}
                     onChange={(e) => updateField('communication_link', e.target.value)}
                     placeholder="https://discord.gg/..."
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                   />
                 </div>
               </div>
@@ -564,32 +661,481 @@ export default function EditHackathon() {
 
             {/* Prizes Tab */}
             {activeTab === 'prizes' && (
-              <div className="space-y-6">
+              <div className="space-y-8">
+                <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
+                  <p className="font-jetbrains text-sm text-gray-300">
+                    🏆 <span className="text-maximally-yellow font-bold">Tip:</span> Add prizes to attract more participants. You can add multiple prize positions.
+                  </p>
+                </div>
+
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    Total Prize Pool
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    TOTAL PRIZE POOL
                   </label>
                   <input
                     type="text"
                     value={hackathon.total_prize_pool || ''}
                     onChange={(e) => updateField('total_prize_pool', e.target.value)}
                     placeholder="e.g., ₹50,000 or $5,000"
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-maximally-yellow outline-none"
+                  />
+                </div>
+
+                {/* Prize Breakdown Builder */}
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="font-press-start text-sm text-maximally-red">
+                      PRIZE BREAKDOWN
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const prizes = JSON.parse(hackathon.prize_breakdown || '[]');
+                        prizes.push({ position: '', amount: '', description: '' });
+                        updateField('prize_breakdown', JSON.stringify(prizes));
+                      }}
+                      className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      ADD_PRIZE
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {JSON.parse(hackathon.prize_breakdown || '[]').map((prize: any, index: number) => (
+                      <div key={index} className="pixel-card bg-gray-900 border-2 border-gray-700 p-6 relative">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const prizes = JSON.parse(hackathon.prize_breakdown || '[]');
+                            prizes.splice(index, 1);
+                            updateField('prize_breakdown', JSON.stringify(prizes));
+                          }}
+                          className="absolute top-4 right-4 text-gray-500 hover:text-maximally-red transition-colors"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Position
+                            </label>
+                            <input
+                              type="text"
+                              value={prize.position}
+                              onChange={(e) => {
+                                const prizes = JSON.parse(hackathon.prize_breakdown || '[]');
+                                prizes[index].position = e.target.value;
+                                updateField('prize_breakdown', JSON.stringify(prizes));
+                              }}
+                              placeholder="1st Place"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Amount
+                            </label>
+                            <input
+                              type="text"
+                              value={prize.amount}
+                              onChange={(e) => {
+                                const prizes = JSON.parse(hackathon.prize_breakdown || '[]');
+                                prizes[index].amount = e.target.value;
+                                updateField('prize_breakdown', JSON.stringify(prizes));
+                              }}
+                              placeholder="₹20,000"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Description (Optional)
+                            </label>
+                            <input
+                              type="text"
+                              value={prize.description || ''}
+                              onChange={(e) => {
+                                const prizes = JSON.parse(hackathon.prize_breakdown || '[]');
+                                prizes[index].description = e.target.value;
+                                updateField('prize_breakdown', JSON.stringify(prizes));
+                              }}
+                              placeholder="Winner"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {JSON.parse(hackathon.prize_breakdown || '[]').length === 0 && (
+                      <div className="text-center py-8 text-gray-500 font-jetbrains">
+                        No prizes added yet. Click "ADD_PRIZE" to add your first prize.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Rules Tab */}
+            {activeTab === 'rules' && (
+              <div className="space-y-8">
+                <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
+                  <p className="font-jetbrains text-sm text-gray-300">
+                    📋 <span className="text-maximally-yellow font-bold">Tip:</span> Clear rules help participants understand what's expected and create a fair competition.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    RULES & REGULATIONS
+                  </label>
+                  <textarea
+                    value={hackathon.rules_content || ''}
+                    onChange={(e) => updateField('rules_content', e.target.value)}
+                    rows={10}
+                    placeholder="Detailed rules and regulations for your hackathon:&#10;&#10;1. Team Formation&#10;   • Teams can have 1-4 members&#10;   • Team formation allowed until registration closes&#10;&#10;2. Project Requirements&#10;   • All code must be written during the event&#10;   • Projects must be original work&#10;   • Open source libraries are allowed&#10;&#10;3. Submission&#10;   • Submit before the deadline&#10;   • Include demo video and source code"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none leading-relaxed"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    Prize Breakdown (JSON)
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    ELIGIBILITY CRITERIA
                   </label>
                   <textarea
-                    value={hackathon.prize_breakdown || '[]'}
-                    onChange={(e) => updateField('prize_breakdown', e.target.value)}
+                    value={hackathon.eligibility_criteria || ''}
+                    onChange={(e) => updateField('eligibility_criteria', e.target.value)}
                     rows={6}
-                    placeholder='[{"position": "1st Place", "amount": "₹20,000", "description": "Winner"}]'
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-sm focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none resize-none font-mono placeholder:text-gray-500"
+                    placeholder="Who can participate?&#10;&#10;• Open to students from all universities&#10;• Professionals and working individuals welcome&#10;• Must be 18 years or older&#10;• International participants allowed"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none leading-relaxed"
                   />
-                  <p className="text-xs text-gray-500 mt-2">JSON array format</p>
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    SUBMISSION GUIDELINES
+                  </label>
+                  <textarea
+                    value={hackathon.submission_guidelines || ''}
+                    onChange={(e) => updateField('submission_guidelines', e.target.value)}
+                    rows={8}
+                    placeholder="What participants need to submit:&#10;&#10;• Working prototype or demo&#10;• Source code repository (GitHub/GitLab)&#10;• Demo video (2-3 minutes)&#10;• Project documentation&#10;• Presentation slides (optional)"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none leading-relaxed"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    JUDGING PROCESS
+                  </label>
+                  <textarea
+                    value={hackathon.judging_process || ''}
+                    onChange={(e) => updateField('judging_process', e.target.value)}
+                    rows={8}
+                    placeholder="How projects will be evaluated:&#10;&#10;Judging Criteria:&#10;• Innovation & Creativity (30%)&#10;• Technical Implementation (25%)&#10;• Design & User Experience (20%)&#10;• Impact & Usefulness (15%)&#10;• Presentation (10%)&#10;&#10;Process:&#10;• Initial screening by organizers&#10;• Top 10 teams present to judges&#10;• Winners announced at closing ceremony"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none leading-relaxed"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    CODE OF CONDUCT
+                  </label>
+                  <textarea
+                    value={hackathon.code_of_conduct || ''}
+                    onChange={(e) => updateField('code_of_conduct', e.target.value)}
+                    rows={6}
+                    placeholder="Expected behavior and community guidelines:&#10;&#10;• Be respectful and inclusive&#10;• No harassment or discrimination&#10;• Collaborate and help others&#10;• Follow organizer instructions"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none leading-relaxed"
+                  />
+                </div>
+
+                {/* FAQs Builder */}
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="font-press-start text-sm text-maximally-red">
+                      FREQUENTLY ASKED QUESTIONS
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const faqs = JSON.parse(hackathon.faqs || '[]');
+                        faqs.push({ question: '', answer: '' });
+                        updateField('faqs', JSON.stringify(faqs));
+                      }}
+                      className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      ADD_FAQ
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {JSON.parse(hackathon.faqs || '[]').map((faq: any, index: number) => (
+                      <div key={index} className="pixel-card bg-gray-900 border-2 border-gray-700 p-6 relative">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const faqs = JSON.parse(hackathon.faqs || '[]');
+                            faqs.splice(index, 1);
+                            updateField('faqs', JSON.stringify(faqs));
+                          }}
+                          className="absolute top-4 right-4 text-gray-500 hover:text-maximally-red transition-colors"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+
+                        <div className="space-y-4">
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Question
+                            </label>
+                            <input
+                              type="text"
+                              value={faq.question}
+                              onChange={(e) => {
+                                const faqs = JSON.parse(hackathon.faqs || '[]');
+                                faqs[index].question = e.target.value;
+                                updateField('faqs', JSON.stringify(faqs));
+                              }}
+                              placeholder="Can I participate alone?"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Answer
+                            </label>
+                            <textarea
+                              value={faq.answer}
+                              onChange={(e) => {
+                                const faqs = JSON.parse(hackathon.faqs || '[]');
+                                faqs[index].answer = e.target.value;
+                                updateField('faqs', JSON.stringify(faqs));
+                              }}
+                              rows={3}
+                              placeholder="Yes, solo participation is allowed!"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {JSON.parse(hackathon.faqs || '[]').length === 0 && (
+                      <div className="text-center py-8 text-gray-500 font-jetbrains">
+                        No FAQs added yet. Click "ADD_FAQ" to add your first question.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Tracks Tab */}
+            {activeTab === 'tracks' && (
+              <div className="space-y-8">
+                <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
+                  <p className="font-jetbrains text-sm text-gray-300">
+                    🎯 <span className="text-maximally-yellow font-bold">Tip:</span> Tracks help participants focus on specific problem areas or technologies.
+                  </p>
+                </div>
+
+                {/* Tracks Builder */}
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <label className="font-press-start text-sm text-maximally-red flex items-center gap-2">
+                      <Zap className="h-4 w-4" />
+                      HACKATHON TRACKS
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const tracks = JSON.parse(hackathon.tracks || '[]');
+                        tracks.push({ name: '', description: '', prize: '' });
+                        updateField('tracks', JSON.stringify(tracks));
+                      }}
+                      className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white transition-colors flex items-center gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      ADD_TRACK
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {JSON.parse(hackathon.tracks || '[]').map((track: any, index: number) => (
+                      <div key={index} className="pixel-card bg-gray-900 border-2 border-gray-700 p-6 relative">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const tracks = JSON.parse(hackathon.tracks || '[]');
+                            tracks.splice(index, 1);
+                            updateField('tracks', JSON.stringify(tracks));
+                          }}
+                          className="absolute top-4 right-4 text-gray-500 hover:text-maximally-red transition-colors"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+
+                        <div className="space-y-4">
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Track Name
+                            </label>
+                            <input
+                              type="text"
+                              value={track.name}
+                              onChange={(e) => {
+                                const tracks = JSON.parse(hackathon.tracks || '[]');
+                                tracks[index].name = e.target.value;
+                                updateField('tracks', JSON.stringify(tracks));
+                              }}
+                              placeholder="AI & Machine Learning"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Description
+                            </label>
+                            <textarea
+                              value={track.description}
+                              onChange={(e) => {
+                                const tracks = JSON.parse(hackathon.tracks || '[]');
+                                tracks[index].description = e.target.value;
+                                updateField('tracks', JSON.stringify(tracks));
+                              }}
+                              rows={3}
+                              placeholder="Build intelligent solutions using AI/ML technologies"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                              Prize (Optional)
+                            </label>
+                            <input
+                              type="text"
+                              value={track.prize || ''}
+                              onChange={(e) => {
+                                const tracks = JSON.parse(hackathon.tracks || '[]');
+                                tracks[index].prize = e.target.value;
+                                updateField('tracks', JSON.stringify(tracks));
+                              }}
+                              placeholder="₹20,000"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {JSON.parse(hackathon.tracks || '[]').length === 0 && (
+                      <div className="text-center py-8 text-gray-500 font-jetbrains">
+                        No tracks added yet. Click "ADD_TRACK" to add your first track.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    THEMES/TAGS
+                  </label>
+                  <input
+                    type="text"
+                    value={hackathon.themes?.join(', ') || ''}
+                    onChange={(e) => updateField('themes', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
+                    placeholder="AI, Web3, Healthcare, Education (comma separated)"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                    Comma-separated theme tags for categorization
+                  </p>
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={hackathon.open_innovation || false}
+                      onChange={(e) => updateField('open_innovation', e.target.checked)}
+                      className="w-5 h-5"
+                    />
+                    OPEN INNOVATION
+                  </label>
+                  <p className="text-sm text-gray-400 font-jetbrains ml-7">
+                    Allow participants to work on any idea, not restricted to specific tracks
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Sponsors Tab */}
+            {activeTab === 'sponsors' && (
+              <div className="space-y-8">
+                <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
+                  <p className="font-jetbrains text-sm text-gray-300">
+                    🤝 <span className="text-maximally-yellow font-bold">Tip:</span> Showcase your sponsors and partners to give them visibility.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block flex items-center gap-2">
+                    <Trophy className="h-4 w-4" />
+                    SPONSORS
+                  </label>
+                  <textarea
+                    value={hackathon.sponsors?.join('\n') || ''}
+                    onChange={(e) => updateField('sponsors', e.target.value.split('\n').filter(Boolean))}
+                    rows={6}
+                    placeholder="List sponsor names (one per line):&#10;Google Cloud&#10;GitHub&#10;Microsoft Azure&#10;AWS"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                    One sponsor name per line
+                  </p>
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    PARTNERS
+                  </label>
+                  <textarea
+                    value={hackathon.partners?.join('\n') || ''}
+                    onChange={(e) => updateField('partners', e.target.value.split('\n').filter(Boolean))}
+                    rows={6}
+                    placeholder="List partner organizations (one per line):&#10;IEEE Computer Society&#10;ACM Student Chapter&#10;Developer Student Clubs"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                    One partner name per line
+                  </p>
+                </div>
+
+                <div>
+                  <label className="font-press-start text-sm text-maximally-red mb-3 block">
+                    PERKS & BENEFITS
+                  </label>
+                  <textarea
+                    value={hackathon.perks?.join('\n') || ''}
+                    onChange={(e) => updateField('perks', e.target.value.split('\n').filter(Boolean))}
+                    rows={6}
+                    placeholder="List perks for participants (one per line):&#10;Free GitHub Pro for 6 months&#10;$100 AWS credits&#10;Free domain from Domain.com&#10;Exclusive swag kit"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                    One perk per line
+                  </p>
                 </div>
               </div>
             )}
@@ -598,88 +1144,94 @@ export default function EditHackathon() {
             {activeTab === 'links' && (
               <div className="space-y-6">
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    Discord Link
+                  <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                    DISCORD LINK
                   </label>
                   <input
                     type="url"
                     value={hackathon.discord_link || ''}
                     onChange={(e) => updateField('discord_link', e.target.value)}
                     placeholder="https://discord.gg/..."
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    WhatsApp Link
+                  <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                    WHATSAPP LINK
                   </label>
                   <input
                     type="url"
                     value={hackathon.whatsapp_link || ''}
                     onChange={(e) => updateField('whatsapp_link', e.target.value)}
                     placeholder="https://chat.whatsapp.com/..."
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    Website URL
+                  <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                    WEBSITE URL
                   </label>
                   <input
                     type="url"
                     value={hackathon.website_url || ''}
                     onChange={(e) => updateField('website_url', e.target.value)}
                     placeholder="https://yourhackathon.com"
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-semibold text-gray-200 mb-3 block">
-                    Contact Email
+                  <label className="font-press-start text-sm text-maximally-red mb-2 block">
+                    CONTACT EMAIL
                   </label>
                   <input
                     type="email"
                     value={hackathon.contact_email || ''}
                     onChange={(e) => updateField('contact_email', e.target.value)}
                     placeholder="contact@yourhackathon.com"
-                    className="w-full bg-gray-800/50 border border-gray-700 rounded-lg text-white px-4 py-3.5 text-base focus:border-maximally-red focus:ring-2 focus:ring-maximally-red/20 outline-none transition-all placeholder:text-gray-500"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
                   />
                 </div>
+              </div>
+            )}
+
+            {/* Timeline Tab */}
+            {activeTab === 'timeline' && hackathon && (
+              <div className="space-y-6">
+                <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
+                  <p className="font-jetbrains text-sm text-gray-300 mb-2">
+                    ⏰ <span className="text-maximally-yellow font-bold">Timeline:</span> Set important dates for your hackathon. These dates help participants know when to register, submit, and expect results.
+                  </p>
+                  {hackathon.status === 'published' && (
+                    <p className="font-jetbrains text-xs text-green-400 mt-2">
+                      ✅ Timeline changes can be saved directly without admin approval. Use the "SAVE_TIMELINE" button below.
+                    </p>
+                  )}
+                </div>
+                <TimelineManager hackathonId={hackathon.id} />
               </div>
             )}
             </div>
           </div>
 
-          {/* Bottom Actions */}
-          <div className="flex gap-4 mt-8">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex-1 bg-maximally-yellow hover:bg-maximally-yellow/90 text-black py-4 rounded-lg font-semibold text-sm transition-all duration-200 disabled:opacity-50 shadow-lg shadow-maximally-yellow/30 flex items-center justify-center gap-2"
-            >
-              <Save className="h-4 w-4" />
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
 
-            {canPublish && (
-              <button
-                onClick={handleRequestPublish}
-                disabled={!requiredFieldsFilled}
-                className="flex-1 bg-gradient-to-r from-maximally-red to-red-600 hover:from-maximally-red hover:to-red-700 text-white py-4 rounded-lg font-semibold text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-maximally-red/30 flex items-center justify-center gap-2"
-                title={!requiredFieldsFilled ? 'Please fill in Name, Description, Start Date, and End Date' : 'Request publication'}
-              >
-                <Send className="h-4 w-4" />
-                Request Publish
-              </button>
-            )}
-          </div>
         </div>
       </div>
 
       <Footer />
+
+      {/* Publish Confirmation Modal */}
+      <ConfirmDialog
+        open={showPublishConfirm}
+        onOpenChange={setShowPublishConfirm}
+        title="REQUEST PUBLICATION"
+        description="Your hackathon will be reviewed by our team. Once approved, it will be visible to all participants. Are you sure you want to submit it for review?"
+        confirmText="SUBMIT FOR REVIEW"
+        cancelText="CANCEL"
+        onConfirm={handleRequestPublish}
+      />
     </>
   );
 }

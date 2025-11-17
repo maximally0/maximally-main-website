@@ -136,6 +136,9 @@ import CreateHackathon from './pages/CreateHackathon';
 import OrganizerDashboard from './pages/OrganizerDashboard';
 import EditHackathon from './pages/EditHackathon';
 import PublicHackathon from './pages/PublicHackathon';
+import OrganizerProfile from './pages/OrganizerProfile';
+import HackathonRegistrations from './pages/HackathonRegistrations';
+import HackathonSubmit from './pages/HackathonSubmit';
 
 // People pages
 import People from './pages/People';
@@ -146,6 +149,12 @@ import JudgeProfile from './pages/JudgeProfile';
 import JudgeApplicationForm from './pages/JudgeApplicationForm';
 import JudgeDashboard from './pages/JudgeDashboard';
 import JudgeInbox from './pages/JudgeInbox';
+import JudgeHackathons from './pages/JudgeHackathons';
+import JudgeSubmissions from './pages/JudgeSubmissions';
+import ProjectDetail from './pages/ProjectDetail';
+import SubmissionDetail from './pages/SubmissionDetail';
+import ParticipantDashboard from './pages/ParticipantDashboard';
+import AdminNotifications from './pages/AdminNotifications';
 import Resources from './pages/Resources';
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
@@ -329,6 +338,12 @@ const AppContent = () => {
         <Route path="/judges/apply" element={<JudgeApplicationForm />} />
         <Route path="/judge-dashboard" element={<JudgeDashboard />} />
         <Route path="/judge-inbox" element={<JudgeInbox />} />
+        <Route path="/judge/hackathons" element={<JudgeHackathons />} />
+        <Route path="/judge/hackathons/:hackathonId/submissions" element={<JudgeSubmissions />} />
+        <Route path="/project/:projectId" element={<ProjectDetail />} />
+        <Route path="/submissions/:slug" element={<SubmissionDetail />} />
+        <Route path="/my-hackathons" element={<ParticipantDashboard />} />
+        <Route path="/admin/notifications" element={<AdminNotifications />} />
         <Route path="/resources" element={<Resources />} />
         {/* Legacy redirect */}
         <Route path="/featured" element={<Navigate to="/people" replace />} />
@@ -338,7 +353,10 @@ const AppContent = () => {
         <Route path="/create-hackathon" element={<CreateHackathon />} />
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
         <Route path="/organizer/hackathons/:id" element={<EditHackathon />} />
+        <Route path="/organizer/hackathons/:hackathonId/manage" element={<HackathonRegistrations />} />
+        <Route path="/organizer/:username" element={<OrganizerProfile />} />
         <Route path="/hackathon/:slug" element={<PublicHackathon />} />
+        <Route path="/hackathon/:slug/submit" element={<HackathonSubmit />} />
 
         <Route path="/events" element={<Events />} />
         <Route

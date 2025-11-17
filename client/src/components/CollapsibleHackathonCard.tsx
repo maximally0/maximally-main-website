@@ -12,8 +12,11 @@ import { PixelCard } from '@/components/ui/pixel-card';
 import type { SelectHackathon } from '@shared/schema';
 import { cn } from '@/lib/utils';
 
+// Extended type to include Maximally official flag
+type ExtendedHackathon = SelectHackathon & { isMaximallyOfficial?: boolean };
+
 interface HackathonCardProps {
-  hackathon: SelectHackathon;
+  hackathon: ExtendedHackathon;
   className?: string;
 }
 
@@ -28,6 +31,8 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
       year: 'numeric' 
     });
   };
+
+  const isMaximallyHackathon = hackathon.isMaximallyOfficial === true;
 
   const getStatusBadge = () => {
     const baseClasses = "minecraft-block px-3 py-1 font-press-start text-xs";
@@ -82,12 +87,22 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
         <div className="p-4">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
-            <h3 
-              className="font-press-start text-base text-gray-900 dark:text-white"
-              data-testid={`name-${hackathon.id}`}
-            >
-              {hackathon.name}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 
+                className="font-press-start text-base text-gray-900 dark:text-white"
+                data-testid={`name-${hackathon.id}`}
+              >
+                {hackathon.name}
+              </h3>
+              {isMaximallyHackathon && (
+                <div 
+                  className="minecraft-block bg-maximally-red text-white w-7 h-7 flex items-center justify-center font-press-start text-xs shadow-lg hover:scale-110 transition-transform cursor-help" 
+                  title="Maximally Official Hackathon"
+                >
+                  M
+                </div>
+              )}
+            </div>
             {getStatusBadge()}
           </div>
           

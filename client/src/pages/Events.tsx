@@ -16,9 +16,12 @@ import { supabase, supabasePublic } from '@/lib/supabaseClient';
 import type { SelectHackathon } from '@shared/schema';
 import { grandIndianHackathonSeason } from '@shared/schema';
 
+// Extended type to include Maximally official flag
+type ExtendedHackathon = SelectHackathon & { isMaximallyOfficial?: boolean };
+
 const Events = () => {
-  // Use the shared SelectHackathon type so the card component receives the expected shape
-  const [hackathons, setHackathons] = useState<SelectHackathon[]>([]);
+  // Use the extended type to include the Maximally official flag
+  const [hackathons, setHackathons] = useState<ExtendedHackathon[]>([]);
 
   const toTags = (value: any): string[] => {
     if (!value) return [];
@@ -44,78 +47,103 @@ const Events = () => {
   };
 
   const fetchHackathons = async () => {
-    // Events: Supabase client checks (debug logs removed)
-    
     if (!supabasePublic) {
-      // Use fallback data from schema when Supabase is not configured
-    // Supabase public client not configured, using fallback hackathon data
       setHackathons(grandIndianHackathonSeason);
       return;
     }
     
     try {
-      // Use direct fetch to bypass Supabase client issues
       const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
       const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
-  // Starting hackathons fetch via direct fetch
+      // Fetch both admin hackathons and organizer hackathons
+      const [adminResponse, organizerResponse] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url,sort_order&is_active=eq.true&order=sort_order.asc,created_at.desc`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        }),
+        fetch(`${SUPABASE_URL}/rest/v1/organizer_hackathons?select=id,hackathon_name,tagline,start_date,end_date,format,venue,slug,total_prize_pool,themes&status=eq.published&order=start_date.desc`, {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        })
+      ]);
       
-      const hackathonsResponse = await fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url,sort_order&is_active=eq.true&order=sort_order.asc,created_at.desc`, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      console.log('Admin hackathons response:', adminResponse.status);
+      console.log('Organizer hackathons response:', organizerResponse.status);
       
-      if (!hackathonsResponse.ok) {
+      const adminData = adminResponse.ok ? await adminResponse.json() : [];
+      const organizerData = organizerResponse.ok ? await organizerResponse.json() : [];
+      
+      console.log('Admin hackathons:', adminData.length);
+      console.log('Organizer hackathons:', organizerData.length, organizerData);
+      
+      const adminItems = Array.isArray(adminData) ? adminData : [];
+      const organizerItems = Array.isArray(organizerData) ? organizerData : [];
+      
+      // Map admin hackathons (Maximally official hackathons)
+      const mappedAdmin: ExtendedHackathon[] = adminItems.map((h, idx) => ({
+        id: (h.id ?? `hackathon-${idx + 1}`).toString(),
+        name: h.title ?? '',
+        description: h.subtitle ?? '',
+        startDate: h.start_date ? new Date(h.start_date) : new Date(),
+        endDate: h.end_date ? new Date(h.end_date) : new Date(h.start_date ?? Date.now()),
+        length: h.duration ?? '48 hours',
+        location: h.location ?? 'Online',
+        participants: 0,
+        prizes: 'TBD',
+        tags: Array.isArray(h.focus_areas) ? h.focus_areas.map(String) : [],
+        registerUrl: h.devpost_register_url ?? h.registration_url ?? '#',
+        detailsUrl: h.devpost_url ?? '#',
+        imageUrl: null,
+        organizerName: 'Maximally',
+        organizerUrl: 'https://maximally.org',
+        status: (h.status ?? calcStatus(h.status ?? undefined, h.start_date)) as any,
+        isMaximallyOfficial: true, // Flag for Maximally hackathons
+      }));
+      
+      // Map organizer hackathons (Community organizer hackathons)
+      const mappedOrganizer: ExtendedHackathon[] = organizerItems.map((h, idx) => {
+        const startDate = h.start_date ? new Date(h.start_date) : new Date();
+        const endDate = h.end_date ? new Date(h.end_date) : new Date();
+        const diffMs = endDate.getTime() - startDate.getTime();
+        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        const duration = diffDays === 1 ? '24 hours' : `${diffDays} days`;
         
-  // Falling back to hardcoded hackathon data
-        setHackathons(grandIndianHackathonSeason);
-        return;
-      }
-      
-      const data = await hackathonsResponse.json();
-  // Hackathons fetch result (debug logging removed)
-  const items = Array.isArray(data) ? data : [];
-      
-      if (items.length === 0) {
-        // If no data in Supabase, use fallback
-    // No hackathons found in database, using fallback data
-        setHackathons(grandIndianHackathonSeason);
-        return;
-      }
-      
-      // Map Supabase row shape to SelectHackathon (schema used by UI components)
-      // Mapping hackathons
-      const mapped: SelectHackathon[] = items.map((h, idx) => {
-        // mapping hackathon
         return {
-          id: (h.id ?? `hackathon-${idx + 1}`).toString(),
-          name: h.title ?? '',
-          description: h.subtitle ?? '',
-          // convert date strings to Date objects expected by SelectHackathon
-          startDate: h.start_date ? new Date(h.start_date) : new Date(),
-          endDate: h.end_date ? new Date(h.end_date) : new Date(h.start_date ?? Date.now()),
-          length: h.duration ?? '48 hours',
-          location: h.location ?? 'Online',
-          participants: 0, // Not available in database yet
-          prizes: 'TBD', // Not available in database yet
-          tags: Array.isArray(h.focus_areas) ? h.focus_areas.map(String) : [],
-          registerUrl: h.devpost_register_url ?? h.registration_url ?? '#',
-          detailsUrl: h.devpost_url ?? '#',
-          imageUrl: null, // Not available in database yet
-          organizerName: 'Maximally', // Default organizer
-          organizerUrl: 'https://maximally.org',
-          status: (h.status ?? calcStatus(h.status ?? undefined, h.start_date)) as any,
+          id: `org-${h.id}`,
+          name: h.hackathon_name ?? '',
+          description: h.tagline ?? '',
+          startDate,
+          endDate,
+          length: duration,
+          location: h.format === 'online' ? 'Online' : (h.venue || 'TBD'),
+          participants: 0,
+          prizes: h.total_prize_pool || 'TBD',
+          tags: Array.isArray(h.themes) ? h.themes : [],
+          registerUrl: `/hackathon/${h.slug}`,
+          detailsUrl: `/hackathon/${h.slug}`,
+          imageUrl: null,
+          organizerName: 'Community Organizer',
+          organizerUrl: `/hackathon/${h.slug}`,
+          status: calcStatus('published', h.start_date) as any,
+          isMaximallyOfficial: false, // Flag for community hackathons
         };
       });
       
-  // Events: Mapped hackathons (logging removed)
-  setHackathons(mapped);
-    } catch (err) {
+      // Combine and sort by start date
+      const allHackathons = [...mappedAdmin, ...mappedOrganizer].sort((a, b) => 
+        b.startDate.getTime() - a.startDate.getTime()
+      );
       
-  // Using fallback hackathon data due to connection error
+      setHackathons(allHackathons.length > 0 ? allHackathons : grandIndianHackathonSeason);
+    } catch (err) {
+      console.error('Error fetching hackathons:', err);
       setHackathons(grandIndianHackathonSeason);
     }
   };
@@ -149,7 +177,9 @@ const Events = () => {
 
   // Derive filter options from actual data
   const filterOptions = useMemo(() => {
-    const uniqueLocations = Array.from(new Set(hackathons.map(h => h.location))).sort();
+    // Simplified location filter - only Online and Offline
+    const locations = ['Online', 'Offline'];
+    
     const uniqueStatuses = Array.from(new Set(hackathons.map(h => h.status))).sort();
     const allUniqueLengths = Array.from(new Set(hackathons.map(h => h.length)));
     
@@ -162,7 +192,7 @@ const Events = () => {
     const uniqueTags = Array.from(new Set(hackathons.flatMap(h => h.tags))).sort();
     
     return {
-      locations: uniqueLocations,
+      locations,
       statuses: uniqueStatuses,
       lengths: uniqueLengths,
       tags: uniqueTags
@@ -207,10 +237,20 @@ const Events = () => {
         return false;
       }
 
-      // Location filter - case insensitive comparison
-      if (selectedFilters.location.length > 0 && 
-          !selectedFilters.location.some(filter => normalizeString(filter) === normalizeString(hackathon.location))) {
-        return false;
+      // Location filter - categorize as Online or Offline
+      if (selectedFilters.location.length > 0) {
+        const hackathonLocation = normalizeString(hackathon.location);
+        const isOnline = hackathonLocation === 'online' || hackathonLocation.includes('online');
+        const isOffline = !isOnline;
+        
+        const matchesFilter = selectedFilters.location.some(filter => {
+          const normalizedFilter = normalizeString(filter);
+          if (normalizedFilter === 'online') return isOnline;
+          if (normalizedFilter === 'offline') return isOffline;
+          return false;
+        });
+        
+        if (!matchesFilter) return false;
       }
 
       // Status filter - case insensitive comparison

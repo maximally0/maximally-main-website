@@ -1,9 +1,21 @@
+// @ts-nocheck
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { createClient } from "@supabase/supabase-js";
 import { registerOrganizerRoutes } from "./routes/organizer";
 import { registerAdminHackathonRoutes } from "./routes/admin-hackathons";
+import { registerHackathonRegistrationRoutes } from "./routes/hackathon-registration";
+import { registerOrganizerAdvancedRoutes } from "./routes/organizer-advanced";
+import { registerPublicHackathonRoutes } from "./routes/public-hackathons";
+import { registerJudgeInvitationRoutes } from "./routes/judge-invitations";
+import { registerJudgeProfileRoutes } from "./routes/judge-profile";
+import { registerSimpleJudgeRoutes } from "./routes/judge-profile-simple";
+import { registerJudgingRoutes } from "./routes/judging";
+import { registerFileUploadRoutes } from "./routes/file-uploads";
+import { registerHackathonFeatureRoutes } from "./routes/hackathon-features";
+// import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
+import { sendSubmissionConfirmation, sendAnnouncement, sendWinnerNotification } from "./services/email";
 
 // Simple per-user rate limiter (token bucket) in memory
 const rateBuckets = new Map<string, { tokens: number; last: number }>();
@@ -644,6 +656,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Lightweight notifications stub to avoid 404s from the client navbar
+  app.get("/api/notifications/unread-count", async (_req: Request, res: Response) => {
+    return res.json({ success: true, count: 0 });
+  });
+
   // User data export endpoint
   app.get("/api/user/export-data", async (req: Request, res: Response) => {
     try {
@@ -873,10 +890,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: 'Judge not found' });
       }
 
-      const events = await storage.getJudgeEvents(judge.id);
+      // Try to fetch events, but do not fail the whole request if this breaks
+      let events: any[] = [];
+      try {
+        events = await storage.getJudgeEvents(judge.id as any);
+      } catch (eventsErr: any) {
+        console.error('Error fetching judge events for profile:', eventsErr?.message || eventsErr);
+        // Fallback: just return the judge without events
+        events = [];
+      }
 
       return res.json({ ...judge, topEventsJudged: events });
     } catch (err: any) {
+      console.error('Error in /api/judges/:username route:', err);
       return res.status(500).json({ message: err?.message || 'Failed to fetch judge' });
     }
   });
@@ -2292,6 +2318,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Register admin hackathon management routes
   registerAdminHackathonRoutes(app);
+  
+  // Register hackathon registration routes
+  registerHackathonRegistrationRoutes(app);
+  
+  // Register advanced organizer features
+  registerOrganizerAdvancedRoutes(app);
+
+  // Register notification routes - DISABLED
+  // registerNotificationRoutes(app);
 
   // Public hackathon routes
   app.get("/api/hackathons/:slug", async (req: Request, res: Response) => {
@@ -2328,6 +2363,551 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
+
+  // Get public announcements for a hackathon
+  app.get("/api/hackathons/:hackathonId/announcements", async (req: Request, res: Response) => {
+    try {
+      const { hackathonId } = req.params;
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+
+      const { data, error} = await supabaseAdmin
+        .from('hackathon_announcements')
+        .select('id, title, content, announcement_type, created_at, published_at')
+        .eq('hackathon_id', hackathonId)
+        .eq('is_published', true)
+        .order('published_at', { ascending: false });
+
+      if (error) throw error;
+
+      return res.json({ success: true, data: data || [] });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Submit project
+  app.post("/api/hackathons/:hackathonId/submit", async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+      const { data: userData } = await supabaseAdmin.auth.getUser(token);
+      const userId = userData?.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+      const submissionData = req.body;
+
+      // Check if user is registered
+      const { data: registration } = await supabaseAdmin
+        .from('hackathon_registrations')
+        .select('id, team_id')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .single();
+
+      if (!registration) {
+        return res.status(403).json({ success: false, message: 'You must be registered to submit' });
+      }
+
+      // Check if already submitted (ONE SUBMISSION PER USER PER HACKATHON)
+      const { data: existing, error: existingError } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select('id, status')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .single();
+
+      if (existing) {
+        // Update existing submission (only one submission allowed per user)
+        const { data, error } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .update({
+            ...submissionData,
+            submitted_at: submissionData.status === 'submitted' ? new Date().toISOString() : null
+          })
+          .eq('id', existing.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        // Send email only if status changed to submitted
+        if (submissionData.status === 'submitted' && data.status === 'submitted') {
+          const { data: hackathonDetails } = await supabaseAdmin
+            .from('organizer_hackathons')
+            .select('hackathon_name, slug')
+            .eq('id', hackathonId)
+            .single();
+
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('full_name, username, email')
+            .eq('id', userId)
+            .single();
+
+          if (hackathonDetails && profile?.email) {
+            sendSubmissionConfirmation({
+              email: profile.email,
+              userName: profile.full_name || profile.username || 'there',
+              hackathonName: hackathonDetails.hackathon_name,
+              hackathonSlug: hackathonDetails.slug,
+              projectName: data.project_name,
+              projectId: data.id,
+              submittedAt: data.submitted_at,
+            }).catch(err => console.error('Email send failed:', err));
+          }
+        }
+
+        return res.json({ success: true, data });
+      } else {
+        // Create new submission
+        const { data, error } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .insert({
+            hackathon_id: hackathonId,
+            user_id: userId,
+            team_id: registration.team_id,
+            ...submissionData,
+            submitted_at: submissionData.status === 'submitted' ? new Date().toISOString() : null
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        // Send email only if submitted (not draft)
+        if (submissionData.status === 'submitted') {
+          const { data: hackathonDetails } = await supabaseAdmin
+            .from('organizer_hackathons')
+            .select('hackathon_name, slug')
+            .eq('id', hackathonId)
+            .single();
+
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('full_name, username, email')
+            .eq('id', userId)
+            .single();
+
+          if (hackathonDetails && profile?.email) {
+            sendSubmissionConfirmation({
+              email: profile.email,
+              userName: profile.full_name || profile.username || 'there',
+              hackathonName: hackathonDetails.hackathon_name,
+              hackathonSlug: hackathonDetails.slug,
+              projectName: data.project_name,
+              projectId: data.id,
+              submittedAt: data.submitted_at,
+            }).catch(err => console.error('Email send failed:', err));
+          }
+        }
+
+        return res.json({ success: true, data });
+      }
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get user's submission
+  app.get("/api/hackathons/:hackathonId/my-submission", async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+      const { data: userData } = await supabaseAdmin.auth.getUser(token);
+      const userId = userData?.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select('*')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      return res.json({ success: true, data: data || null });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get all projects for a hackathon (public)
+  app.get("/api/hackathons/:hackathonId/projects", async (req: Request, res: Response) => {
+    try {
+      const { hackathonId } = req.params;
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select(`
+          *,
+          team:hackathon_teams(team_name, team_code)
+        `)
+        .eq('hackathon_id', hackathonId)
+        .eq('status', 'submitted')
+        .order('submitted_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Get user names
+      const enrichedData = await Promise.all((data || []).map(async (submission: any) => {
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('username, full_name')
+          .eq('id', submission.user_id)
+          .single();
+
+        return {
+          ...submission,
+          user_name: profile?.full_name || profile?.username || 'Anonymous'
+        };
+      }));
+
+      return res.json({ success: true, data: enrichedData });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Participant: Get my hackathons
+  app.get("/api/participant/my-hackathons", async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+      const { data: userData } = await supabaseAdmin.auth.getUser(token);
+      const userId = userData?.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      // Get all registrations for this user
+      const { data: registrations, error } = await supabaseAdmin
+        .from('hackathon_registrations')
+        .select(`
+          id,
+          status,
+          registration_number,
+          registration_type,
+          team_id,
+          hackathon_id,
+          team:hackathon_teams(team_name, team_code)
+        `)
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Get hackathon details and submissions
+      const enrichedData = await Promise.all((registrations || []).map(async (reg: any) => {
+        // Get hackathon details
+        const { data: hackathon } = await supabaseAdmin
+          .from('organizer_hackathons')
+          .select('id, hackathon_name, slug, start_date, end_date, format')
+          .eq('id', reg.hackathon_id)
+          .single();
+
+        // Get submission if exists
+        const { data: submission } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .select('id, project_name, status, score, prize_won')
+          .eq('hackathon_id', reg.hackathon_id)
+          .eq('user_id', userId)
+          .single();
+
+        return {
+          ...hackathon,
+          registration: {
+            id: reg.id,
+            status: reg.status,
+            registration_number: reg.registration_number,
+            registration_type: reg.registration_type,
+            team: reg.team
+          },
+          submission: submission || null
+        };
+      }));
+
+      return res.json({ success: true, data: enrichedData });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get individual project details (public)
+  app.get("/api/projects/:projectId", async (req: Request, res: Response) => {
+    try {
+      const { projectId } = req.params;
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select(`
+          *,
+          team:hackathon_teams(team_name, team_code),
+          hackathon:organizer_hackathons(hackathon_name, slug)
+        `)
+        .eq('id', projectId)
+        .eq('status', 'submitted')
+        .single();
+
+      if (error || !data) {
+        return res.status(404).json({ success: false, message: 'Project not found' });
+      }
+
+      // Get user name
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('username, full_name')
+        .eq('id', data.user_id)
+        .single();
+
+      const enrichedData = {
+        ...data,
+        user_name: profile?.full_name || profile?.username || 'Anonymous'
+      };
+
+      return res.json({ success: true, data: enrichedData });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Judge: Get submissions for judging
+  app.get("/api/judge/hackathons/:hackathonId/submissions", async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+      const { data: userData } = await supabaseAdmin.auth.getUser(token);
+      const userId = userData?.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      // Verify user is a judge
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profile?.role !== 'judge') {
+        return res.status(403).json({ success: false, message: 'Judge role required' });
+      }
+
+      const { hackathonId } = req.params;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select(`
+          *,
+          team:hackathon_teams(team_name, team_code)
+        `)
+        .eq('hackathon_id', hackathonId)
+        .eq('status', 'submitted')
+        .order('submitted_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Get user names
+      const enrichedData = await Promise.all((data || []).map(async (submission: any) => {
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('username, full_name')
+          .eq('id', submission.user_id)
+          .single();
+
+        return {
+          ...submission,
+          user_name: profile?.full_name || profile?.username || 'Anonymous'
+        };
+      }));
+
+      return res.json({ success: true, data: enrichedData });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Judge: Get hackathons to judge
+  app.get("/api/judge/hackathons", async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+      const { data: userData } = await supabaseAdmin.auth.getUser(token);
+      const userId = userData?.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      // Verify user is a judge
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profile?.role !== 'judge') {
+        return res.status(403).json({ success: false, message: 'Judge role required' });
+      }
+
+      // Get all published hackathons
+      const { data, error } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, hackathon_name, slug, start_date, end_date, format, registrations_count')
+        .eq('status', 'published')
+        .order('start_date', { ascending: false });
+
+      if (error) throw error;
+
+      // Get submission counts
+      const enrichedData = await Promise.all((data || []).map(async (hackathon: any) => {
+        const { count } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .select('*', { count: 'exact', head: true })
+          .eq('hackathon_id', hackathon.id)
+          .eq('status', 'submitted');
+
+        return {
+          ...hackathon,
+          submissions_count: count || 0
+        };
+      }));
+
+      return res.json({ success: true, data: enrichedData });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Judge: Score a submission
+  app.post("/api/judge/submissions/:submissionId/score", async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+      const { data: userData } = await supabaseAdmin.auth.getUser(token);
+      const userId = userData?.user?.id;
+
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      // Verify user is a judge
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profile?.role !== 'judge') {
+        return res.status(403).json({ success: false, message: 'Judge role required' });
+      }
+
+      const { submissionId } = req.params;
+      const { score, feedback, prize_won } = req.body;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .update({
+          score,
+          feedback,
+          prize_won,
+          status: prize_won ? 'winner' : 'submitted'
+        })
+        .eq('id', submissionId)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      // Send winner notification email if prize was awarded
+      if (prize_won && data) {
+        const { data: hackathonDetails } = await supabaseAdmin
+          .from('organizer_hackathons')
+          .select('hackathon_name, slug')
+          .eq('id', data.hackathon_id)
+          .single();
+
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('full_name, username, email')
+          .eq('id', data.user_id)
+          .single();
+
+        if (hackathonDetails && profile?.email) {
+          sendWinnerNotification({
+            email: profile.email,
+            userName: profile.full_name || profile.username || 'there',
+            hackathonName: hackathonDetails.hackathon_name,
+            hackathonSlug: hackathonDetails.slug,
+            projectName: data.project_name,
+            projectId: data.id,
+            prize: prize_won,
+            score: score,
+          }).catch(err => console.error('Winner email send failed:', err));
+        }
+      }
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Register route modules
+  registerOrganizerRoutes(app);
+  registerAdminHackathonRoutes(app);
+  registerHackathonRegistrationRoutes(app);
+  registerOrganizerAdvancedRoutes(app);
+  registerPublicHackathonRoutes(app);
+  registerJudgeInvitationRoutes(app);
+  registerJudgeProfileRoutes(app); // Re-enabled with fix
+  registerJudgingRoutes(app); // Complete judging system
+  registerFileUploadRoutes(app); // File upload endpoints for logos
+  registerHackathonFeatureRoutes(app); // Tracks, sponsors, feedback, tasks, etc.
+  // registerSimpleJudgeRoutes(app); // Disabled
 
   const httpServer = createServer(app);
   return httpServer;

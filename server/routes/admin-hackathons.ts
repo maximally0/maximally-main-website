@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
@@ -136,6 +137,12 @@ export function registerAdminHackathonRoutes(app: Express) {
         return res.status(500).json({ success: false, message: 'Failed to approve hackathon' });
       }
 
+      // Update organizer role in profiles table
+      await supabaseAdmin
+        .from('profiles')
+        .update({ role: 'organizer' })
+        .eq('id', hackathon.organizer_id);
+
       // Update organizer stats
       const { data: profile } = await supabaseAdmin
         .from('organizer_profiles')
@@ -263,6 +270,245 @@ export function registerAdminHackathonRoutes(app: Express) {
       return res.json({ success: true });
     } catch (error: any) {
       console.error('Error in delete hackathon:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get all edit requests
+  app.get("/api/admin/edit-requests", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId || !(await isAdmin(supabaseAdmin, userId))) {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      const { data: requests, error } = await supabaseAdmin
+        .from('hackathon_edit_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching edit requests:', error);
+        return res.status(500).json({ success: false, message: 'Failed to fetch edit requests' });
+      }
+
+      // Manually fetch hackathon details for each request
+      const requestsWithHackathons = await Promise.all(
+        (requests || []).map(async (request: any) => {
+          const { data: hackathon } = await supabaseAdmin
+            .from('organizer_hackathons')
+            .select('hackathon_name, slug, status')
+            .eq('id', request.hackathon_id)
+            .single();
+
+          return {
+            ...request,
+            hackathon: hackathon || null
+          };
+        })
+      );
+
+      console.log('Edit requests fetched:', requestsWithHackathons.length, 'requests');
+      console.log('Sample request:', requestsWithHackathons[0]);
+
+      return res.json({ success: true, data: requestsWithHackathons });
+    } catch (error: any) {
+      console.error('Error in get edit requests:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Approve edit request
+  app.post("/api/admin/edit-requests/:id/approve", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId || !(await isAdmin(supabaseAdmin, userId))) {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      const { id } = req.params;
+      const { adminNotes } = req.body;
+
+      // Get edit request
+      const { data: editRequest } = await supabaseAdmin
+        .from('hackathon_edit_requests')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (!editRequest) {
+        return res.status(404).json({ success: false, message: 'Edit request not found' });
+      }
+
+      // Apply the changes to the hackathon
+      const { error: updateError } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .update({
+          ...editRequest.requested_changes,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', editRequest.hackathon_id);
+
+      if (updateError) {
+        console.error('Error applying changes:', updateError);
+        return res.status(500).json({ success: false, message: 'Failed to apply changes' });
+      }
+
+      // Update edit request status
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_edit_requests')
+        .update({
+          status: 'approved',
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: userId,
+          admin_notes: adminNotes || null
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error approving edit request:', error);
+        return res.status(500).json({ success: false, message: 'Failed to approve edit request' });
+      }
+
+      // Get hackathon details for email
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('hackathon_name, slug')
+        .eq('id', editRequest.hackathon_id)
+        .single();
+
+      // Send approval email
+      await sendEmail(
+        editRequest.organizer_email,
+        `✅ Edit request approved for "${hackathon?.hackathon_name}"`,
+        `Good news! Your edit request for "${hackathon?.hackathon_name}" has been approved.\n\nYour changes are now live on the hackathon page.\n\n${adminNotes ? `Admin notes: ${adminNotes}\n\n` : ''}Best regards,\nMaximally Team`
+      );
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      console.error('Error in approve edit request:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Reject edit request
+  app.post("/api/admin/edit-requests/:id/reject", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId || !(await isAdmin(supabaseAdmin, userId))) {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      const { id } = req.params;
+      const { rejectionReason, adminNotes } = req.body;
+
+      if (!rejectionReason) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Rejection reason is required' 
+        });
+      }
+
+      // Get edit request
+      const { data: editRequest } = await supabaseAdmin
+        .from('hackathon_edit_requests')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (!editRequest) {
+        return res.status(404).json({ success: false, message: 'Edit request not found' });
+      }
+
+      // Update edit request status
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_edit_requests')
+        .update({
+          status: 'rejected',
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: userId,
+          rejection_reason: rejectionReason,
+          admin_notes: adminNotes || null
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error rejecting edit request:', error);
+        return res.status(500).json({ success: false, message: 'Failed to reject edit request' });
+      }
+
+      // Get hackathon details for email
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('hackathon_name')
+        .eq('id', editRequest.hackathon_id)
+        .single();
+
+      // Send rejection email
+      await sendEmail(
+        editRequest.organizer_email,
+        `Update on edit request for "${hackathon?.hackathon_name}"`,
+        `Hello,\n\nYour edit request for "${hackathon?.hackathon_name}" could not be approved for the following reason:\n\n${rejectionReason}\n\n${adminNotes ? `Additional notes: ${adminNotes}\n\n` : ''}You can submit a new edit request with the necessary changes.\n\nBest regards,\nMaximally Team`
+      );
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      console.error('Error in reject edit request:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Delete edit request
+  app.delete("/api/admin/edit-requests/:id", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId || !(await isAdmin(supabaseAdmin, userId))) {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      const { id } = req.params;
+
+      const { error } = await supabaseAdmin
+        .from('hackathon_edit_requests')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting edit request:', error);
+        return res.status(500).json({ success: false, message: 'Failed to delete edit request' });
+      }
+
+      return res.json({ success: true });
+    } catch (error: any) {
+      console.error('Error in delete edit request:', error);
       return res.status(500).json({ success: false, message: error.message });
     }
   });
