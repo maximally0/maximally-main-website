@@ -618,10 +618,10 @@ export default function Profile() {
 
       const typedCertificates = (certificates || []) as Certificate[];
 
-      // Get hackathons from the certificates
+      // Get hackathons from certificates (old system)
       const hackathonNames = Array.from(new Set(typedCertificates.map(cert => cert.hackathon_name)));
       
-      // Get hackathon details from the hackathons table
+      // Get hackathon details from the old hackathons table
       const hackathonDetails: HackathonDetails[] = [];
       if (hackathonNames.length > 0) {
         for (const hackathonName of hackathonNames) {
@@ -633,6 +633,47 @@ export default function Profile() {
           
           if (hackathon) {
             hackathonDetails.push(hackathon as any);
+          }
+        }
+      }
+
+      // ALSO get hackathons from registrations (new system)
+      // First get the user ID from the username
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('username', username)
+        .single();
+
+      if (profileData) {
+        const { data: registrations } = await supabase
+          .from('hackathon_registrations')
+          .select(`
+            hackathon_id,
+            organizer_hackathons (
+              id,
+              hackathon_name,
+              slug,
+              start_date,
+              end_date,
+              cover_image
+            )
+          `)
+          .eq('user_id', profileData.id);
+
+        if (registrations) {
+          for (const reg of registrations) {
+            if (reg.organizer_hackathons) {
+              const h = reg.organizer_hackathons as any;
+              hackathonDetails.push({
+                id: h.id,
+                title: h.hackathon_name,
+                start_date: h.start_date,
+                end_date: h.end_date,
+                slug: h.slug,
+                cover_image: h.cover_image
+              });
+            }
           }
         }
       }
@@ -842,6 +883,12 @@ export default function Profile() {
                       className="animate-pulse"
                     />
                   )}
+                  {(dbProfile.role as string) === 'organizer' && (
+                    <div className="minecraft-block bg-maximally-blue text-white px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
+                      <Trophy className="w-4 h-4 animate-pulse" />
+                      <span>ORGANIZER</span>
+                    </div>
+                  )}
                 </div>
                 <p className="text-maximally-yellow font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 break-all">@{userProfile.username}</p>
               </div>
@@ -866,6 +913,15 @@ export default function Profile() {
                     >
                       <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                       VIEW_JUDGE_PROFILE
+                    </a>
+                  )}
+                  {(dbProfile.role as string) === 'organizer' && (
+                    <a
+                      href={`/organizer/${userProfile.username}`}
+                      className="pixel-button bg-maximally-blue text-white hover:bg-maximally-red font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300 flex items-center gap-2"
+                    >
+                      <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
+                      VIEW_ORGANIZER_PROFILE
                     </a>
                   )}
                   <button

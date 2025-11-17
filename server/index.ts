@@ -3,6 +3,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
+import { runAutoMigrations } from "./auto-migrate";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -65,6 +66,9 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
     });
     app.locals.supabaseAdmin = supabaseAdmin;
     log("Supabase admin client initialized");
+    
+    // Run auto-migrations
+    runAutoMigrations(supabaseAdmin);
   } else {
     log("Supabase admin client NOT initialized: missing env SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
   }

@@ -1918,3 +1918,14 @@
 .delay-700 {
   animation-delay: 700ms;
 }
+
+/* Notification Panel Blur Effect */
+body.notification-panel-open > #root > *:not(.notification-panel-wrapper) {
+  filter: blur(8px);
+  transition: filter 0.3s ease;
+}
+
+body:not(.notification-panel-open) > #root > * {
+  filter: none;
+  transition: filter 0.3s ease;
+}

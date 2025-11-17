@@ -16,7 +16,8 @@ export function log(message: string, source = "express") {
     hour12: true,
   });
 
-  
+  // Simple structured log line, e.g. "[12:34:56 PM] [express] serving on port 5002"
+  console.log(`[${formattedTime}] [${source}] ${message}`);
 }
 
 export async function setupVite(app: Express, server: Server) {

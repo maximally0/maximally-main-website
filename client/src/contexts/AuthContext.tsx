@@ -219,29 +219,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-  // Getting user profile for session
         // Get user profile when signed in with timeout protection
         try {
-          // Add timeout to prevent hanging
+          // Increase timeout to 15 seconds for slower connections
           const profilePromise = getCurrentUserWithProfile();
           const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Profile loading timeout')), 5000)
+            setTimeout(() => reject(new Error('Profile loading timeout')), 15000)
           );
           
           const result = await Promise.race([profilePromise, timeoutPromise]) as { user: any; profile: any } | null;
-            if (result && result.profile) {
+          if (result && result.profile) {
             setProfile(result.profile);
           } else {
-            console.warn('⚠️ No profile found for user, this might indicate a database issue');
-            // Set profile to null but don't block the auth flow
-            setProfile(null);
+            console.warn('⚠️ No profile found for user, will retry on next interaction');
+            // Don't clear profile immediately - keep user logged in
+            // Profile will be fetched again on next page interaction
           }
         } catch (error: any) {
           console.error('❌ Error getting profile after auth change:', error.message || error);
-          // Don't block the auth flow even if profile loading fails
-          setProfile(null);
+          console.log('ℹ️ User will remain logged in, profile will retry on next interaction');
+          // Don't log user out on profile fetch failure
+          // The session is still valid, just profile fetch failed
         }
-          } else {
+      } else {
         // User signed out, clearing profile
         setProfile(null);
       }

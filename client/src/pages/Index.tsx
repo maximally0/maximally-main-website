@@ -29,6 +29,7 @@ import { Link } from "react-router-dom";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { supabase, supabasePublic } from "@/lib/supabaseClient";
+import MyHackathonsQuickAccess from "@/components/MyHackathonsQuickAccess";
 
 // Type definitions for hackathon data
 interface HackathonData {
@@ -1059,6 +1060,9 @@ const Index = () => {
         </section>
 
         <Footer />
+        
+        {/* Quick Access to User's Hackathons */}
+        <MyHackathonsQuickAccess />
       </div>
     </>
   );
