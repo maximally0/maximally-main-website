@@ -236,7 +236,6 @@ const Judges = () => {
         title="Become a Maximally Judge | The Standard of Judgment in Innovation"
         description="Join the world's top 0.1% of innovators mentoring and evaluating the next generation of builders. Become a Maximally Judge — the global standard of innovation credibility."
       />
-
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="fixed inset-0 bg-black" />
         <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
@@ -610,7 +609,7 @@ const Judges = () => {
                   </p>
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-cyan-900/80 to-purple-900/80 border-2 border-cyan-400 p-8">
+                <div className="minecraft-block from-cyan-900/80 to-purple-900/80 border-2 border-cyan-400 p-8 bg-[#090c14]">
                   <div className="border-l-4 border-maximally-yellow pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE RULE
