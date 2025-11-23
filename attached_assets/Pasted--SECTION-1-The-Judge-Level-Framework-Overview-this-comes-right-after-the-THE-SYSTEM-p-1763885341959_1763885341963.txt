@@ -1,0 +1,1053 @@
+# **SECTION 1 — The Judge Level Framework (Overview)**
+
+*this comes right after the “THE SYSTEM” part and before individual tiers.*
+
+---
+
+## **THE JUDGE LEVEL FRAMEWORK**
+
+A global standard for credibility in innovation.
+
+Every Maximally Judge is placed into one of five levels — a clear, transparent hierarchy that reflects their expertise, experience, and impact. This isn’t about titles. It’s about proof of work. What you’ve built, what you’ve led, and how you shape the next generation of builders.
+
+Your level is your starting point.
+
+Your journey is in your hands.
+
+From first-time mentors to ecosystem legends, this framework creates a shared language across all Maximally events — ensuring every builder is evaluated with fairness, depth, and world-class judgment.
+
+### **The Five Levels**
+
+- **Level 1 — Starter Judge**
+    
+    Early professionals and first-time mentors beginning their judging journey.
+    
+- **Level 2 — Verified Judge**
+    
+    Experienced builders with proven domain expertise and prior judging or mentoring experience.
+    
+- **Level 3 — Senior Judge**
+    
+    Established leaders with deep professional or entrepreneurial backgrounds and consistent judging history.
+    
+- **Level 4 — Chief Judge**
+    
+    High-credibility industry or academic leaders who oversee panels and define judging quality standards.
+    
+- **Level 5 — Legacy Judge**
+    
+    Distinguished figures recognized for long-term contributions to innovation and mentorship.
+# **SECTION 2 — Criteria For Each Level**
+
+A Maximally Judge’s level reflects three things:
+
+**(1) what they’ve built**
+
+**(2) how deeply they understand their domain**
+
+**(3) how consistently they mentor or evaluate innovators**
+
+Below is the exact criteria we use to place judges into each tier.
+
+---
+
+## **LEVEL 1 — STARTER JUDGE**
+
+**For:** Early professionals or emerging builders beginning their judging journey.
+
+**We Look For:**
+
+- 1–3 years of professional experience *or* strong student-led projects
+- A portfolio that shows real work: shipped features, prototypes, research, open-source, or side projects
+- Strong interest in mentoring early-stage builders
+- Good communication skills and willingness to learn standard judging frameworks
+
+**Typical Profiles:**
+
+- SDE 1 or junior engineer
+- Early-stage startup founder
+- University researcher / ML enthusiast with published projects
+- Community leaders, contributors, or builders with strong portfolios
+
+**Where They Judge:**
+
+- Prelims & beginner tracks
+- Paired with Verified or Senior judges for guidance
+
+---
+
+## **LEVEL 2 — VERIFIED JUDGE**
+
+**For:** Experienced professionals with real domain depth and prior mentoring or judging experience.
+
+**We Look For:**
+
+- 3–7 years of industry experience
+- Evidence of solving difficult problems or leading features
+- History of mentoring, reviewing, or judging in any context (hackathons, accelerators, internal events)
+- Strong technical or product depth in at least one domain
+
+**Typical Profiles:**
+
+- SDE2 / Senior Engineer / PM / Data Scientist
+- Founders of funded or revenue-making startups
+- Product, design, or research leads with public work
+- Long-time community mentors / devrel contributors
+
+**Where They Judge:**
+
+- Main rounds at Maximally events
+- Lead evaluation in beginner/intermediate tracks
+- First picks for domain-specific panels
+
+---
+
+## **LEVEL 3 — SENIOR JUDGE**
+
+**For:** Established professionals or entrepreneurs with significant depth and repeated judging experience.
+
+**We Look For:**
+
+- 7–15+ years in industry or equivalent startup leadership
+- Strong track record: leading teams, building large systems, launching products at scale
+- Judged multiple hackathons or innovation programs
+- Recognized expertise (talks, OSS leadership, patents, research, public projects)
+
+**Typical Profiles:**
+
+- EM / Staff / Principal Engineers
+- Senior PMs / Directors / Product Architects
+- Founders who’ve built and scaled startups
+- Recognized researchers / open-source maintainers
+
+**Where They Judge:**
+
+- Finals & advanced tracks
+- Lead judging panels
+- Help design rubrics, scoring frameworks, and domain criteria
+
+---
+
+## **LEVEL 4 — CHIEF JUDGE**
+
+**For:** High-credibility leaders who can oversee judging at scale.
+
+**We Look For:**
+
+- 10–20+ years of senior leadership or elite domain expertise
+- Experience managing large teams, programs, or evaluation committees
+- Ability to set judging standards across entire events
+- Influence or impact in their domain (industry, academia, or startup ecosystem)
+
+**Typical Profiles:**
+
+- Director / VP / CTO-level leaders
+- Distinguished researchers or professors running labs
+- Founders of well-known or scaled companies
+- Senior investors or ecosystem operators
+
+**Where They Judge:**
+
+- Head judge for major events
+- Oversight of multiple panels
+- Final decision-maker on scoring, tie-breakers, and rubric design
+- Mentor to Level 1–3 judges
+
+---
+
+## **LEVEL 5 — LEGACY JUDGE**
+
+**For:** Iconic figures who have shaped innovation over years, not just projects.
+
+**We Look For:**
+
+- Long-term contribution to tech, research, startups, design, or innovation
+- Built something that influenced an ecosystem, industry, or community
+- Reputation that brings credibility to the event by their presence alone
+- Proven mentorship impact over many years
+- Thought leadership or public influence in shaping the future of their field
+
+**Typical Profiles:**
+
+- Founders of iconic startups
+- Senior academics or researchers with major breakthroughs
+- Distinguished engineers or creators with global recognition
+- Senior partners, investors, or innovators known internationally
+
+**Where They Judge:**
+
+- Headlining final rounds
+- Special “Legacy Panels” for flagship events
+- Inspire, mentor, and elevate the next generation
+- (Often) judge 1–2 major events a year — quality > quantity
+
+# **SECTION 3 — How Judges Grow Inside Maximally**
+
+---
+
+Being a Maximally Judge is not a fixed label.
+
+It’s a progression system — the more you judge, mentor, and contribute, the higher you rise.
+
+We evaluate every judge across four pillars, and your tier evolves as your impact grows.
+
+---
+
+## **THE FOUR PILLARS OF PROGRESSION**
+
+### **1. Judging Credits**
+
+Every event you judge adds to your permanent track record.
+
+Credits are earned based on:
+
+- number of events judged
+- complexity of the tracks (beginner → advanced → finals)
+- role in event (judge → lead judge → panel head)
+
+These credits travel with you across seasons, panels, and years.
+
+---
+
+### **2. Feedback Quality**
+
+Great judges give great feedback.
+
+We evaluate:
+
+- clarity
+- specificity
+- depth of insight
+- usefulness to builders
+- fairness and consistency
+
+Judges with consistently strong feedback move up faster.
+
+---
+
+### **3. Reliability & Professionalism**
+
+Your ability to show up matters.
+
+We track:
+
+- punctuality
+- completing all assigned evaluations
+- communication when unavailable
+- zero ghosting
+- zero conflicts of interest
+
+Reliability = trust.
+
+Trust = higher tiers.
+
+---
+
+### **4. Community Contribution**
+
+Not mandatory, but a big signal.
+
+This includes:
+
+- taking workshops or mentorship sessions
+- advising organizers
+- helping design rubrics or tracks
+- referring strong judges
+- contributing to MFHOP or Maximally events
+
+It shows leadership beyond scoring submissions.
+
+---
+
+# **HOW PROMOTIONS WORK**
+
+We review every judge at the end of each Maximally season.
+
+### **L1 → L2: Getting Verified**
+
+You move up when you:
+
+- judge 1–2 events
+- give strong feedback
+- show reliability
+- demonstrate domain depth
+    
+    **Most active judges achieve this within one season.**
+    
+
+---
+
+### **L2 → L3: Becoming Senior**
+
+You move up when you:
+
+- judge multiple events across categories
+- show consistent high-quality evaluation
+- demonstrate strong professional advancement
+- show ability to guide juniors
+- optionally lead smaller panels
+
+This marks you as a mature evaluator.
+
+---
+
+### **L3 → L4: Becoming Chief Judge**
+
+You move up when you:
+
+- lead panels or full tracks
+- help design judging frameworks
+- mentor Level 1–2 judges
+- show leadership qualities in the community
+- become a trusted evaluator for major rounds
+
+This tier is rare.
+
+---
+
+### **L4 → L5: Achieving Legacy Status**
+
+Reserved for long-term contributors who:
+
+- shape innovation ecosystems
+- consistently elevate the standard
+- have judged major events over years
+- act as ambassadors for the movement
+- bring outsized credibility and influence
+
+Legacy Judge is the highest honor in the Maximally universe.
+
+---
+
+# **THE RULE**
+
+> Your level reflects your impact — not your title.
+The more you build, contribute, and mentor, the higher you rise.
+
+# **SECTION 4 — Fast-Track & Direct Placement**
+
+---
+
+Not everyone needs to start at Level 1.
+
+Some people have already built enough, led enough, and contributed enough to enter the Maximally system at a higher tier from day one.
+
+Our fast-track process ensures that accomplished founders, senior engineers, researchers, and leaders are placed where their experience actually belongs — instantly.
+
+---
+
+## **WHY FAST-TRACK EXISTS**
+
+Innovation moves fast.
+
+Credibility should too.
+
+Judges with strong professional backgrounds shouldn't wait to “climb” the ladder from the bottom. If your track record proves you already operate at Level 3, 4, or 5, we reflect that immediately.
+
+No gatekeeping.
+
+No unnecessary thresholds.
+
+Just placing talent where it deserves to be.
+
+---
+
+# **FAST-TRACK CRITERIA**
+
+## **Fast-Track to Level 3 — Senior Judge**
+
+Given to individuals with deep domain expertise and strong leadership history.
+
+**Examples:**
+
+- Staff / Principal / Senior engineers at top tech companies
+- Senior product managers or designers with shipped products at scale
+- Founders of funded or revenue-generating startups
+- Experienced mentors, devrel leads, or community builders
+- Judges of major hackathons, accelerators, or competitions
+
+**Why they skip Levels 1–2:**
+
+They already have the depth required to evaluate complex ideas and guide junior judges.
+
+---
+
+## **Fast-Track to Level 4 — Chief Judge**
+
+Reserved for senior leaders who have overseen teams, programs, or innovation processes.
+
+**Examples:**
+
+- Directors, VPs, CTOs, or Heads of Engineering
+- Distinguished researchers, professors, or lab leads
+- Founders of scaled companies with significant user or revenue traction
+- Senior ecosystem operators (accelerators, venture funds, technical programs)
+
+**Why they skip Levels 1–3:**
+
+They have operated at evaluation-level leadership for years.
+
+They don’t just judge — they *define how judging should work*.
+
+---
+
+## **Direct Legacy Placement — Level 5**
+
+Extremely rare.
+
+Given to figures whose work has shaped ecosystems or industries.
+
+**Examples:**
+
+- Founders of iconic companies
+- Globally recognized researchers or inventors
+- Distinguished engineers with patents, open-source influence, or industry-shaping contributions
+- Senior academic or technical leaders with global legacy status
+- Senior partners or leaders in major innovation ecosystems
+
+**Why they skip the entire ladder:**
+
+Their presence itself sets a new standard of credibility.
+
+They mentor generations, not just events.
+
+**Note:**
+
+> Direct Legacy placement is invite-only or requires exceptional portfolio review.
+> 
+
+---
+
+# **HOW FAST-TRACK EVALUATION WORKS**
+
+We review:
+
+- professional seniority
+- projects and products shipped
+- ecosystem impact
+- leadership roles
+- prior judging or mentorship experience
+- public work (talks, research, OSS, writing)
+
+If your profile shows you're already operating at a higher tier, we elevate you immediately.
+
+---
+
+# **THE PROMISE**
+
+> We don’t make you prove what your career has already proven.
+Your level reflects your true credibility — from the very first day.
+
+# **SECTION 5 — What We Expect From Every Maximally Judge**
+
+---
+
+Great judging isn’t just about scoring projects.
+
+It’s about showing up with professionalism, clarity, and real respect for builders.
+
+Every Maximally Judge — regardless of level — follows the same core responsibilities.
+
+---
+
+## **1. Show Up. Fully.**
+
+- Attend the judging session you commit to
+- Be on time
+- Complete all assigned evaluations
+- Communicate early if anything changes
+
+Reliability is non-negotiable.
+
+---
+
+## **2. Review Every Assigned Submission**
+
+Each project deserves fairness.
+
+We expect judges to:
+
+- read thoroughly
+- explore demos
+- evaluate based on the rubric
+- give scores grounded in reasoning
+
+Builders put hours into their work — judges should too.
+
+---
+
+## **3. Give Specific, Actionable Feedback**
+
+Good judges don’t say “good project.”
+
+They say:
+
+- what was strong
+- what could be better
+- what direction to take next
+- how to turn the idea into something real
+
+Feedback is mentorship.
+
+Mentorship is impact.
+
+---
+
+## **4. Stay Fair and Unbiased**
+
+Judges must:
+
+- avoid favoritism
+- avoid scoring bias based on school, resume, or background
+- evaluate only the work presented
+- declare conflicts of interest immediately
+
+We protect fairness at all costs.
+
+---
+
+## **5. Respect Young & Emerging Builders**
+
+Maximally events include teenagers, beginners, and first-time founders.
+
+Judges must:
+
+- be encouraging, not discouraging
+- provide clarity without arrogance
+- guide without dismissing ambition
+- remember that early feedback can shape someone’s life direction
+
+We build people, not just scorecards.
+
+---
+
+## **6. Maintain Professional Conduct**
+
+This includes:
+
+- no harassment
+- no rude comments
+- no mocking of projects
+- no public criticism outside the judging environment
+- maintaining confidentiality where required
+
+Judging is a leadership role.
+
+We expect leadership behavior.
+
+---
+
+## **7. Protect the Integrity of the System**
+
+Judges agree to:
+
+- avoid leaking scoring details
+- avoid sharing internal judging conversations
+- respect panel decisions
+- help maintain judging standards
+
+Maximally is building a global trust layer — and trust requires discipline.
+
+---
+
+# **THE BOTTOM LINE**
+
+> If you show up, review with depth, give strong feedback, and respect the process — you rise fast.
+If you ghost, disrespect builders, or break trust — you lose access.
+
+# **SECTION 6 — What You Unlock As You Level Up**
+
+---
+
+Every level in the Maximally Judge system unlocks new responsibilities, visibility, and opportunities.
+
+As you rise, you don’t just judge more — you shape the ecosystem.
+
+---
+
+# **LEVEL 1 — STARTER JUDGE (L1)**
+
+**You Unlock:**
+
+- Verified judge profile on Maximally
+- Eligibility to judge beginner and preliminary tracks
+- Invitation to the judge community spaces
+- “Starter Judge” badge displayed on your profile
+- Access to standard judging frameworks and guidelines
+- Opportunity to earn Credits and move to Level 2 quickly
+
+**Your focus:** learning the system, giving good feedback, building reliability.
+
+---
+
+# **LEVEL 2 — VERIFIED JUDGE (L2)**
+
+**You Unlock:**
+
+- Priority invitations for upcoming events
+- Ability to judge main tracks across categories
+- Consideration for small panel leadership roles
+- Featured appearance in Maximally newsletters or event pages
+- “Verified Judge” badge with domain tags
+- Eligible for fast promotion to Level 3 with strong performance
+
+**Your focus:** consistent depth, mentorship, and showing leadership qualities.
+
+---
+
+# **LEVEL 3 — SENIOR JUDGE (L3)**
+
+**You Unlock:**
+
+- Lead judge responsibility for prelims, semis, or category tracks
+- Featured judge spotlight on Maximally profiles
+- Invitations to advanced or specialized tracks (AI, full-stack, product, fintech, etc)
+- Access to internal programs: rubric design, mentorship sessions, speaker slots
+- “Senior Judge” badge and elevated profile ranking
+- Priority allocation for high-stakes events
+
+**Your focus:** guiding junior judges, shaping track quality, and demonstrating domain leadership.
+
+---
+
+# **LEVEL 4 — CHIEF JUDGE (L4)**
+
+**You Unlock:**
+
+- Full oversight of panels and judging operations
+- Authority to finalize rubrics, scoring frameworks, and track structures
+- Invitations to headline major Maximally events
+- Opportunities to host workshops, keynotes, or fireside chats
+- “Chief Judge” badge and premium profile placement
+- Direct influence over upcoming Maximally seasons
+
+**Your focus:** becoming a thought leader inside the evaluation ecosystem.
+
+---
+
+# **LEVEL 5 — LEGACY JUDGE (L5)**
+
+**You Unlock:**
+
+- Eternal Legacy profile on Maximally
+- Invitations to judge the biggest events and flagship finals
+- “Legacy Judge” badge — the highest honor in the ecosystem
+- Lifetime ambassador status
+- Recognition across the Maximally network and MFHOP
+- Zero judging requirement — contribute on your terms
+- Access to exclusive roundtables and private sessions
+- Ability to mentor or shape entire seasons and judging standards
+
+**Your focus:** long-term impact, inspiring the next generation, shaping innovation culture itself.
+
+---
+
+# **THE PHILOSOPHY**
+
+> As your level rises, your influence grows.
+As your influence grows, the ecosystem improves.
+This is how we standardize excellence globally.
+
+# **SECTION 7 — Your Maximally Judge Profile**
+
+Every Maximally Judge gets a public, permanent profile — your identity in the global judging ecosystem.
+
+It showcases who you are, what you’ve judged, what you’ve built, and what you bring to the next generation of innovators.
+
+Your profile grows with you.
+
+Your credibility compounds over time.
+
+Your work becomes part of your legacy.
+
+---
+
+## **WHAT YOUR PROFILE SHOWS**
+
+### **1. Your Level**
+
+Your current rank in the Maximally Judge Framework: L1 to L5.
+
+Displayed prominently as a badge.
+
+Instantly signals your expertise and experience.
+
+---
+
+### **2. Domain Tags**
+
+Precise, searchable tags that define your strengths:
+
+- AI / ML
+- Full-Stack
+- Cybersecurity
+- Product
+- Fintech
+- Data Science
+- Cloud
+- Hardware
+- AR/VR
+- Design
+- Research
+- and more.
+
+These help organizers match the right judge to the right track.
+
+---
+
+### **3. Judging Credits (Your Reputation Score)**
+
+Credits are earned every time you judge a Maximally event.
+
+They reflect:
+
+- number of events judged
+- the rounds you evaluated
+- complexity of the track
+- your role (judge → lead judge → chief judge)
+
+Credits accumulate season after season.
+
+They are your **IMDB-style record** for innovation judging.
+
+---
+
+### **4. Events You’ve Judged**
+
+A timeline of every hackathon, competition, and program you’ve judged under Maximally.
+
+Each entry shows:
+
+- event name
+- track or category
+- your role (judge / lead / chief / legacy)
+- date and season
+- badges earned
+
+Builders and organizers can see your real contribution at a glance.
+
+---
+
+### **5. Badges & Achievements**
+
+Judges earn badges like:
+
+- **MGIHS Judge (season badge)**
+- **PromptStorm Alpha Judge**
+- **Codepocalypse Winter Judge**
+- **Top Feedback Award**
+- **Panel Lead**
+- **Chief Judge Honors**
+- **Legacy Milestones**
+
+These stack across your profile — visual proof of your journey.
+
+---
+
+### **6. Professional Summary**
+
+A short display of who you are:
+
+- your role (ex: Senior Engineer at Meta)
+- what you’ve built
+- your industry experience
+- your founder or research history
+- your notable achievements
+
+This is your credibility snapshot.
+
+---
+
+### **7. Personal Links**
+
+Your profile includes:
+
+- LinkedIn
+- GitHub
+- Portfolio
+- Website
+- Research pages
+- Socials (optional)
+
+This turns your judge profile into a **mini resume** for innovation.
+
+---
+
+# **HOW THE CREDITS SYSTEM WORKS**
+
+Credits are the backbone of the Maximally Judge Framework.
+
+### **You earn credits for:**
+
+- judging events
+- leading panels
+- judging higher rounds
+- contributing workshops or mentorship
+- referring strong judges
+- designing rubrics
+- special roles in flagship seasons
+
+### **More credits = higher trust = higher tiers**
+
+This system ensures you grow based on work, not vibes.
+
+---
+
+# **THE PHILOSOPHY**
+
+> Your judge profile is your innovation identity.
+Your credits are your track record.
+Your legacy is built in public.
+
+# **SECTION 8 — How We Select Judges**
+
+We don’t collect judges.
+
+We **curate** them.
+
+Every application goes through a structured, multi-layer evaluation to ensure only credible, experienced, and value-aligned individuals become Maximally Judges.
+
+Our acceptance rate is intentionally low — because the next generation of builders deserves the highest standard of evaluation.
+
+---
+
+## **THE SELECTION FRAMEWORK**
+
+We assess every applicant across five key pillars:
+
+---
+
+### **1. Professional Background**
+
+We review your real-world experience:
+
+- roles held
+- companies worked at
+- teams led
+- products built
+- research or projects shipped
+
+Titles don’t matter.
+
+Proof of work does.
+
+---
+
+### **2. Domain Expertise**
+
+We analyze:
+
+- depth of technical or product knowledge
+- specialization (AI, product, design, infra, data, fintech, etc.)
+- visibility into strong portfolios, GitHubs, case studies, or publications
+
+Judges must understand *what they’re evaluating*.
+
+---
+
+### **3. Judging & Mentorship History**
+
+Prior involvement in any of the following boosts your tier:
+
+- hackathons
+- competitions
+- accelerators or incubators
+- workshops, teaching, mentoring
+- team leadership or reviewing work internally
+- open-source community stewardship
+
+Preference goes to those who’ve already helped people grow.
+
+---
+
+### **4. Communication & Feedback Ability**
+
+We look for:
+
+- clarity of writing
+- ability to explain reasoning
+- constructive feedback style
+- good judgment
+- balanced evaluation
+- professionalism
+
+Innovation deserves judges who can actually *communicate* insight.
+
+---
+
+### **5. Reliability & Alignment**
+
+We look for signs that you:
+
+- show up consistently
+- take commitments seriously
+- behave ethically and respectfully
+- treat builders with empathy
+- align with Maximally’s values of credibility, mentorship, and global access
+
+Judging is leadership.
+
+We only select people who act like leaders.
+
+---
+
+# **PLACEMENT INTO LEVELS**
+
+Once evaluated, applicants are placed into the level that matches their experience:
+
+- L1 or L2 → early-stage or mid-level professionals
+- L3 → senior contributors and repeat mentors
+- L4 → leaders, operators, and high-credibility industry experts
+- L5 → influencers, ecosystem builders, and globally recognized figures
+
+If your background warrants it, you may enter directly at a higher tier through our **Fast-Track Process**.
+
+---
+
+# **REVIEW CYCLE**
+
+We conduct seasonal reviews to:
+
+- adjust judge levels based on credits & performance
+- invite high-performing judges into leadership roles
+- maintain the integrity of the judging ecosystem
+
+You grow as you contribute.
+
+---
+
+# **THE STANDARD**
+
+> We accept less than 15% of judge applications.
+Quality is the foundation of credibility — and credibility is the foundation of innovation.
+
+# **SECTION 9 — FAQ**
+
+Short, direct, polished answers that maintain exclusivity + clarity.
+
+---
+
+## **Who can become a Maximally Judge?**
+
+Anyone with proven experience in building, engineering, design, research, product, or leadership.
+
+Titles don’t matter — **proof of work does**.
+
+---
+
+## **Can students apply?**
+
+Yes — but only students who have built real projects, led communities, published research, or have strong domain portfolios.
+
+Most start at **Level 1** unless they have exceptional experience.
+
+---
+
+## **Do I need prior judging experience?**
+
+Not always.
+
+If you’re early in your judging journey but have built meaningful products or research, you can start at **Level 1** and grow through credits.
+
+---
+
+## **How do I get promoted?**
+
+Judge consistently.
+
+Give high-quality feedback.
+
+Show reliability.
+
+Contribute to workshops and panels.
+
+Your level upgrades during seasonal reviews.
+
+---
+
+## **Can I skip levels?**
+
+Yes.
+
+If your background shows seniority, leadership, or ecosystem impact, you can enter at **Level 3**, **Level 4**, or even be considered for **Legacy Judge**.
+
+---
+
+## **Can I lose my judge status?**
+
+Only in cases of:
+
+- repeated no-shows
+- ghosting evaluations
+- unprofessional behavior
+- bias or misconduct
+- breaking judging confidentiality
+- violating Maximally’s values
+
+We protect the integrity of the ecosystem above all else.
+
+---
+
+## **Is judging paid?**
+
+Some events offer honorariums or partner benefits; others are volunteer-based.
+
+Legacy Judges may be invited for premium roles or keynotes depending on event scale.
+
+---
+
+## **How much time does judging take?**
+
+Usually 1–2 hours for prelims,
+
+3–4 hours for main rounds,
+
+and 4–6 hours for finals depending on event size.
+
+You choose the events you participate in.
+
+---
+
+## **Do I get a certificate or verification?**
+
+Yes — all judges get a **public profile**, **verified badge**, and **judging credits** that travel with them across seasons.
+
+---
+
+## **Can I request a specific track or domain?**
+
+Absolutely.
+
+You can select your domains during application and we match you to the right tracks.
+
+---
+
+## **Will I get access to the Maximally community?**
+
+Yes — judges get access to a private community of:
+
+- founders
+- engineers
+- designers
+- researchers
+- ecosystem operators
+
+This alone is one of the biggest perks.
+
+---
+
+# **THE FINAL CALL TO ACTION**
+
+make this bold, minimal, and high-energy:
+
+---
+
+# **BECOME A MAXIMALLY JUDGE**
+
+Set the standard for innovation.
+
+Mentor the next generation.
+
+Join the global judging movement.
+
+**[APPLY NOW]**
