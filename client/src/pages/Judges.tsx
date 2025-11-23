@@ -610,7 +610,7 @@ const Judges = () => {
                   </p>
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-cyan-900/30 to-purple-900/30 border-2 border-cyan-400 p-8">
+                <div className="minecraft-block bg-gradient-to-r from-cyan-900/80 to-purple-900/80 border-2 border-cyan-400 p-8">
                   <div className="border-l-4 border-maximally-yellow pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE RULE
@@ -722,7 +722,7 @@ const Judges = () => {
                   </div>
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-purple-900/30 to-yellow-900/30 border-2 border-maximally-yellow p-8">
+                <div className="minecraft-block bg-gradient-to-r from-purple-900/80 to-yellow-900/80 border-2 border-maximally-yellow p-8">
                   <div className="border-l-4 border-cyan-400 pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE PROMISE
@@ -822,7 +822,7 @@ const Judges = () => {
                   </div>
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-red-900/30 to-orange-900/30 border-2 border-maximally-red p-8">
+                <div className="minecraft-block bg-gradient-to-r from-red-900/80 to-orange-900/80 border-2 border-maximally-red p-8">
                   <div className="border-l-4 border-maximally-yellow pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE BOTTOM LINE
@@ -885,7 +885,7 @@ const Judges = () => {
                   })}
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-cyan-900/30 to-green-900/30 border-2 border-cyan-400 p-8 mt-8">
+                <div className="minecraft-block bg-gradient-to-r from-cyan-900/80 to-green-900/80 border-2 border-cyan-400 p-8 mt-8">
                   <div className="border-l-4 border-maximally-yellow pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE PHILOSOPHY
@@ -987,7 +987,7 @@ const Judges = () => {
                   </div>
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-yellow-900/30 to-orange-900/30 border-2 border-maximally-yellow p-8 mt-8">
+                <div className="minecraft-block bg-gradient-to-r from-yellow-900/80 to-orange-900/80 border-2 border-maximally-yellow p-8 mt-8">
                   <div className="border-l-4 border-cyan-400 pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE PHILOSOPHY
@@ -1095,7 +1095,7 @@ const Judges = () => {
                   </div>
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-red-900/30 to-pink-900/30 border-2 border-maximally-red p-8 mt-8">
+                <div className="minecraft-block bg-gradient-to-r from-red-900/80 to-pink-900/80 border-2 border-maximally-red p-8 mt-8">
                   <div className="border-l-4 border-cyan-400 pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE STANDARD
