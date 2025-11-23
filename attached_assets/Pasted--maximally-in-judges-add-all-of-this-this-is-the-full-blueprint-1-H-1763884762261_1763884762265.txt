@@ -1,0 +1,308 @@
+# maximally.in/judges
+
+---
+
+*(add all of this — this is the full blueprint)*
+
+---
+
+## **1. Hero Section (you already have most of this)**
+
+- big bold headline
+- strong subhead
+- “Apply to be a Judge” button
+- “View Verified Judges” link
+
+---
+
+## **2. Why Judges Matter (already partly there)**
+
+- a short block explaining the *problem*
+- a block explaining the *vision*
+- -> you already have this, keep it.
+
+---
+
+## **3. The Judge Level System (New Section)**
+
+A short intro paragraph:
+
+> “Maximally uses a 5-level judging framework — the world’s first standardized hierarchy for innovation evaluation.
+> 
+> 
+> Your level reflects your expertise, experience, and contribution to the ecosystem.
+> 
+> Everyone starts at a home level, and can rise through the ranks over time.”
+> 
+
+then list the 5 levels:
+
+- Level 1: Starter Judge
+- Level 2: Verified Judge
+- Level 3: Senior Judge
+- Level 4: Chief Judge
+- Level 5: Legacy Judge
+
+---
+
+## **4. Criteria For Each Level (New + crucial)**
+
+Add a subheading:
+
+### **Judge Level Criteria**
+
+then create a mini-card for each level with:
+
+- **Who this is for**
+- **What we look for**
+- **Typical profile examples**
+- **What they can judge in Maximally**
+
+this is super important because people will self-identify instantly.
+
+(I’ve already written all these for you above — just paste them.)
+
+---
+
+## **5. Climbing the Ladder (New Section)**
+
+Add a section titled:
+
+### **How You Grow As A Maximally Judge**
+
+include:
+
+### **Progression Factors**
+
+- judging credits
+- feedback quality score
+- reliability score
+- community contribution
+
+### **Promotion Windows**
+
+- L1 → L2: after judging 1–2 events + strong feedback
+- L2 → L3: after multiple events + proven domain depth
+- L3 → L4: after leading panels + ecosystem impact
+- L4 → L5: rare, long-term, high-impact individuals
+
+### **Review Cycle**
+
+> “We review judge levels after every Maximally Season. Tiers are upgraded based on contribution, performance, and leadership.”
+> 
+
+---
+
+## **6. Fast Track Eligibility (New Section)**
+
+Title:
+
+### **Fast-Track Placement**
+
+This tells high-level people they won’t be put in Level 1.
+
+Add:
+
+- **Fast-track to Level 3**
+    - staff engineers, founders, seasoned mentors
+- **Fast-track to Level 4**
+    - directors, VPs, CTOs, senior academics
+- **Direct Legacy Level**
+    - exceptional global figures with ecosystem impact
+    - invite-only or special evaluation
+
+One line:
+
+> "If your profile demonstrates exceptional credibility, we place you directly into the level you deserve — no need to climb from Level 1."
+> 
+
+---
+
+## **7. Judge Responsibilities (New Section)**
+
+Title:
+
+### **What We Expect From Every Maximally Judge**
+
+Add bullets:
+
+- show up on time
+- score all assigned submissions
+- give specific, helpful feedback
+- keep judging unbiased
+- no conflicts of interest
+- treat student & youth founders with respect
+- communicate if unavailable
+- protect confidentiality where required
+
+this helps reduce ghosting 10x.
+
+---
+
+## **8. Perks & Unlocks Per Level (New Section)**
+
+Title:
+
+### **What You Unlock As You Level Up**
+
+example structure:
+
+- **Level 1**
+    - judge beginner tracks
+    - verified profile
+    - certificate
+- **Level 2**
+    - priority invitations
+    - more complex tracks
+    - featured on newsletters
+- **Level 3**
+    - lead panels
+    - design challenges
+    - featured judge badges
+- **Level 4**
+    - oversee judging at major events
+    - keynote opportunities
+    - access to partner programs
+- **Level 5**
+    - global ambassador status
+    - permanent legacy profile
+    - guaranteed spotlight in major events
+
+this gives people motivation to climb.
+
+---
+
+## **9. Judge Profiles & Credits System (New Section)**
+
+Title:
+
+### **Your Judge Profile**
+
+explain:
+
+- every judge gets a public profile
+- it shows:
+    - level
+    - domains (AI, product, fintech, design…)
+    - events judged
+    - judging credits
+    - badges & seasons
+
+1 line:
+
+> “Your judge identity becomes a permanent, portable part of your professional story.”
+> 
+
+---
+
+## **10. How We Review Applications (New Section)**
+
+Title:
+
+### **How We Select Judges**
+
+Add simple bullets:
+
+- review of professional background
+- past projects / products shipped
+- judging experience
+- domain depth
+- ability to mentor
+- credibility & track record
+- reliability indicators
+
+And one bold line:
+
+> “We accept less than 15% of judge applications.”
+> 
+
+This adds exclusivity.
+
+---
+
+## **11. FAQ (Optional but boosts conversion)**
+
+Add stuff like:
+
+- “Can students become judges?” → yes, but typically at Level 1 if they have real shipped projects
+- “How do I get promoted?”
+- “What is the time commitment?”
+- “Do I get paid?” (make your call)
+- “Can I skip levels?”
+- “Can I lose my judge status?”
+
+---
+
+## **12. Call to Action (you already have)**
+
+A final CTA at the bottom:
+
+### **Become a Maximally Judge**
+
+button: **Apply Now**
+
+---
+
+# ⚡ Additional extras (very good ideas you can add)
+
+## **A. “Judge Season Badges”**
+
+like:
+
+- MGIHS 2025
+- PromptStorm Alpha Judge
+- Codepocalypse Winter Judge
+
+collectible. feels premium.
+
+## **B. “Inactive Status”**
+
+If a judge doesn’t judge for 2 seasons → mark them inactive.
+
+Still keeps credibility but explains silence.
+
+## **C. “Judge Hall of Fame”**
+
+Your top 10 judges each season.
+
+## **D. “Toxicity / Ghosting Policy”**
+
+Soft line: we protect the experience → unreliable judges lose access.
+
+---
+
+# 🧨 TL;DR — WHAT TO ADD EXACTLY
+
+**You should add these sections:**
+
+1. Judge Levels Overview
+2. Level-by-Level Criteria
+3. How Judges Grow (progression system)
+4. Fast-Track Eligibility
+5. Judge Responsibilities
+6. Perks per Level
+7. Judge Profile / Credits System
+8. How We Select Judges
+9. FAQ
+
+add these and Maximally becomes the first proper “judge credentialing system” on the internet.
+
+---
+
+[**SECTION 1 — The Judge Level Framework (Overview)**](https://www.notion.so/SECTION-1-The-Judge-Level-Framework-Overview-2b0ecfba8afb802c93c5de1beb175ad4?pvs=21)
+
+[**SECTION 2 — Criteria For Each Level**](https://www.notion.so/SECTION-2-Criteria-For-Each-Level-2b0ecfba8afb80f98145f07c6696083f?pvs=21)
+
+[**SECTION 3 — How Judges Grow Inside Maximally**](https://www.notion.so/SECTION-3-How-Judges-Grow-Inside-Maximally-2b0ecfba8afb8039a4ffc411e2e39b3c?pvs=21)
+
+[**SECTION 4 — Fast-Track & Direct Placement**](https://www.notion.so/SECTION-4-Fast-Track-Direct-Placement-2b0ecfba8afb80acaf4fdc8c9f3730b9?pvs=21)
+
+[**SECTION 5 — What We Expect From Every Maximally Judge**](https://www.notion.so/SECTION-5-What-We-Expect-From-Every-Maximally-Judge-2b0ecfba8afb80e3a73ff6eaca9f1c52?pvs=21)
+
+[**SECTION 6 — What You Unlock As You Level Up**](https://www.notion.so/SECTION-6-What-You-Unlock-As-You-Level-Up-2b0ecfba8afb80eab34fd4d717403f11?pvs=21)
+
+[**SECTION 7 — Your Maximally Judge Profile**](https://www.notion.so/SECTION-7-Your-Maximally-Judge-Profile-2b0ecfba8afb80269ad2cc3e13749048?pvs=21)
+
+[**SECTION 8 — How We Select Judges**](https://www.notion.so/SECTION-8-How-We-Select-Judges-2b0ecfba8afb80bf9d4dd877179b3572?pvs=21)
+
+[**SECTION 9 — FAQ**](https://www.notion.so/SECTION-9-FAQ-2b0ecfba8afb80e2867af9392842d66f?pvs=21)
