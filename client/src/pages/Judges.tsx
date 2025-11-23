@@ -884,7 +884,7 @@ const Judges = () => {
                   })}
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-cyan-900/80 to-green-900/80 border-2 border-cyan-400 p-8 mt-8">
+                <div className="minecraft-block from-cyan-900/80 to-green-900/80 border-2 border-cyan-400 p-8 mt-8 bg-[#090c14]">
                   <div className="border-l-4 border-maximally-yellow pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE PHILOSOPHY
