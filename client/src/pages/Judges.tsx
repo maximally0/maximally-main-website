@@ -821,7 +821,7 @@ const Judges = () => {
                   </div>
                 </div>
 
-                <div className="minecraft-block bg-gradient-to-r from-red-900/80 to-orange-900/80 border-2 border-maximally-red p-8">
+                <div className="minecraft-block from-red-900/80 to-orange-900/80 border-2 border-maximally-red p-8 bg-[#090c14]">
                   <div className="border-l-4 border-maximally-yellow pl-6">
                     <p className="font-press-start text-lg text-white mb-4">
                       THE BOTTOM LINE
