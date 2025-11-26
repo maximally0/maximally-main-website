@@ -1,0 +1,288 @@
+Got you — here’s a **clean, developer-ready write-up** that tells your designer to build a **Maximally landing page inspired by Unstop’s UI**, but with your own *builder-first*, *hackathon-energy*, *cleaner*, *bolder* version of it.
+
+This is NOT a clone.
+This is a **reinterpretation** of Unstop’s structure, layout logic, and UX patterns — but in Maximally’s identity.
+
+Copy-paste this to your developer/designer.
+
+---
+
+# 🚀 **PROMPT FOR DEVELOPER — MAXIMALLY LANDING PAGE (UNSTOP-STYLE, OUR VERSION)**
+
+We’re redesigning the Maximally landing page using **Unstop’s UI structure and UX patterns**, but adapted to our brand.
+
+Unstop is a general opportunity portal.
+Maximally is a **tech + builders-only opportunity platform**.
+So the layout should feel familiar like Unstop, but visually sharper, simpler, more modern, and more “builder/hacker” oriented.
+
+The design direction:
+
+* Clean like Unstop
+* Sections arranged like Unstop
+* But visually more premium, more minimal, darker, and more tech-forward
+* Absolutely ZERO copying of Unstop graphics or text — only the *structure* and *workflow style*
+
+---
+
+# 🧩 **OVERALL STYLE (VERY IMPORTANT)**
+
+### **Think:**
+
+Unstop’s clarity + navigation
+Replit’s hacker aesthetic
+Figma’s spacing + typography
+MLH’s energy
+Maximally brand identity
+
+### Core design traits:
+
+* Light mode or light-gray mode (not fully dark) like Unstop
+* White, grayscale, subtle gradients
+* No loud backgrounds
+* Simple iconography
+* High contrast
+* Big, readable typography
+* Category chips + horizontal scroll sections
+* Card-based UI everywhere
+* Very “clean professional product” look
+
+---
+
+# 🧱 **STRUCTURE (FOLLOW UNSTOP'S FLOW, BUT OUR CONTENT)**
+
+Use Unstop's UX layout logic:
+
+## **1. Top Navbar**
+
+Unstop-like:
+Left = logo
+Right = Explore Opportunities | Categories | Community | For Organizers | Login | Sign Up
+
+Flat, clean, white background, slight shadow.
+
+---
+
+## **2. Hero Section (Unstop-style)**
+
+Unstop has a main hero with illustration + search.
+
+We want our version:
+
+**Left Side (text):**
+
+* Big headline: “the opportunity platform for young builders”
+* Subtext: “find hackathons, accelerators, fellowships, competitions, gigs, and more — built for developers, founders, and creators.”
+* Two main buttons: Explore opportunities / List your program
+
+**Right Side:**
+Instead of an illustration, use a card-wall or modular tech shapes.
+Light, minimal, but energetic — NOT cartoonish.
+
+---
+
+## **3. Search Bar (like Unstop)**
+
+Centered under hero.
+Wide, rounded search bar for:
+“Search hackathons, fellowships, accelerators…”
+
+Below it, category chips (scrollable on mobile).
+
+---
+
+## **4. Category Grid (Influenced by Unstop’s category blocks)**
+
+9 categories:
+
+* Hackathons
+* Startup Competitions
+* AI & Tech Challenges
+* Fellowships
+* Accelerators
+* Bootcamps
+* Grants & Funding
+* Internships & Startup Gigs
+* Workshops & Events
+
+Each category = card with:
+
+* minimal icon
+* name
+* small description
+* Unstop-style light-gray card with subtle hover
+
+---
+
+## **5. Featured Opportunities Section (Unstop-style carousels)**
+
+Use **horizontal scroll carousels** just like Unstop:
+
+* Trending Now
+* Closing Soon
+* Popular This Week
+
+Each card includes:
+
+* logo / thumbnail
+* category tag
+* title
+* organizer
+* deadline
+* register button
+
+Cards should be lighter and sharper; no clutter.
+
+---
+
+## **6. Filter Bar (Unstop’s filter pattern)**
+
+Below featured opportunities, add an “Explore All Opportunities” section with a filter bar:
+
+* Category
+* Difficulty
+* Prize
+* Online/Offline
+* Tags
+
+Clean dropdowns + chip filters like Unstop.
+
+---
+
+## **7. Info Blocks / Value Proposition**
+
+This replaces Unstop’s “Why Choose Us” section.
+
+3-column layout:
+
+1. discover in one place
+2. register once, apply everywhere
+3. run programs with zero setup
+
+Use minimal vector icons.
+
+---
+
+## **8. Ecosystem Section (Unstop has similar partner/solution sections)**
+
+Cards for:
+
+* Maximally Events
+* Maximally Community
+* Federation
+* Mentor Network
+* Micro-challenges
+* Maximally Fund
+
+Grid of simple cards like Unstop's “Solutions” layout.
+
+---
+
+## **9. Trust Section (Unstop has big logos area)**
+
+Logos of:
+Google, Microsoft, Meta, McKinsey, Visa, Replit, Atlassian, FedEx, Amazon.
+
+Use Unstop’s grid layout style but with Maximally branding.
+
+---
+
+## **10. For Organizers (Match Unstop’s “For Recruiters” blocks)**
+
+Simple two-card layout:
+
+* Build your microsite
+* Manage registrations and analytics
+
+Each with icon, short description, clean card UI.
+
+---
+
+## **11. Dual CTA Section (Unstop often has stacked CTAs)**
+
+Two blocks:
+
+**Left Card:**
+For Builders
+Button: Browse opportunities
+
+**Right Card:**
+For Organizers
+Button: List your program
+
+Same sizing & spacing concepts as Unstop.
+
+---
+
+## **12. Footer (Use Unstop’s structured footer style)**
+
+4-column structure:
+
+* Opportunities
+* For Organizers
+* Company
+* Social
+
+White background, thin dividers, small text.
+
+---
+
+# 🎨 **VISUAL GUIDELINES (MAKE IT LOOK LIKE A PREMIUM VERSION OF UNSTOP)**
+
+### Colors
+
+* White
+* Light Gray (#F7F7F7)
+* Black text (#111111)
+* Soft blue/purple accents (#6366F1 or #4F46E5)
+* Light shadows only
+* No heavy gradients
+
+### Typography
+
+* Inter / Space Grotesk / Söhne / Neue Haas
+* Big, bold headings
+* Clean body text
+* Neutral, tech-forward appearance
+
+### Card Style
+
+* Rounded corners (10px)
+* Slight shadow
+* Border #E5E5E5
+* Hover = lift + shadow increase
+
+### Spacing
+
+* 64–120px vertical padding between sections
+* 20–32px card padding
+* Very breathable layout
+
+### Tone
+
+Professional
+Tech-first
+Minimal
+Functional
+Slightly futuristic
+Inspired by Unstop, but unmistakably Maximally
+
+---
+
+# 📌 **WHAT YOU SHOULD DELIVER**
+
+* A complete landing page redesign
+* Following Unstop’s structural logic
+* But using Maximally’s brand, vibe, categories, and content
+* Clean, elegant, builder-first design
+* Figma components clearly organized
+* Desktop + Mobile versions
+
+---
+
+If you want, I can make:
+
+🔥 A shorter version (for Slack)
+🔥 A “Rishul-style very informal” version
+🔥 A version your dev can follow **section by section with exact spacing + pixel directions**
+
+Just say the word.

@@ -1,18 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, Terminal, Mail, ChevronDown, User, LogOut, Bell } from "lucide-react";
+import { Menu, X, Terminal, ChevronDown, User, LogOut } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
-import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
-// import NotificationPanel from "./NotificationPanel"; // REMOVED - Notification system disabled
-import { getAuthHeaders } from "@/lib/auth";
-
-// Pixelated User Icon Component
-const PixelUserIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
-  <svg fill="currentColor" viewBox="0 0 22 22" className={className} xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 2H18V3H19V4H20V18H19V19H18V20H4V19H3V18H2V4H3V3H4V2M4 16H5V15H7V14H15V15H17V16H18V5H17V4H5V5H4V16M16 18V17H14V16H8V17H6V18H16M9 5H13V6H14V7H15V11H14V12H13V13H9V12H8V11H7V7H8V6H9V5M12 8V7H10V8H9V10H10V11H12V10H13V8H12Z" />
-  </svg>
-);
+import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,35 +11,24 @@ const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  // const [notificationPanelOpen, setNotificationPanelOpen] = useState(false); // REMOVED
-  const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
   const profileDropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Get user and profile first
   const { user, profile, loading, refreshProfile } = useAuth();
-  const { unreadCount } = useJudgeUnreadCount();
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-
-      // Update scrolled state for styling
       if (currentScrollY > 10) {
         setIsScrolled(true);
       } else {
         setIsScrolled(false);
       }
-
-      // Hide/show navbar based on scroll direction
       if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        // Scrolling down & past 100px - hide navbar
         setIsVisible(false);
       } else {
-        // Scrolling up - show navbar
         setIsVisible(true);
       }
-
       setLastScrollY(currentScrollY);
     };
 
@@ -56,64 +36,32 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  const fetchUnreadCount = async () => {
-    try {
-      const headers = await getAuthHeaders();
-      const response = await fetch('/api/notifications/unread-count', { headers });
-      const data = await response.json();
-      if (data.success) {
-        setNotificationUnreadCount(data.count);
-      }
-    } catch (error) {
-      console.error('Error fetching unread count:', error);
-    }
-  };
-
-  // Fetch unread notification count
-  useEffect(() => {
-    if (user) {
-      fetchUnreadCount();
-      // Poll every 30 seconds
-      const interval = setInterval(fetchUnreadCount, 30000);
-      return () => clearInterval(interval);
-    }
-  }, [user]);
-
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isMenuOpen]);
 
-  // Debug: Log profile data
-  console.log('Navbar profile data:', { username: profile?.username, email: user?.email, fullProfile: profile });
-
   const isLoggedIn = !!user && !loading;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : '/profile';
-  const isJudge = profile?.role === 'judge';
-  const isOrganizer = (profile?.role as string) === 'organizer';
 
-  // Refresh profile when user changes to ensure judge role is detected
   useEffect(() => {
     if (user && !loading) {
       refreshProfile();
     }
   }, [user?.id]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
         setProfileDropdownOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -124,10 +72,11 @@ const Navbar = () => {
     navigate('/');
   };
 
-  const menuItems = [
-    { path: "/events", label: "JOIN A HACKATHON", color: "#E50914" },
-    { path: "/host-hackathon", label: "HOST A HACKATHON", color: "#FFD700" },
-    { path: "/contact", label: "CONTACT", color: "#FF2B2B" }
+  const navItems = [
+    { path: "/events", label: "Opportunities" },
+    { path: "/categories", label: "Categories" },
+    { path: "/community", label: "Community" },
+    { path: "/host-hackathon", label: "For Organizers" },
   ];
 
   return (
@@ -136,267 +85,181 @@ const Navbar = () => {
         transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
         transition: 'transform 0.3s ease-in-out'
       }}
-      className={`fixed top-0 w-full z-50 ${
-        isScrolled ? "py-2 sm:py-3 bg-black/98 backdrop-blur-md border-b border-maximally-red/30 shadow-lg" : "py-3 sm:py-4 bg-black/95 backdrop-blur-md border-b border-gray-800/50"
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled 
+          ? "py-3 bg-black/95 backdrop-blur-md border-b border-white/10" 
+          : "py-4 bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-3 sm:px-4">
+      <div className="container mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group">
-            <div className="minecraft-block bg-maximally-red p-1.5 sm:p-2 mr-2 sm:mr-3 group-hover:bg-maximally-yellow transition-colors">
-              <Terminal className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-black" />
+          {/* Logo - Left */}
+          <Link to="/" className="flex items-center group" data-testid="link-home">
+            <div className="bg-maximally-red p-1.5 mr-2 group-hover:bg-maximally-yellow transition-colors">
+              <Terminal className="h-4 w-4 sm:h-5 sm:w-5 text-black" />
             </div>
-            <span className="font-press-start text-white text-xs sm:text-sm md:text-base lg:text-lg group-hover:text-maximally-red transition-colors">
+            <span className="font-press-start text-white text-xs sm:text-sm tracking-wider group-hover:text-maximally-red transition-colors">
               MAXIMALLY
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            {menuItems.map((item) => (
+          {/* Center Navigation - Desktop */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className="relative font-press-start text-[10px] lg:text-xs px-2 lg:px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group"
+                className="text-sm text-gray-300 hover:text-white transition-colors duration-200 font-medium"
+                data-testid={`link-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-red transition-all duration-200 group-hover:w-full"></span>
               </Link>
             ))}
+          </div>
+
+          {/* Right Section - Auth */}
+          <div className="hidden lg:flex items-center space-x-4">
             {loading ? (
-              <div className="font-press-start text-xs px-4 py-2 text-gray-500">
-                LOADING...
-              </div>
+              <div className="text-sm text-gray-500">Loading...</div>
             ) : isLoggedIn ? (
-              <>
-                {isJudge && (
-                  <>
-                    <Link
-                      to="/judge-dashboard"
-                      className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-red transition-colors duration-200 group ml-2"
-                      data-testid="button-judge-dashboard"
-                    >
-                      JUDGE
-                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-red transition-all duration-200 group-hover:w-full"></span>
-                    </Link>
-                    <Link
-                      to="/judge-inbox"
-                      className="relative p-2 text-white hover:text-cyan-400 transition-colors duration-200 ml-2"
-                      data-testid="button-judge-inbox"
-                      aria-label={`Judge inbox${unreadCount > 0 ? ` - ${unreadCount} unread` : ''}`}
-                      title={`Judge Inbox${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
-                    >
-                      <Mail className="h-5 w-5" />
-                      {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-maximally-red text-white text-[10px] font-press-start px-1.5 py-0.5 rounded-sm min-w-[18px] text-center leading-none shadow-lg">
-                          {unreadCount > 99 ? '99+' : unreadCount}
-                        </span>
-                      )}
-                    </Link>
-                  </>
-                )}
-                {isOrganizer && (
-                  <Link
-                    to="/organizer/dashboard"
-                    className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-yellow transition-colors duration-200 group ml-2"
-                    data-testid="button-organizer-dashboard"
-                  >
-                    ORGANIZER
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-yellow transition-all duration-200 group-hover:w-full"></span>
-                  </Link>
-                )}
-                {/* Notification Bell - DISABLED */}
-                {/* <button
-                  onClick={() => setNotificationPanelOpen(true)}
-                  className="relative p-2 text-white hover:text-maximally-yellow transition-colors duration-200 ml-2"
-                  aria-label={`Notifications${notificationUnreadCount > 0 ? ` - ${notificationUnreadCount} unread` : ''}`}
-                  title={`Notifications${notificationUnreadCount > 0 ? ` (${notificationUnreadCount} unread)` : ''}`}
+              <div className="relative" ref={profileDropdownRef}>
+                <button
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors"
+                  data-testid="button-profile-dropdown"
                 >
-                  <Bell className="h-5 w-5" />
-                  {notificationUnreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-maximally-red text-white text-[10px] font-press-start px-1.5 py-0.5 rounded-sm min-w-[18px] text-center leading-none shadow-lg animate-pulse">
-                      {notificationUnreadCount > 99 ? '99+' : notificationUnreadCount}
-                    </span>
-                  )}
-                </button> */}
-                <div className="relative ml-4" ref={profileDropdownRef}>
-                  <button
-                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="group relative"
-                    data-testid="button-profile-dropdown"
-                    aria-label="User profile"
-                  >
+                  <div className="w-8 h-8 rounded-full bg-maximally-red/20 border border-maximally-red/50 flex items-center justify-center overflow-hidden">
                     {profile?.avatar_url ? (
-                      <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-maximally-red transition-colors duration-200 overflow-hidden" style={{ imageRendering: 'pixelated' }}>
-                        <img 
-                          src={profile.avatar_url} 
-                          alt={profile.username || user?.email || 'User'} 
-                          className="w-full h-full object-cover"
-                          style={{ imageRendering: 'pixelated' }}
-                          onError={(e) => {
-                            // Fallback if image fails to load
-                            e.currentTarget.style.display = 'none';
-                            if (e.currentTarget.parentElement) {
-                              e.currentTarget.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-maximally-red text-white font-press-start text-lg">${(profile?.username || user?.email || 'U')[0].toUpperCase()}</div>`;
-                            }
-                          }}
-                        />
-                      </div>
+                      <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-10 h-10 minecraft-block border-2 group-hover:border-maximally-red transition-colors duration-200 flex items-center justify-center bg-maximally-red/20" style={{ borderColor: '#2a2a2a' }}>
-                        {profile?.username || user?.email ? (
-                          <span className="font-press-start text-lg text-maximally-red">
-                            {(profile?.username || user?.email || 'U')[0].toUpperCase()}
-                          </span>
-                        ) : (
-                          <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-maximally-red transition-colors duration-200" />
-                        )}
-                      </div>
+                      <User className="w-4 h-4 text-maximally-red" />
                     )}
-                  </button>
-                  {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-56 minecraft-block border-2 border-maximally-red shadow-2xl shadow-maximally-red/30 z-50 overflow-hidden" style={{ backgroundColor: '#0a0a0a' }}>
-                      <div className="px-5 py-4 border-b-2 border-maximally-red/40" style={{ backgroundColor: '#121212' }}>
-                        <p className="font-press-start text-[9px] text-gray-500 mb-1.5">SIGNED IN AS</p>
-                        <p className="font-press-start text-xs text-white truncate">
-                          {profile?.username ? `@${profile.username}` : (user?.email?.split('@')[0]?.toUpperCase() || 'USER')}
-                        </p>
-                      </div>                      <div className="py-2">
-                        <Link
-                          to={profileUrl}
-                          className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-maximally-red hover:text-black transition-all duration-200 group"
-                          onClick={() => setProfileDropdownOpen(false)}
-                        >
-                          <User className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                          <span>MY PROFILE</span>
-                        </Link>
-                        <button
-                          onClick={handleSignOut}
-                          className="w-full flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-maximally-red hover:text-black transition-all duration-200 group"
-                        >
-                          <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                          <span>SIGN OUT</span>
-                        </button>
-                      </div>
+                  </div>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-black/95 backdrop-blur-md border border-white/10 rounded-md shadow-xl z-50">
+                    <div className="px-4 py-3 border-b border-white/10">
+                      <p className="text-xs text-gray-500">Signed in as</p>
+                      <p className="text-sm text-white truncate">
+                        {profile?.username || user?.email?.split('@')[0]}
+                      </p>
                     </div>
-                  )}
-                </div>
-              </>
+                    <div className="py-1">
+                      <Link
+                        to={profileUrl}
+                        className="flex items-center space-x-2 px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+                        onClick={() => setProfileDropdownOpen(false)}
+                        data-testid="link-my-profile"
+                      >
+                        <User className="w-4 h-4" />
+                        <span>My Profile</span>
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center space-x-2 px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+                        data-testid="button-sign-out"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
-              <Link
-                to="/login"
-                className="group ml-4"
-                data-testid="button-join"
-                aria-label="Sign in"
-              >
-                <div className="w-10 h-10 minecraft-block border-2 group-hover:border-maximally-red transition-colors duration-200 flex items-center justify-center" style={{ backgroundColor: '#121212', borderColor: '#2a2a2a' }}>
-                  <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-maximally-red transition-colors duration-200" />
-                </div>
-              </Link>
+              <>
+                <Link
+                  to="/login"
+                  className="text-sm text-gray-300 hover:text-white transition-colors"
+                  data-testid="link-login"
+                >
+                  Login
+                </Link>
+                <Link to="/signup" data-testid="link-signup">
+                  <Button className="bg-maximally-red hover:bg-maximally-red/90 text-white text-sm px-5">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
             )}
           </div>
 
-          {/* Mobile Menu Button & Theme Toggle */}
-          <div className="flex items-center space-x-2 md:hidden">
-            {/* Mobile Menu Toggle */}
-            <button
-              className="pixel-button bg-maximally-red text-black p-1.5 sm:p-2 hover:bg-maximally-yellow transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMenuOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Menu className="h-4 w-4 sm:h-5 sm:w-5" />}
-            </button>
-          </div>
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden p-2 text-white hover:text-maximally-red transition-colors"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+            data-testid="button-mobile-menu"
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-[60px] sm:top-[70px] bg-black z-40">
-            <div className="pixel-grid-bg absolute inset-0 opacity-20"></div>
-            <div className="container mx-auto px-4 py-6 sm:py-8 relative z-10">
-              <div className="grid grid-cols-1 gap-3 sm:gap-4 max-w-sm mx-auto">
-                {menuItems.map((item) => (
+          <div className="lg:hidden fixed inset-0 top-[60px] bg-black/98 backdrop-blur-md z-40">
+            <div className="container mx-auto px-6 py-8">
+              <div className="flex flex-col space-y-6">
+                {navItems.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className="pixel-button bg-maximally-red text-black font-press-start text-center py-3 sm:py-4 px-4 sm:px-6 text-xs sm:text-sm hover:bg-maximally-yellow transition-all duration-300 hover:scale-105"
+                    className="text-lg text-white hover:text-maximally-red transition-colors py-2 border-b border-white/10"
+                    data-testid={`link-mobile-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     {item.label}
                   </Link>
                 ))}
-                {loading ? (
-                  <div className="pixel-button bg-gray-600 text-gray-400 font-press-start text-center py-4 px-6">
-                    LOADING...
-                  </div>
-                ) : isLoggedIn ? (
-                  <div className="space-y-4">
-                    {isJudge && (
-                      <>
-                        <Link
-                          to="/judge-dashboard"
-                          onClick={() => setIsMenuOpen(false)}
-                          className="pixel-button bg-maximally-red text-white font-press-start text-center py-4 px-6 hover:bg-maximally-yellow hover:text-black transition-all duration-300 hover:scale-105 block"
-                          data-testid="button-judge-dashboard-mobile"
-                        >
-                          JUDGE DASHBOARD
-                        </Link>
-                        <Link
-                          to="/judge-inbox"
-                          onClick={() => setIsMenuOpen(false)}
-                          className="pixel-button bg-cyan-600 text-white font-press-start text-center py-4 px-6 hover:bg-cyan-700 transition-all duration-300 hover:scale-105 block relative"
-                          data-testid="button-judge-inbox-mobile"
-                        >
-                          JUDGE INBOX
-                          {unreadCount > 0 && (
-                            <span className="ml-2 bg-maximally-red text-maximally-yellow text-xs font-press-start px-2 py-0.5 rounded-sm">
-                              {unreadCount > 99 ? '99+' : unreadCount}
-                            </span>
-                          )}
-                        </Link>
-                      </>
-                    )}
-                    {isOrganizer && (
+                <div className="pt-4 flex flex-col space-y-4">
+                  {loading ? (
+                    <div className="text-gray-500">Loading...</div>
+                  ) : isLoggedIn ? (
+                    <>
                       <Link
-                        to="/organizer/dashboard"
+                        to={profileUrl}
                         onClick={() => setIsMenuOpen(false)}
-                        className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red hover:text-white transition-all duration-300 hover:scale-105 block"
-                        data-testid="button-organizer-dashboard-mobile"
+                        className="text-lg text-white hover:text-maximally-red transition-colors"
+                        data-testid="link-mobile-profile"
                       >
-                        ORGANIZER DASHBOARD
+                        My Profile
                       </Link>
-                    )}
-                    <Link
-                      to={profileUrl}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105 block"
-                      data-testid="button-profile-mobile"
-                    >
-                      PROFILE
-                    </Link>
-                  </div>
-                ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red transition-all duration-300 hover:scale-105"
-                    data-testid="button-join-mobile"
-                  >
-                    JOIN
-                  </Link>
-                )}
+                      <button
+                        onClick={() => { handleSignOut(); setIsMenuOpen(false); }}
+                        className="text-left text-lg text-gray-400 hover:text-white transition-colors"
+                        data-testid="button-mobile-sign-out"
+                      >
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-lg text-gray-300 hover:text-white transition-colors"
+                        data-testid="link-mobile-login"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/signup"
+                        onClick={() => setIsMenuOpen(false)}
+                        data-testid="link-mobile-signup"
+                      >
+                        <Button className="w-full bg-maximally-red hover:bg-maximally-red/90 text-white">
+                          Sign Up
+                        </Button>
+                      </Link>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         )}
       </div>
-
-      {/* Notification Panel - DISABLED */}
-      {/* <NotificationPanel
-        isOpen={notificationPanelOpen}
-        onClose={() => setNotificationPanelOpen(false)}
-      /> */}
     </nav>
   );
 };

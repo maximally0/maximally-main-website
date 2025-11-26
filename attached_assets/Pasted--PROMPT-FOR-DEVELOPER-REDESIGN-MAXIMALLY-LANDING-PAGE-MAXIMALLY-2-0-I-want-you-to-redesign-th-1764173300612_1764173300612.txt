@@ -1,0 +1,226 @@
+🚀 PROMPT FOR DEVELOPER — REDESIGN MAXIMALLY LANDING PAGE (MAXIMALLY 2.0)
+
+I want you to redesign the entire Maximally landing page into a clean, minimal, world-class UI with UI/UX as the top priority.
+
+The new Maximally is an opportunity platform for young builders (developers, founders, designers, creators), focused on tech/startup/digital programs.
+
+We want the landing page to feel:
+
+futuristic
+
+clean
+
+structured
+
+minimal
+
+builder-first
+
+high-contrast
+
+grid-based
+
+with lots of breathing space
+
+simple components (to keep dev light)
+
+Avoid clutter. Avoid “busy” UI. Avoid corporate/boring Unstop style.
+
+🔥 FINAL CATEGORY SYSTEM (USE THESE ON HOMEPAGE)
+
+Please use these 9 categories in a clean 3×3 grid:
+
+Hackathons
+
+Startup Competitions
+
+AI & Tech Challenges
+
+Fellowships
+
+Accelerators
+
+Bootcamps
+
+Grants & Funding
+
+Internships & Startup Gigs
+
+Workshops & Events
+
+Each card should have:
+
+icon
+
+title
+
+tiny 1-line subtext
+
+subtle border
+
+hover lift + soft glow
+
+🧩 FULL LANDING PAGE LAYOUT (SECTION BY SECTION)
+1. NAVBAR
+
+Minimal, thin, clean
+
+Left: Maximally wordmark
+
+Center: Opportunities | Categories | Community | For Organizers
+
+Right: Login + Sign Up button
+
+Transparent on hero, solid on scroll
+
+2. HERO SECTION
+
+Big, clean, center-aligned.
+
+Headline:
+“the opportunity platform for young builders”
+
+Subtext:
+“discover hackathons, startup competitions, fellowships, accelerators, tech challenges, and more — curated for developers, creators, and founders.”
+
+Buttons:
+
+Explore opportunities
+
+List your program
+
+Background aesthetic:
+Option A: parallax grid of floating cards
+Option B: subtle gradient with glowing tech shapes
+
+Lots of spacing. Big typography.
+
+3. CATEGORY GRID (IMPORTANT)
+
+Centered, 3×3 grid with the 9 categories above.
+Equal card size, breathable spacing.
+
+4. FEATURED OPPORTUNITIES (CAROUSEL)
+
+Horizontal scroll of opportunity cards:
+
+image/logo
+
+category tag
+
+title
+
+deadline
+
+prize/perks
+
+Clean and premium looking.
+
+5. SEARCH + FILTER BAR
+
+A wide search bar (full-width or centered).
+
+Below it: pill-shaped filter chips:
+
+hackathons
+
+ai/tech
+
+fellowships
+
+accelerators
+
+funding
+
+gigs
+
+Clean and simple.
+
+6. “WHY MAXIMALLY” SECTION
+
+3 cards describing the core value:
+
+discover everything in one place
+
+register once, apply everywhere
+
+run programs with zero setup
+
+Minimal, grayscale aesthetic.
+
+7. ECOSYSTEM SECTION
+
+Use icons, small cards:
+
+Maximally Events
+
+Maximally Community
+
+Federation of Organizers
+
+Mentor & Judge Network
+
+Micro-challenges
+
+Maximally Fund
+
+Uniform spacing and layout.
+
+8. TRUST INDICATORS
+
+Logos of mentors/judges from:
+Google, Meta, Microsoft, McKinsey, Replit, Amazon, Visa, FedEx, Atlassian, etc.
+
+Below that:
+“Used by 100+ schools, colleges, clubs, and communities.”
+
+Grayscale logos — subtle, premium.
+
+9. DUAL CTA SECTION
+
+Two big side-by-side cards:
+
+For Builders:
+“ready to find your next opportunity?”
+Button: Browse opportunities
+
+For Organizers:
+“host your hackathon, fellowship, or accelerator. build a microsite in minutes.”
+Button: List your program
+
+10. COMMUNITY CTA
+
+Full-width, slight gradient or pattern.
+
+“join thousands of builders shaping the future.”
+Button: Join the community
+
+11. FOOTER
+
+4-column minimal footer:
+
+Opportunities
+
+hackathons
+fellowships
+accelerators
+bootcamps
+funding
+gigs
+
+For Organizers
+
+list opportunity
+microsite builder
+federation
+
+Company
+
+about
+contact
+
+Social
+
+instagram
+linkedin
+discord
