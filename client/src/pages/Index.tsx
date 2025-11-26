@@ -34,6 +34,9 @@ import {
   BarChart3,
   Layers,
   Gift,
+  Quote,
+  Mail,
+  Send,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -88,7 +91,7 @@ const mockOpportunities = [
   {
     id: 3,
     title: "Web3 Startup Accelerator",
-    organizer: "a]16z Crypto",
+    organizer: "a16z Crypto",
     category: "Accelerator",
     deadline: "Dec 20, 2025",
     prize: "$500K investment",
@@ -109,7 +112,7 @@ const mockOpportunities = [
     mode: "Remote",
     location: "Global",
     image: "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=400&h=200&fit=crop",
-    trending: false,
+    trending: true,
     closingSoon: false,
     popular: true,
   },
@@ -139,7 +142,7 @@ const mockOpportunities = [
     image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=200&fit=crop",
     trending: true,
     closingSoon: true,
-    popular: false,
+    popular: true,
   },
   {
     id: 7,
@@ -179,9 +182,9 @@ const mockOpportunities = [
     mode: "Remote",
     location: "Global",
     image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=200&fit=crop",
-    trending: false,
+    trending: true,
     closingSoon: true,
-    popular: false,
+    popular: true,
   },
   {
     id: 10,
@@ -200,7 +203,14 @@ const mockOpportunities = [
 ];
 
 const trustedCompanies = [
-  "Google", "Meta", "Microsoft", "McKinsey", "Replit", "Amazon", "Visa", "FedEx", "Atlassian", "Y Combinator", "OpenAI"
+  { name: "Google", color: "text-blue-600" },
+  { name: "Meta", color: "text-blue-500" },
+  { name: "Microsoft", color: "text-emerald-600" },
+  { name: "McKinsey", color: "text-blue-700" },
+  { name: "Replit", color: "text-orange-500" },
+  { name: "Amazon", color: "text-orange-600" },
+  { name: "Y Combinator", color: "text-orange-500" },
+  { name: "OpenAI", color: "text-emerald-600" },
 ];
 
 const ecosystemItems = [
@@ -210,6 +220,34 @@ const ecosystemItems = [
   { icon: Star, title: "Mentor Network", description: "Industry experts" },
   { icon: Target, title: "Micro-challenges", description: "Quick skill tests" },
   { icon: Gift, title: "Maximally Fund", description: "Builder grants" },
+];
+
+const testimonials = [
+  {
+    quote: "Found my first hackathon through Maximally and won $5,000. The platform makes it so easy to discover opportunities.",
+    name: "Arjun S.",
+    role: "CS Student, IIT Delhi",
+    avatar: "AS",
+  },
+  {
+    quote: "As an organizer, Maximally helped us get 500+ registrations for our first hackathon. The tools are incredibly helpful.",
+    name: "Priya M.",
+    role: "Founder, TechFest",
+    avatar: "PM",
+  },
+  {
+    quote: "Got selected for Y Combinator after building my network through Maximally events. This platform changed my trajectory.",
+    name: "Rahul K.",
+    role: "Startup Founder",
+    avatar: "RK",
+  },
+];
+
+const stats = [
+  { value: "10,000+", label: "Builders", icon: Users },
+  { value: "200+", label: "Programs Listed", icon: Calendar },
+  { value: "$2M+", label: "Prizes Won", icon: Trophy },
+  { value: "50+", label: "Partner Orgs", icon: Building },
 ];
 
 const OpportunityCard = ({ opportunity }: { opportunity: typeof mockOpportunities[0] }) => (
@@ -292,8 +330,44 @@ const HorizontalCarousel = ({ title, icon: Icon, opportunities }: { title: strin
   );
 };
 
+const AnimatedStat = ({ value, label, icon: Icon }: { value: string; label: string; icon: any }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div 
+      ref={ref}
+      className={`text-center transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+    >
+      <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+        <Icon className="w-6 h-6 text-red-500" />
+      </div>
+      <div className="text-3xl md:text-4xl font-bold text-gray-900 mb-1">{value}</div>
+      <div className="text-sm text-gray-500">{label}</div>
+    </div>
+  );
+};
+
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [email, setEmail] = useState("");
 
   const trendingOpportunities = mockOpportunities.filter(o => o.trending);
   const closingSoonOpportunities = mockOpportunities.filter(o => o.closingSoon);
@@ -371,6 +445,7 @@ const Index = () => {
                   className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-600 cursor-pointer transition-colors whitespace-nowrap"
                   data-testid={`chip-${cat.title.toLowerCase().replace(/\s+/g, '-')}`}
                 >
+                  <cat.icon className="w-3 h-3 mr-1.5" />
                   {cat.title}
                 </Badge>
               ))}
@@ -378,14 +453,28 @@ const Index = () => {
           </div>
         </section>
 
-        {/* TRUST SECTION */}
-        <section className="py-8 bg-white">
+        {/* STATS SECTION */}
+        <section className="py-12 bg-white">
           <div className="container mx-auto px-4 sm:px-6">
-            <p className="text-center text-sm text-gray-500 mb-4">Trusted by mentors and judges from</p>
-            <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              {stats.map((stat) => (
+                <AnimatedStat key={stat.label} value={stat.value} label={stat.label} icon={stat.icon} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* TRUST SECTION */}
+        <section className="py-8 bg-gray-50 border-y border-gray-100">
+          <div className="container mx-auto px-4 sm:px-6">
+            <p className="text-center text-sm text-gray-500 mb-6">Trusted by mentors and judges from</p>
+            <div className="flex flex-wrap justify-center items-center gap-x-10 gap-y-4">
               {trustedCompanies.map((company) => (
-                <span key={company} className="text-gray-400 text-sm font-medium">
-                  {company}
+                <span 
+                  key={company.name} 
+                  className={`text-lg font-semibold ${company.color} opacity-70 hover:opacity-100 transition-opacity`}
+                >
+                  {company.name}
                 </span>
               ))}
             </div>
@@ -393,7 +482,7 @@ const Index = () => {
         </section>
 
         {/* CATEGORY GRID */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4 sm:px-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 text-center">
               Explore by Category
@@ -430,7 +519,7 @@ const Index = () => {
         </section>
 
         {/* FEATURED OPPORTUNITIES */}
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4 sm:px-6">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 text-center">
               Featured Opportunities
@@ -456,7 +545,7 @@ const Index = () => {
         </section>
 
         {/* FILTER BAR */}
-        <section className="py-12 bg-gray-50">
+        <section className="py-12 bg-white">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="flex items-center gap-2 mb-6">
               <Filter className="w-5 h-5 text-gray-500" />
@@ -464,7 +553,7 @@ const Index = () => {
             </div>
             <div className="flex flex-wrap gap-3">
               <Select>
-                <SelectTrigger className="w-[160px] bg-white" data-testid="filter-category">
+                <SelectTrigger className="w-[160px] bg-white border-gray-200" data-testid="filter-category">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -472,39 +561,101 @@ const Index = () => {
                   <SelectItem value="fellowship">Fellowships</SelectItem>
                   <SelectItem value="accelerator">Accelerators</SelectItem>
                   <SelectItem value="bootcamp">Bootcamps</SelectItem>
+                  <SelectItem value="ai-challenge">AI Challenges</SelectItem>
+                  <SelectItem value="startup">Startup Competitions</SelectItem>
+                  <SelectItem value="grants">Grants & Funding</SelectItem>
+                  <SelectItem value="gigs">Internships & Gigs</SelectItem>
+                  <SelectItem value="workshops">Workshops & Events</SelectItem>
                 </SelectContent>
               </Select>
               <Select>
-                <SelectTrigger className="w-[160px] bg-white" data-testid="filter-difficulty">
+                <SelectTrigger className="w-[160px] bg-white border-gray-200" data-testid="filter-difficulty">
                   <SelectValue placeholder="Difficulty" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="beginner">Beginner</SelectItem>
+                  <SelectItem value="beginner">Beginner Friendly</SelectItem>
                   <SelectItem value="intermediate">Intermediate</SelectItem>
                   <SelectItem value="advanced">Advanced</SelectItem>
+                  <SelectItem value="open">Open to All</SelectItem>
                 </SelectContent>
               </Select>
               <Select>
-                <SelectTrigger className="w-[160px] bg-white" data-testid="filter-prize">
+                <SelectTrigger className="w-[160px] bg-white border-gray-200" data-testid="filter-prize">
                   <SelectValue placeholder="Prize" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="no-prize">No Prize / Experience</SelectItem>
                   <SelectItem value="under-1k">Under $1,000</SelectItem>
-                  <SelectItem value="1k-10k">$1,000 - $10,000</SelectItem>
+                  <SelectItem value="1k-5k">$1,000 - $5,000</SelectItem>
+                  <SelectItem value="5k-10k">$5,000 - $10,000</SelectItem>
                   <SelectItem value="10k-50k">$10,000 - $50,000</SelectItem>
-                  <SelectItem value="over-50k">Over $50,000</SelectItem>
+                  <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
+                  <SelectItem value="over-100k">Over $100,000</SelectItem>
                 </SelectContent>
               </Select>
               <Select>
-                <SelectTrigger className="w-[160px] bg-white" data-testid="filter-mode">
+                <SelectTrigger className="w-[160px] bg-white border-gray-200" data-testid="filter-mode">
                   <SelectValue placeholder="Mode" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="remote">Remote</SelectItem>
+                  <SelectItem value="remote">Remote / Online</SelectItem>
                   <SelectItem value="in-person">In-Person</SelectItem>
                   <SelectItem value="hybrid">Hybrid</SelectItem>
                 </SelectContent>
               </Select>
+              <Select>
+                <SelectTrigger className="w-[160px] bg-white border-gray-200" data-testid="filter-duration">
+                  <SelectValue placeholder="Duration" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1-day">1 Day</SelectItem>
+                  <SelectItem value="weekend">Weekend (2-3 days)</SelectItem>
+                  <SelectItem value="1-week">1 Week</SelectItem>
+                  <SelectItem value="1-month">1 Month</SelectItem>
+                  <SelectItem value="3-months">3 Months</SelectItem>
+                  <SelectItem value="6-months">6+ Months</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select>
+                <SelectTrigger className="w-[160px] bg-white border-gray-200" data-testid="filter-location">
+                  <SelectValue placeholder="Location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="global">Global / Worldwide</SelectItem>
+                  <SelectItem value="india">India</SelectItem>
+                  <SelectItem value="usa">United States</SelectItem>
+                  <SelectItem value="europe">Europe</SelectItem>
+                  <SelectItem value="asia">Asia Pacific</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </section>
+
+        {/* TESTIMONIALS */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 text-center">
+              What Builders Say
+            </h2>
+            <p className="text-gray-500 text-center mb-10">Success stories from our community</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {testimonials.map((testimonial, index) => (
+                <Card key={index} className="p-6 bg-white border border-gray-200 relative">
+                  <Quote className="w-8 h-8 text-red-100 absolute top-4 right-4" />
+                  <p className="text-gray-600 mb-6 relative z-10">"{testimonial.quote}"</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-semibold text-sm">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">{testimonial.name}</p>
+                      <p className="text-xs text-gray-500">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
@@ -611,8 +762,42 @@ const Index = () => {
           </div>
         </section>
 
-        {/* DUAL CTA */}
+        {/* NEWSLETTER */}
         <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4 sm:px-6">
+            <Card className="max-w-2xl mx-auto p-8 bg-white border border-gray-200 text-center">
+              <div className="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-7 h-7 text-red-500" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Stay in the loop</h3>
+              <p className="text-gray-500 mb-6">Get weekly curated opportunities, builder stories, and exclusive drops.</p>
+              <form 
+                className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setEmail("");
+                }}
+              >
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 bg-gray-50 border-gray-200"
+                  data-testid="input-newsletter-email"
+                />
+                <Button type="submit" className="bg-red-500 hover:bg-red-600 text-white gap-2" data-testid="button-subscribe">
+                  Subscribe
+                  <Send className="w-4 h-4" />
+                </Button>
+              </form>
+              <p className="text-xs text-gray-400 mt-4">No spam, unsubscribe anytime.</p>
+            </Card>
+          </div>
+        </section>
+
+        {/* DUAL CTA */}
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               <Card className="p-8 bg-red-500 border-0 text-white">
@@ -641,7 +826,7 @@ const Index = () => {
         </section>
 
         {/* COMMUNITY CTA */}
-        <section className="py-16 bg-gradient-to-b from-white to-red-50">
+        <section className="py-16 bg-gradient-to-b from-gray-50 to-red-50">
           <div className="container mx-auto px-4 sm:px-6 text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
               Join thousands of builders shaping the future
