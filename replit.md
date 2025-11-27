@@ -93,6 +93,38 @@ The application follows a modern full-stack monolith approach with clear separat
 
 ## Changelog
 
+- November 27, 2025. **LANDING PAGE & NAVBAR REDESIGN**: Complete landing page and navigation overhaul
+  - Created JSON config system for dynamic content management:
+    - `client/src/data/hackathons.json` - Hackathon listings with dates, prizes, tags
+    - `client/src/data/happeningNow.json` - Live updates and announcements
+    - `client/src/data/exploreCards.json` - Explore section cards with status and badges
+    - `client/src/data/partners.json` - Partner logos and stats
+  - Built reusable component library in `client/src/components/landing/`:
+    - HackathonCard - Displays hackathon info with tags, dates, prizes
+    - ExploreCard - Explore section cards with icons and badges
+    - HappeningNowCard - Dynamic announcement cards with countdown
+    - PartnerLogoRow/CompanyMarquee - Animated partner logo strips
+  - Created modular landing page sections in `client/src/components/landing/sections/`:
+    - HeroSection - Cosmic/neon design with particle background
+    - CredibilitySection - Stats and company marquee
+    - HappeningNowSection - Dynamic announcements
+    - UpcomingHackathonsSection - Grid of upcoming events
+    - ExploreMaximallySection - Explore cards grid
+    - WhyMaximallySection - Feature highlights
+    - ForOrganizersSection - Organizer resources
+    - PartnersSection - Partner logo display
+  - Rebuilt Navbar with simplified structure:
+    - Home, Hackathons, Organizers, Explore, About navigation
+    - "Join a Hackathon" CTA button
+    - Mobile hamburger menu with full-screen overlay
+    - Active route highlighting with underline animation
+  - Created dedicated Explore page (`/explore`) with:
+    - Grid layout for all explore categories
+    - "Available Now" and "Coming Soon" sections
+    - Back navigation and suggestion CTA
+  - Design aesthetic: Dark cosmic/neon theme with red (#E50914), purple, blue accents
+  - All content data-driven via JSON configs for easy updates without code changes
+
 - November 5, 2025. **JUDGE SYSTEM IMPLEMENTATION**: Built complete judge system for Maximally platform
   - Created judge database schema with public/private fields (profile photo, expertise, stats, NDA agreement)
   - Implemented judge tier progression system: Starter → Verified → Senior → Chief → Legacy
