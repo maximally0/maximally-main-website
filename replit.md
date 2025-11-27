@@ -5,13 +5,16 @@ Maximally is a global hackathon ecosystem designed for ambitious teenagers (ages
 
 ## Recent Changes (November 2025)
 
-### Events Page Redesign
-- Expanded from hackathon-only to broader "Tech Events" platform covering hackathons, conferences, workshops, meetups, bootcamps, and demo days
-- Created `client/src/data/techEvents.json` config with event categories, featured events, and type-based styling
-- New `EventCard.tsx` component with type-based gradients and icons
+### Events Page Redesign (Hackathons Focus)
+- Refocused from "Tech Events" to "Discover Hackathons" - hackathons are now the primary attraction
+- Hero section with "BUILD. SHIP. WIN." badge and hackathon-focused messaging
+- Stats badges: hackathon count, prize money, global access
+- Hackathons displayed in primary grid with filters (format, status, topics)
+- "Other Cool Stuff" collapsible section for non-hackathon events (conferences, workshops, meetups, bootcamps, demo days)
 - Purple cosmic theme matching homepage aesthetics (radial gradients, floating pixels, grid pattern)
-- Category filter tabs with icons for quick event type filtering
-- Updated SEO for broader tech events scope
+- `EventCard.tsx` component with type-based gradients and icons
+- CTA linking to host-hackathon page for organizers
+- Updated SEO for hackathons focus
 
 ### Host Hackathon Page Redesign
 - Complete visual overhaul with purple cosmic theme (radial gradients, floating pixels, grid overlays)
