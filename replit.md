@@ -16,6 +16,21 @@ Maximally is a global hackathon ecosystem designed for ambitious teenagers (ages
 - CTA linking to host-hackathon page for organizers
 - Updated SEO for hackathons focus
 
+### Footer Redesign (Cosmic Purple Theme)
+- Updated from red/maximally-red theme to purple cosmic theme matching landing page
+- Radial gradients with purple, pink, cyan accent colors
+- Floating animated pixels with colored glow effects
+- Section cards use gradient backgrounds (cyan/pink/green/amber/purple)
+- "BUILD. SHIP. WIN." badge at top, MAXIMALLY title with gradient text
+- Social icons with gradient backgrounds and colored icons
+
+### Explore Page Updates
+- Removed "Jobs & Internships" section from exploreCards.json
+
+### About Page Updates
+- Added "Explore Maximally" to "What We're Building" section (cyan styling, links to /explore)
+- Added NexFellow as permanent Media Partner in partners section (purple gradient styling)
+
 ### Host Hackathon Page Redesign
 - Complete visual overhaul with purple cosmic theme (radial gradients, floating pixels, grid overlays)
 - Hero section with gradient title "HOST YOUR OWN HACKATHON" and animated elements
