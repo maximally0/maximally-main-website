@@ -130,17 +130,17 @@ export function ExploreCard({
       
       <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${styles.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
       
-      <div className="relative p-5 sm:p-6 space-y-4 h-full flex flex-col">
+      <div className="relative p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4 h-full flex flex-col min-h-[140px] sm:min-h-[160px]">
         <div className="flex items-start justify-between gap-2">
-          <div className={`p-3 ${isComingSoon ? 'bg-gray-800 border-gray-700' : styles.icon} border transition-colors`}>
+          <div className={`p-2.5 sm:p-3 ${isComingSoon ? 'bg-gray-800 border-gray-700' : styles.icon} border transition-colors`}>
             <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isComingSoon ? 'text-gray-500' : styles.text}`} />
           </div>
           
           {badge && (
-            <span className={`px-2 py-1 text-[9px] sm:text-[10px] font-press-start border whitespace-nowrap ${
+            <span className={`px-2 py-1 text-[10px] sm:text-[11px] font-press-start border whitespace-nowrap ${
               badge === "Hiring" 
                 ? "bg-green-500/20 text-green-400 border-green-500/50" 
-                : badge === "New Posts"
+                : badge === "New Posts" || badge === "New"
                 ? styles.badge
                 : "bg-yellow-500/20 text-yellow-400 border-yellow-500/50"
             }`}>
@@ -150,7 +150,7 @@ export function ExploreCard({
         </div>
         
         <div className="flex-1">
-          <h3 className={`font-press-start text-xs sm:text-sm mb-2 ${isComingSoon ? 'text-gray-500' : `text-white group-hover:${styles.text}`} transition-colors leading-relaxed`}>
+          <h3 className={`font-press-start text-[11px] sm:text-xs md:text-sm mb-2 ${isComingSoon ? 'text-gray-500' : `text-white group-hover:${styles.text}`} transition-colors leading-relaxed`}>
             {title}
           </h3>
           <p className={`text-xs sm:text-sm font-jetbrains ${isComingSoon ? 'text-gray-600' : 'text-gray-400'} line-clamp-2 leading-relaxed`}>
@@ -159,7 +159,7 @@ export function ExploreCard({
         </div>
         
         {!isComingSoon && (
-          <div className={`flex items-center gap-2 ${styles.text} font-press-start text-[10px] opacity-0 group-hover:opacity-100 transition-opacity mt-auto`}>
+          <div className={`flex items-center gap-2 ${styles.text} font-press-start text-[10px] sm:text-[11px] opacity-0 group-hover:opacity-100 sm:transition-opacity mt-auto`}>
             <span>EXPLORE</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </div>
