@@ -93,6 +93,24 @@ The application follows a modern full-stack monolith approach with clear separat
 
 ## Changelog
 
+- November 27, 2025. **VISUAL ENHANCEMENT & CARD REDESIGN**: Major visual improvements across landing page
+  - **Navbar Cleanup**: Removed "Join a Hackathon" CTA button for cleaner navigation
+  - **Section Reordering**: Moved "Happening Now" section below "Upcoming Hackathons" for better flow
+  - **HackathonCard Redesign**: Complete overhaul without photo dependency
+    - Type-based gradient backgrounds (ai=cyan/blue, science=indigo/purple, security=rose/red, creative=pink/purple, flagship=yellow/orange, general=red/purple)
+    - Dynamic icons per hackathon type (Brain for AI, Shield for Security, etc.)
+    - Updated hackathons.json schema: removed posterUrl, added type field
+  - **Enhanced All Landing Sections**:
+    - HeroSection: Multi-colored floating pixels, floating icons, stats display, enhanced glow effects
+    - CredibilitySection: Icons with stats cards, improved spacing and glow
+    - UpcomingHackathonsSection: Enhanced with gradient overlays and better card spacing
+    - HappeningNowSection: Live pulse indicator, staggered animations
+    - ExploreMaximallySection: Grid pattern background, section dividers for coming soon
+    - WhyMaximallySection: Color-coded feature cards with unique icons per reason
+    - ForOrganizersSection: Card-based layout with icons and hover effects
+    - PartnersSection: Improved grayscale-to-color hover, contact CTA
+  - All sections now have: gradient divider lines, blur glow effects, smooth transitions
+
 - November 27, 2025. **LANDING PAGE & NAVBAR REDESIGN**: Complete landing page and navigation overhaul
   - Created JSON config system for dynamic content management:
     - `client/src/data/hackathons.json` - Hackathon listings with dates, prizes, tags
@@ -115,7 +133,6 @@ The application follows a modern full-stack monolith approach with clear separat
     - PartnersSection - Partner logo display
   - Rebuilt Navbar with simplified structure:
     - Home, Hackathons, Organizers, Explore, About navigation
-    - "Join a Hackathon" CTA button
     - Mobile hamburger menu with full-screen overlay
     - Active route highlighting with underline animation
   - Created dedicated Explore page (`/explore`) with:
