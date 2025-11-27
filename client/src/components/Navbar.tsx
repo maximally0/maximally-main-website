@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Terminal, Mail, User, LogOut, Rocket } from "lucide-react";
+import { Menu, X, Terminal, Mail, User, LogOut } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
@@ -259,27 +259,9 @@ const Navbar = () => {
               </Link>
             )}
 
-            <Link
-              to="/events"
-              className="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-500 text-white font-press-start text-[10px] xl:text-xs transition-all duration-200 group"
-              data-testid="button-join-hackathon"
-            >
-              <Rocket className="w-4 h-4" />
-              <span className="hidden xl:inline">JOIN A HACKATHON</span>
-              <span className="xl:hidden">JOIN</span>
-            </Link>
           </div>
 
-          <div className="flex items-center space-x-3 lg:hidden">
-            <Link
-              to="/events"
-              className="flex items-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-500 text-white font-press-start text-[10px] transition-all duration-200"
-              data-testid="button-join-hackathon-mobile"
-            >
-              <Rocket className="w-3.5 h-3.5" />
-              <span>JOIN</span>
-            </Link>
-            
+          <div className="flex items-center lg:hidden">
             <button
               className="p-2 bg-gray-900 border border-gray-700 hover:border-red-500 text-white transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}

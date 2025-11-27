@@ -33,9 +33,9 @@ const Index = () => {
         
         <CredibilitySection />
         
-        <HappeningNowSection />
-        
         <UpcomingHackathonsSection />
+        
+        <HappeningNowSection />
         
         <ExploreMaximallySection />
         
