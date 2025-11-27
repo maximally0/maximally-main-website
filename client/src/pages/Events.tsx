@@ -15,7 +15,8 @@ import {
   Presentation,
   Globe,
   Trophy,
-  Zap
+  Zap,
+  ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
@@ -61,9 +62,10 @@ const categoryIcons: Record<string, typeof Sparkles> = {
 
 const Events = () => {
   const [events, setEvents] = useState<TechEvent[]>([]);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState<string>("hackathon");
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
+  const [showOtherEvents, setShowOtherEvents] = useState<boolean>(false);
   
   const [selectedFilters, setSelectedFilters] = useState<{
     format: string[];
@@ -234,11 +236,9 @@ const Events = () => {
 
   const normalizeString = (str: string) => str.toLowerCase().trim();
 
-  const filteredEvents = useMemo(() => {
+  const hackathonEvents = useMemo(() => {
     return events.filter(event => {
-      if (activeCategory !== 'all' && event.type !== activeCategory) {
-        return false;
-      }
+      if (event.type !== 'hackathon') return false;
 
       const normalizedSearchQuery = searchQuery ? normalizeString(searchQuery) : '';
       if (normalizedSearchQuery && 
@@ -265,7 +265,38 @@ const Events = () => {
 
       return true;
     });
-  }, [events, activeCategory, searchQuery, selectedFilters]);
+  }, [events, searchQuery, selectedFilters]);
+
+  const otherEvents = useMemo(() => {
+    return events.filter(event => {
+      if (event.type === 'hackathon') return false;
+
+      const normalizedSearchQuery = searchQuery ? normalizeString(searchQuery) : '';
+      if (normalizedSearchQuery && 
+          !normalizeString(event.name).includes(normalizedSearchQuery) && 
+          !normalizeString(event.description).includes(normalizedSearchQuery) &&
+          !event.tags.some(tag => normalizeString(tag).includes(normalizedSearchQuery))) {
+        return false;
+      }
+
+      if (selectedFilters.format.length > 0 && 
+          !selectedFilters.format.includes(event.format)) {
+        return false;
+      }
+
+      if (selectedFilters.status.length > 0 && 
+          !selectedFilters.status.includes(event.status)) {
+        return false;
+      }
+
+      if (selectedFilters.tags.length > 0 && 
+          !selectedFilters.tags.some(tag => event.tags.includes(tag))) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [events, searchQuery, selectedFilters]);
 
   const toggleFilter = (category: keyof typeof selectedFilters, value: string) => {
     setSelectedFilters(prev => ({
@@ -279,21 +310,21 @@ const Events = () => {
   const clearAllFilters = () => {
     setSelectedFilters({ format: [], status: [], tags: [] });
     setSearchQuery('');
-    setActiveCategory('all');
   };
 
   const toggleFilterSection = (section: keyof typeof expandedFilters) => {
     setExpandedFilters(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  const categories = techEventsData.eventCategories;
+  const hackathonCount = events.filter(e => e.type === 'hackathon').length;
+  const totalPrizes = events.filter(e => e.type === 'hackathon' && e.prizes).length;
 
   return (
     <>
       <SEO
-        title="Tech Events | Hackathons, Conferences, Workshops | Maximally"
-        description="Discover the best tech events for teen builders. Find hackathons, conferences, workshops, meetups, bootcamps, and demo days from around the world."
-        keywords="tech events, hackathons, coding competitions, tech conferences, workshops, developer meetups, bootcamps, demo days, teen tech events"
+        title="Hackathons | Discover & Join Global Hackathons | Maximally"
+        description="Find the best hackathons for teen builders. Join coding competitions, innovation challenges, and build projects that matter. Plus workshops, conferences & more."
+        keywords="hackathons, coding competitions, teen hackathons, programming contests, innovation challenges, builder events, coding events"
       />
       
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -324,35 +355,36 @@ const Events = () => {
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center max-w-4xl mx-auto mb-12">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-6">
-                <Globe className="w-4 h-4 text-purple-400" />
+                <Code className="w-4 h-4 text-purple-400" />
                 <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
-                  GLOBAL TECH EVENTS
+                  BUILD. SHIP. WIN.
                 </span>
               </div>
               
               <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-6 leading-tight">
                 Discover{" "}
                 <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
-                  Tech Events
+                  Hackathons
                 </span>
               </h1>
               
               <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8">
-                Hackathons, conferences, workshops, and more. Find the perfect event to level up your skills and connect with builders worldwide.
+                Join the best coding competitions and innovation challenges. Build projects that matter, 
+                win prizes, and connect with builders worldwide.
               </p>
 
               <div className="flex flex-wrap justify-center gap-4 mb-8">
                 <div className="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30">
-                  <Zap className="w-4 h-4 text-cyan-400" />
-                  <span className="font-press-start text-[10px] text-cyan-300">{techEventsData.stats.totalEvents} EVENTS</span>
+                  <Code className="w-4 h-4 text-cyan-400" />
+                  <span className="font-press-start text-[10px] text-cyan-300">{hackathonCount}+ HACKATHONS</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 bg-pink-500/10 border border-pink-500/30">
-                  <Globe className="w-4 h-4 text-pink-400" />
-                  <span className="font-press-start text-[10px] text-pink-300">{techEventsData.stats.countries} COUNTRIES</span>
+                  <Trophy className="w-4 h-4 text-pink-400" />
+                  <span className="font-press-start text-[10px] text-pink-300">$100K+ IN PRIZES</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30">
-                  <Users className="w-4 h-4 text-green-400" />
-                  <span className="font-press-start text-[10px] text-green-300">{techEventsData.stats.participants} BUILDERS</span>
+                  <Globe className="w-4 h-4 text-green-400" />
+                  <span className="font-press-start text-[10px] text-green-300">GLOBAL ACCESS</span>
                 </div>
               </div>
             </div>
@@ -362,7 +394,7 @@ const Events = () => {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 h-5 w-5" />
                 <input
                   type="text"
-                  placeholder="Search events by name, topic, or keyword..."
+                  placeholder="Search hackathons by name, topic, or keyword..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none font-jetbrains text-base"
@@ -377,30 +409,6 @@ const Events = () => {
                   </button>
                 )}
               </div>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
-              {categories.map((cat) => {
-                const IconComponent = categoryIcons[cat.id] || Sparkles;
-                const isActive = activeCategory === cat.id;
-                
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={`group flex items-center gap-2 px-3 sm:px-4 py-2 font-press-start text-[9px] sm:text-[10px] transition-all duration-300 ${
-                      isActive 
-                        ? 'bg-purple-500/30 border-purple-400 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.3)]' 
-                        : 'bg-black/30 border-gray-700 text-gray-400 hover:border-purple-500/50 hover:text-purple-300'
-                    } border`}
-                    data-testid={`category-${cat.id}`}
-                  >
-                    <IconComponent className={`w-3.5 h-3.5 ${isActive ? 'text-purple-400' : 'text-gray-500 group-hover:text-purple-400'}`} />
-                    <span className="hidden sm:inline">{cat.label}</span>
-                    <span className="sm:hidden">{cat.label.split(' ')[0]}</span>
-                  </button>
-                );
-              })}
             </div>
           </div>
         </div>
@@ -509,90 +517,108 @@ const Events = () => {
 
             <div className="flex-1">
               <div className="flex items-center justify-between mb-6">
-                <p className="font-jetbrains text-sm text-gray-400">
-                  Showing <span className="text-purple-300 font-semibold">{filteredEvents.length}</span> events
-                </p>
-                {(selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length > 0 || activeCategory !== 'all') && (
-                  <div className="flex flex-wrap gap-2">
-                    {activeCategory !== 'all' && (
-                      <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-500/20 text-purple-300 text-xs font-jetbrains border border-purple-500/30">
-                        {categories.find(c => c.id === activeCategory)?.label}
-                        <button onClick={() => setActiveCategory('all')} className="ml-1 hover:text-white">
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    )}
+                <div className="flex items-center gap-3">
+                  <div className="bg-purple-500/20 border border-purple-500/40 p-2">
+                    <Code className="h-5 w-5 text-purple-400" />
                   </div>
+                  <div>
+                    <h2 className="font-press-start text-sm sm:text-base text-white">HACKATHONS</h2>
+                    <p className="font-jetbrains text-xs text-gray-500">
+                      {hackathonEvents.length} events found
+                    </p>
+                  </div>
+                </div>
+                {(selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length > 0) && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-jetbrains hover:bg-purple-500/20 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear filters
+                  </button>
                 )}
               </div>
 
-              {filteredEvents.length === 0 ? (
-                <div className="text-center py-16 bg-black/20 border border-purple-500/20">
-                  <div className="inline-flex items-center justify-center w-16 h-16 mb-4 bg-purple-500/10 border border-purple-500/30">
-                    <Search className="w-8 h-8 text-purple-400" />
-                  </div>
-                  <h3 className="font-press-start text-base text-white mb-3">No events found</h3>
-                  <p className="font-jetbrains text-sm text-gray-400 mb-6 max-w-md mx-auto">
-                    Try adjusting your filters or search query to find more events.
+              {hackathonEvents.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
+                  {hackathonEvents.map(event => (
+                    <EventCard 
+                      key={event.id} 
+                      {...event}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-black/40 border border-purple-500/20 p-12 text-center mb-12">
+                  <Code className="h-12 w-12 text-purple-400/50 mx-auto mb-4" />
+                  <h3 className="font-press-start text-sm text-gray-400 mb-2">NO HACKATHONS FOUND</h3>
+                  <p className="font-jetbrains text-gray-500 text-sm mb-4">
+                    Try adjusting your filters or search query
                   </p>
                   <button
                     onClick={clearAllFilters}
-                    className="px-6 py-3 bg-purple-500/20 border border-purple-500/40 text-purple-300 font-press-start text-xs hover:bg-purple-500/30 transition-colors"
-                    data-testid="clear-filters-empty"
+                    className="px-4 py-2 bg-purple-500/20 border border-purple-500/40 text-purple-300 font-press-start text-xs hover:bg-purple-500/30 transition-colors"
                   >
-                    CLEAR ALL FILTERS
+                    CLEAR FILTERS
                   </button>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {filteredEvents.map((event, index) => (
-                    <div 
-                      key={event.id}
-                      className="animate-fade-in"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <EventCard
-                        id={event.id}
-                        name={event.name}
-                        description={event.description}
-                        type={event.type}
-                        startDate={event.startDate}
-                        endDate={event.endDate}
-                        location={event.location}
-                        format={event.format}
-                        prizes={event.prizes}
-                        tags={event.tags}
-                        registerUrl={event.registerUrl}
-                        featured={event.featured}
-                        status={event.status}
-                        organizer={event.organizer}
-                        isMaximallyOfficial={event.isMaximallyOfficial}
-                      />
-                    </div>
-                  ))}
                 </div>
               )}
 
-              <div className="mt-12 p-8 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
+              {otherEvents.length > 0 && (
+                <div className="mt-8">
+                  <button
+                    onClick={() => setShowOtherEvents(!showOtherEvents)}
+                    className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 hover:border-amber-400/50 transition-all duration-300 group"
+                    data-testid="toggle-other-events"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="bg-amber-500/20 border border-amber-500/40 p-2">
+                        <Sparkles className="h-5 w-5 text-amber-400" />
+                      </div>
+                      <div className="text-left">
+                        <h3 className="font-press-start text-xs sm:text-sm text-amber-300">OTHER COOL STUFF</h3>
+                        <p className="font-jetbrains text-xs text-gray-500">
+                          {otherEvents.length} conferences, workshops, meetups & more
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronDown className={`h-5 w-5 text-amber-400 transition-transform duration-300 ${showOtherEvents ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {showOtherEvents && (
+                    <div className="mt-5 pt-5 border-t border-amber-500/20">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        {otherEvents.map(event => (
+                          <EventCard 
+                            key={event.id} 
+                            {...event}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="mt-16 p-8 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />
                 <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
                 
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-12 h-12 mb-4 bg-purple-500/20 border border-purple-500/40">
-                    <Calendar className="w-6 h-6 text-purple-400" />
-                  </div>
                   <h3 className="font-press-start text-sm sm:text-base text-white mb-3">
-                    Want to host your own event?
+                    Want to host your own hackathon?
                   </h3>
                   <p className="font-jetbrains text-sm text-gray-400 mb-6 max-w-lg mx-auto">
-                    Partner with Maximally to reach thousands of ambitious teen builders worldwide.
+                    Join 1000+ organizers who have launched successful events with Maximally's support.
                   </p>
                   <Link
-                    to="/organizers"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/30 to-pink-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-300 hover:text-purple-200 font-press-start text-[10px] sm:text-xs transition-all duration-300"
-                    data-testid="button-host-event"
+                    to="/host-hackathon"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs transition-all duration-300"
+                    data-testid="link-host-hackathon"
                   >
-                    BECOME AN ORGANIZER
+                    <Rocket className="h-4 w-4" />
+                    HOST A HACKATHON
+                    <ChevronRight className="h-4 w-4" />
                   </Link>
                 </div>
               </div>
