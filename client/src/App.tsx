@@ -132,6 +132,7 @@ import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 import MFHOP from './pages/MFHOP';
 import PartnerNetwork from './pages/PartnerNetwork';
 import HostHackathon from './pages/HostHackathon';
+import Explore from './pages/Explore';
 import CreateHackathon from './pages/CreateHackathon';
 import OrganizerDashboard from './pages/OrganizerDashboard';
 import EditHackathon from './pages/EditHackathon';
@@ -359,6 +360,7 @@ const AppContent = () => {
         <Route path="/hackathon/:slug/submit" element={<HackathonSubmit />} />
 
         <Route path="/events" element={<Events />} />
+        <Route path="/explore" element={<Explore />} />
         <Route
           path="/blog/makeathon-for-future"
           element={<MakeathonForFuture />}

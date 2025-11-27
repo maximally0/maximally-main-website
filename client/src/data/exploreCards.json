@@ -1,0 +1,76 @@
+{
+  "exploreCards": [
+    {
+      "id": "jobs",
+      "title": "Jobs & Internships",
+      "description": "Curated opportunities from our partner companies and startups in the ecosystem.",
+      "icon": "briefcase",
+      "url": "/explore/jobs",
+      "status": "active",
+      "badge": null
+    },
+    {
+      "id": "work-with-us",
+      "title": "Work With Us",
+      "description": "Join the Maximally task force. Help us run events, build tools, and grow the community.",
+      "icon": "users",
+      "url": "/careers",
+      "status": "active",
+      "badge": "Hiring"
+    },
+    {
+      "id": "labs",
+      "title": "Maximally Labs",
+      "description": "Experimental projects and tools we're building for the builder community.",
+      "icon": "flask",
+      "url": "/explore/labs",
+      "status": "coming-soon",
+      "badge": "Coming Soon"
+    },
+    {
+      "id": "fellowships",
+      "title": "Fellowships",
+      "description": "Long-term programs for exceptional builders who want to level up.",
+      "icon": "graduation-cap",
+      "url": "/explore/fellowships",
+      "status": "coming-soon",
+      "badge": "Coming Soon"
+    },
+    {
+      "id": "startup-gigs",
+      "title": "Startup Gigs",
+      "description": "Short-term projects with early-stage startups looking for builder talent.",
+      "icon": "rocket",
+      "url": "/explore/startup-gigs",
+      "status": "coming-soon",
+      "badge": "Coming Soon"
+    },
+    {
+      "id": "community",
+      "title": "Community",
+      "description": "Join our Discord, meet fellow builders, and find your next hackathon team.",
+      "icon": "message-circle",
+      "url": "https://discord.gg/MpBnYk8qMX",
+      "status": "active",
+      "badge": null
+    },
+    {
+      "id": "resources",
+      "title": "Resources",
+      "description": "Guides, templates, and tools to help you build better projects faster.",
+      "icon": "book-open",
+      "url": "/resources",
+      "status": "active",
+      "badge": null
+    },
+    {
+      "id": "mfhop",
+      "title": "MFHOP",
+      "description": "Maximally For Hackathon Organizer Program - resources for event organizers.",
+      "icon": "calendar",
+      "url": "/mfhop",
+      "status": "active",
+      "badge": null
+    }
+  ]
+}

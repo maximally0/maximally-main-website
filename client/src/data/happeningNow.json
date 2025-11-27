@@ -1,0 +1,37 @@
+{
+  "happeningNow": [
+    {
+      "id": "1",
+      "type": "featured",
+      "title": "AI Shipathon 2025",
+      "description": "Build AI-powered products in 48 hours. $10,000 in prizes.",
+      "badge": "Featured",
+      "ctaText": "Register Now",
+      "ctaUrl": "https://maximally.devpost.com/ai-shipathon",
+      "endDate": "2025-02-15",
+      "icon": "rocket"
+    },
+    {
+      "id": "2",
+      "type": "closing-soon",
+      "title": "Early Bird Registration",
+      "description": "Get 20% off on Code Hypothesis registration. Ends in 3 days.",
+      "badge": "Closing Soon",
+      "ctaText": "Claim Offer",
+      "ctaUrl": "https://maximally.devpost.com/code-hypothesis",
+      "endDate": "2025-01-20",
+      "icon": "clock"
+    },
+    {
+      "id": "3",
+      "type": "new",
+      "title": "Protocol 404 Announced",
+      "description": "Our biggest cybersecurity hackathon is here. 72 hours of pure hacking.",
+      "badge": "New",
+      "ctaText": "Learn More",
+      "ctaUrl": "/protocol-404",
+      "endDate": null,
+      "icon": "sparkles"
+    }
+  ]
+}

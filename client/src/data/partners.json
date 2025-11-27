@@ -1,0 +1,57 @@
+{
+  "partners": [
+    {
+      "id": "1",
+      "name": "Google",
+      "logoUrl": "/partners/google.svg",
+      "type": "judge"
+    },
+    {
+      "id": "2",
+      "name": "Microsoft",
+      "logoUrl": "/partners/microsoft.svg",
+      "type": "judge"
+    },
+    {
+      "id": "3",
+      "name": "Meta",
+      "logoUrl": "/partners/meta.svg",
+      "type": "judge"
+    },
+    {
+      "id": "4",
+      "name": "AWS",
+      "logoUrl": "/partners/aws.svg",
+      "type": "sponsor"
+    },
+    {
+      "id": "5",
+      "name": "OpenAI",
+      "logoUrl": "/partners/openai.svg",
+      "type": "judge"
+    },
+    {
+      "id": "6",
+      "name": "Replit",
+      "logoUrl": "/partners/replit.svg",
+      "type": "sponsor"
+    },
+    {
+      "id": "7",
+      "name": "Y Combinator",
+      "logoUrl": "/partners/yc.svg",
+      "type": "judge"
+    },
+    {
+      "id": "8",
+      "name": "Atlassian",
+      "logoUrl": "/partners/atlassian.svg",
+      "type": "sponsor"
+    }
+  ],
+  "stats": {
+    "participants": "15,000+",
+    "hackathons": "11+",
+    "sponsors": "20+"
+  }
+}

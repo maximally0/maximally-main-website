@@ -1,0 +1,76 @@
+{
+  "hackathons": [
+    {
+      "id": "1",
+      "name": "AI Shipathon 2025",
+      "theme": "Build AI-powered products that solve real problems",
+      "startDate": "2025-02-15",
+      "endDate": "2025-02-16",
+      "prize": "$10,000",
+      "posterUrl": "/placeholder-hackathon-1.jpg",
+      "registrationUrl": "https://maximally.devpost.com/ai-shipathon",
+      "tags": ["online", "AI", "beginner-friendly"],
+      "status": "upcoming"
+    },
+    {
+      "id": "2",
+      "name": "Code Hypothesis",
+      "theme": "Science meets code - prove your hypothesis through building",
+      "startDate": "2025-03-01",
+      "endDate": "2025-03-02",
+      "prize": "$5,000",
+      "posterUrl": "/placeholder-hackathon-2.jpg",
+      "registrationUrl": "https://maximally.devpost.com/code-hypothesis",
+      "tags": ["online", "science", "intermediate"],
+      "status": "upcoming"
+    },
+    {
+      "id": "3",
+      "name": "Protocol 404",
+      "theme": "Breaking systems to build better ones",
+      "startDate": "2025-03-15",
+      "endDate": "2025-03-17",
+      "prize": "$15,000",
+      "posterUrl": "/placeholder-hackathon-3.jpg",
+      "registrationUrl": "https://maximally.devpost.com/protocol-404",
+      "tags": ["hybrid", "security", "advanced"],
+      "status": "upcoming"
+    },
+    {
+      "id": "4",
+      "name": "Prompt Storm",
+      "theme": "Master the art of prompting AI",
+      "startDate": "2025-04-05",
+      "endDate": "2025-04-06",
+      "prize": "$3,000",
+      "posterUrl": "/placeholder-hackathon-4.jpg",
+      "registrationUrl": "https://maximally.devpost.com/prompt-storm",
+      "tags": ["online", "AI", "beginner-friendly"],
+      "status": "upcoming"
+    },
+    {
+      "id": "5",
+      "name": "StealAThon",
+      "theme": "Remix, reimagine, rebuild existing projects",
+      "startDate": "2025-04-20",
+      "endDate": "2025-04-21",
+      "prize": "$7,500",
+      "posterUrl": "/placeholder-hackathon-5.jpg",
+      "registrationUrl": "https://maximally.devpost.com/stealathon",
+      "tags": ["online", "creative", "all-levels"],
+      "status": "upcoming"
+    },
+    {
+      "id": "6",
+      "name": "Grand Tech Assembly",
+      "theme": "The ultimate builder showdown",
+      "startDate": "2025-05-10",
+      "endDate": "2025-05-12",
+      "prize": "$25,000",
+      "posterUrl": "/placeholder-hackathon-6.jpg",
+      "registrationUrl": "https://maximally.devpost.com/gta",
+      "tags": ["offline", "flagship", "advanced"],
+      "status": "upcoming"
+    }
+  ]
+}
