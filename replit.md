@@ -3,6 +3,16 @@
 ## Overview
 Maximally is a global hackathon ecosystem designed for ambitious teenagers (ages 13-19) worldwide. It focuses on hosting high-stakes innovation events, chaos sprints, and public launch challenges, emphasizing real proof-of-work rather than theoretical learning. The platform aims to be the boldest hackathon league for teen founders, coders, and creators globally.
 
+## Recent Changes (November 2025)
+
+### Events Page Redesign
+- Expanded from hackathon-only to broader "Tech Events" platform covering hackathons, conferences, workshops, meetups, bootcamps, and demo days
+- Created `client/src/data/techEvents.json` config with event categories, featured events, and type-based styling
+- New `EventCard.tsx` component with type-based gradients and icons
+- Purple cosmic theme matching homepage aesthetics (radial gradients, floating pixels, grid pattern)
+- Category filter tabs with icons for quick event type filtering
+- Updated SEO for broader tech events scope
+
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
