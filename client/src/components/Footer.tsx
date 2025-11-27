@@ -3,7 +3,7 @@ import { Instagram, Linkedin, Twitter, MessageCircle, Code } from 'lucide-react'
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-white py-12 sm:py-16 md:py-20 relative overflow-hidden">
+    <footer className="bg-black text-white py-10 sm:py-12 md:py-16 lg:py-20 relative overflow-x-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
@@ -28,31 +28,31 @@ const Footer = () => {
       ))}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-8 sm:mb-10 md:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-4">
-            <Code className="w-4 h-4 text-purple-400" />
-            <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
+        <div className="text-center mb-6 sm:mb-8 md:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-500/10 border border-purple-500/30 mb-3 sm:mb-4">
+            <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-400" />
+            <span className="font-press-start text-[9px] sm:text-[10px] md:text-xs text-purple-300 tracking-wider">
               BUILD. SHIP. WIN.
             </span>
           </div>
           
-          <h2 className="font-press-start text-lg sm:text-xl md:text-2xl lg:text-3xl mb-3 sm:mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+          <h2 className="font-press-start text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-2 sm:mb-3 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
             MAXIMALLY
           </h2>
-          <p className="font-jetbrains text-gray-400 max-w-2xl mx-auto text-xs sm:text-sm md:text-base px-2 sm:px-4">
+          <p className="font-jetbrains text-gray-400 max-w-2xl mx-auto text-xs sm:text-sm md:text-base px-2">
             The global hackathon league for builders, creators, and
             innovators. High-stakes events for ambitious youth worldwide.
           </p>
         </div>
 
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent mb-8 sm:mb-10 md:mb-14"></div>
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent mb-6 sm:mb-8 md:mb-12"></div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
-          <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-4 sm:p-5 md:p-6 h-fit">
-            <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm mb-4 sm:mb-5 text-cyan-300 flex items-center gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-5 lg:gap-6">
+          <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-3 sm:p-4 md:p-5 h-fit">
+            <h3 className="font-press-start text-[9px] sm:text-[10px] md:text-xs mb-3 sm:mb-4 text-cyan-300 flex items-center gap-2">
               EVENTS
             </h3>
-            <ul className="space-y-2 sm:space-y-3 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
+            <ul className="space-y-2 sm:space-y-2.5 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
               <li>
                 <Link
                   to="/events"
@@ -72,11 +72,11 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-pink-500/10 to-rose-500/10 border border-pink-500/30 p-4 sm:p-5 md:p-6 h-fit">
-            <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm mb-4 sm:mb-5 text-pink-300 flex items-center gap-2">
+          <div className="bg-gradient-to-br from-pink-500/10 to-rose-500/10 border border-pink-500/30 p-3 sm:p-4 md:p-5 h-fit">
+            <h3 className="font-press-start text-[9px] sm:text-[10px] md:text-xs mb-3 sm:mb-4 text-pink-300 flex items-center gap-2">
               COMMUNITY
             </h3>
-            <ul className="space-y-2 sm:space-y-3 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
+            <ul className="space-y-2 sm:space-y-2.5 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
               <li>
                 <a
                   href="https://discord.gg/MpBnYk8qMX"
@@ -98,11 +98,11 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 p-4 sm:p-5 md:p-6 h-fit">
-            <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm mb-4 sm:mb-5 text-green-300 flex items-center gap-2">
+          <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 p-3 sm:p-4 md:p-5 h-fit">
+            <h3 className="font-press-start text-[9px] sm:text-[10px] md:text-xs mb-3 sm:mb-4 text-green-300 flex items-center gap-2">
               CONTENT
             </h3>
-            <ul className="space-y-2 sm:space-y-3 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
+            <ul className="space-y-2 sm:space-y-2.5 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
               <li>
                 <Link
                   to="/blog"
@@ -130,11 +130,11 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 p-4 sm:p-5 md:p-6 h-fit">
-            <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm mb-4 sm:mb-5 text-amber-300 flex items-center gap-2">
+          <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 p-3 sm:p-4 md:p-5 h-fit">
+            <h3 className="font-press-start text-[9px] sm:text-[10px] md:text-xs mb-3 sm:mb-4 text-amber-300 flex items-center gap-2">
               COMPANY
             </h3>
-            <ul className="space-y-2 sm:space-y-3 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
+            <ul className="space-y-2 sm:space-y-2.5 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm">
               <li>
                 <Link
                   to="/about"
@@ -154,11 +154,11 @@ const Footer = () => {
             </ul>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-500/10 to-violet-500/10 border border-purple-500/30 p-4 sm:p-5 md:p-6 h-fit col-span-2 sm:col-span-1">
-            <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm mb-4 sm:mb-5 text-purple-300 flex items-center gap-2">
+          <div className="bg-gradient-to-br from-purple-500/10 to-violet-500/10 border border-purple-500/30 p-3 sm:p-4 md:p-5 h-fit col-span-2 sm:col-span-1">
+            <h3 className="font-press-start text-[9px] sm:text-[10px] md:text-xs mb-3 sm:mb-4 text-purple-300 flex items-center gap-2">
               LEGAL
             </h3>
-            <ul className="space-y-2 sm:space-y-3 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm grid grid-cols-2 sm:grid-cols-1 gap-x-4 sm:gap-x-0">
+            <ul className="space-y-2 sm:space-y-2.5 font-jetbrains text-white text-[11px] sm:text-xs md:text-sm grid grid-cols-2 sm:grid-cols-1 gap-x-4 sm:gap-x-0">
               <li>
                 <Link
                   to="/privacy"
@@ -187,11 +187,11 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-10 sm:mt-12 md:mt-16 text-center">
-          <h3 className="font-press-start text-xs sm:text-sm md:text-base mb-4 sm:mb-5 md:mb-6 text-white">
+        <div className="mt-8 sm:mt-10 md:mt-14 text-center">
+          <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 md:mb-5 text-white">
             STAY CONNECTED
           </h3>
-          <div className="flex justify-center gap-3 sm:gap-4 md:gap-5">
+          <div className="flex justify-center gap-2.5 sm:gap-3 md:gap-4">
             {[
               {
                 name: 'Instagram',
@@ -235,17 +235,17 @@ const Footer = () => {
                 data-testid={`social-${social.name.toLowerCase()}`}
               >
                 <div
-                  className={`bg-gradient-to-br ${social.gradient} border ${social.border} hover:scale-110 transition-all duration-300 p-3 sm:p-4 w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16 flex items-center justify-center hover:shadow-[0_0_20px_rgba(168,85,247,0.3)]`}
+                  className={`bg-gradient-to-br ${social.gradient} border ${social.border} hover:scale-105 transition-all duration-300 p-2 sm:p-3 md:p-4 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center hover:shadow-[0_0_15px_rgba(168,85,247,0.3)]`}
                 >
-                  <social.icon className={`h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 ${social.iconColor}`} />
+                  <social.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${social.iconColor}`} />
                 </div>
               </a>
             ))}
           </div>
         </div>
 
-        <div className="mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-purple-500/20 text-center">
-          <p className="font-jetbrains text-gray-500 text-xs sm:text-sm">
+        <div className="mt-8 sm:mt-10 pt-5 sm:pt-6 md:pt-8 border-t border-purple-500/20 text-center">
+          <p className="font-jetbrains text-gray-500 text-[10px] sm:text-xs md:text-sm">
             &copy; {new Date().getFullYear()} Maximally. Built by builders, for builders.
           </p>
         </div>

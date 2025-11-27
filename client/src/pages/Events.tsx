@@ -327,7 +327,7 @@ const Events = () => {
         keywords="hackathons, coding competitions, teen hackathons, programming contests, innovation challenges, builder events, coding events"
       />
       
-      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
@@ -351,61 +351,61 @@ const Events = () => {
           />
         ))}
 
-        <div className="relative z-10 pt-24 sm:pt-28 pb-12">
+        <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 lg:pt-28 pb-8 sm:pb-12">
           <div className="container mx-auto px-4 sm:px-6">
-            <div className="text-center max-w-4xl mx-auto mb-12">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-6">
+            <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-12">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-4 sm:mb-6">
                 <Code className="w-4 h-4 text-purple-400" />
                 <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
                   BUILD. SHIP. WIN.
                 </span>
               </div>
               
-              <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-6 leading-tight">
+              <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white mb-4 sm:mb-6 leading-relaxed">
                 Discover{" "}
                 <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
                   Hackathons
                 </span>
               </h1>
               
-              <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8">
+              <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
                 Join the best coding competitions and innovation challenges. Build projects that matter, 
                 win prizes, and connect with builders worldwide.
               </p>
 
-              <div className="flex flex-wrap justify-center gap-4 mb-8">
-                <div className="flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30">
-                  <Code className="w-4 h-4 text-cyan-400" />
-                  <span className="font-press-start text-[10px] text-cyan-300">{hackathonCount}+ HACKATHONS</span>
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-cyan-500/10 border border-cyan-500/30">
+                  <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400 flex-shrink-0" />
+                  <span className="font-press-start text-[9px] sm:text-[10px] text-cyan-300">{hackathonCount}+ HACKATHONS</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-pink-500/10 border border-pink-500/30">
-                  <Trophy className="w-4 h-4 text-pink-400" />
-                  <span className="font-press-start text-[10px] text-pink-300">$100K+ IN PRIZES</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-pink-500/10 border border-pink-500/30">
+                  <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-400 flex-shrink-0" />
+                  <span className="font-press-start text-[9px] sm:text-[10px] text-pink-300">$100K+ PRIZES</span>
                 </div>
-                <div className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30">
-                  <Globe className="w-4 h-4 text-green-400" />
-                  <span className="font-press-start text-[10px] text-green-300">GLOBAL ACCESS</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-green-500/10 border border-green-500/30">
+                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-400 flex-shrink-0" />
+                  <span className="font-press-start text-[9px] sm:text-[10px] text-green-300">GLOBAL</span>
                 </div>
               </div>
             </div>
 
-            <div className="max-w-3xl mx-auto mb-10">
+            <div className="max-w-3xl mx-auto mb-6 sm:mb-10">
               <div className="relative bg-black/40 border border-purple-500/30 p-1 backdrop-blur-sm">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400 h-5 w-5" />
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-purple-400 h-4 w-4 sm:h-5 sm:w-5" />
                 <input
                   type="text"
-                  placeholder="Search hackathons by name, topic, or keyword..."
+                  placeholder="Search hackathons..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none font-jetbrains text-base"
+                  className="w-full pl-10 sm:pl-12 pr-10 sm:pr-4 py-3 sm:py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none font-jetbrains text-sm sm:text-base"
                   data-testid="search-events"
                 />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-400 transition-colors"
+                    className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-400 transition-colors p-1"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 )}
               </div>
@@ -413,28 +413,28 @@ const Events = () => {
           </div>
         </div>
 
-        <div className="relative z-10 container mx-auto px-4 sm:px-6 pb-16">
-          <div className="flex flex-col lg:flex-row gap-8">
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             <div className="lg:hidden">
               <button
                 onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-                className="flex items-center gap-2 px-4 py-3 bg-purple-500/10 border border-purple-500/30 text-purple-300 font-press-start text-xs"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-purple-500/10 border border-purple-500/30 text-purple-300 font-press-start text-[10px] sm:text-xs w-full justify-center sm:w-auto"
                 data-testid="mobile-filter-toggle"
               >
                 <Filter className="h-4 w-4" />
                 FILTERS
                 {(selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length) > 0 && (
-                  <span className="ml-2 px-2 py-0.5 bg-purple-500/30 text-purple-200 text-[10px]">
+                  <span className="ml-2 px-2 py-0.5 bg-purple-500/30 text-purple-200 text-[9px] sm:text-[10px]">
                     {selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length}
                   </span>
                 )}
               </button>
             </div>
 
-            <div className={`lg:w-72 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
-              <div className="sticky top-24 bg-black/40 border border-purple-500/20 p-5 backdrop-blur-sm">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-press-start text-sm text-purple-300">FILTERS</h3>
+            <div className={`lg:w-64 xl:w-72 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
+              <div className="lg:sticky lg:top-24 bg-black/40 border border-purple-500/20 p-4 sm:p-5 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h3 className="font-press-start text-xs sm:text-sm text-purple-300">FILTERS</h3>
                   <button
                     onClick={clearAllFilters}
                     className="text-gray-500 font-jetbrains text-xs hover:text-purple-400 transition-colors"
