@@ -1,0 +1,158 @@
+{
+  "eventCategories": [
+    { "id": "all", "label": "All Events", "icon": "Sparkles" },
+    { "id": "hackathon", "label": "Hackathons", "icon": "Code" },
+    { "id": "conference", "label": "Conferences", "icon": "Users" },
+    { "id": "workshop", "label": "Workshops", "icon": "GraduationCap" },
+    { "id": "meetup", "label": "Meetups", "icon": "Coffee" },
+    { "id": "bootcamp", "label": "Bootcamps", "icon": "Rocket" },
+    { "id": "demo-day", "label": "Demo Days", "icon": "Presentation" }
+  ],
+  "featuredEvents": [
+    {
+      "id": "gih-season-2",
+      "name": "Grand Indian Hackathon Season 2",
+      "description": "India's largest teen hackathon series returns with bigger prizes and more challenges",
+      "type": "hackathon",
+      "startDate": "2025-06-15",
+      "endDate": "2025-06-17",
+      "location": "Hybrid - Delhi NCR & Online",
+      "format": "hybrid",
+      "prizes": "50L+",
+      "tags": ["AI", "Web3", "Climate Tech", "EdTech"],
+      "registerUrl": "/hackathons/gih-s2",
+      "featured": true,
+      "status": "upcoming",
+      "organizer": "Maximally"
+    },
+    {
+      "id": "ai-summit-2025",
+      "name": "Teen AI Summit 2025",
+      "description": "A conference bringing together the brightest young minds in artificial intelligence",
+      "type": "conference",
+      "startDate": "2025-07-20",
+      "endDate": "2025-07-21",
+      "location": "Bangalore, India",
+      "format": "in-person",
+      "prizes": null,
+      "tags": ["AI", "Machine Learning", "Deep Learning"],
+      "registerUrl": "/events/ai-summit",
+      "featured": true,
+      "status": "upcoming",
+      "organizer": "Maximally"
+    },
+    {
+      "id": "web3-workshop",
+      "name": "Web3 Builder Workshop",
+      "description": "Hands-on workshop to build your first decentralized application",
+      "type": "workshop",
+      "startDate": "2025-05-10",
+      "endDate": "2025-05-10",
+      "location": "Online",
+      "format": "online",
+      "prizes": null,
+      "tags": ["Web3", "Blockchain", "DeFi"],
+      "registerUrl": "/events/web3-workshop",
+      "featured": false,
+      "status": "upcoming",
+      "organizer": "Maximally"
+    },
+    {
+      "id": "founder-meetup-mumbai",
+      "name": "Teen Founders Meetup - Mumbai",
+      "description": "Monthly gathering of teen entrepreneurs to network and share ideas",
+      "type": "meetup",
+      "startDate": "2025-04-25",
+      "endDate": "2025-04-25",
+      "location": "Mumbai, India",
+      "format": "in-person",
+      "prizes": null,
+      "tags": ["Networking", "Startups", "Entrepreneurship"],
+      "registerUrl": "/events/founders-mumbai",
+      "featured": false,
+      "status": "upcoming",
+      "organizer": "Community"
+    },
+    {
+      "id": "code-bootcamp-summer",
+      "name": "Summer Code Bootcamp",
+      "description": "Intensive 2-week coding bootcamp for aspiring teen developers",
+      "type": "bootcamp",
+      "startDate": "2025-06-01",
+      "endDate": "2025-06-14",
+      "location": "Online",
+      "format": "online",
+      "prizes": null,
+      "tags": ["Full Stack", "React", "Node.js"],
+      "registerUrl": "/events/summer-bootcamp",
+      "featured": true,
+      "status": "upcoming",
+      "organizer": "Maximally"
+    },
+    {
+      "id": "demo-day-q2",
+      "name": "Maximally Demo Day Q2",
+      "description": "Showcase your projects to investors, mentors, and the community",
+      "type": "demo-day",
+      "startDate": "2025-06-30",
+      "endDate": "2025-06-30",
+      "location": "Online",
+      "format": "online",
+      "prizes": "5L+ in prizes",
+      "tags": ["Startups", "Pitching", "Investors"],
+      "registerUrl": "/events/demo-day-q2",
+      "featured": true,
+      "status": "upcoming",
+      "organizer": "Maximally"
+    }
+  ],
+  "eventTypeColors": {
+    "hackathon": {
+      "gradient": "from-cyan-500/20 via-blue-500/20 to-purple-500/20",
+      "border": "border-cyan-500/40",
+      "glow": "shadow-[0_0_30px_rgba(6,182,212,0.15)]",
+      "badge": "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
+      "icon": "text-cyan-400"
+    },
+    "conference": {
+      "gradient": "from-purple-500/20 via-pink-500/20 to-rose-500/20",
+      "border": "border-purple-500/40",
+      "glow": "shadow-[0_0_30px_rgba(168,85,247,0.15)]",
+      "badge": "bg-purple-500/20 text-purple-300 border-purple-500/40",
+      "icon": "text-purple-400"
+    },
+    "workshop": {
+      "gradient": "from-green-500/20 via-emerald-500/20 to-teal-500/20",
+      "border": "border-green-500/40",
+      "glow": "shadow-[0_0_30px_rgba(34,197,94,0.15)]",
+      "badge": "bg-green-500/20 text-green-300 border-green-500/40",
+      "icon": "text-green-400"
+    },
+    "meetup": {
+      "gradient": "from-orange-500/20 via-amber-500/20 to-yellow-500/20",
+      "border": "border-orange-500/40",
+      "glow": "shadow-[0_0_30px_rgba(249,115,22,0.15)]",
+      "badge": "bg-orange-500/20 text-orange-300 border-orange-500/40",
+      "icon": "text-orange-400"
+    },
+    "bootcamp": {
+      "gradient": "from-rose-500/20 via-red-500/20 to-orange-500/20",
+      "border": "border-rose-500/40",
+      "glow": "shadow-[0_0_30px_rgba(244,63,94,0.15)]",
+      "badge": "bg-rose-500/20 text-rose-300 border-rose-500/40",
+      "icon": "text-rose-400"
+    },
+    "demo-day": {
+      "gradient": "from-indigo-500/20 via-blue-500/20 to-cyan-500/20",
+      "border": "border-indigo-500/40",
+      "glow": "shadow-[0_0_30px_rgba(99,102,241,0.15)]",
+      "badge": "bg-indigo-500/20 text-indigo-300 border-indigo-500/40",
+      "icon": "text-indigo-400"
+    }
+  },
+  "stats": {
+    "totalEvents": "50+",
+    "countries": "15+",
+    "participants": "10K+"
+  }
+}

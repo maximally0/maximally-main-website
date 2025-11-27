@@ -1,5 +1,6 @@
 export { HackathonCard } from "./HackathonCard";
 export { ExploreCard } from "./ExploreCard";
+export { EventCard } from "./EventCard";
 export { HappeningNowCard } from "./HappeningNowCard";
 export { PartnerLogoRow, CompanyMarquee } from "./PartnerLogoRow";
 
