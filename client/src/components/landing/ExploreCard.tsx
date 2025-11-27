@@ -8,6 +8,7 @@ import {
   BookOpen, 
   Calendar,
   ArrowRight,
+  Award,
   LucideIcon
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -32,6 +33,7 @@ const iconMap: Record<string, LucideIcon> = {
   "message-circle": MessageCircle,
   "book-open": BookOpen,
   "calendar": Calendar,
+  "award": Award,
 };
 
 const colorStyles: Record<string, { icon: string; border: string; glow: string; badge: string; text: string }> = {
@@ -97,6 +99,13 @@ const colorStyles: Record<string, { icon: string; border: string; glow: string; 
     glow: "from-yellow-500/10 to-orange-500/10",
     badge: "bg-yellow-500/20 text-yellow-300 border-yellow-500/50",
     text: "text-yellow-400",
+  },
+  amber: {
+    icon: "bg-amber-500/20 border-amber-500/30 group-hover:border-amber-400",
+    border: "hover:border-amber-500/50",
+    glow: "from-amber-500/10 to-yellow-500/10",
+    badge: "bg-amber-500/20 text-amber-300 border-amber-500/50",
+    text: "text-amber-400",
   },
 };
 

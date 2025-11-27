@@ -26,6 +26,7 @@ Maximally is a global hackathon ecosystem designed for ambitious teenagers (ages
 
 ### Explore Page Updates
 - Removed "Jobs & Internships" section from exploreCards.json
+- Added "Maximally Judge Network" card with amber styling, award icon, and "New" badge
 
 ### About Page Updates
 - Added "Explore Maximally" to "What We're Building" section (cyan styling, links to /explore)

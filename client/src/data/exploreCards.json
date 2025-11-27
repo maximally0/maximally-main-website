@@ -31,6 +31,16 @@
       "color": "cyan"
     },
     {
+      "id": "judge-network",
+      "title": "Judge Network",
+      "description": "Connect with experienced judges, mentors, and industry experts who evaluate hackathon projects.",
+      "icon": "award",
+      "url": "/judges",
+      "status": "active",
+      "badge": "New",
+      "color": "amber"
+    },
+    {
       "id": "resources",
       "title": "Resources",
       "description": "Guides, templates, and tools to help you build better projects faster.",
