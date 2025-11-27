@@ -124,6 +124,16 @@ const WhatWereBuilding = () => {
       link: "#"
     },
     {
+      title: "EXPLORE MAXIMALLY",
+      description: "Your gateway to opportunities beyond hackathons — careers, resources, labs, fellowships, and community initiatives.",
+      icon: Sparkles,
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      border: 'border-cyan-500/40',
+      iconBg: 'bg-cyan-500/20',
+      iconColor: 'text-cyan-400',
+      link: "/explore"
+    },
+    {
       title: "FEDERATION (MFHOP)",
       description: "A cross-school, cross-company network where organizers share resources, partnerships, and reach.",
       icon: Globe,
@@ -137,10 +147,10 @@ const WhatWereBuilding = () => {
       title: "STUDIOS",
       description: "Content around hackathons, innovation, and youth culture — documenting stories and voices of builders.",
       icon: Star,
-      gradient: 'from-blue-500/20 to-cyan-500/20',
-      border: 'border-blue-500/40',
-      iconBg: 'bg-blue-500/20',
-      iconColor: 'text-blue-400',
+      gradient: 'from-indigo-500/20 to-violet-500/20',
+      border: 'border-indigo-500/40',
+      iconBg: 'bg-indigo-500/20',
+      iconColor: 'text-indigo-400',
       link: "/blog"
     },
     {
@@ -523,6 +533,16 @@ const Partners = () => {
       border: 'border-green-500/40',
       iconBg: 'bg-green-500/20',
       iconColor: 'text-green-400'
+    },
+    {
+      name: "NexFellow",
+      type: "Media Partnership",
+      description: "Amplifying stories of young builders and innovators through strategic media coverage",
+      highlight: "Media Partner",
+      gradient: 'from-purple-500/20 to-violet-500/20',
+      border: 'border-purple-500/40',
+      iconBg: 'bg-purple-500/20',
+      iconColor: 'text-purple-400'
     }
   ];
 

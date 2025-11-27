@@ -11,16 +11,6 @@
       "color": "purple"
     },
     {
-      "id": "jobs",
-      "title": "Jobs & Internships",
-      "description": "Curated opportunities from our partner companies and startups in the ecosystem.",
-      "icon": "briefcase",
-      "url": "/explore/jobs",
-      "status": "active",
-      "badge": null,
-      "color": "blue"
-    },
-    {
       "id": "work-with-us",
       "title": "Work With Us",
       "description": "Join the Maximally task force. Help us run events, build tools, and grow the community.",
