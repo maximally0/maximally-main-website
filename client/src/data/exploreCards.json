@@ -1,13 +1,24 @@
 {
   "exploreCards": [
     {
+      "id": "blog",
+      "title": "Blog",
+      "description": "Stories, guides, and insights from the Maximally hackathon ecosystem.",
+      "icon": "book-open",
+      "url": "/blog",
+      "status": "active",
+      "badge": "New Posts",
+      "color": "purple"
+    },
+    {
       "id": "jobs",
       "title": "Jobs & Internships",
       "description": "Curated opportunities from our partner companies and startups in the ecosystem.",
       "icon": "briefcase",
       "url": "/explore/jobs",
       "status": "active",
-      "badge": null
+      "badge": null,
+      "color": "blue"
     },
     {
       "id": "work-with-us",
@@ -16,34 +27,8 @@
       "icon": "users",
       "url": "/careers",
       "status": "active",
-      "badge": "Hiring"
-    },
-    {
-      "id": "labs",
-      "title": "Maximally Labs",
-      "description": "Experimental projects and tools we're building for the builder community.",
-      "icon": "flask",
-      "url": "/explore/labs",
-      "status": "coming-soon",
-      "badge": "Coming Soon"
-    },
-    {
-      "id": "fellowships",
-      "title": "Fellowships",
-      "description": "Long-term programs for exceptional builders who want to level up.",
-      "icon": "graduation-cap",
-      "url": "/explore/fellowships",
-      "status": "coming-soon",
-      "badge": "Coming Soon"
-    },
-    {
-      "id": "startup-gigs",
-      "title": "Startup Gigs",
-      "description": "Short-term projects with early-stage startups looking for builder talent.",
-      "icon": "rocket",
-      "url": "/explore/startup-gigs",
-      "status": "coming-soon",
-      "badge": "Coming Soon"
+      "badge": "Hiring",
+      "color": "green"
     },
     {
       "id": "community",
@@ -52,7 +37,8 @@
       "icon": "message-circle",
       "url": "https://discord.gg/MpBnYk8qMX",
       "status": "active",
-      "badge": null
+      "badge": null,
+      "color": "cyan"
     },
     {
       "id": "resources",
@@ -61,7 +47,8 @@
       "icon": "book-open",
       "url": "/resources",
       "status": "active",
-      "badge": null
+      "badge": null,
+      "color": "orange"
     },
     {
       "id": "mfhop",
@@ -70,7 +57,38 @@
       "icon": "calendar",
       "url": "/mfhop",
       "status": "active",
-      "badge": null
+      "badge": null,
+      "color": "red"
+    },
+    {
+      "id": "labs",
+      "title": "Maximally Labs",
+      "description": "Experimental projects and tools we're building for the builder community.",
+      "icon": "flask",
+      "url": "/explore/labs",
+      "status": "coming-soon",
+      "badge": "Coming Soon",
+      "color": "pink"
+    },
+    {
+      "id": "fellowships",
+      "title": "Fellowships",
+      "description": "Long-term programs for exceptional builders who want to level up.",
+      "icon": "graduation-cap",
+      "url": "/explore/fellowships",
+      "status": "coming-soon",
+      "badge": "Coming Soon",
+      "color": "indigo"
+    },
+    {
+      "id": "startup-gigs",
+      "title": "Startup Gigs",
+      "description": "Short-term projects with early-stage startups looking for builder talent.",
+      "icon": "rocket",
+      "url": "/explore/startup-gigs",
+      "status": "coming-soon",
+      "badge": "Coming Soon",
+      "color": "yellow"
     }
   ]
 }

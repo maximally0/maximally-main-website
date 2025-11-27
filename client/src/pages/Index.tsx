@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import {
   HeroSection,
   CredibilitySection,
-  HappeningNowSection,
+  BlogFeedSection,
   UpcomingHackathonsSection,
   ExploreMaximallySection,
   WhyMaximallySection,
@@ -35,7 +35,7 @@ const Index = () => {
         
         <UpcomingHackathonsSection />
         
-        <HappeningNowSection />
+        <BlogFeedSection />
         
         <ExploreMaximallySection />
         

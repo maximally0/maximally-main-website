@@ -20,6 +20,7 @@ interface ExploreCardProps {
   url: string;
   status: "active" | "coming-soon";
   badge?: string | null;
+  color?: string;
 }
 
 const iconMap: Record<string, LucideIcon> = {
@@ -33,6 +34,72 @@ const iconMap: Record<string, LucideIcon> = {
   "calendar": Calendar,
 };
 
+const colorStyles: Record<string, { icon: string; border: string; glow: string; badge: string; text: string }> = {
+  purple: {
+    icon: "bg-purple-500/20 border-purple-500/30 group-hover:border-purple-400",
+    border: "hover:border-purple-500/50",
+    glow: "from-purple-500/10 to-pink-500/10",
+    badge: "bg-purple-500/20 text-purple-300 border-purple-500/50",
+    text: "text-purple-400",
+  },
+  blue: {
+    icon: "bg-blue-500/20 border-blue-500/30 group-hover:border-blue-400",
+    border: "hover:border-blue-500/50",
+    glow: "from-blue-500/10 to-cyan-500/10",
+    badge: "bg-blue-500/20 text-blue-300 border-blue-500/50",
+    text: "text-blue-400",
+  },
+  green: {
+    icon: "bg-green-500/20 border-green-500/30 group-hover:border-green-400",
+    border: "hover:border-green-500/50",
+    glow: "from-green-500/10 to-emerald-500/10",
+    badge: "bg-green-500/20 text-green-300 border-green-500/50",
+    text: "text-green-400",
+  },
+  cyan: {
+    icon: "bg-cyan-500/20 border-cyan-500/30 group-hover:border-cyan-400",
+    border: "hover:border-cyan-500/50",
+    glow: "from-cyan-500/10 to-blue-500/10",
+    badge: "bg-cyan-500/20 text-cyan-300 border-cyan-500/50",
+    text: "text-cyan-400",
+  },
+  orange: {
+    icon: "bg-orange-500/20 border-orange-500/30 group-hover:border-orange-400",
+    border: "hover:border-orange-500/50",
+    glow: "from-orange-500/10 to-yellow-500/10",
+    badge: "bg-orange-500/20 text-orange-300 border-orange-500/50",
+    text: "text-orange-400",
+  },
+  red: {
+    icon: "bg-red-500/20 border-red-500/30 group-hover:border-red-400",
+    border: "hover:border-red-500/50",
+    glow: "from-red-500/10 to-orange-500/10",
+    badge: "bg-red-500/20 text-red-300 border-red-500/50",
+    text: "text-red-400",
+  },
+  pink: {
+    icon: "bg-pink-500/20 border-pink-500/30 group-hover:border-pink-400",
+    border: "hover:border-pink-500/50",
+    glow: "from-pink-500/10 to-purple-500/10",
+    badge: "bg-pink-500/20 text-pink-300 border-pink-500/50",
+    text: "text-pink-400",
+  },
+  indigo: {
+    icon: "bg-indigo-500/20 border-indigo-500/30 group-hover:border-indigo-400",
+    border: "hover:border-indigo-500/50",
+    glow: "from-indigo-500/10 to-purple-500/10",
+    badge: "bg-indigo-500/20 text-indigo-300 border-indigo-500/50",
+    text: "text-indigo-400",
+  },
+  yellow: {
+    icon: "bg-yellow-500/20 border-yellow-500/30 group-hover:border-yellow-400",
+    border: "hover:border-yellow-500/50",
+    glow: "from-yellow-500/10 to-orange-500/10",
+    badge: "bg-yellow-500/20 text-yellow-300 border-yellow-500/50",
+    text: "text-yellow-400",
+  },
+};
+
 export function ExploreCard({
   id,
   title,
@@ -41,45 +108,49 @@ export function ExploreCard({
   url,
   status,
   badge,
+  color = "red",
 }: ExploreCardProps) {
   const Icon = iconMap[icon] || Rocket;
   const isExternal = url.startsWith("http");
   const isComingSoon = status === "coming-soon";
+  const styles = colorStyles[color] || colorStyles.red;
 
   const CardContent = () => (
     <>
-      <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className={`absolute inset-0 bg-gradient-to-br ${styles.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
       
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${styles.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
       
-      <div className="relative p-6 space-y-4">
-        <div className="flex items-start justify-between">
-          <div className={`p-3 ${isComingSoon ? 'bg-gray-800' : 'bg-red-500/20'} border ${isComingSoon ? 'border-gray-700' : 'border-red-500/30'} group-hover:border-red-500/50 transition-colors`}>
-            <Icon className={`w-6 h-6 ${isComingSoon ? 'text-gray-500' : 'text-red-500'}`} />
+      <div className="relative p-5 sm:p-6 space-y-4 h-full flex flex-col">
+        <div className="flex items-start justify-between gap-2">
+          <div className={`p-3 ${isComingSoon ? 'bg-gray-800 border-gray-700' : styles.icon} border transition-colors`}>
+            <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${isComingSoon ? 'text-gray-500' : styles.text}`} />
           </div>
           
           {badge && (
-            <span className={`px-2 py-1 text-[10px] font-press-start ${
+            <span className={`px-2 py-1 text-[9px] sm:text-[10px] font-press-start border whitespace-nowrap ${
               badge === "Hiring" 
-                ? "bg-green-500/20 text-green-400 border border-green-500/50" 
-                : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/50"
+                ? "bg-green-500/20 text-green-400 border-green-500/50" 
+                : badge === "New Posts"
+                ? styles.badge
+                : "bg-yellow-500/20 text-yellow-400 border-yellow-500/50"
             }`}>
               {badge.toUpperCase()}
             </span>
           )}
         </div>
         
-        <div>
-          <h3 className={`font-press-start text-sm mb-2 ${isComingSoon ? 'text-gray-500' : 'text-white group-hover:text-red-400'} transition-colors`}>
+        <div className="flex-1">
+          <h3 className={`font-press-start text-xs sm:text-sm mb-2 ${isComingSoon ? 'text-gray-500' : `text-white group-hover:${styles.text}`} transition-colors leading-relaxed`}>
             {title}
           </h3>
-          <p className={`text-sm font-jetbrains ${isComingSoon ? 'text-gray-600' : 'text-gray-400'} line-clamp-2`}>
+          <p className={`text-xs sm:text-sm font-jetbrains ${isComingSoon ? 'text-gray-600' : 'text-gray-400'} line-clamp-2 leading-relaxed`}>
             {description}
           </p>
         </div>
         
         {!isComingSoon && (
-          <div className="flex items-center gap-2 text-red-500 font-press-start text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className={`flex items-center gap-2 ${styles.text} font-press-start text-[10px] opacity-0 group-hover:opacity-100 transition-opacity mt-auto`}>
             <span>EXPLORE</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </div>
@@ -88,10 +159,10 @@ export function ExploreCard({
     </>
   );
 
-  const cardClasses = `group relative bg-gradient-to-br from-gray-900/80 via-black to-gray-900/80 border ${
+  const cardClasses = `group relative h-full bg-gradient-to-br from-gray-900/80 via-black to-gray-900/80 border ${
     isComingSoon 
-      ? 'border-gray-800 cursor-not-allowed' 
-      : 'border-gray-800 hover:border-red-500/50 cursor-pointer'
+      ? 'border-gray-800/60 cursor-not-allowed opacity-60' 
+      : `border-gray-800 ${styles.border} cursor-pointer`
   } transition-all duration-300 overflow-hidden`;
 
   if (isComingSoon) {
