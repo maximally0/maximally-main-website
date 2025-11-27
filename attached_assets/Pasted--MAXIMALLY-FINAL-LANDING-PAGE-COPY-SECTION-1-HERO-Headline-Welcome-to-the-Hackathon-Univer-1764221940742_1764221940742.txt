@@ -1,0 +1,189 @@
+🌌 MAXIMALLY — FINAL LANDING PAGE COPY
+⭐ SECTION 1 — HERO
+Headline:
+
+Welcome to the Hackathon Universe.
+
+Subheading:
+
+Maximally runs high-energy hackathons and innovation events for ambitious builders.
+Compete, build, learn, and be part of a fast-growing community of creators.
+
+Primary CTA:
+
+Explore Hackathons
+
+Secondary CTA:
+
+For Organizers
+
+(Background → cosmic gradients, subtle particles, neon glows)
+
+⭐ SECTION 2 — CREDIBILITY (moved up)
+
+Placed right after hero. This builds instant trust.
+
+Trusted by thousands of builders.
+
+Maximally has grown into one of India’s most loved hackathon ecosystems.
+
+15,000+ participants across our events
+
+11+ large-scale hackathons hosted
+
+20+ sponsor partners including global brands
+
+Judges & mentors from Google, Microsoft, Meta, AWS & more
+
+Organizers across schools, colleges, communities, and startups
+
+(Show logos in a neat row)
+
+⭐ SECTION 3 — HAPPENING NOW
+
+Dynamic, simple. Great for consumer-first behavior.
+
+Happening Now
+
+Fast updates on what’s live in the universe.
+
+Cards like:
+
+🔥 Featured Hackathon
+
+⚡ Registrations Closing Soon
+
+🆕 Newly Announced
+
+(If you only have one live, show 1–2 cards — still works visually.)
+
+⭐ SECTION 4 — UPCOMING HACKATHONS (MAIN SECTION)
+Upcoming Hackathons
+
+Explore current and upcoming events in the Maximally ecosystem.
+
+Show cards:
+
+Name
+
+Theme
+
+Date
+
+Prize
+
+Register button
+
+Poster style
+
+Button: View All Hackathons
+
+This is the core of the website.
+This must be the biggest section.
+
+⭐ SECTION 5 — WHY MAXIMALLY (builder-first reasons)
+
+Short, crisp, youth-friendly but not childish.
+
+Why Builders Choose Maximally
+
+Creative Themes — our hackathons aren’t boring.
+
+High-Energy Format — intense, fast-paced, unforgettable.
+
+Beginner-Friendly — anyone can start building.
+
+Serious Judging — vetted by industry engineers and founders.
+
+Global Community — connect with builders everywhere.
+
+Punchline:
+We make building fun, competitive, and meaningful.
+
+⭐ SECTION 6 — FOR ORGANIZERS
+
+Small, clean, clearly separate.
+
+For Organizers
+
+Run your own hackathon with Maximally’s ecosystem.
+
+Cards:
+
+Host With Maximally — full-stack support for your event
+
+MFHOP — join the federation of organizers
+
+Judges & Mentors — access our evaluation network
+
+CTA: Learn More
+
+This section should feel supportive, not salesy.
+
+⭐ SECTION 7 — LABS (YOUR INTERNAL INITIATIVES)
+
+A neat, minimal cluster.
+
+Labs
+
+The experimental side of Maximally — where we build things, try ideas, and push innovation.
+
+Cards:
+
+🧪 Research Labs
+
+Experiments, prototypes, and new ideas we’re testing behind the scenes.
+
+⚖️ Judging Panel
+
+Experts who evaluate submissions across all Maximally events.
+
+🌐 MFHOP
+
+The federation of hackathon organizers — a shared ecosystem of standards.
+
+🎮 Special Projects
+
+One-off events, creative formats, and fun experiments.
+
+(You can adjust what shows here anytime.)
+
+⭐ SECTION 8 — PARTNERS / COMMUNITY TRUST
+Supported By
+
+Logos of:
+Google, Microsoft, Meta, AWS, Warner Bros Discovery, etc.
+(based on your judging/mentor partners)
+
+Simple, clean.
+
+⭐ SECTION 9 — FOOTER
+
+Links:
+Hackathons | Organizers | Labs | About | Contact | Privacy
+
+Socials: IG, LinkedIn, Discord (optional)
+
+Simple dark footer.
+
+🌈 THIS IS THE FINAL FLOW (SUMMARY)
+
+Hero
+
+Credibility
+
+Happening Now
+
+Upcoming Hackathons
+
+Why Maximally
+
+Organizers
+
+Labs
+
+Partners
+
+Footer
+
+This is clean, consumer-first, high energy, and deeply aligned with your brand.
