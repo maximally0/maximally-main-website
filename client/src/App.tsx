@@ -156,7 +156,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import SubmissionDetail from './pages/SubmissionDetail';
 import ParticipantDashboard from './pages/ParticipantDashboard';
 import AdminNotifications from './pages/AdminNotifications';
-import Resources from './pages/Resources';
+// Resources page removed
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
 
@@ -345,7 +345,7 @@ const AppContent = () => {
         <Route path="/submissions/:slug" element={<SubmissionDetail />} />
         <Route path="/my-hackathons" element={<ParticipantDashboard />} />
         <Route path="/admin/notifications" element={<AdminNotifications />} />
-        <Route path="/resources" element={<Resources />} />
+        {/* Resources route removed */}
         {/* Legacy redirect */}
         <Route path="/featured" element={<Navigate to="/people" replace />} />
         <Route path="/mfhop" element={<MFHOP />} />

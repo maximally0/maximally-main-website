@@ -68,7 +68,7 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
 
 export function BlogFeedSection() {
   const { featuredPosts } = blogData;
-  const displayPosts = featuredPosts.slice(0, 6);
+  const displayPosts = featuredPosts.slice(0, 3);
 
   if (!displayPosts || displayPosts.length === 0) {
     return null;

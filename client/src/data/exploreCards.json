@@ -41,16 +41,6 @@
       "color": "amber"
     },
     {
-      "id": "resources",
-      "title": "Resources",
-      "description": "Guides, templates, and tools to help you build better projects faster.",
-      "icon": "book-open",
-      "url": "/resources",
-      "status": "active",
-      "badge": null,
-      "color": "orange"
-    },
-    {
       "id": "mfhop",
       "title": "MFHOP",
       "description": "Maximally For Hackathon Organizer Program - resources for event organizers.",
