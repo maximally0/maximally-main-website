@@ -9,6 +9,7 @@ import {
   Calendar,
   ArrowRight,
   Award,
+  Lightbulb,
   LucideIcon
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -34,6 +35,7 @@ const iconMap: Record<string, LucideIcon> = {
   "book-open": BookOpen,
   "calendar": Calendar,
   "award": Award,
+  "lightbulb": Lightbulb,
 };
 
 const colorStyles: Record<string, { icon: string; border: string; glow: string; badge: string; text: string }> = {

@@ -144,16 +144,6 @@ const WhatWereBuilding = () => {
       link: "/mfhop"
     },
     {
-      title: "STUDIOS",
-      description: "Content around hackathons, innovation, and youth culture — documenting stories and voices of builders.",
-      icon: Star,
-      gradient: 'from-indigo-500/20 to-violet-500/20',
-      border: 'border-indigo-500/40',
-      iconBg: 'bg-indigo-500/20',
-      iconColor: 'text-indigo-400',
-      link: "/blog"
-    },
-    {
       title: "COMMUNITY",
       description: "A living network of participants, mentors, and judges that stays connected long after events end.",
       icon: Heart,
