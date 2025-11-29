@@ -55,6 +55,11 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// Redirect /vibe to vibe-a-thon.devpost.com
+app.get('/vibe', (_req: Request, res: Response) => {
+  res.redirect(301, 'https://vibe-a-thon.devpost.com');
+});
+
 // Initialize Supabase service-role client on the server only.
 // Required env vars: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 (() => {
