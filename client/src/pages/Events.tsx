@@ -564,41 +564,6 @@ const Events = () => {
                 </div>
               )}
 
-              {otherEvents.length > 0 && (
-                <div className="mt-8">
-                  <button
-                    onClick={() => setShowOtherEvents(!showOtherEvents)}
-                    className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/30 hover:border-amber-400/50 transition-all duration-300 group"
-                    data-testid="toggle-other-events"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="bg-amber-500/20 border border-amber-500/40 p-2">
-                        <Sparkles className="h-5 w-5 text-amber-400" />
-                      </div>
-                      <div className="text-left">
-                        <h3 className="font-press-start text-xs sm:text-sm text-amber-300">OTHER COOL STUFF</h3>
-                        <p className="font-jetbrains text-xs text-gray-500">
-                          {otherEvents.length} conferences, workshops, meetups & more
-                        </p>
-                      </div>
-                    </div>
-                    <ChevronDown className={`h-5 w-5 text-amber-400 transition-transform duration-300 ${showOtherEvents ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {showOtherEvents && (
-                    <div className="mt-5 pt-5 border-t border-amber-500/20">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        {otherEvents.map(event => (
-                          <EventCard 
-                            key={event.id} 
-                            {...event}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
 
               <div className="mt-16 p-8 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />

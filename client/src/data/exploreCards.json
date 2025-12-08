@@ -21,16 +21,6 @@
       "color": "green"
     },
     {
-      "id": "maximally-ideas",
-      "title": "Maximally Ideas",
-      "description": "A peek into everything we're experimenting with at Maximally — projects, concepts, and wild ideas in the works.",
-      "icon": "lightbulb",
-      "url": "https://www.notion.so/maximally/Maximally-Idea-Hub-2b9ecfba8afb8018b066f503f82b9aa8",
-      "status": "active",
-      "badge": "New",
-      "color": "yellow"
-    },
-    {
       "id": "community",
       "title": "Community",
       "description": "Join our Discord, meet fellow builders, and find your next hackathon team.",
@@ -59,36 +49,6 @@
       "status": "active",
       "badge": null,
       "color": "red"
-    },
-    {
-      "id": "labs",
-      "title": "Maximally Labs",
-      "description": "Experimental projects and tools we're building for the builder community.",
-      "icon": "flask",
-      "url": "/explore/labs",
-      "status": "coming-soon",
-      "badge": "Coming Soon",
-      "color": "pink"
-    },
-    {
-      "id": "fellowships",
-      "title": "Fellowships",
-      "description": "Long-term programs for exceptional builders who want to level up.",
-      "icon": "graduation-cap",
-      "url": "/explore/fellowships",
-      "status": "coming-soon",
-      "badge": "Coming Soon",
-      "color": "indigo"
-    },
-    {
-      "id": "startup-gigs",
-      "title": "Startup Gigs",
-      "description": "Short-term projects with early-stage startups looking for builder talent.",
-      "icon": "rocket",
-      "url": "/explore/startup-gigs",
-      "status": "coming-soon",
-      "badge": "Coming Soon",
-      "color": "yellow"
     }
   ]
 }

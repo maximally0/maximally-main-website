@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Linkedin, Twitter, MessageCircle, Code } from 'lucide-react';
+import { Instagram, Linkedin, Twitter, MessageCircle, Code, Youtube } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -61,14 +61,6 @@ const Footer = () => {
                   Hackathons
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/people"
-                  className="hover:text-cyan-300 transition-colors block"
-                >
-                  People
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -119,6 +111,46 @@ const Footer = () => {
                   Explore
                 </Link>
               </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/maximally.in/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-green-300 transition-colors block"
+                >
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/company/maximallyedu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-green-300 transition-colors block"
+                >
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://twitter.com/maximally_in"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-green-300 transition-colors block"
+                >
+                  X
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.youtube.com/@MaximallyHQ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-green-300 transition-colors block"
+                >
+                  YouTube
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -133,6 +165,14 @@ const Footer = () => {
                   className="hover:text-amber-300 transition-colors block"
                 >
                   About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/people"
+                  className="hover:text-amber-300 transition-colors block"
+                >
+                  People
                 </Link>
               </li>
               <li>
