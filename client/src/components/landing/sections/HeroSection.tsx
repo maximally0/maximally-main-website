@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Compass, Zap, Code2, Rocket } from "lucide-react";
+import ycLogo from "@assets/yccc_1765213818052.png";
 
 interface FloatingPixel {
   id: number;
@@ -69,6 +70,25 @@ export function HeroSection() {
 
       <div className="container mx-auto px-4 sm:px-6 z-10">
         <div className="max-w-5xl mx-auto text-center">
+          <div className="flex justify-center mb-10">
+            <a 
+              href="https://www.ycombinator.com/companies/maximally"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-gray-900/95 via-gray-900/90 to-gray-800/95 border border-orange-500/30 rounded-full backdrop-blur-md hover:border-orange-500/60 transition-all duration-300 group shadow-[0_0_25px_rgba(255,115,0,0.15)] hover:shadow-[0_0_35px_rgba(255,115,0,0.25)]"
+              data-testid="link-yc-badge"
+            >
+              <img 
+                src={ycLogo} 
+                alt="Y Combinator" 
+                className="w-6 h-6 rounded"
+              />
+              <span className="font-jetbrains text-[15px] text-white/95 group-hover:text-white transition-colors tracking-tight">
+                Backed by Y Combinator
+              </span>
+            </a>
+          </div>
+          
           <h1 className="font-press-start text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 sm:mb-10 leading-tight px-2">
             <span className="block bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
               Welcome to the
