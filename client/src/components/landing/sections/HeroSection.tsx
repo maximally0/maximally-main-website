@@ -70,30 +70,23 @@ export function HeroSection() {
 
       <div className="container mx-auto px-4 sm:px-6 z-10">
         <div className="max-w-5xl mx-auto text-center">
-          <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="flex justify-center mb-10">
             <a 
               href="https://www.ycombinator.com/companies/maximally"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-4 py-2 bg-gray-900/80 border border-gray-700/50 rounded-full backdrop-blur-sm hover:border-orange-500/50 transition-all duration-300 group"
+              className="inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-gray-900/95 via-gray-900/90 to-gray-800/95 border border-orange-500/30 rounded-full backdrop-blur-md hover:border-orange-500/60 transition-all duration-300 group shadow-[0_0_25px_rgba(255,115,0,0.15)] hover:shadow-[0_0_35px_rgba(255,115,0,0.25)]"
               data-testid="link-yc-badge"
             >
               <img 
                 src={ycLogo} 
                 alt="Y Combinator" 
-                className="w-5 h-5 rounded-sm"
+                className="w-6 h-6 rounded"
               />
-              <span className="font-jetbrains text-sm text-white/90 group-hover:text-white transition-colors">
+              <span className="font-jetbrains text-[15px] text-white/95 group-hover:text-white transition-colors tracking-tight">
                 Backed by Y Combinator
               </span>
             </a>
-            
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 backdrop-blur-sm">
-              <Zap className="w-4 h-4 text-red-400" />
-              <span className="font-press-start text-[10px] text-red-400 tracking-wider">
-                THE GLOBAL HACKATHON LEAGUE
-              </span>
-            </div>
           </div>
           
           <h1 className="font-press-start text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 sm:mb-10 leading-tight px-2">
