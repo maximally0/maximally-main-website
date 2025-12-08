@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from "react-router-dom";
 
 interface HackathonEvent {
   id: string;
@@ -187,17 +188,29 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
             </div>
 
             <div className="space-y-3">
-              <a
-                href={hackathon.registerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-press-start text-xs transition-all duration-300 hover:from-purple-500 hover:via-purple-400 hover:to-pink-400 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02]"
-                data-testid="button-register-hackathon"
-              >
-                <Zap className="w-4 h-4" />
-                REGISTER NOW
-                <ExternalLink className="w-4 h-4" />
-              </a>
+              {hackathon.registerUrl.startsWith('/') ? (
+                <Link
+                  to={hackathon.registerUrl}
+                  onClick={onClose}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-press-start text-xs transition-all duration-300 hover:from-purple-500 hover:via-purple-400 hover:to-pink-400 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02]"
+                  data-testid="button-register-hackathon"
+                >
+                  <Zap className="w-4 h-4" />
+                  VIEW & REGISTER
+                </Link>
+              ) : (
+                <a
+                  href={hackathon.registerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-press-start text-xs transition-all duration-300 hover:from-purple-500 hover:via-purple-400 hover:to-pink-400 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02]"
+                  data-testid="button-register-hackathon"
+                >
+                  <Zap className="w-4 h-4" />
+                  REGISTER NOW
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
             </div>
           </div>
         </ScrollArea>
