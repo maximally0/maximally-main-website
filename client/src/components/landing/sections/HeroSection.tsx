@@ -139,6 +139,23 @@ export function HeroSection() {
               </div>
             </div>
           </div>
+          
+          <div className="mt-12 sm:mt-16">
+            <a
+              href="https://www.ycombinator.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-500/10 border border-orange-500/30 hover:border-orange-400/50 transition-all duration-300"
+              data-testid="link-yc-backed"
+            >
+              <div className="w-5 h-5 bg-orange-500 flex items-center justify-center">
+                <span className="font-press-start text-[8px] text-white font-bold">Y</span>
+              </div>
+              <span className="font-jetbrains text-[10px] text-orange-400/80 tracking-wide">
+                Backed by Y Combinator
+              </span>
+            </a>
+          </div>
         </div>
       </div>
 

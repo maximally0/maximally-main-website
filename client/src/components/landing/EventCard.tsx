@@ -31,6 +31,7 @@ interface EventCardProps {
   status: "upcoming" | "ongoing" | "completed";
   organizer?: string;
   isMaximallyOfficial?: boolean;
+  onClick?: () => void;
 }
 
 const typeStyles: Record<string, {
@@ -144,7 +145,8 @@ export function EventCard({
   featured,
   status,
   organizer,
-  isMaximallyOfficial
+  isMaximallyOfficial,
+  onClick
 }: EventCardProps) {
   const styles = typeStyles[type] || typeStyles.hackathon;
   const TypeIcon = typeIcons[type] || Code;
@@ -162,12 +164,8 @@ export function EventCard({
     hybrid: "bg-pink-500/20 text-pink-300"
   };
 
-  return (
-    <Link
-      to={registerUrl}
-      className={`group block relative overflow-hidden bg-gradient-to-br ${styles.gradient} border ${styles.border} ${styles.glow} hover:scale-[1.02] transition-all duration-300`}
-      data-testid={`event-card-${id}`}
-    >
+  const cardContent = (
+    <>
       <div className="absolute inset-0 bg-black/40" />
       
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -262,6 +260,37 @@ export function EventCard({
           </div>
         </div>
       </div>
+    </>
+  );
+
+  const cardClassName = `group block relative overflow-hidden bg-gradient-to-br ${styles.gradient} border ${styles.border} ${styles.glow} hover:scale-[1.02] transition-all duration-300 cursor-pointer`;
+
+  if (onClick) {
+    return (
+      <div
+        onClick={onClick}
+        className={cardClassName}
+        data-testid={`event-card-${id}`}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            onClick();
+          }
+        }}
+      >
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to={registerUrl}
+      className={cardClassName}
+      data-testid={`event-card-${id}`}
+    >
+      {cardContent}
     </Link>
   );
 }

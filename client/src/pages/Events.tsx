@@ -22,8 +22,9 @@ import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import { EventCard } from '@/components/landing/EventCard';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { HackathonDetailSheet } from '@/components/HackathonDetailSheet';
 import { supabase, supabasePublic } from '@/lib/supabaseClient';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import type { SelectHackathon } from '@shared/schema';
 import { grandIndianHackathonSeason } from '@shared/schema';
 import techEventsData from '@/data/techEvents.json';
@@ -66,6 +67,18 @@ const Events = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
   const [showOtherEvents, setShowOtherEvents] = useState<boolean>(false);
+  const [selectedHackathon, setSelectedHackathon] = useState<TechEvent | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
+
+  const handleHackathonClick = (hackathon: TechEvent) => {
+    setSelectedHackathon(hackathon);
+    setIsSheetOpen(true);
+  };
+
+  const handleSheetClose = () => {
+    setIsSheetOpen(false);
+    setSelectedHackathon(null);
+  };
   
   const [selectedFilters, setSelectedFilters] = useState<{
     format: string[];
@@ -545,6 +558,7 @@ const Events = () => {
                     <EventCard 
                       key={event.id} 
                       {...event}
+                      onClick={() => handleHackathonClick(event)}
                     />
                   ))}
                 </div>
@@ -592,6 +606,12 @@ const Events = () => {
         </div>
 
         <Footer />
+
+        <HackathonDetailSheet
+          hackathon={selectedHackathon}
+          isOpen={isSheetOpen}
+          onClose={handleSheetClose}
+        />
       </div>
     </>
   );
