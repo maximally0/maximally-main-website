@@ -18,7 +18,10 @@ interface RegistrationProps {
   registrationClosesAt?: string;
   registrationControl?: 'auto' | 'open' | 'closed';
   buildingControl?: 'auto' | 'open' | 'closed';
+  winnersAnnounced?: boolean;
+  winnersAnnouncedAt?: string;
   onRegistrationChange?: () => void;
+  onViewWinners?: () => void;
 }
 
 export default function HackathonRegistration({
@@ -30,7 +33,10 @@ export default function HackathonRegistration({
   registrationClosesAt,
   registrationControl = 'auto',
   buildingControl = 'auto',
-  onRegistrationChange
+  winnersAnnounced = false,
+  winnersAnnouncedAt,
+  onRegistrationChange,
+  onViewWinners
 }: RegistrationProps) {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -381,6 +387,26 @@ export default function HackathonRegistration({
                     {opensAt?.toLocaleDateString()} at {opensAt?.toLocaleTimeString()}
                   </p>
                 </div>
+              </div>
+            </div>
+          ) : winnersAnnounced ? (
+            <div 
+              className="pixel-card bg-yellow-500/20 border-2 border-yellow-500 p-6 cursor-pointer hover:bg-yellow-500/30 transition-colors"
+              onClick={onViewWinners}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">🏆</div>
+                  <div>
+                    <h3 className="font-press-start text-sm text-yellow-400">WINNERS_ANNOUNCED!</h3>
+                    <p className="font-jetbrains text-gray-300 text-sm">
+                      {winnersAnnouncedAt 
+                        ? `Announced on ${new Date(winnersAnnouncedAt).toLocaleDateString()}`
+                        : 'Click to see the winning projects'}
+                    </p>
+                  </div>
+                </div>
+                <span className="font-press-start text-xs text-yellow-400 hidden sm:block">VIEW_WINNERS →</span>
               </div>
             </div>
           ) : isRegistrationClosed ? (

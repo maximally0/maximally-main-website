@@ -499,27 +499,6 @@ export default function PublicHackathon() {
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-5xl mx-auto">
-              {/* Winners Announced Banner */}
-              {hackathon.winners_announced && (
-                <div 
-                  onClick={() => setActiveTab('winners')}
-                  className="mb-6 pixel-card bg-gradient-to-r from-yellow-500/20 via-yellow-400/10 to-yellow-500/20 border-2 border-yellow-400 p-4 cursor-pointer hover:border-yellow-300 hover:scale-[1.02] transition-all animate-pulse-slow"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl">🏆</div>
-                      <div>
-                        <h3 className="font-press-start text-lg text-yellow-400">WINNERS_ANNOUNCED!</h3>
-                        <p className="text-gray-300 font-jetbrains text-sm">Click to see the winning projects</p>
-                      </div>
-                    </div>
-                    <div className="text-yellow-400 font-press-start text-sm hidden sm:block">
-                      VIEW_WINNERS →
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Status Badge */}
               <div className={`inline-flex items-center gap-3 bg-black/50 border-2 ${status.borderColor} px-6 py-3 mb-6 font-mono text-sm backdrop-blur-sm`}>
                 <Calendar className={`h-5 w-5 ${status.color} animate-pulse`} />
@@ -552,7 +531,10 @@ export default function PublicHackathon() {
                     registrationClosesAt={hackathon.registration_closes_at}
                     registrationControl={hackathon.registration_control}
                     buildingControl={hackathon.building_control}
+                    winnersAnnounced={hackathon.winners_announced}
+                    winnersAnnouncedAt={hackathon.winners_announced_at}
                     onRegistrationChange={fetchHackathon}
+                    onViewWinners={() => setActiveTab('winners')}
                   />
                 </div>
                 <RequestToJudge hackathonId={hackathon.id} />
