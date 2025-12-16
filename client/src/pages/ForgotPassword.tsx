@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { requestPasswordReset } from '@/lib/supabaseClient';
 import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
 import { isCaptchaRequired, isValidCaptchaToken } from '@/lib/captcha';
-import { useRef } from 'react';
+import { Lock, ArrowLeft, CheckCircle } from 'lucide-react';
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -16,7 +16,6 @@ export default function ForgotPassword() {
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
 
-  // CAPTCHA state
   const captchaRequired = isCaptchaRequired();
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string | null>(null);
@@ -26,6 +25,7 @@ export default function ForgotPassword() {
     setCaptchaToken(token);
     setCaptchaError(null);
   };
+  
   const handleCaptchaError = () => {
     setCaptchaToken(null);
     setCaptchaError('CAPTCHA verification failed. Please refresh and try again.');
@@ -35,11 +35,9 @@ export default function ForgotPassword() {
     e.preventDefault();
     setError(null);
 
-    if (captchaRequired) {
-      if (!isValidCaptchaToken(captchaToken)) {
-        setCaptchaError('Please complete the CAPTCHA verification');
-        return;
-      }
+    if (captchaRequired && !isValidCaptchaToken(captchaToken)) {
+      setCaptchaError('Please complete the CAPTCHA verification');
+      return;
     }
 
     setLoading(true);
@@ -62,87 +60,105 @@ export default function ForgotPassword() {
       <Helmet>
         <title>Forgot Password - Maximally</title>
       </Helmet>
+      
       <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center p-4 pt-24">
-        <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+        
+        <div className="absolute top-20 left-[10%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+        <div className="absolute bottom-20 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
 
         <div className="w-full max-w-lg relative z-10">
-          <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red hover:border-maximally-yellow transition-all duration-500 p-8 relative group overflow-hidden">
-            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
-            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
-            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
-
-            <div className="relative z-10">
-              <div className="text-center mb-8">
-                <div className="minecraft-block bg-maximally-red/20 border-2 border-maximally-red p-3 inline-block mb-4">
-                  <span className="text-4xl">🔒</span>
-                </div>
-                <h1 className="font-press-start text-2xl md:text-3xl font-bold mb-4 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">FORGOT_PASSWORD</span>
-                </h1>
-                <p className="font-jetbrains text-sm text-gray-400">Enter your email and we'll send you a reset link.</p>
+          <div className="bg-gradient-to-br from-gray-900/80 to-gray-900/40 border border-purple-500/30 p-6 sm:p-8 backdrop-blur-sm">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-14 h-14 mb-4 bg-purple-500/20 border border-purple-500/40">
+                <Lock className="w-7 h-7 text-purple-400" />
               </div>
-
-              {error && (
-                <div className="minecraft-block bg-red-900/30 border-2 border-maximally-red p-3 mb-6">
-                  <div className="text-red-300 font-press-start text-xs" role="alert">⚠️ {error}</div>
-                </div>
-              )}
-
-              {sent ? (
-                <div className="minecraft-block bg-green-900/30 border-2 border-green-600 p-3 mb-6">
-                  <div className="text-green-300 font-press-start text-xs" role="status">Check your email for the password reset link.</div>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="font-press-start text-xs text-maximally-blue flex items-center gap-2">
-                      <span className="w-2 h-2 bg-maximally-blue"></span>
-                      EMAIL_ADDRESS
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="hacker@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue placeholder:text-gray-500 transition-colors"
-                      required
-                    />
-                  </div>
-
-                  {captchaRequired && (
-                    <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-blue/30 p-4">
-                      <h3 className="font-press-start text-xs text-maximally-blue mb-3 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-maximally-blue"></span>
-                        VERIFICATION_REQUIRED
-                      </h3>
-                      <div className="flex justify-center">
-                        <Recaptcha
-                          ref={recaptchaRef}
-                          onVerify={handleCaptchaVerify}
-                          onError={handleCaptchaError}
-                          size="normal"
-                        />
-                      </div>
-                      {captchaError && (
-                        <div className="minecraft-block bg-red-900/30 border-2 border-maximally-red p-2 mt-3">
-                          <div className="text-red-300 font-press-start text-xs" role="alert">⚠️ {captchaError}</div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <Button type="submit" disabled={loading} className="w-full pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-sm py-4 transition-colors border-4 border-maximally-red hover:border-maximally-yellow">
-                    {loading ? 'SENDING...' : 'SEND_RESET_LINK'}
-                  </Button>
-                  <div className="text-center">
-                    <button type="button" onClick={() => navigate('/login')} className="font-press-start text-xs text-gray-400 hover:text-maximally-yellow">BACK_TO_LOGIN</button>
-                  </div>
-                </form>
-              )}
+              <h1 className="font-press-start text-lg sm:text-xl md:text-2xl mb-3">
+                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                  FORGOT PASSWORD
+                </span>
+              </h1>
+              <p className="font-jetbrains text-sm text-gray-400">
+                Enter your email and we'll send you a reset link.
+              </p>
             </div>
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/30 p-3 mb-6">
+                <div className="text-red-400 font-jetbrains text-sm" role="alert">⚠️ {error}</div>
+              </div>
+            )}
+
+            {sent ? (
+              <div className="bg-green-500/10 border border-green-500/30 p-4 mb-6 text-center">
+                <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-3" />
+                <div className="text-green-400 font-jetbrains text-sm" role="status">
+                  Check your email for the password reset link.
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="font-press-start text-[10px] text-purple-300 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                    EMAIL ADDRESS
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="hacker@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="bg-black/50 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400 placeholder:text-gray-600"
+                    required
+                  />
+                </div>
+
+                {captchaRequired && (
+                  <div className="bg-purple-500/5 border border-purple-500/20 p-4">
+                    <h3 className="font-press-start text-[10px] text-purple-300 mb-3 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                      VERIFICATION REQUIRED
+                    </h3>
+                    <div className="flex justify-center">
+                      <Recaptcha
+                        ref={recaptchaRef}
+                        onVerify={handleCaptchaVerify}
+                        onError={handleCaptchaError}
+                        size="normal"
+                      />
+                    </div>
+                    {captchaError && (
+                      <div className="bg-red-500/10 border border-red-500/30 p-2 mt-3">
+                        <div className="text-red-400 font-jetbrains text-xs" role="alert">⚠️ {captchaError}</div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <Button 
+                  type="submit" 
+                  disabled={loading} 
+                  className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs py-5 transition-all duration-300"
+                >
+                  {loading ? 'SENDING...' : 'SEND RESET LINK'}
+                </Button>
+                
+                <div className="text-center">
+                  <button 
+                    type="button" 
+                    onClick={() => navigate('/login')} 
+                    className="inline-flex items-center gap-2 font-jetbrains text-sm text-gray-400 hover:text-purple-400 transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Login
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>
