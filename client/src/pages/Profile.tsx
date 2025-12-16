@@ -110,12 +110,12 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
   };
 
   return (
-    <Card className="p-3 sm:p-4 md:p-6 bg-gray-900 border-gray-800 hover:border-maximally-red transition-all duration-300 hover:shadow-lg hover:shadow-maximally-red/20">
+    <Card className="p-3 sm:p-4 md:p-6 bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 hover:border-purple-400/60 transition-all duration-300">
       <div className="flex flex-col gap-3 sm:gap-4">
         <div className="flex-1">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
             <div className="flex-1 min-w-0">
-              <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm text-maximally-red mb-1 sm:mb-2 break-words">
+              <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm text-purple-400 mb-1 sm:mb-2 break-words">
                 {certificate.hackathon_name}
               </h3>
               <p className="text-gray-300 font-jetbrains text-[10px] sm:text-xs md:text-sm">
@@ -153,7 +153,7 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
               href={verificationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="pixel-button bg-maximally-red text-white text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-maximally-red/90 transition-colors"
+              className="bg-purple-500/20 border border-purple-500/40 text-purple-300 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-purple-500/30 transition-colors"
             >
               <Shield className="w-2 h-2 sm:w-3 sm:h-3" />
               <span>VERIFY</span>
@@ -165,7 +165,7 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
                 href={certificate.pdf_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pixel-button bg-maximally-blue text-white text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-maximally-blue/90 transition-colors"
+                className="bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-cyan-500/30 transition-colors"
               >
                 <Download className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span>PDF</span>
@@ -178,7 +178,7 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
                 href={certificate.jpg_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pixel-button bg-maximally-yellow text-maximally-black text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-maximally-yellow/90 transition-colors"
+                className="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-amber-500/30 transition-colors"
               >
                 <Eye className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span>VIEW</span>
@@ -202,17 +202,17 @@ function HackathonDetailsCard({ hackathon }: { hackathon: HackathonDetails }) {
   };
 
   return (
-    <Card className="p-6 bg-gray-900 border-gray-800 hover:border-maximally-red transition-all duration-300 hover:shadow-lg hover:shadow-maximally-red/20">
+    <Card className="p-6 bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 hover:border-purple-400/60 transition-all duration-300">
       <div className="flex gap-4">
         {hackathon.cover_image && (
           <img
             src={hackathon.cover_image}
             alt={hackathon.title}
-            className="w-20 h-20 object-cover rounded-lg border-2 border-gray-700"
+            className="w-20 h-20 object-cover border border-purple-500/30"
           />
         )}
         <div className="flex-1">
-          <h3 className="font-press-start text-sm text-maximally-red mb-2">{hackathon.title}</h3>
+          <h3 className="font-press-start text-sm text-purple-400 mb-2">{hackathon.title}</h3>
           {hackathon.subtitle && (
             <p className="text-gray-300 font-jetbrains text-sm mb-3 line-clamp-2">
               {hackathon.subtitle}
@@ -246,7 +246,7 @@ function AchievementCard({ achievement }: { achievement: UserAchievement }) {
   };
 
   return (
-    <Card className="p-6 bg-gray-900 border-gray-800 hover:border-maximally-yellow transition-all duration-300 hover:shadow-lg hover:shadow-maximally-yellow/20">
+    <Card className="p-6 bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-amber-500/30 hover:border-amber-400/60 transition-all duration-300">
       <div className="flex items-center gap-4">
         <div className="text-4xl flex-shrink-0">
           {achievement.icon}
@@ -333,109 +333,109 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300 flex items-center gap-1 sm:gap-2">
+        <button className="bg-purple-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-300 hover:text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-1 sm:gap-2">
           <Edit className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
-          <span className="hidden sm:inline">EDIT_PROFILE</span>
+          <span className="hidden sm:inline">EDIT PROFILE</span>
           <span className="sm:hidden">EDIT</span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl bg-black border-4 border-maximally-red max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="border-b border-maximally-red/30 pb-4 mb-6">
-          <DialogTitle className="text-maximally-red font-press-start text-lg flex items-center gap-2">
+      <DialogContent className="max-w-3xl bg-gray-900 border border-purple-500/50 max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="border-b border-purple-500/30 pb-4 mb-6">
+          <DialogTitle className="text-purple-400 font-press-start text-lg flex items-center gap-2">
             <Edit className="w-5 h-5" />
-            EDIT_PROFILE
+            EDIT PROFILE
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
           {/* Personal Info Section */}
-          <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-red/30 p-4">
-            <h3 className="font-press-start text-sm text-maximally-red mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-maximally-red"></span>
-              PERSONAL_INFO
+          <div className="bg-black/30 border border-purple-500/30 p-4">
+            <h3 className="font-press-start text-sm text-purple-400 mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 bg-purple-400"></span>
+              PERSONAL INFO
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name" className="text-maximally-yellow font-press-start text-xs mb-2 block">FULL_NAME</Label>
-                <Input id="name" value={formData.name || ''} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-red" placeholder="Enter your full name" />
+                <Label htmlFor="name" className="text-pink-300 font-press-start text-xs mb-2 block">FULL NAME</Label>
+                <Input id="name" value={formData.name || ''} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-black/50 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400" placeholder="Enter your full name" />
               </div>
               <div>
-                <Label htmlFor="location" className="text-maximally-blue font-press-start text-xs mb-2 block">LOCATION</Label>
-                <Input id="location" value={formData.location || ''} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue" placeholder="Your location" />
+                <Label htmlFor="location" className="text-cyan-300 font-press-start text-xs mb-2 block">LOCATION</Label>
+                <Input id="location" value={formData.location || ''} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="Your location" />
               </div>
             </div>
             <div className="mt-4">
-              <Label htmlFor="bio" className="text-maximally-green font-press-start text-xs mb-2 block">BIO</Label>
-              <Textarea id="bio" value={formData.bio || ''} onChange={(e) => setFormData({ ...formData, bio: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green" rows={3} placeholder="Tell us about yourself..." />
+              <Label htmlFor="bio" className="text-green-300 font-press-start text-xs mb-2 block">BIO</Label>
+              <Textarea id="bio" value={formData.bio || ''} onChange={(e) => setFormData({ ...formData, bio: e.target.value })} className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400" rows={3} placeholder="Tell us about yourself..." />
             </div>
             <div className="mt-4">
-              <Label htmlFor="email" className="text-maximally-yellow font-press-start text-xs mb-2 block">EMAIL</Label>
-              <Input id="email" type="email" value={formData.email || ''} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-yellow" placeholder="your@email.com" />
+              <Label htmlFor="email" className="text-amber-300 font-press-start text-xs mb-2 block">EMAIL</Label>
+              <Input id="email" type="email" value={formData.email || ''} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-black/50 border border-amber-500/30 text-white font-jetbrains focus:border-amber-400" placeholder="your@email.com" />
             </div>
           </div>
 
           {/* Avatar Section */}
-          <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-yellow/30 p-4">
-            <h3 className="font-press-start text-sm text-maximally-yellow mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-maximally-yellow"></span>
-              AVATAR_CONFIG
+          <div className="bg-black/30 border border-amber-500/30 p-4">
+            <h3 className="font-press-start text-sm text-amber-400 mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 bg-amber-400"></span>
+              AVATAR CONFIG
             </h3>
             <div>
-              <Label htmlFor="avatar" className="text-maximally-yellow font-press-start text-xs mb-2 block">UPLOAD_AVATAR</Label>
-              <Input id="avatar" type="file" accept="image/*" onChange={(e) => setAvatarFile(e.target.files?.[0] || null)} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-yellow" />
+              <Label htmlFor="avatar" className="text-amber-300 font-press-start text-xs mb-2 block">UPLOAD AVATAR</Label>
+              <Input id="avatar" type="file" accept="image/*" onChange={(e) => setAvatarFile(e.target.files?.[0] || null)} className="bg-black/50 border border-amber-500/30 text-white font-jetbrains focus:border-amber-400" />
               {profile.avatarUrl && (
                 <div className="mt-3">
                   <Button type="button" onClick={async () => {
                     const { clearAvatar } = await import('@/lib/supabaseClient');
                     await clearAvatar();
                     setFormData({ ...formData, avatarUrl: null });
-                  }} className="pixel-button bg-gray-800 hover:bg-maximally-red text-white font-press-start text-xs px-3 py-2 transition-colors">REMOVE_AVATAR</Button>
+                  }} className="bg-red-500/20 border border-red-500/40 hover:bg-red-500/30 text-red-300 font-press-start text-xs px-3 py-2 transition-colors">REMOVE AVATAR</Button>
                 </div>
               )}
             </div>
           </div>
 
           {/* Social Links Section */}
-          <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-blue/30 p-4">
-            <h3 className="font-press-start text-sm text-maximally-blue mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-maximally-blue"></span>
-              SOCIAL_LINKS
+          <div className="bg-black/30 border border-cyan-500/30 p-4">
+            <h3 className="font-press-start text-sm text-cyan-400 mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 bg-cyan-400"></span>
+              SOCIAL LINKS
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="github" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
                   <Github className="w-3 h-3" /> GITHUB
                 </Label>
-                <Input id="github" value={formData.github || ''} onChange={(e) => setFormData({ ...formData, github: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue" placeholder="username" />
+                <Input id="github" value={formData.github || ''} onChange={(e) => setFormData({ ...formData, github: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="username" />
               </div>
               <div>
                 <Label htmlFor="linkedin" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
                   <Linkedin className="w-3 h-3" /> LINKEDIN
                 </Label>
-                <Input id="linkedin" value={formData.linkedin || ''} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue" placeholder="username" />
+                <Input id="linkedin" value={formData.linkedin || ''} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="username" />
               </div>
               <div>
                 <Label htmlFor="twitter" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
                   <Twitter className="w-3 h-3" /> TWITTER
                 </Label>
-                <Input id="twitter" value={formData.twitter || ''} onChange={(e) => setFormData({ ...formData, twitter: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue" placeholder="username" />
+                <Input id="twitter" value={formData.twitter || ''} onChange={(e) => setFormData({ ...formData, twitter: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="username" />
               </div>
               <div>
                 <Label htmlFor="website" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
                   <Globe className="w-3 h-3" /> WEBSITE
                 </Label>
-                <Input id="website" value={formData.website || ''} onChange={(e) => setFormData({ ...formData, website: e.target.value })} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue" placeholder="https://yoursite.com" />
+                <Input id="website" value={formData.website || ''} onChange={(e) => setFormData({ ...formData, website: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="https://yoursite.com" />
               </div>
             </div>
           </div>
 
           {/* Skills Section */}
-          <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-green/30 p-4">
-            <h3 className="font-press-start text-sm text-maximally-green mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-maximally-green"></span>
-              SKILLS_CONFIG
+          <div className="bg-black/30 border border-green-500/30 p-4">
+            <h3 className="font-press-start text-sm text-green-400 mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 bg-green-400"></span>
+              SKILLS CONFIG
             </h3>
             <div>
-              <Label htmlFor="skills" className="text-maximally-green font-press-start text-xs mb-2 block">SKILLS (COMMA_SEPARATED)</Label>
+              <Label htmlFor="skills" className="text-green-300 font-press-start text-xs mb-2 block">SKILLS (COMMA SEPARATED)</Label>
               <Input 
                 id="skills" 
                 value={(formData.skills || []).join(', ')} 
@@ -444,19 +444,19 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
                   const skills = value.split(',').map(s => s.trim());
                   setFormData({ ...formData, skills });
                 }} 
-                className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green" 
+                className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400" 
                 placeholder="React, TypeScript, Python, Machine Learning, etc." 
               />
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-maximally-red/30">
-            <Button onClick={() => setOpen(false)} className="bg-gray-800 hover:bg-gray-700 text-white font-press-start text-xs px-6 py-3 transition-colors border-2 border-gray-700 hover:border-gray-600">
+          <div className="flex justify-end gap-3 pt-4 border-t border-purple-500/30">
+            <Button onClick={() => setOpen(false)} className="bg-gray-800 hover:bg-gray-700 text-white font-press-start text-xs px-6 py-3 transition-colors border border-gray-700 hover:border-gray-600">
               CANCEL
             </Button>
-            <Button onClick={handleSave} className="bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-xs px-6 py-3 transition-colors border-2 border-maximally-red">
-              SAVE_CHANGES
+            <Button onClick={handleSave} className="bg-purple-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-300 hover:text-white font-press-start text-xs px-6 py-3 transition-all">
+              SAVE CHANGES
             </Button>
           </div>
         </div>
@@ -823,40 +823,24 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Pixel Grid Background */}
-      <div className="fixed inset-0 bg-black" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      {/* Background Effects */}
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
       
-      {/* Floating Pixels */}
-      {[...Array(6)].map((_, i) => (
-        <div
-          key={i}
-          className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${i * 0.5}s`,
-            animationDuration: `${4 + i * 0.5}s`,
-          }}
-        />
-      ))}
+      <div className="fixed top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+      <div className="fixed top-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
       
       {/* Header */}
-      <div className="relative z-10 bg-gradient-to-br from-black via-red-950/10 to-black border-b-2 border-maximally-red/30 pt-16 sm:pt-20 lg:pt-24">
+      <div className="relative z-10 bg-gradient-to-br from-black via-purple-950/10 to-black border-b border-purple-500/30 pt-16 sm:pt-20 lg:pt-24">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12">
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 sm:gap-8 lg:gap-12">
             {/* Avatar */}
             <div className="flex-shrink-0 relative">
-              <div className="minecraft-block bg-maximally-red/20 border-4 border-maximally-red p-2 animate-[glow_2s_ease-in-out_infinite] hover:scale-105 transition-transform duration-300">
-                {/* Corner decorations */}
-                <div className="absolute top-1 left-1 w-3 h-3 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
-                <div className="absolute top-1 right-1 w-3 h-3 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
-                <div className="absolute bottom-1 left-1 w-3 h-3 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
-                <div className="absolute bottom-1 right-1 w-3 h-3 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
-                
-                <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 border-2 sm:border-3 lg:border-4 border-maximally-yellow">
+              <div className="bg-purple-500/20 border-2 border-purple-500/50 p-2 hover:scale-105 transition-transform duration-300">
+                <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 border-2 sm:border-3 lg:border-4 border-purple-400">
                   <AvatarImage src={userProfile.avatarUrl || ''} alt={userProfile.name || userProfile.username} />
-                  <AvatarFallback className="bg-maximally-red text-white text-sm sm:text-lg md:text-2xl lg:text-4xl font-press-start">
+                  <AvatarFallback className="bg-purple-500/30 text-purple-300 text-sm sm:text-lg md:text-2xl lg:text-4xl font-press-start">
                     {(userProfile.name || userProfile.username || 'U').charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -868,12 +852,12 @@ export default function Profile() {
               {/* Name and Status */}
               <div>
                 <div className="flex flex-col lg:flex-row lg:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                  <h1 className="font-press-start text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[3px_3px_0px_rgba(0,0,0,1)] hover:drop-shadow-[3px_3px_0px_rgba(255,215,0,0.5)] sm:hover:drop-shadow-[5px_5px_0px_rgba(255,215,0,0.5)] transition-all duration-300 break-words leading-tight">
+                  <h1 className="font-press-start text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent transition-all duration-300 break-words leading-tight">
                     {userProfile.name || userProfile.username}
                   </h1>
                   {dbProfile.role === 'admin' && (
-                    <div className="minecraft-block bg-maximally-yellow text-maximally-black px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
-                      <Shield className="w-4 h-4 animate-pulse" />
+                    <div className="bg-amber-500/20 border border-amber-500/50 text-amber-300 px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
                       <span>ADMIN</span>
                     </div>
                   )}
@@ -882,17 +866,16 @@ export default function Profile() {
                       tier={judgeData.tier} 
                       size="md" 
                       showLabel={true}
-                      className="animate-pulse"
                     />
                   )}
                   {(dbProfile.role as string) === 'organizer' && (
-                    <div className="minecraft-block bg-maximally-blue text-white px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
-                      <Trophy className="w-4 h-4 animate-pulse" />
+                    <div className="bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
+                      <Trophy className="w-4 h-4" />
                       <span>ORGANIZER</span>
                     </div>
                   )}
                 </div>
-                <p className="text-maximally-yellow font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 break-all">@{userProfile.username}</p>
+                <p className="text-pink-400 font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 break-all">@{userProfile.username}</p>
               </div>
 
               {/* Bio */}
