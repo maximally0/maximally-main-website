@@ -5,33 +5,99 @@ import {
   Calendar,
   MapPin,
   X,
-  ChevronDown
+  ChevronDown,
+  Sparkles,
+  Code,
+  Users,
+  GraduationCap,
+  Coffee,
+  Rocket,
+  Presentation,
+  Globe,
+  Trophy,
+  Zap,
+  ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
-import HackathonCard from '@/components/CollapsibleHackathonCard';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { EventCard } from '@/components/landing/EventCard';
+import { HackathonDetailSheet } from '@/components/HackathonDetailSheet';
 import { supabase, supabasePublic } from '@/lib/supabaseClient';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import type { SelectHackathon } from '@shared/schema';
 import { grandIndianHackathonSeason } from '@shared/schema';
+import techEventsData from '@/data/techEvents.json';
 
-// Extended type to include Maximally official flag
-type ExtendedHackathon = SelectHackathon & { isMaximallyOfficial?: boolean };
+type EventType = "hackathon" | "conference" | "workshop" | "meetup" | "bootcamp" | "demo-day";
+type EventFormat = "online" | "in-person" | "hybrid";
+type EventStatus = "upcoming" | "ongoing" | "completed";
+
+interface TechEvent {
+  id: string;
+  name: string;
+  description: string;
+  type: EventType;
+  startDate: string;
+  endDate: string;
+  location: string;
+  format: EventFormat;
+  prizes: string | null;
+  tags: string[];
+  registerUrl: string;
+  featured: boolean;
+  status: EventStatus;
+  organizer: string;
+  isMaximallyOfficial?: boolean;
+}
+
+const categoryIcons: Record<string, typeof Sparkles> = {
+  all: Sparkles,
+  hackathon: Code,
+  conference: Users,
+  workshop: GraduationCap,
+  meetup: Coffee,
+  bootcamp: Rocket,
+  "demo-day": Presentation
+};
 
 const Events = () => {
-  // Use the extended type to include the Maximally official flag
-  const [hackathons, setHackathons] = useState<ExtendedHackathon[]>([]);
+  const [events, setEvents] = useState<TechEvent[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>("hackathon");
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
+  const [showOtherEvents, setShowOtherEvents] = useState<boolean>(false);
+  const [selectedHackathon, setSelectedHackathon] = useState<TechEvent | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
 
-  const toTags = (value: any): string[] => {
-    if (!value) return [];
-    if (Array.isArray(value)) return value.map(String);
-    if (typeof value === 'object') return Object.values(value).map(String);
-    return [];
+  const handleHackathonClick = (hackathon: TechEvent) => {
+    setSelectedHackathon(hackathon);
+    setIsSheetOpen(true);
   };
 
-  const calcStatus = (status?: string | null, start?: string) => {
-    if (status) return status as any;
+  const handleSheetClose = () => {
+    setIsSheetOpen(false);
+    setSelectedHackathon(null);
+  };
+  
+  const [selectedFilters, setSelectedFilters] = useState<{
+    format: string[];
+    status: string[];
+    tags: string[];
+  }>({
+    format: [],
+    status: [],
+    tags: []
+  });
+
+  const [expandedFilters, setExpandedFilters] = useState<{ 
+    format: boolean; 
+    status: boolean; 
+    tags: boolean 
+  }>({ format: true, status: true, tags: false });
+
+  const calcStatus = (status?: string | null, start?: string): EventStatus => {
+    if (status) return status as EventStatus;
     if (!start) return 'upcoming';
     try {
       const now = new Date();
@@ -46,9 +112,35 @@ const Events = () => {
     }
   };
 
-  const fetchHackathons = async () => {
+  const fetchEvents = async () => {
+    const staticEvents: TechEvent[] = techEventsData.featuredEvents.map(e => ({
+      ...e,
+      type: e.type as EventType,
+      format: e.format as EventFormat,
+      status: e.status as EventStatus,
+      isMaximallyOfficial: e.organizer === "Maximally"
+    }));
+
     if (!supabasePublic) {
-      setHackathons(grandIndianHackathonSeason);
+      const fallbackEvents: TechEvent[] = grandIndianHackathonSeason.map((h, idx) => ({
+        id: h.id?.toString() || `hackathon-${idx}`,
+        name: h.name,
+        description: h.description,
+        type: "hackathon" as EventType,
+        startDate: h.startDate instanceof Date ? h.startDate.toISOString() : h.startDate,
+        endDate: h.endDate instanceof Date ? h.endDate.toISOString() : h.endDate,
+        location: h.location,
+        format: h.location.toLowerCase().includes('online') ? 'online' as EventFormat : 'hybrid' as EventFormat,
+        prizes: h.prizes,
+        tags: h.tags || [],
+        registerUrl: h.registerUrl || '#',
+        featured: false,
+        status: calcStatus(h.status, h.startDate instanceof Date ? h.startDate.toISOString() : h.startDate),
+        organizer: "Maximally",
+        isMaximallyOfficial: true
+      }));
+      
+      setEvents([...staticEvents, ...fallbackEvents]);
       return;
     }
     
@@ -56,7 +148,6 @@ const Events = () => {
       const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
       const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
-      // Fetch both admin hackathons and organizer hackathons
       const [adminResponse, organizerResponse] = await Promise.all([
         fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url,sort_order&is_active=eq.true&order=sort_order.asc,created_at.desc`, {
           headers: {
@@ -74,95 +165,70 @@ const Events = () => {
         })
       ]);
       
-      console.log('Admin hackathons response:', adminResponse.status);
-      console.log('Organizer hackathons response:', organizerResponse.status);
-      
       const adminData = adminResponse.ok ? await adminResponse.json() : [];
       const organizerData = organizerResponse.ok ? await organizerResponse.json() : [];
-      
-      console.log('Admin hackathons:', adminData.length);
-      console.log('Organizer hackathons:', organizerData.length, organizerData);
       
       const adminItems = Array.isArray(adminData) ? adminData : [];
       const organizerItems = Array.isArray(organizerData) ? organizerData : [];
       
-      // Map admin hackathons (Maximally official hackathons)
-      const mappedAdmin: ExtendedHackathon[] = adminItems.map((h, idx) => ({
-        id: (h.id ?? `hackathon-${idx + 1}`).toString(),
+      const mappedAdmin: TechEvent[] = adminItems.map((h: any) => ({
+        id: h.id?.toString() || `admin-${Math.random()}`,
         name: h.title ?? '',
         description: h.subtitle ?? '',
-        startDate: h.start_date ? new Date(h.start_date) : new Date(),
-        endDate: h.end_date ? new Date(h.end_date) : new Date(h.start_date ?? Date.now()),
-        length: h.duration ?? '48 hours',
+        type: "hackathon" as EventType,
+        startDate: h.start_date || new Date().toISOString(),
+        endDate: h.end_date || h.start_date || new Date().toISOString(),
         location: h.location ?? 'Online',
-        participants: 0,
+        format: (h.location?.toLowerCase().includes('online') ? 'online' : 'hybrid') as EventFormat,
         prizes: 'TBD',
         tags: Array.isArray(h.focus_areas) ? h.focus_areas.map(String) : [],
         registerUrl: h.devpost_register_url ?? h.registration_url ?? '#',
-        detailsUrl: h.devpost_url ?? '#',
-        imageUrl: null,
-        organizerName: 'Maximally',
-        organizerUrl: 'https://maximally.org',
-        status: (h.status ?? calcStatus(h.status ?? undefined, h.start_date)) as any,
-        isMaximallyOfficial: true, // Flag for Maximally hackathons
+        featured: false,
+        status: calcStatus(h.status, h.start_date),
+        organizer: 'Maximally',
+        isMaximallyOfficial: true
       }));
       
-      // Map organizer hackathons (Community organizer hackathons)
-      const mappedOrganizer: ExtendedHackathon[] = organizerItems.map((h, idx) => {
-        const startDate = h.start_date ? new Date(h.start_date) : new Date();
-        const endDate = h.end_date ? new Date(h.end_date) : new Date();
-        const diffMs = endDate.getTime() - startDate.getTime();
-        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-        const duration = diffDays === 1 ? '24 hours' : `${diffDays} days`;
-        
-        return {
-          id: `org-${h.id}`,
-          name: h.hackathon_name ?? '',
-          description: h.tagline ?? '',
-          startDate,
-          endDate,
-          length: duration,
-          location: h.format === 'online' ? 'Online' : (h.venue || 'TBD'),
-          participants: 0,
-          prizes: h.total_prize_pool || 'TBD',
-          tags: Array.isArray(h.themes) ? h.themes : [],
-          registerUrl: `/hackathon/${h.slug}`,
-          detailsUrl: `/hackathon/${h.slug}`,
-          imageUrl: null,
-          organizerName: 'Community Organizer',
-          organizerUrl: `/hackathon/${h.slug}`,
-          status: calcStatus('published', h.start_date) as any,
-          isMaximallyOfficial: false, // Flag for community hackathons
-        };
-      });
+      const mappedOrganizer: TechEvent[] = organizerItems.map((h: any) => ({
+        id: `org-${h.id}`,
+        name: h.hackathon_name ?? '',
+        description: h.tagline ?? '',
+        type: "hackathon" as EventType,
+        startDate: h.start_date || new Date().toISOString(),
+        endDate: h.end_date || new Date().toISOString(),
+        location: h.format === 'online' ? 'Online' : (h.venue || 'TBD'),
+        format: (h.format || 'hybrid') as EventFormat,
+        prizes: h.total_prize_pool || 'TBD',
+        tags: Array.isArray(h.themes) ? h.themes : [],
+        registerUrl: `/hackathon/${h.slug}`,
+        featured: false,
+        status: calcStatus('published', h.start_date),
+        organizer: 'Community Organizer',
+        isMaximallyOfficial: false
+      }));
       
-      // Combine and sort by start date
-      const allHackathons = [...mappedAdmin, ...mappedOrganizer].sort((a, b) => 
-        b.startDate.getTime() - a.startDate.getTime()
+      const allEvents = [...staticEvents, ...mappedAdmin, ...mappedOrganizer].sort((a, b) => 
+        new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
       );
       
-      setHackathons(allHackathons.length > 0 ? allHackathons : grandIndianHackathonSeason);
+      setEvents(allEvents.length > 0 ? allEvents : staticEvents);
     } catch (err) {
-      console.error('Error fetching hackathons:', err);
-      setHackathons(grandIndianHackathonSeason);
+      console.error('Error fetching events:', err);
+      setEvents(staticEvents);
     }
   };
 
   useEffect(() => {
-    fetchHackathons();
+    fetchEvents();
     
-    // Only set up real-time subscriptions if Supabase is properly configured
     const sb = supabase;
-    if (!sb) {
-  // Supabase client not available, skipping real-time subscriptions
-      return;
-    }
+    if (!sb) return;
     
     try {
       const channel = sb
-        .channel('realtime-hackathons-events-page')
+        .channel('realtime-events-page')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'hackathons' }, () => {
-          fetchHackathons();
+          fetchEvents();
         })
         .subscribe();
       return () => {
@@ -173,324 +239,287 @@ const Events = () => {
     }
   }, []);
 
-  // hackathons are loaded from Supabase above
-
-  // Derive filter options from actual data
   const filterOptions = useMemo(() => {
-    // Simplified location filter - only Online and Offline
-    const locations = ['Online', 'Offline'];
+    const formats = ['online', 'in-person', 'hybrid'];
+    const statuses = ['upcoming', 'ongoing', 'completed'];
+    const allTags = Array.from(new Set(events.flatMap(e => e.tags))).sort();
     
-    const uniqueStatuses = Array.from(new Set(hackathons.map(h => h.status))).sort();
-    const allUniqueLengths = Array.from(new Set(hackathons.map(h => h.length)));
-    
-    // Only show specific duration options
-    const allowedDurations = ['24 hours', '48 hours', '7 days', '1 month'];
-    const uniqueLengths = allowedDurations.filter(duration => 
-      allUniqueLengths.some(length => length.toLowerCase().includes(duration.toLowerCase()))
-    );
-    
-    const uniqueTags = Array.from(new Set(hackathons.flatMap(h => h.tags))).sort();
-    
-    return {
-      locations,
-      statuses: uniqueStatuses,
-      lengths: uniqueLengths,
-      tags: uniqueTags
-    };
-  }, [hackathons]);
+    return { formats, statuses, tags: allTags };
+  }, [events]);
 
-  // Local UI state: search input, selected filters, expanded filter sections, mobile filter toggle
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedFilters, setSelectedFilters] = useState<{
-    location: string[];
-    status: string[];
-    length: string[];
-    tags: string[];
-  }>(
-    {
-      location: [],
-      status: [],
-      length: [],
-      tags: []
-    }
-  );
-
-  const [expandedFilters, setExpandedFilters] = useState<{ location: boolean; status: boolean; duration: boolean; tags: boolean }>(
-    { location: true, status: true, duration: true, tags: false }
-  );
-
-  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState<boolean>(false);
-
-  // Utility function for normalized string comparison
   const normalizeString = (str: string) => str.toLowerCase().trim();
 
-  // Filter and search functionality with normalized string comparisons
-  const filteredHackathons = useMemo(() => {
-    return hackathons.filter(hackathon => {
+  const hackathonEvents = useMemo(() => {
+    return events.filter(event => {
+      if (event.type !== 'hackathon') return false;
+
       const normalizedSearchQuery = searchQuery ? normalizeString(searchQuery) : '';
-      
-      // Search query filter - case insensitive and trimmed
       if (normalizedSearchQuery && 
-          !normalizeString(hackathon.name).includes(normalizedSearchQuery) && 
-          !normalizeString(hackathon.description).includes(normalizedSearchQuery) &&
-          !hackathon.tags.some(tag => normalizeString(tag).includes(normalizedSearchQuery))) {
+          !normalizeString(event.name).includes(normalizedSearchQuery) && 
+          !normalizeString(event.description).includes(normalizedSearchQuery) &&
+          !event.tags.some(tag => normalizeString(tag).includes(normalizedSearchQuery))) {
         return false;
       }
 
-      // Location filter - categorize as Online or Offline
-      if (selectedFilters.location.length > 0) {
-        const hackathonLocation = normalizeString(hackathon.location);
-        const isOnline = hackathonLocation === 'online' || hackathonLocation.includes('online');
-        const isOffline = !isOnline;
-        
-        const matchesFilter = selectedFilters.location.some(filter => {
-          const normalizedFilter = normalizeString(filter);
-          if (normalizedFilter === 'online') return isOnline;
-          if (normalizedFilter === 'offline') return isOffline;
-          return false;
-        });
-        
-        if (!matchesFilter) return false;
+      if (selectedFilters.format.length > 0 && 
+          !selectedFilters.format.includes(event.format)) {
+        return false;
       }
 
-      // Status filter - case insensitive comparison
       if (selectedFilters.status.length > 0 && 
-          !selectedFilters.status.some(filter => normalizeString(filter) === normalizeString(hackathon.status))) {
+          !selectedFilters.status.includes(event.status)) {
         return false;
       }
 
-      // Length filter - case insensitive comparison
-      if (selectedFilters.length.length > 0 && 
-          !selectedFilters.length.some(filter => normalizeString(filter) === normalizeString(hackathon.length))) {
-        return false;
-      }
-
-      // Tags filter - case insensitive comparison
       if (selectedFilters.tags.length > 0 && 
-          !selectedFilters.tags.some(filterTag => 
-            hackathon.tags.some(hackathonTag => normalizeString(filterTag) === normalizeString(hackathonTag)))) {
+          !selectedFilters.tags.some(tag => event.tags.includes(tag))) {
         return false;
       }
 
       return true;
     });
-  }, [hackathons, searchQuery, selectedFilters]);
+  }, [events, searchQuery, selectedFilters]);
+
+  const otherEvents = useMemo(() => {
+    return events.filter(event => {
+      if (event.type === 'hackathon') return false;
+
+      const normalizedSearchQuery = searchQuery ? normalizeString(searchQuery) : '';
+      if (normalizedSearchQuery && 
+          !normalizeString(event.name).includes(normalizedSearchQuery) && 
+          !normalizeString(event.description).includes(normalizedSearchQuery) &&
+          !event.tags.some(tag => normalizeString(tag).includes(normalizedSearchQuery))) {
+        return false;
+      }
+
+      if (selectedFilters.format.length > 0 && 
+          !selectedFilters.format.includes(event.format)) {
+        return false;
+      }
+
+      if (selectedFilters.status.length > 0 && 
+          !selectedFilters.status.includes(event.status)) {
+        return false;
+      }
+
+      if (selectedFilters.tags.length > 0 && 
+          !selectedFilters.tags.some(tag => event.tags.includes(tag))) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [events, searchQuery, selectedFilters]);
 
   const toggleFilter = (category: keyof typeof selectedFilters, value: string) => {
     setSelectedFilters(prev => ({
       ...prev,
       [category]: prev[category].includes(value) 
-        ? prev[category].filter((item: string) => item !== value)
+        ? prev[category].filter(item => item !== value)
         : [...prev[category], value]
     }));
   };
 
   const clearAllFilters = () => {
-    setSelectedFilters({
-      location: [],
-      status: [],
-      length: [],
-      tags: []
-    });
+    setSelectedFilters({ format: [], status: [], tags: [] });
     setSearchQuery('');
   };
 
   const toggleFilterSection = (section: keyof typeof expandedFilters) => {
-    setExpandedFilters(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
+    setExpandedFilters(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  const formatDate = (date: Date | string) => {
-    const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
-    });
-  };
+  const hackathonCount = events.filter(e => e.type === 'hackathon').length;
+  const totalPrizes = events.filter(e => e.type === 'hackathon' && e.prizes).length;
 
   return (
     <>
       <SEO
-        title="Find Hackathons | Join Global Innovation Challenges | Maximally"
-        description="Discover and join the world's best hackathons. Find upcoming coding competitions, AI challenges, and innovation contests from around the globe."
-        keywords="hackathons, coding competitions, AI hackathons, programming contests, innovation challenges, tech events, developer competitions"
+        title="Hackathons | Discover & Join Global Hackathons | Maximally"
+        description="Find the best hackathons for teen builders. Join coding competitions, innovation challenges, and build projects that matter. Plus workshops, conferences & more."
+        keywords="hackathons, coding competitions, teen hackathons, programming contests, innovation challenges, builder events, coding events"
       />
       
-      <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white transition-colors">
-        {/* Pixel Grid Background */}
-        <div className="fixed inset-0 bg-white dark:bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(229,9,20,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.1)_1px,transparent_1px)] bg-[size:50px_50px] dark:bg-[linear-gradient(rgba(229,9,20,0.2)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.2)_1px,transparent_1px)]" />
+      <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
         
-        {/* Header */}
-        <div className="bg-maximally-red text-white py-16 mt-16 relative z-10">
-          {/* Floating Pixels Animation */}
-          {Array.from({ length: 8 }, (_, i) => (
-            <div
-              key={i}
-              className="absolute w-2 h-2 bg-maximally-yellow pixel-border animate-float pointer-events-none"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${i * 0.5}s`,
-                animationDuration: `${4 + i * 0.3}s`,
-              }}
-            />
-          ))}
-          
-          <div className="max-w-7xl mx-auto px-4 text-center relative z-10">
-            <div className="minecraft-block bg-maximally-yellow text-black px-6 py-3 inline-block mb-6 animate-pulse">
-              <span className="font-press-start text-sm">🌟 GLOBAL HACKATHON LEAGUE</span>
-            </div>
-            <h1 className="font-press-start text-3xl md:text-4xl lg:text-5xl mb-6 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] animate-fade-in">
-              Join the world's best hackathons
-            </h1>
-            <p className="font-jetbrains text-lg md:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in">
-              Discover innovation challenges, coding competitions, and tech events from around the globe
-            </p>
-          </div>
-        </div>
+        <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+        <div className="absolute top-60 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+        <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-cyan-500/10 rounded-full blur-[90px]" />
+        
+        {Array.from({ length: 12 }, (_, i) => (
+          <div
+            key={i}
+            className="absolute w-1.5 h-1.5 animate-float pointer-events-none"
+            style={{
+              left: `${5 + (i * 8)}%`,
+              top: `${10 + Math.sin(i) * 20}%`,
+              animationDelay: `${i * 0.3}s`,
+              animationDuration: `${4 + (i % 3)}s`,
+              backgroundColor: ['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5],
+              boxShadow: `0 0 10px ${['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5]}40`
+            }}
+          />
+        ))}
 
-        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
-          {/* Search Bar */}
-          <div className="mb-8">
-            <div className="pixel-card bg-white dark:bg-card border-2 border-maximally-red p-6 max-w-3xl mx-auto">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-5 w-5" />
+        <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 lg:pt-28 pb-8 sm:pb-12">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-12">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-4 sm:mb-6">
+                <Code className="w-4 h-4 text-purple-400" />
+                <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
+                  BUILD. SHIP. WIN.
+                </span>
+              </div>
+              
+              <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white mb-4 sm:mb-6 leading-relaxed">
+                Discover{" "}
+                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+                  Hackathons
+                </span>
+              </h1>
+              
+              <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
+                Join the best coding competitions and innovation challenges. Build projects that matter, 
+                win prizes, and connect with builders worldwide.
+              </p>
+
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-cyan-500/10 border border-cyan-500/30">
+                  <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400 flex-shrink-0" />
+                  <span className="font-press-start text-[9px] sm:text-[10px] text-cyan-300">{hackathonCount}+ HACKATHONS</span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-pink-500/10 border border-pink-500/30">
+                  <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-400 flex-shrink-0" />
+                  <span className="font-press-start text-[9px] sm:text-[10px] text-pink-300">$100K+ PRIZES</span>
+                </div>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-green-500/10 border border-green-500/30">
+                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-400 flex-shrink-0" />
+                  <span className="font-press-start text-[9px] sm:text-[10px] text-green-300">GLOBAL</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="max-w-3xl mx-auto mb-6 sm:mb-10">
+              <div className="relative bg-black/40 border border-purple-500/30 p-1 backdrop-blur-sm">
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-purple-400 h-4 w-4 sm:h-5 sm:w-5" />
                 <input
                   type="text"
-                  placeholder="Search by hackathon title or keyword..."
+                  placeholder="Search hackathons..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-28 py-4 bg-transparent border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white rounded-none focus:ring-2 focus:ring-maximally-red focus:border-maximally-red outline-none font-jetbrains text-lg"
-                  data-testid="search-hackathons"
+                  className="w-full pl-10 sm:pl-12 pr-10 sm:pr-4 py-3 sm:py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none font-jetbrains text-sm sm:text-base"
+                  data-testid="search-events"
                 />
-                <button className="pixel-button absolute right-2 top-1/2 transform -translate-y-1/2 bg-maximally-red text-white px-6 py-2 font-press-start text-xs hover:bg-maximally-yellow hover:text-black transition-colors hover:scale-105">
-                  SEARCH
-                </button>
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-400 transition-colors p-1"
+                  >
+                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Mobile Filter Toggle */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
             <div className="lg:hidden">
               <button
                 onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-                className="pixel-button bg-white dark:bg-card border-2 border-maximally-red text-gray-900 dark:text-white hover:bg-maximally-red hover:text-white transition-all px-6 py-3 font-press-start text-sm flex items-center gap-2"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-purple-500/10 border border-purple-500/30 text-purple-300 font-press-start text-[10px] sm:text-xs w-full justify-center sm:w-auto"
                 data-testid="mobile-filter-toggle"
               >
                 <Filter className="h-4 w-4" />
                 FILTERS
+                {(selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length) > 0 && (
+                  <span className="ml-2 px-2 py-0.5 bg-purple-500/30 text-purple-200 text-[9px] sm:text-[10px]">
+                    {selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length}
+                  </span>
+                )}
               </button>
             </div>
 
-            {/* Sidebar Filters */}
-            <div className={`lg:w-80 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
-              <div className="pixel-card bg-white dark:bg-card border-2 border-maximally-red p-6 sticky top-24 hover:shadow-glow-red transition-all">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-press-start text-lg text-gray-900 dark:text-white">FILTERS</h3>
+            <div className={`lg:w-64 xl:w-72 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
+              <div className="lg:sticky lg:top-24 bg-black/40 border border-purple-500/20 p-4 sm:p-5 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h3 className="font-press-start text-xs sm:text-sm text-purple-300">FILTERS</h3>
                   <button
                     onClick={clearAllFilters}
-                    className="text-maximally-red font-jetbrains text-sm hover:text-maximally-yellow transition-colors underline-offset-4 hover:underline"
+                    className="text-gray-500 font-jetbrains text-xs hover:text-purple-400 transition-colors"
                     data-testid="clear-all-filters"
                   >
                     Clear all
                   </button>
                 </div>
 
-                {/* Location Filter */}
-                <Collapsible open={expandedFilters.location} onOpenChange={() => toggleFilterSection('location')} className="mb-8">
+                <Collapsible open={expandedFilters.format} onOpenChange={() => toggleFilterSection('format')} className="mb-6">
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                    <h4 className="font-press-start text-sm text-maximally-red">LOCATION</h4>
-                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.location ? 'rotate-180' : ''}`} />
+                    <h4 className="font-press-start text-xs text-gray-400">FORMAT</h4>
+                    <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${expandedFilters.format ? 'rotate-180' : ''}`} />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4">
-                    <div className="space-y-3">
-                      {filterOptions.locations.map(location => (
-                        <label key={location} className="flex items-center cursor-pointer group">
+                  <CollapsibleContent className="mt-3">
+                    <div className="space-y-2">
+                      {filterOptions.formats.map(format => (
+                        <label key={format} className="flex items-center cursor-pointer group">
                           <input
                             type="checkbox"
-                            checked={selectedFilters.location.includes(location)}
-                            onChange={() => toggleFilter('location', location)}
-                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                            data-testid={`filter-location-${normalizeString(location).replace(/\s+/g, '-')}`}
+                            checked={selectedFilters.format.includes(format)}
+                            onChange={() => toggleFilter('format', format)}
+                            className="mr-3 h-4 w-4 accent-purple-500 bg-transparent border-gray-600"
+                            data-testid={`filter-format-${format}`}
                           />
-                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{location}</span>
+                          <span className="font-jetbrains text-sm text-gray-400 group-hover:text-purple-300 transition-colors capitalize">{format}</span>
                         </label>
                       ))}
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
 
-                {/* Status Filter */}
-                <Collapsible open={expandedFilters.status} onOpenChange={() => toggleFilterSection('status')} className="mb-8">
+                <Collapsible open={expandedFilters.status} onOpenChange={() => toggleFilterSection('status')} className="mb-6">
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                    <h4 className="font-press-start text-sm text-maximally-red">STATUS</h4>
-                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.status ? 'rotate-180' : ''}`} />
+                    <h4 className="font-press-start text-xs text-gray-400">STATUS</h4>
+                    <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${expandedFilters.status ? 'rotate-180' : ''}`} />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4">
-                    <div className="space-y-3">
+                  <CollapsibleContent className="mt-3">
+                    <div className="space-y-2">
                       {filterOptions.statuses.map(status => (
                         <label key={status} className="flex items-center cursor-pointer group">
                           <input
                             type="checkbox"
                             checked={selectedFilters.status.includes(status)}
                             onChange={() => toggleFilter('status', status)}
-                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
+                            className="mr-3 h-4 w-4 accent-purple-500 bg-transparent border-gray-600"
                             data-testid={`filter-status-${status}`}
                           />
-                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors capitalize">{status}</span>
+                          <span className="font-jetbrains text-sm text-gray-400 group-hover:text-purple-300 transition-colors capitalize">{status}</span>
                         </label>
                       ))}
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
 
-                {/* Length Filter */}
-                <Collapsible open={expandedFilters.duration} onOpenChange={() => toggleFilterSection('duration')} className="mb-8">
+                <Collapsible open={expandedFilters.tags} onOpenChange={() => toggleFilterSection('tags')} className="mb-4">
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                    <h4 className="font-press-start text-sm text-maximally-red">DURATION</h4>
-                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.duration ? 'rotate-180' : ''}`} />
+                    <h4 className="font-press-start text-xs text-gray-400">TOPICS</h4>
+                    <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${expandedFilters.tags ? 'rotate-180' : ''}`} />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4">
-                    <div className="space-y-3">
-                      {filterOptions.lengths.map(length => (
-                        <label key={length} className="flex items-center cursor-pointer group">
-                          <input
-                            type="checkbox"
-                            checked={selectedFilters.length.includes(length)}
-                            onChange={() => toggleFilter('length', length)}
-                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                            data-testid={`filter-length-${normalizeString(length).replace(/\s+/g, '-')}`}
-                          />
-                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{length}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-
-                {/* Tags Filter */}
-                <Collapsible open={expandedFilters.tags} onOpenChange={() => toggleFilterSection('tags')} className="mb-6">
-                  <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                    <h4 className="font-press-start text-sm text-maximally-red">FOCUS AREAS</h4>
-                    <ChevronDown className={`h-4 w-4 text-maximally-red transition-transform ${expandedFilters.tags ? 'rotate-180' : ''}`} />
-                  </CollapsibleTrigger>
-                  <CollapsibleContent className="mt-4">
-                    <div className="space-y-3 max-h-48 overflow-y-auto">
+                  <CollapsibleContent className="mt-3">
+                    <div className="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-purple-500/30 scrollbar-track-transparent">
                       {filterOptions.tags.map(tag => (
                         <label key={tag} className="flex items-center cursor-pointer group">
                           <input
                             type="checkbox"
                             checked={selectedFilters.tags.includes(tag)}
                             onChange={() => toggleFilter('tags', tag)}
-                            className="mr-3 h-4 w-4 text-maximally-red focus:ring-maximally-red border-gray-300 dark:border-gray-600 rounded-none"
-                            data-testid={`filter-tag-${normalizeString(tag).replace(/\s+/g, '-')}`}
+                            className="mr-3 h-4 w-4 accent-purple-500 bg-transparent border-gray-600"
+                            data-testid={`filter-tag-${tag.toLowerCase().replace(/\s+/g, '-')}`}
                           />
-                          <span className="font-jetbrains text-sm text-gray-700 dark:text-gray-300 group-hover:text-maximally-red transition-colors">{tag}</span>
+                          <span className="font-jetbrains text-sm text-gray-400 group-hover:text-purple-300 transition-colors">{tag}</span>
                         </label>
                       ))}
                     </div>
@@ -499,54 +528,90 @@ const Events = () => {
               </div>
             </div>
 
-            {/* Main Content */}
             <div className="flex-1">
-              {/* Results Info */}
-              <div className="mb-8">
-                <div className="pixel-card bg-white dark:bg-card border-2 border-gray-300 dark:border-gray-600 p-4">
-                  <p className="font-press-start text-sm text-gray-700 dark:text-gray-300">
-                    SHOWING {filteredHackathons.length} HACKATHONS
-                  </p>
-                </div>
-              </div>
-
-              {/* Hackathon Cards - Now using HackathonCard */}
-              <div className="space-y-4">
-                {filteredHackathons.map(hackathon => (
-                  <HackathonCard 
-                    key={hackathon.id}
-                    hackathon={hackathon}
-                    className="animate-fade-in"
-                  />
-                ))}
-              </div>
-
-              {/* Empty State */}
-              {filteredHackathons.length === 0 && (
-                <div className="pixel-card bg-white dark:bg-card border-2 border-gray-400 dark:border-gray-600 p-12 text-center">
-                  <div className="minecraft-block bg-gray-500 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-                    <Search className="h-8 w-8 text-white" />
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-purple-500/20 border border-purple-500/40 p-2">
+                    <Code className="h-5 w-5 text-purple-400" />
                   </div>
-                  <h3 className="font-press-start text-lg text-gray-700 dark:text-gray-300 mb-4">
-                    NO HACKATHONS FOUND
-                  </h3>
-                  <p className="font-jetbrains text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-                    No hackathons match your current search and filter criteria. Try adjusting your filters or search terms.
+                  <div>
+                    <h2 className="font-press-start text-sm sm:text-base text-white">HACKATHONS</h2>
+                    <p className="font-jetbrains text-xs text-gray-500">
+                      {hackathonEvents.length} events found
+                    </p>
+                  </div>
+                </div>
+                {(selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length > 0) && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-jetbrains hover:bg-purple-500/20 transition-colors"
+                  >
+                    <X className="h-3 w-3" />
+                    Clear filters
+                  </button>
+                )}
+              </div>
+
+              {hackathonEvents.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
+                  {hackathonEvents.map(event => (
+                    <EventCard 
+                      key={event.id} 
+                      {...event}
+                      onClick={() => handleHackathonClick(event)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-black/40 border border-purple-500/20 p-12 text-center mb-12">
+                  <Code className="h-12 w-12 text-purple-400/50 mx-auto mb-4" />
+                  <h3 className="font-press-start text-sm text-gray-400 mb-2">NO HACKATHONS FOUND</h3>
+                  <p className="font-jetbrains text-gray-500 text-sm mb-4">
+                    Try adjusting your filters or search query
                   </p>
                   <button
                     onClick={clearAllFilters}
-                    className="pixel-button bg-maximally-red text-white hover:bg-maximally-yellow hover:text-black transition-all px-6 py-3 font-press-start text-sm"
-                    data-testid="clear-filters-empty-state"
+                    className="px-4 py-2 bg-purple-500/20 border border-purple-500/40 text-purple-300 font-press-start text-xs hover:bg-purple-500/30 transition-colors"
                   >
-                    CLEAR_ALL_FILTERS
+                    CLEAR FILTERS
                   </button>
                 </div>
               )}
+
+
+              <div className="mt-16 p-8 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+                
+                <div className="relative z-10">
+                  <h3 className="font-press-start text-sm sm:text-base text-white mb-3">
+                    Want to host your own hackathon?
+                  </h3>
+                  <p className="font-jetbrains text-sm text-gray-400 mb-6 max-w-lg mx-auto">
+                    Join 1000+ organizers who have launched successful events with Maximally's support.
+                  </p>
+                  <Link
+                    to="/host-hackathon"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs transition-all duration-300"
+                    data-testid="link-host-hackathon"
+                  >
+                    <Rocket className="h-4 w-4" />
+                    HOST A HACKATHON
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        
+
         <Footer />
+
+        <HackathonDetailSheet
+          hackathon={selectedHackathon}
+          isOpen={isSheetOpen}
+          onClose={handleSheetClose}
+        />
       </div>
     </>
   );

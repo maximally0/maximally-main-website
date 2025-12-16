@@ -4,7 +4,6 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ModerationGuard from '@/components/ModerationGuard';
 import {
   BrowserRouter as Router,
   Routes,
@@ -37,12 +36,6 @@ import Bootcamps from '@/pages/Bootcamps';
 import Blog from './pages/Blog';
 // Removed Community and Collaborate imports
 import CommunityRedirect from '@/components/CommunityRedirect';
-
-const VibeRedirect = () => {
-  window.location.href = 'https://vibe-a-thon.devpost.com';
-  return null;
-};
-
 import SummerPrograms2025 from './pages/BlogPost/SummerPrograms2025';
 import MaximallyLeangap2025 from './pages/BlogPost/MaximallyLeangap2025';
 import SummerBreak2025 from './pages/BlogPost/SummerBreak2025';
@@ -139,6 +132,7 @@ import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 import MFHOP from './pages/MFHOP';
 import PartnerNetwork from './pages/PartnerNetwork';
 import HostHackathon from './pages/HostHackathon';
+import Explore from './pages/Explore';
 import CreateHackathon from './pages/CreateHackathon';
 import OrganizerDashboard from './pages/OrganizerDashboard';
 import EditHackathon from './pages/EditHackathon';
@@ -151,27 +145,20 @@ import HackathonSubmit from './pages/HackathonSubmit';
 import People from './pages/People';
 import PeopleCore from './pages/PeopleCore';
 import PeopleJudges from './pages/PeopleJudges';
-import PeopleOrganizers from './pages/PeopleOrganizers';
 import Judges from './pages/Judges';
 import JudgeProfile from './pages/JudgeProfile';
 import JudgeApplicationForm from './pages/JudgeApplicationForm';
-import OrganizerApplicationForm from './pages/OrganizerApplicationForm';
 import JudgeDashboard from './pages/JudgeDashboard';
 import JudgeInbox from './pages/JudgeInbox';
-import OrganizerInbox from './pages/OrganizerInbox';
 import JudgeHackathons from './pages/JudgeHackathons';
 import JudgeSubmissions from './pages/JudgeSubmissions';
 import ProjectDetail from './pages/ProjectDetail';
 import SubmissionDetail from './pages/SubmissionDetail';
 import ParticipantDashboard from './pages/ParticipantDashboard';
 import AdminNotifications from './pages/AdminNotifications';
-import Resources from './pages/Resources';
+// Resources page removed
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
-import Gallery from './pages/Gallery';
-import GalleryProjectDetail from './pages/GalleryProjectDetail';
-import GallerySubmit from './pages/GallerySubmit';
-import GalleryEdit from './pages/GalleryEdit';
 
 const queryClient = new QueryClient();
 
@@ -344,34 +331,21 @@ const AppContent = () => {
         {/* Community redirect to Discord */}
         <Route path="/community" element={<CommunityRedirect />} />
 
-        {/* Vibe redirect to Devpost */}
-        <Route path="/vibe" element={<VibeRedirect />} />
-
         <Route path="/people" element={<People />} />
         <Route path="/people/core" element={<PeopleCore />} />
         <Route path="/people/judges" element={<PeopleJudges />} />
-        <Route path="/people/organizers" element={<PeopleOrganizers />} />
         <Route path="/judges" element={<Judges />} />
         <Route path="/judge/:username" element={<JudgeProfile />} />
         <Route path="/judges/apply" element={<JudgeApplicationForm />} />
-        <Route path="/organizer/apply" element={<OrganizerApplicationForm />} />
         <Route path="/judge-dashboard" element={<JudgeDashboard />} />
         <Route path="/judge-inbox" element={<JudgeInbox />} />
-        <Route path="/organizer-inbox" element={<OrganizerInbox />} />
         <Route path="/judge/hackathons" element={<JudgeHackathons />} />
         <Route path="/judge/hackathons/:hackathonId/submissions" element={<JudgeSubmissions />} />
         <Route path="/project/:projectId" element={<ProjectDetail />} />
         <Route path="/submissions/:slug" element={<SubmissionDetail />} />
         <Route path="/my-hackathons" element={<ParticipantDashboard />} />
         <Route path="/admin/notifications" element={<AdminNotifications />} />
-        <Route path="/resources" element={<Resources />} />
-        
-        {/* Project Gallery */}
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/gallery/submit" element={<GallerySubmit />} />
-        <Route path="/gallery/edit/:id" element={<GalleryEdit />} />
-        <Route path="/gallery/:id" element={<GalleryProjectDetail />} />
-        
+        {/* Resources route removed */}
         {/* Legacy redirect */}
         <Route path="/featured" element={<Navigate to="/people" replace />} />
         <Route path="/mfhop" element={<MFHOP />} />
@@ -386,6 +360,7 @@ const AppContent = () => {
         <Route path="/hackathon/:slug/submit" element={<HackathonSubmit />} />
 
         <Route path="/events" element={<Events />} />
+        <Route path="/explore" element={<Explore />} />
         <Route
           path="/blog/makeathon-for-future"
           element={<MakeathonForFuture />}
@@ -578,9 +553,7 @@ const App = () => {
           <Sonner />
           <AuthProvider>
             <Router>
-              <ModerationGuard>
-                <AppContent />
-              </ModerationGuard>
+              <AppContent />
             </Router>
           </AuthProvider>
         </TooltipProvider>

@@ -13,13 +13,16 @@ import {
   Heart,
   MapPin,
   Mail,
-  Loader2
+  Loader2,
+  Sparkles,
+  Star,
+  Rocket,
+  MessageSquare
 } from 'lucide-react';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { supabase } from '@/lib/supabaseClient';
 
-// Interfaces for dynamic data
 interface CoreTeamMember {
   id: number;
   name: string;
@@ -35,51 +38,62 @@ interface FeaturedJudge {
   company: string;
 }
 
-// Hero Section Component
 const HeroSection = () => {
   return (
-    <section className="min-h-screen bg-black text-white relative overflow-hidden flex items-center">
-      {/* Pixel Background */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.1)_1px,transparent_1px)] bg-[size:50px_50px] animate-pulse" />
+    <section className="min-h-screen bg-black text-white relative overflow-hidden flex items-center pt-24 sm:pt-32">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
       
-      {/* Floating Pixels */}
+      <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+      <div className="absolute top-60 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+      <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-cyan-500/10 rounded-full blur-[90px]" />
+      
       {Array.from({ length: 12 }, (_, i) => (
         <div
           key={i}
-          className="absolute w-2 h-2 bg-maximally-red pixel-border animate-float"
+          className="absolute w-1.5 h-1.5 animate-float pointer-events-none"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${i * 0.5}s`,
-            animationDuration: `${4 + i}s`,
+            left: `${5 + (i * 8)}%`,
+            top: `${10 + Math.sin(i) * 20}%`,
+            animationDelay: `${i * 0.3}s`,
+            animationDuration: `${4 + (i % 3)}s`,
+            backgroundColor: ['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5],
+            boxShadow: `0 0 10px ${['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5]}40`
           }}
         />
       ))}
       
-      <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-        <div className="minecraft-block bg-maximally-red p-4 inline-block mb-6">
-          <Code className="h-8 w-8 text-black" />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-6">
+          <Code className="w-4 h-4 text-purple-400" />
+          <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
+            OUR STORY
+          </span>
         </div>
         
-        <h1 className="font-press-start text-3xl md:text-4xl lg:text-6xl mb-6 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
-          ABOUT MAXIMALLY
+        <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight">
+          ABOUT{" "}
+          <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+            MAXIMALLY
+          </span>
         </h1>
         
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-6 md:p-8 max-w-4xl mx-auto">
-          <p className="font-press-start text-maximally-red text-lg md:text-xl mb-4">
+        <div className="bg-black/40 border border-purple-500/30 p-6 sm:p-8 max-w-4xl mx-auto backdrop-blur-sm">
+          <p className="font-press-start text-purple-300 text-sm sm:text-base mb-4">
             HACKATHONS AS CULTURE, NOT JUST CODE
           </p>
           
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg leading-relaxed">
+          <p className="font-jetbrains text-gray-400 text-sm sm:text-base leading-relaxed">
             Hackathons have always been more than just code. They are experiments in how people think, 
             create, and work together under pressure. They are places where rules bend, ideas collide, 
             and the boundaries of what's possible shift overnight.
           </p>
           
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg leading-relaxed mt-4">
+          <p className="font-jetbrains text-gray-400 text-sm sm:text-base leading-relaxed mt-4">
             Yet, for too long, hackathons have been scattered — run in silos, limited by geography, 
             or tied to a single school or company. Maximally was born out of a simple belief: 
-            hackathons deserve to be open, accessible, and cultural.
+            <span className="text-purple-300 font-semibold"> hackathons deserve to be open, accessible, and cultural.</span>
           </p>
         </div>
       </div>
@@ -87,146 +101,137 @@ const HeroSection = () => {
   );
 };
 
-// What We're Building Component
 const WhatWereBuilding = () => {
-  const colorClasses = {
-    'maximally-red': {
-      border: 'border-maximally-red',
-      bg: 'bg-maximally-red',
-      text: 'text-maximally-red'
-    },
-    'maximally-yellow': {
-      border: 'border-maximally-yellow',
-      bg: 'bg-maximally-yellow', 
-      text: 'text-maximally-yellow'
-    },
-    'green-500': {
-      border: 'border-green-500',
-      bg: 'bg-green-500',
-      text: 'text-green-500'
-    },
-    'blue-500': {
-      border: 'border-blue-500',
-      bg: 'bg-blue-500',
-      text: 'text-blue-500'
-    },
-    'purple-500': {
-      border: 'border-purple-500',
-      bg: 'bg-purple-500',
-      text: 'text-purple-500'
-    }
-  };
-
   const buildingBlocks = [
     {
       title: "HACKATHONS (EVENTS)",
       description: "Where it all started. We run global online and hybrid hackathons with open themes, beginner-friendly tracks, and experimental formats.",
       icon: Calendar,
-      color: "maximally-red",
+      gradient: 'from-rose-500/20 to-red-500/20',
+      border: 'border-rose-500/40',
+      iconBg: 'bg-rose-500/20',
+      iconColor: 'text-rose-400',
       link: "/events"
     },
     {
       title: "MAXIMALLY PLATFORM",
       description: "An AI-native hackathon platform that gives organizers creative tools for submissions, judging, and community engagement.",
       icon: Code,
-      color: "maximally-yellow",
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      border: 'border-amber-500/40',
+      iconBg: 'bg-amber-500/20',
+      iconColor: 'text-amber-400',
       link: "#"
+    },
+    {
+      title: "EXPLORE MAXIMALLY",
+      description: "Your gateway to opportunities beyond hackathons — careers, resources, labs, fellowships, and community initiatives.",
+      icon: Sparkles,
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      border: 'border-cyan-500/40',
+      iconBg: 'bg-cyan-500/20',
+      iconColor: 'text-cyan-400',
+      link: "/explore"
     },
     {
       title: "FEDERATION (MFHOP)",
       description: "A cross-school, cross-company network where organizers share resources, partnerships, and reach.",
       icon: Globe,
-      color: "green-500",
+      gradient: 'from-green-500/20 to-emerald-500/20',
+      border: 'border-green-500/40',
+      iconBg: 'bg-green-500/20',
+      iconColor: 'text-green-400',
       link: "/mfhop"
-    },
-    {
-      title: "STUDIOS",
-      description: "Content around hackathons, innovation, and youth culture — documenting stories and voices of builders.",
-      icon: Users,
-      color: "blue-500",
-      link: "/blog"
     },
     {
       title: "COMMUNITY",
       description: "A living network of participants, mentors, and judges that stays connected long after events end.",
       icon: Heart,
-      color: "purple-500",
+      gradient: 'from-purple-500/20 to-pink-500/20',
+      border: 'border-purple-500/40',
+      iconBg: 'bg-purple-500/20',
+      iconColor: 'text-purple-400',
       link: "https://discord.gg/MpBnYk8qMX"
     }
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,203,71,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,203,71,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+    <section className="py-16 sm:py-24 bg-black relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.02)_1px,transparent_1px)] bg-[size:30px_30px]" />
       
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-yellow drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            WHAT WE'RE BUILDING
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/30 mb-6">
+            <Rocket className="w-4 h-4 text-amber-400" />
+            <span className="font-press-start text-[10px] sm:text-xs text-amber-300">OUR VISION</span>
+          </div>
+          <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+            WHAT WE'RE{" "}
+            <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+              BUILDING
+            </span>
           </h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {buildingBlocks.map((block, index) => {
-            const colors = colorClasses[block.color as keyof typeof colorClasses];
-            return (
-              <div key={index} className={`pixel-card bg-black border-2 ${colors.border} p-6 hover:scale-105 transition-all duration-300 group`}>
-                <div className={`minecraft-block ${colors.bg} p-3 inline-block mb-4 group-hover:animate-pulse`}>
-                  <block.icon className="h-6 w-6 text-black" />
-                </div>
-                
-                <h3 className="font-press-start text-sm md:text-base mb-4 text-white">
-                  {block.title}
-                </h3>
-                
-                <p className="font-jetbrains text-gray-300 text-sm leading-relaxed mb-4">
-                  {block.description}
-                </p>
-                
-                {block.link.startsWith('http') ? (
-                  <a 
-                    href={block.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={`inline-flex items-center font-press-start text-xs ${colors.text} hover:text-white transition-colors`}
-                  >
-                    EXPLORE <ExternalLink className="h-3 w-3 ml-2" />
-                  </a>
-                ) : (
-                  <Link 
-                    to={block.link}
-                    className={`inline-flex items-center font-press-start text-xs ${colors.text} hover:text-white transition-colors`}
-                  >
-                    EXPLORE <ArrowRight className="h-3 w-3 ml-2" />
-                  </Link>
-                )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {buildingBlocks.map((block, index) => (
+            <div 
+              key={index} 
+              className={`group bg-gradient-to-br ${block.gradient} border ${block.border} p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]`}
+              data-testid={`building-block-${index}`}
+            >
+              <div className={`${block.iconBg} border ${block.border} w-12 h-12 flex items-center justify-center mb-4`}>
+                <block.icon className={`h-6 w-6 ${block.iconColor}`} />
               </div>
-            );
-          })}
+              
+              <h3 className="font-press-start text-xs text-white mb-3 group-hover:text-purple-300 transition-colors">
+                {block.title}
+              </h3>
+              
+              <p className="font-jetbrains text-gray-400 text-sm leading-relaxed mb-4">
+                {block.description}
+              </p>
+              
+              {block.link.startsWith('http') ? (
+                <a 
+                  href={block.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center font-press-start text-[10px] ${block.iconColor} hover:text-white transition-colors`}
+                >
+                  EXPLORE <ExternalLink className="h-3 w-3 ml-2" />
+                </a>
+              ) : (
+                <Link 
+                  to={block.link}
+                  className={`inline-flex items-center font-press-start text-[10px] ${block.iconColor} hover:text-white transition-colors`}
+                >
+                  EXPLORE <ArrowRight className="h-3 w-3 ml-2" />
+                </Link>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 };
 
-// People Preview Component
 const PeoplePreview = () => {
-  // State management for dynamic data
   const [coreTeam, setCoreTeam] = useState<CoreTeamMember[]>([]);
   const [featuredJudges, setFeaturedJudges] = useState<FeaturedJudge[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch dashboard configuration and people/judges data
   useEffect(() => {
     const fetchPeopleData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // Ensure supabase client is available
         if (!supabase) throw new Error('Supabase client not available');
-        // First, fetch dashboard configuration
+        
         type DashboardRow = {
           featured_core_id_1?: number | null;
           featured_core_id_2?: number | null;
@@ -247,21 +252,18 @@ const PeoplePreview = () => {
           throw new Error(`Dashboard fetch failed: ${dashboardError.message}`);
         }
 
-        // Extract core team IDs
         const coreIds = [
           dashboardData?.featured_core_id_1,
           dashboardData?.featured_core_id_2,
           dashboardData?.featured_core_id_3
         ].filter(id => id !== null);
 
-        // Extract judge IDs
         const judgeIds = [
           dashboardData?.featured_judge_id_1,
           dashboardData?.featured_judge_id_2,
           dashboardData?.featured_judge_id_3
         ].filter(id => id !== null);
 
-        // Fetch core team members
         if (coreIds.length > 0) {
           const { data: coreData, error: coreError } = await db
             .from('people')
@@ -272,7 +274,6 @@ const PeoplePreview = () => {
             throw new Error(`Core team fetch failed: ${coreError.message}`);
           }
 
-          // Sort core team members by the order they appear in dashboard configuration
           const coreDataArr: any[] = coreData || [];
           const sortedCoreTeam = coreIds.map(id => 
             coreDataArr.find(member => member.id === id)
@@ -281,7 +282,6 @@ const PeoplePreview = () => {
           setCoreTeam(sortedCoreTeam);
         }
 
-        // Fetch featured judges
         if (judgeIds.length > 0) {
           const { data: judgeData, error: judgeError } = await db
             .from('judges')
@@ -292,7 +292,6 @@ const PeoplePreview = () => {
             throw new Error(`Judges fetch failed: ${judgeError.message}`);
           }
 
-          // Sort judges by the order they appear in dashboard configuration
           const judgeDataArr: any[] = judgeData || [];
           const sortedJudges = judgeIds.map(id => 
             judgeDataArr.find(judge => judge.id === id)
@@ -312,86 +311,91 @@ const PeoplePreview = () => {
   }, []);
 
   return (
-    <section className="py-16 md:py-24 bg-black relative">
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
+    <section className="py-16 sm:py-24 bg-black relative">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.08)_0%,transparent_60%)]" />
+      
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            OUR PEOPLE
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 border border-pink-500/30 mb-6">
+            <Users className="w-4 h-4 text-pink-400" />
+            <span className="font-press-start text-[10px] sm:text-xs text-pink-300">THE TEAM</span>
+          </div>
+          <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+            OUR{" "}
+            <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+              PEOPLE
+            </span>
           </h2>
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg max-w-2xl mx-auto">
+          <p className="font-jetbrains text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
             Meet the students and builders behind Maximally
           </p>
         </div>
         
-        {/* Core Team Section */}
-        <div className="mb-12">
+        <div className="mb-16">
           <div className="text-center mb-8">
-            <div className="minecraft-block bg-maximally-red p-3 inline-block mb-4">
-              <Users className="h-6 w-6 text-black" />
+            <div className="bg-rose-500/20 border border-rose-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
+              <Users className="h-6 w-6 text-rose-400" />
             </div>
-            <h3 className="font-press-start text-xl md:text-2xl text-maximally-red mb-2">
+            <h3 className="font-press-start text-sm sm:text-base text-rose-300 mb-2">
               CORE TEAM
             </h3>
           </div>
           
-          {/* Loading State */}
           {loading && (
             <div className="text-center py-12">
-              <div className="minecraft-block bg-maximally-red text-black px-6 py-4 inline-block mb-4">
-                <span className="font-press-start text-sm flex items-center gap-2 justify-center">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  LOADING CORE TEAM
-                </span>
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-purple-500/10 border border-purple-500/30">
+                <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
+                <span className="font-press-start text-xs text-purple-300">LOADING TEAM</span>
               </div>
             </div>
           )}
 
-          {/* Error State */}
           {error && !loading && (
             <div className="text-center py-12">
-              <div className="minecraft-block bg-red-600 text-white px-6 py-4 inline-block mb-4">
-                <span className="font-press-start text-sm">ERROR LOADING TEAM</span>
+              <div className="bg-red-500/10 border border-red-500/30 px-6 py-4 inline-block mb-4">
+                <span className="font-press-start text-xs text-red-300">ERROR LOADING TEAM</span>
               </div>
-              <p className="text-red-400 font-jetbrains mb-4">{error}</p>
+              <p className="text-red-400 font-jetbrains text-sm mb-4">{error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="minecraft-block bg-maximally-red text-black px-4 py-2 hover:bg-maximally-yellow transition-colors"
+                className="bg-purple-500/20 border border-purple-500/40 px-4 py-2 hover:bg-purple-500/30 transition-colors"
               >
-                <span className="font-press-start text-xs">RETRY</span>
+                <span className="font-press-start text-xs text-purple-300">RETRY</span>
               </button>
             </div>
           )}
 
-          {/* Core Team Grid - Only show when data is loaded */}
           {!loading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
               {coreTeam.map((member) => (
-                <div key={member.id} className="pixel-card bg-black/90 border-2 border-maximally-red p-6 hover:scale-105 transition-all duration-300">
+                <div 
+                  key={member.id} 
+                  className="group bg-gradient-to-br from-rose-500/10 to-pink-500/10 border border-rose-500/30 p-6 transition-all duration-300 hover:scale-[1.02] hover:border-rose-400/50"
+                  data-testid={`team-member-${member.id}`}
+                >
                   <div className="text-center">
-                    <div className="minecraft-block bg-maximally-red p-2 inline-block mb-4">
-                      <div className="w-8 h-8 bg-white rounded-sm flex items-center justify-center">
-                        <span className="font-press-start text-xs text-black">
-                          {member.name.split(' ').map(n => n[0]).join('')}
-                        </span>
-                      </div>
+                    <div className="bg-rose-500/20 border border-rose-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                      <span className="font-press-start text-xs text-rose-300">
+                        {member.name.split(' ').map(n => n[0]).join('')}
+                      </span>
                     </div>
                     
-                    <h4 className="font-press-start text-sm text-white mb-2">
+                    <h4 className="font-press-start text-xs text-white mb-2">
                       {member.name}
                     </h4>
                     
-                    <p className="font-press-start text-xs text-maximally-red mb-3">
+                    <p className="font-press-start text-[10px] text-rose-400 mb-3">
                       {member.role_in_company}
                     </p>
                     
                     {member.company && (
-                      <p className="font-jetbrains text-xs text-gray-400 mb-2">
+                      <p className="font-jetbrains text-xs text-gray-500 mb-2">
                         {member.company}
                       </p>
                     )}
                     
                     {member.description && (
-                      <p className="font-jetbrains text-xs text-gray-300 leading-relaxed">
+                      <p className="font-jetbrains text-xs text-gray-400 leading-relaxed">
                         {member.description}
                       </p>
                     )}
@@ -403,72 +407,67 @@ const PeoplePreview = () => {
           
           {!loading && !error && (
             <div className="text-center">
-              <Link to="/people/core" className="pixel-button bg-maximally-red text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-yellow transition-colors inline-flex items-center">
-                SEE FULL TEAM <ArrowRight className="h-3 w-3 ml-2" />
+              <Link 
+                to="/people/core" 
+                className="inline-flex items-center gap-2 px-6 py-3 bg-rose-500/20 border border-rose-500/40 hover:border-rose-400 text-rose-300 hover:text-rose-200 font-press-start text-[10px] transition-all duration-300"
+                data-testid="link-see-full-team"
+              >
+                SEE FULL TEAM <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
           )}
         </div>
 
-        {/* Judges Preview */}
         <div>
           <div className="text-center mb-8">
-            <div className="minecraft-block bg-maximally-yellow p-3 inline-block mb-4">
-              <Trophy className="h-6 w-6 text-black" />
+            <div className="bg-amber-500/20 border border-amber-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
+              <Trophy className="h-6 w-6 text-amber-400" />
             </div>
-            <h3 className="font-press-start text-xl md:text-2xl text-maximally-yellow mb-2">
+            <h3 className="font-press-start text-sm sm:text-base text-amber-300 mb-2">
               FEATURED JUDGES
             </h3>
           </div>
           
-          {/* Loading State for Judges */}
           {loading && (
             <div className="text-center py-12">
-              <div className="minecraft-block bg-maximally-yellow text-black px-6 py-4 inline-block mb-4">
-                <span className="font-press-start text-sm flex items-center gap-2 justify-center">
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  LOADING FEATURED JUDGES
-                </span>
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500/10 border border-amber-500/30">
+                <Loader2 className="h-4 w-4 animate-spin text-amber-400" />
+                <span className="font-press-start text-xs text-amber-300">LOADING JUDGES</span>
               </div>
             </div>
           )}
 
-          {/* Error State for Judges */}
           {error && !loading && (
             <div className="text-center py-12">
-              <div className="minecraft-block bg-red-600 text-white px-6 py-4 inline-block mb-4">
-                <span className="font-press-start text-sm">ERROR LOADING JUDGES</span>
+              <div className="bg-red-500/10 border border-red-500/30 px-6 py-4 inline-block mb-4">
+                <span className="font-press-start text-xs text-red-300">ERROR LOADING JUDGES</span>
               </div>
-              <p className="text-red-400 font-jetbrains mb-4">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="minecraft-block bg-maximally-yellow text-black px-4 py-2 hover:bg-maximally-red transition-colors"
-              >
-                <span className="font-press-start text-xs">RETRY</span>
-              </button>
             </div>
           )}
 
-          {/* Featured Judges Grid - Only show when data is loaded */}
           {!loading && !error && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
                 {featuredJudges.map((judge) => (
-                  <div key={judge.id} className="pixel-card bg-black/90 border-2 border-maximally-yellow p-6 hover:scale-105 transition-all duration-300">
+                  <div 
+                    key={judge.id} 
+                    className="group bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 p-6 transition-all duration-300 hover:scale-[1.02] hover:border-amber-400/50"
+                    data-testid={`judge-${judge.id}`}
+                  >
                     <div className="text-center">
-                      <div className="minecraft-block bg-maximally-yellow p-2 inline-block mb-4">
-                        <Trophy className="h-5 w-5 text-black" />
+                      <div className="bg-amber-500/20 border border-amber-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        <Trophy className="h-5 w-5 text-amber-400" />
                       </div>
                       
-                      <h4 className="font-press-start text-sm text-white mb-2">
+                      <h4 className="font-press-start text-xs text-white mb-2">
                         {judge.full_name}
                       </h4>
                       
-                      <p className="font-press-start text-xs text-maximally-yellow mb-1">
+                      <p className="font-press-start text-[10px] text-amber-400 mb-1">
                         {judge.role_title}
                       </p>
                       
-                      <p className="font-jetbrains text-xs text-gray-300">
+                      <p className="font-jetbrains text-xs text-gray-400">
                         {judge.company}
                       </p>
                     </div>
@@ -477,8 +476,12 @@ const PeoplePreview = () => {
               </div>
               
               <div className="text-center">
-                <Link to="/people/judges" className="pixel-button bg-maximally-yellow text-black font-press-start text-xs px-6 py-3 hover:bg-maximally-red transition-colors inline-flex items-center">
-                  ALL JUDGES & MENTORS <ArrowRight className="h-3 w-3 ml-2" />
+                <Link 
+                  to="/people/judges" 
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-amber-200 font-press-start text-[10px] transition-all duration-300"
+                  data-testid="link-all-judges"
+                >
+                  ALL JUDGES & MENTORS <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
             </>
@@ -489,7 +492,6 @@ const PeoplePreview = () => {
   );
 };
 
-// Partners Component
 const Partners = () => {
   const partners = [
     {
@@ -497,241 +499,187 @@ const Partners = () => {
       type: "Educational Partnership",
       description: "Leading business school backing our vision of creating entrepreneurial leaders",
       highlight: "Education Partner",
-      color: {
-        border: 'border-maximally-red',
-        bg: 'bg-maximally-red',
-        text: 'text-maximally-red'
-      }
+      gradient: 'from-rose-500/20 to-red-500/20',
+      border: 'border-rose-500/40',
+      iconBg: 'bg-rose-500/20',
+      iconColor: 'text-rose-400'
     },
     {
       name: "MakeX",
       type: "Technology Partnership", 
       description: "Innovative technology company supporting our hackathon infrastructure",
       highlight: "Tech Partner",
-      color: {
-        border: 'border-maximally-yellow',
-        bg: 'bg-maximally-yellow',
-        text: 'text-maximally-yellow'
-      }
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      border: 'border-amber-500/40',
+      iconBg: 'bg-amber-500/20',
+      iconColor: 'text-amber-400'
     },
     {
       name: "Young Researchers Institute",
       type: "Research Partnership",
       description: "Advancing research and innovation in youth-led technology initiatives",
-      highlight: "Research Partner", 
-      color: {
-        border: 'border-green-500',
-        bg: 'bg-green-500',
-        text: 'text-green-500'
-      }
+      highlight: "Research Partner",
+      gradient: 'from-green-500/20 to-emerald-500/20',
+      border: 'border-green-500/40',
+      iconBg: 'bg-green-500/20',
+      iconColor: 'text-green-400'
+    },
+    {
+      name: "NexFellow",
+      type: "Media Partnership",
+      description: "Amplifying stories of young builders and innovators through strategic media coverage",
+      highlight: "Media Partner",
+      gradient: 'from-purple-500/20 to-violet-500/20',
+      border: 'border-purple-500/40',
+      iconBg: 'bg-purple-500/20',
+      iconColor: 'text-purple-400'
     }
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      {/* Background pattern */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
+    <section className="py-16 sm:py-24 bg-black relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
       
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-12">
-          <div className="minecraft-block bg-white p-4 inline-block mb-6">
-            <Heart className="h-8 w-8 text-black" />
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 mb-6">
+            <Heart className="w-4 h-4 text-cyan-400" />
+            <span className="font-press-start text-[10px] sm:text-xs text-cyan-300">SUPPORTERS</span>
           </div>
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
-            OUR PARTNERS
+          <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+            OUR{" "}
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              PARTNERS
+            </span>
           </h2>
-          <p className="font-press-start text-maximally-red text-lg">
+          <p className="font-press-start text-purple-300 text-xs sm:text-sm">
             THEY BELIEVE IN OUR VISION
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {partners.map((partner, index) => (
-            <div key={index} className={`pixel-card bg-black/90 border-2 ${partner.color.border} p-8 hover:scale-105 transition-all duration-300 group relative overflow-hidden`}>
-              {/* Background glow effect */}
-              <div className={`absolute inset-0 ${partner.color.bg} opacity-5 group-hover:opacity-10 transition-opacity`} />
+            <div 
+              key={index} 
+              className={`group bg-gradient-to-br ${partner.gradient} border ${partner.border} p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]`}
+              data-testid={`partner-${index}`}
+            >
+              <div className={`${partner.iconBg} border ${partner.border} px-3 py-1.5 inline-block mb-4`}>
+                <span className="font-press-start text-[10px] text-white">
+                  {partner.highlight}
+                </span>
+              </div>
               
-              <div className="relative z-10">
-                {/* Partner highlight badge */}
-                <div className={`minecraft-block ${partner.color.bg} px-4 py-2 inline-block mb-4`}>
-                  <span className="font-press-start text-xs text-black">
-                    {partner.highlight}
+              <h3 className="font-press-start text-sm text-white mb-2 group-hover:text-purple-300 transition-colors">
+                {partner.name}
+              </h3>
+              
+              <p className={`font-press-start text-[10px] ${partner.iconColor} mb-4`}>
+                {partner.type}
+              </p>
+              
+              <p className="font-jetbrains text-gray-400 text-sm leading-relaxed mb-4">
+                {partner.description}
+              </p>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 ${partner.iconBg}`} />
+                  <span className="font-press-start text-[9px] text-gray-500">
+                    ACTIVE PARTNER
                   </span>
                 </div>
                 
-                {/* Partner name */}
-                <h3 className="font-press-start text-lg md:text-xl text-white mb-2">
-                  {partner.name}
-                </h3>
-                
-                {/* Partner type */}
-                <p className={`font-press-start text-sm ${partner.color.text} mb-4`}>
-                  {partner.type}
-                </p>
-                
-                {/* Description */}
-                <p className="font-jetbrains text-gray-300 text-sm leading-relaxed mb-6">
-                  {partner.description}
-                </p>
-                
-                {/* Partnership indicator */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className={`w-3 h-3 ${partner.color.bg} pixel-border mr-2`} />
-                    <span className="font-press-start text-xs text-gray-400">
-                      ACTIVE PARTNER
-                    </span>
-                  </div>
-                  
-                  <div className={`minecraft-block ${partner.color.bg} p-2 group-hover:animate-pulse`}>
-                    <Heart className="h-4 w-4 text-black" />
-                  </div>
+                <div className={`${partner.iconBg} border ${partner.border} p-2`}>
+                  <Heart className={`h-4 w-4 ${partner.iconColor}`} />
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-};
-
-
-// Culture Section Component
-const Culture = () => {
-  const culturePoints = [
-    {
-      title: "OBSESSION WITH BUILDING",
-      icon: Target,
-      description: "We live and breathe creation. Every line of code, every event, every interaction is about building something better."
-    },
-    {
-      title: "WORK THAT FEELS ALIVE",
-      icon: Zap,
-      description: "Not mechanical, not corporate. Our work has soul, energy, and the kind of passion that keeps you up at night."
-    },
-    {
-      title: "TEENS AT FULL SPEED",
-      icon: Users,
-      description: "Young builders running at maximum velocity. No speed limits, no \"wait until you're older.\" The future is now."
-    }
-  ];
-
-  return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-4 text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            CULTURE / TASK FORCE
-          </h2>
-          <p className="font-press-start text-maximally-yellow text-lg">
-            OUR DNA IS SIMPLE
-          </p>
-        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {culturePoints.map((point, index) => (
-            <div key={index} className="pixel-card bg-black border-2 border-maximally-red p-6 text-center hover:border-maximally-yellow transition-colors">
-              <div className="minecraft-block bg-maximally-red p-4 inline-block mb-4 hover:bg-maximally-yellow transition-colors">
-                <point.icon className="h-6 w-6 text-black" />
-              </div>
-              
-              <h3 className="font-press-start text-sm md:text-base mb-4 text-maximally-red">
-                {point.title}
-              </h3>
-              
-              <p className="font-jetbrains text-gray-300 text-sm leading-relaxed">
-                {point.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Future Vision Component
-const FutureVision = () => {
-  return (
-    <section className="py-16 md:py-24 bg-black relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-maximally-red/10 via-maximally-yellow/10 to-maximally-red/10 animate-pulse" />
-      
-      <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-        <div className="pixel-card bg-black/90 border-2 border-maximally-yellow p-8 md:p-12 max-w-4xl mx-auto">
-          <div className="minecraft-block bg-maximally-yellow p-4 inline-block mb-6">
-            <Globe className="h-8 w-8 text-black" />
-          </div>
-          
-          <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-6 text-maximally-yellow drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-            FUTURE VISION
-          </h2>
-          
-          <p className="font-press-start text-maximally-red text-lg md:text-xl mb-6">
-            BY 2027, MAXIMALLY WILL BE THE BIGGEST HACKATHON ENGINE IN ASIA
-          </p>
-          
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg leading-relaxed">
-            A system where hackathons are constant, connected, and central to how people learn and innovate.
-            Where every student, every builder, every dreamer has access to the tools and community they need to create the future.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// Media Kit Component
-const MediaKit = () => {
-  return (
-    <section className="py-16 md:py-24 bg-gray-900 relative">
-      <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-        <h2 className="font-press-start text-2xl md:text-3xl lg:text-4xl mb-8 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
-          MEDIA KIT
-        </h2>
-        
-        <div className="pixel-card bg-black border-2 border-maximally-red p-8 max-w-2xl mx-auto">
-          <div className="minecraft-block bg-maximally-red p-4 inline-block mb-6">
-            <Mail className="h-8 w-8 text-black" />
-          </div>
-          
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg mb-6">
-            Need logos, colors, or press materials? We've got you covered.
-          </p>
-          
-          <a 
-            href="mailto:brand@maximally.in" 
-            className="pixel-button bg-maximally-red text-black font-press-start text-sm px-6 py-3 hover:bg-maximally-yellow transition-colors inline-flex items-center"
+        <div className="text-center mt-10">
+          <Link 
+            to="/sponsor" 
+            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-500/20 border border-purple-500/40 hover:border-purple-400 text-purple-300 hover:text-purple-200 font-press-start text-[10px] transition-all duration-300"
+            data-testid="link-become-partner"
           >
-            CONTACT: BRAND@MAXIMALLY.IN <Mail className="h-4 w-4 ml-2" />
-          </a>
+            BECOME A PARTNER <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
       </div>
     </section>
   );
 };
 
-// Main About Component
+const ContactSection = () => {
+  return (
+    <section className="py-16 sm:py-24 bg-black relative">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="p-8 sm:p-12 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent" />
+            
+            <div className="relative z-10">
+              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-purple-500/20 border border-purple-500/40">
+                <Mail className="w-8 h-8 text-purple-400" />
+              </div>
+              <h3 className="font-press-start text-base sm:text-lg md:text-xl text-white mb-4">
+                Get in Touch
+              </h3>
+              <p className="font-jetbrains text-sm sm:text-base text-gray-400 mb-8 max-w-xl mx-auto">
+                Have questions or want to collaborate? We'd love to hear from you.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="mailto:hello@maximally.in"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-[10px] sm:text-xs transition-all duration-300"
+                  data-testid="button-email-us"
+                >
+                  <Mail className="h-4 w-4" />
+                  EMAIL US
+                </a>
+                <a
+                  href="https://discord.gg/MpBnYk8qMX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-black/40 border border-gray-700 hover:border-purple-500/50 text-gray-300 hover:text-purple-300 font-press-start text-[10px] sm:text-xs transition-all duration-300"
+                  data-testid="button-join-discord"
+                >
+                  <MessageSquare className="h-4 w-4" />
+                  JOIN DISCORD
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const About = () => {
   return (
-    <div className="min-h-screen bg-black">
-      <SEO 
-        title="About Maximally - Hackathons as Culture, Not Just Code"
-        description="Learn about Maximally's mission to make hackathons open, accessible, and cultural. Discover our platform, events, and global community of teen builders."
-        keywords="about Maximally, hackathon platform, teen builders, global hackathons, MFHOP, hackathon culture"
+    <>
+      <SEO
+        title="About Maximally | Global Hackathon Platform for Teen Builders"
+        description="Learn about Maximally's mission to make hackathons open, accessible, and cultural. Meet our team, partners, and discover what we're building."
+        keywords="about maximally, hackathon platform, teen hackers, global hackathons, youth innovation"
+        canonicalUrl="https://maximally.in/about"
       />
       
-      <HeroSection />
-      <WhatWereBuilding />
-      <PeoplePreview />
-      <Partners />
-      <Culture />
-      <FutureVision />
-      <MediaKit />
-      
-      <Footer />
-    </div>
+      <div className="min-h-screen bg-black text-white">
+        <HeroSection />
+        <WhatWereBuilding />
+        <PeoplePreview />
+        <Partners />
+        <ContactSection />
+        <Footer />
+      </div>
+    </>
   );
 };
 

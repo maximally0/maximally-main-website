@@ -1,0 +1,54 @@
+{
+  "exploreCards": [
+    {
+      "id": "blog",
+      "title": "Blog",
+      "description": "Stories, guides, and insights from the Maximally hackathon ecosystem.",
+      "icon": "book-open",
+      "url": "/blog",
+      "status": "active",
+      "badge": "New Posts",
+      "color": "purple"
+    },
+    {
+      "id": "work-with-us",
+      "title": "Work With Us",
+      "description": "Join the Maximally task force. Help us run events, build tools, and grow the community.",
+      "icon": "users",
+      "url": "https://tally.so/r/wvRYrv",
+      "status": "active",
+      "badge": "Hiring",
+      "color": "green"
+    },
+    {
+      "id": "community",
+      "title": "Community",
+      "description": "Join our Discord, meet fellow builders, and find your next hackathon team.",
+      "icon": "message-circle",
+      "url": "https://discord.gg/MpBnYk8qMX",
+      "status": "active",
+      "badge": null,
+      "color": "cyan"
+    },
+    {
+      "id": "judge-network",
+      "title": "Judge Network",
+      "description": "Connect with experienced judges, mentors, and industry experts who evaluate hackathon projects.",
+      "icon": "award",
+      "url": "/judges",
+      "status": "active",
+      "badge": "New",
+      "color": "amber"
+    },
+    {
+      "id": "mfhop",
+      "title": "MFHOP",
+      "description": "Maximally For Hackathon Organizer Program - resources for event organizers.",
+      "icon": "calendar",
+      "url": "/mfhop",
+      "status": "active",
+      "badge": null,
+      "color": "red"
+    }
+  ]
+}

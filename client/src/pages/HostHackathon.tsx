@@ -18,7 +18,10 @@ import {
   Calendar,
   FileText,
   MessageSquare,
-  Handshake
+  Handshake,
+  Code,
+  Star,
+  Shield
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from '@/components/Footer';
@@ -28,26 +31,11 @@ import { getAuthHeaders } from '@/lib/auth';
 
 const HostHackathon = () => {
   const navigate = useNavigate();
-  const { user, profile, loading: authLoading } = useAuth();
-  const [floatingPixels, setFloatingPixels] = useState<
-    Array<{ id: number; x: number; y: number; delay: number }>
-  >([]);
+  const { user, loading: authLoading } = useAuth();
   const [hasHackathons, setHasHackathons] = useState(false);
   const [checkingHackathons, setCheckingHackathons] = useState(true);
 
   useEffect(() => {
-    // Generate floating pixels
-    const pixels = Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 2,
-    }));
-    setFloatingPixels(pixels);
-  }, []);
-
-  useEffect(() => {
-    // Check if user has hackathons
     const checkHackathons = async () => {
       if (!authLoading) {
         if (user) {
@@ -71,204 +59,191 @@ const HostHackathon = () => {
 
   const handleGetStarted = () => {
     if (!user) {
-      // Redirect to login if not authenticated
-      navigate('/login?redirect=/organizer/apply');
+      navigate('/login?redirect=/create-hackathon');
     } else if (hasHackathons) {
-      // Navigate to dashboard if user has hackathons
       navigate('/organizer/dashboard');
     } else {
-      // Check if user has organizer role, if yes go to create hackathon, else go to application
-      if (profile?.role === 'admin') {
-        navigate('/create-hackathon');
-      } else {
-        navigate('/organizer/apply');
-      }
+      navigate('/create-hackathon');
     }
   };
 
   const benefits = [
     {
-      icon: <Globe className="h-8 w-8" />,
+      icon: Globe,
       title: 'GLOBAL NETWORK',
       description: 'Access to MFHOP, organizer events, and cross-promotion',
-      features: [
-        'Federation membership',
-        'Community amplification',
-        'Cross-promotion in newsletters'
-      ],
-      color: 'bg-blue-600'
+      features: ['Federation membership', 'Community amplification', 'Cross-promotion in newsletters'],
+      gradient: 'from-cyan-500/20 to-blue-500/20',
+      border: 'border-cyan-500/40',
+      iconBg: 'bg-cyan-500/20',
+      iconColor: 'text-cyan-400'
     },
     {
-      icon: <Users className="h-8 w-8" />,
+      icon: Users,
       title: 'FULL SUPPORT',
       description: '1-on-1 mentorship, playbooks, and dedicated assistance',
-      features: [
-        'Organizer mentorship',
-        'Judging frameworks',
-        'Resource library access'
-      ],
-      color: 'bg-green-600'
+      features: ['Organizer mentorship', 'Judging frameworks', 'Resource library access'],
+      gradient: 'from-green-500/20 to-emerald-500/20',
+      border: 'border-green-500/40',
+      iconBg: 'bg-green-500/20',
+      iconColor: 'text-green-400'
     },
     {
-      icon: <Trophy className="h-8 w-8" />,
+      icon: Trophy,
       title: 'PRIZES & PERKS',
       description: 'Prize pools, swag kits, and software lab credits',
-      features: [
-        'Maximally prize pool',
-        'Emergency budget support',
-        'Digital and physical swag'
-      ],
-      color: 'bg-purple-600'
+      features: ['Maximally prize pool', 'Emergency budget support', 'Digital and physical swag'],
+      gradient: 'from-purple-500/20 to-pink-500/20',
+      border: 'border-purple-500/40',
+      iconBg: 'bg-purple-500/20',
+      iconColor: 'text-purple-400'
     },
     {
-      icon: <Lightbulb className="h-8 w-8" />,
+      icon: Lightbulb,
       title: 'PRE-EVENT SUPPORT',
       description: 'Budget templates, sponsor lists, and best practices',
-      features: [
-        'Organizer playbook',
-        'Peer group insights',
-        'Early tool access'
-      ],
-      color: 'bg-yellow-600'
+      features: ['Organizer playbook', 'Peer group insights', 'Early tool access'],
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      border: 'border-amber-500/40',
+      iconBg: 'bg-amber-500/20',
+      iconColor: 'text-amber-400'
     },
     {
-      icon: <Zap className="h-8 w-8" />,
+      icon: Zap,
       title: 'DURING EVENT',
       description: 'Real-time support and on-site assistance',
-      features: [
-        'Maximally rep support',
-        'Judging system help',
-        'Fun mini-events'
-      ],
-      color: 'bg-red-600'
+      features: ['Maximally rep support', 'Judging system help', 'Fun mini-events'],
+      gradient: 'from-rose-500/20 to-red-500/20',
+      border: 'border-rose-500/40',
+      iconBg: 'bg-rose-500/20',
+      iconColor: 'text-rose-400'
     },
     {
-      icon: <BarChart3 className="h-8 w-8" />,
+      icon: BarChart3,
       title: 'POST-EVENT',
       description: 'Analytics, media coverage, and global ranking',
-      features: [
-        'Post-event surveys',
-        'Media coverage',
-        'Project integrity review'
-      ],
-      color: 'bg-cyan-600'
+      features: ['Post-event surveys', 'Media coverage', 'Project integrity review'],
+      gradient: 'from-indigo-500/20 to-violet-500/20',
+      border: 'border-indigo-500/40',
+      iconBg: 'bg-indigo-500/20',
+      iconColor: 'text-indigo-400'
     }
   ];
 
   const stats = [
-    { number: '250+', label: 'HACKATHONS ADVISED' },
-    { number: '1000+', label: 'ORGANIZERS SUPPORTED' },
-    { number: '50K+', label: 'PARTICIPANTS REACHED' }
+    { number: '250+', label: 'HACKATHONS ADVISED', color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30' },
+    { number: '1000+', label: 'ORGANIZERS SUPPORTED', color: 'text-pink-400', bg: 'bg-pink-500/10', border: 'border-pink-500/30' },
+    { number: '50K+', label: 'PARTICIPANTS REACHED', color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30' }
+  ];
+
+  const steps = [
+    { step: '1', title: 'SHARE YOUR VISION', description: 'Tell us about your hackathon idea, goals, and timeline.', icon: Lightbulb },
+    { step: '2', title: 'GET MATCHED', description: 'We connect you with the right resources, mentors, and support.', icon: Network },
+    { step: '3', title: 'PLAN TOGETHER', description: 'Work with our team to build your event roadmap and strategy.', icon: Calendar },
+    { step: '4', title: 'LAUNCH & EXECUTE', description: 'Host your hackathon with full support from start to finish.', icon: Rocket }
   ];
 
   return (
     <>
       <SEO
-        title="Host a Hackathon - Maximally"
-        description="Host your own hackathon with Maximally. Get full support, mentorship, prizes, and access to a global network of organizers."
-        keywords="host hackathon, organize hackathon, hackathon support, event organizing"
+        title="Host a Hackathon | Partner with Maximally"
+        description="Host your own hackathon with Maximally. Get full support, mentorship, prizes, and access to a global network of organizers and participants."
+        keywords="host hackathon, organize hackathon, hackathon support, event organizing, teen hackathons"
         canonicalUrl="https://maximally.in/host-hackathon"
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        {/* Pixel Grid Background */}
-        <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
-
-        {/* Floating Pixels */}
-        {floatingPixels.map((pixel) => (
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+        
+        <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+        <div className="absolute top-60 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+        <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-cyan-500/10 rounded-full blur-[90px]" />
+        
+        {Array.from({ length: 15 }, (_, i) => (
           <div
-            key={pixel.id}
-            className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
+            key={i}
+            className="absolute w-1.5 h-1.5 animate-float pointer-events-none"
             style={{
-              left: `${pixel.x}%`,
-              top: `${pixel.y}%`,
-              animationDelay: `${pixel.delay}s`,
-              animationDuration: `${4 + pixel.delay}s`,
+              left: `${5 + (i * 6)}%`,
+              top: `${10 + Math.sin(i) * 25}%`,
+              animationDelay: `${i * 0.3}s`,
+              animationDuration: `${4 + (i % 3)}s`,
+              backgroundColor: ['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5],
+              boxShadow: `0 0 10px ${['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5]}40`
             }}
           />
         ))}
 
-        {/* Hero Section */}
         <section className="min-h-screen relative flex items-center pt-24 sm:pt-32 pb-12">
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-maximally-red/20 blur-3xl rounded-full animate-pulse" />
-            <div className="absolute bottom-20 right-20 w-40 h-40 bg-maximally-yellow/20 blur-3xl rounded-full animate-pulse delay-700" />
-            <div className="absolute top-1/2 left-1/3 w-36 h-36 bg-red-500/20 blur-3xl rounded-full animate-pulse delay-500" />
-          </div>
-
           <div className="container mx-auto px-4 sm:px-6 z-10">
-            <div className="max-w-6xl mx-auto text-center">
-              {/* Badge */}
-              <div className="minecraft-block bg-gradient-to-r from-maximally-yellow via-orange-500 to-maximally-yellow text-black px-6 xs:px-8 py-3 xs:py-4 inline-block mb-6 sm:mb-8 animate-[glow_2s_ease-in-out_infinite] shadow-2xl shadow-maximally-yellow/50">
-                <span className="font-press-start text-xs xs:text-sm sm:text-base flex items-center gap-2 xs:gap-3">
-                  <Rocket className="h-4 w-4 xs:h-5 xs:w-5 animate-bounce" />
+            <div className="max-w-5xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-6">
+                <Rocket className="w-4 h-4 text-purple-400" />
+                <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
                   FOR ORGANIZERS
-                  <Sparkles className="h-4 w-4 xs:h-5 xs:w-5 animate-spin-slow" />
                 </span>
+                <Sparkles className="w-4 h-4 text-pink-400" />
               </div>
 
-              {/* Main Title */}
-              <h1 className="font-press-start text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 minecraft-text leading-tight px-2">
-                <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:drop-shadow-[6px_6px_0px_rgba(255,215,0,0.5)] transition-all duration-300">
+              <h1 className="font-press-start text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
                   HOST YOUR OWN
                 </span>
                 <br />
-                <span className="text-white drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                  HACKATHON
-                </span>
+                <span className="text-white">HACKATHON</span>
               </h1>
 
-              <p className="text-gray-300 text-sm xs:text-base sm:text-lg md:text-xl max-w-4xl mx-auto font-jetbrains leading-relaxed mb-6 sm:mb-8 md:mb-12 px-4">
+              <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed mb-8">
                 Turn your vision into reality. Whether you're a first-time organizer or a seasoned host,
-                <span className="text-maximally-yellow font-bold"> Maximally supports you every step of the way.</span>
+                <span className="text-purple-300 font-semibold"> Maximally supports you every step of the way.</span>
               </p>
 
-              {/* Primary CTA */}
-              <div className="flex flex-col xs:flex-row gap-4 xs:gap-6 justify-center mb-8 sm:mb-12 md:mb-16 px-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                 <button
                   onClick={handleGetStarted}
                   disabled={authLoading || checkingHackathons}
-                  className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-12 xs:h-14 sm:h-16 px-6 xs:px-8 sm:px-10 font-press-start text-xs xs:text-sm sm:text-base relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600/30 to-pink-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs sm:text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-testid="button-get-started"
                 >
-                  <div className="absolute inset-0 bg-maximally-yellow opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                   {user && hasHackathons ? (
                     <>
-                      <BarChart3 className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:animate-bounce" />
-                      <span>{checkingHackathons ? 'LOADING...' : 'MY_DASHBOARD'}</span>
+                      <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
+                      <span>{checkingHackathons ? 'LOADING...' : 'MY DASHBOARD'}</span>
                     </>
                   ) : (
                     <>
-                      <Rocket className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:animate-bounce" />
-                      <span>{authLoading || checkingHackathons ? 'LOADING...' : 'GET_STARTED'}</span>
+                      <Rocket className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-bounce" />
+                      <span>{authLoading || checkingHackathons ? 'LOADING...' : 'GET STARTED'}</span>
                     </>
                   )}
-                  <ArrowRight className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:translate-x-2 transition-transform" />
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
 
                 <a
                   href="https://discord.gg/MpBnYk8qMX"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pixel-button bg-black border-2 xs:border-4 border-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-black h-12 xs:h-14 sm:h-16 px-6 xs:px-8 sm:px-10 font-press-start text-xs xs:text-sm sm:text-base"
+                  className="group flex items-center justify-center gap-2 px-8 py-4 bg-black/40 border border-gray-700 hover:border-purple-500/50 text-gray-300 hover:text-purple-300 font-press-start text-xs sm:text-sm transition-all duration-300"
+                  data-testid="button-join-discord"
                 >
-                  <MessageSquare className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6" />
-                  <span>JOIN_DISCORD</span>
+                  <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span>JOIN DISCORD</span>
                 </a>
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-1 xs:grid-cols-3 gap-4 xs:gap-6 max-w-4xl mx-auto px-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
                 {stats.map((stat, i) => (
                   <div
                     key={i}
-                    className="pixel-card bg-black/50 border-2 border-maximally-red p-4 xs:p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105"
+                    className={`${stat.bg} border ${stat.border} p-5 transition-all duration-300 hover:scale-105`}
+                    data-testid={`stat-${i}`}
                   >
-                    <div className="font-press-start text-2xl xs:text-3xl sm:text-4xl text-maximally-red mb-2">
+                    <div className={`font-press-start text-2xl sm:text-3xl ${stat.color} mb-2`}>
                       {stat.number}
                     </div>
-                    <div className="font-press-start text-[10px] xs:text-xs text-gray-400">
+                    <div className="font-press-start text-[9px] sm:text-[10px] text-gray-400">
                       {stat.label}
                     </div>
                   </div>
@@ -278,58 +253,51 @@ const HostHackathon = () => {
           </div>
         </section>
 
-        {/* What We Offer Section */}
-        <section className="py-16 sm:py-20 md:py-24 relative bg-gradient-to-b from-black via-gray-900 to-black">
-          <div className="container mx-auto px-4 sm:px-6">
+        <section className="py-16 sm:py-24 relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
+          
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <div className="max-w-6xl mx-auto">
-              {/* Section Header */}
-              <div className="text-center mb-12 sm:mb-16">
-                <div className="minecraft-block bg-gradient-to-r from-maximally-red to-red-700 text-white px-6 py-3 inline-block mb-6 sm:mb-8">
-                  <span className="font-press-start text-xs sm:text-sm">✨ FULL SUPPORT PACKAGE</span>
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 border border-pink-500/30 mb-6">
+                  <Star className="w-4 h-4 text-pink-400" />
+                  <span className="font-press-start text-[10px] sm:text-xs text-pink-300">FULL SUPPORT PACKAGE</span>
                 </div>
-                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                    WHAT WE OFFER
+                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+                  WHAT WE{" "}
+                  <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    OFFER
                   </span>
                 </h2>
-                <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed px-4">
+                <p className="font-jetbrains text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
                   From planning to execution to post-event analytics, we've got you covered.
                 </p>
               </div>
 
-              {/* Benefits Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {benefits.map((benefit, i) => (
                   <div
                     key={i}
-                    className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 xs:border-4 border-maximally-red p-6 sm:p-8 hover:border-maximally-yellow transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden"
+                    className={`group bg-gradient-to-br ${benefit.gradient} border ${benefit.border} p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]`}
+                    data-testid={`benefit-${i}`}
                   >
-                    {/* Hover Background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-maximally-red/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    {/* Corner Decorations */}
-                    <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute bottom-0 right-0 w-6 h-6 border-b-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                    
-                    <div className="relative z-10">
-                      <div className={`minecraft-block ${benefit.color} w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 flex items-center justify-center text-white shadow-lg group-hover:animate-bounce`}>
-                        {benefit.icon}
-                      </div>
-                      <h3 className="font-press-start text-xs sm:text-sm text-maximally-red mb-3 sm:mb-4 text-center group-hover:text-maximally-yellow transition-colors">
-                        {benefit.title}
-                      </h3>
-                      <p className="font-jetbrains text-xs sm:text-sm text-gray-300 mb-4 sm:mb-6 text-center leading-relaxed group-hover:text-gray-200 transition-colors">
-                        {benefit.description}
-                      </p>
-                      <ul className="space-y-2 sm:space-y-3">
-                        {benefit.features.map((feature, j) => (
-                          <li key={j} className="flex items-start gap-2 sm:gap-3 text-xs font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
-                            <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className={`${benefit.iconBg} border ${benefit.border} w-12 h-12 flex items-center justify-center mb-4`}>
+                      <benefit.icon className={`h-6 w-6 ${benefit.iconColor}`} />
                     </div>
+                    <h3 className="font-press-start text-xs text-white mb-3 group-hover:text-purple-300 transition-colors">
+                      {benefit.title}
+                    </h3>
+                    <p className="font-jetbrains text-sm text-gray-400 mb-4 leading-relaxed">
+                      {benefit.description}
+                    </p>
+                    <ul className="space-y-2">
+                      {benefit.features.map((feature, j) => (
+                        <li key={j} className="flex items-start gap-2 text-xs font-jetbrains text-gray-500">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
@@ -337,65 +305,40 @@ const HostHackathon = () => {
           </div>
         </section>
 
-        {/* How It Works Section */}
-        <section className="py-16 sm:py-20 relative bg-black">
-          <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-12 sm:mb-16">
-                <div className="minecraft-block bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 inline-block mb-6 sm:mb-8">
-                  <span className="font-press-start text-xs sm:text-sm">🎯 SIMPLE PROCESS</span>
+        <section className="py-16 sm:py-24 relative">
+          <div className="container mx-auto px-4 sm:px-6 relative z-10">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 mb-6">
+                  <Target className="w-4 h-4 text-cyan-400" />
+                  <span className="font-press-start text-[10px] sm:text-xs text-cyan-300">SIMPLE PROCESS</span>
                 </div>
-                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                    HOW IT WORKS
+                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+                  HOW IT{" "}
+                  <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                    WORKS
                   </span>
                 </h2>
               </div>
 
-              <div className="space-y-6 sm:space-y-8">
-                {[
-                  {
-                    step: '1',
-                    title: 'SHARE YOUR VISION',
-                    description: 'Tell us about your hackathon idea, goals, and timeline.',
-                    icon: <Lightbulb className="h-5 w-5 sm:h-6 sm:w-6" />
-                  },
-                  {
-                    step: '2',
-                    title: 'GET MATCHED',
-                    description: 'We connect you with the right resources, mentors, and support.',
-                    icon: <Network className="h-5 w-5 sm:h-6 sm:w-6" />
-                  },
-                  {
-                    step: '3',
-                    title: 'PLAN TOGETHER',
-                    description: 'Work with our team to build your event roadmap and strategy.',
-                    icon: <Calendar className="h-5 w-5 sm:h-6 sm:w-6" />
-                  },
-                  {
-                    step: '4',
-                    title: 'LAUNCH & EXECUTE',
-                    description: 'Host your hackathon with full support from start to finish.',
-                    icon: <Rocket className="h-5 w-5 sm:h-6 sm:w-6" />
-                  }
-                ].map((item, i) => (
+              <div className="space-y-4">
+                {steps.map((item, i) => (
                   <div
                     key={i}
-                    className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 xs:border-4 border-maximally-yellow p-6 sm:p-8 flex items-center gap-4 sm:gap-6 hover:border-maximally-red transition-all duration-300 hover:scale-105 group"
+                    className="group bg-black/40 border border-purple-500/20 hover:border-purple-500/40 p-6 flex items-center gap-5 transition-all duration-300 hover:bg-purple-500/5"
+                    data-testid={`step-${i}`}
                   >
-                    <div className="minecraft-block bg-maximally-yellow w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center flex-shrink-0 group-hover:animate-bounce">
-                      <span className="font-press-start text-black text-base sm:text-xl">{item.step}</span>
+                    <div className="bg-gradient-to-br from-purple-500/30 to-pink-500/20 border border-purple-500/40 w-14 h-14 flex items-center justify-center flex-shrink-0">
+                      <span className="font-press-start text-lg text-purple-300">{item.step}</span>
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                        <div className="text-maximally-yellow group-hover:text-maximally-red transition-colors">
-                          {item.icon}
-                        </div>
-                        <h3 className="font-press-start text-xs sm:text-sm text-maximally-yellow group-hover:text-maximally-red transition-colors">
+                      <div className="flex items-center gap-3 mb-2">
+                        <item.icon className="h-5 w-5 text-purple-400" />
+                        <h3 className="font-press-start text-xs sm:text-sm text-purple-300 group-hover:text-purple-200 transition-colors">
                           {item.title}
                         </h3>
                       </div>
-                      <p className="font-jetbrains text-xs sm:text-sm text-gray-300 leading-relaxed">
+                      <p className="font-jetbrains text-sm text-gray-400 leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -406,126 +349,79 @@ const HostHackathon = () => {
           </div>
         </section>
 
-        {/* Initiatives Section */}
-        <section className="py-16 sm:py-20 md:py-24 relative bg-gradient-to-b from-black via-red-950/10 to-black overflow-hidden">
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-maximally-red/20 blur-3xl rounded-full animate-pulse" />
-            <div className="absolute bottom-20 right-20 w-40 h-40 bg-maximally-yellow/20 blur-3xl rounded-full animate-pulse delay-700" />
-            <div className="absolute top-1/2 left-1/3 w-36 h-36 bg-red-500/20 blur-3xl rounded-full animate-pulse delay-500" />
-          </div>
-
+        <section className="py-16 sm:py-24 relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-pink-900/5 to-transparent" />
+          
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
-            <div className="max-w-6xl mx-auto">
-              {/* Section Header */}
-              <div className="text-center mb-12 sm:mb-16">
-                <div className="minecraft-block bg-gradient-to-r from-maximally-yellow via-orange-500 to-maximally-yellow text-black px-6 py-3 inline-block mb-6 sm:mb-8 animate-[glow_2s_ease-in-out_infinite] shadow-2xl shadow-maximally-yellow/50">
-                  <span className="font-press-start text-xs sm:text-sm flex items-center gap-2 sm:gap-3">
-                    <Handshake className="h-4 w-4 sm:h-5 sm:w-5 animate-bounce" />
-                    INITIATIVES BY MAXIMALLY
-                    <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 animate-spin-slow" />
-                  </span>
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 mb-6">
+                  <Handshake className="w-4 h-4 text-green-400" />
+                  <span className="font-press-start text-[10px] sm:text-xs text-green-300">INITIATIVES BY MAXIMALLY</span>
                 </div>
-                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                    FOR ORGANIZERS
+                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+                  FOR{" "}
+                  <span className="bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+                    ORGANIZERS
                   </span>
                 </h2>
-                <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed px-4">
+                <p className="font-jetbrains text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
                   Explore our programs designed to empower hackathon organizers worldwide.
                 </p>
               </div>
 
-              {/* Initiatives Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                {/* Partner Network Card */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Link
                   to="/partner"
-                  className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 sm:p-10 hover:border-maximally-yellow transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden block"
+                  className="group bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 hover:border-blue-400/50 p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]"
+                  data-testid="link-partner-network"
                 >
-                  {/* Animated Background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                  {/* Corner Accents */}
-                  <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                  <div className="relative z-10">
-                    <div className="minecraft-block bg-gradient-to-br from-blue-600 to-blue-800 w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-blue-600/50 group-hover:animate-bounce">
-                      <Handshake className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                    </div>
-                    <h3 className="font-press-start text-base sm:text-lg text-maximally-red mb-4 text-center group-hover:text-maximally-yellow transition-colors">
-                      PARTNER NETWORK
-                    </h3>
-                    <p className="font-jetbrains text-sm sm:text-base text-gray-300 text-center mb-6 leading-relaxed group-hover:text-gray-200 transition-colors">
-                      Co-organize, feature, or partner with Maximally to host your hackathon with full support.
-                    </p>
-                    <ul className="space-y-3 mb-6">
-                      {[
-                        'Global network access',
-                        'Full operational support',
-                        'Prizes & perks',
-                        'Media coverage'
-                      ].map((feature, j) => (
-                        <li key={j} className="flex items-start gap-3 text-xs sm:text-sm font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
-                          <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="flex items-center justify-center gap-2 text-maximally-red group-hover:text-maximally-yellow transition-colors font-press-start text-xs sm:text-sm">
-                      <span>LEARN_MORE</span>
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform" />
-                    </div>
+                  <div className="bg-blue-500/20 border border-blue-500/40 w-16 h-16 flex items-center justify-center mb-6">
+                    <Handshake className="h-8 w-8 text-blue-400" />
+                  </div>
+                  <h3 className="font-press-start text-sm sm:text-base text-white mb-3 group-hover:text-blue-300 transition-colors">
+                    PARTNER NETWORK
+                  </h3>
+                  <p className="font-jetbrains text-sm text-gray-400 mb-6 leading-relaxed">
+                    Co-organize, feature, or partner with Maximally to host your hackathon with full support.
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    {['Global network access', 'Full operational support', 'Prizes & perks', 'Media coverage'].map((feature, j) => (
+                      <li key={j} className="flex items-start gap-2 text-xs font-jetbrains text-gray-500">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex items-center gap-2 font-press-start text-xs text-blue-400 group-hover:text-blue-300">
+                    LEARN MORE <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
 
-                {/* MFHOP Card */}
                 <Link
                   to="/mfhop"
-                  className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red p-8 sm:p-10 hover:border-maximally-yellow transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-maximally-red/50 group relative overflow-hidden block"
+                  className="group bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 hover:border-amber-400/50 p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(245,158,11,0.15)]"
+                  data-testid="link-mfhop"
                 >
-                  {/* Animated Background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                  {/* Corner Accents */}
-                  <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-maximally-yellow opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                  <div className="relative z-10">
-                    <div className="minecraft-block bg-gradient-to-br from-green-600 to-green-800 w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-green-600/50 group-hover:animate-bounce">
-                      <Users className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
-                    </div>
-                    <h3 className="font-press-start text-base sm:text-lg text-maximally-red mb-4 text-center group-hover:text-maximally-yellow transition-colors">
-                      MFHOP
-                    </h3>
-                    <p className="font-jetbrains text-xs sm:text-sm text-gray-400 text-center mb-4 leading-relaxed">
-                      Maximally Federation of Hackathon Organizers and Partners
-                    </p>
-                    <p className="font-jetbrains text-sm sm:text-base text-gray-300 text-center mb-6 leading-relaxed group-hover:text-gray-200 transition-colors">
-                      A global network of hackathon organizers working together to grow reach and strengthen events.
-                    </p>
-                    <ul className="space-y-3 mb-6">
-                      {[
-                        'Cross-promotion',
-                        'Sponsor sharing',
-                        'Judge & mentor circuit',
-                        'Free membership'
-                      ].map((feature, j) => (
-                        <li key={j} className="flex items-start gap-3 text-xs sm:text-sm font-jetbrains text-gray-400 group-hover:text-gray-300 transition-colors">
-                          <CheckCircle2 className="h-4 w-4 text-maximally-yellow flex-shrink-0 mt-0.5 group-hover:scale-125 transition-transform" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="flex items-center justify-center gap-2 text-maximally-red group-hover:text-maximally-yellow transition-colors font-press-start text-xs sm:text-sm">
-                      <span>LEARN_MORE</span>
-                      <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform" />
-                    </div>
+                  <div className="bg-amber-500/20 border border-amber-500/40 w-16 h-16 flex items-center justify-center mb-6">
+                    <Globe className="h-8 w-8 text-amber-400" />
+                  </div>
+                  <h3 className="font-press-start text-sm sm:text-base text-white mb-3 group-hover:text-amber-300 transition-colors">
+                    MFHOP FEDERATION
+                  </h3>
+                  <p className="font-jetbrains text-sm text-gray-400 mb-6 leading-relaxed">
+                    Join the Maximally Federation of Hackathon Organizer Partners for exclusive resources.
+                  </p>
+                  <ul className="space-y-2 mb-6">
+                    {['Exclusive organizer events', 'Shared sponsor network', 'Cross-promotion', 'Best practices library'].map((feature, j) => (
+                      <li key={j} className="flex items-start gap-2 text-xs font-jetbrains text-gray-500">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex items-center gap-2 font-press-start text-xs text-amber-400 group-hover:text-amber-300">
+                    LEARN MORE <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
               </div>
@@ -533,48 +429,35 @@ const HostHackathon = () => {
           </div>
         </section>
 
-        {/* Final CTA Section */}
-        <section className="py-16 sm:py-20 relative bg-gradient-to-b from-black to-gray-900">
+        <section className="py-16 sm:py-24 relative">
           <div className="container mx-auto px-4 sm:px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 minecraft-text">
-                <span className="text-maximally-red drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-                  READY TO HOST?
-                </span>
-              </h2>
-
-              <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-jetbrains mb-8 sm:mb-12 px-4">
-                Join hundreds of organizers who've successfully hosted hackathons with Maximally.
-              </p>
-
-              <div className="pixel-card bg-black border-2 xs:border-4 border-maximally-yellow p-6 sm:p-8 mb-8 sm:mb-12 hover:border-maximally-red transition-all duration-300">
-                <p className="text-gray-300 text-sm sm:text-base font-jetbrains mb-2">
-                  <span className="text-maximally-yellow font-bold">250+ hackathons advised.</span> You're never doing it alone.
-                </p>
-                <p className="text-gray-400 text-xs sm:text-sm font-jetbrains">
-                  Whether you're a first-time organizer or returning host.
-                </p>
-              </div>
-
-              <div className="flex flex-col xs:flex-row gap-4 xs:gap-6 justify-center">
-                <button
-                  onClick={handleGetStarted}
-                  disabled={authLoading}
-                  className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-12 xs:h-14 sm:h-16 px-6 xs:px-8 sm:px-10 font-press-start text-xs xs:text-sm sm:text-base relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <div className="absolute inset-0 bg-maximally-yellow opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
-                  <Rocket className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:animate-bounce" />
-                  <span>{authLoading ? 'LOADING...' : 'GET_STARTED'}</span>
-                  <ArrowRight className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 group-hover:translate-x-2 transition-transform" />
-                </button>
-
-                <Link
-                  to="/contact"
-                  className="pixel-button bg-black border-2 xs:border-4 border-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:bg-maximally-red hover:text-black h-12 xs:h-14 sm:h-16 px-6 xs:px-8 sm:px-10 font-press-start text-xs xs:text-sm sm:text-base"
-                >
-                  <MessageSquare className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6" />
-                  <span>CONTACT_US</span>
-                </Link>
+            <div className="max-w-4xl mx-auto">
+              <div className="p-8 sm:p-12 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+                <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent" />
+                
+                <div className="relative z-10">
+                  <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-purple-500/20 border border-purple-500/40">
+                    <Rocket className="w-8 h-8 text-purple-400" />
+                  </div>
+                  <h3 className="font-press-start text-base sm:text-lg md:text-xl text-white mb-4">
+                    Ready to host your hackathon?
+                  </h3>
+                  <p className="font-jetbrains text-sm sm:text-base text-gray-400 mb-8 max-w-xl mx-auto">
+                    Join 1000+ organizers who have launched successful events with Maximally's support.
+                  </p>
+                  <button
+                    onClick={handleGetStarted}
+                    disabled={authLoading || checkingHackathons}
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs sm:text-sm transition-all duration-300 disabled:opacity-50"
+                    data-testid="button-cta-get-started"
+                  >
+                    <Rocket className="h-5 w-5" />
+                    {user && hasHackathons ? 'GO TO DASHBOARD' : 'START NOW'}
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -1,0 +1,64 @@
+{
+  "featuredPosts": [
+    {
+      "id": "masters-union-partnership",
+      "title": "Masters' Union x Maximally Partnership",
+      "excerpt": "A groundbreaking collaboration bringing world-class business education to the hackathon ecosystem.",
+      "category": "Partnerships",
+      "readTime": "5 min",
+      "date": "2025-11-25",
+      "slug": "masters-union-partnership",
+      "featured": true
+    },
+    {
+      "id": "protocol-404-future-hackathons",
+      "title": "Protocol 404: The Future of Hackathons",
+      "excerpt": "How we're reimagining what a hackathon can be - breaking every rule in the process.",
+      "category": "Events",
+      "readTime": "4 min",
+      "date": "2025-11-20",
+      "slug": "protocol-404-future-of-hackathons",
+      "featured": true
+    },
+    {
+      "id": "project-codegen-beyond",
+      "title": "Project CodeGen: Beyond Hackathons",
+      "excerpt": "Taking the hackathon spirit and applying it to how we build, collaborate, and ship.",
+      "category": "Innovation",
+      "readTime": "6 min",
+      "date": "2025-11-15",
+      "slug": "project-codegen-beyond-hackathons",
+      "featured": true
+    },
+    {
+      "id": "ai-shipathon-guide",
+      "title": "AI Shipathon: Complete Guide",
+      "excerpt": "Everything you need to know about participating in our flagship AI-focused hackathon.",
+      "category": "Guides",
+      "readTime": "8 min",
+      "date": "2025-11-10",
+      "slug": "maximally-ai-shipathon-guide",
+      "featured": false
+    },
+    {
+      "id": "code-hypothesis-survive",
+      "title": "Survive Code Hypothesis in 24 Hours",
+      "excerpt": "Practical tips and strategies for making the most of your Code Hypothesis experience.",
+      "category": "Guides",
+      "readTime": "5 min",
+      "date": "2025-11-05",
+      "slug": "survive-code-hypothesis-24-hours",
+      "featured": false
+    },
+    {
+      "id": "no-code-ai-shipathon",
+      "title": "No-Code AI: Building Without Code",
+      "excerpt": "How to participate in AI hackathons even if you don't know how to code.",
+      "category": "Tutorials",
+      "readTime": "7 min",
+      "date": "2025-10-28",
+      "slug": "no-code-ai-shipathon",
+      "featured": false
+    }
+  ]
+}

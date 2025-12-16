@@ -77,7 +77,7 @@ const PartnerNetwork = () => {
       features: [
         'Post-event surveys and analytics',
         'Maximally Global Ranking inclusion',
-        'Media coverage through Maximally Studios',
+        'Media coverage through Maximally',
         'Project integrity review support'
       ]
     }
