@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
@@ -11,7 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/lib/supabaseClient';
 import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
-import { verifyCaptcha, isCaptchaRequired, isValidCaptchaToken } from '@/lib/captcha';
+import { isCaptchaRequired, isValidCaptchaToken } from '@/lib/captcha';
+import { Sparkles, Zap } from 'lucide-react';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,48 +24,30 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // CAPTCHA state
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string | null>(null);
   const [captchaLoaded, setCaptchaLoaded] = useState(false);
   const captchaRequired = isCaptchaRequired();
   const recaptchaRef = useRef<RecaptchaRef | null>(null);
   const captchaTokenRef = useRef<string | null>(null);
-  
-  // Removed development-only CAPTCHA debug logging
 
-  // Handle OAuth errors and user redirect
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const oauthError = urlParams.get('error');
-    const errorDescription = urlParams.get('error_description');
     
     if (oauthError) {
-      console.error('❌ OAuth error:', {
-        error: oauthError,
-        description: errorDescription,
-        code: urlParams.get('error_code')
-      });
-      
-      // Clear the error from URL
       window.history.replaceState({}, document.title, window.location.pathname);
-      
-      // Clear any corrupted OAuth state
       if (supabase) {
         supabase.auth.signOut().catch(() => {});
       }
-      
-      // Clear browser storage to reset OAuth state
       try {
         localStorage.removeItem('maximally-supabase-auth');
         sessionStorage.clear();
       } catch (e) {}
-      
       setError('OAuth authentication failed. Please try again.');
       return;
     }
     
-    // Check for profile constraint errors and handle them
     if (window.location.pathname === '/login' && !oauthError && !user) {
       const currentError = localStorage.getItem('oauth_profile_error');
       if (currentError) {
@@ -79,12 +60,10 @@ export default function Login() {
     }
     
     if (user) {
-      // User authenticated, redirecting to home
       navigate('/', { replace: true });
     }
-  }, [user, navigate, supabase]);
+  }, [user, navigate]);
 
-  // CAPTCHA handlers
   const handleCaptchaVerify = (token: string | null) => {
     setCaptchaToken(token);
     captchaTokenRef.current = token;
@@ -106,33 +85,21 @@ export default function Login() {
     captchaTokenRef.current = null;
   };
 
-  // Email validation check before signup (client-side only for static hosting)
   const validateEmailBeforeSignup = async (email: string): Promise<boolean> => {
     try {
-      // Basic client-side email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
         setError('Please enter a valid email address');
         return false;
       }
-
-      // Check for common disposable email domains (basic list)
-      const disposableDomains = [
-        '10minutemail.com', 'tempmail.org', 'guerrillamail.com', 
-        'mailinator.com', 'throwaway.email', 'temp-mail.org'
-      ];
-      
+      const disposableDomains = ['10minutemail.com', 'tempmail.org', 'guerrillamail.com', 'mailinator.com'];
       const domain = email.split('@')[1]?.toLowerCase();
       if (disposableDomains.includes(domain)) {
         setError('Please use a permanent email address');
         return false;
       }
-
-      // For static hosting, we'll do basic validation only
-      // In a full-stack deployment, this would validate with the backend
       return true;
     } catch (err: any) {
-      console.error('Email validation error:', err);
       setError('Unable to validate email. Please try again.');
       return false;
     }
@@ -140,36 +107,25 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Clear all errors at the start
     setError(null);
     setCaptchaError(null);
     setLoading(true);
 
-    // Check CAPTCHA if required
     if (captchaRequired) {
-      // Check both captchaToken state and captchaTokenRef for the token
       const currentToken = captchaToken || captchaTokenRef.current;
-      
       if (!isValidCaptchaToken(currentToken)) {
         setError('Please complete the CAPTCHA verification');
         setLoading(false);
         return;
       }
-
-      // For now, skip backend verification since we're on static hosting
-      // The CAPTCHA token presence is sufficient for client-side validation
     }
 
-    // Validation
     if (isSignUp) {
-      // Check password length first
       if (password.length < 8) {
         setError('Password must be at least 8 characters long');
         setLoading(false);
         return;
       }
-      // Then check if passwords match
       if (password !== confirmPassword) {
         setError('Passwords do not match');
         setLoading(false);
@@ -189,26 +145,17 @@ export default function Login() {
 
     try {
       if (isSignUp) {
-  // Attempting to sign up user with email validation
-        
-        // First, validate the email
         const emailIsValid = await validateEmailBeforeSignup(email);
         if (!emailIsValid) {
           setLoading(false);
           return;
         }
-        
-  // Email validation passed, proceeding with signup
-        
-        // Use the original signup method (which works correctly for username storage)
         const result = await signUp(email, password, name.trim(), username.trim());
         if (result.error) {
           setError(result.error.message);
           setLoading(false);
           return;
         }
-  // Sign up successful
-        // If email confirmation is required, there may be no session yet.
         try {
           const { data: { session } } = await supabase!.auth.getSession();
           if (!session) {
@@ -220,46 +167,33 @@ export default function Login() {
           navigate(`/verify-email?email=${encodeURIComponent(email)}`);
         }
       } else {
-  // Attempting to sign in user
         const result = await signIn(email, password);
         if (result.error) {
           setError(result.error.message);
-          resetCaptcha(); // Reset CAPTCHA on authentication error
+          resetCaptcha();
           setLoading(false);
           return;
         }
-  // Sign in successful
-        // Redirect to home page after successful signin
         navigate('/');
       }
     } catch (err: any) {
-      console.error('Authentication error:', err);
       setError(err.message || 'An unexpected error occurred');
-      resetCaptcha(); // Reset CAPTCHA on any error
+      resetCaptcha();
       setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
     if (!supabase) return;
-    
-    // Check CAPTCHA if required
     if (captchaRequired) {
       const currentToken = captchaToken || captchaTokenRef.current;
-      
       if (!isValidCaptchaToken(currentToken)) {
         setError('Please complete the CAPTCHA verification before signing in with Google');
         return;
       }
-
-      // For now, skip backend verification since we're on static hosting
     }
-    
     try {
-      // Clear any existing OAuth state to prevent conflicts
       await supabase.auth.signOut();
-      
-      // Small delay to ensure cleanup is complete
       setTimeout(async () => {
         if (!supabase) {
           setError('Authentication service not available');
@@ -267,41 +201,26 @@ export default function Login() {
         }
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
-          options: {
-            redirectTo: window.location.origin
-          }
+          options: { redirectTo: window.location.origin }
         });
-        if (error) {
-          console.error('Google OAuth error:', error);
-          setError('Google sign-in failed: ' + error.message);
-        }
+        if (error) setError('Google sign-in failed: ' + error.message);
       }, 100);
     } catch (err) {
-      console.error('Google sign-in error', err);
       setError('Google sign-in failed');
     }
   };
 
   const handleGithubSignIn = async () => {
     if (!supabase) return;
-    
-    // Check CAPTCHA if required
     if (captchaRequired) {
       const currentToken = captchaToken || captchaTokenRef.current;
-      
       if (!isValidCaptchaToken(currentToken)) {
         setError('Please complete the CAPTCHA verification before signing in with GitHub');
         return;
       }
-
-      // For now, skip backend verification since we're on static hosting
     }
-    
     try {
-      // Clear any existing OAuth state to prevent conflicts
       await supabase.auth.signOut();
-      
-      // Small delay to ensure cleanup is complete
       setTimeout(async () => {
         if (!supabase) {
           setError('Authentication service not available');
@@ -309,17 +228,11 @@ export default function Login() {
         }
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'github',
-          options: {
-            redirectTo: window.location.origin
-          }
+          options: { redirectTo: window.location.origin }
         });
-        if (error) {
-          console.error('GitHub OAuth error:', error);
-          setError('GitHub sign-in failed: ' + error.message);
-        }
+        if (error) setError('GitHub sign-in failed: ' + error.message);
       }, 100);
     } catch (err) {
-      console.error('GitHub sign-in error', err);
       setError('GitHub sign-in failed');
     }
   };
@@ -328,275 +241,223 @@ export default function Login() {
     <>
       <Helmet>
         <title>{isSignUp ? 'Sign Up' : 'Login'} - Maximally</title>
-        <meta
-          name="description"
-          content="Join Maximally - World's First AI-Native Hackathon Platform"
-        />
+        <meta name="description" content="Join Maximally - World's First AI-Native Hackathon Platform" />
       </Helmet>
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center p-4 pt-24">
-        {/* Pixel Grid Background */}
-        <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        {/* Background Effects */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
         
-        {/* Floating Pixels */}
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${4 + i * 0.5}s`,
-            }}
-          />
-        ))}
+        <div className="absolute top-20 left-[10%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+        <div className="absolute bottom-20 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
 
         {/* Auth Card */}
         <div className="w-full max-w-lg relative z-10">
-          <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red hover:border-maximally-yellow transition-all duration-500 p-8 relative group overflow-hidden" data-testid="card-auth">
-            {/* Corner decorations */}
-            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
-            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
-            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
-            
-            {/* Animated Border Glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-maximally-red via-maximally-yellow to-maximally-red opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500" />
-            
-            <div className="relative z-10">
-              {/* Header */}
-              <div className="text-center mb-8">
-                <div className="minecraft-block bg-maximally-red/20 border-2 border-maximally-red p-3 inline-block mb-4 animate-[glow_2s_ease-in-out_infinite]">
-                  <span className="text-4xl">⚡</span>
+          <div className="bg-gradient-to-br from-gray-900/80 to-gray-900/40 border border-purple-500/30 p-6 sm:p-8 backdrop-blur-sm" data-testid="card-auth">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-14 h-14 mb-4 bg-purple-500/20 border border-purple-500/40">
+                <Zap className="w-7 h-7 text-purple-400" />
+              </div>
+              <h1 className="font-press-start text-lg sm:text-xl md:text-2xl mb-3">
+                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                  {isSignUp ? 'JOIN MAXIMALLY' : 'WELCOME BACK'}
+                </span>
+              </h1>
+              <p className="font-jetbrains text-sm text-gray-400">
+                {isSignUp ? 'Join the global innovation league' : 'Access your dashboard'}
+              </p>
+            </div>
+
+            {/* Error Display */}
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/30 p-3 mb-6">
+                <div className="text-red-400 font-jetbrains text-sm" role="alert" data-testid="auth-error">
+                  ⚠️ {error}
                 </div>
-                <h1 className="font-press-start text-2xl md:text-3xl font-bold mb-4 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">
-                    {isSignUp ? 'JOIN_MAXIMALLY' : 'WELCOME_BACK'}
-                  </span>
-                </h1>
-                <p className="font-press-start text-xs text-maximally-yellow mb-2">
-                  {isSignUp ? 'CREATE_ACCOUNT' : 'SIGN_IN_TO_CONTINUE'}
-                </p>
-                <p className="font-jetbrains text-sm text-gray-400">
-                  {isSignUp
-                    ? 'Join the global innovation league'
-                    : 'Access your dashboard'}
-                </p>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="font-press-start text-[10px] text-purple-300 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                  EMAIL ADDRESS
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="hacker@example.com"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); setError(null); }}
+                  className="bg-black/50 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400 placeholder:text-gray-600"
+                  required
+                  data-testid="input-email"
+                />
               </div>
 
-              {/* Error Display */}
-              {error && (
-                <div className="minecraft-block bg-red-900/30 border-2 border-maximally-red p-3 mb-6">
-                  <div className="text-red-300 font-press-start text-xs" role="alert" data-testid="auth-error">
-                    ⚠️ {error}
+              {isSignUp && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="name" className="font-press-start text-[10px] text-pink-300 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-pink-400"></span>
+                      FULL NAME
+                    </Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={name}
+                      onChange={(e) => { setName(e.target.value); setError(null); }}
+                      className="bg-black/50 border border-pink-500/30 text-white font-jetbrains focus:border-pink-400 placeholder:text-gray-600"
+                      required
+                      data-testid="input-name"
+                    />
                   </div>
-                </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="username" className="font-press-start text-[10px] text-cyan-300 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+                      USERNAME
+                    </Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      placeholder="choose_a_username"
+                      value={username}
+                      onChange={(e) => { setUsername(e.target.value); setError(null); }}
+                      className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400 placeholder:text-gray-600"
+                      required
+                      data-testid="input-username"
+                    />
+                  </div>
+                </>
               )}
-              
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="font-press-start text-xs text-maximally-blue flex items-center gap-2">
-                    <span className="w-2 h-2 bg-maximally-blue"></span>
-                    EMAIL_ADDRESS
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="hacker@example.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setError(null); // Clear error when user types
-                    }}
-                    className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue placeholder:text-gray-500 transition-colors"
-                    required
-                    data-testid="input-email"
-                  />
-                </div>
 
-                {isSignUp && (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="font-press-start text-xs text-maximally-yellow flex items-center gap-2">
-                        <span className="w-2 h-2 bg-maximally-yellow"></span>
-                        FULL_NAME
-                      </Label>
-                      <Input
-                        id="name"
-                        type="text"
-                        placeholder="Enter your full name"
-                        value={name}
-                        onChange={(e) => {
-                          setName(e.target.value);
-                          setError(null); // Clear error when user types
-                        }}
-                        className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-yellow placeholder:text-gray-500 transition-colors"
-                        required
-                        data-testid="input-name"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="username" className="font-press-start text-xs text-maximally-red flex items-center gap-2">
-                        <span className="w-2 h-2 bg-maximally-red"></span>
-                        USERNAME
-                      </Label>
-                      <Input
-                        id="username"
-                        type="text"
-                        placeholder="choose_a_username"
-                        value={username}
-                        onChange={(e) => {
-                          setUsername(e.target.value);
-                          setError(null); // Clear error when user types
-                        }}
-                        className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-red placeholder:text-gray-500 transition-colors"
-                        required
-                        data-testid="input-username"
-                      />
-                    </div>
-                  </>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="font-press-start text-[10px] text-green-300 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-green-400"></span>
+                  PASSWORD
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value); setError(null); }}
+                  className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
+                  required
+                  data-testid="input-password"
+                />
+                {!isSignUp && (
+                  <div className="text-right mt-1">
+                    <button
+                      type="button"
+                      onClick={() => navigate('/forgot-password')}
+                      className="font-jetbrains text-xs text-gray-500 hover:text-purple-400 transition-colors"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
                 )}
+              </div>
 
+              {isSignUp && (
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
-                    <span className="w-2 h-2 bg-maximally-green"></span>
-                    PASSWORD
+                  <Label htmlFor="confirmPassword" className="font-press-start text-[10px] text-green-300 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-green-400"></span>
+                    CONFIRM PASSWORD
                   </Label>
                   <Input
-                    id="password"
+                    id="confirmPassword"
                     type="password"
                     placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                      setError(null); // Clear error when user types
-                    }}
-                    className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
+                    value={confirmPassword}
+                    onChange={(e) => { setConfirmPassword(e.target.value); setError(null); }}
+                    className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
                     required
-                    data-testid="input-password"
+                    data-testid="input-confirm-password"
                   />
-                  {!isSignUp && (
-                    <div className="text-right mt-1">
-                      <button
-                        type="button"
-                        onClick={() => navigate('/forgot-password')}
-                        className="font-press-start text-xs text-gray-400 hover:text-maximally-blue"
-                      >
-                        FORGOT_PASSWORD?
-                      </button>
+                </div>
+              )}
+
+              {captchaRequired && (
+                <div className="bg-purple-500/5 border border-purple-500/20 p-4">
+                  <h3 className="font-press-start text-[10px] text-purple-300 mb-3 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                    VERIFICATION REQUIRED
+                  </h3>
+                  <div className="flex justify-center">
+                    <Recaptcha
+                      ref={recaptchaRef}
+                      onVerify={handleCaptchaVerify}
+                      onError={handleCaptchaError}
+                      size="normal"
+                    />
+                  </div>
+                  {captchaError && (
+                    <div className="bg-red-500/10 border border-red-500/30 p-2 mt-3">
+                      <div className="text-red-400 font-jetbrains text-xs" role="alert">⚠️ {captchaError}</div>
                     </div>
                   )}
                 </div>
+              )}
 
-                {isSignUp && (
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
-                      <span className="w-2 h-2 bg-maximally-green"></span>
-                      CONFIRM_PASSWORD
-                    </Label>
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      placeholder="••••••••"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        setError(null); // Clear error when user types
-                      }}
-                      className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
-                      required
-                      data-testid="input-confirm-password"
-                    />
-                  </div>
-                )}
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs py-5 transition-all duration-300"
+                data-testid="button-submit"
+                disabled={loading}
+              >
+                {loading ? 'LOADING...' : (isSignUp ? 'JOIN LEAGUE' : 'ACCESS DASHBOARD')}
+              </Button>
+            </form>
 
-                {captchaRequired && (
-                  <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-blue/30 p-4">
-                    <h3 className="font-press-start text-xs text-maximally-blue mb-3 flex items-center gap-2">
-                      <span className="w-2 h-2 bg-maximally-blue"></span>
-                      VERIFICATION_REQUIRED
-                    </h3>
-                    <div className="flex justify-center">
-                      <Recaptcha
-                        ref={recaptchaRef}
-                        onVerify={handleCaptchaVerify}
-                        onError={handleCaptchaError}
-                        size="normal"
-                        className=""
-                      />
-                    </div>
-                    {captchaError && (
-                      <div className="minecraft-block bg-red-900/30 border-2 border-maximally-red p-2 mt-3">
-                        <div className="text-red-300 font-press-start text-xs" role="alert">⚠️ {captchaError}</div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <Button
-                  type="submit"
-                  className="w-full pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-sm py-4 transition-colors border-4 border-maximally-red hover:border-maximally-yellow"
-                  data-testid="button-submit"
-                  disabled={loading}
-                >
-                  {loading ? 'LOADING...' : (isSignUp ? 'JOIN_LEAGUE' : 'ACCESS_DASHBOARD')}
-                </Button>
-
-              </form>
-
-              {/* OAuth Separator */}
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t-2 border-gray-700" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-black px-4 font-press-start text-xs text-gray-400">
-                    OR_CONNECT_WITH
-                  </span>
-                </div>
+            {/* OAuth Separator */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-purple-500/20" />
               </div>
-
-              {/* OAuth Buttons */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <Button
-                  onClick={handleGoogleSignIn}
-                  className="pixel-button bg-white hover:bg-gray-100 text-black font-press-start text-xs py-3 border-2 border-gray-300 hover:border-maximally-red transition-colors flex items-center justify-center gap-2"
-                  data-testid="button-google-signin"
-                >
-                  <FcGoogle className="h-4 w-4" />
-                  <span className="hidden sm:inline">GOOGLE</span>
-                </Button>
-
-                <Button
-                  onClick={handleGithubSignIn}
-                  className="pixel-button bg-gray-800 hover:bg-black text-white font-press-start text-xs py-3 border-2 border-gray-700 hover:border-maximally-red transition-colors flex items-center justify-center gap-2"
-                  data-testid="button-github-signin"
-                >
-                  <FaGithub className="h-4 w-4" />
-                  <span className="hidden sm:inline">GITHUB</span>
-                </Button>
+              <div className="relative flex justify-center">
+                <span className="bg-gray-900 px-4 font-jetbrains text-xs text-gray-500">
+                  or connect with
+                </span>
               </div>
+            </div>
 
-              {/* Toggle Mode */}
-              <div className="text-center border-t-2 border-gray-800 pt-4">
-                <button
-                  onClick={() => {
-                    setIsSignUp(!isSignUp);
-                    setError(null);
-                    resetCaptcha();
-                  }}
-                  className="font-press-start text-xs text-gray-400 hover:text-maximally-yellow transition-colors"
-                  data-testid="button-toggle-mode"
-                >
-                  {isSignUp
-                    ? 'EXISTING_USER? → SIGN_IN'
-                    : 'NEW_USER? → JOIN_NOW'}
-                </button>
-              </div>
+            {/* OAuth Buttons */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <Button
+                onClick={handleGoogleSignIn}
+                className="bg-white hover:bg-gray-100 text-black font-press-start text-[10px] py-3 border border-gray-300 hover:border-purple-400 transition-colors flex items-center justify-center gap-2"
+                data-testid="button-google-signin"
+              >
+                <FcGoogle className="h-4 w-4" />
+                <span className="hidden sm:inline">GOOGLE</span>
+              </Button>
+
+              <Button
+                onClick={handleGithubSignIn}
+                className="bg-gray-800 hover:bg-gray-700 text-white font-press-start text-[10px] py-3 border border-gray-700 hover:border-purple-400 transition-colors flex items-center justify-center gap-2"
+                data-testid="button-github-signin"
+              >
+                <FaGithub className="h-4 w-4" />
+                <span className="hidden sm:inline">GITHUB</span>
+              </Button>
+            </div>
+
+            {/* Toggle Mode */}
+            <div className="text-center border-t border-purple-500/20 pt-4">
+              <button
+                onClick={() => { setIsSignUp(!isSignUp); setError(null); resetCaptcha(); }}
+                className="font-jetbrains text-sm text-gray-400 hover:text-purple-400 transition-colors"
+                data-testid="button-toggle-mode"
+              >
+                {isSignUp ? 'Already have an account? Sign in' : 'New user? Create account'}
+              </button>
             </div>
           </div>
         </div>
