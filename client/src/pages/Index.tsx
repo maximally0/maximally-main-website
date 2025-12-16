@@ -1,5 +1,6 @@
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
+import MyHackathonsQuickAccess from "@/components/MyHackathonsQuickAccess";
 import {
   HeroSection,
   CredibilitySection,
@@ -31,6 +32,7 @@ const Index = () => {
       />
 
       <div className="min-h-screen bg-black text-white">
+        <MyHackathonsQuickAccess />
         <HeroSection />
         
         <CredibilitySection />
