@@ -12,4 +12,6 @@ export { UpcomingHackathonsSection } from "./sections/UpcomingHackathonsSection"
 export { ExploreMaximallySection } from "./sections/ExploreMaximallySection";
 export { WhyMaximallySection } from "./sections/WhyMaximallySection";
 export { ForOrganizersSection } from "./sections/ForOrganizersSection";
+export { BecomeJudgeSection } from "./sections/BecomeJudgeSection";
+export { GlobalGallerySection } from "./sections/GlobalGallerySection";
 export { PartnersSection } from "./sections/PartnersSection";

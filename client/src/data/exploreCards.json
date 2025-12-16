@@ -49,6 +49,26 @@
       "status": "active",
       "badge": null,
       "color": "red"
+    },
+    {
+      "id": "gallery",
+      "title": "Project Gallery",
+      "description": "Explore projects built at Maximally hackathons. Get inspired and showcase your work.",
+      "icon": "layers",
+      "url": "/gallery",
+      "status": "active",
+      "badge": "New",
+      "color": "pink"
+    },
+    {
+      "id": "people",
+      "title": "People",
+      "description": "Meet the judges, organizers, and core team behind Maximally hackathons.",
+      "icon": "users",
+      "url": "/people",
+      "status": "active",
+      "badge": null,
+      "color": "blue"
     }
   ]
 }

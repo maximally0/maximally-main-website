@@ -8,6 +8,8 @@ import {
   ExploreMaximallySection,
   WhyMaximallySection,
   ForOrganizersSection,
+  BecomeJudgeSection,
+  GlobalGallerySection,
   PartnersSection,
 } from "@/components/landing";
 
@@ -42,6 +44,10 @@ const Index = () => {
         <WhyMaximallySection />
         
         <ForOrganizersSection />
+        
+        <BecomeJudgeSection />
+        
+        <GlobalGallerySection />
         
         <PartnersSection />
         
