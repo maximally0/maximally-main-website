@@ -83,13 +83,13 @@ export function registerJudgingRoutes(app: Express) {
 
       // Get submissions
       const { data: submissions, error } = await supabaseAdmin
-        .from('submissions')
+        .from('hackathon_submissions')
         .select(`
           *,
-          team:teams(team_name),
-          user:profiles!submissions_user_id_fkey(username, full_name)
+          team:hackathon_teams(team_name)
         `)
         .eq('hackathon_id', hackathonId)
+        .eq('status', 'submitted')
         .order('submitted_at', { ascending: false });
 
       if (error) {
@@ -105,9 +105,16 @@ export function registerJudgingRoutes(app: Express) {
         .in('submission_id', submissionIds)
         .eq('judge_id', userId) : { data: [] };
 
-      // Combine data
-      const enrichedSubmissions = (submissions || []).map((submission: any) => {
+      // Combine data with user names
+      const enrichedSubmissions = await Promise.all((submissions || []).map(async (submission: any) => {
         const myScore = (scores || []).find((s: any) => s.submission_id === submission.id);
+        
+        // Get user profile
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('username, full_name')
+          .eq('id', submission.user_id)
+          .single();
 
         return {
           id: submission.id,
@@ -120,14 +127,15 @@ export function registerJudgingRoutes(app: Express) {
           video_url: submission.video_url,
           technologies_used: submission.technologies_used,
           team: submission.team,
-          user_name: submission.user?.full_name || submission.user?.username || 'Unknown',
+          user_name: profile?.full_name || profile?.username || 'Unknown',
           submitted_at: submission.submitted_at,
           score: myScore?.score || null,
+          criteria_scores: myScore?.criteria_scores || null,
           feedback: myScore?.feedback || null,
-          prize_won: myScore?.prize_won || null,
+          prize_won: submission.prize_won || null,
           has_scored: !!myScore
         };
-      });
+      }));
 
       return res.json({ success: true, data: enrichedSubmissions });
     } catch (error: any) {

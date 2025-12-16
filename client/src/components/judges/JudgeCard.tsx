@@ -33,9 +33,24 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
         </div>
       </div>
 
-      {/* Tier Badge */}
-      <div className="flex justify-center mb-3">
+      {/* Tier Badge & Availability */}
+      <div className="flex justify-center items-center gap-2 mb-3">
         <TierBadge tier={judge.tier} size="sm" showLabel={false} />
+        {judge.availabilityStatus === 'not-available' && (
+          <span className="px-2 py-0.5 text-[8px] font-press-start bg-red-500/20 text-red-400 border border-red-500 rounded">
+            UNAVAILABLE
+          </span>
+        )}
+        {judge.availabilityStatus === 'seasonal' && (
+          <span className="px-2 py-0.5 text-[8px] font-press-start bg-yellow-500/20 text-yellow-400 border border-yellow-500 rounded">
+            SEASONAL
+          </span>
+        )}
+        {judge.availabilityStatus === 'available' && (
+          <span className="px-2 py-0.5 text-[8px] font-press-start bg-green-500/20 text-green-400 border border-green-500 rounded">
+            AVAILABLE
+          </span>
+        )}
       </div>
 
       {/* Name */}

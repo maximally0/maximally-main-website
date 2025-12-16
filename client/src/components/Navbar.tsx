@@ -4,6 +4,7 @@ import { Menu, X, Terminal, Mail, ChevronDown, User, LogOut, Bell } from "lucide
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
+import { useOrganizerUnreadCount } from "@/hooks/useOrganizerUnreadCount";
 // import NotificationPanel from "./NotificationPanel"; // REMOVED - Notification system disabled
 import { getAuthHeaders } from "@/lib/auth";
 
@@ -28,6 +29,7 @@ const Navbar = () => {
   // Get user and profile first
   const { user, profile, loading, refreshProfile } = useAuth();
   const { unreadCount } = useJudgeUnreadCount();
+  const { unreadCount: organizerUnreadCount } = useOrganizerUnreadCount();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -197,14 +199,30 @@ const Navbar = () => {
                   </>
                 )}
                 {isOrganizer && (
-                  <Link
-                    to="/organizer/dashboard"
-                    className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-yellow transition-colors duration-200 group ml-2"
-                    data-testid="button-organizer-dashboard"
-                  >
-                    ORGANIZER
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-yellow transition-all duration-200 group-hover:w-full"></span>
-                  </Link>
+                  <>
+                    <Link
+                      to="/organizer/dashboard"
+                      className="relative font-press-start text-xs px-4 py-2 text-white hover:text-maximally-yellow transition-colors duration-200 group ml-2"
+                      data-testid="button-organizer-dashboard"
+                    >
+                      ORGANIZER
+                      <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-maximally-yellow transition-all duration-200 group-hover:w-full"></span>
+                    </Link>
+                    <Link
+                      to="/organizer-inbox"
+                      className="relative p-2 text-white hover:text-green-400 transition-colors duration-200 ml-2"
+                      data-testid="button-organizer-inbox"
+                      aria-label={`Organizer inbox${organizerUnreadCount > 0 ? ` - ${organizerUnreadCount} unread` : ''}`}
+                      title={`Organizer Inbox${organizerUnreadCount > 0 ? ` (${organizerUnreadCount} unread)` : ''}`}
+                    >
+                      <Mail className="h-5 w-5" />
+                      {organizerUnreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-press-start px-1.5 py-0.5 rounded-sm min-w-[18px] text-center leading-none shadow-lg">
+                          {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
+                        </span>
+                      )}
+                    </Link>
+                  </>
                 )}
                 {/* Notification Bell - DISABLED */}
                 {/* <button
@@ -358,14 +376,29 @@ const Navbar = () => {
                       </>
                     )}
                     {isOrganizer && (
-                      <Link
-                        to="/organizer/dashboard"
-                        onClick={() => setIsMenuOpen(false)}
-                        className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red hover:text-white transition-all duration-300 hover:scale-105 block"
-                        data-testid="button-organizer-dashboard-mobile"
-                      >
-                        ORGANIZER DASHBOARD
-                      </Link>
+                      <>
+                        <Link
+                          to="/organizer/dashboard"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="pixel-button bg-maximally-yellow text-black font-press-start text-center py-4 px-6 hover:bg-maximally-red hover:text-white transition-all duration-300 hover:scale-105 block"
+                          data-testid="button-organizer-dashboard-mobile"
+                        >
+                          ORGANIZER DASHBOARD
+                        </Link>
+                        <Link
+                          to="/organizer-inbox"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="pixel-button bg-green-600 text-white font-press-start text-center py-4 px-6 hover:bg-green-700 transition-all duration-300 hover:scale-105 block relative"
+                          data-testid="button-organizer-inbox-mobile"
+                        >
+                          ORGANIZER INBOX
+                          {organizerUnreadCount > 0 && (
+                            <span className="ml-2 bg-maximally-red text-maximally-yellow text-xs font-press-start px-2 py-0.5 rounded-sm">
+                              {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
+                            </span>
+                          )}
+                        </Link>
+                      </>
                     )}
                     <Link
                       to={profileUrl}

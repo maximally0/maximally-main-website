@@ -10,6 +10,50 @@ async function bearerUserId(supabaseAdmin: any, token: string): Promise<string |
 export function registerPublicHackathonRoutes(app: Express) {
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
+  // Get public hackathon by ID (legacy endpoint)
+  app.get("/api/hackathons/by-id/:hackathonId", async (req, res) => {
+    try {
+      const { hackathonId } = req.params;
+
+      const { data, error } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('*')
+        .eq('id', hackathonId)
+        .eq('status', 'published')
+        .single();
+
+      if (error || !data) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get public hackathon by ID (used by judge submissions page)
+  app.get("/api/hackathons/id/:hackathonId", async (req, res) => {
+    try {
+      const { hackathonId } = req.params;
+
+      const { data, error } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('*')
+        .eq('id', hackathonId)
+        .eq('status', 'published')
+        .single();
+
+      if (error || !data) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
   // Get public hackathon by slug
   app.get("/api/hackathons/:slug", async (req, res) => {
     try {
@@ -48,11 +92,80 @@ export function registerPublicHackathonRoutes(app: Express) {
         .select('*')
         .eq('hackathon_id', hackathonId)
         .eq('is_published', true)
+        .eq('target_audience', 'public')
         .order('published_at', { ascending: false });
 
       if (error) throw error;
 
       return res.json({ success: true, data: data || [] });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get public projects/submissions for a hackathon
+  app.get("/api/hackathons/:hackathonId/projects", async (req, res) => {
+    try {
+      const { hackathonId } = req.params;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select(`
+          id,
+          project_name,
+          tagline,
+          description,
+          track,
+          github_repo,
+          demo_url,
+          video_url,
+          cover_image,
+          project_logo,
+          technologies_used,
+          status,
+          score,
+          prize_won,
+          submitted_at,
+          user_id,
+          team_id
+        `)
+        .eq('hackathon_id', hackathonId)
+        .eq('status', 'submitted')
+        .order('submitted_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Enrich with user names and team info
+      const enrichedData = await Promise.all((data || []).map(async (project: any) => {
+        let userName = 'Anonymous';
+        let team = null;
+
+        if (project.user_id) {
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('username, full_name')
+            .eq('id', project.user_id)
+            .single();
+          userName = profile?.full_name || profile?.username || 'Anonymous';
+        }
+
+        if (project.team_id) {
+          const { data: teamData } = await supabaseAdmin
+            .from('hackathon_teams')
+            .select('team_name, team_code')
+            .eq('id', project.team_id)
+            .single();
+          team = teamData;
+        }
+
+        return {
+          ...project,
+          user_name: userName,
+          team
+        };
+      }));
+
+      return res.json({ success: true, data: enrichedData });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
@@ -162,26 +275,55 @@ export function registerPublicHackathonRoutes(app: Express) {
         .from('hackathon_winners')
         .select(`
           *,
-          submission:hackathon_submissions(description, tagline, github_repo, demo_url, video_url, cover_image),
-          team:hackathon_teams(team_name, team_code, project_name)
+          submission:hackathon_submissions(
+            id,
+            project_name,
+            description,
+            tagline,
+            github_repo,
+            demo_url,
+            video_url,
+            cover_image,
+            project_logo,
+            user_id,
+            team_id
+          )
         `)
         .eq('hackathon_id', hackathonIdNum)
         .order('position', { ascending: true });
 
       if (error) throw error;
 
-      // Get user names
+      // Enrich with user names and team names
       const enrichedData = await Promise.all((data || []).map(async (winner: any) => {
-        const { data: profile } = await supabaseAdmin
-          .from('profiles')
-          .select('username, full_name, avatar_url')
-          .eq('id', winner.user_id)
-          .single();
+        let userName = 'Anonymous';
+        let teamName = null;
+
+        if (winner.submission?.user_id) {
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('username, full_name')
+            .eq('id', winner.submission.user_id)
+            .single();
+          userName = profile?.full_name || profile?.username || 'Anonymous';
+        }
+        if (winner.submission?.team_id) {
+          const { data: team } = await supabaseAdmin
+            .from('hackathon_teams')
+            .select('team_name')
+            .eq('id', winner.submission.team_id)
+            .single();
+          teamName = team?.team_name;
+        }
 
         return {
           ...winner,
-          user_name: profile?.full_name || profile?.username || 'Anonymous',
-          user_avatar: profile?.avatar_url
+          submission: winner.submission ? {
+            ...winner.submission,
+            user_name: userName,
+            team: teamName ? { team_name: teamName } : null
+          } : null,
+          team_name: teamName
         };
       }));
 

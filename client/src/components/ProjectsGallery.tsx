@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Github, ExternalLink, Video, Trophy, Users, Eye } from 'lucide-react';
+import { Github, ExternalLink, Video, Trophy, Users, Eye, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface Project {
@@ -15,6 +15,8 @@ interface Project {
   status: string;
   score?: number;
   prize_won?: string;
+  project_logo?: string;
+  cover_image?: string;
   team?: {
     team_name: string;
     team_code: string;
@@ -31,6 +33,7 @@ export default function ProjectsGallery({ hackathonId }: Props) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchProjects();
@@ -52,6 +55,18 @@ export default function ProjectsGallery({ hackathonId }: Props) {
   };
 
   const filteredProjects = projects.filter(p => {
+    // Apply search filter
+    const matchesSearch = searchQuery === '' || 
+      p.project_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.tagline?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.team?.team_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.user_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.technologies_used?.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()));
+    
+    if (!matchesSearch) return false;
+    
+    // Apply category filter
     if (filter === 'all') return true;
     if (filter === 'winners') return p.prize_won;
     return p.track === filter;
@@ -78,6 +93,26 @@ export default function ProjectsGallery({ hackathonId }: Props) {
 
   return (
     <div className="space-y-6">
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+        <input
+          type="text"
+          placeholder="Search projects by name, team, tech..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full bg-gray-900 border-2 border-gray-700 text-white pl-12 pr-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none placeholder-gray-500"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
         <button
@@ -109,7 +144,27 @@ export default function ProjectsGallery({ hackathonId }: Props) {
         ))}
       </div>
 
+      {/* Results count */}
+      {searchQuery && (
+        <p className="text-sm text-gray-400 font-jetbrains">
+          Found {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''} 
+          {searchQuery && ` matching "${searchQuery}"`}
+        </p>
+      )}
+
+      {/* No results message */}
+      {filteredProjects.length === 0 && (
+        <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-8 text-center">
+          <Search className="h-10 w-10 text-gray-600 mx-auto mb-4" />
+          <p className="font-press-start text-gray-400 text-sm mb-2">NO_PROJECTS_FOUND</p>
+          <p className="text-gray-500 font-jetbrains text-sm">
+            Try a different search term or filter
+          </p>
+        </div>
+      )}
+
       {/* Projects Grid */}
+      {filteredProjects.length > 0 && (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProjects.map((project) => (
           <div
@@ -126,8 +181,17 @@ export default function ProjectsGallery({ hackathonId }: Props) {
               </div>
             )}
 
-            {/* Project Name */}
-            <h3 className="font-press-start text-lg text-white mb-2">{project.project_name}</h3>
+            {/* Project Name with Logo */}
+            <div className="flex items-start gap-3 mb-2">
+              {project.project_logo && (
+                <img 
+                  src={project.project_logo} 
+                  alt={project.project_name}
+                  className="w-10 h-10 object-contain rounded border border-gray-700"
+                />
+              )}
+              <h3 className="font-press-start text-lg text-white">{project.project_name}</h3>
+            </div>
 
             {/* Tagline */}
             {project.tagline && (
@@ -225,6 +289,7 @@ export default function ProjectsGallery({ hackathonId }: Props) {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

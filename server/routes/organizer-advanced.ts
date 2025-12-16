@@ -215,7 +215,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
 
       if (error) throw error;
 
-      // Get user names
+      // Get user names and judge scores
       const enrichedData = await Promise.all((data || []).map(async (submission: any) => {
         const { data: profile } = await supabaseAdmin
           .from('profiles')
@@ -223,9 +223,43 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
           .eq('id', submission.user_id)
           .single();
 
+        // Get all judge scores for this submission from judge_scores table
+        const { data: scores, error: scoresError } = await supabaseAdmin
+          .from('judge_scores')
+          .select('judge_id, score, feedback, criteria_scores, created_at, updated_at')
+          .eq('submission_id', submission.id);
+        
+        console.log(`[SUBMISSIONS] Submission ${submission.id} (${submission.project_name}): scores query result:`, scores, 'error:', scoresError);
+
+        // Get judge names for each score
+        const judgeScores = await Promise.all((scores || []).map(async (scoreEntry: any) => {
+          const { data: judgeProfile } = await supabaseAdmin
+            .from('profiles')
+            .select('username, full_name')
+            .eq('id', scoreEntry.judge_id)
+            .single();
+          
+          return {
+            judge_id: scoreEntry.judge_id,
+            judge_name: judgeProfile?.full_name || judgeProfile?.username || 'Judge',
+            score: scoreEntry.score,
+            notes: scoreEntry.feedback,
+            scored_at: scoreEntry.updated_at || scoreEntry.created_at,
+            criteria_scores: scoreEntry.criteria_scores
+          };
+        }));
+
+        // Calculate average score from all judges
+        const avgScore = judgeScores.length > 0 
+          ? judgeScores.reduce((sum, js) => sum + (js.score || 0), 0) / judgeScores.length 
+          : null;
+
         return {
           ...submission,
-          user_name: profile?.full_name || profile?.username || 'Anonymous'
+          user_name: profile?.full_name || profile?.username || 'Anonymous',
+          judge_scores: judgeScores,
+          judges_count: judgeScores.length,
+          average_score: avgScore ? parseFloat(avgScore.toFixed(1)) : null
         };
       }));
 
@@ -313,6 +347,11 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
           case 'individuals':
             query = query.eq('registration_type', 'individual');
             break;
+          case 'public':
+            // Public announcements don't send emails to participants
+            // They are only visible on the website
+            query = null;
+            break;
           case 'all':
           default:
             // Send to all registered users (confirmed + waitlist)
@@ -320,7 +359,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
             break;
         }
 
-        const { data: registrations } = await query;
+        const { data: registrations } = query ? await query : { data: [] };
 
         if (hackathonDetails && registrations && registrations.length > 0) {
           // Send emails in background
@@ -387,7 +426,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
   });
 
   // Update announcement
-  app.put("/api/hackathons/:hackathonId/announcements/:announcementId", async (req, res) => {
+  app.put("/api/organizer/hackathons/:hackathonId/announcements/:announcementId", async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
@@ -401,7 +440,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
       }
 
       const { hackathonId, announcementId } = req.params;
-      const { title, content, announcement_type } = req.body;
+      const { title, content, announcement_type, target_audience, send_email, is_published } = req.body;
 
       // Verify ownership
       const { data: hackathon } = await supabaseAdmin
@@ -414,13 +453,23 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
 
+      // Build update object with only provided fields
+      const updateData: any = { updated_at: new Date().toISOString() };
+      if (title !== undefined) updateData.title = title;
+      if (content !== undefined) updateData.content = content;
+      if (announcement_type !== undefined) updateData.announcement_type = announcement_type;
+      if (target_audience !== undefined) updateData.target_audience = target_audience;
+      if (send_email !== undefined) updateData.send_email = send_email;
+      if (is_published !== undefined) {
+        updateData.is_published = is_published;
+        if (is_published && !updateData.published_at) {
+          updateData.published_at = new Date().toISOString();
+        }
+      }
+
       const { data, error } = await supabaseAdmin
         .from('hackathon_announcements')
-        .update({
-          title,
-          content,
-          announcement_type
-        })
+        .update(updateData)
         .eq('id', announcementId)
         .eq('hackathon_id', hackathonId)
         .select()
@@ -435,7 +484,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
   });
 
   // Delete announcement
-  app.delete("/api/hackathons/:hackathonId/announcements/:announcementId", async (req, res) => {
+  app.delete("/api/organizer/hackathons/:hackathonId/announcements/:announcementId", async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
@@ -846,63 +895,13 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
   });
 
   // Get judge assignments for a hackathon
-  app.get("/api/organizer/hackathons/:hackathonId/judge-assignments", async (req, res) => {
-    try {
-      const authHeader = req.headers['authorization'];
-      if (!authHeader?.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-      }
-
-      const token = authHeader.slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin, token);
-      if (!userId) {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
-      }
-
-      const { hackathonId } = req.params;
-
-      // Verify ownership
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id')
-        .eq('id', hackathonId)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
-      }
-
-      // Get accepted judge invitations
-      const { data: invitations, error } = await supabaseAdmin
-        .from('judge_invitations')
-        .select(`
-          id,
-          judge_id,
-          status,
-          created_at,
-          judge:profiles!judge_invitations_judge_id_fkey(id, username, full_name, email)
-        `)
-        .eq('hackathon_id', hackathonId)
-        .eq('status', 'accepted')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      const assignments = (invitations || []).map((inv: any) => ({
-        id: inv.id,
-        judge_id: inv.judge_id,
-        judge_name: inv.judge?.full_name || inv.judge?.username || 'Unknown',
-        judge_email: inv.judge?.email || '',
-        status: 'active',
-        assigned_at: inv.created_at
-      }));
-
-      return res.json({ success: true, data: assignments });
-    } catch (error: any) {
-      console.error('Error fetching judge assignments:', error);
-      return res.status(500).json({ success: false, message: error.message });
-    }
+  // NOTE: This endpoint is also defined in judge-invitations.ts - keeping this as backup
+  // The judge-invitations.ts version uses the correct table (judge_hackathon_assignments)
+  /*
+  app.get("/api/organizer/hackathons/:hackathonId/judge-assignments-legacy", async (req, res) => {
+    // Disabled - use the endpoint in judge-invitations.ts instead
   });
+  */
 
   // Update hackathon settings (close registrations, submissions, etc.)
   app.patch("/api/organizer/hackathons/:hackathonId/settings", async (req, res) => {

@@ -12,15 +12,48 @@ interface Sponsor {
 
 interface HackathonSponsorsProps {
   hackathonId: number;
+  sponsorsData?: string[] | string | null; // Accept sponsors from parent
 }
 
-export default function HackathonSponsors({ hackathonId }: HackathonSponsorsProps) {
+export default function HackathonSponsors({ hackathonId, sponsorsData }: HackathonSponsorsProps) {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchSponsors();
-  }, [hackathonId]);
+    // If sponsorsData is provided, use it instead of fetching
+    if (sponsorsData) {
+      parseSponsorsData();
+    } else {
+      fetchSponsors();
+    }
+  }, [hackathonId, sponsorsData]);
+
+  const parseSponsorsData = () => {
+    try {
+      let parsedSponsors: string[] = [];
+      
+      if (typeof sponsorsData === 'string') {
+        parsedSponsors = JSON.parse(sponsorsData);
+      } else if (Array.isArray(sponsorsData)) {
+        parsedSponsors = sponsorsData;
+      }
+
+      // Convert simple string array to Sponsor objects
+      const sponsorObjects: Sponsor[] = parsedSponsors.map((name, index) => ({
+        id: `sponsor-${index}`,
+        sponsor_name: name,
+        sponsor_tier: 'partner',
+        display_order: index,
+      }));
+
+      setSponsors(sponsorObjects);
+    } catch (error) {
+      console.error('Error parsing sponsors data:', error);
+      setSponsors([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchSponsors = async () => {
     try {

@@ -183,62 +183,96 @@ app.get("/api/judge/messages", async (req: Request, res: Response) => {
       return res.status(403).json({ items: [], total: 0, error: 'Access denied. Judge role required.' });
     }
 
-    // Get message recipients for this judge
-    const { data: recipients, error: recipientsError} = await supabaseAdmin
+    // Get message recipients with joined message data in a single query
+    const { data: recipientsWithMessages, error: joinError } = await supabaseAdmin
       .from('judge_message_recipients')
-      .select('message_id, is_read, read_at')
-      .eq('judge_username', profileData.username);
+      .select(`
+        message_id,
+        is_read,
+        read_at,
+        judge_messages!inner (
+          id,
+          subject,
+          content,
+          priority,
+          created_at,
+          sent_at,
+          sent_by_name,
+          sent_by_email,
+          status
+        )
+      `)
+      .eq('judge_username', profileData.username)
+      .eq('judge_messages.status', 'sent');
 
-    if (recipientsError) {
-      console.error('Error fetching recipients:', recipientsError);
-      return res.status(500).json({ items: [], total: 0, error: 'Failed to fetch message recipients' });
-    }
+    if (joinError) {
+      console.error('Error fetching messages with join:', joinError);
+      // Fallback to original sequential queries if join fails
+      const { data: recipients, error: recipientsError } = await supabaseAdmin
+        .from('judge_message_recipients')
+        .select('message_id, is_read, read_at')
+        .eq('judge_username', profileData.username);
 
-    const messageIds = (recipients || []).map((r: any) => r.message_id);
-    
-    if (messageIds.length === 0) {
-      return res.json({
-        items: [],
-        total: 0
+      if (recipientsError) {
+        return res.status(500).json({ items: [], total: 0, error: 'Failed to fetch message recipients' });
+      }
+
+      const messageIds = (recipients || []).map((r: any) => r.message_id);
+      
+      if (messageIds.length === 0) {
+        return res.json({ items: [], total: 0 });
+      }
+
+      let query = supabaseAdmin
+        .from('judge_messages')
+        .select('*')
+        .in('id', messageIds)
+        .eq('status', 'sent');
+
+      if (req.query.subject) {
+        query = query.ilike('subject', `%${req.query.subject}%`);
+      }
+      if (req.query.priority) {
+        query = query.eq('priority', req.query.priority);
+      }
+
+      const limit = parseInt(req.query.limit as string) || 50;
+      const offset = parseInt(req.query.offset as string) || 0;
+      query = query.range(offset, offset + limit - 1);
+      query = query.order('created_at', { ascending: false });
+
+      const { data: messages, error: messagesError } = await query;
+
+      if (messagesError) {
+        return res.status(500).json({ items: [], total: 0, error: 'Failed to fetch messages' });
+      }
+
+      const readStatusMap = new Map();
+      (recipients || []).forEach((r: any) => {
+        readStatusMap.set(r.message_id, { is_read: r.is_read, read_at: r.read_at });
       });
+
+      const transformedMessages = (messages || []).map((msg: any) => {
+        const readStatus = readStatusMap.get(msg.id) || { is_read: false, read_at: null };
+        return {
+          id: msg.id,
+          subject: msg.subject,
+          content: msg.content,
+          priority: msg.priority,
+          created_at: msg.created_at,
+          sent_at: msg.sent_at,
+          sent_by_name: msg.sent_by_name,
+          sent_by_email: msg.sent_by_email,
+          recipient: { is_read: readStatus.is_read, read_at: readStatus.read_at }
+        };
+      });
+
+      return res.json({ items: transformedMessages, total: transformedMessages.length });
     }
 
-    // Get messages
-    let query = supabaseAdmin
-      .from('judge_messages')
-      .select('*')
-      .in('id', messageIds)
-      .eq('status', 'sent');
-
-    // Apply filters
-    if (req.query.subject) {
-      query = query.ilike('subject', `%${req.query.subject}%`);
-    }
-    if (req.query.priority) {
-      query = query.eq('priority', req.query.priority);
-    }
-
-    // Pagination
-    const limit = parseInt(req.query.limit as string) || 50;
-    const offset = parseInt(req.query.offset as string) || 0;
-    query = query.range(offset, offset + limit - 1);
-    query = query.order('created_at', { ascending: false });
-
-    const { data: messages, error: messagesError } = await query;
-
-    if (messagesError) {
-      console.error('Error fetching judge messages:', messagesError);
-      return res.status(500).json({ items: [], total: 0, error: 'Failed to fetch messages' });
-    }
-
-    // Create a map of message read status
-    const readStatusMap = new Map();
-    (recipients || []).forEach((r: any) => {
-      readStatusMap.set(r.message_id, { is_read: r.is_read, read_at: r.read_at });
-    });
-
-    const transformedMessages = (messages || []).map((msg: any) => {
-      const readStatus = readStatusMap.get(msg.id) || { is_read: false, read_at: null };
+    // Process joined data
+    let transformedMessages = (recipientsWithMessages || []).map((r: any) => {
+      const msg = r.judge_messages;
       return {
         id: msg.id,
         subject: msg.subject,
@@ -248,15 +282,35 @@ app.get("/api/judge/messages", async (req: Request, res: Response) => {
         sent_at: msg.sent_at,
         sent_by_name: msg.sent_by_name,
         sent_by_email: msg.sent_by_email,
-        recipient: {
-          is_read: readStatus.is_read,
-          read_at: readStatus.read_at
-        }
+        recipient: { is_read: r.is_read, read_at: r.read_at }
       };
     });
 
+    // Apply client-side filters (for joined query)
+    if (req.query.subject) {
+      const searchTerm = (req.query.subject as string).toLowerCase();
+      transformedMessages = transformedMessages.filter((m: any) => 
+        m.subject.toLowerCase().includes(searchTerm)
+      );
+    }
+    if (req.query.priority) {
+      transformedMessages = transformedMessages.filter((m: any) => 
+        m.priority === req.query.priority
+      );
+    }
+
+    // Sort by created_at descending
+    transformedMessages.sort((a: any, b: any) => 
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+
+    // Apply pagination
+    const limit = parseInt(req.query.limit as string) || 50;
+    const offset = parseInt(req.query.offset as string) || 0;
+    const paginatedMessages = transformedMessages.slice(offset, offset + limit);
+
     return res.json({
-      items: transformedMessages,
+      items: paginatedMessages,
       total: transformedMessages.length
     });
   } catch (err: any) {

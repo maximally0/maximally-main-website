@@ -14,6 +14,9 @@ import { registerSimpleJudgeRoutes } from "./routes/judge-profile-simple";
 import { registerJudgingRoutes } from "./routes/judging";
 import { registerFileUploadRoutes } from "./routes/file-uploads";
 import { registerHackathonFeatureRoutes } from "./routes/hackathon-features";
+import { registerOrganizerMessageRoutes } from "./routes/organizer-messages";
+import { registerModerationRoutes } from "./routes/moderation";
+import { registerGalleryRoutes } from "./routes/gallery";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
 import { sendSubmissionConfirmation, sendAnnouncement, sendWinnerNotification } from "./services/email";
 
@@ -1401,6 +1404,378 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================
+  // ORGANIZER APPLICATION ROUTES
+  // ============================================
+
+  // Submit organizer application
+  app.post("/api/organizer/apply", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const body = req.body;
+      console.log('Received organizer application request:', {
+        username: body.username,
+        full_name: body.full_name,
+        email: body.email,
+        hasAllFields: !!(body.username && body.full_name && body.email)
+      });
+
+      // Validate required fields
+      if (!body.username || !body.full_name || !body.email) {
+        console.error('VALIDATION FAILED - Missing required fields:', {
+          username: body.username || 'MISSING',
+          full_name: body.full_name || 'MISSING',
+          email: body.email || 'MISSING',
+          bodyKeys: Object.keys(body)
+        });
+        return res.status(400).json({ 
+          message: 'Missing required fields',
+          details: {
+            username: !body.username ? 'Username is required' : null,
+            full_name: !body.full_name ? 'Full name is required' : null,
+            email: !body.email ? 'Email is required' : null
+          }
+        });
+      }
+
+      console.log('Validation passed, proceeding with application...');
+
+      // Check for existing username in applications
+      const { data: existingUsername } = await supabaseAdmin
+        .from('organizer_applications')
+        .select('id')
+        .eq('username', body.username)
+        .maybeSingle();
+
+      if (existingUsername) {
+        return res.status(400).json({ message: 'You have already submitted an application' });
+      }
+
+      // Check if already an organizer
+      const { data: existingOrganizer } = await supabaseAdmin
+        .from('profiles')
+        .select('id, role')
+        .eq('username', body.username)
+        .single();
+
+      if (existingOrganizer && (existingOrganizer as any).role === 'organizer') {
+        return res.status(400).json({ message: 'You are already an approved organizer' });
+      }
+
+      // Prepare application data
+      const applicationData = {
+        user_id: body.user_id || null,
+        username: body.username,
+        email: body.email,
+        full_name: body.full_name,
+        organization_name: body.organization_name,
+        organization_type: body.organization_type,
+        organization_website: body.organization_website,
+        phone: body.phone,
+        location: body.location,
+        previous_organizing_experience: body.previous_organizing_experience,
+        why_maximally: body.why_maximally,
+        linkedin: body.linkedin,
+        twitter: body.twitter,
+        instagram: body.instagram,
+        additional_info: body.additional_info,
+        agreed_to_terms: body.agreed_to_terms || false,
+        status: 'pending'
+      };
+
+      // Insert application
+      console.log('Attempting to insert application data:', applicationData);
+      const { data: application, error: applicationError } = await supabaseAdmin
+        .from('organizer_applications')
+        .insert(applicationData as any)
+        .select()
+        .single();
+
+      if (applicationError) {
+        console.error('Application insert error:', applicationError);
+        console.error('Application data that failed:', applicationData);
+        return res.status(500).json({ 
+          message: `Failed to submit application: ${applicationError.message}`,
+          error: applicationError.message,
+          details: applicationError
+        });
+      }
+
+      return res.status(201).json({
+        message: 'Application submitted successfully! We will review your application and get back to you soon.',
+        applicationId: (application as any).id
+      });
+    } catch (err: any) {
+      console.error('Organizer application error:', err);
+      return res.status(500).json({ message: err?.message || 'Failed to submit application' });
+    }
+  });
+
+  // Get all organizer applications (Admin only)
+  app.get("/api/admin/organizer-applications", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      // Check admin authentication
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      // Check if user is admin
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile || (profile as any).role !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      const { data: applications, error } = await supabaseAdmin
+        .from('organizer_applications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching applications:', error);
+        return res.status(500).json({ message: `Failed to fetch applications: ${error.message}` });
+      }
+
+      return res.json(applications || []);
+    } catch (err: any) {
+      console.error('Fetch applications error:', err);
+      return res.status(500).json({ message: err?.message || 'Failed to fetch applications' });
+    }
+  });
+
+  // Approve organizer application
+  app.post("/api/admin/organizer-applications/:id/approve", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const { id } = req.params;
+
+      // Check admin authentication
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      // Check if user is admin
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile || (profile as any).role !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      // Get application details
+      const { data: application, error: appError } = await supabaseAdmin
+        .from('organizer_applications')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (appError || !application) {
+        return res.status(404).json({ message: 'Application not found' });
+      }
+
+      const appData = application as any;
+      console.log('Approving application:', { id, user_id: appData.user_id, username: appData.username });
+
+      // Update application status
+      console.log('Step 1: Updating application status...');
+      const { error: updateError } = await supabaseAdmin
+        .from('organizer_applications')
+        .update({
+          status: 'approved',
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: userId
+        })
+        .eq('id', id);
+
+      if (updateError) {
+        console.error('Failed to update application status:', updateError);
+        return res.status(500).json({ message: `Failed to approve application: ${updateError.message}`, error: updateError });
+      }
+      console.log('Step 1: Application status updated successfully');
+
+      // Update user role to organizer if user_id exists
+      if (appData.user_id) {
+        console.log('Step 2: Updating user role to organizer...');
+        const { error: roleError } = await supabaseAdmin
+          .from('profiles')
+          .update({ role: 'organizer' })
+          .eq('id', appData.user_id);
+
+        if (roleError) {
+          console.error('Failed to update user role:', roleError);
+          return res.status(500).json({ message: `Failed to update user role: ${roleError.message}`, error: roleError });
+        }
+        console.log('Step 2: User role updated successfully');
+
+        // Create organizer profile
+        console.log('Step 3: Creating organizer profile...');
+        const { error: profileCreateError } = await supabaseAdmin
+          .from('organizer_profiles')
+          .insert({
+            user_id: appData.user_id,
+            display_name: appData.full_name,
+            organization_name: appData.organization_name,
+            organization_type: appData.organization_type,
+            website: appData.organization_website,
+            location: appData.location,
+            linkedin: appData.linkedin,
+            twitter: appData.twitter,
+            instagram: appData.instagram
+          });
+
+        if (profileCreateError) {
+          console.error('Failed to create organizer profile:', profileCreateError);
+          // Check if it's a duplicate key error (profile already exists)
+          if (profileCreateError.code === '23505') {
+            console.log('Organizer profile already exists, continuing...');
+          } else {
+            return res.status(500).json({ message: `Failed to create organizer profile: ${profileCreateError.message}`, error: profileCreateError });
+          }
+        } else {
+          console.log('Step 3: Organizer profile created successfully');
+        }
+      }
+
+      console.log('Application approved successfully!');
+      return res.json({ message: 'Application approved successfully' });
+    } catch (err: any) {
+      console.error('Approve application error:', err);
+      return res.status(500).json({ message: err?.message || 'Failed to approve application', error: err });
+    }
+  });
+
+  // Reject organizer application
+  app.post("/api/admin/organizer-applications/:id/reject", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const { id } = req.params;
+      const { reason } = req.body;
+
+      // Check admin authentication
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      // Check if user is admin
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile || (profile as any).role !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      // Update application status
+      const { error } = await supabaseAdmin
+        .from('organizer_applications')
+        .update({
+          status: 'rejected',
+          reviewed_at: new Date().toISOString(),
+          reviewed_by: userId,
+          rejection_reason: reason
+        })
+        .eq('id', id);
+
+      if (error) {
+        return res.status(500).json({ message: `Failed to reject application: ${error.message}` });
+      }
+
+      return res.json({ message: 'Application rejected successfully' });
+    } catch (err: any) {
+      console.error('Reject application error:', err);
+      return res.status(500).json({ message: err?.message || 'Failed to reject application' });
+    }
+  });
+
+  // Delete organizer application
+  app.delete("/api/admin/organizer-applications/:id", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const { id } = req.params;
+
+      // Check admin authentication
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      // Check if user is admin
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile || (profile as any).role !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Admin access required' });
+      }
+
+      // Delete the application
+      const { error: deleteError } = await supabaseAdmin
+        .from('organizer_applications')
+        .delete()
+        .eq('id', id);
+
+      if (deleteError) {
+        return res.status(500).json({ message: `Failed to delete application: ${deleteError.message}` });
+      }
+
+      return res.json({ message: 'Application deleted successfully' });
+    } catch (err: any) {
+      console.error('Delete application error:', err);
+      return res.status(500).json({ message: err?.message || 'Failed to delete application' });
+    }
+  });
+
+  // ============================================
+  // END ORGANIZER APPLICATION ROUTES
+  // ============================================
+
   // Tier Progression System
   app.post("/api/admin/judges/:id/promote", async (req: Request, res: Response) => {
     try {
@@ -2107,62 +2482,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
       }
 
-      // Get message recipients for this judge
-      const { data: recipients, error: recipientsError } = await supabaseAdmin
+      // Get message recipients with joined message data in a single query
+      const { data: recipientsWithMessages, error: joinError } = await supabaseAdmin
         .from('judge_message_recipients')
-        .select('message_id, is_read, read_at')
-        .eq('judge_username', profileData.username);
+        .select(`
+          message_id,
+          is_read,
+          read_at,
+          judge_messages!inner (
+            id,
+            subject,
+            content,
+            priority,
+            created_at,
+            sent_at,
+            sent_by_name,
+            sent_by_email,
+            status
+          )
+        `)
+        .eq('judge_username', profileData.username)
+        .eq('judge_messages.status', 'sent');
 
-      if (recipientsError) {
-        console.error('Error fetching recipients:', recipientsError);
-        return res.status(500).json({ success: false, message: 'Failed to fetch message recipients' });
-      }
+      if (joinError) {
+        console.error('Error fetching messages with join:', joinError);
+        // Fallback to original sequential queries if join fails
+        const { data: recipients, error: recipientsError } = await supabaseAdmin
+          .from('judge_message_recipients')
+          .select('message_id, is_read, read_at')
+          .eq('judge_username', profileData.username);
 
-      const messageIds = (recipients || []).map((r: any) => r.message_id);
-      
-      if (messageIds.length === 0) {
-        return res.json({
-          items: [],
-          total: 0
+        if (recipientsError) {
+          return res.status(500).json({ success: false, message: 'Failed to fetch message recipients' });
+        }
+
+        const messageIds = (recipients || []).map((r: any) => r.message_id);
+        
+        if (messageIds.length === 0) {
+          return res.json({ items: [], total: 0 });
+        }
+
+        let query = supabaseAdmin
+          .from('judge_messages')
+          .select('*')
+          .in('id', messageIds)
+          .eq('status', 'sent');
+
+        if (req.query.subject) {
+          query = query.ilike('subject', `%${req.query.subject}%`);
+        }
+        if (req.query.priority) {
+          query = query.eq('priority', req.query.priority);
+        }
+
+        const limit = parseInt(req.query.limit as string) || 50;
+        const offset = parseInt(req.query.offset as string) || 0;
+        query = query.range(offset, offset + limit - 1);
+        query = query.order('created_at', { ascending: false });
+
+        const { data: messages, error: messagesError } = await query;
+
+        if (messagesError) {
+          return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
+        }
+
+        const readStatusMap = new Map();
+        (recipients || []).forEach((r: any) => {
+          readStatusMap.set(r.message_id, { is_read: r.is_read, read_at: r.read_at });
         });
+
+        const transformedMessages = (messages || []).map((msg: any) => {
+          const readStatus = readStatusMap.get(msg.id) || { is_read: false, read_at: null };
+          return {
+            id: msg.id,
+            subject: msg.subject,
+            content: msg.content,
+            priority: msg.priority,
+            created_at: msg.created_at,
+            sent_at: msg.sent_at,
+            sent_by_name: msg.sent_by_name,
+            sent_by_email: msg.sent_by_email,
+            recipient: { is_read: readStatus.is_read, read_at: readStatus.read_at }
+          };
+        });
+
+        return res.json({ items: transformedMessages, total: transformedMessages.length });
       }
 
-      // Get messages
-      let query = supabaseAdmin
-        .from('judge_messages')
-        .select('*')
-        .in('id', messageIds)
-        .eq('status', 'sent');
-
-      // Apply filters
-      if (req.query.subject) {
-        query = query.ilike('subject', `%${req.query.subject}%`);
-      }
-      if (req.query.priority) {
-        query = query.eq('priority', req.query.priority);
-      }
-
-      // Pagination
-      const limit = parseInt(req.query.limit as string) || 50;
-      const offset = parseInt(req.query.offset as string) || 0;
-      query = query.range(offset, offset + limit - 1);
-      query = query.order('created_at', { ascending: false });
-
-      const { data: messages, error: messagesError } = await query;
-
-      if (messagesError) {
-        console.error('Error fetching judge messages:', messagesError);
-        return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
-      }
-
-      // Create a map of message read status
-      const readStatusMap = new Map();
-      (recipients || []).forEach((r: any) => {
-        readStatusMap.set(r.message_id, { is_read: r.is_read, read_at: r.read_at });
-      });
-
-      const transformedMessages = (messages || []).map((msg: any) => {
-        const readStatus = readStatusMap.get(msg.id) || { is_read: false, read_at: null };
+      // Process joined data
+      let transformedMessages = (recipientsWithMessages || []).map((r: any) => {
+        const msg = r.judge_messages;
         return {
           id: msg.id,
           subject: msg.subject,
@@ -2172,15 +2581,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
           sent_at: msg.sent_at,
           sent_by_name: msg.sent_by_name,
           sent_by_email: msg.sent_by_email,
-          recipient: {
-            is_read: readStatus.is_read,
-            read_at: readStatus.read_at
-          }
+          recipient: { is_read: r.is_read, read_at: r.read_at }
         };
       });
 
+      // Apply client-side filters (for joined query)
+      if (req.query.subject) {
+        const searchTerm = (req.query.subject as string).toLowerCase();
+        transformedMessages = transformedMessages.filter((m: any) => 
+          m.subject.toLowerCase().includes(searchTerm)
+        );
+      }
+      if (req.query.priority) {
+        transformedMessages = transformedMessages.filter((m: any) => 
+          m.priority === req.query.priority
+        );
+      }
+
+      // Sort by created_at descending
+      transformedMessages.sort((a: any, b: any) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+
+      // Apply pagination
+      const limit = parseInt(req.query.limit as string) || 50;
+      const offset = parseInt(req.query.offset as string) || 0;
+      const paginatedMessages = transformedMessages.slice(offset, offset + limit);
+
       return res.json({
-        items: transformedMessages,
+        items: paginatedMessages,
         total: transformedMessages.length
       });
     } catch (err: any) {
@@ -2313,6 +2742,210 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Organizer Messages API Endpoints
+  app.get("/api/organizer/messages", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('username, role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(404).json({ success: false, message: 'Profile not found' });
+      }
+
+      const profileData = profile as any;
+
+      if (profileData.role !== 'organizer') {
+        return res.status(403).json({ success: false, message: 'Access denied. Organizer role required.' });
+      }
+
+      const { data: recipients, error: recipientsError } = await supabaseAdmin
+        .from('organizer_message_recipients')
+        .select('message_id, is_read, read_at')
+        .eq('organizer_username', profileData.username);
+
+      if (recipientsError) {
+        return res.status(500).json({ success: false, message: 'Failed to fetch message recipients' });
+      }
+
+      const messageIds = (recipients || []).map((r: any) => r.message_id);
+      
+      if (messageIds.length === 0) {
+        return res.json({ items: [], total: 0 });
+      }
+
+      let query = supabaseAdmin
+        .from('organizer_messages')
+        .select('*')
+        .in('id', messageIds)
+        .eq('status', 'sent');
+
+      if (req.query.subject) {
+        query = query.ilike('subject', `%${req.query.subject}%`);
+      }
+      if (req.query.priority) {
+        query = query.eq('priority', req.query.priority);
+      }
+
+      const limit = parseInt(req.query.limit as string) || 50;
+      const offset = parseInt(req.query.offset as string) || 0;
+      query = query.range(offset, offset + limit - 1);
+      query = query.order('created_at', { ascending: false });
+
+      const { data: messages, error: messagesError } = await query;
+
+      if (messagesError) {
+        return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
+      }
+
+      const readStatusMap = new Map();
+      (recipients || []).forEach((r: any) => {
+        readStatusMap.set(r.message_id, { is_read: r.is_read, read_at: r.read_at });
+      });
+
+      const transformedMessages = (messages || []).map((msg: any) => {
+        const readStatus = readStatusMap.get(msg.id) || { is_read: false, read_at: null };
+        return {
+          id: msg.id,
+          subject: msg.subject,
+          content: msg.content,
+          priority: msg.priority,
+          created_at: msg.created_at,
+          sent_at: msg.sent_at,
+          sent_by_name: msg.sent_by_name,
+          sent_by_email: msg.sent_by_email,
+          recipient: { is_read: readStatus.is_read, read_at: readStatus.read_at }
+        };
+      });
+
+      return res.json({ items: transformedMessages, total: transformedMessages.length });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch messages' });
+    }
+  });
+
+  app.get("/api/organizer/messages/unread-count", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('username, role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(404).json({ success: false, message: 'Profile not found' });
+      }
+
+      const profileData = profile as any;
+
+      if (profileData.role !== 'organizer') {
+        return res.status(403).json({ success: false, message: 'Access denied. Organizer role required.' });
+      }
+
+      const { count, error: countError } = await supabaseAdmin
+        .from('organizer_message_recipients')
+        .select('*', { count: 'exact', head: true })
+        .eq('organizer_username', profileData.username)
+        .eq('is_read', false);
+
+      if (countError) {
+        return res.status(500).json({ success: false, message: 'Failed to count unread messages' });
+      }
+
+      return res.json({ unread: count || 0 });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch unread count' });
+    }
+  });
+
+  app.post("/api/organizer/messages/:id/read", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Missing bearer token' });
+      }
+      const token = authHeader.toString().slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin as any, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      const { data: profile, error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .select('username, role')
+        .eq('id', userId)
+        .single();
+
+      if (profileError || !profile) {
+        return res.status(404).json({ success: false, message: 'Profile not found' });
+      }
+
+      const profileData = profile as any;
+
+      if (profileData.role !== 'organizer') {
+        return res.status(403).json({ success: false, message: 'Access denied. Organizer role required.' });
+      }
+
+      const messageId = parseInt(req.params.id);
+
+      const { data: recipient, error: recipientError } = await supabaseAdmin
+        .from('organizer_message_recipients')
+        .select('id')
+        .eq('message_id', messageId)
+        .eq('organizer_username', profileData.username)
+        .single();
+
+      if (recipientError || !recipient) {
+        return res.status(404).json({ success: false, message: 'Message not found for this organizer' });
+      }
+
+      const { error: updateError } = await supabaseAdmin
+        .from('organizer_message_recipients')
+        .update({ is_read: true, read_at: new Date().toISOString() } as any)
+        .eq('message_id', messageId)
+        .eq('organizer_username', profileData.username);
+
+      if (updateError) {
+        return res.status(500).json({ success: false, message: 'Failed to mark message as read' });
+      }
+
+      return res.json({ success: true, message: 'Message marked as read' });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to mark message as read' });
+    }
+  });
+
   // Register organizer routes
   registerOrganizerRoutes(app);
   
@@ -2375,6 +3008,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .select('id, title, content, announcement_type, created_at, published_at')
         .eq('hackathon_id', hackathonId)
         .eq('is_published', true)
+        .eq('target_audience', 'public')
         .order('published_at', { ascending: false });
 
       if (error) throw error;
@@ -2698,7 +3332,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Judge: Get submissions for judging
+  // Judge: Get submissions for judging (ASSIGNED ONLY)
+  // Returns data shape compatible with JudgeHackathonInterface
   app.get("/api/judge/hackathons/:hackathonId/submissions", async (req: Request, res: Response) => {
     try {
       const authHeader = req.headers['authorization'];
@@ -2722,17 +3357,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .eq('id', userId)
         .single();
 
-      if (profile?.role !== 'judge') {
+      if ((profile as any)?.role !== 'judge') {
         return res.status(403).json({ success: false, message: 'Judge role required' });
       }
 
       const { hackathonId } = req.params;
 
-      const { data, error } = await supabaseAdmin
+      // Verify judge is assigned to this hackathon
+      const { data: assignment } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .select('id')
+        .eq('hackathon_id', hackathonId)
+        .eq('judge_id', userId)
+        .eq('status', 'active')
+        .single();
+
+      if (!assignment) {
+        return res.status(403).json({ success: false, message: 'Not authorized to judge this hackathon' });
+      }
+
+      const { data: submissions, error } = await supabaseAdmin
         .from('hackathon_submissions')
         .select(`
           *,
-          team:hackathon_teams(team_name, team_code)
+          team:hackathon_teams(team_name)
         `)
         .eq('hackathon_id', hackathonId)
         .eq('status', 'submitted')
@@ -2740,27 +3388,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (error) throw error;
 
-      // Get user names
-      const enrichedData = await Promise.all((data || []).map(async (submission: any) => {
-        const { data: profile } = await supabaseAdmin
-          .from('profiles')
-          .select('username, full_name')
-          .eq('id', submission.user_id)
-          .single();
+      const submissionIds = (submissions || []).map((s: any) => s.id);
+      const userIds = Array.from(new Set((submissions || []).map((s: any) => s.user_id).filter(Boolean)));
+
+      // Fetch user profiles in batch (avoid relying on FK relationship)
+      const { data: profiles } = userIds.length > 0
+        ? await supabaseAdmin
+            .from('profiles')
+            .select('id, username, full_name, avatar_url')
+            .in('id', userIds)
+        : { data: [] };
+
+      const profileById = (profiles || []).reduce((acc: any, p: any) => {
+        acc[p.id] = p;
+        return acc;
+      }, {});
+
+      const { data: myRatings } = submissionIds.length > 0
+        ? await supabaseAdmin
+            .from('hackathon_submission_ratings')
+            .select('submission_id, criterion_id, score, notes')
+            .in('submission_id', submissionIds)
+            .eq('judge_id', userId)
+        : { data: [] };
+
+      const ratingsBySubmission = (myRatings || []).reduce((acc: any, r: any) => {
+        acc[r.submission_id] = acc[r.submission_id] || [];
+        acc[r.submission_id].push(r);
+        return acc;
+      }, {});
+
+      const enriched = (submissions || []).map((s: any) => {
+        const mine = ratingsBySubmission[s.id] || [];
+        const p = profileById[s.user_id];
 
         return {
-          ...submission,
-          user_name: profile?.full_name || profile?.username || 'Anonymous'
+          ...s,
+          user: p ? { username: p.username, full_name: p.full_name, avatar_url: p.avatar_url } : null,
+          my_ratings: mine,
+          has_rated: mine.length > 0
         };
-      }));
+      });
 
-      return res.json({ success: true, data: enrichedData });
+      return res.json({ success: true, data: enriched });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
 
-  // Judge: Get hackathons to judge
+  // Judge: Get hackathons to judge (ASSIGNED ONLY)
   app.get("/api/judge/hackathons", async (req: Request, res: Response) => {
     try {
       const authHeader = req.headers['authorization'];
@@ -2784,21 +3460,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .eq('id', userId)
         .single();
 
-      if (profile?.role !== 'judge') {
+      if ((profile as any)?.role !== 'judge') {
         return res.status(403).json({ success: false, message: 'Judge role required' });
       }
 
-      // Get all published hackathons
-      const { data, error } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('id, hackathon_name, slug, start_date, end_date, format, registrations_count')
-        .eq('status', 'published')
-        .order('start_date', { ascending: false });
+      // Fetch assigned hackathons
+      const { data: assignments, error } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .select(`
+          hackathon:organizer_hackathons(
+            id,
+            hackathon_name,
+            slug,
+            start_date,
+            end_date,
+            format,
+            registrations_count
+          )
+        `)
+        .eq('judge_id', userId)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      // Get submission counts
-      const enrichedData = await Promise.all((data || []).map(async (hackathon: any) => {
+      const hackathons = (assignments || [])
+        .map((a: any) => a.hackathon)
+        .filter(Boolean);
+
+      // Add submissions_count
+      const enrichedData = await Promise.all(hackathons.map(async (hackathon: any) => {
         const { count } = await supabaseAdmin
           .from('hackathon_submissions')
           .select('*', { count: 'exact', head: true })
@@ -2817,7 +3508,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Judge: Score a submission
+  // Judge: Score a submission (ASSIGNED ONLY)
   app.post("/api/judge/submissions/:submissionId/score", async (req: Request, res: Response) => {
     try {
       const authHeader = req.headers['authorization'];
@@ -2841,29 +3532,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .eq('id', userId)
         .single();
 
-      if (profile?.role !== 'judge') {
+      if ((profile as any)?.role !== 'judge') {
         return res.status(403).json({ success: false, message: 'Judge role required' });
       }
 
       const { submissionId } = req.params;
-      const { score, feedback, prize_won } = req.body;
+      const { score, feedback, criteria_scores } = req.body;
+
+      // Fetch submission to verify assignment
+      const { data: submission } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select('id, hackathon_id')
+        .eq('id', submissionId)
+        .single();
+
+      if (!submission) {
+        return res.status(404).json({ success: false, message: 'Submission not found' });
+      }
+
+      // Check if judging period is open
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('judging_starts_at, judging_ends_at, judging_control')
+        .eq('id', submission.hackathon_id)
+        .single();
+
+      if (hackathon) {
+        const now = new Date();
+        const judgingControl = hackathon.judging_control || 'auto';
+        
+        // Check period control first
+        if (judgingControl === 'closed') {
+          return res.status(403).json({ success: false, message: 'Judging period is closed' });
+        }
+        
+        // If not force open, check timeline
+        if (judgingControl !== 'open') {
+          const judgingStarts = hackathon.judging_starts_at ? new Date(hackathon.judging_starts_at) : null;
+          const judgingEnds = hackathon.judging_ends_at ? new Date(hackathon.judging_ends_at) : null;
+          
+          if (judgingStarts && now < judgingStarts) {
+            return res.status(403).json({ success: false, message: 'Judging period has not started yet' });
+          }
+          
+          if (judgingEnds && now > judgingEnds) {
+            return res.status(403).json({ success: false, message: 'Judging period has ended' });
+          }
+        }
+      }
+
+      const { data: assignment } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .select('id')
+        .eq('hackathon_id', submission.hackathon_id)
+        .eq('judge_id', userId)
+        .eq('status', 'active')
+        .single();
+
+      if (!assignment) {
+        return res.status(403).json({ success: false, message: 'Not authorized to judge this submission' });
+      }
+
+      // Build update object - only include criteria_scores if provided
+      const updateData: any = { score, feedback };
+      if (criteria_scores) {
+        updateData.criteria_scores = criteria_scores;
+      }
 
       const { data, error } = await supabaseAdmin
         .from('hackathon_submissions')
-        .update({
-          score,
-          feedback,
-          prize_won,
-          status: prize_won ? 'winner' : 'submitted'
-        })
+        .update(updateData)
         .eq('id', submissionId)
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error updating submission score:', error);
+        throw error;
+      }
 
-      // Send winner notification email if prize was awarded
-      if (prize_won && data) {
+      // Winner notification removed - prize_won no longer used
+      if (false && data) {
         const { data: hackathonDetails } = await supabaseAdmin
           .from('organizer_hackathons')
           .select('hackathon_name, slug')
@@ -2907,6 +3656,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerJudgingRoutes(app); // Complete judging system
   registerFileUploadRoutes(app); // File upload endpoints for logos
   registerHackathonFeatureRoutes(app); // Tracks, sponsors, feedback, tasks, etc.
+  registerOrganizerMessageRoutes(app); // Organizer inbox messages
+  
+  console.log('[Routes] About to register moderation routes...');
+  try {
+    registerModerationRoutes(app); // User reporting and moderation system
+    console.log('[Routes] Moderation routes registered successfully');
+  } catch (err) {
+    console.error('[Routes] ERROR registering moderation routes:', err);
+  }
+  
+  console.log('[Routes] About to register gallery routes...');
+  try {
+    registerGalleryRoutes(app); // Project gallery system
+    console.log('[Routes] Gallery routes registered successfully');
+  } catch (err) {
+    console.error('[Routes] ERROR registering gallery routes:', err);
+  }
   // registerSimpleJudgeRoutes(app); // Disabled
 
   const httpServer = createServer(app);

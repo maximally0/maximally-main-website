@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Users, Award } from 'lucide-react';
+import { Users, Award, Calendar } from 'lucide-react';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 
@@ -48,7 +48,7 @@ const People = () => {
             </section>
 
             {/* Navigation Blocks */}
-            <section className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            <section className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {/* Core Team Block */}
               <Link
                 to="/people/core"
@@ -85,11 +85,34 @@ const People = () => {
                     JUDGES
                   </h2>
                   <p className="font-jetbrains text-gray-300 text-center leading-relaxed">
-                    Industry experts from top companies like Meta, Amazon, Google, and more who evaluate our competitions.
+                    Industry experts from top companies who evaluate our competitions.
                   </p>
                   <div className="mt-6 text-center">
                     <div className="inline-block minecraft-block bg-cyan-400 text-black px-4 py-2 group-hover:bg-maximally-yellow transition-colors">
                       <span className="font-press-start text-xs">VIEW JUDGES →</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+
+              {/* Organizers Block */}
+              <Link
+                to="/people/organizers"
+                className="group"
+              >
+                <div className="pixel-card bg-black border-4 border-green-400 p-8 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow hover:bg-gradient-to-br hover:from-gray-900 hover:to-black">
+                  <div className="minecraft-block bg-green-400 w-16 h-16 mx-auto mb-6 flex items-center justify-center group-hover:bg-maximally-yellow transition-colors">
+                    <Calendar className="h-8 w-8 text-black" />
+                  </div>
+                  <h2 className="font-press-start text-xl md:text-2xl mb-4 text-green-400 group-hover:text-maximally-yellow transition-colors text-center">
+                    ORGANIZERS
+                  </h2>
+                  <p className="font-jetbrains text-gray-300 text-center leading-relaxed">
+                    Community leaders who host and organize Maximally hackathons worldwide.
+                  </p>
+                  <div className="mt-6 text-center">
+                    <div className="inline-block minecraft-block bg-green-400 text-black px-4 py-2 group-hover:bg-maximally-yellow transition-colors">
+                      <span className="font-press-start text-xs">VIEW ORGANIZERS →</span>
                     </div>
                   </div>
                 </div>

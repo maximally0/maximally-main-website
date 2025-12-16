@@ -22,83 +22,92 @@ export function registerSimpleJudgeRoutes(app: Express) {
       if (judge) {
         console.log(`[SIMPLE JUDGE] Found in judges table`);
         return res.json({
-          id: judge.id,
-          username: judge.username,
-          fullName: judge.full_name,
-          profilePhoto: judge.profile_photo,
-          headline: judge.headline,
-          shortBio: judge.short_bio,
-          location: judge.judge_location,
-          currentRole: judge.role_title,
-          company: judge.company,
-          tier: judge.tier,
-          availabilityStatus: judge.availability_status,
-          primaryExpertise: judge.primary_expertise || [],
-          secondaryExpertise: judge.secondary_expertise || [],
-          totalEventsJudged: judge.total_events_judged || 0,
-          totalTeamsEvaluated: judge.total_teams_evaluated || 0,
-          totalMentorshipHours: judge.total_mentorship_hours || 0,
-          yearsOfExperience: judge.years_of_experience || 0,
-          averageFeedbackRating: judge.average_feedback_rating,
-          eventsJudgedVerified: judge.events_judged_verified || false,
-          teamsEvaluatedVerified: judge.teams_evaluated_verified || false,
-          mentorshipHoursVerified: judge.mentorship_hours_verified || false,
-          feedbackRatingVerified: judge.feedback_rating_verified || false,
-          linkedin: judge.linkedin,
-          github: judge.github,
-          twitter: judge.twitter,
-          website: judge.website,
-          languagesSpoken: judge.languages_spoken || [],
-          publicAchievements: judge.public_achievements || '',
-          mentorshipStatement: judge.mentorship_statement || '',
-          email: judge.email,
-          phone: judge.phone,
-          address: judge.address,
-          timezone: judge.timezone,
-          compensationPreference: judge.compensation_preference,
+          id: (judge as any).id,
+          username: (judge as any).username,
+          fullName: (judge as any).full_name,
+          profilePhoto: (judge as any).profile_photo,
+          headline: (judge as any).headline,
+          shortBio: (judge as any).short_bio,
+          location: (judge as any).judge_location,
+          currentRole: (judge as any).role_title,
+          company: (judge as any).company,
+          tier: (judge as any).tier,
+          availabilityStatus: (judge as any).availability_status,
+          primaryExpertise: (judge as any).primary_expertise || [],
+          secondaryExpertise: (judge as any).secondary_expertise || [],
+          totalEventsJudged: (judge as any).total_events_judged || 0,
+          totalTeamsEvaluated: (judge as any).total_teams_evaluated || 0,
+          totalMentorshipHours: (judge as any).total_mentorship_hours || 0,
+          yearsOfExperience: (judge as any).years_of_experience || 0,
+          averageFeedbackRating: (judge as any).average_feedback_rating,
+          eventsJudgedVerified: (judge as any).events_judged_verified || false,
+          teamsEvaluatedVerified: (judge as any).teams_evaluated_verified || false,
+          mentorshipHoursVerified: (judge as any).mentorship_hours_verified || false,
+          feedbackRatingVerified: (judge as any).feedback_rating_verified || false,
+          linkedin: (judge as any).linkedin,
+          github: (judge as any).github,
+          twitter: (judge as any).twitter,
+          website: (judge as any).website,
+          languagesSpoken: (judge as any).languages_spoken || [],
+          publicAchievements: (judge as any).public_achievements || '',
+          mentorshipStatement: (judge as any).mentorship_statement || '',
+          email: (judge as any).email,
+          phone: (judge as any).phone,
+          address: (judge as any).address,
+          timezone: (judge as any).timezone,
+          compensationPreference: (judge as any).compensation_preference,
           topEventsJudged: []
         });
       }
 
-      // Try profiles table
+      // Fallback: Try profiles table (for judges who haven't been migrated to judges table yet)
       const { data: profile } = await supabaseAdmin
         .from('profiles')
         .select('*')
         .eq('username', username)
+        .eq('role', 'judge')
         .maybeSingle();
 
-      if (profile && (profile.role === 'judge' || profile.judge_tier)) {
-        console.log(`[SIMPLE JUDGE] Found in profiles table`);
+      if (profile) {
+        console.log(`[SIMPLE JUDGE] Found in profiles table (fallback)`);
+        
+        // Try to get tier from judges table if exists
+        const { data: judgeData } = await supabaseAdmin
+          .from('judges')
+          .select('tier')
+          .eq('user_id', (profile as any).id)
+          .maybeSingle();
+        
         return res.json({
-          id: profile.id,
-          username: profile.username,
-          fullName: profile.full_name,
-          profilePhoto: profile.avatar_url,
-          headline: profile.headline || 'Judge',
-          shortBio: profile.bio || '',
-          location: profile.location || '',
-          currentRole: profile.current_role || '',
-          company: profile.company || '',
-          tier: profile.judge_tier || 'starter',
+          id: (profile as any).id,
+          username: (profile as any).username,
+          fullName: (profile as any).full_name,
+          profilePhoto: (profile as any).avatar_url,
+          headline: (profile as any).headline || 'Judge',
+          shortBio: (profile as any).bio || '',
+          location: (profile as any).location || '',
+          currentRole: (profile as any).current_role || '',
+          company: (profile as any).company || '',
+          tier: (judgeData as any)?.tier || 'starter',
           availabilityStatus: 'available',
-          primaryExpertise: profile.skills || [],
+          primaryExpertise: (profile as any).skills || [],
           secondaryExpertise: [],
-          totalEventsJudged: profile.total_events_judged || 0,
-          totalTeamsEvaluated: profile.total_teams_evaluated || 0,
-          totalMentorshipHours: profile.total_mentorship_hours || 0,
-          yearsOfExperience: profile.years_of_experience || 0,
+          totalEventsJudged: (profile as any).total_events_judged || 0,
+          totalTeamsEvaluated: (profile as any).total_teams_evaluated || 0,
+          totalMentorshipHours: (profile as any).total_mentorship_hours || 0,
+          yearsOfExperience: (profile as any).years_of_experience || 0,
           averageFeedbackRating: null,
           eventsJudgedVerified: true,
           teamsEvaluatedVerified: true,
           mentorshipHoursVerified: true,
           feedbackRatingVerified: false,
-          linkedin: profile.linkedin_username ? `https://linkedin.com/in/${profile.linkedin_username}` : null,
-          github: profile.github_username ? `https://github.com/${profile.github_username}` : null,
-          twitter: profile.twitter_username ? `https://twitter.com/${profile.twitter_username}` : null,
-          website: profile.website_url,
+          linkedin: (profile as any).linkedin_username ? `https://linkedin.com/in/${(profile as any).linkedin_username}` : null,
+          github: (profile as any).github_username ? `https://github.com/${(profile as any).github_username}` : null,
+          twitter: (profile as any).twitter_username ? `https://twitter.com/${(profile as any).twitter_username}` : null,
+          website: (profile as any).website_url,
           languagesSpoken: ['English'],
           publicAchievements: '',
-          mentorshipStatement: profile.bio || '',
+          mentorshipStatement: (profile as any).bio || '',
           topEventsJudged: []
         });
       }

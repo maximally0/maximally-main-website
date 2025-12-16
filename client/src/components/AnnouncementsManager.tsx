@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Megaphone, Plus, Send, Eye, X } from 'lucide-react';
+import { Megaphone, Plus, Send, Eye, X, Edit2, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 
@@ -11,6 +11,8 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
   const { toast } = useToast();
   const [announcements, setAnnouncements] = useState<any[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<any>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -60,15 +62,10 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
           description: publishNow ? "Announcement published successfully" : "Saved as draft",
         });
         setShowCreateModal(false);
-        setFormData({
-          title: '',
-          content: '',
-          announcement_type: 'general',
-          target_audience: 'all',
-          send_email: false,
-          is_published: false
-        });
+        resetForm();
         fetchAnnouncements();
+      } else {
+        throw new Error(data.message || 'Failed to create announcement');
       }
     } catch (error: any) {
       toast({
@@ -77,6 +74,133 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
         variant: "destructive",
       });
     }
+  };
+
+  const handleEdit = (announcement: any) => {
+    setEditingAnnouncement(announcement);
+    setFormData({
+      title: announcement.title,
+      content: announcement.content,
+      announcement_type: announcement.announcement_type,
+      target_audience: announcement.target_audience,
+      send_email: announcement.send_email || false,
+      is_published: announcement.is_published
+    });
+    setShowCreateModal(true);
+  };
+
+  const handleUpdate = async (publishNow?: boolean) => {
+    if (!editingAnnouncement) return;
+
+    try {
+      const headers = await getAuthHeaders();
+      const dataToSend = {
+        ...formData,
+        is_published: publishNow !== undefined ? publishNow : formData.is_published
+      };
+      
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/announcements/${editingAnnouncement.id}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(dataToSend)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Announcement Updated!",
+          description: publishNow ? "Announcement published successfully" : "Changes saved",
+        });
+        setShowCreateModal(false);
+        setEditingAnnouncement(null);
+        resetForm();
+        fetchAnnouncements();
+      } else {
+        throw new Error(data.message || 'Failed to update announcement');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handlePublish = async (announcementId: number) => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/announcements/${announcementId}`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ is_published: true })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Announcement Published!",
+          description: "Your announcement is now live",
+        });
+        fetchAnnouncements();
+      } else {
+        throw new Error(data.message || 'Failed to publish announcement');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDelete = async (announcementId: number) => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/announcements/${announcementId}`, {
+        method: 'DELETE',
+        headers
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Announcement Deleted",
+          description: "The announcement has been removed",
+        });
+        setShowDeleteConfirm(null);
+        fetchAnnouncements();
+      } else {
+        throw new Error(data.message || 'Failed to delete announcement');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      content: '',
+      announcement_type: 'general',
+      target_audience: 'all',
+      send_email: false,
+      is_published: false
+    });
+  };
+
+  const closeModal = () => {
+    setShowCreateModal(false);
+    setEditingAnnouncement(null);
+    resetForm();
   };
 
   return (
@@ -130,7 +254,12 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   <div className="flex items-center gap-4 text-xs text-gray-400 font-jetbrains">
                     <span>Target: {announcement.target_audience}</span>
                     <span>•</span>
-                    <span>{new Date(announcement.created_at).toLocaleDateString()}</span>
+                    <span>
+                      {new Date(announcement.created_at).toLocaleDateString()}
+                      {announcement.updated_at && announcement.updated_at !== announcement.created_at && (
+                        <span className="text-yellow-400"> (edited)</span>
+                      )}
+                    </span>
                     {announcement.send_email && (
                       <>
                         <span>•</span>
@@ -138,6 +267,36 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                       </>
                     )}
                   </div>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex items-center gap-2">
+                  {!announcement.is_published && (
+                    <button
+                      onClick={() => handlePublish(announcement.id)}
+                      className="pixel-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 font-press-start text-xs transition-colors flex items-center gap-1"
+                      title="Publish Draft"
+                    >
+                      <Send className="h-3 w-3" />
+                      PUBLISH
+                    </button>
+                  )}
+                  <button
+                    onClick={() => handleEdit(announcement)}
+                    className="pixel-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 font-press-start text-xs transition-colors flex items-center gap-1"
+                    title="Edit Announcement"
+                  >
+                    <Edit2 className="h-3 w-3" />
+                    EDIT
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteConfirm(announcement.id)}
+                    className="pixel-button bg-red-600 hover:bg-red-700 text-white px-3 py-2 font-press-start text-xs transition-colors flex items-center gap-1"
+                    title="Delete Announcement"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                    DELETE
+                  </button>
                 </div>
               </div>
             </div>
@@ -151,8 +310,10 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
           <div className="pixel-card bg-black border-4 border-maximally-red max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b-2 border-maximally-red">
               <div className="flex items-center justify-between">
-                <h2 className="font-press-start text-xl text-maximally-red">CREATE_ANNOUNCEMENT</h2>
-                <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-white">
+                <h2 className="font-press-start text-xl text-maximally-red">
+                  {editingAnnouncement ? 'EDIT_ANNOUNCEMENT' : 'CREATE_ANNOUNCEMENT'}
+                </h2>
+                <button onClick={closeModal} className="text-gray-400 hover:text-white">
                   <X className="h-6 w-6" />
                 </button>
               </div>
@@ -208,6 +369,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                     <option value="waitlist">Waitlist Only</option>
                     <option value="teams">Teams Only</option>
                     <option value="individuals">Individuals Only</option>
+                    <option value="public">Public (Everyone)</option>
                   </select>
                 </div>
               </div>
@@ -226,18 +388,70 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
               </div>
 
               <div className="flex gap-3">
+                {editingAnnouncement ? (
+                  <>
+                    <button
+                      onClick={() => handleUpdate()}
+                      className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 transition-colors"
+                    >
+                      SAVE_CHANGES
+                    </button>
+                    {!editingAnnouncement.is_published && (
+                      <button
+                        onClick={() => handleUpdate(true)}
+                        className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Send className="h-4 w-4" />
+                        PUBLISH
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleCreate(false)}
+                      className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 transition-colors"
+                    >
+                      SAVE_DRAFT
+                    </button>
+                    <button
+                      onClick={() => handleCreate(true)}
+                      className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors flex items-center justify-center gap-2"
+                    >
+                      <Send className="h-4 w-4" />
+                      PUBLISH
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="pixel-card bg-black border-4 border-red-500 max-w-md w-full">
+            <div className="p-6 border-b-2 border-red-500">
+              <h2 className="font-press-start text-xl text-red-500">DELETE_ANNOUNCEMENT</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="font-jetbrains text-gray-300">
+                Are you sure you want to delete this announcement? This action cannot be undone.
+              </p>
+              <div className="flex gap-3">
                 <button
-                  onClick={() => handleCreate(false)}
+                  onClick={() => setShowDeleteConfirm(null)}
                   className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 transition-colors"
                 >
-                  SAVE_DRAFT
+                  CANCEL
                 </button>
                 <button
-                  onClick={() => handleCreate(true)}
-                  className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors flex items-center justify-center gap-2"
+                  onClick={() => handleDelete(showDeleteConfirm)}
+                  className="flex-1 pixel-button bg-red-600 text-white px-6 py-3 font-press-start text-sm hover:bg-red-700 transition-colors"
                 >
-                  <Send className="h-4 w-4" />
-                  PUBLISH
+                  DELETE
                 </button>
               </div>
             </div>

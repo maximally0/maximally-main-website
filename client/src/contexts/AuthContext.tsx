@@ -10,8 +10,10 @@ import {
   signUpWithGitHub,
   signOut as supabaseSignOut,
   getCurrentUserWithProfile,
+  getUserModerationStatus,
   type Profile,
-  type SignUpPayload
+  type SignUpPayload,
+  type ModerationStatus
 } from '@/lib/supabaseClient';
 
 interface AuthContextType {
@@ -19,6 +21,10 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
+  moderationStatus: ModerationStatus | null;
+  isBanned: boolean;
+  isMuted: boolean;
+  isSuspended: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: any }>;
   signUp: (email: string, password: string, name: string, username: string) => Promise<{ error?: any }>;
   signInWithGoogle: () => Promise<{ error?: any }>;
@@ -27,6 +33,7 @@ interface AuthContextType {
   signUpWithGitHub: () => Promise<{ error?: any }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  refreshModerationStatus: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,6 +55,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [moderationStatus, setModerationStatus] = useState<ModerationStatus | null>(null);
+
+  // Computed moderation flags
+  const isBanned = moderationStatus?.is_banned ?? false;
+  const isMuted = moderationStatus?.is_muted ?? false;
+  const isSuspended = moderationStatus?.is_suspended ?? false;
+
+  const refreshModerationStatus = async () => {
+    try {
+      if (user) {
+        const status = await getUserModerationStatus(user.id);
+        setModerationStatus(status);
+      }
+    } catch (error) {
+      console.error('Error refreshing moderation status:', error);
+    }
+  };
 
   const refreshProfile = async () => {
     try {
@@ -56,6 +80,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (result) {
           setProfile(result.profile);
         }
+        // Also refresh moderation status
+        await refreshModerationStatus();
       }
     } catch (error) {
       console.error('Error refreshing profile:', error);
@@ -198,6 +224,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           if (result) {
             setProfile(result.profile);
           }
+          
+          // Get moderation status
+          const modStatus = await getUserModerationStatus(session.user.id);
+          setModerationStatus(modStatus);
         }
       } catch (error) {
         console.error('Error in getInitialSession:', error);
@@ -232,18 +262,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setProfile(result.profile);
           } else {
             console.warn('⚠️ No profile found for user, will retry on next interaction');
-            // Don't clear profile immediately - keep user logged in
-            // Profile will be fetched again on next page interaction
+          }
+          
+          // Also fetch moderation status
+          if (session?.user) {
+            const modStatus = await getUserModerationStatus(session.user.id);
+            setModerationStatus(modStatus);
           }
         } catch (error: any) {
           console.error('❌ Error getting profile after auth change:', error.message || error);
-          console.log('ℹ️ User will remain logged in, profile will retry on next interaction');
-          // Don't log user out on profile fetch failure
-          // The session is still valid, just profile fetch failed
         }
       } else {
-        // User signed out, clearing profile
+        // User signed out, clearing profile and moderation status
         setProfile(null);
+        setModerationStatus(null);
       }
 
       // Always ensure loading is false after state change
@@ -261,6 +293,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     profile,
     session,
     loading,
+    moderationStatus,
+    isBanned,
+    isMuted,
+    isSuspended,
     signIn,
     signUp,
     signInWithGoogle: signInWithGoogleHandler,
@@ -269,6 +305,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signUpWithGitHub: signUpWithGitHubHandler,
     signOut,
     refreshProfile,
+    refreshModerationStatus,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

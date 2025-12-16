@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Calendar, ArrowLeft, Trophy, Github, Link as LinkIcon, Video, FileText, X, Check, Upload } from 'lucide-react';
+import { Calendar, ArrowLeft, Trophy, Github, Link as LinkIcon, Video, FileText, X, Check, Upload, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import Footer from '@/components/Footer';
@@ -16,15 +16,23 @@ interface Hackathon {
   end_date: string;
   format: string;
   tracks?: string;
+  building_starts_at?: string;
+  building_ends_at?: string;
   submission_opens_at?: string;
   submission_closes_at?: string;
   total_prize_pool?: string;
+  // Period controls
+  registration_control?: 'auto' | 'open' | 'closed';
+  building_control?: 'auto' | 'open' | 'closed';
+  submission_control?: 'auto' | 'open' | 'closed';
+  judging_control?: 'auto' | 'open' | 'closed';
 }
 
 // Inline Submission Form Component
-function SubmissionForm({ hackathonId, hackathonName, tracks, submissionDeadline }: {
+function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, submissionDeadline }: {
   hackathonId: number;
   hackathonName: string;
+  hackathonSlug: string;
   tracks?: string;
   submissionDeadline?: string;
 }) {
@@ -76,7 +84,7 @@ function SubmissionForm({ hackathonId, hackathonName, tracks, submissionDeadline
           presentation_url: data.data.presentation_url || '',
           technologies_used: data.data.technologies_used || [],
           tech_input: '',
-          logo_url: data.data.logo_url || ''
+          logo_url: data.data.project_logo || ''
         });
       }
     } catch (error) {
@@ -116,30 +124,59 @@ function SubmissionForm({ hackathonId, hackathonName, tracks, submissionDeadline
       return;
     }
 
+    // Validate file type (match server)
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+    if (!allowedTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file type",
+        description: "Only JPEG, PNG, WebP, and SVG are allowed",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "File size must be under 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setUploadingLogo(true);
-    const uploadFormData = new FormData();
-    uploadFormData.append('logo', file);
 
     try {
+      // Convert to base64 to match server implementation
+      const base64Data: string = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('Failed to read file'));
+        reader.readAsDataURL(file);
+      });
+
       const headers = await getAuthHeaders();
-      delete headers['Content-Type']; // Let browser set it with boundary
-      
       const response = await fetch(`/api/submissions/${submission.id}/upload-logo`, {
         method: 'POST',
         headers,
-        body: uploadFormData
+        body: JSON.stringify({
+          fileData: base64Data,
+          fileName: file.name,
+          fileType: file.type
+        })
       });
 
       const data = await response.json();
       if (data.success) {
-        setFormData(prev => ({ ...prev, logo_url: data.logo_url }));
+        setFormData(prev => ({ ...prev, logo_url: data.url }));
         toast({ title: "Logo uploaded successfully!" });
-        fetchSubmission(); // Refresh to get updated data
+        fetchSubmission();
       } else {
         toast({ title: "Failed to upload logo", description: data.message, variant: "destructive" });
       }
-    } catch (error) {
-      toast({ title: "Error uploading logo", variant: "destructive" });
+    } catch (error: any) {
+      toast({ title: "Error uploading logo", description: error.message, variant: "destructive" });
     } finally {
       setUploadingLogo(false);
     }
@@ -182,7 +219,13 @@ function SubmissionForm({ hackathonId, hackathonName, tracks, submissionDeadline
           title: isDraft ? "Draft Saved!" : "Project Submitted!",
           description: isDraft ? "Your project has been saved as a draft" : "Your project has been submitted successfully",
         });
-        fetchSubmission();
+        
+        if (!isDraft) {
+          // Redirect to hackathon projects tab after successful submission
+          navigate(`/hackathon/${hackathonSlug}?tab=projects`);
+        } else {
+          fetchSubmission();
+        }
       } else {
         toast({
           title: "Submission Failed",
@@ -535,10 +578,84 @@ export default function HackathonSubmit() {
     ? new Date(hackathon.submission_closes_at) 
     : endDate;
 
-  // Check if submissions are open (using IST timezone)
+  // Check if submissions are open (using period controls first, then timeline)
   const now = new Date();
-  const submissionsClosed = hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now;
-  const submissionsNotOpen = hackathon.submission_opens_at && new Date(hackathon.submission_opens_at) > now;
+  const subControl = hackathon.submission_control || 'auto';
+  const buildControl = hackathon.building_control || 'auto';
+  
+  // Period control overrides
+  const isSubmissionForceOpen = subControl === 'open';
+  const isSubmissionForceClosed = subControl === 'closed';
+  const isBuildingForceActive = buildControl === 'open';
+  
+  // Timeline-based checks (only used if control is 'auto')
+  const submissionsClosedByTimeline = hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now;
+  const submissionsNotOpenByTimeline = hackathon.submission_opens_at && new Date(hackathon.submission_opens_at) > now;
+  const buildingInProgressByTimeline = hackathon.building_starts_at && hackathon.building_ends_at && 
+    new Date(hackathon.building_starts_at) <= now && new Date(hackathon.building_ends_at) >= now;
+  
+  // Final status (period control takes priority)
+  const submissionsClosed = isSubmissionForceClosed || (subControl === 'auto' && submissionsClosedByTimeline);
+  const submissionsNotOpen = !isSubmissionForceOpen && subControl === 'auto' && submissionsNotOpenByTimeline;
+  const buildingInProgress = isBuildingForceActive || (buildControl === 'auto' && buildingInProgressByTimeline);
+  
+  // If submission is force open, override building phase check
+  const showBuildingPage = buildingInProgress && !isSubmissionForceOpen;
+
+  // Building phase - no submissions allowed (unless submission is force open)
+  if (showBuildingPage) {
+    const endsAt = hackathon.building_ends_at ? new Date(hackathon.building_ends_at) : new Date();
+    const formattedDate = endsAt.toLocaleDateString('en-IN', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric',
+      timeZone: 'Asia/Kolkata'
+    });
+    const formattedTime = endsAt.toLocaleTimeString('en-IN', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'Asia/Kolkata'
+    });
+
+    return (
+      <>
+        <SEO
+          title={`Building Phase - ${hackathon.hackathon_name} - Maximally`}
+          description={`Building phase in progress for ${hackathon.hackathon_name}`}
+        />
+        <div className="min-h-screen bg-black text-white flex items-center justify-center">
+          <div className="text-center max-w-2xl px-4">
+            <div className="pixel-card bg-orange-900/20 border-4 border-orange-500 p-12">
+              <Zap className="h-16 w-16 text-orange-500 mx-auto mb-6 animate-pulse" />
+              <h1 className="font-press-start text-2xl text-orange-400 mb-4">BUILDING_IN_PROGRESS</h1>
+              <p className="font-jetbrains text-gray-300 mb-2">
+                The building/hacking phase is currently active for {hackathon.hackathon_name}.
+              </p>
+              <p className="font-jetbrains text-gray-400 mb-4">
+                Focus on building your project! Submissions will open after the building phase ends.
+              </p>
+              <p className="font-jetbrains text-sm text-gray-500 mb-1">Building phase ends on:</p>
+              <p className="font-jetbrains text-xl text-orange-400 font-bold mb-1">
+                {formattedDate}
+              </p>
+              <p className="font-jetbrains text-sm text-gray-400 mb-6">
+                at {formattedTime} IST
+              </p>
+              <Link 
+                to={`/hackathon/${slug}`}
+                className="pixel-button bg-orange-600 hover:bg-orange-500 text-white px-6 py-3 font-press-start text-sm inline-flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                BACK_TO_HACKATHON
+              </Link>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   // Submissions not open yet
   if (submissionsNotOpen) {
@@ -712,6 +829,7 @@ export default function HackathonSubmit() {
               <SubmissionForm 
                 hackathonId={hackathon.id} 
                 hackathonName={hackathon.hackathon_name}
+                hackathonSlug={hackathon.slug}
                 tracks={hackathon.tracks}
                 submissionDeadline={hackathon.end_date}
               />

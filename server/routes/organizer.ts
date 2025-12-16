@@ -47,6 +47,21 @@ export function registerOrganizerRoutes(app: Express) {
         return res.status(401).json({ success: false, message: 'Invalid token' });
       }
 
+      // Only approved organizers (or admins) can create hackathons
+      const { data: roleRow } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      const role = (roleRow as any)?.role;
+      if (role !== 'organizer' && role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          message: 'Organizer role required. Please apply to become an organizer and wait for approval.'
+        });
+      }
+
       // Get user email
       const { data: userData } = await supabaseAdmin.auth.getUser(token);
       const userEmail = userData?.user?.email;
@@ -121,12 +136,6 @@ export function registerOrganizerRoutes(app: Express) {
           .from('organizer_profiles')
           .insert({ user_id: userId });
       }
-
-      // Update user role to organizer if not already
-      await supabaseAdmin
-        .from('profiles')
-        .update({ role: 'organizer' })
-        .eq('id', userId);
 
       return res.json({ success: true, data });
     } catch (error: any) {
@@ -476,6 +485,58 @@ export function registerOrganizerRoutes(app: Express) {
     }
   });
 
+  // Get organizer profile with tier (for dashboard)
+  app.get("/api/organizer/my-profile", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      // Check if user is an organizer
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (profile?.role !== 'organizer') {
+        return res.status(403).json({ success: false, message: 'Not an organizer' });
+      }
+
+      const { data, error } = await supabaseAdmin
+        .from('organizer_profiles')
+        .select('tier, organization_name, total_hackathons_hosted, total_participants_reached')
+        .eq('user_id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching organizer profile:', error);
+        return res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+      }
+
+      // Return default tier if no profile exists yet
+      return res.json({ 
+        success: true, 
+        data: data || { 
+          tier: 'starter', 
+          organization_name: null,
+          total_hackathons_hosted: 0,
+          total_participants_reached: 0
+        } 
+      });
+    } catch (error: any) {
+      console.error('Error in get organizer my-profile:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
   // Submit edit request for published hackathon
   app.post("/api/organizer/hackathons/:id/request-edit", async (req, res) => {
     try {
@@ -812,6 +873,259 @@ export function registerOrganizerRoutes(app: Express) {
       return res.json({ success: true, data: cloned });
     } catch (error: any) {
       console.error('Error in clone hackathon:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Update period controls for a hackathon
+  app.put("/api/organizer/hackathons/:id/period-control", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { id } = req.params;
+
+      // Check ownership
+      const { data: existing } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, organizer_id')
+        .eq('id', id)
+        .eq('organizer_id', userId)
+        .single();
+
+      if (!existing) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Validate the control values
+      const validControls = ['auto', 'open', 'closed'];
+      const allowedFields = ['registration_control', 'building_control', 'submission_control', 'judging_control'];
+      
+      const updates: Record<string, string> = {};
+      for (const [key, value] of Object.entries(req.body)) {
+        if (allowedFields.includes(key) && validControls.includes(value as string)) {
+          updates[key] = value as string;
+        }
+      }
+
+      if (Object.keys(updates).length === 0) {
+        return res.status(400).json({ success: false, message: 'No valid period control updates provided' });
+      }
+
+      updates.updated_at = new Date().toISOString();
+
+      const { data, error } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating period controls:', error);
+        return res.status(500).json({ success: false, message: 'Failed to update period controls' });
+      }
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      console.error('Error in update period controls:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get winners for a hackathon
+  app.get("/api/organizer/hackathons/:id/winners", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { id } = req.params;
+
+      // Check ownership
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, organizer_id')
+        .eq('id', id)
+        .eq('organizer_id', userId)
+        .single();
+
+      if (!hackathon) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Get winners with submission details
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_winners')
+        .select(`
+          *,
+          submission:hackathon_submissions(
+            id,
+            project_name,
+            tagline,
+            demo_url,
+            github_repo,
+            user_id,
+            team_id
+          )
+        `)
+        .eq('hackathon_id', id)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching winners:', error);
+        return res.status(500).json({ success: false, message: 'Failed to fetch winners' });
+      }
+
+      // Enrich with user names and team names
+      const enrichedData = await Promise.all((data || []).map(async (winner: any) => {
+        let userName = 'Anonymous';
+        let teamName = null;
+
+        if (winner.submission?.user_id) {
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('username, full_name')
+            .eq('id', winner.submission.user_id)
+            .single();
+          userName = profile?.full_name || profile?.username || 'Anonymous';
+        }
+
+        if (winner.submission?.team_id) {
+          const { data: team } = await supabaseAdmin
+            .from('hackathon_teams')
+            .select('team_name')
+            .eq('id', winner.submission.team_id)
+            .single();
+          teamName = team?.team_name;
+        }
+
+        return {
+          ...winner,
+          submission: winner.submission ? {
+            ...winner.submission,
+            user_name: userName,
+            team: teamName ? { team_name: teamName } : null
+          } : null
+        };
+      }));
+
+      return res.json({ success: true, data: enrichedData });
+    } catch (error: any) {
+      console.error('Error in get winners:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Announce winners for a hackathon
+  app.post("/api/organizer/hackathons/:id/announce-winners", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { id } = req.params;
+      const { winners } = req.body;
+
+      if (!winners || !Array.isArray(winners) || winners.length === 0) {
+        return res.status(400).json({ success: false, message: 'No winners provided' });
+      }
+
+      // Check ownership
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, organizer_id')
+        .eq('id', id)
+        .eq('organizer_id', userId)
+        .single();
+
+      if (!hackathon) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Delete existing winners for this hackathon
+      await supabaseAdmin
+        .from('hackathon_winners')
+        .delete()
+        .eq('hackathon_id', id);
+
+      // Get submission details to get user_id for each winner
+      const submissionIds = winners.map((w: any) => w.submission_id);
+      const { data: submissions } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select('id, user_id, team_id')
+        .in('id', submissionIds);
+
+      const submissionMap = new Map((submissions || []).map((s: any) => [s.id, s]));
+
+      // Insert new winners with user_id from submission
+      const winnersToInsert = winners.map((w: any, index: number) => {
+        const submission = submissionMap.get(w.submission_id);
+        return {
+          hackathon_id: parseInt(id),
+          submission_id: w.submission_id,
+          user_id: submission?.user_id,
+          team_id: submission?.team_id || null,
+          position: index + 1, // numeric position (1, 2, 3...)
+          prize_name: w.prize_position, // Required field - use prize_position as prize_name
+          prize_position: w.prize_position, // text like "1st Place"
+          prize_amount: w.prize_amount || null,
+          announced_by: userId
+        };
+      });
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_winners')
+        .insert(winnersToInsert)
+        .select();
+
+      if (error) {
+        console.error('Error announcing winners:', error);
+        return res.status(500).json({ success: false, message: 'Failed to announce winners' });
+      }
+
+      // Update hackathon to mark winners announced
+      await supabaseAdmin
+        .from('organizer_hackathons')
+        .update({ 
+          winners_announced: true,
+          winners_announced_at: new Date().toISOString()
+        })
+        .eq('id', id);
+
+      // Update submissions with prize won
+      for (const winner of winners) {
+        await supabaseAdmin
+          .from('hackathon_submissions')
+          .update({ prize_won: winner.prize_position })
+          .eq('id', winner.submission_id);
+      }
+
+      return res.json({ success: true, data, message: 'Winners announced successfully' });
+    } catch (error: any) {
+      console.error('Error in announce winners:', error);
       return res.status(500).json({ success: false, message: error.message });
     }
   });

@@ -76,6 +76,8 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
           title: "Timeline Updated!",
           description: "Hackathon timeline has been saved successfully",
         });
+        // Refresh the data to confirm it was saved
+        await fetchTimeline();
       } else {
         throw new Error(data.message);
       }

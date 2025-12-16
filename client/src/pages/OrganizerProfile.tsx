@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, Trophy, Users, MapPin, ExternalLink, Mail, Globe } from 'lucide-react';
+import { Calendar, Trophy, Users, MapPin, ExternalLink, Mail, Globe, Award, Shield, Star, Crown, Flame } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+
+type OrganizerTier = 'starter' | 'verified' | 'senior' | 'chief' | 'legacy';
 
 interface OrganizerProfile {
   user_id: string;
@@ -15,6 +17,7 @@ interface OrganizerProfile {
   total_hackathons_hosted: number;
   total_participants_reached: number;
   total_prize_money_distributed?: string;
+  tier?: OrganizerTier;
   created_at: string;
 }
 
@@ -99,6 +102,39 @@ export default function OrganizerProfile() {
     return false;
   });
 
+  const getTierInfo = (tier: OrganizerTier) => {
+    const tierConfig = {
+      starter: { 
+        label: 'Starter Organizer', 
+        color: 'text-green-400 border-green-400 bg-green-400/10', 
+        icon: <Award className="h-4 w-4" />
+      },
+      verified: { 
+        label: 'Verified Organizer', 
+        color: 'text-blue-400 border-blue-400 bg-blue-400/10', 
+        icon: <Shield className="h-4 w-4" />
+      },
+      senior: { 
+        label: 'Senior Organizer', 
+        color: 'text-purple-400 border-purple-400 bg-purple-400/10', 
+        icon: <Star className="h-4 w-4" />
+      },
+      chief: { 
+        label: 'Chief Organizer', 
+        color: 'text-yellow-400 border-yellow-400 bg-yellow-400/10', 
+        icon: <Crown className="h-4 w-4" />
+      },
+      legacy: { 
+        label: 'Legacy Organizer', 
+        color: 'text-red-400 border-red-400 bg-red-400/10', 
+        icon: <Flame className="h-4 w-4" />
+      }
+    };
+    return tierConfig[tier] || tierConfig.starter;
+  };
+
+  const tierInfo = profile?.tier ? getTierInfo(profile.tier) : getTierInfo('starter');
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -176,9 +212,14 @@ export default function OrganizerProfile() {
                       <h1 className="font-press-start text-3xl md:text-5xl text-white mb-2 drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
                         {userProfile?.full_name || profile?.organization_name || userProfile?.username || 'Organizer'}
                       </h1>
-                      <p className="font-jetbrains text-maximally-yellow text-lg">
+                      <p className="font-jetbrains text-maximally-yellow text-lg mb-2">
                         @{userProfile?.username}
                       </p>
+                      {/* Tier Badge */}
+                      <div className={`inline-flex items-center gap-2 minecraft-block border-2 ${tierInfo.color} px-3 py-1`}>
+                        {tierInfo.icon}
+                        <span className="font-press-start text-xs">{tierInfo.label}</span>
+                      </div>
                     </div>
                     {isOwnProfile && (
                       <Link

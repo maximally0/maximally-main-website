@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Users, Mail, UserPlus, X, Check, Crown, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useModeration } from '@/hooks/useModeration';
 import { getAuthHeaders } from '@/lib/auth';
 import TeamTasks from '@/components/TeamTasks';
 
@@ -31,6 +32,7 @@ interface Props {
 export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate }: Props) {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { canJoinTeam } = useModeration();
   const [team, setTeam] = useState<TeamDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [inviteEmail, setInviteEmail] = useState('');
@@ -58,6 +60,11 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
 
   const handleInvite = async () => {
     if (!inviteEmail.trim()) return;
+
+    // Check moderation status
+    if (!canJoinTeam()) {
+      return;
+    }
 
     setSending(true);
     try {

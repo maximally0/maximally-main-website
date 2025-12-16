@@ -24,7 +24,7 @@ import { getAuthHeaders } from '@/lib/auth';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
-import TimelineManager from '@/components/TimelineManager';
+import DateTimePicker from '@/components/DateTimePicker';
 
 interface HackathonData {
   id: number;
@@ -71,6 +71,15 @@ interface HackathonData {
   promo_video_link?: string;
   cover_image?: string;
   status: string;
+  registration_opens_at?: string;
+  registration_closes_at?: string;
+  building_starts_at?: string;
+  building_ends_at?: string;
+  submission_opens_at?: string;
+  submission_closes_at?: string;
+  judging_starts_at?: string;
+  judging_ends_at?: string;
+  results_announced_at?: string;
 }
 
 export default function EditHackathon() {
@@ -83,6 +92,10 @@ export default function EditHackathon() {
   const [hackathon, setHackathon] = useState<HackathonData | null>(null);
   const [activeTab, setActiveTab] = useState('basic');
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+  const [themesInput, setThemesInput] = useState('');
+  const [sponsorsInput, setSponsorsInput] = useState('');
+  const [partnersInput, setPartnersInput] = useState('');
+  const [perksInput, setPerksInput] = useState('');
 
   // Only redirect on initial load, not on subsequent auth changes
   useEffect(() => {
@@ -97,6 +110,24 @@ export default function EditHackathon() {
       fetchHackathon();
     }
   }, [user, id]);
+
+  // Initialize input states when hackathon data is loaded
+  useEffect(() => {
+    if (hackathon) {
+      if (hackathon.themes) {
+        setThemesInput(hackathon.themes.join(', '));
+      }
+      if (hackathon.sponsors) {
+        setSponsorsInput(hackathon.sponsors.join('\n'));
+      }
+      if (hackathon.partners) {
+        setPartnersInput(hackathon.partners.join('\n'));
+      }
+      if (hackathon.perks) {
+        setPerksInput(hackathon.perks.join('\n'));
+      }
+    }
+  }, [hackathon?.themes, hackathon?.sponsors, hackathon?.partners, hackathon?.perks]);
 
   const fetchHackathon = async () => {
     try {
@@ -133,6 +164,7 @@ export default function EditHackathon() {
     setSaving(true);
     try {
       const headers = await getAuthHeaders();
+      
       const response = await fetch(`/api/organizer/hackathons/${id}`, {
         method: 'PATCH',
         headers,
@@ -1053,8 +1085,17 @@ export default function EditHackathon() {
                   </label>
                   <input
                     type="text"
-                    value={hackathon.themes?.join(', ') || ''}
-                    onChange={(e) => updateField('themes', e.target.value.split(',').map(t => t.trim()).filter(Boolean))}
+                    value={themesInput}
+                    onChange={(e) => {
+                      setThemesInput(e.target.value);
+                    }}
+                    onBlur={() => {
+                      // Clean up and update themes only on blur
+                      const cleanedThemes = themesInput.split(',').map(t => t.trim()).filter(Boolean);
+                      const cleanedInput = cleanedThemes.join(', ');
+                      setThemesInput(cleanedInput);
+                      updateField('themes', cleanedThemes);
+                    }}
                     placeholder="AI, Web3, Healthcare, Education (comma separated)"
                     className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none"
                   />
@@ -1095,8 +1136,17 @@ export default function EditHackathon() {
                     SPONSORS
                   </label>
                   <textarea
-                    value={hackathon.sponsors?.join('\n') || ''}
-                    onChange={(e) => updateField('sponsors', e.target.value.split('\n').filter(Boolean))}
+                    value={sponsorsInput}
+                    onChange={(e) => {
+                      setSponsorsInput(e.target.value);
+                    }}
+                    onBlur={() => {
+                      // Clean up and update sponsors only on blur
+                      const cleanedSponsors = sponsorsInput.split('\n').map(s => s.trim()).filter(Boolean);
+                      const cleanedInput = cleanedSponsors.join('\n');
+                      setSponsorsInput(cleanedInput);
+                      updateField('sponsors', cleanedSponsors);
+                    }}
                     rows={6}
                     placeholder="List sponsor names (one per line):&#10;Google Cloud&#10;GitHub&#10;Microsoft Azure&#10;AWS"
                     className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
@@ -1111,8 +1161,17 @@ export default function EditHackathon() {
                     PARTNERS
                   </label>
                   <textarea
-                    value={hackathon.partners?.join('\n') || ''}
-                    onChange={(e) => updateField('partners', e.target.value.split('\n').filter(Boolean))}
+                    value={partnersInput}
+                    onChange={(e) => {
+                      setPartnersInput(e.target.value);
+                    }}
+                    onBlur={() => {
+                      // Clean up and update partners only on blur
+                      const cleanedPartners = partnersInput.split('\n').map(p => p.trim()).filter(Boolean);
+                      const cleanedInput = cleanedPartners.join('\n');
+                      setPartnersInput(cleanedInput);
+                      updateField('partners', cleanedPartners);
+                    }}
                     rows={6}
                     placeholder="List partner organizations (one per line):&#10;IEEE Computer Society&#10;ACM Student Chapter&#10;Developer Student Clubs"
                     className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
@@ -1127,8 +1186,17 @@ export default function EditHackathon() {
                     PERKS & BENEFITS
                   </label>
                   <textarea
-                    value={hackathon.perks?.join('\n') || ''}
-                    onChange={(e) => updateField('perks', e.target.value.split('\n').filter(Boolean))}
+                    value={perksInput}
+                    onChange={(e) => {
+                      setPerksInput(e.target.value);
+                    }}
+                    onBlur={() => {
+                      // Clean up and update perks only on blur
+                      const cleanedPerks = perksInput.split('\n').map(p => p.trim()).filter(Boolean);
+                      const cleanedInput = cleanedPerks.join('\n');
+                      setPerksInput(cleanedInput);
+                      updateField('perks', cleanedPerks);
+                    }}
                     rows={6}
                     placeholder="List perks for participants (one per line):&#10;Free GitHub Pro for 6 months&#10;$100 AWS credits&#10;Free domain from Domain.com&#10;Exclusive swag kit"
                     className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
@@ -1198,19 +1266,144 @@ export default function EditHackathon() {
             )}
 
             {/* Timeline Tab */}
-            {activeTab === 'timeline' && hackathon && (
-              <div className="space-y-6">
+            {activeTab === 'timeline' && (
+              <div className="space-y-8">
                 <div className="pixel-card bg-black/50 border-2 border-maximally-yellow/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300 mb-2">
+                  <p className="font-jetbrains text-sm text-gray-300">
                     ⏰ <span className="text-maximally-yellow font-bold">Timeline:</span> Set important dates for your hackathon. These dates help participants know when to register, submit, and expect results.
                   </p>
-                  {hackathon.status === 'published' && (
-                    <p className="font-jetbrains text-xs text-green-400 mt-2">
-                      ✅ Timeline changes can be saved directly without admin approval. Use the "SAVE_TIMELINE" button below.
-                    </p>
-                  )}
                 </div>
-                <TimelineManager hackathonId={hackathon.id} />
+
+                {/* Registration Period */}
+                <div className="pixel-card bg-gray-900 border-2 border-blue-500 p-6">
+                  <h3 className="font-press-start text-lg text-blue-500 mb-4 flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    REGISTRATION_PERIOD
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Opens At</label>
+                      <DateTimePicker
+                        value={hackathon.registration_opens_at}
+                        onChange={(date) => updateField('registration_opens_at', date)}
+                        placeholder="Select registration opening date"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Closes At</label>
+                      <DateTimePicker
+                        value={hackathon.registration_closes_at}
+                        onChange={(date) => updateField('registration_closes_at', date)}
+                        placeholder="Select registration closing date"
+                        minDate={hackathon.registration_opens_at ? new Date(hackathon.registration_opens_at) : undefined}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Building/Hacking Phase */}
+                <div className="pixel-card bg-gray-900 border-2 border-orange-500 p-6">
+                  <h3 className="font-press-start text-lg text-orange-500 mb-4 flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    BUILDING_PHASE
+                  </h3>
+                  <p className="text-gray-400 font-jetbrains text-sm mb-4">
+                    The hacking/building period when participants work on their projects. No registrations or submissions during this phase.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Starts At</label>
+                      <DateTimePicker
+                        value={hackathon.building_starts_at}
+                        onChange={(date) => updateField('building_starts_at', date)}
+                        placeholder="Select building phase start"
+                        minDate={hackathon.registration_closes_at ? new Date(hackathon.registration_closes_at) : undefined}
+                      />
+                    </div>
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Ends At</label>
+                      <DateTimePicker
+                        value={hackathon.building_ends_at}
+                        onChange={(date) => updateField('building_ends_at', date)}
+                        placeholder="Select building phase end"
+                        minDate={hackathon.building_starts_at ? new Date(hackathon.building_starts_at) : undefined}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submission Period */}
+                <div className="pixel-card bg-gray-900 border-2 border-green-500 p-6">
+                  <h3 className="font-press-start text-lg text-green-500 mb-4 flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    SUBMISSION_PERIOD
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Opens At</label>
+                      <DateTimePicker
+                        value={hackathon.submission_opens_at}
+                        onChange={(date) => updateField('submission_opens_at', date)}
+                        placeholder="Select submission opening date"
+                        minDate={hackathon.building_ends_at ? new Date(hackathon.building_ends_at) : (hackathon.registration_closes_at ? new Date(hackathon.registration_closes_at) : undefined)}
+                      />
+                    </div>
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Closes At</label>
+                      <DateTimePicker
+                        value={hackathon.submission_closes_at}
+                        onChange={(date) => updateField('submission_closes_at', date)}
+                        placeholder="Select submission closing date"
+                        minDate={hackathon.submission_opens_at ? new Date(hackathon.submission_opens_at) : undefined}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Judging Period */}
+                <div className="pixel-card bg-gray-900 border-2 border-purple-500 p-6">
+                  <h3 className="font-press-start text-lg text-purple-500 mb-4 flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    JUDGING_PERIOD
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Starts At</label>
+                      <DateTimePicker
+                        value={hackathon.judging_starts_at}
+                        onChange={(date) => updateField('judging_starts_at', date)}
+                        placeholder="Select judging start date"
+                        minDate={hackathon.submission_closes_at ? new Date(hackathon.submission_closes_at) : undefined}
+                      />
+                    </div>
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Ends At</label>
+                      <DateTimePicker
+                        value={hackathon.judging_ends_at}
+                        onChange={(date) => updateField('judging_ends_at', date)}
+                        placeholder="Select judging end date"
+                        minDate={hackathon.judging_starts_at ? new Date(hackathon.judging_starts_at) : undefined}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Results Announcement */}
+                <div className="pixel-card bg-gray-900 border-2 border-yellow-500 p-6">
+                  <h3 className="font-press-start text-lg text-yellow-500 mb-4 flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    RESULTS_ANNOUNCEMENT
+                  </h3>
+                  <div>
+                    <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Announced At</label>
+                    <DateTimePicker
+                      value={hackathon.results_announced_at}
+                      onChange={(date) => updateField('results_announced_at', date)}
+                      placeholder="Select results announcement date"
+                      minDate={hackathon.judging_ends_at ? new Date(hackathon.judging_ends_at) : undefined}
+                    />
+                  </div>
+                </div>
               </div>
             )}
             </div>

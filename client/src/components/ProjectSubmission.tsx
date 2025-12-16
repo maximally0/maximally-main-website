@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Upload, Github, Link as LinkIcon, Video, FileText, X, Check } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useModeration } from '@/hooks/useModeration';
 import { getAuthHeaders } from '@/lib/auth';
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 export default function ProjectSubmission({ hackathonId, hackathonName, tracks, submissionDeadline }: Props) {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { canSubmit } = useModeration();
   const [submission, setSubmission] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -90,6 +92,11 @@ export default function ProjectSubmission({ hackathonId, hackathonName, tracks, 
         description: "Please fill in project name and description",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Check moderation status before submitting
+    if (!canSubmit()) {
       return;
     }
 

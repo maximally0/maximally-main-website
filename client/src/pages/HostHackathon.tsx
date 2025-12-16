@@ -28,7 +28,7 @@ import { getAuthHeaders } from '@/lib/auth';
 
 const HostHackathon = () => {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const [floatingPixels, setFloatingPixels] = useState<
     Array<{ id: number; x: number; y: number; delay: number }>
   >([]);
@@ -72,13 +72,17 @@ const HostHackathon = () => {
   const handleGetStarted = () => {
     if (!user) {
       // Redirect to login if not authenticated
-      navigate('/login?redirect=/create-hackathon');
+      navigate('/login?redirect=/organizer/apply');
     } else if (hasHackathons) {
       // Navigate to dashboard if user has hackathons
       navigate('/organizer/dashboard');
     } else {
-      // Navigate to create hackathon page
-      navigate('/create-hackathon');
+      // Check if user has organizer role, if yes go to create hackathon, else go to application
+      if (profile?.role === 'admin') {
+        navigate('/create-hackathon');
+      } else {
+        navigate('/organizer/apply');
+      }
     }
   };
 

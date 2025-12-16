@@ -23,6 +23,9 @@ import {
   Lightbulb,
   Network,
   GraduationCap,
+  Code,
+  BarChart,
+  Heart,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -30,6 +33,7 @@ import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { supabase, supabasePublic } from "@/lib/supabaseClient";
 import MyHackathonsQuickAccess from "@/components/MyHackathonsQuickAccess";
+import GlobalProjectGallerySection from "@/components/GlobalProjectGallerySection";
 
 // Type definitions for hackathon data
 interface HackathonData {
@@ -1058,6 +1062,136 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Become an Organizer Section */}
+        <section className="py-20 relative overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black">
+          {/* Animated background elements */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-20 right-20 w-40 h-40 bg-green-500/20 blur-3xl rounded-full animate-pulse" />
+            <div className="absolute bottom-20 left-20 w-32 h-32 bg-maximally-yellow/20 blur-3xl rounded-full animate-pulse delay-700" />
+            <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-emerald-500/20 blur-3xl rounded-full animate-pulse delay-500" />
+          </div>
+
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-6xl mx-auto">
+              {/* Header */}
+              <div className="text-center mb-16">
+                <div className="minecraft-block bg-gradient-to-r from-green-600 to-emerald-800 text-white px-6 py-3 inline-block mb-6 animate-[glow_2s_ease-in-out_infinite]">
+                  <span className="font-press-start text-sm flex items-center gap-2 justify-center">
+                    <Calendar className="h-4 w-4 animate-spin-slow" />
+                    BECOME AN ORGANIZER
+                    <Trophy className="h-4 w-4 animate-bounce" />
+                  </span>
+                </div>
+                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 minecraft-text">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-maximally-yellow to-green-400 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)] sm:drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                    HOST YOUR OWN HACKATHON
+                  </span>
+                </h2>
+                <h3 className="font-press-start text-sm sm:text-base md:text-lg text-gray-300 mb-6">
+                  BUILD COMMUNITIES AT MAXIMALLY
+                </h3>
+                <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-3xl mx-auto font-jetbrains leading-relaxed mb-8 px-4">
+                  The community leaders who bring hackathons to life. Create, manage, and grow tech events that inspire the next generation of builders.
+                </p>
+              </div>
+
+              {/* Benefits Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {[
+                  {
+                    title: "Full Control",
+                    description:
+                      "Create and customize your hackathon with themes, tracks, prizes, and judging criteria.",
+                    icon: <Zap className="h-6 w-6" />,
+                    color: "bg-green-600",
+                  },
+                  {
+                    title: "Built-in Tools",
+                    description:
+                      "Registration management, team formation, submission handling, and winner selection.",
+                    icon: <Code className="h-6 w-6" />,
+                    color: "bg-emerald-600",
+                  },
+                  {
+                    title: "Global Reach",
+                    description:
+                      "Access Maximally's community of builders, judges, and sponsors worldwide.",
+                    icon: <Globe className="h-6 w-6" />,
+                    color: "bg-teal-600",
+                  },
+                  {
+                    title: "Tier System",
+                    description:
+                      "Progress through 5 organizer tiers as you host more successful events.",
+                    icon: <Award className="h-6 w-6" />,
+                    color: "bg-yellow-600",
+                  },
+                  {
+                    title: "Analytics",
+                    description:
+                      "Track registrations, engagement, and event performance with detailed insights.",
+                    icon: <BarChart className="h-6 w-6" />,
+                    color: "bg-blue-600",
+                  },
+                  {
+                    title: "Support",
+                    description:
+                      "Get guidance from the Maximally team and connect with other organizers.",
+                    icon: <Heart className="h-6 w-6" />,
+                    color: "bg-red-600",
+                  },
+                ].map((benefit, i) => (
+                  <div
+                    key={i}
+                    className="pixel-card bg-black border-2 border-green-600 p-6 hover:border-maximally-yellow transition-all duration-300 hover:scale-105 group"
+                    data-testid={`organizer-benefit-card-${i}`}
+                  >
+                    <div
+                      className={`minecraft-block ${benefit.color} w-12 h-12 mx-auto mb-4 flex items-center justify-center text-white group-hover:animate-bounce`}
+                    >
+                      {benefit.icon}
+                    </div>
+                    <h4 className="font-press-start text-sm text-green-400 mb-3 text-center group-hover:text-maximally-yellow transition-colors">
+                      {benefit.title.toUpperCase()}
+                    </h4>
+                    <p className="font-jetbrains text-gray-300 text-sm text-center">
+                      {benefit.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTAs */}
+              <div className="text-center">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+                  <Link
+                    to="/people/organizers"
+                    className="pixel-button bg-green-600 text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-green h-12 px-6 font-press-start text-xs sm:text-sm hover:bg-green-700"
+                    data-testid="button-view-organizers"
+                  >
+                    <Users className="h-4 w-4" />
+                    <span>MEET_ORGANIZERS</span>
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+
+                  <Link
+                    to="/host-hackathon"
+                    className="pixel-button bg-maximally-yellow text-maximally-black group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 px-6 font-press-start text-xs sm:text-sm"
+                    data-testid="button-become-organizer"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    <span>HOST_A_HACKATHON</span>
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Global Project Gallery Section */}
+        <GlobalProjectGallerySection />
 
         <Footer />
         

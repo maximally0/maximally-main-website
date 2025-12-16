@@ -65,6 +65,13 @@ export function registerJudgeProfileRoutes(app: Express) {
         console.error('Error fetching assignments:', assignmentsError);
       }
 
+      // Get judge data from judges table for tier information
+      const { data: judgeData } = await supabaseAdmin
+        .from('judges')
+        .select('tier')
+        .eq('user_id', userId)
+        .single();
+
       // Format response
       const response = {
         profile: {
@@ -77,7 +84,7 @@ export function registerJudgeProfileRoutes(app: Express) {
           location: profile.location || '',
           currentRole: profile.current_role || '',
           company: profile.company || '',
-          tier: profile.judge_tier || 'starter',
+          tier: judgeData?.tier || 'starter',
           totalEventsJudged: profile.total_events_judged || 0,
           totalTeamsEvaluated: profile.total_teams_evaluated || 0,
           totalMentorshipHours: profile.total_mentorship_hours || 0,
@@ -130,6 +137,13 @@ export function registerJudgeProfileRoutes(app: Express) {
         return res.status(404).json({ success: false, message: 'Judge not found' });
       }
 
+      // Get judge data from judges table for tier information
+      const { data: judgeData } = await supabaseAdmin
+        .from('judges')
+        .select('tier')
+        .eq('user_id', profile.id)
+        .single();
+
       // Get verified events only (public)
       const { data: events } = await supabaseAdmin
         .from('judge_events')
@@ -146,7 +160,7 @@ export function registerJudgeProfileRoutes(app: Express) {
         headline: profile.headline || 'Judge',
         shortBio: profile.bio || '',
         location: profile.location || '',
-        tier: profile.judge_tier || 'starter',
+        tier: judgeData?.tier || 'starter',
         totalEventsJudged: profile.total_events_judged || 0,
         totalTeamsEvaluated: profile.total_teams_evaluated || 0,
         totalMentorshipHours: profile.total_mentorship_hours || 0,
@@ -217,7 +231,7 @@ export function registerJudgeProfileRoutes(app: Express) {
       }
 
       const { submissionId } = req.params;
-      const { score, feedback, prize_won } = req.body;
+      const { score, feedback, criteria_scores } = req.body;
 
       if (!score || score < 0 || score > 100) {
         return res.status(400).json({ success: false, message: 'Score must be between 0 and 100' });
@@ -225,7 +239,7 @@ export function registerJudgeProfileRoutes(app: Express) {
 
       // Verify judge has access to this submission's hackathon
       const { data: submission } = await supabaseAdmin
-        .from('submissions')
+        .from('hackathon_submissions')
         .select('hackathon_id')
         .eq('id', submissionId)
         .single();
@@ -246,15 +260,17 @@ export function registerJudgeProfileRoutes(app: Express) {
         return res.status(403).json({ success: false, message: 'Not authorized to score this submission' });
       }
 
-      // Upsert score
+      // Upsert score with criteria scores
+      console.log(`[JUDGE SCORE] Saving score for submission ${submissionId} by judge ${userId}:`, { score, criteria_scores, feedback });
+      
       const { data, error } = await supabaseAdmin
         .from('judge_scores')
         .upsert({
           judge_id: userId,
           submission_id: parseInt(submissionId),
           score: parseFloat(score),
+          criteria_scores: criteria_scores || null,
           feedback: feedback || null,
-          prize_won: prize_won || null,
           updated_at: new Date().toISOString()
         }, {
           onConflict: 'judge_id,submission_id'
@@ -263,10 +279,11 @@ export function registerJudgeProfileRoutes(app: Express) {
         .single();
 
       if (error) {
-        console.error('Error upserting score:', error);
+        console.error('[JUDGE SCORE] Error upserting score:', error);
         throw error;
       }
 
+      console.log('[JUDGE SCORE] Score saved successfully:', data);
       return res.json({ success: true, data });
     } catch (error: any) {
       console.error('Error in score submission:', error);

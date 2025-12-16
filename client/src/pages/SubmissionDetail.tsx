@@ -48,6 +48,7 @@ interface Submission {
     project_name: string;
   } | null;
   user: {
+    id: string;
     username: string;
     full_name: string;
     avatar_url: string;
@@ -55,7 +56,7 @@ interface Submission {
 }
 
 export default function SubmissionDetail() {
-  const { slug } = useParams();
+  const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [loading, setLoading] = useState(true);

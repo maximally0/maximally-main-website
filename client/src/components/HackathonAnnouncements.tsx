@@ -23,7 +23,7 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editForm, setEditForm] = useState({ title: '', content: '', announcement_type: 'general' as const });
+  const [editForm, setEditForm] = useState<{ title: string; content: string; announcement_type: 'general' | 'important' | 'reminder' | 'update' }>({ title: '', content: '', announcement_type: 'general' });
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; id: number | null }>({ show: false, id: null });
   const { user } = useAuth();

@@ -78,6 +78,108 @@ if (supabase) {
   // Using main Supabase client for public data queries
 }
 
+// -------------------- Moderation Status --------------------
+export interface ModerationStatus {
+  user_id: string;
+  is_banned: boolean;
+  is_muted: boolean;
+  is_suspended: boolean;
+  ban_reason: string | null;
+  mute_reason: string | null;
+  suspend_reason: string | null;
+  ban_expires_at: string | null;
+  mute_expires_at: string | null;
+  suspend_expires_at: string | null;
+  warning_count: number;
+}
+
+export async function getUserModerationStatus(userId: string): Promise<ModerationStatus | null> {
+  if (!supabase) return null;
+  try {
+    const { data, error } = await supabase
+      .from('user_moderation_status')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+    
+    if (error && error.code !== 'PGRST116') {
+      console.error('Error fetching moderation status:', error);
+      return null;
+    }
+    
+    // Check if any time-based restrictions have expired
+    if (data) {
+      const now = new Date();
+      const status = data as ModerationStatus;
+      
+      // Check if ban has expired
+      if (status.is_banned && status.ban_expires_at) {
+        if (new Date(status.ban_expires_at) < now) {
+          status.is_banned = false;
+        }
+      }
+      
+      // Check if mute has expired
+      if (status.is_muted && status.mute_expires_at) {
+        if (new Date(status.mute_expires_at) < now) {
+          status.is_muted = false;
+        }
+      }
+      
+      // Check if suspension has expired
+      if (status.is_suspended && status.suspend_expires_at) {
+        if (new Date(status.suspend_expires_at) < now) {
+          status.is_suspended = false;
+        }
+      }
+      
+      return status;
+    }
+    
+    return null;
+  } catch (err) {
+    console.error('getUserModerationStatus error:', err);
+    return null;
+  }
+}
+
+export async function isUserBanned(userId: string): Promise<{ banned: boolean; reason?: string; expiresAt?: string }> {
+  const status = await getUserModerationStatus(userId);
+  if (!status) return { banned: false };
+  
+  if (status.is_banned) {
+    // Check if ban has expired
+    if (status.ban_expires_at) {
+      const expiresAt = new Date(status.ban_expires_at);
+      if (expiresAt < new Date()) {
+        return { banned: false };
+      }
+      return { banned: true, reason: status.ban_reason || undefined, expiresAt: status.ban_expires_at };
+    }
+    return { banned: true, reason: status.ban_reason || undefined };
+  }
+  
+  return { banned: false };
+}
+
+export async function isUserMuted(userId: string): Promise<{ muted: boolean; reason?: string; expiresAt?: string }> {
+  const status = await getUserModerationStatus(userId);
+  if (!status) return { muted: false };
+  
+  if (status.is_muted) {
+    if (status.mute_expires_at) {
+      const expiresAt = new Date(status.mute_expires_at);
+      if (expiresAt < new Date()) {
+        return { muted: false };
+      }
+      return { muted: true, reason: status.mute_reason || undefined, expiresAt: status.mute_expires_at };
+    }
+    return { muted: true, reason: status.mute_reason || undefined };
+  }
+  
+  return { muted: false };
+}
+
 // -------------------- Types --------------------
 export type Profile = {
   id: string; // uuid

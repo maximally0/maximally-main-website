@@ -19,7 +19,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import UsernameSettings from '@/components/UsernameSettings';
 import PasswordSettings from '@/components/PasswordSettings';
 import ExportDataButton from '@/components/ExportDataButton';
+import ReportUserDialog from '@/components/ReportUserDialog';
 import { useToast } from '@/hooks/use-toast';
+import { Flag } from 'lucide-react';
 
 interface Certificate {
   id: string;
@@ -645,7 +647,7 @@ export default function Profile() {
         .eq('username', username)
         .single();
 
-      if (profileData) {
+      if (profileData && (profileData as any).id) {
         const { data: registrations } = await supabase
           .from('hackathon_registrations')
           .select(`
@@ -659,12 +661,12 @@ export default function Profile() {
               cover_image
             )
           `)
-          .eq('user_id', profileData.id);
+          .eq('user_id', (profileData as any).id);
 
         if (registrations) {
           for (const reg of registrations) {
-            if (reg.organizer_hackathons) {
-              const h = reg.organizer_hackathons as any;
+            if ((reg as any).organizer_hackathons) {
+              const h = (reg as any).organizer_hackathons as any;
               hackathonDetails.push({
                 id: h.id,
                 title: h.hackathon_name,
@@ -945,6 +947,22 @@ export default function Profile() {
                   >
                     LOGOUT
                   </button>
+                </div>
+              )}
+
+              {/* Report Button for non-owners */}
+              {!isOwner && authUser && (
+                <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                  <ReportUserDialog 
+                    reportedUserId={dbProfile.id} 
+                    reportedUsername={userProfile.username}
+                    trigger={
+                      <button className="pixel-button bg-gray-800 hover:bg-red-600 text-gray-400 hover:text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-colors duration-300 flex items-center gap-2">
+                        <Flag className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span>REPORT</span>
+                      </button>
+                    }
+                  />
                 </div>
               )}
 

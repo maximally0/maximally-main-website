@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Mail, Check, X, Calendar, MapPin, ExternalLink } from 'lucide-react';
+import { Mail, Check, X, Calendar, MapPin, ExternalLink, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 
@@ -70,6 +70,36 @@ export default function JudgeInvitations() {
         toast({
           title: "Invitation Rejected",
           description: "You've declined this invitation",
+        });
+        fetchRequests();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleWithdraw = async (hackathonId: number) => {
+    if (!confirm('Are you sure you want to withdraw from judging this hackathon? This action cannot be undone.')) return;
+    
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/judge/hackathons/${hackathonId}/withdraw`, {
+        method: 'POST',
+        headers
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Withdrawn Successfully",
+          description: "You've withdrawn from judging this hackathon",
         });
         fetchRequests();
       } else {
@@ -220,9 +250,19 @@ export default function JudgeInvitations() {
                       </div>
                     </div>
                   </div>
-                  <span className="px-3 py-1 text-xs font-press-start bg-green-500/20 text-green-500 border border-green-500">
-                    ACCEPTED
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 text-xs font-press-start bg-green-500/20 text-green-500 border border-green-500">
+                      ACCEPTED
+                    </span>
+                    <button
+                      onClick={() => handleWithdraw(item.hackathon_id)}
+                      className="pixel-button bg-red-600/20 text-red-400 border border-red-500 px-3 py-1 font-press-start text-xs hover:bg-red-600 hover:text-white transition-colors flex items-center gap-1"
+                      title="Withdraw from judging"
+                    >
+                      <LogOut className="h-3 w-3" />
+                      WITHDRAW
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

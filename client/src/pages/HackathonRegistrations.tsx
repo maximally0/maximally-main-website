@@ -15,7 +15,15 @@ import {
   UserCheck,
   Trophy,
   ExternalLink,
-  Star
+  Star,
+  MoreVertical,
+  Ban,
+  UserMinus,
+  CheckSquare,
+  Square,
+  Trash2,
+  X,
+  Eye
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -23,10 +31,8 @@ import { getAuthHeaders } from '@/lib/auth';
 import RegistrationAnalytics from '@/components/RegistrationAnalytics';
 import AnnouncementsManager from '@/components/AnnouncementsManager';
 import JudgesManager from '@/components/JudgesManager';
-import TimelineManager from '@/components/TimelineManager';
-import OrganizerTracksManager from '@/components/OrganizerTracksManager';
-import OrganizerSponsorsManager from '@/components/OrganizerSponsorsManager';
 import OrganizerFeedbackViewer from '@/components/OrganizerFeedbackViewer';
+import WinnersManager from '@/components/WinnersManager';
 
 interface Registration {
   id: number;
@@ -69,13 +75,19 @@ export default function HackathonRegistrations() {
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [hackathon, setHackathon] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'registrations' | 'teams' | 'submissions' | 'analytics' | 'announcements' | 'judges' | 'timeline' | 'settings'>('registrations');
+  const [activeTab, setActiveTab] = useState<'registrations' | 'teams' | 'submissions' | 'analytics' | 'announcements' | 'judges' | 'winners' | 'timeline' | 'settings' | 'feedback'>('registrations');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedRegistrations, setSelectedRegistrations] = useState<number[]>([]);
-  const [showBulkActions, setShowBulkActions] = useState(false);
+  const [bulkActionLoading, setBulkActionLoading] = useState(false);
+  const [showParticipantMenu, setShowParticipantMenu] = useState<number | null>(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [analytics, setAnalytics] = useState<any>(null);
+  const [registrationControl, setRegistrationControl] = useState<'auto' | 'open' | 'closed'>('auto');
+  const [buildingControl, setBuildingControl] = useState<'auto' | 'open' | 'closed'>('auto');
+  const [submissionControl, setSubmissionControl] = useState<'auto' | 'open' | 'closed'>('auto');
+  const [judgingControl, setJudgingControl] = useState<'auto' | 'open' | 'closed'>('auto');
+  const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
 
   useEffect(() => {
     if (hackathonId) {
@@ -102,7 +114,14 @@ export default function HackathonRegistrations() {
       if (regData.success) setRegistrations(regData.data);
       if (teamsData.success) setTeams(teamsData.data);
       if (submissionsData.success) setSubmissions(submissionsData.data);
-      if (hackathonData.success) setHackathon(hackathonData.data);
+      if (hackathonData.success) {
+        setHackathon(hackathonData.data);
+        // Load period controls from hackathon data
+        if (hackathonData.data.registration_control) setRegistrationControl(hackathonData.data.registration_control);
+        if (hackathonData.data.building_control) setBuildingControl(hackathonData.data.building_control);
+        if (hackathonData.data.submission_control) setSubmissionControl(hackathonData.data.submission_control);
+        if (hackathonData.data.judging_control) setJudgingControl(hackathonData.data.judging_control);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
       toast({
@@ -136,6 +155,148 @@ export default function HackathonRegistrations() {
     a.href = url;
     a.download = `hackathon-${hackathonId}-registrations.csv`;
     a.click();
+  };
+
+  // Toggle selection for a single registration
+  const toggleSelection = (regId: number) => {
+    setSelectedRegistrations(prev => 
+      prev.includes(regId) 
+        ? prev.filter(id => id !== regId)
+        : [...prev, regId]
+    );
+  };
+
+  // Select/deselect all visible registrations
+  const toggleSelectAll = () => {
+    if (selectedRegistrations.length === filteredRegistrations.length) {
+      setSelectedRegistrations([]);
+    } else {
+      setSelectedRegistrations(filteredRegistrations.map(r => r.id));
+    }
+  };
+
+  // Bulk check-in
+  const handleBulkCheckIn = async () => {
+    if (selectedRegistrations.length === 0) return;
+    setBulkActionLoading(true);
+    try {
+      const headers = await getAuthHeaders();
+      const results = await Promise.all(
+        selectedRegistrations.map(regId =>
+          fetch(`/api/organizer/registrations/${regId}/check-in`, {
+            method: 'POST',
+            headers
+          })
+        )
+      );
+      const successCount = results.filter(r => r.ok).length;
+      toast({
+        title: "Bulk Check-in Complete",
+        description: `${successCount} of ${selectedRegistrations.length} participants checked in`,
+      });
+      setSelectedRegistrations([]);
+      fetchData();
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to check in participants", variant: "destructive" });
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
+
+  // Save period control to database
+  const savePeriodControl = async (controlType: string, value: 'auto' | 'open' | 'closed') => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/period-control`, {
+        method: 'PUT',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ [controlType]: value })
+      });
+      const data = await response.json();
+      if (data.success) {
+        toast({ title: "Period control updated" });
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message || "Failed to update period control", variant: "destructive" });
+    }
+  };
+
+  // Bulk unregister
+  const handleBulkUnregister = async () => {
+    if (selectedRegistrations.length === 0) return;
+    if (!confirm(`Are you sure you want to unregister ${selectedRegistrations.length} participants?`)) return;
+    setBulkActionLoading(true);
+    try {
+      const headers = await getAuthHeaders();
+      const results = await Promise.all(
+        selectedRegistrations.map(regId =>
+          fetch(`/api/organizer/registrations/${regId}/unregister`, {
+            method: 'POST',
+            headers
+          })
+        )
+      );
+      const successCount = results.filter(r => r.ok).length;
+      toast({
+        title: "Bulk Unregister Complete",
+        description: `${successCount} of ${selectedRegistrations.length} participants unregistered`,
+      });
+      setSelectedRegistrations([]);
+      fetchData();
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to unregister participants", variant: "destructive" });
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
+
+  // Single participant actions
+  const handleUnregister = async (regId: number) => {
+    if (!confirm('Are you sure you want to unregister this participant?')) return;
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/registrations/${regId}/unregister`, {
+        method: 'POST',
+        headers
+      });
+      const data = await response.json();
+      if (data.success) {
+        toast({ title: "Participant unregistered" });
+        fetchData();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+    setShowParticipantMenu(null);
+  };
+
+  const handleBlockUser = async (regId: number, userId: string) => {
+    if (!confirm('Are you sure you want to block this user from this hackathon? They will be unregistered and cannot re-register.')) return;
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/block-user`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ user_id: userId, registration_id: regId })
+      });
+      const data = await response.json();
+      if (data.success) {
+        toast({ title: "User blocked", description: "User has been blocked from this hackathon" });
+        fetchData();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+    setShowParticipantMenu(null);
   };
 
   const filteredRegistrations = registrations.filter(reg => {
@@ -319,36 +480,6 @@ export default function HackathonRegistrations() {
               JUDGES
             </button>
             <button
-              onClick={() => setActiveTab('timeline')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'timeline'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              TIMELINE
-            </button>
-            <button
-              onClick={() => setActiveTab('tracks')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'tracks'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              TRACKS
-            </button>
-            <button
-              onClick={() => setActiveTab('sponsors')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'sponsors'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              SPONSORS
-            </button>
-            <button
               onClick={() => setActiveTab('feedback')}
               className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
                 activeTab === 'feedback'
@@ -357,6 +488,16 @@ export default function HackathonRegistrations() {
               }`}
             >
               FEEDBACK
+            </button>
+            <button
+              onClick={() => setActiveTab('winners')}
+              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
+                activeTab === 'winners'
+                  ? 'bg-maximally-red text-white'
+                  : 'bg-gray-800 text-gray-400'
+              }`}
+            >
+              WINNERS
             </button>
             <button
               onClick={() => setActiveTab('settings')}
@@ -409,6 +550,66 @@ export default function HackathonRegistrations() {
                 </div>
               </div>
 
+              {/* Bulk Actions Bar */}
+              {selectedRegistrations.length > 0 && (
+                <div className="pixel-card bg-maximally-red/20 border-2 border-maximally-red p-4">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <CheckSquare className="h-5 w-5 text-maximally-red" />
+                      <span className="font-press-start text-sm text-white">
+                        {selectedRegistrations.length} SELECTED
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={handleBulkCheckIn}
+                        disabled={bulkActionLoading}
+                        className="pixel-button bg-blue-600 text-white px-4 py-2 font-press-start text-xs hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
+                      >
+                        <UserCheck className="h-4 w-4" />
+                        BULK_CHECK_IN
+                      </button>
+                      <button
+                        onClick={handleBulkUnregister}
+                        disabled={bulkActionLoading}
+                        className="pixel-button bg-orange-600 text-white px-4 py-2 font-press-start text-xs hover:bg-orange-700 flex items-center gap-2 disabled:opacity-50"
+                      >
+                        <UserMinus className="h-4 w-4" />
+                        BULK_UNREGISTER
+                      </button>
+                      <button
+                        onClick={() => setSelectedRegistrations([])}
+                        className="pixel-button bg-gray-700 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-600"
+                      >
+                        CLEAR
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Select All Header */}
+              <div className="flex items-center gap-3 px-2">
+                <button
+                  onClick={toggleSelectAll}
+                  className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
+                >
+                  {selectedRegistrations.length === filteredRegistrations.length && filteredRegistrations.length > 0 ? (
+                    <CheckSquare className="h-5 w-5 text-maximally-yellow" />
+                  ) : (
+                    <Square className="h-5 w-5" />
+                  )}
+                  <span className="font-jetbrains text-sm">
+                    {selectedRegistrations.length === filteredRegistrations.length && filteredRegistrations.length > 0
+                      ? 'Deselect All'
+                      : 'Select All'}
+                  </span>
+                </button>
+                <span className="text-gray-500 font-jetbrains text-sm">
+                  ({filteredRegistrations.length} participants)
+                </span>
+              </div>
+
               {/* Registrations List */}
               <div className="space-y-4">
                 {filteredRegistrations.length === 0 ? (
@@ -420,9 +621,25 @@ export default function HackathonRegistrations() {
                   filteredRegistrations.map((reg) => (
                     <div
                       key={reg.id}
-                      className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 hover:border-maximally-yellow transition-colors"
+                      className={`pixel-card bg-gray-900 border-2 p-6 transition-colors ${
+                        selectedRegistrations.includes(reg.id) 
+                          ? 'border-maximally-yellow bg-maximally-yellow/5' 
+                          : 'border-gray-800 hover:border-maximally-yellow'
+                      }`}
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        {/* Checkbox */}
+                        <button
+                          onClick={() => toggleSelection(reg.id)}
+                          className="flex-shrink-0"
+                        >
+                          {selectedRegistrations.includes(reg.id) ? (
+                            <CheckSquare className="h-6 w-6 text-maximally-yellow" />
+                          ) : (
+                            <Square className="h-6 w-6 text-gray-600 hover:text-gray-400" />
+                          )}
+                        </button>
+
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-3">
                             <h3 className="font-press-start text-lg text-white">
@@ -432,6 +649,7 @@ export default function HackathonRegistrations() {
                               reg.status === 'confirmed' ? 'bg-green-500/20 text-green-500 border border-green-500' :
                               reg.status === 'checked_in' ? 'bg-blue-500/20 text-blue-500 border border-blue-500' :
                               reg.status === 'waitlist' ? 'bg-orange-500/20 text-orange-500 border border-orange-500' :
+                              reg.status === 'cancelled' ? 'bg-red-500/20 text-red-500 border border-red-500' :
                               'bg-gray-500/20 text-gray-500 border border-gray-500'
                             }`}>
                               {reg.status.toUpperCase()}
@@ -492,31 +710,65 @@ export default function HackathonRegistrations() {
                           )}
                         </div>
 
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-2 items-end">
                           <div className="text-xs font-press-start text-gray-500">
                             #{reg.registration_number}
                           </div>
-                          {reg.status === 'confirmed' && (
-                            <button
-                              onClick={async () => {
-                                try {
-                                  const headers = await getAuthHeaders();
-                                  await fetch(`/api/organizer/registrations/${reg.id}/check-in`, {
-                                    method: 'POST',
-                                    headers
-                                  });
-                                  fetchData();
-                                  toast({ title: "Participant checked in!" });
-                                } catch (error) {
-                                  toast({ title: "Error", variant: "destructive" });
-                                }
-                              }}
-                              className="pixel-button bg-blue-600 text-white px-4 py-2 font-press-start text-xs hover:bg-blue-700 flex items-center gap-2"
-                            >
-                              <UserCheck className="h-4 w-4" />
-                              CHECK_IN
-                            </button>
-                          )}
+                          
+                          <div className="flex items-center gap-2">
+                            {reg.status === 'confirmed' && (
+                              <button
+                                onClick={async () => {
+                                  try {
+                                    const headers = await getAuthHeaders();
+                                    await fetch(`/api/organizer/registrations/${reg.id}/check-in`, {
+                                      method: 'POST',
+                                      headers
+                                    });
+                                    fetchData();
+                                    toast({ title: "Participant checked in!" });
+                                  } catch (error) {
+                                    toast({ title: "Error", variant: "destructive" });
+                                  }
+                                }}
+                                className="pixel-button bg-blue-600 text-white px-4 py-2 font-press-start text-xs hover:bg-blue-700 flex items-center gap-2"
+                              >
+                                <UserCheck className="h-4 w-4" />
+                                CHECK_IN
+                              </button>
+                            )}
+
+                            {/* Actions Menu */}
+                            <div className="relative">
+                              <button
+                                onClick={() => setShowParticipantMenu(showParticipantMenu === reg.id ? null : reg.id)}
+                                className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors"
+                              >
+                                <MoreVertical className="h-5 w-5" />
+                              </button>
+
+                              {showParticipantMenu === reg.id && (
+                                <div className="absolute right-0 top-full mt-1 bg-gray-900 border-2 border-gray-700 rounded shadow-lg z-50 min-w-[180px]">
+                                  {reg.status !== 'cancelled' && (
+                                    <button
+                                      onClick={() => handleUnregister(reg.id)}
+                                      className="w-full px-4 py-3 text-left text-sm font-jetbrains text-orange-400 hover:bg-gray-800 flex items-center gap-2"
+                                    >
+                                      <UserMinus className="h-4 w-4" />
+                                      Unregister
+                                    </button>
+                                  )}
+                                  <button
+                                    onClick={() => handleBlockUser(reg.id, reg.user_id)}
+                                    className="w-full px-4 py-3 text-left text-sm font-jetbrains text-red-400 hover:bg-gray-800 flex items-center gap-2"
+                                  >
+                                    <Ban className="h-4 w-4" />
+                                    Block User
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -583,25 +835,36 @@ export default function HackathonRegistrations() {
               ) : (
                 submissions.map((submission) => (
                   <div key={submission.id} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 hover:border-maximally-yellow transition-colors">
-                    <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <h3 className="font-press-start text-lg text-white mb-2">{submission.project_name}</h3>
-                        {submission.tagline && (
-                          <p className="text-sm text-gray-400 font-jetbrains italic mb-2">"{submission.tagline}"</p>
-                        )}
-                        <p className="text-sm text-gray-300 font-jetbrains mb-3">{submission.description}</p>
+                        <div className="flex items-start gap-3 mb-2">
+                          {submission.project_logo && (
+                            <img src={submission.project_logo} alt="" className="w-12 h-12 object-contain rounded border border-gray-700" />
+                          )}
+                          <div>
+                            <h3 className="font-press-start text-lg text-white">{submission.project_name}</h3>
+                            {submission.tagline && (
+                              <p className="text-sm text-gray-400 font-jetbrains italic">"{submission.tagline}"</p>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <p className="text-sm text-gray-300 font-jetbrains mb-3 line-clamp-2">{submission.description}</p>
                         
                         {submission.technologies_used && submission.technologies_used.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-3">
-                            {submission.technologies_used.map((tech: string, i: number) => (
+                            {submission.technologies_used.slice(0, 4).map((tech: string, i: number) => (
                               <span key={i} className="text-xs bg-gray-800 border border-gray-700 px-2 py-1 text-gray-400 font-jetbrains">
                                 {tech}
                               </span>
                             ))}
+                            {submission.technologies_used.length > 4 && (
+                              <span className="text-xs text-gray-500">+{submission.technologies_used.length - 4}</span>
+                            )}
                           </div>
                         )}
 
-                        <div className="flex flex-wrap gap-2 mb-3">
+                        <div className="flex flex-wrap gap-3 mb-3">
                           {submission.github_repo && (
                             <a href={submission.github_repo} target="_blank" rel="noopener noreferrer"
                                className="text-maximally-yellow hover:text-maximally-red text-sm font-jetbrains flex items-center gap-1">
@@ -623,22 +886,195 @@ export default function HackathonRegistrations() {
                         </div>
                       </div>
 
-                      {submission.score && (
-                        <div className="text-right">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Star className="h-5 w-5 text-maximally-yellow" />
-                            <span className="text-2xl font-bold text-maximally-yellow font-press-start">{submission.score}</span>
-                          </div>
-                          {submission.prize_won && (
+                      {/* Scores Section */}
+                      <div className="flex-shrink-0 min-w-[200px]">
+                        {/* Average Score */}
+                        <div className="text-right mb-3">
+                          {(submission.average_score || submission.score) ? (
+                            <>
+                              <div className="flex items-center justify-end gap-2">
+                                <Star className="h-5 w-5 text-maximally-yellow" />
+                                <span className="text-2xl font-bold text-maximally-yellow font-press-start">
+                                  {submission.average_score || submission.score}
+                                </span>
+                              </div>
+                              {submission.judges_count > 0 && (
+                                <p className="text-xs text-gray-500 font-jetbrains">
+                                  avg from {submission.judges_count} judge{submission.judges_count !== 1 ? 's' : ''}
+                                </p>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-500 font-jetbrains">Not scored yet</span>
+                          )}
+                        </div>
+
+                        {/* Prize Badge */}
+                        {submission.prize_won && (
+                          <div className="text-right mb-3">
                             <span className="px-3 py-1 text-xs font-press-start bg-maximally-yellow/20 text-maximally-yellow border border-maximally-yellow">
                               {submission.prize_won}
                             </span>
-                          )}
-                        </div>
-                      )}
+                          </div>
+                        )}
+
+                        {/* View Details Button - always show for scored submissions */}
+                        {(submission.average_score || submission.score) && (
+                          <div className="text-right mb-3">
+                            <button
+                              onClick={() => setSelectedSubmission(submission)}
+                              className="pixel-button bg-gray-800 text-maximally-yellow px-3 py-2 text-xs font-press-start hover:bg-gray-700 flex items-center gap-2 ml-auto"
+                            >
+                              <Eye className="h-4 w-4" /> DETAILS
+                            </button>
+                          </div>
+                        )}
+
+                        {/* Individual Judge Scores */}
+                        {submission.judge_scores && submission.judge_scores.length > 0 && (
+                          <div className="bg-gray-800/50 border border-gray-700 p-3 rounded">
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="text-xs text-gray-400 font-press-start">JUDGE_SCORES</p>
+                              <button
+                                onClick={() => setSelectedSubmission(submission)}
+                                className="text-xs text-maximally-yellow hover:text-maximally-red font-jetbrains flex items-center gap-1"
+                              >
+                                <Eye className="h-3 w-3" /> Details
+                              </button>
+                            </div>
+                            <div className="space-y-2">
+                              {submission.judge_scores.slice(0, 3).map((js: any, idx: number) => (
+                                <div key={idx} className="flex items-center justify-between text-xs">
+                                  <span className="text-gray-400 font-jetbrains truncate max-w-[100px]" title={js.judge_name}>
+                                    {js.judge_name}
+                                  </span>
+                                  <span className="text-maximally-yellow font-press-start">{js.score}</span>
+                                </div>
+                              ))}
+                              {submission.judge_scores.length > 3 && (
+                                <button
+                                  onClick={() => setSelectedSubmission(submission)}
+                                  className="text-xs text-gray-500 hover:text-maximally-yellow font-jetbrains"
+                                >
+                                  +{submission.judge_scores.length - 3} more judges...
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))
+              )}
+
+              {/* Submission Details Modal */}
+              {selectedSubmission && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                  <div className="bg-gray-900 border-2 border-maximally-yellow max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    {/* Modal Header */}
+                    <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="font-press-start text-lg text-white">{selectedSubmission.project_name}</h3>
+                        <p className="text-sm text-gray-400 font-jetbrains">
+                          {selectedSubmission.team ? `Team: ${selectedSubmission.team.team_name}` : `By: ${selectedSubmission.user_name}`}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setSelectedSubmission(null)}
+                        className="text-gray-400 hover:text-white p-2"
+                      >
+                        <X className="h-6 w-6" />
+                      </button>
+                    </div>
+
+                    {/* Modal Content */}
+                    <div className="p-6 space-y-6">
+                      {/* Overall Score */}
+                      <div className="text-center p-4 bg-gray-800/50 border border-gray-700 rounded">
+                        <p className="text-xs text-gray-400 font-press-start mb-2">AVERAGE_SCORE</p>
+                        <div className="flex items-center justify-center gap-2">
+                          <Star className="h-8 w-8 text-maximally-yellow" />
+                          <span className="text-4xl font-bold text-maximally-yellow font-press-start">
+                            {selectedSubmission.average_score || selectedSubmission.score || 'N/A'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-500 font-jetbrains mt-2">
+                          from {selectedSubmission.judges_count || 0} judge{selectedSubmission.judges_count !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+
+                      {/* Individual Judge Scores */}
+                      <div>
+                        <h4 className="font-press-start text-sm text-maximally-red mb-4">SCORES_BY_JUDGE</h4>
+                        {selectedSubmission.judge_scores && selectedSubmission.judge_scores.length > 0 ? (
+                          <div className="space-y-4">
+                            {selectedSubmission.judge_scores.map((js: any, idx: number) => (
+                              <div key={idx} className="bg-gray-800/50 border border-gray-700 p-4 rounded">
+                                <div className="flex items-center justify-between mb-3">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                                      <span className="text-white font-press-start text-sm">
+                                        {js.judge_name?.charAt(0)?.toUpperCase() || 'J'}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <p className="text-white font-jetbrains font-medium">{js.judge_name}</p>
+                                      <p className="text-xs text-gray-500 font-jetbrains">
+                                        Scored on {new Date(js.scored_at).toLocaleDateString()}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  <div className="text-right">
+                                    <span className="text-2xl font-bold text-maximally-yellow font-press-start">{js.score}</span>
+                                    <span className="text-gray-500 font-jetbrains">/100</span>
+                                  </div>
+                                </div>
+                                
+                                {/* Criteria Scores if available */}
+                                {js.criteria_scores && (
+                                  <div className="mt-3 pt-3 border-t border-gray-700">
+                                    <p className="text-xs text-gray-400 font-press-start mb-2">CRITERIA_BREAKDOWN</p>
+                                    <div className="grid grid-cols-2 gap-2">
+                                      {Object.entries(js.criteria_scores).map(([criterion, score]: [string, any]) => (
+                                        <div key={criterion} className="flex items-center justify-between text-xs">
+                                          <span className="text-gray-400 font-jetbrains capitalize">{criterion}</span>
+                                          <span className="text-white font-jetbrains">{score}/20</span>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Judge Notes */}
+                                {js.notes && (
+                                  <div className="mt-3 pt-3 border-t border-gray-700">
+                                    <p className="text-xs text-gray-400 font-press-start mb-2">NOTES</p>
+                                    <p className="text-sm text-gray-300 font-jetbrains">{js.notes}</p>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 text-gray-500 font-jetbrains">
+                            No judge scores yet
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Modal Footer */}
+                    <div className="sticky bottom-0 bg-gray-900 border-t border-gray-700 p-4">
+                      <button
+                        onClick={() => setSelectedSubmission(null)}
+                        className="w-full pixel-button bg-gray-700 text-white px-4 py-3 font-press-start text-sm hover:bg-gray-600"
+                      >
+                        CLOSE
+                      </button>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
           )}
@@ -653,41 +1089,61 @@ export default function HackathonRegistrations() {
             <JudgesManager hackathonId={parseInt(hackathonId)} />
           )}
 
-          {/* Timeline Tab */}
-          {activeTab === 'timeline' && hackathonId && (
-            <TimelineManager hackathonId={parseInt(hackathonId)} />
-          )}
-
-          {/* Tracks Tab */}
-          {activeTab === 'tracks' && hackathonId && (
-            <OrganizerTracksManager hackathonId={parseInt(hackathonId)} />
-          )}
-
-          {/* Sponsors Tab */}
-          {activeTab === 'sponsors' && hackathonId && (
-            <OrganizerSponsorsManager hackathonId={parseInt(hackathonId)} />
-          )}
-
           {/* Feedback Tab */}
           {activeTab === 'feedback' && hackathonId && (
             <OrganizerFeedbackViewer hackathonId={parseInt(hackathonId)} />
           )}
 
-          {/* Settings Tab - Quick Actions */}
+          {/* Winners Tab */}
+          {activeTab === 'winners' && hackathonId && hackathon && (
+            <WinnersManager 
+              hackathonId={parseInt(hackathonId)} 
+              prizes={hackathon.prize_breakdown || []}
+              onWinnersAnnounced={() => fetchData()}
+            />
+          )}
+
+          {/* Settings Tab - Period Controls */}
           {activeTab === 'settings' && hackathon && (
             <div className="space-y-6">
-              <h2 className="font-press-start text-xl text-maximally-red">HACKATHON_SETTINGS</h2>
+              <h2 className="font-press-start text-xl text-maximally-red mb-2">PERIOD_CONTROLS</h2>
+              <p className="text-gray-400 font-jetbrains text-sm mb-6">
+                Control when registrations, submissions, and judging are open. Use AUTO to follow timeline dates.
+              </p>
               
-              {/* Status Overview */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Registration Status */}
-                <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                  <h3 className="font-press-start text-sm text-gray-400 mb-3">REGISTRATION_STATUS</h3>
+              {/* Registration Period Control */}
+              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="font-press-start text-lg text-white mb-2">REGISTRATION_PERIOD</h3>
+                    {hackathon.registration_opens_at && hackathon.registration_closes_at && (
+                      <p className="text-xs text-gray-500 font-jetbrains">
+                        Timeline: {new Date(hackathon.registration_opens_at).toLocaleDateString()} - {new Date(hackathon.registration_closes_at).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
                   {(() => {
                     const now = new Date();
                     const regClosed = hackathon.registration_closes_at && new Date(hackathon.registration_closes_at) < now;
                     const regNotOpen = hackathon.registration_opens_at && new Date(hackathon.registration_opens_at) > now;
                     
+                    if (registrationControl === 'closed') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <span className="font-press-start text-red-500 text-sm">CLOSED</span>
+                        </div>
+                      );
+                    }
+                    if (registrationControl === 'open') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="font-press-start text-green-500 text-sm">OPEN</span>
+                        </div>
+                      );
+                    }
+                    // Auto mode
                     if (regClosed) {
                       return (
                         <div className="flex items-center gap-2">
@@ -711,25 +1167,186 @@ export default function HackathonRegistrations() {
                       </div>
                     );
                   })()}
-                  {hackathon.registration_closes_at ? (
-                    <p className="text-xs text-gray-500 font-jetbrains mt-2">
-                      {new Date(hackathon.registration_closes_at) > new Date() ? 'Closes' : 'Closed'}: {new Date(hackathon.registration_closes_at).toLocaleString()}
-                    </p>
-                  ) : (
-                    <p className="text-xs text-yellow-500 font-jetbrains mt-2">
-                      ⚠ No closing date set - will remain open
-                    </p>
-                  )}
                 </div>
 
-                {/* Submission Status */}
-                <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                  <h3 className="font-press-start text-sm text-gray-400 mb-3">SUBMISSION_STATUS</h3>
+                {/* Toggle Control */}
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <button
+                    onClick={() => { setRegistrationControl('closed'); savePeriodControl('registration_control', 'closed'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      registrationControl === 'closed'
+                        ? 'bg-red-600 text-white border-2 border-red-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    CLOSED
+                  </button>
+                  <button
+                    onClick={() => { setRegistrationControl('auto'); savePeriodControl('registration_control', 'auto'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      registrationControl === 'auto'
+                        ? 'bg-blue-600 text-white border-2 border-blue-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    AUTO
+                  </button>
+                  <button
+                    onClick={() => { setRegistrationControl('open'); savePeriodControl('registration_control', 'open'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      registrationControl === 'open'
+                        ? 'bg-green-600 text-white border-2 border-green-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    OPEN
+                  </button>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-gray-500 font-jetbrains">
+                    {registrationControl === 'auto' && '⚙️ Following timeline dates'}
+                    {registrationControl === 'open' && '🟢 Force open - ignoring timeline'}
+                    {registrationControl === 'closed' && '🔴 Force closed - ignoring timeline'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Building Phase Control */}
+              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="font-press-start text-lg text-white mb-2">BUILDING_PHASE</h3>
+                    <p className="text-xs text-gray-400 font-jetbrains mb-1">Hacking time - no submissions allowed</p>
+                    {hackathon.building_starts_at && hackathon.building_ends_at && (
+                      <p className="text-xs text-gray-500 font-jetbrains">
+                        Timeline: {new Date(hackathon.building_starts_at).toLocaleDateString()} - {new Date(hackathon.building_ends_at).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                  {(() => {
+                    const now = new Date();
+                    const buildingEnded = hackathon.building_ends_at && new Date(hackathon.building_ends_at) < now;
+                    const buildingNotStarted = hackathon.building_starts_at && new Date(hackathon.building_starts_at) > now;
+                    
+                    if (buildingControl === 'closed') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <span className="font-press-start text-red-500 text-sm">ENDED</span>
+                        </div>
+                      );
+                    }
+                    if (buildingControl === 'open') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                          <span className="font-press-start text-orange-500 text-sm">ACTIVE</span>
+                        </div>
+                      );
+                    }
+                    // Auto mode
+                    if (buildingEnded) {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                          <span className="font-press-start text-gray-500 text-sm">ENDED</span>
+                        </div>
+                      );
+                    }
+                    if (buildingNotStarted) {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                          <span className="font-press-start text-yellow-500 text-sm">NOT_STARTED</span>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                        <span className="font-press-start text-orange-500 text-sm">ACTIVE</span>
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* Toggle Control */}
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <button
+                    onClick={() => { setBuildingControl('closed'); savePeriodControl('building_control', 'closed'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      buildingControl === 'closed'
+                        ? 'bg-red-600 text-white border-2 border-red-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    ENDED
+                  </button>
+                  <button
+                    onClick={() => { setBuildingControl('auto'); savePeriodControl('building_control', 'auto'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      buildingControl === 'auto'
+                        ? 'bg-blue-600 text-white border-2 border-blue-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    AUTO
+                  </button>
+                  <button
+                    onClick={() => { setBuildingControl('open'); savePeriodControl('building_control', 'open'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      buildingControl === 'open'
+                        ? 'bg-orange-600 text-white border-2 border-orange-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    ACTIVE
+                  </button>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-gray-500 font-jetbrains">
+                    {buildingControl === 'auto' && '⚙️ Following timeline dates'}
+                    {buildingControl === 'open' && '🟠 Force active - participants are building'}
+                    {buildingControl === 'closed' && '⚫ Force ended - building phase complete'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Submission Period Control */}
+              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="font-press-start text-lg text-white mb-2">SUBMISSION_PERIOD</h3>
+                    {hackathon.submission_opens_at && hackathon.submission_closes_at && (
+                      <p className="text-xs text-gray-500 font-jetbrains">
+                        Timeline: {new Date(hackathon.submission_opens_at).toLocaleDateString()} - {new Date(hackathon.submission_closes_at).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
                   {(() => {
                     const now = new Date();
                     const subClosed = hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now;
                     const subNotOpen = hackathon.submission_opens_at && new Date(hackathon.submission_opens_at) > now;
                     
+                    if (submissionControl === 'closed') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <span className="font-press-start text-red-500 text-sm">CLOSED</span>
+                        </div>
+                      );
+                    }
+                    if (submissionControl === 'open') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="font-press-start text-green-500 text-sm">OPEN</span>
+                        </div>
+                      );
+                    }
+                    // Auto mode
                     if (subClosed) {
                       return (
                         <div className="flex items-center gap-2">
@@ -753,182 +1370,149 @@ export default function HackathonRegistrations() {
                       </div>
                     );
                   })()}
-                  {hackathon.submission_closes_at ? (
-                    <p className="text-xs text-gray-500 font-jetbrains mt-2">
-                      {new Date(hackathon.submission_closes_at) > new Date() ? 'Closes' : 'Closed'}: {new Date(hackathon.submission_closes_at).toLocaleString()}
-                    </p>
-                  ) : (
-                    <p className="text-xs text-yellow-500 font-jetbrains mt-2">
-                      ⚠ No closing date set - will remain open
-                    </p>
-                  )}
+                </div>
+
+                {/* Toggle Control */}
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <button
+                    onClick={() => { setSubmissionControl('closed'); savePeriodControl('submission_control', 'closed'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      submissionControl === 'closed'
+                        ? 'bg-red-600 text-white border-2 border-red-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    CLOSED
+                  </button>
+                  <button
+                    onClick={() => { setSubmissionControl('auto'); savePeriodControl('submission_control', 'auto'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      submissionControl === 'auto'
+                        ? 'bg-blue-600 text-white border-2 border-blue-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    AUTO
+                  </button>
+                  <button
+                    onClick={() => { setSubmissionControl('open'); savePeriodControl('submission_control', 'open'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      submissionControl === 'open'
+                        ? 'bg-green-600 text-white border-2 border-green-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    OPEN
+                  </button>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-gray-500 font-jetbrains">
+                    {submissionControl === 'auto' && '⚙️ Following timeline dates'}
+                    {submissionControl === 'open' && '🟢 Force open - ignoring timeline'}
+                    {submissionControl === 'closed' && '🔴 Force closed - ignoring timeline'}
+                  </p>
                 </div>
               </div>
 
-              {/* Quick Actions */}
+              {/* Judging Period Control */}
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                <h3 className="font-press-start text-lg text-white mb-4">QUICK_ACTIONS</h3>
-                
-                <div className="pixel-card bg-blue-900/20 border border-blue-500 p-4 mb-4">
-                  <p className="font-jetbrains text-blue-400 text-sm">
-                    💡 <strong>Automatic Closure:</strong> Registrations and submissions will automatically close based on the dates you set in the Timeline tab. Use the buttons below only for emergency manual closure.
-                  </p>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="font-press-start text-lg text-white mb-2">JUDGING_PERIOD</h3>
+                    {hackathon.judging_starts_at && hackathon.judging_ends_at && (
+                      <p className="text-xs text-gray-500 font-jetbrains">
+                        Timeline: {new Date(hackathon.judging_starts_at).toLocaleDateString()} - {new Date(hackathon.judging_ends_at).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                  {(() => {
+                    const now = new Date();
+                    const judgingClosed = hackathon.judging_ends_at && new Date(hackathon.judging_ends_at) < now;
+                    const judgingNotOpen = hackathon.judging_starts_at && new Date(hackathon.judging_starts_at) > now;
+                    
+                    if (judgingControl === 'closed') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <span className="font-press-start text-red-500 text-sm">CLOSED</span>
+                        </div>
+                      );
+                    }
+                    if (judgingControl === 'open') {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="font-press-start text-green-500 text-sm">OPEN</span>
+                        </div>
+                      );
+                    }
+                    // Auto mode
+                    if (judgingClosed) {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <span className="font-press-start text-red-500 text-sm">CLOSED</span>
+                        </div>
+                      );
+                    }
+                    if (judgingNotOpen) {
+                      return (
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                          <span className="font-press-start text-yellow-500 text-sm">NOT_OPEN</span>
+                        </div>
+                      );
+                    }
+                    return (
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="font-press-start text-green-500 text-sm">OPEN</span>
+                      </div>
+                    );
+                  })()}
                 </div>
 
-                <div className="space-y-4">
-                  {(() => {
-                    const now = new Date();
-                    const regClosed = hackathon.registration_closes_at && new Date(hackathon.registration_closes_at) < now;
-                    const hasRegDate = hackathon.registration_closes_at;
-                    
-                    if (regClosed) {
-                      return (
-                        <div className="pixel-card bg-gray-800 border border-gray-700 px-6 py-3 text-center">
-                          <span className="font-press-start text-sm text-gray-500">REGISTRATIONS_ALREADY_CLOSED</span>
-                        </div>
-                      );
-                    }
+                {/* Toggle Control */}
+                <div className="flex items-center justify-center gap-4 mt-6">
+                  <button
+                    onClick={() => { setJudgingControl('closed'); savePeriodControl('judging_control', 'closed'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      judgingControl === 'closed'
+                        ? 'bg-red-600 text-white border-2 border-red-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    CLOSED
+                  </button>
+                  <button
+                    onClick={() => { setJudgingControl('auto'); savePeriodControl('judging_control', 'auto'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      judgingControl === 'auto'
+                        ? 'bg-blue-600 text-white border-2 border-blue-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    AUTO
+                  </button>
+                  <button
+                    onClick={() => { setJudgingControl('open'); savePeriodControl('judging_control', 'open'); }}
+                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                      judgingControl === 'open'
+                        ? 'bg-green-600 text-white border-2 border-green-400'
+                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                    }`}
+                  >
+                    OPEN
+                  </button>
+                </div>
 
-                    if (hasRegDate) {
-                      return (
-                        <div className="pixel-card bg-gray-800 border border-green-700 px-6 py-3">
-                          <p className="font-jetbrains text-green-400 text-sm text-center">
-                            ✓ Registrations will auto-close on {new Date(hackathon.registration_closes_at!).toLocaleString()}
-                          </p>
-                          <button
-                            onClick={async () => {
-                              if (!confirm('Are you sure you want to close registrations immediately? This will override the scheduled closing time.')) return;
-                              try {
-                                const headers = await getAuthHeaders();
-                                await fetch(`/api/organizer/hackathons/${hackathonId}/settings`, {
-                                  method: 'PATCH',
-                                  headers,
-                                  body: JSON.stringify({
-                                    registration_closes_at: new Date().toISOString()
-                                  })
-                                });
-                                toast({ title: "Registrations Closed Immediately!" });
-                                fetchData();
-                              } catch (error) {
-                                toast({ title: "Error", variant: "destructive" });
-                              }
-                            }}
-                            className="pixel-button bg-orange-600 text-white px-4 py-2 font-press-start text-xs hover:bg-orange-700 w-full mt-2"
-                          >
-                            EMERGENCY_CLOSE_NOW
-                          </button>
-                        </div>
-                      );
-                    }
-                    
-                    return (
-                      <div>
-                        <div className="pixel-card bg-yellow-900/20 border border-yellow-500 px-4 py-2 mb-2">
-                          <p className="font-jetbrains text-yellow-400 text-xs">
-                            ⚠ No closing date set in Timeline. Set one there or close manually here.
-                          </p>
-                        </div>
-                        <button
-                          onClick={async () => {
-                            try {
-                              const headers = await getAuthHeaders();
-                              await fetch(`/api/organizer/hackathons/${hackathonId}/settings`, {
-                                method: 'PATCH',
-                                headers,
-                                body: JSON.stringify({
-                                  registration_closes_at: new Date().toISOString()
-                                })
-                              });
-                              toast({ title: "Registrations Closed!" });
-                              fetchData();
-                            } catch (error) {
-                              toast({ title: "Error", variant: "destructive" });
-                            }
-                          }}
-                          className="pixel-button bg-orange-600 text-white px-6 py-3 font-press-start text-sm hover:bg-orange-700 w-full"
-                        >
-                          CLOSE_REGISTRATIONS_NOW
-                        </button>
-                      </div>
-                    );
-                  })()}
-
-                  {(() => {
-                    const now = new Date();
-                    const subClosed = hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now;
-                    const hasSubDate = hackathon.submission_closes_at;
-                    
-                    if (subClosed) {
-                      return (
-                        <div className="pixel-card bg-gray-800 border border-gray-700 px-6 py-3 text-center">
-                          <span className="font-press-start text-sm text-gray-500">SUBMISSIONS_ALREADY_CLOSED</span>
-                        </div>
-                      );
-                    }
-
-                    if (hasSubDate) {
-                      return (
-                        <div className="pixel-card bg-gray-800 border border-green-700 px-6 py-3">
-                          <p className="font-jetbrains text-green-400 text-sm text-center">
-                            ✓ Submissions will auto-close on {new Date(hackathon.submission_closes_at!).toLocaleString()}
-                          </p>
-                          <button
-                            onClick={async () => {
-                              if (!confirm('Are you sure you want to close submissions immediately? This will override the scheduled closing time.')) return;
-                              try {
-                                const headers = await getAuthHeaders();
-                                await fetch(`/api/organizer/hackathons/${hackathonId}/settings`, {
-                                  method: 'PATCH',
-                                  headers,
-                                  body: JSON.stringify({
-                                    submission_closes_at: new Date().toISOString()
-                                  })
-                                });
-                                toast({ title: "Submissions Closed Immediately!" });
-                                fetchData();
-                              } catch (error) {
-                                toast({ title: "Error", variant: "destructive" });
-                              }
-                            }}
-                            className="pixel-button bg-red-600 text-white px-4 py-2 font-press-start text-xs hover:bg-red-700 w-full mt-2"
-                          >
-                            EMERGENCY_CLOSE_NOW
-                          </button>
-                        </div>
-                      );
-                    }
-                    
-                    return (
-                      <div>
-                        <div className="pixel-card bg-yellow-900/20 border border-yellow-500 px-4 py-2 mb-2">
-                          <p className="font-jetbrains text-yellow-400 text-xs">
-                            ⚠ No closing date set in Timeline. Set one there or close manually here.
-                          </p>
-                        </div>
-                        <button
-                          onClick={async () => {
-                            try {
-                              const headers = await getAuthHeaders();
-                              await fetch(`/api/organizer/hackathons/${hackathonId}/settings`, {
-                                method: 'PATCH',
-                                headers,
-                                body: JSON.stringify({
-                                  submission_closes_at: new Date().toISOString()
-                                })
-                              });
-                              toast({ title: "Submissions Closed!" });
-                              fetchData();
-                            } catch (error) {
-                              toast({ title: "Error", variant: "destructive" });
-                            }
-                          }}
-                          className="pixel-button bg-red-600 text-white px-6 py-3 font-press-start text-sm hover:bg-red-700 w-full"
-                        >
-                          CLOSE_SUBMISSIONS_NOW
-                        </button>
-                      </div>
-                    );
-                  })()}
+                <div className="mt-4 text-center">
+                  <p className="text-xs text-gray-500 font-jetbrains">
+                    {judgingControl === 'auto' && '⚙️ Following timeline dates'}
+                    {judgingControl === 'open' && '🟢 Force open - ignoring timeline'}
+                    {judgingControl === 'closed' && '🔴 Force closed - ignoring timeline'}
+                  </p>
                 </div>
               </div>
             </div>

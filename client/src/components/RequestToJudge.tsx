@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Scale, Send, Check } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { Scale, Send, Check, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
@@ -118,12 +119,17 @@ export default function RequestToJudge({ hackathonId }: RequestToJudgeProps) {
           REQUEST_TO_JUDGE
         </button>
 
-        {/* Request Modal */}
-        {showModal && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="pixel-card bg-black border-4 border-purple-600 max-w-md w-full">
+        {/* Request Modal - Using Portal to render at document body level */}
+        {showModal && createPortal(
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4" style={{ zIndex: 99999 }}>
+            <div className="pixel-card bg-black border-4 border-purple-600 max-w-md w-full relative" style={{ zIndex: 100000 }}>
               <div className="p-6 border-b-2 border-purple-600">
-                <h2 className="font-press-start text-xl text-purple-600">REQUEST_TO_JUDGE</h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="font-press-start text-xl text-purple-600">REQUEST_TO_JUDGE</h2>
+                  <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
               </div>
 
               <div className="p-6 space-y-4">
@@ -161,7 +167,8 @@ export default function RequestToJudge({ hackathonId }: RequestToJudgeProps) {
                 </div>
               </div>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </>
     );

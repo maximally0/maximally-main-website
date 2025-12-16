@@ -4,6 +4,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import ModerationGuard from '@/components/ModerationGuard';
 import {
   BrowserRouter as Router,
   Routes,
@@ -144,11 +145,14 @@ import HackathonSubmit from './pages/HackathonSubmit';
 import People from './pages/People';
 import PeopleCore from './pages/PeopleCore';
 import PeopleJudges from './pages/PeopleJudges';
+import PeopleOrganizers from './pages/PeopleOrganizers';
 import Judges from './pages/Judges';
 import JudgeProfile from './pages/JudgeProfile';
 import JudgeApplicationForm from './pages/JudgeApplicationForm';
+import OrganizerApplicationForm from './pages/OrganizerApplicationForm';
 import JudgeDashboard from './pages/JudgeDashboard';
 import JudgeInbox from './pages/JudgeInbox';
+import OrganizerInbox from './pages/OrganizerInbox';
 import JudgeHackathons from './pages/JudgeHackathons';
 import JudgeSubmissions from './pages/JudgeSubmissions';
 import ProjectDetail from './pages/ProjectDetail';
@@ -158,6 +162,10 @@ import AdminNotifications from './pages/AdminNotifications';
 import Resources from './pages/Resources';
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
+import Gallery from './pages/Gallery';
+import GalleryProjectDetail from './pages/GalleryProjectDetail';
+import GallerySubmit from './pages/GallerySubmit';
+import GalleryEdit from './pages/GalleryEdit';
 
 const queryClient = new QueryClient();
 
@@ -333,11 +341,14 @@ const AppContent = () => {
         <Route path="/people" element={<People />} />
         <Route path="/people/core" element={<PeopleCore />} />
         <Route path="/people/judges" element={<PeopleJudges />} />
+        <Route path="/people/organizers" element={<PeopleOrganizers />} />
         <Route path="/judges" element={<Judges />} />
         <Route path="/judge/:username" element={<JudgeProfile />} />
         <Route path="/judges/apply" element={<JudgeApplicationForm />} />
+        <Route path="/organizer/apply" element={<OrganizerApplicationForm />} />
         <Route path="/judge-dashboard" element={<JudgeDashboard />} />
         <Route path="/judge-inbox" element={<JudgeInbox />} />
+        <Route path="/organizer-inbox" element={<OrganizerInbox />} />
         <Route path="/judge/hackathons" element={<JudgeHackathons />} />
         <Route path="/judge/hackathons/:hackathonId/submissions" element={<JudgeSubmissions />} />
         <Route path="/project/:projectId" element={<ProjectDetail />} />
@@ -345,6 +356,13 @@ const AppContent = () => {
         <Route path="/my-hackathons" element={<ParticipantDashboard />} />
         <Route path="/admin/notifications" element={<AdminNotifications />} />
         <Route path="/resources" element={<Resources />} />
+        
+        {/* Project Gallery */}
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/gallery/submit" element={<GallerySubmit />} />
+        <Route path="/gallery/edit/:id" element={<GalleryEdit />} />
+        <Route path="/gallery/:id" element={<GalleryProjectDetail />} />
+        
         {/* Legacy redirect */}
         <Route path="/featured" element={<Navigate to="/people" replace />} />
         <Route path="/mfhop" element={<MFHOP />} />
@@ -551,7 +569,9 @@ const App = () => {
           <Sonner />
           <AuthProvider>
             <Router>
-              <AppContent />
+              <ModerationGuard>
+                <AppContent />
+              </ModerationGuard>
             </Router>
           </AuthProvider>
         </TooltipProvider>

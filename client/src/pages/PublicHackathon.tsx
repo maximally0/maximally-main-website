@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import { 
   Calendar, 
   MapPin, 
@@ -15,10 +15,12 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { getAuthHeaders } from '@/lib/auth';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import HackathonRegistration from '@/components/HackathonRegistration';
 import HackathonAnnouncements from '@/components/HackathonAnnouncements';
+import ParticipantAnnouncements from '@/components/ParticipantAnnouncements';
 import ProjectsGallery from '@/components/ProjectsGallery';
 import SocialShare from '@/components/SocialShare';
 import RequestToJudge from '@/components/RequestToJudge';
@@ -63,27 +65,76 @@ interface Hackathon {
   // Timeline fields
   registration_opens_at?: string;
   registration_closes_at?: string;
+  building_starts_at?: string;
+  building_ends_at?: string;
   submission_opens_at?: string;
   submission_closes_at?: string;
   judging_starts_at?: string;
   judging_ends_at?: string;
   results_announced_at?: string;
   hackathon_status?: string;
+  // Period controls
+  registration_control?: 'auto' | 'open' | 'closed';
+  building_control?: 'auto' | 'open' | 'closed';
+  submission_control?: 'auto' | 'open' | 'closed';
+  judging_control?: 'auto' | 'open' | 'closed';
+  // Winners
+  winners_announced?: boolean;
+  winners_announced_at?: string;
 }
 
 export default function PublicHackathon() {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { user, profile } = useAuth();
   const [hackathon, setHackathon] = useState<Hackathon | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+  const [judgeStatus, setJudgeStatus] = useState<any>(null);
+  const [userSubmission, setUserSubmission] = useState<any>(null);
+  const [userRegistration, setUserRegistration] = useState<any>(null);
+  const [winners, setWinners] = useState<any[]>([]);
+
+  // Handle tab from URL query parameter
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
+
+  // Auto-switch to winners tab if winners are announced and no tab specified
+  useEffect(() => {
+    if (hackathon?.winners_announced && !searchParams.get('tab')) {
+      setActiveTab('winners');
+    }
+  }, [hackathon?.winners_announced]);
 
   useEffect(() => {
     if (slug) {
       fetchHackathon();
     }
   }, [slug]);
+
+  useEffect(() => {
+    if (user && profile?.role === 'judge' && hackathon) {
+      fetchJudgeStatus();
+    }
+  }, [user, profile, hackathon]);
+
+  useEffect(() => {
+    if (user && hackathon) {
+      fetchUserSubmission();
+      fetchUserRegistration();
+    }
+  }, [user, hackathon]);
+
+  useEffect(() => {
+    if (hackathon?.winners_announced) {
+      fetchWinners();
+    }
+  }, [hackathon]);
 
   const fetchHackathon = async () => {
     try {
@@ -105,6 +156,61 @@ export default function PublicHackathon() {
       console.error('Error fetching hackathon:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchJudgeStatus = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/hackathons/${hackathon?.id}/judge-status`, { headers });
+      const data = await response.json();
+
+      if (data.success) {
+        setJudgeStatus(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching judge status:', error);
+    }
+  };
+
+  const fetchUserSubmission = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/hackathons/${hackathon?.id}/my-submission`, { headers });
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        setUserSubmission(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching user submission:', error);
+    }
+  };
+
+  const fetchUserRegistration = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/hackathons/${hackathon?.id}/my-registration`, { headers });
+      const data = await response.json();
+
+      if (data.success && data.data) {
+        setUserRegistration(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching user registration:', error);
+    }
+  };
+
+  const fetchWinners = async () => {
+    try {
+      const response = await fetch(`/api/hackathons/${hackathon?.id}/winners`);
+      const data = await response.json();
+
+      if (data.success) {
+        setWinners(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching winners:', error);
     }
   };
 
@@ -185,9 +291,48 @@ export default function PublicHackathon() {
     const start = new Date(hackathon.start_date);
     const end = new Date(hackathon.end_date);
     
+    // Get period controls (default to 'auto' if not set)
+    const regControl = hackathon.registration_control || 'auto';
+    const buildControl = hackathon.building_control || 'auto';
+    const subControl = hackathon.submission_control || 'auto';
+    const judgControl = hackathon.judging_control || 'auto';
+
+    // PRIORITY 0: Check if winners have been announced
+    if (hackathon.winners_announced) {
+      return { label: '🏆 WINNERS ANNOUNCED', color: 'text-yellow-400', bgColor: 'bg-yellow-400/20', borderColor: 'border-yellow-400' };
+    }
+
+    // PRIORITY 1: Check forced period controls first
+    // If building is force-active, show building status
+    if (buildControl === 'open') {
+      return { label: 'BUILDING IN PROGRESS', color: 'text-orange-400', bgColor: 'bg-orange-400/20', borderColor: 'border-orange-400' };
+    }
+    
+    // If submission is force-open, show submission status
+    if (subControl === 'open') {
+      return { label: 'SUBMISSIONS OPEN', color: 'text-green-500', bgColor: 'bg-green-500/20', borderColor: 'border-green-500' };
+    }
+    
+    // If judging is force-open, show judging status
+    if (judgControl === 'open') {
+      return { label: 'JUDGING IN PROGRESS', color: 'text-purple-500', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-500' };
+    }
+    
+    // If registration is force-closed (and nothing else is active), show closed
+    if (regControl === 'closed' && buildControl !== 'open' && subControl !== 'open') {
+      return { label: 'REGISTRATIONS CLOSED', color: 'text-orange-500', bgColor: 'bg-orange-500/20', borderColor: 'border-orange-500' };
+    }
+    
+    // If registration is force-open, show open
+    if (regControl === 'open') {
+      return { label: 'REGISTRATIONS OPEN', color: 'text-blue-500', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-500' };
+    }
+    
     // Parse timeline dates if they exist
     const regOpens = hackathon.registration_opens_at ? new Date(hackathon.registration_opens_at) : null;
     const regCloses = hackathon.registration_closes_at ? new Date(hackathon.registration_closes_at) : null;
+    const buildingStarts = hackathon.building_starts_at ? new Date(hackathon.building_starts_at) : null;
+    const buildingEnds = hackathon.building_ends_at ? new Date(hackathon.building_ends_at) : null;
     const subOpens = hackathon.submission_opens_at ? new Date(hackathon.submission_opens_at) : null;
     const subCloses = hackathon.submission_closes_at ? new Date(hackathon.submission_closes_at) : null;
     const judgingStarts = hackathon.judging_starts_at ? new Date(hackathon.judging_starts_at) : null;
@@ -195,42 +340,73 @@ export default function PublicHackathon() {
     const resultsAt = hackathon.results_announced_at ? new Date(hackathon.results_announced_at) : null;
 
     // Check if we have detailed timeline data
-    const hasDetailedTimeline = regOpens || regCloses || subOpens || subCloses || judgingStarts || judgingEnds || resultsAt;
+    const hasDetailedTimeline = regOpens || regCloses || buildingStarts || buildingEnds || subOpens || subCloses || judgingStarts || judgingEnds || resultsAt;
 
-    // If we have detailed timeline data, use it
+    // PRIORITY 2: If all controls are 'auto', use timeline-based logic
     if (hasDetailedTimeline) {
-      // Check if results announced
-      if (resultsAt && now >= resultsAt) {
-        return { label: 'WINNERS ANNOUNCED', color: 'text-yellow-400', bgColor: 'bg-yellow-400/20', borderColor: 'border-yellow-400' };
-      }
+      // PHASE 1: REGISTRATION (only if regControl is 'auto')
+      if (regControl === 'auto') {
+        // Check if registration hasn't opened yet
+        if (regOpens && now < regOpens) {
+          const daysUntilReg = Math.ceil((regOpens.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          if (daysUntilReg <= 7) {
+            return { label: 'REGISTRATIONS OPEN SOON', color: 'text-blue-400', bgColor: 'bg-blue-400/20', borderColor: 'border-blue-400' };
+          }
+          return { label: 'REGISTRATIONS NOT OPENED', color: 'text-yellow-600', bgColor: 'bg-yellow-600/20', borderColor: 'border-yellow-600' };
+        }
 
-      // Check if results announcement is soon (within 3 days)
-      if (resultsAt && now < resultsAt) {
-        const daysUntilResults = Math.ceil((resultsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysUntilResults <= 3) {
-          return { label: 'RESULTS SOON', color: 'text-yellow-500', bgColor: 'bg-yellow-500/20', borderColor: 'border-yellow-500' };
+        // Check if registration is currently open
+        if (regOpens && regCloses && now >= regOpens && now <= regCloses) {
+          const daysLeft = Math.ceil((regCloses.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          if (daysLeft <= 3) {
+            return { label: 'REGISTRATION CLOSING SOON', color: 'text-orange-400', bgColor: 'bg-orange-400/20', borderColor: 'border-orange-400' };
+          }
+          return { label: 'REGISTRATIONS OPEN', color: 'text-blue-500', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-500' };
+        }
+
+        // Check if registration is closed but hackathon hasn't started
+        if (regCloses && now > regCloses && now < start) {
+          return { label: 'REGISTRATIONS CLOSED', color: 'text-orange-500', bgColor: 'bg-orange-500/20', borderColor: 'border-orange-500' };
         }
       }
 
-      // Check if judging is happening
-      if (judgingStarts && judgingEnds && now >= judgingStarts && now <= judgingEnds) {
-        return { label: 'JUDGING IN PROGRESS', color: 'text-purple-500', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-500' };
-      }
+      // PHASE 1.5: BUILDING/HACKING PHASE (only if buildControl is 'auto')
+      if (buildControl === 'auto') {
+        // Check if building phase hasn't started yet
+        if (buildingStarts && now < buildingStarts) {
+          const hoursUntilBuilding = Math.ceil((buildingStarts.getTime() - now.getTime()) / (1000 * 60 * 60));
+          if (hoursUntilBuilding <= 24) {
+            return { label: 'BUILDING STARTS SOON', color: 'text-orange-400', bgColor: 'bg-orange-400/20', borderColor: 'border-orange-400' };
+          }
+          return { label: 'WAITING FOR BUILDING PHASE', color: 'text-yellow-500', bgColor: 'bg-yellow-500/20', borderColor: 'border-yellow-500' };
+        }
 
-      // Check if judging starts soon (within 2 days)
-      if (judgingStarts && now < judgingStarts) {
-        const daysUntilJudging = Math.ceil((judgingStarts.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysUntilJudging <= 2) {
-          return { label: 'JUDGING STARTS SOON', color: 'text-purple-400', bgColor: 'bg-purple-400/20', borderColor: 'border-purple-400' };
+        // Check if currently in building phase
+        if (buildingStarts && buildingEnds && now >= buildingStarts && now <= buildingEnds) {
+          const hoursLeft = Math.ceil((buildingEnds.getTime() - now.getTime()) / (1000 * 60 * 60));
+          if (hoursLeft <= 6) {
+            return { label: 'BUILDING PHASE ENDING SOON', color: 'text-orange-500', bgColor: 'bg-orange-500/20', borderColor: 'border-orange-500' };
+          }
+          return { label: 'BUILDING IN PROGRESS', color: 'text-orange-400', bgColor: 'bg-orange-400/20', borderColor: 'border-orange-400' };
+        }
+
+        // Check if building phase ended but submissions haven't opened
+        if (buildingEnds && now > buildingEnds && subOpens && now < subOpens) {
+          return { label: 'BUILDING PHASE ENDED', color: 'text-orange-600', bgColor: 'bg-orange-600/20', borderColor: 'border-orange-600' };
         }
       }
 
-      // Check if submissions are closed but judging hasn't started
-      if (subCloses && now > subCloses && (!judgingStarts || now < judgingStarts)) {
-        return { label: 'SUBMISSIONS CLOSED', color: 'text-orange-600', bgColor: 'bg-orange-600/20', borderColor: 'border-orange-600' };
+      // PHASE 2: SUBMISSIONS
+      // Check if submissions haven't opened yet
+      if (subOpens && now < subOpens) {
+        const daysUntilSub = Math.ceil((subOpens.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysUntilSub <= 2) {
+          return { label: 'SUBMISSIONS OPEN SOON', color: 'text-green-400', bgColor: 'bg-green-400/20', borderColor: 'border-green-400' };
+        }
+        return { label: 'HACKATHON STARTING SOON', color: 'text-cyan-500', bgColor: 'bg-cyan-500/20', borderColor: 'border-cyan-500' };
       }
 
-      // Check if submissions are open
+      // Check if submissions are currently open
       if (subOpens && subCloses && now >= subOpens && now <= subCloses) {
         const hoursLeft = Math.ceil((subCloses.getTime() - now.getTime()) / (1000 * 60 * 60));
         if (hoursLeft <= 24) {
@@ -239,34 +415,41 @@ export default function PublicHackathon() {
         return { label: 'SUBMISSIONS OPEN', color: 'text-green-500', bgColor: 'bg-green-500/20', borderColor: 'border-green-500' };
       }
 
-      // Check if submissions open soon (within 2 days)
-      if (subOpens && now < subOpens) {
-        const daysUntilSub = Math.ceil((subOpens.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysUntilSub <= 2) {
-          return { label: 'SUBMISSIONS OPEN SOON', color: 'text-green-400', bgColor: 'bg-green-400/20', borderColor: 'border-green-400' };
-        }
+      // Check if submissions are closed but judging hasn't started
+      if (subCloses && now > subCloses && (!judgingStarts || now < judgingStarts)) {
+        return { label: 'SUBMISSIONS CLOSED', color: 'text-orange-600', bgColor: 'bg-orange-600/20', borderColor: 'border-orange-600' };
       }
 
-      // Check if registration is closed but hackathon hasn't started
-      if (regCloses && now > regCloses && now < start) {
-        return { label: 'REGISTRATION CLOSED', color: 'text-orange-500', bgColor: 'bg-orange-500/20', borderColor: 'border-orange-500' };
+      // PHASE 3: JUDGING
+      // Check if judging hasn't started yet
+      if (judgingStarts && now < judgingStarts) {
+        const daysUntilJudging = Math.ceil((judgingStarts.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        if (daysUntilJudging <= 2) {
+          return { label: 'JUDGING STARTS SOON', color: 'text-purple-400', bgColor: 'bg-purple-400/20', borderColor: 'border-purple-400' };
+        }
+        return { label: 'AWAITING JUDGING', color: 'text-purple-300', bgColor: 'bg-purple-300/20', borderColor: 'border-purple-300' };
       }
 
-      // Check if registration is open
-      if (regOpens && regCloses && now >= regOpens && now <= regCloses) {
-        const daysLeft = Math.ceil((regCloses.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysLeft <= 3) {
-          return { label: 'REGISTRATION CLOSING SOON', color: 'text-orange-400', bgColor: 'bg-orange-400/20', borderColor: 'border-orange-400' };
-        }
-        return { label: 'REGISTRATION OPEN', color: 'text-blue-500', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-500' };
+      // Check if judging is currently happening
+      if (judgingStarts && judgingEnds && now >= judgingStarts && now <= judgingEnds) {
+        return { label: 'JUDGING IN PROGRESS', color: 'text-purple-500', bgColor: 'bg-purple-500/20', borderColor: 'border-purple-500' };
       }
 
-      // Check if registration opens soon (within 7 days)
-      if (regOpens && now < regOpens) {
-        const daysUntilReg = Math.ceil((regOpens.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        if (daysUntilReg <= 7) {
-          return { label: 'REGISTRATION OPENS SOON', color: 'text-blue-400', bgColor: 'bg-blue-400/20', borderColor: 'border-blue-400' };
+      // PHASE 4: RESULTS
+      // Check if judging is done but results not announced yet
+      if (judgingEnds && now > judgingEnds && (!resultsAt || now < resultsAt)) {
+        if (resultsAt) {
+          const daysUntilResults = Math.ceil((resultsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          if (daysUntilResults <= 3) {
+            return { label: 'RESULTS SOON', color: 'text-yellow-500', bgColor: 'bg-yellow-500/20', borderColor: 'border-yellow-500' };
+          }
         }
+        return { label: 'AWAITING RESULTS', color: 'text-yellow-400', bgColor: 'bg-yellow-400/20', borderColor: 'border-yellow-400' };
+      }
+
+      // Check if results have been announced
+      if (resultsAt && now >= resultsAt) {
+        return { label: 'WINNERS ANNOUNCED', color: 'text-yellow-400', bgColor: 'bg-yellow-400/20', borderColor: 'border-yellow-400' };
       }
     }
 
@@ -316,6 +499,27 @@ export default function PublicHackathon() {
           
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-5xl mx-auto">
+              {/* Winners Announced Banner */}
+              {hackathon.winners_announced && (
+                <div 
+                  onClick={() => setActiveTab('winners')}
+                  className="mb-6 pixel-card bg-gradient-to-r from-yellow-500/20 via-yellow-400/10 to-yellow-500/20 border-2 border-yellow-400 p-4 cursor-pointer hover:border-yellow-300 hover:scale-[1.02] transition-all animate-pulse-slow"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="text-4xl">🏆</div>
+                      <div>
+                        <h3 className="font-press-start text-lg text-yellow-400">WINNERS_ANNOUNCED!</h3>
+                        <p className="text-gray-300 font-jetbrains text-sm">Click to see the winning projects</p>
+                      </div>
+                    </div>
+                    <div className="text-yellow-400 font-press-start text-sm hidden sm:block">
+                      VIEW_WINNERS →
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Status Badge */}
               <div className={`inline-flex items-center gap-3 bg-black/50 border-2 ${status.borderColor} px-6 py-3 mb-6 font-mono text-sm backdrop-blur-sm`}>
                 <Calendar className={`h-5 w-5 ${status.color} animate-pulse`} />
@@ -346,6 +550,8 @@ export default function PublicHackathon() {
                     teamSizeMax={hackathon.team_size_max || 4}
                     registrationOpensAt={hackathon.registration_opens_at}
                     registrationClosesAt={hackathon.registration_closes_at}
+                    registrationControl={hackathon.registration_control}
+                    buildingControl={hackathon.building_control}
                     onRegistrationChange={fetchHackathon}
                   />
                 </div>
@@ -357,8 +563,8 @@ export default function PublicHackathon() {
                 />
               </div>
 
-              {/* Judge Interface Button - Show if user is a judge */}
-              {user && profile?.role === 'judge' && (
+              {/* Judge Interface Button - Show only if user is assigned as judge for this hackathon */}
+              {user && profile?.role === 'judge' && judgeStatus?.isAssigned && (
                 <div className="mb-10 animate-fade-in">
                   <Link
                     to={`/judge/hackathons/${hackathon.id}/submissions`}
@@ -414,8 +620,10 @@ export default function PublicHackathon() {
                   { id: 'rules', label: 'rules' },
                   ...(hackathon.tracks && JSON.parse(hackathon.tracks || '[]').length > 0 ? [{ id: 'tracks', label: 'tracks' }] : []),
                   { id: 'projects', label: 'projects' },
+                  ...(hackathon.winners_announced ? [{ id: 'winners', label: '🏆 winners' }] : []),
                   ...(hackathon.sponsors && hackathon.sponsors.length > 0 ? [{ id: 'sponsors', label: 'sponsors' }] : []),
                   ...(hackathon.faqs && JSON.parse(hackathon.faqs || '[]').length > 0 ? [{ id: 'faqs', label: 'faqs' }] : []),
+                  { id: 'feedback', label: 'feedback' },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -464,7 +672,11 @@ export default function PublicHackathon() {
               {/* Announcements Tab */}
               {activeTab === 'announcements' && (
                 <div className="space-y-8">
-                  <HackathonAnnouncements hackathonId={hackathon.id} />
+                  {user ? (
+                    <ParticipantAnnouncements hackathonId={hackathon.id} />
+                  ) : (
+                    <HackathonAnnouncements hackathonId={hackathon.id} />
+                  )}
                 </div>
               )}
 
@@ -563,6 +775,55 @@ export default function PublicHackathon() {
                           </div>
                         </div>
                       </div>
+
+                      {/* Building/Hacking Phase */}
+                      {(hackathon.building_starts_at || hackathon.building_ends_at) && (
+                        <div className="pixel-card bg-gray-900 border-2 border-orange-500 p-6 hover:border-orange-400 transition-colors">
+                          <div className="flex items-start gap-4">
+                            <div className="minecraft-block bg-orange-500 w-12 h-12 flex items-center justify-center flex-shrink-0">
+                              <Zap className="h-6 w-6 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <h3 className="font-press-start text-sm text-orange-400 mb-2">BUILDING_PHASE</h3>
+                              <p className="text-xs text-gray-500 font-jetbrains mb-2">Hacking time! No submissions during this phase.</p>
+                              <div className="space-y-1 font-jetbrains text-sm text-gray-300">
+                                {hackathon.building_starts_at && (
+                                  <p>
+                                    <span className="text-gray-500">Starts:</span>{' '}
+                                    <span className="text-white">
+                                      {new Date(hackathon.building_starts_at).toLocaleString('en-IN', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: 'numeric',
+                                        minute: '2-digit',
+                                        hour12: true,
+                                        timeZone: 'Asia/Kolkata'
+                                      })} IST
+                                    </span>
+                                  </p>
+                                )}
+                                {hackathon.building_ends_at && (
+                                  <p>
+                                    <span className="text-gray-500">Ends:</span>{' '}
+                                    <span className="text-white">
+                                      {new Date(hackathon.building_ends_at).toLocaleString('en-IN', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: 'numeric',
+                                        minute: '2-digit',
+                                        hour12: true,
+                                        timeZone: 'Asia/Kolkata'
+                                      })} IST
+                                    </span>
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       {/* Submission Period */}
                       {(hackathon.submission_opens_at || hackathon.submission_closes_at) && (
@@ -824,35 +1085,8 @@ export default function PublicHackathon() {
                 <div>
                   <h2 className="font-press-start text-2xl text-maximally-red mb-6">HACKATHON_TRACKS</h2>
                   
-                  {/* New Tracks Component */}
-                  <HackathonTracks hackathonId={hackathon.id} />
-
-                  {/* Legacy tracks from JSON field (fallback) */}
-                  {hackathon.tracks && JSON.parse(hackathon.tracks || '[]').length > 0 && (
-                    <div className="mt-8 space-y-4">
-                      <h3 className="font-press-start text-lg text-cyan-400 mb-4">ADDITIONAL TRACKS</h3>
-                      {JSON.parse(hackathon.tracks || '[]').map((track: any, i: number) => (
-                        <div key={i} className="pixel-card bg-gray-900 border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-colors">
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <h3 className="font-press-start text-lg text-maximally-yellow mb-3">
-                                {track.name}
-                              </h3>
-                              <p className="text-gray-300 font-jetbrains leading-relaxed mb-3">
-                                {track.description}
-                              </p>
-                              {track.prize && (
-                                <div className="inline-flex items-center gap-2 bg-maximally-yellow/10 border border-maximally-yellow px-4 py-2 rounded">
-                                  <Trophy className="h-4 w-4 text-maximally-yellow" />
-                                  <span className="font-press-start text-sm text-maximally-yellow">{track.prize}</span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  {/* Display tracks from JSON field */}
+                  <HackathonTracks tracks={hackathon.tracks} />
 
                   {hackathon.open_innovation && (
                     <div className="pixel-card bg-maximally-yellow/10 border-2 border-maximally-yellow p-6 mt-6">
@@ -875,30 +1109,33 @@ export default function PublicHackathon() {
                 <div className="space-y-8">
                   <h2 className="font-press-start text-2xl text-maximally-red mb-6">SPONSORS & PARTNERS</h2>
                   
-                  {/* New Sponsors Component */}
-                  <HackathonSponsors hackathonId={hackathon.id} />
-
-                  {/* Legacy sponsors from JSON field (fallback) */}
-                  {hackathon.sponsors && hackathon.sponsors.length > 0 && (
-                    <div className="mt-8">
-                      <h3 className="font-press-start text-lg text-cyan-400 mb-4">ADDITIONAL SPONSORS</h3>
+                  {/* Display sponsors from JSON field */}
+                  {hackathon.sponsors && hackathon.sponsors.length > 0 ? (
+                    <div>
+                      <h3 className="font-press-start text-lg text-cyan-400 mb-4">💎 SPONSORS</h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {hackathon.sponsors.map((sponsor, i) => (
-                          <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-700 p-6 hover:border-maximally-yellow transition-colors flex items-center justify-center">
-                            <p className="font-press-start text-sm text-gray-300 text-center">{sponsor}</p>
+                          <div key={i} className="pixel-card bg-gray-900 border-2 border-cyan-400 p-6 hover:border-maximally-yellow transition-colors flex items-center justify-center hover:scale-105">
+                            <p className="font-press-start text-sm text-white text-center">{sponsor}</p>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="minecraft-block bg-gray-800 text-gray-400 px-6 py-4 inline-block">
+                        <span className="font-press-start text-sm">NO SPONSORS YET</span>
                       </div>
                     </div>
                   )}
 
                   {hackathon.partners && hackathon.partners.length > 0 && (
                     <div className="mt-8">
-                      <h3 className="font-press-start text-lg text-cyan-400 mb-4">COMMUNITY PARTNERS</h3>
+                      <h3 className="font-press-start text-lg text-cyan-400 mb-4">🤝 COMMUNITY PARTNERS</h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {hackathon.partners.map((partner, i) => (
-                          <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-700 p-6 hover:border-maximally-yellow transition-colors flex items-center justify-center">
-                            <p className="font-press-start text-sm text-gray-300 text-center">{partner}</p>
+                          <div key={i} className="pixel-card bg-gray-900 border-2 border-purple-500 p-6 hover:border-maximally-yellow transition-colors flex items-center justify-center hover:scale-105">
+                            <p className="font-press-start text-sm text-white text-center">{partner}</p>
                           </div>
                         ))}
                       </div>
@@ -932,8 +1169,20 @@ export default function PublicHackathon() {
                   {/* Submit Project Section (for registered users) */}
                   {(() => {
                     const now = new Date();
-                    const submissionClosed = hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now;
-                    const submissionNotOpen = hackathon.submission_opens_at && new Date(hackathon.submission_opens_at) > now;
+                    const subControl = hackathon.submission_control || 'auto';
+                    
+                    // Check period control first
+                    const isSubmissionForceOpen = subControl === 'open';
+                    const isSubmissionForceClosed = subControl === 'closed';
+                    
+                    // Timeline-based checks (only used if control is 'auto')
+                    const submissionClosedByTimeline = hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now;
+                    const submissionNotOpenByTimeline = hackathon.submission_opens_at && new Date(hackathon.submission_opens_at) > now;
+                    
+                    // Final status
+                    const submissionClosed = isSubmissionForceClosed || (subControl === 'auto' && submissionClosedByTimeline);
+                    const submissionNotOpen = !isSubmissionForceOpen && subControl === 'auto' && submissionNotOpenByTimeline;
+                    const submissionOpen = isSubmissionForceOpen || (subControl === 'auto' && !submissionClosedByTimeline && !submissionNotOpenByTimeline);
 
                     if (submissionClosed) {
                       return (
@@ -957,7 +1206,144 @@ export default function PublicHackathon() {
                       );
                     }
 
-                    if (user) {
+                    if (user && userSubmission) {
+                      // User has already submitted - show their submission
+                      const isEdited = userSubmission.updated_at && userSubmission.submitted_at && 
+                        new Date(userSubmission.updated_at) > new Date(userSubmission.submitted_at);
+                      
+                      // Check if user is in a team but not the leader
+                      const isInTeam = userRegistration?.team_id && userRegistration?.registration_type === 'team';
+                      const isTeamLeader = isInTeam && userRegistration?.team?.team_leader_id === user.id;
+                      const isTeamMemberNotLeader = isInTeam && !isTeamLeader;
+                      const canEdit = !isTeamMemberNotLeader; // Only leader or solo can edit
+                      
+                      return (
+                        <div className="pixel-card bg-gray-900 border-2 border-green-500 p-6">
+                          <div className="flex items-center gap-3 mb-4">
+                            <CheckCircle className="h-6 w-6 text-green-500" />
+                            <h2 className="font-press-start text-xl text-green-500">
+                              {isInTeam ? 'TEAM_SUBMISSION' : 'YOUR_SUBMISSION'}
+                            </h2>
+                          </div>
+                          
+                          {/* Team info for team submissions */}
+                          {isInTeam && (
+                            <div className="bg-blue-900/20 border border-blue-600 px-3 py-2 rounded mb-4">
+                              <p className="text-blue-400 text-xs font-jetbrains">
+                                👥 Team: {userRegistration?.team?.team_name}
+                              </p>
+                            </div>
+                          )}
+                          
+                          <div className="bg-black/50 border border-gray-700 p-4 rounded mb-4">
+                            <h3 className="font-press-start text-lg text-white mb-2">{userSubmission.project_name}</h3>
+                            {userSubmission.tagline && (
+                              <p className="text-gray-400 font-jetbrains text-sm mb-3 italic">"{userSubmission.tagline}"</p>
+                            )}
+                            {userSubmission.description && (
+                              <p className="text-gray-300 font-jetbrains text-sm mb-3 line-clamp-3">{userSubmission.description}</p>
+                            )}
+                            
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {userSubmission.technologies_used?.map((tech: string, i: number) => (
+                                <span key={i} className="px-2 py-1 bg-gray-800 text-gray-300 text-xs font-jetbrains rounded">
+                                  {tech}
+                                </span>
+                              ))}
+                            </div>
+                            
+                            <div className="flex flex-wrap gap-3 text-sm">
+                              {userSubmission.github_repo && (
+                                <a href={userSubmission.github_repo} target="_blank" rel="noopener noreferrer" 
+                                   className="text-blue-400 hover:text-blue-300 font-jetbrains flex items-center gap-1">
+                                  <ExternalLink className="h-3 w-3" /> GitHub
+                                </a>
+                              )}
+                              {userSubmission.demo_url && (
+                                <a href={userSubmission.demo_url} target="_blank" rel="noopener noreferrer"
+                                   className="text-green-400 hover:text-green-300 font-jetbrains flex items-center gap-1">
+                                  <ExternalLink className="h-3 w-3" /> Demo
+                                </a>
+                              )}
+                              {userSubmission.video_url && (
+                                <a href={userSubmission.video_url} target="_blank" rel="noopener noreferrer"
+                                   className="text-purple-400 hover:text-purple-300 font-jetbrains flex items-center gap-1">
+                                  <ExternalLink className="h-3 w-3" /> Video
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {/* Submission status */}
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="text-sm font-jetbrains">
+                              <span className="text-gray-500">Status: </span>
+                              <span className={userSubmission.status === 'submitted' ? 'text-green-400' : 'text-yellow-400'}>
+                                {userSubmission.status === 'submitted' ? 'SUBMITTED' : 'DRAFT'}
+                              </span>
+                            </div>
+                            {userSubmission.submitted_at && (
+                              <div className="text-xs text-gray-500 font-jetbrains">
+                                Submitted: {new Date(userSubmission.submitted_at).toLocaleString()}
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Edited indicator */}
+                          {isEdited && (
+                            <div className="bg-yellow-900/20 border border-yellow-600 px-3 py-2 rounded mb-4">
+                              <p className="text-yellow-400 text-xs font-jetbrains">
+                                ✏️ Edited on {new Date(userSubmission.updated_at).toLocaleString()}
+                              </p>
+                            </div>
+                          )}
+                          
+                          {/* Edit button - only if submissions are still open AND user can edit */}
+                          {submissionOpen && canEdit && (
+                            <Link
+                              to={`/hackathon/${slug}/submit`}
+                              className="pixel-button bg-maximally-yellow text-black px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white transition-colors inline-flex items-center gap-2"
+                            >
+                              <FileText className="h-4 w-4" />
+                              EDIT_SUBMISSION
+                            </Link>
+                          )}
+                          
+                          {/* Message for team members who can't edit */}
+                          {submissionOpen && isTeamMemberNotLeader && (
+                            <div className="bg-gray-800/50 border border-gray-600 px-4 py-3 rounded">
+                              <p className="text-gray-400 text-sm font-jetbrains">
+                                Only the team leader can edit the submission.
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    }
+
+                    if (user && submissionOpen) {
+                      // Check if user is in a team but not the leader
+                      const isInTeam = userRegistration?.team_id && userRegistration?.registration_type === 'team';
+                      const isTeamLeader = isInTeam && userRegistration?.team?.team_leader_id === user.id;
+                      const isTeamMemberNotLeader = isInTeam && !isTeamLeader;
+
+                      if (isTeamMemberNotLeader) {
+                        return (
+                          <div className="pixel-card bg-gray-900 border-2 border-yellow-500 p-6">
+                            <div className="flex items-center gap-3 mb-4">
+                              <Users className="h-6 w-6 text-yellow-500" />
+                              <h2 className="font-press-start text-xl text-yellow-500">TEAM_SUBMISSION</h2>
+                            </div>
+                            <p className="text-gray-300 font-jetbrains mb-2">
+                              You are part of team <span className="text-yellow-400 font-bold">{userRegistration?.team?.team_name}</span>.
+                            </p>
+                            <p className="text-gray-400 font-jetbrains text-sm">
+                              Only the team leader can submit a project on behalf of the team. Please coordinate with your team leader to submit your project.
+                            </p>
+                          </div>
+                        );
+                      }
+
                       return (
                         <div className="pixel-card bg-gray-900 border-2 border-maximally-red p-6">
                           <h2 className="font-press-start text-xl text-maximally-red mb-4">SUBMIT_YOUR_PROJECT</h2>
@@ -996,6 +1382,118 @@ export default function PublicHackathon() {
                     <h2 className="font-press-start text-2xl text-maximally-red mb-6">SUBMITTED_PROJECTS</h2>
                     <ProjectsGallery hackathonId={hackathon.id} />
                   </div>
+                </div>
+              )}
+
+              {/* Winners Tab */}
+              {activeTab === 'winners' && hackathon.winners_announced && (
+                <div className="space-y-8">
+                  <div>
+                    <h2 className="font-press-start text-2xl text-maximally-yellow mb-2">🏆 WINNERS_ANNOUNCED</h2>
+                    {hackathon.winners_announced_at && (
+                      <p className="text-gray-400 font-jetbrains text-sm mb-6">
+                        Announced on {new Date(hackathon.winners_announced_at).toLocaleDateString('en-US', {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    )}
+                  </div>
+
+                  {winners.length === 0 ? (
+                    <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
+                      <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                      <p className="font-press-start text-gray-400">LOADING_WINNERS...</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {winners.map((winner, index) => (
+                        <div 
+                          key={winner.id} 
+                          className={`pixel-card bg-gray-900 border-2 p-6 transition-all hover:scale-[1.02] ${
+                            index === 0 ? 'border-yellow-400 bg-yellow-400/5' :
+                            index === 1 ? 'border-gray-300 bg-gray-300/5' :
+                            index === 2 ? 'border-orange-400 bg-orange-400/5' :
+                            'border-gray-700'
+                          }`}
+                        >
+                          <div className="flex items-start gap-4">
+                            <div className={`minecraft-block w-16 h-16 flex items-center justify-center flex-shrink-0 ${
+                              index === 0 ? 'bg-yellow-400' :
+                              index === 1 ? 'bg-gray-300' :
+                              index === 2 ? 'bg-orange-400' :
+                              'bg-gray-600'
+                            }`}>
+                              <Trophy className={`h-8 w-8 ${index === 0 ? 'text-black' : 'text-white'}`} />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className={`font-press-start text-lg ${
+                                  index === 0 ? 'text-yellow-400' :
+                                  index === 1 ? 'text-gray-300' :
+                                  index === 2 ? 'text-orange-400' :
+                                  'text-gray-400'
+                                }`}>
+                                  {winner.prize_position}
+                                </span>
+                                {winner.prize_amount && (
+                                  <span className="text-maximally-yellow font-press-start text-sm">
+                                    {winner.prize_amount}
+                                  </span>
+                                )}
+                              </div>
+                              
+                              <h3 className="font-press-start text-xl text-white mb-2">
+                                {winner.submission?.project_name || 'Unknown Project'}
+                              </h3>
+                              
+                              {winner.submission?.tagline && (
+                                <p className="text-gray-400 font-jetbrains italic mb-3">
+                                  "{winner.submission.tagline}"
+                                </p>
+                              )}
+                              
+                              <p className="text-gray-500 font-jetbrains text-sm mb-3">
+                                By: {winner.team_name || winner.submission?.user_name || 'Anonymous'}
+                              </p>
+                              
+                              <div className="flex flex-wrap gap-3">
+                                {winner.submission?.id && (
+                                  <Link 
+                                    to={`/project/${winner.submission.id}`}
+                                    className="text-maximally-yellow hover:text-maximally-red font-jetbrains text-sm flex items-center gap-1"
+                                  >
+                                    <ExternalLink className="h-4 w-4" /> View Project
+                                  </Link>
+                                )}
+                                {winner.submission?.github_repo && (
+                                  <a 
+                                    href={winner.submission.github_repo} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-blue-400 hover:text-blue-300 font-jetbrains text-sm flex items-center gap-1"
+                                  >
+                                    <ExternalLink className="h-4 w-4" /> GitHub
+                                  </a>
+                                )}
+                                {winner.submission?.demo_url && (
+                                  <a 
+                                    href={winner.submission.demo_url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-green-400 hover:text-green-300 font-jetbrains text-sm flex items-center gap-1"
+                                  >
+                                    <ExternalLink className="h-4 w-4" /> Demo
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -1159,6 +1657,8 @@ export default function PublicHackathon() {
                   teamSizeMax={hackathon.team_size_max || 4}
                   registrationOpensAt={hackathon.registration_opens_at}
                   registrationClosesAt={hackathon.registration_closes_at}
+                  registrationControl={hackathon.registration_control}
+                  buildingControl={hackathon.building_control}
                   onRegistrationChange={fetchHackathon}
                 />
               </div>

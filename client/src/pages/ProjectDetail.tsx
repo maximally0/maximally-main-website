@@ -228,16 +228,6 @@ export default function ProjectDetail() {
             </div>
           )}
 
-          {/* Judge Feedback */}
-          {project.feedback && (
-            <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-8 mb-8">
-              <h2 className="font-press-start text-xl text-maximally-red mb-6">JUDGE_FEEDBACK</h2>
-              <div className="bg-black/50 border border-gray-700 p-6">
-                <p className="text-gray-300 font-jetbrains leading-relaxed">{project.feedback}</p>
-              </div>
-            </div>
-          )}
-
           {/* Hackathon Info */}
           <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-8">
             <h2 className="font-press-start text-xl text-maximally-red mb-6">HACKATHON_INFO</h2>

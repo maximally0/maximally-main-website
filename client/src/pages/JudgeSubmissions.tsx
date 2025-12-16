@@ -16,8 +16,8 @@ interface Submission {
   video_url?: string;
   technologies_used?: string[];
   score?: number;
+  criteria_scores?: string;
   feedback?: string;
-  prize_won?: string;
   team?: { team_name: string };
   user_name: string;
   submitted_at: string;
@@ -32,15 +32,54 @@ export default function JudgeSubmissions() {
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [showScoreModal, setShowScoreModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'unscored' | 'scored'>('unscored');
+  const [hackathon, setHackathon] = useState<any>(null);
   const [scoreData, setScoreData] = useState({
-    score: '',
-    feedback: '',
-    prize_won: ''
+    innovation: 50,
+    technical: 50,
+    design: 50,
+    presentation: 50,
+    impact: 50,
+    feedback: ''
   });
 
   useEffect(() => {
     fetchSubmissions();
+    fetchHackathon();
   }, [hackathonId]);
+
+  const fetchHackathon = async () => {
+    try {
+      const response = await fetch(`/api/hackathons/id/${hackathonId}`);
+      const data = await response.json();
+      if (data.success) {
+        setHackathon(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching hackathon:', error);
+    }
+  };
+
+  // Check if judging is open
+  const isJudgingOpen = () => {
+    if (!hackathon) return false;
+    
+    const now = new Date();
+    const judgingControl = hackathon.judging_control || 'auto';
+    
+    // Force open
+    if (judgingControl === 'open') return true;
+    // Force closed
+    if (judgingControl === 'closed') return false;
+    
+    // Auto - check timeline
+    const judgingStarts = hackathon.judging_starts_at ? new Date(hackathon.judging_starts_at) : null;
+    const judgingEnds = hackathon.judging_ends_at ? new Date(hackathon.judging_ends_at) : null;
+    
+    if (judgingStarts && now < judgingStarts) return false;
+    if (judgingEnds && now > judgingEnds) return false;
+    
+    return true;
+  };
 
   const fetchSubmissions = async () => {
     try {
@@ -60,16 +99,36 @@ export default function JudgeSubmissions() {
 
   const handleScore = (submission: Submission) => {
     setSelectedSubmission(submission);
+    // Parse existing scores if available (stored as JSON in score field or separate fields)
+    const existingScores = submission.criteria_scores ? JSON.parse(submission.criteria_scores as string) : null;
     setScoreData({
-      score: submission.score?.toString() || '',
-      feedback: submission.feedback || '',
-      prize_won: submission.prize_won || ''
+      innovation: existingScores?.innovation ?? 50,
+      technical: existingScores?.technical ?? 50,
+      design: existingScores?.design ?? 50,
+      presentation: existingScores?.presentation ?? 50,
+      impact: existingScores?.impact ?? 50,
+      feedback: submission.feedback || ''
     });
     setShowScoreModal(true);
   };
 
+  // Calculate overall score from criteria
+  const calculateOverallScore = () => {
+    const { innovation, technical, design, presentation, impact } = scoreData;
+    return ((innovation + technical + design + presentation + impact) / 5).toFixed(1);
+  };
+
   const handleSubmitScore = async () => {
     if (!selectedSubmission) return;
+
+    const overallScore = parseFloat(calculateOverallScore());
+    const criteriaScores = {
+      innovation: scoreData.innovation,
+      technical: scoreData.technical,
+      design: scoreData.design,
+      presentation: scoreData.presentation,
+      impact: scoreData.impact
+    };
 
     try {
       const headers = await getAuthHeaders();
@@ -77,9 +136,9 @@ export default function JudgeSubmissions() {
         method: 'POST',
         headers,
         body: JSON.stringify({
-          score: parseFloat(scoreData.score),
-          feedback: scoreData.feedback,
-          prize_won: scoreData.prize_won || null
+          score: overallScore,
+          criteria_scores: JSON.stringify(criteriaScores),
+          feedback: scoreData.feedback
         })
       });
 
@@ -88,7 +147,7 @@ export default function JudgeSubmissions() {
       if (data.success) {
         toast({
           title: "Score Submitted!",
-          description: "Your evaluation has been saved",
+          description: `Overall score: ${overallScore}/100`,
         });
         setShowScoreModal(false);
         fetchSubmissions();
@@ -155,6 +214,25 @@ export default function JudgeSubmissions() {
           </Link>
 
           <h1 className="font-press-start text-3xl text-maximally-red mb-8">JUDGE_SUBMISSIONS</h1>
+
+          {/* Judging Period Status */}
+          {hackathon && !isJudgingOpen() && (
+            <div className="pixel-card bg-yellow-900/20 border-2 border-yellow-500 p-4 mb-6">
+              <div className="flex items-center gap-3">
+                <Award className="h-6 w-6 text-yellow-500" />
+                <div>
+                  <p className="font-press-start text-sm text-yellow-500">JUDGING_NOT_OPEN</p>
+                  <p className="font-jetbrains text-gray-400 text-sm mt-1">
+                    {hackathon.judging_control === 'closed' 
+                      ? 'Judging has been closed by the organizer.'
+                      : hackathon.judging_starts_at && new Date(hackathon.judging_starts_at) > new Date()
+                        ? `Judging starts on ${new Date(hackathon.judging_starts_at).toLocaleDateString()}`
+                        : 'Judging period has ended.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Tabs */}
           <div className="flex gap-2 mb-6">
@@ -251,11 +329,19 @@ export default function JudgeSubmissions() {
                         <div className="lg:w-48 flex flex-col gap-2">
                           <button
                             onClick={() => handleScore(submission)}
-                            className="pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors flex items-center justify-center gap-2"
+                            disabled={!isJudgingOpen()}
+                            className={`pixel-button px-6 py-3 font-press-start text-sm transition-colors flex items-center justify-center gap-2 ${
+                              isJudgingOpen()
+                                ? 'bg-maximally-red text-white hover:bg-maximally-yellow hover:text-black'
+                                : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                            }`}
                           >
                             <Star className="h-4 w-4" />
                             SCORE
                           </button>
+                          {!isJudgingOpen() && (
+                            <p className="text-xs text-gray-500 font-jetbrains text-center">Judging not open</p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -356,11 +442,19 @@ export default function JudgeSubmissions() {
                     <div className="lg:w-48 flex flex-col gap-2">
                       <button
                         onClick={() => handleScore(submission)}
-                        className="pixel-button bg-cyan-600 text-white px-6 py-3 font-press-start text-sm hover:bg-cyan-700 transition-colors flex items-center justify-center gap-2"
+                        disabled={!isJudgingOpen()}
+                        className={`pixel-button px-6 py-3 font-press-start text-sm transition-colors flex items-center justify-center gap-2 ${
+                          isJudgingOpen()
+                            ? 'bg-cyan-600 text-white hover:bg-cyan-700'
+                            : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        }`}
                       >
                         <Star className="h-4 w-4" />
                         EDIT_SCORE
                       </button>
+                      {!isJudgingOpen() && (
+                        <p className="text-xs text-gray-500 font-jetbrains text-center">Judging not open</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -374,64 +468,157 @@ export default function JudgeSubmissions() {
 
       {/* Score Modal */}
       {showScoreModal && selectedSubmission && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="pixel-card bg-black border-4 border-maximally-red max-w-2xl w-full">
-            <div className="p-6 border-b-2 border-maximally-red">
-              <h2 className="font-press-start text-xl text-maximally-red">SCORE_PROJECT</h2>
-              <p className="font-jetbrains text-gray-400 text-sm mt-2">{selectedSubmission.project_name}</p>
-            </div>
-
-            <div className="p-6 space-y-6">
-              {/* Score */}
-              <div>
-                <label className="font-jetbrains text-sm text-gray-300 mb-2 block">
-                  Score (0-100) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.1"
-                  value={scoreData.score}
-                  onChange={(e) => setScoreData({ ...scoreData, score: e.target.value })}
-                  className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
-                  placeholder="85.5"
-                />
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto">
+          <div className="min-h-full flex items-center justify-center p-4">
+            <div className="pixel-card bg-black border-4 border-maximally-red max-w-2xl w-full my-8">
+              <div className="p-6 border-b-2 border-maximally-red">
+                <h2 className="font-press-start text-xl text-maximally-red">SCORE_PROJECT</h2>
+                <p className="font-jetbrains text-gray-400 text-sm mt-2">{selectedSubmission.project_name}</p>
               </div>
 
-              {/* Feedback */}
-              <div>
-                <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Feedback</label>
-                <textarea
-                  value={scoreData.feedback}
-                  onChange={(e) => setScoreData({ ...scoreData, feedback: e.target.value })}
-                  rows={4}
-                  className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
-                  placeholder="Great project! The implementation is solid..."
-                />
+              <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+                {/* Overall Score Display */}
+                <div className="bg-gray-900 border-2 border-maximally-yellow p-4 rounded text-center">
+                  <p className="font-press-start text-xs text-gray-400 mb-1">OVERALL_SCORE</p>
+                  <p className="font-press-start text-3xl text-maximally-yellow">{calculateOverallScore()}</p>
+                  <p className="font-jetbrains text-xs text-gray-500 mt-1">Average of all criteria</p>
+                </div>
+
+                {/* Scoring Criteria */}
+                <div className="space-y-4">
+                  <p className="font-press-start text-sm text-white">SCORING_CRITERIA</p>
+                  
+                  {/* Innovation */}
+                  <div className="bg-gray-900/50 p-3 rounded">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="font-jetbrains text-sm text-gray-300">Innovation</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={scoreData.innovation}
+                        onChange={(e) => setScoreData({ ...scoreData, innovation: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
+                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={scoreData.innovation}
+                      onChange={(e) => setScoreData({ ...scoreData, innovation: parseInt(e.target.value) })}
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                    />
+                  </div>
+
+                  {/* Technical */}
+                  <div className="bg-gray-900/50 p-3 rounded">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="font-jetbrains text-sm text-gray-300">Technical Excellence</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={scoreData.technical}
+                        onChange={(e) => setScoreData({ ...scoreData, technical: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
+                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={scoreData.technical}
+                      onChange={(e) => setScoreData({ ...scoreData, technical: parseInt(e.target.value) })}
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                    />
+                  </div>
+
+                  {/* Design */}
+                  <div className="bg-gray-900/50 p-3 rounded">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="font-jetbrains text-sm text-gray-300">Design & UX</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={scoreData.design}
+                        onChange={(e) => setScoreData({ ...scoreData, design: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
+                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={scoreData.design}
+                      onChange={(e) => setScoreData({ ...scoreData, design: parseInt(e.target.value) })}
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                    />
+                  </div>
+
+                  {/* Presentation */}
+                  <div className="bg-gray-900/50 p-3 rounded">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="font-jetbrains text-sm text-gray-300">Presentation</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={scoreData.presentation}
+                        onChange={(e) => setScoreData({ ...scoreData, presentation: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
+                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={scoreData.presentation}
+                      onChange={(e) => setScoreData({ ...scoreData, presentation: parseInt(e.target.value) })}
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                    />
+                  </div>
+
+                  {/* Impact */}
+                  <div className="bg-gray-900/50 p-3 rounded">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="font-jetbrains text-sm text-gray-300">Impact & Usefulness</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={scoreData.impact}
+                        onChange={(e) => setScoreData({ ...scoreData, impact: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
+                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                      />
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={scoreData.impact}
+                      onChange={(e) => setScoreData({ ...scoreData, impact: parseInt(e.target.value) })}
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                    />
+                  </div>
+                </div>
+
+                {/* Feedback */}
+                <div>
+                  <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Feedback (Optional)</label>
+                  <textarea
+                    value={scoreData.feedback}
+                    onChange={(e) => setScoreData({ ...scoreData, feedback: e.target.value })}
+                    rows={3}
+                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                    placeholder="Great project! The implementation is solid..."
+                  />
+                </div>
               </div>
 
-              {/* Prize */}
-              <div>
-                <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Prize Won (Optional)</label>
-                <select
-                  value={scoreData.prize_won}
-                  onChange={(e) => setScoreData({ ...scoreData, prize_won: e.target.value })}
-                  className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
-                >
-                  <option value="">No Prize</option>
-                  <option value="1ST PLACE">1st Place</option>
-                  <option value="2ND PLACE">2nd Place</option>
-                  <option value="3RD PLACE">3rd Place</option>
-                  <option value="BEST DESIGN">Best Design</option>
-                  <option value="BEST INNOVATION">Best Innovation</option>
-                  <option value="BEST TECHNICAL">Best Technical</option>
-                  <option value="PEOPLE'S CHOICE">People's Choice</option>
-                </select>
-              </div>
-
-              {/* Buttons */}
-              <div className="flex gap-3">
+              {/* Buttons - Fixed at bottom */}
+              <div className="p-6 border-t-2 border-gray-800 flex gap-3">
                 <button
                   onClick={() => setShowScoreModal(false)}
                   className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600"
@@ -440,8 +627,7 @@ export default function JudgeSubmissions() {
                 </button>
                 <button
                   onClick={handleSubmitScore}
-                  disabled={!scoreData.score}
-                  className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black disabled:opacity-50"
+                  className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black"
                 >
                   SUBMIT_SCORE
                 </button>

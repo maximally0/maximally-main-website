@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Plus, Calendar, MapPin, Users, Eye, Clock, Edit, Trash2, Send, Copy } from 'lucide-react';
+import { Plus, Calendar, MapPin, Users, Eye, Clock, Edit, Trash2, Send, Copy, Award, Shield, Star, Crown, Flame } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 import Footer from '@/components/Footer';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+
+type OrganizerTier = 'starter' | 'verified' | 'senior' | 'chief' | 'legacy';
+
+interface OrganizerProfileData {
+  tier: OrganizerTier;
+  organization_name?: string;
+  total_hackathons_hosted: number;
+  total_participants_reached: number;
+}
 
 interface Hackathon {
   id: number;
@@ -27,8 +36,45 @@ export default function OrganizerDashboard() {
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
   const [hackathons, setHackathons] = useState<Hackathon[]>([]);
+  const [organizerProfile, setOrganizerProfile] = useState<OrganizerProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; id: number | null }>({ show: false, id: null });
+
+  const getTierInfo = (tier: OrganizerTier) => {
+    const tierConfig = {
+      starter: { 
+        label: 'Starter Organizer', 
+        color: 'text-green-400 border-green-400 bg-green-400/10', 
+        icon: <Award className="h-4 w-4" />,
+        description: 'Entry-level organizer building experience'
+      },
+      verified: { 
+        label: 'Verified Organizer', 
+        color: 'text-blue-400 border-blue-400 bg-blue-400/10', 
+        icon: <Shield className="h-4 w-4" />,
+        description: 'Experienced organizer with proven track record'
+      },
+      senior: { 
+        label: 'Senior Organizer', 
+        color: 'text-purple-400 border-purple-400 bg-purple-400/10', 
+        icon: <Star className="h-4 w-4" />,
+        description: 'Established leader with extensive experience'
+      },
+      chief: { 
+        label: 'Chief Organizer', 
+        color: 'text-yellow-400 border-yellow-400 bg-yellow-400/10', 
+        icon: <Crown className="h-4 w-4" />,
+        description: 'Industry leader overseeing major events'
+      },
+      legacy: { 
+        label: 'Legacy Organizer', 
+        color: 'text-red-400 border-red-400 bg-red-400/10', 
+        icon: <Flame className="h-4 w-4" />,
+        description: 'Distinguished figure with exceptional contributions'
+      }
+    };
+    return tierConfig[tier] || tierConfig.starter;
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -39,8 +85,22 @@ export default function OrganizerDashboard() {
   useEffect(() => {
     if (user) {
       fetchHackathons();
+      fetchOrganizerProfile();
     }
   }, [user]);
+
+  const fetchOrganizerProfile = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch('/api/organizer/my-profile', { headers });
+      const data = await response.json();
+      if (data.success && data.data) {
+        setOrganizerProfile(data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching organizer profile:', error);
+    }
+  };
 
   const fetchHackathons = async () => {
     try {
@@ -180,12 +240,22 @@ export default function OrganizerDashboard() {
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="mb-12">
-            <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl text-maximally-red mb-4">
-              ORGANIZER DASHBOARD
-            </h1>
-            <p className="font-jetbrains text-gray-400">
-              Manage your hackathons and track their performance
-            </p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl text-maximally-red mb-4">
+                  ORGANIZER DASHBOARD
+                </h1>
+                <p className="font-jetbrains text-gray-400">
+                  Manage your hackathons and track their performance
+                </p>
+              </div>
+              {organizerProfile && (
+                <div className={`minecraft-block border-2 ${getTierInfo(organizerProfile.tier).color} px-4 py-2 flex items-center gap-2`}>
+                  {getTierInfo(organizerProfile.tier).icon}
+                  <span className="font-press-start text-xs">{getTierInfo(organizerProfile.tier).label}</span>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Create New Button */}

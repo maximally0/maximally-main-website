@@ -140,6 +140,8 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear all errors at the start
     setError(null);
     setCaptchaError(null);
     setLoading(true);
@@ -161,14 +163,15 @@ export default function Login() {
 
     // Validation
     if (isSignUp) {
-      
-      if (password !== confirmPassword) {
-        setError('Passwords do not match');
+      // Check password length first
+      if (password.length < 8) {
+        setError('Password must be at least 8 characters long');
         setLoading(false);
         return;
       }
-      if (password.length < 8) {
-        setError('Password must be at least 8 characters long');
+      // Then check if passwords match
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
         setLoading(false);
         return;
       }
@@ -404,7 +407,10 @@ export default function Login() {
                     type="email"
                     placeholder="hacker@example.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setError(null); // Clear error when user types
+                    }}
                     className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue placeholder:text-gray-500 transition-colors"
                     required
                     data-testid="input-email"
@@ -423,7 +429,10 @@ export default function Login() {
                         type="text"
                         placeholder="Enter your full name"
                         value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        onChange={(e) => {
+                          setName(e.target.value);
+                          setError(null); // Clear error when user types
+                        }}
                         className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-yellow placeholder:text-gray-500 transition-colors"
                         required
                         data-testid="input-name"
@@ -440,7 +449,10 @@ export default function Login() {
                         type="text"
                         placeholder="choose_a_username"
                         value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        onChange={(e) => {
+                          setUsername(e.target.value);
+                          setError(null); // Clear error when user types
+                        }}
                         className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-red placeholder:text-gray-500 transition-colors"
                         required
                         data-testid="input-username"
@@ -459,7 +471,10 @@ export default function Login() {
                     type="password"
                     placeholder="••••••••"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setError(null); // Clear error when user types
+                    }}
                     className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
                     required
                     data-testid="input-password"
@@ -488,7 +503,10 @@ export default function Login() {
                       type="password"
                       placeholder="••••••••"
                       value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                        setError(null); // Clear error when user types
+                      }}
                       className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-green placeholder:text-gray-500 transition-colors"
                       required
                       data-testid="input-confirm-password"

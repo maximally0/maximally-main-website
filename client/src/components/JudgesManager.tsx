@@ -79,7 +79,7 @@ export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
   const handleAcceptRequest = async (requestId: string) => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`/api/organizer/judge-requests/${requestId}/accept`, {
+      const response = await fetch(`/api/judge-requests/${requestId}/accept`, {
         method: 'POST',
         headers
       });
@@ -107,7 +107,7 @@ export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
   const handleRejectRequest = async (requestId: string) => {
     try {
       const headers = await getAuthHeaders();
-      const response = await fetch(`/api/organizer/judge-requests/${requestId}/reject`, {
+      const response = await fetch(`/api/judge-requests/${requestId}/reject`, {
         method: 'POST',
         headers
       });
@@ -118,6 +118,35 @@ export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
         toast({
           title: "Request Rejected",
           description: "Judge request has been rejected",
+        });
+        fetchData();
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRemoveJudge = async (assignmentId: string) => {
+    if (!confirm('Are you sure you want to remove this judge from the hackathon?')) return;
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/judges/${assignmentId}`, {
+        method: 'DELETE',
+        headers
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Judge Removed",
+          description: "Judge has been removed from this hackathon",
         });
         fetchData();
       } else {
@@ -169,9 +198,18 @@ export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
                     <div className="text-sm text-gray-400">{assignment.judge_email}</div>
                   </div>
                 </div>
-                <span className="px-3 py-1 text-xs font-press-start bg-green-500/20 text-green-500 border border-green-500">
-                  ACTIVE
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 text-xs font-press-start bg-green-500/20 text-green-500 border border-green-500">
+                    ACTIVE
+                  </span>
+                  <button
+                    onClick={() => handleRemoveJudge(assignment.id)}
+                    className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded transition-colors"
+                    title="Remove judge"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -245,6 +283,14 @@ export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
             </div>
 
             <div className="p-6 space-y-6">
+              {/* Availability Notice */}
+              <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded">
+                <p className="text-yellow-400 font-jetbrains text-sm">
+                  ⚠️ Note: Judges who have set their status to "Not Available" cannot receive invitations. 
+                  Check the judge's availability on their profile before inviting.
+                </p>
+              </div>
+
               <div>
                 <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Judge Email</label>
                 <input

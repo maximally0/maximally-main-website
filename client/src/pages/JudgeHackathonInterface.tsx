@@ -67,7 +67,7 @@ export default function JudgeHackathonInterface() {
       const headers = await getAuthHeaders();
       
       // Fetch hackathon details
-      const hackathonRes = await fetch(`/api/organizer/hackathons/${hackathonId}`, { headers });
+      const hackathonRes = await fetch(`/api/hackathons/by-id/${hackathonId}`, { headers });
       const hackathonData = await hackathonRes.json();
       if (hackathonData.success) {
         setHackathon(hackathonData.data);

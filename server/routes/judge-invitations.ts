@@ -44,6 +44,21 @@ export function registerJudgeInvitationRoutes(app: Express) {
 
       const judgeId = judgeProfile.id;
 
+      // Check judge availability status from judges table
+      const { data: judgeData } = await supabaseAdmin
+        .from('judges')
+        .select('availability_status')
+        .eq('user_id', judgeId)
+        .single();
+
+      if (judgeData?.availability_status === 'not-available') {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'This judge is currently not available for judging. They have set their status to "Not Available".',
+          availability_status: 'not-available'
+        });
+      }
+
       // Verify organizer owns this hackathon
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
@@ -229,20 +244,25 @@ export function registerJudgeInvitationRoutes(app: Express) {
 
       const { data, error } = await supabaseAdmin
         .from('judge_hackathon_requests')
-        .select(`
-          *,
-          judge:profiles!judge_hackathon_requests_judge_id_fkey(username, full_name, avatar_url, email)
-        `)
+        .select('*')
         .eq('hackathon_id', hackathonId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      // Enrich with judge names
-      const enrichedData = (data || []).map((req: any) => ({
-        ...req,
-        judge_name: req.judge?.full_name || req.judge?.username || 'Unknown',
-        judge_email: req.judge?.email || ''
+      // Fetch judge profiles separately since there's no direct FK to profiles
+      const enrichedData = await Promise.all((data || []).map(async (req: any) => {
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('username, full_name, avatar_url, email')
+          .eq('id', req.judge_id)
+          .single();
+        
+        return {
+          ...req,
+          judge_name: profile?.full_name || profile?.username || 'Unknown',
+          judge_email: profile?.email || ''
+        };
       }));
 
       return res.json({ success: true, data: enrichedData });
@@ -254,18 +274,24 @@ export function registerJudgeInvitationRoutes(app: Express) {
   // Get judge assignments for a specific hackathon (organizer)
   app.get("/api/organizer/hackathons/:hackathonId/judge-assignments", async (req, res) => {
     try {
+      console.log('📋 [JUDGE ASSIGNMENTS] Fetching assignments for hackathon');
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
+        console.log('❌ [JUDGE ASSIGNMENTS] No auth header');
         return res.status(401).json({ success: false, message: 'Unauthorized' });
       }
 
       const token = authHeader.slice('Bearer '.length);
       const userId = await bearerUserId(supabaseAdmin, token);
       if (!userId) {
+        console.log('❌ [JUDGE ASSIGNMENTS] Invalid token');
         return res.status(401).json({ success: false, message: 'Invalid token' });
       }
 
+      console.log('✅ [JUDGE ASSIGNMENTS] User ID:', userId);
+
       const { hackathonId } = req.params;
+      console.log('📋 [JUDGE ASSIGNMENTS] Hackathon ID:', hackathonId);
 
       // Verify ownership
       const { data: hackathon } = await supabaseAdmin
@@ -274,27 +300,36 @@ export function registerJudgeInvitationRoutes(app: Express) {
         .eq('id', hackathonId)
         .single();
 
+      console.log('📋 [JUDGE ASSIGNMENTS] Hackathon organizer_id:', hackathon?.organizer_id);
+      console.log('📋 [JUDGE ASSIGNMENTS] Match:', hackathon?.organizer_id === userId);
+
       if (hackathon?.organizer_id !== userId) {
+        console.log('❌ [JUDGE ASSIGNMENTS] Not authorized - organizer mismatch');
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
 
       const { data, error } = await supabaseAdmin
         .from('judge_hackathon_assignments')
-        .select(`
-          *,
-          judge:profiles!judge_hackathon_assignments_judge_id_fkey(username, full_name, avatar_url, email)
-        `)
+        .select('*')
         .eq('hackathon_id', hackathonId)
         .eq('status', 'active')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      // Enrich with judge names
-      const enrichedData = (data || []).map((assignment: any) => ({
-        ...assignment,
-        judge_name: assignment.judge?.full_name || assignment.judge?.username || 'Unknown',
-        judge_email: assignment.judge?.email || ''
+      // Fetch judge profiles separately since there's no direct FK to profiles
+      const enrichedData = await Promise.all((data || []).map(async (assignment: any) => {
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('username, full_name, avatar_url, email')
+          .eq('id', assignment.judge_id)
+          .single();
+        
+        return {
+          ...assignment,
+          judge_name: profile?.full_name || profile?.username || 'Unknown',
+          judge_email: profile?.email || ''
+        };
       }));
 
       return res.json({ success: true, data: enrichedData });
@@ -321,15 +356,28 @@ export function registerJudgeInvitationRoutes(app: Express) {
         .from('judge_hackathon_requests')
         .select(`
           *,
-          hackathon:organizer_hackathons(id, hackathon_name, start_date, end_date, format),
-          judge:profiles!judge_hackathon_requests_judge_id_fkey(username, full_name, avatar_url)
+          hackathon:organizer_hackathons(id, hackathon_name, start_date, end_date, format)
         `)
         .eq('organizer_id', userId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      return res.json({ success: true, data });
+      // Fetch judge profiles separately
+      const enrichedData = await Promise.all((data || []).map(async (req: any) => {
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('username, full_name, avatar_url')
+          .eq('id', req.judge_id)
+          .single();
+        
+        return {
+          ...req,
+          judge: profile
+        };
+      }));
+
+      return res.json({ success: true, data: enrichedData });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
@@ -352,14 +400,57 @@ export function registerJudgeInvitationRoutes(app: Express) {
       const { requestId } = req.params;
       const { responseMessage } = req.body;
 
-      const { data, error } = await supabaseAdmin.rpc('accept_judge_request', {
-        p_request_id: requestId,
-        p_response_message: responseMessage || null
-      });
+      // Get the request details
+      const { data: request, error: reqError } = await supabaseAdmin
+        .from('judge_hackathon_requests')
+        .select('*')
+        .eq('id', requestId)
+        .single();
 
-      if (error) throw error;
+      if (reqError || !request) {
+        return res.status(404).json({ success: false, message: 'Request not found' });
+      }
 
-      return res.json({ success: true, data });
+      // Verify the user is authorized (either the organizer or the judge depending on request type)
+      const isOrganizer = request.organizer_id === userId;
+      const isJudge = request.judge_id === userId;
+      
+      if (request.request_type === 'judge_request' && !isOrganizer) {
+        return res.status(403).json({ success: false, message: 'Only the organizer can accept judge requests' });
+      }
+      if (request.request_type === 'organizer_invite' && !isJudge) {
+        return res.status(403).json({ success: false, message: 'Only the judge can accept organizer invites' });
+      }
+
+      // Update the request status
+      const { error: updateError } = await supabaseAdmin
+        .from('judge_hackathon_requests')
+        .update({
+          status: 'accepted',
+          response_message: responseMessage || null,
+          responded_at: new Date().toISOString(),
+          responded_by: userId
+        })
+        .eq('id', requestId);
+
+      if (updateError) throw updateError;
+
+      // Create the assignment
+      const { data: assignment, error: assignError } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .insert({
+          hackathon_id: request.hackathon_id,
+          judge_id: request.judge_id,
+          assigned_by: userId,
+          role: 'judge',
+          status: 'active'
+        })
+        .select()
+        .single();
+
+      if (assignError) throw assignError;
+
+      return res.json({ success: true, data: assignment });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
@@ -382,14 +473,42 @@ export function registerJudgeInvitationRoutes(app: Express) {
       const { requestId } = req.params;
       const { responseMessage } = req.body;
 
-      const { data, error } = await supabaseAdmin.rpc('reject_judge_request', {
-        p_request_id: requestId,
-        p_response_message: responseMessage || null
-      });
+      // Get the request details
+      const { data: request, error: reqError } = await supabaseAdmin
+        .from('judge_hackathon_requests')
+        .select('*')
+        .eq('id', requestId)
+        .single();
 
-      if (error) throw error;
+      if (reqError || !request) {
+        return res.status(404).json({ success: false, message: 'Request not found' });
+      }
 
-      return res.json({ success: true, data });
+      // Verify the user is authorized
+      const isOrganizer = request.organizer_id === userId;
+      const isJudge = request.judge_id === userId;
+      
+      if (request.request_type === 'judge_request' && !isOrganizer) {
+        return res.status(403).json({ success: false, message: 'Only the organizer can reject judge requests' });
+      }
+      if (request.request_type === 'organizer_invite' && !isJudge) {
+        return res.status(403).json({ success: false, message: 'Only the judge can reject organizer invites' });
+      }
+
+      // Update the request status
+      const { error: updateError } = await supabaseAdmin
+        .from('judge_hackathon_requests')
+        .update({
+          status: 'rejected',
+          response_message: responseMessage || null,
+          responded_at: new Date().toISOString(),
+          responded_by: userId
+        })
+        .eq('id', requestId);
+
+      if (updateError) throw updateError;
+
+      return res.json({ success: true, message: 'Request rejected' });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
@@ -420,6 +539,95 @@ export function registerJudgeInvitationRoutes(app: Express) {
       if (error) throw error;
 
       return res.json({ success: true });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Organizer: Remove judge from hackathon
+  app.delete("/api/organizer/hackathons/:hackathonId/judges/:assignmentId", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId, assignmentId } = req.params;
+
+      // Verify organizer owns this hackathon
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      if (hackathon?.organizer_id !== userId) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Update assignment status to 'removed'
+      const { error } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .update({ status: 'removed' })
+        .eq('id', assignmentId)
+        .eq('hackathon_id', hackathonId);
+
+      if (error) throw error;
+
+      return res.json({ success: true, message: 'Judge removed from hackathon' });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Judge: Withdraw from hackathon
+  app.post("/api/judge/hackathons/:hackathonId/withdraw", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+      const { reason } = req.body;
+
+      // Find the assignment
+      const { data: assignment, error: findError } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .select('id')
+        .eq('hackathon_id', hackathonId)
+        .eq('judge_id', userId)
+        .eq('status', 'active')
+        .single();
+
+      if (findError || !assignment) {
+        return res.status(404).json({ success: false, message: 'Assignment not found' });
+      }
+
+      // Update assignment status to 'inactive' (judge withdrew)
+      const { error } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .update({ 
+          status: 'inactive',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', assignment.id);
+
+      if (error) throw error;
+
+      return res.json({ success: true, message: 'Successfully withdrawn from hackathon' });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
