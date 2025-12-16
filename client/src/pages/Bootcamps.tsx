@@ -21,14 +21,14 @@ const Bootcamps = () => {
           <div className="mt-8 mb-12">
             <button 
               onClick={() => window.location.href = "https://tally.so/r/wQEGEA"}
-              className="pixel-button bg-[#39FF14] text-black px-12 py-6 text-xl font-press-start hover:scale-105 transform transition-all shadow-xl"
+              className="bg-gradient-to-r from-[#39FF14] to-[#00ff99] text-black px-12 py-6 text-xl font-press-start hover:scale-105 transform transition-all shadow-xl border-2 border-[#39FF14]/50"
             >
               Apply Now →
             </button>
             
             {/* YouTube Video Embed */}
             <div className="mt-8 max-w-2xl mx-auto">
-              <div className="pixel-border bg-white p-4">
+              <div className="bg-white border-2 border-[#39FF14]/30 p-4 rounded-lg">
                 <div className="aspect-video">
                   <iframe
                     width="100%"
@@ -439,7 +439,7 @@ const Bootcamps = () => {
           </p>
           <Link
             to="/wall-of-progressive-schools"
-            className="pixel-button bg-[#39FF14] text-black inline-flex items-center gap-2 px-8 py-4 text-lg hover:scale-105 transform transition-all"
+            className="bg-gradient-to-r from-[#39FF14] to-[#00ff99] text-black inline-flex items-center gap-2 px-8 py-4 text-lg hover:scale-105 transform transition-all border-2 border-[#39FF14]/50"
           >
             <span>Explore Progressive Schools</span>
             <ArrowRight className="h-5 w-5" />
