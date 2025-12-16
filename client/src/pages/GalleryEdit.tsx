@@ -9,7 +9,9 @@ import {
   Plus,
   X,
   Save,
-  Info
+  Info,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -111,10 +113,13 @@ export default function GalleryEdit() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
-          <h2 className="font-press-start text-lg text-gray-400 mb-4">LOGIN_REQUIRED</h2>
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-purple-500/10 border border-purple-500/30">
+            <Layers className="h-8 w-8 text-purple-500/50" />
+          </div>
+          <h2 className="font-press-start text-sm sm:text-base text-gray-400 mb-4">LOGIN REQUIRED</h2>
           <Link
             to="/login"
-            className="pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/30 to-pink-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs transition-all duration-300"
           >
             LOGIN
           </Link>

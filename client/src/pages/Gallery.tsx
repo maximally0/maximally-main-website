@@ -201,8 +201,8 @@ export default function Gallery() {
 
 
         {/* Filters Section */}
-        <section className="py-4 sm:py-6 border-y border-purple-500/20 bg-gray-900/30 backdrop-blur-sm sticky top-16 z-20">
-          <div className="container mx-auto px-4 sm:px-6">
+        <section className="py-4 sm:py-6 border-y border-purple-500/20 bg-gray-900/30 backdrop-blur-sm">
+          <div className="container mx-auto px-6 sm:px-8 lg:px-12">
             <div className="flex flex-col md:flex-row gap-4 mb-4">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500" />

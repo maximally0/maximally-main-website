@@ -14,9 +14,11 @@ import {
   Share2,
   Edit,
   Trash2,
-  Code,
+  Code2,
   AlertTriangle,
-  X
+  X,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import Footer from '@/components/Footer';
@@ -185,9 +187,11 @@ export default function GalleryProjectDetail() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
-          <Code className="h-16 w-16 text-gray-600 mx-auto mb-4" />
-          <h2 className="font-press-start text-lg text-gray-400">PROJECT_NOT_FOUND</h2>
-          <Link to="/gallery" className="text-maximally-red hover:underline mt-4 inline-block">
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-purple-500/10 border border-purple-500/30">
+            <Code2 className="h-10 w-10 text-purple-500/50" />
+          </div>
+          <h2 className="font-press-start text-sm sm:text-base text-gray-400 mb-4">PROJECT NOT FOUND</h2>
+          <Link to="/gallery" className="text-purple-400 hover:text-purple-300 font-jetbrains text-sm transition-colors">
             Back to Gallery
           </Link>
         </div>
@@ -205,15 +209,21 @@ export default function GalleryProjectDetail() {
         keywords={project.technologies?.join(', ')}
       />
 
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        {/* Background effects */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+        <div className="absolute top-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+
         {/* Header */}
-        <div className="pt-20 pb-8 border-b border-gray-800">
-          <div className="container mx-auto px-4">
+        <div className="relative z-10 pt-20 sm:pt-24 pb-8 border-b border-purple-500/20">
+          <div className="container mx-auto px-4 sm:px-6">
             <Link
               to="/gallery"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 font-jetbrains text-sm"
+              className="group inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 mb-6 font-jetbrains text-sm transition-colors"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
               Back to Gallery
             </Link>
 
@@ -225,15 +235,17 @@ export default function GalleryProjectDetail() {
                     <img
                       src={project.logo_url}
                       alt={project.name}
-                      className="w-16 h-16 rounded border-2 border-gray-700 object-contain bg-white"
+                      className="w-16 h-16 border border-gray-700 object-contain bg-white"
                     />
                   )}
                   <div>
-                    <h1 className="font-press-start text-2xl sm:text-3xl text-white mb-2">
-                      {project.name}
+                    <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl mb-2">
+                      <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
+                        {project.name}
+                      </span>
                     </h1>
                     {project.tagline && (
-                      <p className="text-gray-400 font-jetbrains text-lg">{project.tagline}</p>
+                      <p className="text-gray-400 font-jetbrains text-sm sm:text-base">{project.tagline}</p>
                     )}
                   </div>
                 </div>
@@ -243,20 +255,20 @@ export default function GalleryProjectDetail() {
                   <div className="mb-4">
                     <Link
                       to={`/hackathon/${project.hackathons.slug}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 border-2 border-maximally-red hover:bg-maximally-red/20 transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 hover:border-purple-400 transition-colors"
                     >
                       {project.hackathon_position ? (
                         <>
-                          <Trophy className="h-4 w-4 text-maximally-yellow" />
-                          <span className="font-press-start text-xs text-maximally-yellow">
+                          <Trophy className="h-4 w-4 text-amber-400" />
+                          <span className="font-press-start text-[10px] text-amber-300">
                             {project.hackathon_position}
                           </span>
-                          <span className="text-gray-400">at</span>
+                          <span className="text-gray-400 text-sm">at</span>
                         </>
                       ) : (
                         <span className="text-gray-400 text-sm">Submitted to</span>
                       )}
-                      <span className="font-press-start text-xs text-maximally-red">
+                      <span className="font-press-start text-[10px] text-purple-300">
                         {project.hackathons.title}
                       </span>
                     </Link>
@@ -290,16 +302,16 @@ export default function GalleryProjectDetail() {
                 )}
 
                 {/* Stats */}
-                <div className="flex items-center gap-6 text-sm text-gray-400">
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center gap-6 text-sm text-gray-500">
+                  <div className="flex items-center gap-1.5">
                     <Eye className="h-4 w-4" />
                     {project.view_count} views
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Heart className={`h-4 w-4 ${liked ? 'text-red-500 fill-red-500' : ''}`} />
+                  <div className="flex items-center gap-1.5">
+                    <Heart className={`h-4 w-4 ${liked ? 'text-pink-500 fill-pink-500' : ''}`} />
                     {likeCount} likes
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <Calendar className="h-4 w-4" />
                     {new Date(project.created_at).toLocaleDateString()}
                   </div>
@@ -314,10 +326,10 @@ export default function GalleryProjectDetail() {
                     href={project.demo_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="pixel-button bg-maximally-red text-white flex items-center justify-center gap-2 py-3 font-press-start text-xs hover:bg-red-700"
+                    className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-[10px] transition-all duration-300"
                   >
                     <ExternalLink className="h-4 w-4" />
-                    LIVE_DEMO
+                    LIVE DEMO
                   </a>
                 )}
 
@@ -326,10 +338,10 @@ export default function GalleryProjectDetail() {
                     href={project.github_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="pixel-button bg-gray-800 text-white flex items-center justify-center gap-2 py-3 font-press-start text-xs hover:bg-gray-700"
+                    className="flex items-center justify-center gap-2 py-3 bg-black/50 border border-gray-700 hover:border-purple-500/50 text-gray-300 hover:text-white font-press-start text-[10px] transition-all duration-300"
                   >
                     <Github className="h-4 w-4" />
-                    VIEW_CODE
+                    VIEW CODE
                   </a>
                 )}
 
@@ -338,10 +350,10 @@ export default function GalleryProjectDetail() {
                     href={project.video_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="pixel-button bg-red-600 text-white flex items-center justify-center gap-2 py-3 font-press-start text-xs hover:bg-red-700"
+                    className="flex items-center justify-center gap-2 py-3 bg-pink-500/20 border border-pink-500/40 hover:border-pink-400 text-pink-300 hover:text-white font-press-start text-[10px] transition-all duration-300"
                   >
                     <Video className="h-4 w-4" />
-                    WATCH_VIDEO
+                    WATCH VIDEO
                   </a>
                 )}
 
@@ -350,7 +362,7 @@ export default function GalleryProjectDetail() {
                     href={project.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="pixel-button bg-gray-800 text-white flex items-center justify-center gap-2 py-3 font-press-start text-xs hover:bg-gray-700"
+                    className="flex items-center justify-center gap-2 py-3 bg-black/50 border border-gray-700 hover:border-purple-500/50 text-gray-300 hover:text-white font-press-start text-[10px] transition-all duration-300"
                   >
                     <Globe className="h-4 w-4" />
                     WEBSITE
@@ -362,19 +374,19 @@ export default function GalleryProjectDetail() {
                   <button
                     onClick={handleLike}
                     disabled={liking}
-                    className={`flex-1 pixel-button flex items-center justify-center gap-2 py-3 font-press-start text-xs ${
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 font-press-start text-[10px] transition-all duration-300 ${
                       liked
-                        ? 'bg-red-500 text-white'
-                        : 'bg-gray-800 text-gray-400 hover:text-white'
+                        ? 'bg-pink-500/30 border border-pink-500/50 text-pink-300'
+                        : 'bg-black/50 border border-gray-700 text-gray-400 hover:text-white hover:border-pink-500/50'
                     }`}
                   >
-                    <Heart className={`h-4 w-4 ${liked ? 'fill-white' : ''}`} />
+                    <Heart className={`h-4 w-4 ${liked ? 'fill-pink-400' : ''}`} />
                     {liked ? 'LIKED' : 'LIKE'}
                   </button>
 
                   <button
                     onClick={handleShare}
-                    className="pixel-button bg-gray-800 text-gray-400 hover:text-white px-4 py-3"
+                    className="bg-black/50 border border-gray-700 text-gray-400 hover:text-white hover:border-purple-500/50 px-4 py-3 transition-all duration-300"
                   >
                     <Share2 className="h-4 w-4" />
                   </button>
@@ -382,17 +394,17 @@ export default function GalleryProjectDetail() {
 
                 {/* Owner Actions */}
                 {isOwner && (
-                  <div className="flex gap-2 pt-2 border-t border-gray-800">
+                  <div className="flex gap-2 pt-2 border-t border-purple-500/20">
                     <Link
                       to={`/gallery/edit/${project.id}`}
-                      className="flex-1 pixel-button bg-maximally-yellow text-black flex items-center justify-center gap-2 py-2 font-press-start text-xs"
+                      className="flex-1 flex items-center justify-center gap-2 py-2 bg-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 font-press-start text-[10px] transition-all duration-300"
                     >
                       <Edit className="h-3 w-3" />
                       EDIT
                     </Link>
                     <button
                       onClick={() => setShowDeleteDialog(true)}
-                      className="pixel-button bg-red-900 text-red-400 hover:bg-red-800 px-4 py-2"
+                      className="bg-red-500/20 border border-red-500/40 hover:border-red-400 text-red-400 px-4 py-2 transition-all duration-300"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -404,14 +416,14 @@ export default function GalleryProjectDetail() {
         </div>
 
         {/* Content */}
-        <div className="py-12">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="relative z-10 py-12 sm:py-16">
+          <div className="container mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
               {/* Main Content */}
-              <div className="lg:col-span-2 space-y-8">
+              <div className="lg:col-span-2 space-y-6 sm:space-y-8">
                 {/* Cover Image */}
                 {project.cover_image_url && (
-                  <div className="pixel-card border-2 border-gray-800 overflow-hidden">
+                  <div className="border border-purple-500/20 overflow-hidden">
                     <img
                       src={project.cover_image_url}
                       alt={project.name}
@@ -421,17 +433,17 @@ export default function GalleryProjectDetail() {
                 )}
 
                 {/* Description */}
-                <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                  <h2 className="font-press-start text-lg text-white mb-4">ABOUT</h2>
-                  <p className="text-gray-300 font-jetbrains whitespace-pre-wrap">
+                <div className="bg-gray-900/50 border border-purple-500/20 p-5 sm:p-6">
+                  <h2 className="font-press-start text-sm sm:text-base text-purple-300 mb-4">ABOUT</h2>
+                  <p className="text-gray-300 font-jetbrains text-sm leading-relaxed whitespace-pre-wrap">
                     {project.description}
                   </p>
                 </div>
 
                 {/* README */}
                 {project.readme_content && (
-                  <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                    <h2 className="font-press-start text-lg text-white mb-4">README</h2>
+                  <div className="bg-gray-900/50 border border-purple-500/20 p-5 sm:p-6">
+                    <h2 className="font-press-start text-sm sm:text-base text-purple-300 mb-4">README</h2>
                     <div className="prose prose-invert prose-sm max-w-none font-jetbrains">
                       <ReactMarkdown>{project.readme_content}</ReactMarkdown>
                     </div>
@@ -440,16 +452,16 @@ export default function GalleryProjectDetail() {
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-6">
+              <div className="space-y-5 sm:space-y-6">
                 {/* Technologies */}
                 {project.technologies && project.technologies.length > 0 && (
-                  <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-4">
-                    <h3 className="font-press-start text-sm text-white mb-3">TECH_STACK</h3>
+                  <div className="bg-gray-900/50 border border-green-500/20 p-4 sm:p-5">
+                    <h3 className="font-press-start text-xs text-green-300 mb-3">TECH STACK</h3>
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech, i) => (
                         <span
                           key={i}
-                          className="text-xs bg-gray-800 border border-gray-700 px-3 py-1 text-gray-300 font-jetbrains"
+                          className="text-[10px] bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 text-purple-300 font-jetbrains"
                         >
                           {tech}
                         </span>
@@ -460,14 +472,14 @@ export default function GalleryProjectDetail() {
 
                 {/* Tags */}
                 {project.tags && project.tags.length > 0 && (
-                  <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-4">
-                    <h3 className="font-press-start text-sm text-white mb-3">TAGS</h3>
+                  <div className="bg-gray-900/50 border border-pink-500/20 p-4 sm:p-5">
+                    <h3 className="font-press-start text-xs text-pink-300 mb-3">TAGS</h3>
                     <div className="flex flex-wrap gap-2">
                       {project.tags.map((tag, i) => (
                         <Link
                           key={i}
                           to={`/gallery?search=${encodeURIComponent(tag)}`}
-                          className="text-xs bg-maximally-red/20 border border-maximally-red px-3 py-1 text-maximally-red font-jetbrains hover:bg-maximally-red/30"
+                          className="text-[10px] bg-pink-500/10 border border-pink-500/30 px-2.5 py-1 text-pink-300 font-jetbrains hover:bg-pink-500/20 transition-colors"
                         >
                           #{tag}
                         </Link>
@@ -478,11 +490,11 @@ export default function GalleryProjectDetail() {
 
                 {/* Category */}
                 {project.category && (
-                  <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-4">
-                    <h3 className="font-press-start text-sm text-white mb-3">CATEGORY</h3>
+                  <div className="bg-gray-900/50 border border-amber-500/20 p-4 sm:p-5">
+                    <h3 className="font-press-start text-xs text-amber-300 mb-3">CATEGORY</h3>
                     <Link
                       to={`/gallery?category=${encodeURIComponent(project.category)}`}
-                      className="text-sm text-maximally-yellow font-jetbrains hover:underline"
+                      className="text-sm text-purple-400 font-jetbrains hover:text-purple-300 transition-colors"
                     >
                       {project.category}
                     </Link>
@@ -505,11 +517,11 @@ export default function GalleryProjectDetail() {
             />
             
             {/* Dialog */}
-            <div className="relative z-[101] bg-gray-900 border-2 border-red-500 p-6 max-w-md w-full shadow-2xl shadow-red-500/20">
+            <div className="relative z-[101] bg-gray-900/95 border border-red-500/50 p-6 max-w-md w-full shadow-2xl shadow-red-500/10">
               {/* Close button */}
               <button
                 onClick={() => !deleting && setShowDeleteDialog(false)}
-                className="absolute top-3 right-3 text-gray-500 hover:text-white"
+                className="absolute top-3 right-3 text-gray-500 hover:text-white transition-colors"
                 disabled={deleting}
               >
                 <X className="h-5 w-5" />
@@ -517,14 +529,14 @@ export default function GalleryProjectDetail() {
 
               {/* Icon */}
               <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-red-500/20 border-2 border-red-500 flex items-center justify-center">
-                  <AlertTriangle className="h-8 w-8 text-red-500" />
+                <div className="w-16 h-16 bg-red-500/10 border border-red-500/50 flex items-center justify-center">
+                  <AlertTriangle className="h-8 w-8 text-red-400" />
                 </div>
               </div>
 
               {/* Content */}
-              <h3 className="font-press-start text-lg text-white text-center mb-2">
-                DELETE_PROJECT?
+              <h3 className="font-press-start text-sm sm:text-base text-white text-center mb-2">
+                DELETE PROJECT?
               </h3>
               <p className="text-gray-400 text-center font-jetbrains text-sm mb-6">
                 Are you sure you want to delete "{project?.name}"? This action cannot be undone.
@@ -535,14 +547,14 @@ export default function GalleryProjectDetail() {
                 <button
                   onClick={() => setShowDeleteDialog(false)}
                   disabled={deleting}
-                  className="flex-1 pixel-button bg-gray-800 text-gray-300 py-3 font-press-start text-xs hover:bg-gray-700 disabled:opacity-50"
+                  className="flex-1 py-3 bg-black/50 border border-gray-700 text-gray-300 font-press-start text-[10px] hover:border-gray-600 disabled:opacity-50 transition-all duration-300"
                 >
                   CANCEL
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="flex-1 pixel-button bg-red-600 text-white py-3 font-press-start text-xs hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 bg-red-500/20 border border-red-500/50 text-red-300 font-press-start text-[10px] hover:border-red-400 disabled:opacity-50 flex items-center justify-center gap-2 transition-all duration-300"
                 >
                   {deleting ? (
                     'DELETING...'
