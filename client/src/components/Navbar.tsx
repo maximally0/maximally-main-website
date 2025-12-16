@@ -4,6 +4,7 @@ import { Menu, X, Terminal, Mail, User, LogOut } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
+import { useOrganizerUnreadCount } from "@/hooks/useOrganizerUnreadCount";
 import { getAuthHeaders } from "@/lib/auth";
 
 const PixelUserIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
@@ -24,6 +25,7 @@ const Navbar = () => {
 
   const { user, profile, loading, refreshProfile } = useAuth();
   const { unreadCount } = useJudgeUnreadCount();
+  const { unreadCount: organizerUnreadCount } = useOrganizerUnreadCount();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -176,13 +178,28 @@ const Navbar = () => {
                   </>
                 )}
                 {isOrganizer && (
-                  <Link
-                    to="/organizer/dashboard"
-                    className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
-                    data-testid="button-organizer-dashboard"
-                  >
-                    ORGANIZER
-                  </Link>
+                  <>
+                    <Link
+                      to="/organizer/dashboard"
+                      className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
+                      data-testid="button-organizer-dashboard"
+                    >
+                      ORGANIZER
+                    </Link>
+                    <Link
+                      to="/organizer-inbox"
+                      className="relative p-2 text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
+                      data-testid="button-organizer-inbox"
+                      aria-label={`Organizer inbox${organizerUnreadCount > 0 ? ` - ${organizerUnreadCount} unread` : ''}`}
+                    >
+                      <Mail className="h-5 w-5" />
+                      {organizerUnreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-press-start px-1.5 py-0.5 min-w-[18px] text-center leading-none">
+                          {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
+                        </span>
+                      )}
+                    </Link>
+                  </>
                 )}
                 <div className="relative" ref={profileDropdownRef}>
                   <button
@@ -327,14 +344,29 @@ const Navbar = () => {
                         </>
                       )}
                       {isOrganizer && (
-                        <Link
-                          to="/organizer/dashboard"
-                          onClick={() => setIsMenuOpen(false)}
-                          className="block font-press-start text-center py-4 px-6 text-sm bg-yellow-900/30 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-900/50 transition-all duration-300"
-                          data-testid="button-organizer-dashboard-mobile"
-                        >
-                          ORGANIZER DASHBOARD
-                        </Link>
+                        <>
+                          <Link
+                            to="/organizer/dashboard"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block font-press-start text-center py-4 px-6 text-sm bg-yellow-900/30 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-900/50 transition-all duration-300"
+                            data-testid="button-organizer-dashboard-mobile"
+                          >
+                            ORGANIZER DASHBOARD
+                          </Link>
+                          <Link
+                            to="/organizer-inbox"
+                            onClick={() => setIsMenuOpen(false)}
+                            className="block font-press-start text-center py-4 px-6 text-sm bg-yellow-900/30 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-900/50 transition-all duration-300 relative"
+                            data-testid="button-organizer-inbox-mobile"
+                          >
+                            ORGANIZER INBOX
+                            {organizerUnreadCount > 0 && (
+                              <span className="ml-2 bg-green-500 text-white text-xs font-press-start px-2 py-0.5">
+                                {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
+                              </span>
+                            )}
+                          </Link>
+                        </>
                       )}
                       <Link
                         to={profileUrl}
