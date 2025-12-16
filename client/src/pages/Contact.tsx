@@ -9,8 +9,11 @@ import {
   Newspaper,
   HelpCircle,
   Linkedin,
+  ArrowLeft,
+  Sparkles,
 } from "lucide-react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import Footer from "@/components/Footer";
 
 const Contact = () => {
@@ -20,84 +23,83 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Pixel Grid Background */}
-      <div className="fixed inset-0 bg-black" />
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      {/* Background Effects */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+      
+      <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
+      <div className="absolute top-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+      <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-cyan-500/10 rounded-full blur-[90px]" />
 
-      {/* Floating Pixels */}
-      {Array.from({ length: 8 }, (_, i) => (
-        <div
-          key={i}
-          className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${i * 0.5}s`,
-            animationDuration: `${4 + i}s`,
-          }}
-        />
-      ))}
+      <div className="container mx-auto px-4 sm:px-6 py-20 sm:py-28 relative z-10">
+        {/* Back Link */}
+        <Link 
+          to="/"
+          className="group inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 font-jetbrains text-sm mb-8 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Back to Home
+        </Link>
 
-      <div className="container mx-auto px-4 py-24 relative z-10">
         {/* Hero Section */}
-        <div className="text-center mb-16">
-          <div className="minecraft-block bg-maximally-red text-black px-6 py-3 inline-block mb-8">
-            <span className="font-press-start text-sm">📬 GET IN TOUCH</span>
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-purple-500/10 border border-purple-500/30">
+            <Mail className="w-4 h-4 text-purple-400" />
+            <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
+              GET IN TOUCH
+            </span>
+            <Sparkles className="w-4 h-4 text-purple-400" />
           </div>
-          <h1 className="font-press-start text-4xl md:text-6xl lg:text-7xl mb-8 minecraft-text">
-            <span className="text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
-              CONTACT US
+          
+          <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              Contact Us
             </span>
           </h1>
-          <p className="text-gray-300 text-lg font-jetbrains max-w-3xl mx-auto leading-relaxed mb-12">
-            Ready to join the hackathon revolution? Have questions? Want to
-            partner with us? We're here to help build the future together.
+          
+          <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Ready to join the hackathon revolution? Have questions? 
+            Want to partner with us? We're here to help build the future together.
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto space-y-12">
+        <div className="max-w-6xl mx-auto space-y-12 sm:space-y-16">
           {/* Phone Numbers Section */}
           <section>
-            <div className="text-center mb-8">
-              <div className="minecraft-block bg-maximally-red text-black px-6 py-3 inline-block mb-6">
-                <span className="font-press-start text-sm">
-                  📞 GET IN TOUCH
-                </span>
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-purple-400" />
+                <h2 className="font-press-start text-xs sm:text-sm text-purple-400">DIRECT CONTACTS</h2>
               </div>
+              <div className="flex-1 h-px bg-gradient-to-r from-purple-500/40 to-transparent" />
             </div>
-            <div className="grid md:grid-cols-2 gap-6">
+            
+            <div className="grid md:grid-cols-2 gap-5 sm:gap-6">
               {[
-                {
-                  name: "Rishul Chanana",
-                  phone: "+91 90412 60790",
-                  email: "rishul@maximally.in",
-                },
-                {
-                  name: "Drishti Arora",
-                  phone: "-",
-                  email: "drishti@maximally.in",
-                },
+                { name: "Rishul Chanana", phone: "+91 90412 60790", email: "rishul@maximally.in" },
+                { name: "Drishti Arora", phone: "-", email: "drishti@maximally.in" },
               ].map((contact, index) => (
                 <div
                   key={index}
-                  className="pixel-card bg-black border-2 border-maximally-red p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow"
+                  className="p-6 bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 hover:border-purple-400/60 transition-all duration-300 hover:translate-y-[-2px]"
                 >
                   <div className="text-center">
-                    <div className="minecraft-block bg-maximally-red w-12 h-12 mx-auto mb-4 flex items-center justify-center">
-                      <Phone className="h-6 w-6 text-black" />
+                    <div className="w-12 h-12 mx-auto mb-4 bg-purple-500/20 border border-purple-500/40 flex items-center justify-center">
+                      <Phone className="h-5 w-5 text-purple-400" />
                     </div>
-                    <h3 className="font-press-start text-sm mb-2 text-maximally-red">
+                    <h3 className="font-press-start text-xs sm:text-sm mb-3 text-purple-300">
                       {contact.name.toUpperCase()}
                     </h3>
                     <a
                       href={`tel:${contact.phone.replaceAll(" ", "")}`}
-                      className="font-jetbrains text-white hover:text-maximally-red transition-colors text-lg block mb-2"
+                      className="font-jetbrains text-white hover:text-purple-400 transition-colors text-base sm:text-lg block mb-2"
                     >
                       {contact.phone}
                     </a>
                     <a
                       href={`mailto:${contact.email}`}
-                      className="font-jetbrains text-gray-300 hover:text-maximally-yellow transition-colors text-sm block"
+                      className="font-jetbrains text-gray-400 hover:text-pink-400 transition-colors text-sm block"
                     >
                       {contact.email}
                     </a>
@@ -107,168 +109,107 @@ const Contact = () => {
             </div>
           </section>
 
+
           {/* Email Section */}
           <section>
-            <div className="text-center mb-8">
-              <div className="minecraft-block bg-maximally-yellow text-black px-6 py-3 inline-block mb-6">
-                <span className="font-press-start text-sm">
-                  📧 EMAIL SUPPORT
-                </span>
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-pink-400" />
+                <h2 className="font-press-start text-xs sm:text-sm text-pink-400">EMAIL SUPPORT</h2>
               </div>
-              <h2 className="font-press-start text-2xl md:text-3xl mb-4 text-maximally-yellow">
-                SPECIALIZED CONTACTS
-              </h2>
-              <p className="font-jetbrains text-gray-300 max-w-3xl mx-auto">
-                All emails are redirected to our central inbox. Depending on the
-                topic, you'll receive replies from the relevant Maximally team
-                member or agent.
-              </p>
+              <div className="flex-1 h-px bg-gradient-to-r from-pink-500/40 to-transparent" />
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <p className="font-jetbrains text-sm text-gray-400 mb-6 text-center max-w-2xl mx-auto">
+              All emails are redirected to our central inbox. Depending on the topic, 
+              you'll receive replies from the relevant Maximally team member.
+            </p>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
               {[
-                {
-                  type: "General Inquiries",
-                  email: "hello@maximally.in",
-                  icon: Mail,
-                  borderClass: "border-maximally-yellow",
-                  bgClass: "bg-maximally-yellow",
-                  textClass: "text-maximally-yellow",
-                },
-                {
-                  type: "Partnerships",
-                  email: "partners@maximally.in",
-                  icon: Briefcase,
-                  borderClass: "border-green-500",
-                  bgClass: "bg-green-500",
-                  textClass: "text-green-400",
-                },
-                {
-                  type: "Judging & Mentorship",
-                  email: "judges@maximally.in",
-                  icon: Users,
-                  borderClass: "border-blue-500",
-                  bgClass: "bg-blue-500",
-                  textClass: "text-blue-400",
-                },
-                {
-                  type: "Press & Media",
-                  email: "press@maximally.in",
-                  icon: Newspaper,
-                  borderClass: "border-purple-500",
-                  bgClass: "bg-purple-500",
-                  textClass: "text-purple-400",
-                },
-                {
-                  type: "Support",
-                  email: "support@maximally.in",
-                  icon: HelpCircle,
-                  borderClass: "border-maximally-red",
-                  bgClass: "bg-maximally-red",
-                  textClass: "text-maximally-red",
-                },
-              ].map((contact, index) => (
-                <div
-                  key={index}
-                  className={`pixel-card bg-black ${contact.borderClass} border-2 p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow`}
-                >
+                { type: "General Inquiries", email: "hello@maximally.in", icon: Mail, color: "purple" },
+                { type: "Partnerships", email: "partners@maximally.in", icon: Briefcase, color: "green" },
+                { type: "Judging & Mentorship", email: "judges@maximally.in", icon: Users, color: "cyan" },
+                { type: "Press & Media", email: "press@maximally.in", icon: Newspaper, color: "pink" },
+                { type: "Support", email: "support@maximally.in", icon: HelpCircle, color: "amber" },
+              ].map((contact, index) => {
+                const colorClasses: Record<string, { border: string; bg: string; text: string }> = {
+                  purple: { border: "border-purple-500/30 hover:border-purple-400/60", bg: "bg-purple-500/20 border-purple-500/40", text: "text-purple-400" },
+                  green: { border: "border-green-500/30 hover:border-green-400/60", bg: "bg-green-500/20 border-green-500/40", text: "text-green-400" },
+                  cyan: { border: "border-cyan-500/30 hover:border-cyan-400/60", bg: "bg-cyan-500/20 border-cyan-500/40", text: "text-cyan-400" },
+                  pink: { border: "border-pink-500/30 hover:border-pink-400/60", bg: "bg-pink-500/20 border-pink-500/40", text: "text-pink-400" },
+                  amber: { border: "border-amber-500/30 hover:border-amber-400/60", bg: "bg-amber-500/20 border-amber-500/40", text: "text-amber-400" },
+                };
+                const colors = colorClasses[contact.color];
+                
+                return (
                   <div
-                    className={`${contact.bgClass} w-12 h-12 mx-auto mb-4 flex items-center justify-center minecraft-block`}
+                    key={index}
+                    className={`p-6 bg-gradient-to-br from-gray-900/60 to-gray-900/30 border ${colors.border} transition-all duration-300 hover:translate-y-[-2px]`}
                   >
-                    <contact.icon className="h-6 w-6 text-black" />
+                    <div className={`w-12 h-12 mx-auto mb-4 ${colors.bg} border flex items-center justify-center`}>
+                      <contact.icon className={`h-5 w-5 ${colors.text}`} />
+                    </div>
+                    <h3 className={`font-press-start text-[10px] sm:text-xs mb-3 ${colors.text} text-center`}>
+                      {contact.type.toUpperCase()}
+                    </h3>
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="font-jetbrains text-gray-300 hover:text-white transition-colors text-sm block text-center"
+                    >
+                      {contact.email}
+                    </a>
                   </div>
-                  <h3
-                    className={`font-press-start text-xs mb-3 ${contact.textClass} text-center`}
-                  >
-                    {contact.type.toUpperCase()}
-                  </h3>
-                  <a
-                    href={`mailto:${contact.email}`}
-                    className={`font-jetbrains text-white transition-colors text-sm block text-center`}
-                  >
-                    {contact.email}
-                  </a>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
 
           {/* Official Channels Section */}
           <section>
-            <div className="text-center mb-8">
-              <div className="minecraft-block bg-cyan-400 text-black px-6 py-3 inline-block mb-6">
-                <span className="font-press-start text-sm">
-                  🌐 OFFICIAL CHANNELS
-                </span>
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="flex items-center gap-2">
+                <Terminal className="w-4 h-4 text-cyan-400" />
+                <h2 className="font-press-start text-xs sm:text-sm text-cyan-400">OFFICIAL CHANNELS</h2>
               </div>
-              <h2 className="font-press-start text-2xl md:text-3xl mb-4 text-cyan-400">
-                FIND US ONLINE
-              </h2>
+              <div className="flex-1 h-px bg-gradient-to-r from-cyan-500/40 to-transparent" />
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
               {[
-                {
-                  name: "Instagram",
-                  url: "https://instagram.com/maximally.in",
-                  handle: "@maximally.in",
-                  icon: Instagram,
-                  borderClass: "border-pink-600",   // explicit pink border
-                  bgClass: "bg-pink-600",           // icon background
-                  textClass: "text-pink-600",
-                },
-                {
-                  name: "LinkedIn",
-                  url: "https://linkedin.com/company/maximallyedu",
-                  handle: "Maximally",
-                  icon: Linkedin,
-                  borderClass: "border-blue-600",
-                  bgClass: "bg-blue-600",
-                  textClass: "text-blue-600",
-                },
-                {
-                  name: "Discord",
-                  url: "https://discord.gg/MpBnYk8qMX",
-                  handle: "Join Community",
-                  icon: MessageCircle,
-                  borderClass: "border-indigo-500",
-                  bgClass: "bg-indigo-500",
-                  textClass: "text-indigo-500",
-                },
-                {
-                  name: "Website",
-                  url: "https://maximally.in",
-                  handle: "maximally.in",
-                  icon: Terminal,
-                  borderClass: "border-maximally-red",
-                  bgClass: "bg-maximally-red",
-                  textClass: "text-maximally-red",
-                },
-              ].map((channel, index) => (
-                <div
-                  key={index}
-                  className={`pixel-card bg-black ${channel.borderClass} border-2 p-6 hover:scale-105 transform transition-all duration-300 hover:border-maximally-yellow`}
-                >
-                  <div
-                    className={`${channel.bgClass} w-12 h-12 mx-auto mb-4 flex items-center justify-center minecraft-block`}
-                  >
-                    {/* Icon is present and white for contrast */}
-                    <channel.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3
-                    className={`font-press-start text-xs mb-2 ${channel.textClass} text-center`}
-                  >
-                    {channel.name.toUpperCase()}
-                  </h3>
+                { name: "Instagram", url: "https://instagram.com/maximally.in", handle: "@maximally.in", icon: Instagram, color: "pink" },
+                { name: "LinkedIn", url: "https://linkedin.com/company/maximallyedu", handle: "Maximally", icon: Linkedin, color: "blue" },
+                { name: "Discord", url: "https://discord.gg/MpBnYk8qMX", handle: "Join Community", icon: MessageCircle, color: "indigo" },
+                { name: "Website", url: "https://maximally.in", handle: "maximally.in", icon: Terminal, color: "purple" },
+              ].map((channel, index) => {
+                const colorClasses: Record<string, { border: string; bg: string; text: string }> = {
+                  pink: { border: "border-pink-500/30 hover:border-pink-400/60", bg: "bg-pink-500/20 border-pink-500/40", text: "text-pink-400" },
+                  blue: { border: "border-blue-500/30 hover:border-blue-400/60", bg: "bg-blue-500/20 border-blue-500/40", text: "text-blue-400" },
+                  indigo: { border: "border-indigo-500/30 hover:border-indigo-400/60", bg: "bg-indigo-500/20 border-indigo-500/40", text: "text-indigo-400" },
+                  purple: { border: "border-purple-500/30 hover:border-purple-400/60", bg: "bg-purple-500/20 border-purple-500/40", text: "text-purple-400" },
+                };
+                const colors = colorClasses[channel.color];
+                
+                return (
                   <a
+                    key={index}
                     href={channel.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`font-jetbrains text-white transition-colors text-sm block text-center`}
+                    className={`p-6 bg-gradient-to-br from-gray-900/60 to-gray-900/30 border ${colors.border} transition-all duration-300 hover:translate-y-[-2px] block`}
                   >
-                    {channel.handle}
+                    <div className={`w-12 h-12 mx-auto mb-4 ${colors.bg} border flex items-center justify-center`}>
+                      <channel.icon className={`h-5 w-5 ${colors.text}`} />
+                    </div>
+                    <h3 className={`font-press-start text-[10px] sm:text-xs mb-2 ${colors.text} text-center`}>
+                      {channel.name.toUpperCase()}
+                    </h3>
+                    <p className="font-jetbrains text-gray-300 text-sm text-center">
+                      {channel.handle}
+                    </p>
                   </a>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         </div>
