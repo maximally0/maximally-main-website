@@ -37,6 +37,12 @@ import Bootcamps from '@/pages/Bootcamps';
 import Blog from './pages/Blog';
 // Removed Community and Collaborate imports
 import CommunityRedirect from '@/components/CommunityRedirect';
+
+const VibeRedirect = () => {
+  window.location.href = 'https://vibe-a-thon.devpost.com';
+  return null;
+};
+
 import SummerPrograms2025 from './pages/BlogPost/SummerPrograms2025';
 import MaximallyLeangap2025 from './pages/BlogPost/MaximallyLeangap2025';
 import SummerBreak2025 from './pages/BlogPost/SummerBreak2025';
@@ -337,6 +343,9 @@ const AppContent = () => {
 
         {/* Community redirect to Discord */}
         <Route path="/community" element={<CommunityRedirect />} />
+
+        {/* Vibe redirect to Devpost */}
+        <Route path="/vibe" element={<VibeRedirect />} />
 
         <Route path="/people" element={<People />} />
         <Route path="/people/core" element={<PeopleCore />} />
