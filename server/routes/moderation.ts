@@ -38,8 +38,6 @@ async function isAdmin(supabaseAdmin: any, userId: string): Promise<boolean> {
 }
 
 export function registerModerationRoutes(app: Express) {
-  console.log('[Moderation] Registering moderation routes...');
-  
   // Health check for moderation routes
   app.get("/api/moderation/health", (_req: Request, res: Response) => {
     return res.json({ success: true, message: 'Moderation routes are working' });

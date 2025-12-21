@@ -67,10 +67,10 @@ export default function ParticipantDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed': return 'text-green-500 border-green-500';
-      case 'checked_in': return 'text-blue-500 border-blue-500';
-      case 'waitlist': return 'text-orange-500 border-orange-500';
-      default: return 'text-gray-500 border-gray-500';
+      case 'confirmed': return 'text-green-400 border-green-500/50 bg-green-500/10';
+      case 'checked_in': return 'text-blue-400 border-blue-500/50 bg-blue-500/10';
+      case 'waitlist': return 'text-orange-400 border-orange-500/50 bg-orange-500/10';
+      default: return 'text-gray-400 border-gray-500/50 bg-gray-500/10';
     }
   };
 
@@ -96,35 +96,41 @@ export default function ParticipantDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="font-press-start text-maximally-red">LOADING...</div>
+        <div className="font-press-start text-purple-400 animate-pulse">LOADING...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pt-24 pb-16">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen bg-black text-white pt-24 pb-16 relative">
+      {/* Background Effects */}
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <h1 className="font-press-start text-3xl text-maximally-red mb-8">MY_HACKATHONS</h1>
+          <h1 className="font-press-start text-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-8">
+            MY_HACKATHONS
+          </h1>
 
           {/* Tabs */}
           <div className="flex gap-2 mb-8">
             <button
               onClick={() => setActiveTab('active')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm ${
+              className={`px-6 py-3 font-press-start text-sm transition-all ${
                 activeTab === 'active'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border border-pink-500/50'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:border-purple-500/50'
               }`}
             >
               ACTIVE ({hackathons.filter(isActive).length})
             </button>
             <button
               onClick={() => setActiveTab('past')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm ${
+              className={`px-6 py-3 font-press-start text-sm transition-all ${
                 activeTab === 'past'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border border-pink-500/50'
+                  : 'bg-gray-900 text-gray-400 border border-gray-700 hover:border-purple-500/50'
               }`}
             >
               PAST ({hackathons.filter(h => !isActive(h)).length})
@@ -132,14 +138,14 @@ export default function ParticipantDashboard() {
           </div>
 
           {filteredHackathons.length === 0 ? (
-            <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
+            <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-12 text-center">
               <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
               <p className="font-press-start text-gray-400 mb-4">
                 {activeTab === 'active' ? 'NO_ACTIVE_HACKATHONS' : 'NO_PAST_HACKATHONS'}
               </p>
               <Link
                 to="/events"
-                className="pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors"
+                className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm border border-pink-500/50 transition-all"
               >
                 BROWSE_HACKATHONS
               </Link>
@@ -147,7 +153,10 @@ export default function ParticipantDashboard() {
           ) : (
             <div className="space-y-6">
               {filteredHackathons.map((hackathon) => (
-                <div key={hackathon.id} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 hover:border-maximally-yellow transition-colors">
+                <div 
+                  key={hackathon.id} 
+                  className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/30 p-6 hover:border-pink-400/50 transition-all"
+                >
                   <div className="flex flex-col lg:flex-row gap-6">
                     {/* Hackathon Info */}
                     <div className="flex-1">
@@ -156,10 +165,10 @@ export default function ParticipantDashboard() {
                           <h3 className="font-press-start text-xl text-white mb-2">{hackathon.hackathon_name}</h3>
                           <div className="flex items-center gap-4 text-sm font-jetbrains text-gray-400 mb-3">
                             <div className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
+                              <Calendar className="h-4 w-4 text-purple-400" />
                               {new Date(hackathon.start_date).toLocaleDateString()} - {new Date(hackathon.end_date).toLocaleDateString()}
                             </div>
-                            <span className="px-2 py-1 bg-gray-800 border border-gray-700 text-xs font-press-start">
+                            <span className="px-2 py-1 bg-purple-500/20 border border-purple-500/40 text-xs font-press-start text-purple-300">
                               {hackathon.format.toUpperCase()}
                             </span>
                           </div>
@@ -181,7 +190,7 @@ export default function ParticipantDashboard() {
                         {/* Team Info */}
                         {hackathon.registration.team && (
                           <div className="flex items-center gap-2 text-sm font-jetbrains text-gray-400">
-                            <Users className="h-4 w-4" />
+                            <Users className="h-4 w-4 text-pink-400" />
                             Team: {hackathon.registration.team.team_name} ({hackathon.registration.team.team_code})
                           </div>
                         )}
@@ -189,29 +198,29 @@ export default function ParticipantDashboard() {
 
                       {/* Submission Status */}
                       {hackathon.submission ? (
-                        <div className="pixel-card bg-black/50 border border-gray-700 p-4 mb-4">
+                        <div className="bg-gradient-to-br from-amber-900/30 to-orange-900/20 border border-amber-500/40 p-4 mb-4">
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-press-start text-sm text-maximally-yellow">PROJECT_SUBMITTED</h4>
+                            <h4 className="font-press-start text-sm text-amber-400">PROJECT_SUBMITTED</h4>
                             {hackathon.submission.score && (
                               <div className="flex items-center gap-2">
-                                <Trophy className="h-4 w-4 text-maximally-yellow" />
-                                <span className="font-press-start text-sm text-maximally-yellow">{hackathon.submission.score}</span>
+                                <Trophy className="h-4 w-4 text-amber-400" />
+                                <span className="font-press-start text-sm text-amber-400">{hackathon.submission.score}</span>
                               </div>
                             )}
                           </div>
                           <p className="font-jetbrains text-gray-300 text-sm mb-2">{hackathon.submission.project_name}</p>
                           {hackathon.submission.prize_won && (
-                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-maximally-yellow/20 border border-maximally-yellow text-maximally-yellow font-press-start text-xs">
+                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/20 border border-amber-500/50 text-amber-400 font-press-start text-xs">
                               <Trophy className="h-3 w-3" />
                               {hackathon.submission.prize_won}
                             </span>
                           )}
                         </div>
                       ) : isActive(hackathon) && (
-                        <div className="pixel-card bg-red-900/20 border border-red-500 p-4 mb-4">
+                        <div className="bg-gradient-to-br from-red-900/30 to-rose-900/20 border border-red-500/40 p-4 mb-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <Upload className="h-4 w-4 text-red-500" />
-                            <span className="font-press-start text-sm text-red-500">NO_SUBMISSION_YET</span>
+                            <Upload className="h-4 w-4 text-red-400" />
+                            <span className="font-press-start text-sm text-red-400">NO_SUBMISSION_YET</span>
                           </div>
                           <p className="font-jetbrains text-gray-300 text-sm">Don't forget to submit your project!</p>
                         </div>
@@ -222,14 +231,14 @@ export default function ParticipantDashboard() {
                     <div className="lg:w-48 flex flex-col gap-2">
                       <Link
                         to={`/hackathon/${hackathon.slug}`}
-                        className="pixel-button bg-maximally-red text-white px-4 py-3 font-press-start text-xs hover:bg-maximally-yellow hover:text-black transition-colors text-center"
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-3 font-press-start text-xs border border-pink-500/50 transition-all text-center"
                       >
                         VIEW_HACKATHON
                       </Link>
                       {hackathon.submission && (
                         <Link
                           to={`/project/${hackathon.submission.id}`}
-                          className="pixel-button bg-green-600 text-white px-4 py-3 font-press-start text-xs hover:bg-green-700 transition-colors text-center"
+                          className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 font-press-start text-xs border border-green-500/50 transition-all text-center"
                         >
                           VIEW_PROJECT
                         </Link>

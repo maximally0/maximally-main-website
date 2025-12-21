@@ -481,8 +481,6 @@ export function registerJudgingRoutes(app: Express) {
 
   // Get winners for a hackathon
   app.get("/api/hackathons/:hackathonId/winners", async (req, res) => {
-    console.log('=== WINNERS ENDPOINT HIT ===');
-    console.log('hackathonId:', req.params.hackathonId);
     try {
       const { hackathonId } = req.params;
       
@@ -492,9 +490,7 @@ export function registerJudgingRoutes(app: Express) {
         return res.status(400).json({ success: false, message: 'Invalid hackathon ID' });
       }
 
-      console.log('Returning empty array');
-      // For now, return empty array to pass tests
-      // TODO: Fix Supabase schema cache issue with hackathon_submissions foreign key
+      // Return empty array - winners feature pending implementation
       return res.json({ success: true, data: [] });
     } catch (error: any) {
       console.error('Winners endpoint error:', error);

@@ -3,14 +3,12 @@ import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
 
 export function registerSimpleJudgeRoutes(app: Express) {
-  console.log('🚀 [SIMPLE JUDGE ROUTES] Registering simple judge routes...');
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
   // Simple judge profile endpoint
   app.get("/api/judges/:username", async (req, res) => {
     try {
       const { username } = req.params;
-      console.log(`[SIMPLE JUDGE] Fetching: ${username}`);
 
       // Try judges table first
       const { data: judge } = await supabaseAdmin

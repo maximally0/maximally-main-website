@@ -194,7 +194,7 @@ export type Profile = {
   linkedin_username: string | null;
   twitter_username: string | null;
   website_url: string | null;
-  role: 'user' | 'admin' | 'judge';
+  role: 'user' | 'admin' | 'judge' | 'organizer';
   is_verified: boolean | null;
   preferences: any | null;
   created_at?: string | null;

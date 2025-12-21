@@ -27,7 +27,7 @@ export function Skeleton({ className = '', variant = 'text', count = 1 }: Skelet
 
 export function CardSkeleton() {
   return (
-    <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 animate-pulse">
+    <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6 animate-pulse">
       <div className="flex items-center justify-between mb-4">
         <Skeleton className="w-32 h-6" />
         <Skeleton className="w-20 h-6" />
@@ -44,7 +44,7 @@ export function CardSkeleton() {
 
 export function StatSkeleton() {
   return (
-    <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 animate-pulse">
+    <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6 animate-pulse">
       <Skeleton variant="circle" className="w-8 h-8 mb-4" />
       <Skeleton className="w-16 h-8 mb-2" />
       <Skeleton className="w-24 h-4" />
@@ -54,7 +54,7 @@ export function StatSkeleton() {
 
 export function TableRowSkeleton() {
   return (
-    <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-4 animate-pulse">
+    <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-4 animate-pulse">
       <div className="flex items-center justify-between">
         <div className="flex-1 space-y-2">
           <Skeleton className="w-48 h-5" />

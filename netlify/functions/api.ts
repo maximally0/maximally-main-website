@@ -582,8 +582,6 @@ app.get("/api/judges", async (_req: Request, res: Response) => {
       return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
     }
 
-    console.log('Fetching all published judges');
-
     // Get all published judges
     const { data: judges, error: judgesError } = await supabaseAdmin
       .from('judges')
@@ -634,8 +632,6 @@ app.get("/api/judges", async (_req: Request, res: Response) => {
       isPublished: judgeData.is_published || false,
       createdAt: judgeData.created_at
     }));
-
-    console.log(`Returning ${judgesList.length} published judges`);
     return res.json(judgesList);
   } catch (err: any) {
     console.error('Judges fetch error:', err);
@@ -652,8 +648,6 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
 
     const { username } = req.params;
 
-    console.log('Fetching judge with username:', username);
-
     // Get judge data - use ilike for case-insensitive matching
     const { data: judge, error: judgeError } = await supabaseAdmin
       .from('judges')
@@ -662,25 +656,9 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
       .eq('is_published', true)
       .single();
 
-    if (judgeError) {
-      console.error('Judge fetch error:', judgeError);
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Judge not found',
-        debug: {
-          username,
-          error: judgeError.message,
-          code: judgeError.code
-        }
-      });
-    }
-
-    if (!judge) {
-      console.log('No judge found for username:', username);
+    if (judgeError || !judge) {
       return res.status(404).json({ success: false, message: 'Judge not found' });
     }
-
-    console.log('Judge found:', judge);
 
     // Get top events
     const { data: events, error: eventsError } = await supabaseAdmin
@@ -737,7 +715,6 @@ app.get("/api/judges/:username", async (req: Request, res: Response) => {
       }))
     };
 
-    console.log('Returning judge data for:', username);
     return res.json(response);
   } catch (err: any) {
     console.error('Judge fetch error:', err);

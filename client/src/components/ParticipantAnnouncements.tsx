@@ -32,12 +32,9 @@ export default function ParticipantAnnouncements({ hackathonId }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('ParticipantAnnouncements useEffect triggered', { user: !!user, hackathonId });
     if (user && hackathonId) {
       fetchParticipantAnnouncements();
     } else if (!user && hackathonId) {
-      // If no user, fall back to public announcements
-      console.log('No user, falling back to public announcements');
       fetchPublicAnnouncements();
     }
   }, [user, hackathonId]);
@@ -69,23 +66,15 @@ export default function ParticipantAnnouncements({ hackathonId }: Props) {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching participant announcements for hackathon:', hackathonId);
-      
       const headers = await getAuthHeaders();
-      console.log('Auth headers:', headers);
-      
       const response = await fetch(`/api/hackathons/${hackathonId}/participant-announcements`, { headers });
-      console.log('Response status:', response.status);
-      
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (data.success) {
         setAnnouncements(data.data);
         setUserStatus(data.user_status);
       } else if (response.status === 403) {
         // User is not registered for this hackathon, fall back to public announcements
-        console.log('User not registered, falling back to public announcements');
         const publicResponse = await fetch(`/api/hackathons/${hackathonId}/announcements`);
         const publicData = await publicResponse.json();
         
@@ -122,26 +111,26 @@ export default function ParticipantAnnouncements({ hackathonId }: Props) {
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'important':
-        return 'border-red-500 bg-red-900/20';
+        return 'border-red-500/50 bg-gradient-to-br from-red-500/15 to-rose-500/10';
       case 'reminder':
-        return 'border-orange-500 bg-orange-900/20';
+        return 'border-orange-500/50 bg-gradient-to-br from-orange-500/15 to-amber-500/10';
       case 'update':
-        return 'border-blue-500 bg-blue-900/20';
+        return 'border-blue-500/50 bg-gradient-to-br from-blue-500/15 to-cyan-500/10';
       default:
-        return 'border-maximally-yellow bg-maximally-yellow/10';
+        return 'border-purple-500/50 bg-gradient-to-br from-purple-500/15 to-pink-500/10';
     }
   };
 
   const getTypeTextColor = (type: string) => {
     switch (type) {
       case 'important':
-        return 'text-red-500';
+        return 'text-red-400';
       case 'reminder':
-        return 'text-orange-500';
+        return 'text-orange-400';
       case 'update':
-        return 'text-blue-500';
+        return 'text-blue-400';
       default:
-        return 'text-maximally-yellow';
+        return 'text-purple-400';
     }
   };
 
@@ -206,13 +195,15 @@ export default function ParticipantAnnouncements({ hackathonId }: Props) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 mb-6">
-        <Megaphone className="h-6 w-6 text-maximally-yellow" />
-        <h2 className="font-press-start text-2xl text-maximally-yellow">ANNOUNCEMENTS</h2>
+        <div className="p-2 bg-purple-500/20 border border-purple-500/40">
+          <Megaphone className="h-5 w-5 text-purple-400" />
+        </div>
+        <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">ANNOUNCEMENTS</h2>
       </div>
 
       {/* User Status Info */}
       {userStatus && (
-        <div className="pixel-card bg-gray-900 border-2 border-blue-500 p-4 mb-6">
+        <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/40 p-4 mb-6">
           <div className="flex items-center gap-2 mb-2">
             <Info className="h-4 w-4 text-blue-400" />
             <span className="font-press-start text-xs text-blue-400">YOUR_STATUS</span>
@@ -229,7 +220,7 @@ export default function ParticipantAnnouncements({ hackathonId }: Props) {
         {announcements.map((announcement) => (
           <div
             key={announcement.id}
-            className={`pixel-card border-2 p-6 ${getTypeColor(announcement.announcement_type)}`}
+            className={`border p-6 transition-all duration-300 ${getTypeColor(announcement.announcement_type)}`}
           >
             <div className="flex items-start gap-4">
               <div className={`${getTypeTextColor(announcement.announcement_type)} mt-1`}>
@@ -242,16 +233,16 @@ export default function ParticipantAnnouncements({ hackathonId }: Props) {
                   </h3>
                   <span className={`px-3 py-1 text-xs font-press-start uppercase border ${
                     announcement.announcement_type === 'important' 
-                      ? 'bg-red-500/20 text-red-500 border-red-500'
+                      ? 'bg-red-500/20 text-red-400 border-red-500/40'
                       : announcement.announcement_type === 'reminder'
-                      ? 'bg-orange-500/20 text-orange-500 border-orange-500'
+                      ? 'bg-orange-500/20 text-orange-400 border-orange-500/40'
                       : announcement.announcement_type === 'update'
-                      ? 'bg-blue-500/20 text-blue-500 border-blue-500'
-                      : 'bg-maximally-yellow/20 text-maximally-yellow border-maximally-yellow'
+                      ? 'bg-blue-500/20 text-blue-400 border-blue-500/40'
+                      : 'bg-purple-500/20 text-purple-400 border-purple-500/40'
                   }`}>
                     {announcement.announcement_type}
                   </span>
-                  <span className="px-2 py-1 text-xs font-jetbrains bg-gray-700 text-gray-300 border border-gray-600">
+                  <span className="px-2 py-1 text-xs font-jetbrains bg-gray-800/50 text-gray-300 border border-gray-700">
                     {getAudienceLabel(announcement.target_audience)}
                   </span>
                 </div>
@@ -269,7 +260,7 @@ export default function ParticipantAnnouncements({ hackathonId }: Props) {
                       minute: '2-digit'
                     })}
                     {announcement.updated_at && announcement.updated_at !== announcement.created_at && (
-                      <span className="text-yellow-400"> (edited)</span>
+                      <span className="text-amber-400"> (edited)</span>
                     )}
                   </span>
                 </div>

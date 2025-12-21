@@ -118,9 +118,9 @@ const OrganizerCard = ({ organizer }: OrganizerCardProps) => {
       {/* View Profile Button */}
       <Link
         to={`/organizer/${organizer.username}`}
-        className="block w-full minecraft-block bg-green-600 text-white text-center py-2 hover:bg-green-500 transition-colors"
+        className="block w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white text-center py-3 font-press-start text-xs border border-green-500/50 transition-all hover:scale-[1.02]"
       >
-        <span className="font-press-start text-xs">VIEW PROFILE</span>
+        VIEW PROFILE
       </Link>
     </div>
   );

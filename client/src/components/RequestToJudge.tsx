@@ -86,10 +86,10 @@ export default function RequestToJudge({ hackathonId }: RequestToJudgeProps) {
     return (
       <button
         disabled
-        className="pixel-button bg-green-600 text-white px-6 py-3 font-press-start text-sm flex items-center gap-2 cursor-not-allowed opacity-75"
+        className="bg-green-500/20 border border-green-500/40 text-green-300 px-6 py-3 font-press-start text-xs flex items-center gap-2 cursor-not-allowed opacity-75"
       >
         <Check className="h-4 w-4" />
-        ASSIGNED_AS_JUDGE
+        ASSIGNED AS JUDGE
       </button>
     );
   }
@@ -99,10 +99,10 @@ export default function RequestToJudge({ hackathonId }: RequestToJudgeProps) {
     return (
       <button
         disabled
-        className="pixel-button bg-gray-600 text-white px-6 py-3 font-press-start text-sm flex items-center gap-2 cursor-not-allowed opacity-75"
+        className="bg-gray-800/50 border border-gray-700 text-gray-400 px-6 py-3 font-press-start text-xs flex items-center gap-2 cursor-not-allowed opacity-75"
       >
         <Scale className="h-4 w-4" />
-        REQUEST_{status.requestStatus?.toUpperCase()}
+        REQUEST {status.requestStatus?.toUpperCase()}
       </button>
     );
   }
@@ -113,21 +113,27 @@ export default function RequestToJudge({ hackathonId }: RequestToJudgeProps) {
       <>
         <button
           onClick={() => setShowModal(true)}
-          className="pixel-button bg-purple-600 text-white px-6 py-3 font-press-start text-sm hover:bg-purple-500 flex items-center gap-2"
+          className="bg-gradient-to-r from-purple-600/40 to-violet-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
         >
           <Scale className="h-4 w-4" />
-          REQUEST_TO_JUDGE
+          REQUEST TO JUDGE
         </button>
 
         {/* Request Modal - Using Portal to render at document body level */}
         {showModal && createPortal(
           <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4" style={{ zIndex: 99999 }}>
-            <div className="pixel-card bg-black border-4 border-purple-600 max-w-md w-full relative" style={{ zIndex: 100000 }}>
-              <div className="p-6 border-b-2 border-purple-600">
+            <div className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-purple-500/50 max-w-md w-full relative backdrop-blur-sm" style={{ zIndex: 100000 }}>
+              <div className="p-6 border-b border-purple-500/30">
                 <div className="flex items-center justify-between">
-                  <h2 className="font-press-start text-xl text-purple-600">REQUEST_TO_JUDGE</h2>
-                  <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-white">
-                    <X className="h-6 w-6" />
+                  <h2 className="font-press-start text-lg text-purple-400 flex items-center gap-2">
+                    <Scale className="h-5 w-5" />
+                    REQUEST TO JUDGE
+                  </h2>
+                  <button 
+                    onClick={() => setShowModal(false)} 
+                    className="text-gray-400 hover:text-white p-2 hover:bg-white/10 transition-colors"
+                  >
+                    <X className="h-5 w-5" />
                   </button>
                 </div>
               </div>
@@ -138,12 +144,15 @@ export default function RequestToJudge({ hackathonId }: RequestToJudgeProps) {
                 </p>
 
                 <div>
-                  <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Message (Optional)</label>
+                  <label className="font-press-start text-[10px] text-purple-300 mb-2 block flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                    MESSAGE (OPTIONAL)
+                  </label>
                   <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     rows={4}
-                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-purple-600 outline-none resize-none"
+                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none resize-none placeholder:text-gray-600"
                     placeholder="Tell the organizer about your judging experience..."
                   />
                 </div>
@@ -152,15 +161,15 @@ export default function RequestToJudge({ hackathonId }: RequestToJudgeProps) {
                   <button
                     onClick={handleRequest}
                     disabled={submitting}
-                    className="flex-1 pixel-button bg-purple-600 text-white px-6 py-3 font-press-start text-sm hover:bg-purple-500 flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="flex-1 bg-gradient-to-r from-purple-600/40 to-violet-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     <Send className="h-4 w-4" />
-                    {submitting ? 'SENDING...' : 'SEND_REQUEST'}
+                    {submitting ? 'SENDING...' : 'SEND REQUEST'}
                   </button>
                   <button
                     onClick={() => setShowModal(false)}
                     disabled={submitting}
-                    className="pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600"
+                    className="bg-gray-800/50 border border-gray-700 text-gray-400 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300"
                   >
                     CANCEL
                   </button>

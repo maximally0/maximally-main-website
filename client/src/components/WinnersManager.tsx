@@ -42,7 +42,6 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
   const [saving, setSaving] = useState(false);
   const [canAnnounce, setCanAnnounce] = useState(false);
 
-  // Parse prizes - handle string, array, or empty
   const prizes: Prize[] = (() => {
     if (!prizesProp) return [];
     if (Array.isArray(prizesProp)) return prizesProp;
@@ -57,13 +56,10 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
     return [];
   })();
 
-  // Refetch data when component mounts or hackathonId changes
-  // Also refetch periodically to catch settings changes
   useEffect(() => {
     fetchData();
   }, [hackathonId]);
 
-  // Refetch when tab becomes visible (user switches to Winners tab)
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -78,20 +74,16 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
     try {
       const headers = await getAuthHeaders();
       
-      // Fetch submissions with scores
       const subResponse = await fetch(`/api/organizer/hackathons/${hackathonId}/submissions`, { headers });
       const subData = await subResponse.json();
       
-      // Fetch existing winners
       const winResponse = await fetch(`/api/organizer/hackathons/${hackathonId}/winners`, { headers });
       const winData = await winResponse.json();
       
-      // Check if can announce (judging closed or results phase)
       const hackResponse = await fetch(`/api/organizer/hackathons/${hackathonId}`, { headers });
       const hackData = await hackResponse.json();
       
       if (subData.success) {
-        // Sort by score descending
         const sorted = (subData.data || []).sort((a: Submission, b: Submission) => 
           (b.score || 0) - (a.score || 0)
         );
@@ -107,7 +99,6 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
         const judgingControl = h.judging_control || 'auto';
         const now = new Date();
         
-        // Can announce if judging is closed or ended
         const judgingEnded = judgingControl === 'closed' || 
           (judgingControl === 'auto' && h.judging_ends_at && new Date(h.judging_ends_at) < now);
         setCanAnnounce(judgingEnded);
@@ -174,9 +165,9 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
 
   if (prizes.length === 0) {
     return (
-      <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-8 text-center">
+      <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-8 text-center">
         <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-        <h2 className="font-press-start text-lg text-gray-400 mb-2">NO_PRIZES_CONFIGURED</h2>
+        <h2 className="font-press-start text-lg text-gray-400 mb-2">NO PRIZES CONFIGURED</h2>
         <p className="text-gray-500 font-jetbrains text-sm">
           Please add prize breakdown in the hackathon settings before announcing winners.
         </p>
@@ -187,21 +178,24 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="font-press-start text-xl text-maximally-red">ANNOUNCE_WINNERS</h2>
+        <h2 className="font-press-start text-lg text-purple-400 flex items-center gap-2">
+          <span className="w-2 h-2 bg-purple-400"></span>
+          ANNOUNCE WINNERS
+        </h2>
         <div className="flex items-center gap-3">
           <button
             onClick={() => { setLoading(true); fetchData(); }}
-            className="text-gray-400 hover:text-white p-2 hover:bg-gray-800 rounded transition-colors"
+            className="text-gray-400 hover:text-white p-2 hover:bg-white/10 transition-colors"
             title="Refresh"
           >
             <RefreshCw className="h-4 w-4" />
           </button>
           {canAnnounce ? (
-            <span className="text-xs text-green-500 font-jetbrains flex items-center gap-1">
+            <span className="text-xs text-green-400 font-jetbrains flex items-center gap-1">
               ✓ Ready to announce
             </span>
           ) : (
-            <span className="text-xs text-yellow-500 font-jetbrains">
+            <span className="text-xs text-amber-400 font-jetbrains">
               ⏳ Close judging first
             </span>
           )}
@@ -215,12 +209,12 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
           const selectedSubmission = winner ? submissions.find(s => s.id === winner.submission_id) : null;
           
           return (
-            <div key={index} className="pixel-card bg-gray-900 border-2 border-gray-700 p-4">
+            <div key={index} className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-4">
               <div className="flex items-center gap-3 mb-3">
-                <Trophy className={`h-6 w-6 ${index === 0 ? 'text-yellow-400' : index === 1 ? 'text-gray-300' : 'text-orange-400'}`} />
+                <Trophy className={`h-6 w-6 ${index === 0 ? 'text-amber-400' : index === 1 ? 'text-gray-300' : 'text-orange-400'}`} />
                 <div>
                   <h3 className="font-press-start text-sm text-white">{prize.position}</h3>
-                  <p className="text-maximally-yellow font-jetbrains text-lg">{prize.amount}</p>
+                  <p className="text-amber-400 font-jetbrains text-lg">{prize.amount}</p>
                 </div>
               </div>
               
@@ -228,7 +222,7 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
                 value={winner?.submission_id || ''}
                 onChange={(e) => handleSelectWinner(prize.position, e.target.value ? parseInt(e.target.value) : null)}
                 disabled={!canAnnounce}
-                className="w-full bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-black/50 border border-amber-500/30 text-white px-4 py-3 font-jetbrains focus:border-amber-400 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="">Select Winner...</option>
                 {submissions.map(sub => (
@@ -239,9 +233,9 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
               </select>
               
               {selectedSubmission && (
-                <div className="mt-3 bg-green-900/20 border border-green-600 p-3 rounded">
+                <div className="mt-3 bg-green-500/10 border border-green-500/30 p-3">
                   <div className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-green-500" />
+                    <Check className="h-4 w-4 text-green-400" />
                     <span className="text-green-400 font-jetbrains text-sm">
                       {selectedSubmission.project_name}
                     </span>
@@ -260,15 +254,18 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
       </div>
 
       {/* Top Submissions by Score */}
-      <div className="pixel-card bg-gray-900/50 border-2 border-gray-800 p-4">
-        <h3 className="font-press-start text-sm text-gray-400 mb-3">TOP_SUBMISSIONS_BY_SCORE</h3>
+      <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 p-4">
+        <h3 className="font-press-start text-sm text-gray-400 mb-3 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-gray-400"></span>
+          TOP SUBMISSIONS BY SCORE
+        </h3>
         <div className="space-y-2">
           {submissions.slice(0, 5).map((sub, i) => (
             <div key={sub.id} className="flex items-center justify-between text-sm">
               <span className="text-gray-300 font-jetbrains">
                 {i + 1}. {sub.project_name}
               </span>
-              <span className="text-maximally-yellow font-press-start text-xs">
+              <span className="text-amber-400 font-press-start text-xs">
                 {sub.score?.toFixed(1) || 'N/A'}
               </span>
             </div>
@@ -280,10 +277,10 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
       <button
         onClick={handleAnnounceWinners}
         disabled={!canAnnounce || saving || winners.length === 0}
-        className="w-full pixel-button bg-maximally-red text-white px-6 py-4 font-press-start text-sm hover:bg-maximally-yellow hover:text-black disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-4 font-press-start text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         <Award className="h-5 w-5" />
-        {saving ? 'ANNOUNCING...' : 'ANNOUNCE_WINNERS'}
+        {saving ? 'ANNOUNCING...' : 'ANNOUNCE WINNERS'}
       </button>
       
       {winners.length > 0 && (

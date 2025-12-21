@@ -130,11 +130,14 @@ export default function SubmissionMilestones({ submissionId, canEdit = false }: 
       {/* Header with Progress */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="font-press-start text-lg text-cyan-400">PROJECT MILESTONES</h3>
+          <h3 className="font-press-start text-lg text-cyan-400 flex items-center gap-2">
+            <span className="w-2 h-2 bg-cyan-400"></span>
+            PROJECT MILESTONES
+          </h3>
           {canEdit && (
             <button
               onClick={() => setShowAddForm(!showAddForm)}
-              className="minecraft-block bg-cyan-400 text-black px-4 py-2 hover:bg-maximally-yellow transition-colors flex items-center gap-2"
+              className="bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 hover:border-cyan-400 text-cyan-200 hover:text-white px-4 py-2 transition-all duration-300 flex items-center gap-2"
             >
               <Plus className="h-4 w-4" />
               <span className="font-press-start text-xs">ADD</span>
@@ -151,9 +154,9 @@ export default function SubmissionMilestones({ submissionId, canEdit = false }: 
                 {completedCount} / {milestones.length} completed
               </span>
             </div>
-            <div className="w-full bg-gray-800 h-4 pixel-card">
+            <div className="w-full bg-gray-800 h-4 border border-gray-700">
               <div
-                className="bg-green-500 h-full transition-all duration-300"
+                className="bg-gradient-to-r from-green-500 to-emerald-400 h-full transition-all duration-300"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -163,33 +166,36 @@ export default function SubmissionMilestones({ submissionId, canEdit = false }: 
 
       {/* Add Milestone Form */}
       {showAddForm && canEdit && (
-        <div className="pixel-card bg-gray-900 border-2 border-cyan-400 p-6">
-          <h4 className="font-press-start text-sm text-cyan-400 mb-4">NEW MILESTONE</h4>
+        <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-6">
+          <h4 className="font-press-start text-sm text-cyan-400 mb-4 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+            NEW MILESTONE
+          </h4>
           <div className="space-y-4">
             <input
               type="text"
               placeholder="Milestone title"
               value={newMilestone.milestone_title}
               onChange={(e) => setNewMilestone({ ...newMilestone, milestone_title: e.target.value })}
-              className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-cyan-400 focus:outline-none"
+              className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none placeholder:text-gray-600"
             />
             <textarea
               placeholder="Description (optional)"
               value={newMilestone.milestone_description}
               onChange={(e) => setNewMilestone({ ...newMilestone, milestone_description: e.target.value })}
-              className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-cyan-400 focus:outline-none resize-none"
+              className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none resize-none placeholder:text-gray-600"
               rows={2}
             />
             <div className="flex gap-2">
               <button
                 onClick={handleAddMilestone}
-                className="minecraft-block bg-green-600 text-white px-4 py-2 hover:bg-green-700 transition-colors flex-1"
+                className="flex-1 bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white py-2 transition-all duration-300"
               >
                 <span className="font-press-start text-xs">CREATE</span>
               </button>
               <button
                 onClick={() => setShowAddForm(false)}
-                className="minecraft-block bg-gray-600 text-white px-4 py-2 hover:bg-gray-700 transition-colors"
+                className="bg-gray-800/50 border border-gray-700 text-gray-400 hover:text-white px-4 py-2 transition-all duration-300"
               >
                 <span className="font-press-start text-xs">CANCEL</span>
               </button>
@@ -202,7 +208,7 @@ export default function SubmissionMilestones({ submissionId, canEdit = false }: 
       <div className="space-y-3">
         {milestones.length === 0 ? (
           <div className="text-center py-12">
-            <div className="minecraft-block bg-gray-800 text-gray-400 px-6 py-4 inline-block">
+            <div className="bg-gray-800/50 border border-gray-700 text-gray-400 px-6 py-4 inline-block">
               <span className="font-press-start text-sm">NO MILESTONES YET</span>
             </div>
             {canEdit && (
@@ -215,10 +221,10 @@ export default function SubmissionMilestones({ submissionId, canEdit = false }: 
           milestones.map((milestone) => (
             <div
               key={milestone.id}
-              className={`pixel-card border-2 p-4 transition-all ${
+              className={`border p-4 transition-all ${
                 milestone.completed
-                  ? 'bg-green-900/20 border-green-600'
-                  : 'bg-gray-900 border-gray-700 hover:border-cyan-400'
+                  ? 'bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/30'
+                  : 'bg-gradient-to-br from-gray-900/60 to-gray-900/30 border-gray-700 hover:border-cyan-500/50'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -258,7 +264,7 @@ export default function SubmissionMilestones({ submissionId, canEdit = false }: 
                 {canEdit && (
                   <button
                     onClick={() => handleDeleteMilestone(milestone.id)}
-                    className="text-red-500 hover:text-red-400 transition-colors"
+                    className="text-red-500 hover:text-red-400 transition-colors p-1 hover:bg-red-500/10"
                   >
                     <X className="h-5 w-5" />
                   </button>

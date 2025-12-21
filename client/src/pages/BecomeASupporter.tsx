@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { 
   Heart, 
   Users, 
@@ -14,48 +13,56 @@ import {
   Shield,
   CheckCircle2,
   MessageCircle,
-  Globe
+  Globe,
+  Sparkles
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 
 const HeroSection = () => {
   return (
     <section className="min-h-screen bg-black text-white relative overflow-hidden flex items-center">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.1)_1px,transparent_1px)] bg-[size:50px_50px] animate-pulse" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
       
-      {Array.from({ length: 12 }, (_, i) => (
-        <div
-          key={i}
-          className="absolute w-2 h-2 bg-maximally-red pixel-border animate-float"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${i * 0.5}s`,
-            animationDuration: `${4 + i}s`,
-          }}
-        />
-      ))}
+      <div className="absolute top-20 left-[10%] w-72 h-72 bg-purple-500/15 rounded-full blur-[100px] animate-pulse" />
+      <div className="absolute bottom-20 right-[10%] w-80 h-80 bg-pink-500/12 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
       
       <div className="max-w-7xl mx-auto px-4 relative z-10 text-center py-20">
-        <div className="minecraft-block bg-maximally-red p-4 inline-block mb-6">
-          <Heart className="h-8 w-8 text-black" />
+        <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/30 to-pink-600/20 border border-purple-500/40 mb-8">
+          <Heart className="h-5 w-5 text-pink-400" />
+          <span className="font-press-start text-xs text-purple-300">SUPPORT THE MOVEMENT</span>
         </div>
         
-        <h1 className="font-press-start text-3xl md:text-4xl lg:text-6xl mb-6 text-white drop-shadow-[4px_4px_0px_rgba(229,9,20,1)]">
-          BECOME A SUPPORTER
+        <h1 className="font-press-start text-3xl md:text-4xl lg:text-5xl mb-6">
+          <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+            BECOME A SUPPORTER
+          </span>
         </h1>
         
-        <p className="font-press-start text-maximally-red text-lg md:text-xl mb-6">
+        <p className="font-press-start text-pink-400 text-base md:text-lg mb-8">
           HELP US HOST CRAZIER HACKATHONS
         </p>
         
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-6 md:p-8 max-w-4xl mx-auto">
-          <p className="font-jetbrains text-gray-300 text-base md:text-lg leading-relaxed">
-            Help us push hacker culture to every corner of the world. Build the future of hackathons with us.
-          </p>
+        <p className="font-jetbrains text-gray-300 text-lg max-w-3xl mx-auto leading-relaxed mb-10">
+          Maximally is building the world's most powerful hackathon ecosystem. 
+          Your support helps us bring hackathons to every corner of the world.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a 
+            href="#tiers"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs py-4 px-8 transition-all duration-300 border border-pink-500/50 hover:scale-[1.02]"
+          >
+            VIEW SUPPORT TIERS
+          </a>
+          <a 
+            href="#one-time"
+            className="bg-gradient-to-r from-gray-900 to-gray-800 border border-purple-500/40 hover:border-purple-400 text-gray-300 hover:text-white font-press-start text-xs py-4 px-8 transition-all duration-300"
+          >
+            ONE-TIME DONATION
+          </a>
         </div>
       </div>
     </section>
@@ -65,63 +72,28 @@ const HeroSection = () => {
 const WhyThisExists = () => {
   return (
     <section className="bg-black text-white py-20 relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.02)_1px,transparent_1px)] bg-[size:30px_30px]" />
       
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
+      <div className="max-w-5xl mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-red mb-6">
+          <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
             WHY THIS EXISTS
           </h2>
         </div>
         
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-8 md:p-12 space-y-6">
-          <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
-            Maximally is building the world's most powerful hackathon ecosystem — a global OS for hackathons.
+        <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8 md:p-12">
+          <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-6">
+            Hackathons changed our lives. They gave us skills, connections, and confidence that no classroom ever could. 
+            But here's the problem: <span className="text-pink-400 font-bold">most hackathons are underfunded, poorly organized, or simply don't exist</span> in many parts of the world.
+          </p>
+          
+          <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-6">
+            We're on a mission to change that. Maximally is building infrastructure, tools, and community to make 
+            hackathons <span className="text-purple-400 font-bold">more accessible, more creative, and more impactful</span> than ever before.
           </p>
           
           <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
-            We help schools, colleges, startups, and communities run <span className="text-maximally-red font-bold">insane, high-energy hackathons</span> with:
-          </p>
-          
-          <ul className="font-jetbrains text-gray-300 text-lg space-y-2 pl-6">
-            <li className="flex items-start gap-2">
-              <span className="text-maximally-red">▸</span>
-              <span>full-stack infra</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-maximally-red">▸</span>
-              <span>submissions + judging systems</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-maximally-red">▸</span>
-              <span>sponsors + mentors</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-maximally-red">▸</span>
-              <span>branding + ops</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-maximally-red">▸</span>
-              <span>templates + playbooks</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-maximally-red">▸</span>
-              <span>MFHOP federation access</span>
-            </li>
-          </ul>
-          
-          <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
-            We've already hosted and co-organized 10+ global hackathons, brought thousands of builders together, 
-            and partnered with judges from Google, Microsoft, Meta, AWS, McKinsey, Warner Bros Discovery, and more.
-          </p>
-          
-          <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
-            Now we want to <span className="text-maximally-red font-bold">scale this globally</span> — bigger events, wilder formats, 
-            more locations, more opportunities.
-          </p>
-          
-          <p className="font-jetbrains text-maximally-red text-xl leading-relaxed font-bold text-center pt-4">
-            And we want YOU to be part of the movement.
+            Your support directly funds prize pools, venue costs, mentorship programs, and the technology that powers it all.
           </p>
         </div>
       </div>
@@ -129,39 +101,27 @@ const WhyThisExists = () => {
   );
 };
 
+
 const FounderNote = () => {
   return (
-    <section className="bg-black text-white py-20 relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
-      
-      <div className="max-w-5xl mx-auto px-4 relative z-10">
-        <div className="pixel-card bg-black/90 border-2 border-maximally-yellow p-8 md:p-12">
-          <div className="flex items-center gap-3 mb-6">
-            <MessageCircle className="h-8 w-8 text-maximally-yellow" />
-            <h2 className="font-press-start text-xl md:text-2xl text-maximally-yellow">
-              FROM THE FOUNDER
-            </h2>
+    <section className="bg-black text-white py-20">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-8 md:p-12">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
+              <MessageCircle className="h-8 w-8 text-white" />
+            </div>
+            <div>
+              <h3 className="font-press-start text-lg text-white">A NOTE FROM THE FOUNDER</h3>
+              <p className="font-jetbrains text-purple-400 text-sm">Rishul Chanana</p>
+            </div>
           </div>
           
-          <div className="space-y-4">
-            <p className="font-jetbrains text-gray-300 text-lg leading-relaxed italic">
-              "I started Maximally because hackathons changed my life. Everything we've done so far has been 
-              built without budget — just energy and creativity.
-            </p>
-            
-            <p className="font-jetbrains text-gray-300 text-lg leading-relaxed italic">
-              If you support us today, you're helping fuel something that I genuinely believe will become 
-              the largest hackathon network in the world.
-            </p>
-            
-            <p className="font-jetbrains text-gray-300 text-lg leading-relaxed italic">
-              And I promise: we'll use your support to build the craziest, most creative events ever."
-            </p>
-            
-            <p className="font-jetbrains text-maximally-red text-xl font-bold pt-4">
-              — Rishul Chanana, Founder
-            </p>
-          </div>
+          <blockquote className="font-jetbrains text-gray-300 text-lg leading-relaxed italic border-l-4 border-pink-500 pl-6">
+            "I started Maximally because I believe hackathons are the most powerful way to learn, build, and connect. 
+            Every dollar you contribute goes directly into making these experiences possible for more people. 
+            We're not a big corporation — we're a small team with a big dream. Your support means everything."
+          </blockquote>
         </div>
       </div>
     </section>
@@ -169,22 +129,38 @@ const FounderNote = () => {
 };
 
 const TheMovement = () => {
+  const stats = [
+    { number: "10+", label: "Hackathons Hosted", icon: <Trophy className="h-6 w-6" /> },
+    { number: "1000+", label: "Participants", icon: <Users className="h-6 w-6" /> },
+    { number: "50+", label: "Projects Built", icon: <Zap className="h-6 w-6" /> },
+    { number: "5+", label: "Countries Reached", icon: <Globe className="h-6 w-6" /> }
+  ];
+
   return (
-    <section className="bg-black text-white py-20">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-8 md:p-12 text-center">
-          <Globe className="h-12 w-12 text-maximally-red mx-auto mb-6" />
-          
-          <h2 className="font-press-start text-2xl md:text-3xl text-maximally-red mb-8">
-            THE MOVEMENT
+    <section className="bg-black text-white py-20 relative">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.08)_0%,transparent_50%)]" />
+      
+      <div className="max-w-6xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-12">
+          <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+            THE MOVEMENT SO FAR
           </h2>
-          
-          <p className="font-jetbrains text-gray-300 text-lg md:text-xl leading-relaxed max-w-4xl mx-auto">
-            We want a world where hackathons become a cultural phenomenon — not just a college event. 
-            We want more builders, more chaos, more creativity, more making. 
-            <span className="text-maximally-red font-bold"> Your support helps us bring hackathons to cities, villages, schools, 
-            colleges, communities, and online spaces across the world.</span>
+          <p className="font-jetbrains text-gray-400 text-lg">
+            What we've built together
           </p>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((stat, idx) => (
+            <div 
+              key={idx}
+              className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/30 p-6 text-center hover:border-pink-400/50 transition-all"
+            >
+              <div className="text-purple-400 mb-4 flex justify-center">{stat.icon}</div>
+              <p className="font-press-start text-3xl text-white mb-2">{stat.number}</p>
+              <p className="font-jetbrains text-gray-400 text-sm">{stat.label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -193,437 +169,191 @@ const TheMovement = () => {
 
 const WhatYouFunding = () => {
   const breakdown = [
-    { percentage: 40, label: "Prize Pools", borderColor: "border-maximally-red", textColor: "text-maximally-red" },
-    { percentage: 20, label: "Infra & Tools", borderColor: "border-maximally-yellow", textColor: "text-maximally-yellow" },
-    { percentage: 15, label: "Branding + Content", borderColor: "border-green-500", textColor: "text-green-500" },
-    { percentage: 15, label: "Judges & Mentors", borderColor: "border-blue-500", textColor: "text-blue-500" },
-    { percentage: 10, label: "Outreach & Partnerships", borderColor: "border-purple-500", textColor: "text-purple-500" }
+    { percentage: 40, label: "Prize Pools", gradient: "from-purple-600/40 to-pink-600/30", border: "border-purple-500/50", textColor: "text-purple-400" },
+    { percentage: 20, label: "Infrastructure", gradient: "from-cyan-600/40 to-blue-600/30", border: "border-cyan-500/50", textColor: "text-cyan-400" },
+    { percentage: 15, label: "Branding", gradient: "from-pink-600/40 to-rose-600/30", border: "border-pink-500/50", textColor: "text-pink-400" },
+    { percentage: 15, label: "Mentors", gradient: "from-amber-600/40 to-orange-600/30", border: "border-amber-500/50", textColor: "text-amber-400" },
+    { percentage: 10, label: "Outreach", gradient: "from-green-600/40 to-emerald-600/30", border: "border-green-500/50", textColor: "text-green-400" }
   ];
 
   return (
-    <section className="bg-black text-white py-20 relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
-      
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-red mb-4">
-            WHAT YOU'RE ACTUALLY FUNDING
-          </h2>
-          <p className="font-jetbrains text-gray-300 text-lg">
-            Complete transparency. Here's exactly where supporter money goes:
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-5 gap-6">
-          {breakdown.map((item, idx) => (
-            <Card 
-              key={idx}
-              className={`bg-black border-2 ${item.borderColor} p-6 text-center hover-elevate`}
-              data-testid={`card-funding-${item.label.toLowerCase().replace(/\s+/g, '-')}`}
-            >
-              <div className="mb-4">
-                <DollarSign className={`h-8 w-8 ${item.textColor} mx-auto`} />
-              </div>
-              
-              <p className={`font-press-start text-4xl ${item.textColor} mb-3`}>
-                {item.percentage}%
-              </p>
-              
-              <p className="font-jetbrains text-gray-300 text-sm">
-                {item.label}
-              </p>
-            </Card>
-          ))}
-        </div>
-        
-        <div className="mt-8 text-center">
-          <p className="font-jetbrains text-gray-400 text-sm italic">
-            This builds trust. We're not pocketing it — we're building the ecosystem.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const IndividualTiers = () => {
-  const tiers = [
-    {
-      name: "SUPPORTER",
-      price: "$100",
-      stars: 1,
-      benefits: [
-        "Listed on the Maximally Supporter Wall",
-        "Supporter badge (LinkedIn-ready)",
-        "Early access to all hackathons",
-        "Access to the Maximally Community + private supporter channels",
-        "Invitation to monthly supporter calls",
-        "Ability to advise on formats, themes, and new ideas (light advisory role)"
-      ],
-      starColor: "fill-maximally-red text-maximally-red",
-      priceColor: "text-maximally-red"
-    },
-    {
-      name: "SUPER SUPPORTER",
-      price: "$150",
-      stars: 2,
-      benefits: [
-        "Everything in Supporter +",
-        "Featured profile on Supporter Wall (photo + 1-line)",
-        "Priority invitation to co-review shortlists",
-        "Access to MFHOP resources & organizer playbooks",
-        "Quarterly 'Advisor Circle' meet-up",
-        "Ability to influence the direction of upcoming hackathons"
-      ],
-      starColor: "fill-maximally-yellow text-maximally-yellow",
-      priceColor: "text-maximally-yellow",
-      featured: true
-    },
-    {
-      name: "CHAMPION SUPPORTER",
-      price: "$200",
-      stars: 3,
-      benefits: [
-        "Everything in Super Supporter +",
-        "Featured as Champion on a hackathon webpage",
-        "Optional 'Advisor Spotlight' on our Instagram",
-        "1× 15-minute 'build hackathons with us' call",
-        "Access to our mentors/judges pipeline",
-        "Ability to advise more deeply on the Maximally roadmap"
-      ],
-      starColor: "fill-green-500 text-green-500",
-      priceColor: "text-green-500"
-    }
-  ];
-
-  return (
-    <section className="bg-black text-white py-20">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-red mb-4">
-            INDIVIDUAL SUPPORTERS
-          </h2>
-          <p className="font-jetbrains text-gray-300 text-lg max-w-3xl mx-auto">
-            Support Maximally → become an Advisor-like supporter → help us build crazier shit.
-          </p>
-          <p className="font-jetbrains text-gray-300 text-lg max-w-3xl mx-auto mt-4">
-            When you support Maximally, you're not "donating." You're joining the internal circle that helps 
-            shape hackathons, events, formats, partnerships, and the future of hacker culture.
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-3 gap-8">
-          {tiers.map((tier, idx) => (
-            <Card 
-              key={idx}
-              className={`bg-black border-2 ${tier.featured ? 'border-maximally-yellow' : 'border-maximally-red'} p-6 relative overflow-hidden hover-elevate`}
-              data-testid={`card-tier-${tier.name.toLowerCase().replace(/\s+/g, '-')}`}
-            >
-              {tier.featured && (
-                <div className="absolute top-0 right-0 bg-maximally-yellow text-black px-3 py-1 font-press-start text-xs">
-                  POPULAR
-                </div>
-              )}
-              
-              <div className="flex items-center gap-2 mb-4">
-                {Array.from({ length: tier.stars }).map((_, i) => (
-                  <Star key={i} className={`h-5 w-5 ${tier.starColor}`} />
-                ))}
-              </div>
-              
-              <h3 className="font-press-start text-xl text-white mb-2">
-                {tier.name}
-              </h3>
-              
-              <p className={`font-press-start text-3xl ${tier.priceColor} mb-6`}>
-                {tier.price}
-              </p>
-              
-              <ul className="space-y-3 mb-8">
-                {tier.benefits.map((benefit, i) => (
-                  <li key={i} className="flex items-start gap-2 font-jetbrains text-gray-300 text-sm">
-                    <span className="text-maximally-red mt-1">▸</span>
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <a 
-                href="https://www.buymeacoffee.com/maximally" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <Button 
-                  className="w-full bg-maximally-red hover:bg-maximally-red/90 text-black font-press-start"
-                  data-testid={`button-support-${tier.price.replace('$', '')}`}
-                >
-                  SUPPORT – {tier.price}
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
-              </a>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const AdvisorCircle = () => {
-  const advisorRoles = [
-    { icon: Zap, text: "Brainstorm new formats" },
-    { icon: Trophy, text: "Vote on themes/logos" },
-    { icon: Users, text: "Suggest global judges" },
-    { icon: Heart, text: "Propose communities to partner with" },
-    { icon: Target, text: "Build new hackathon verticals" },
-    { icon: Gift, text: "Experiment with crazy new ideas" }
-  ];
-
-  return (
-    <section className="bg-black text-white py-20">
+    <section className="bg-black text-white py-20" id="funding">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-yellow mb-4">
-            WHAT IS THE ADVISOR CIRCLE?
+          <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+            WHERE YOUR MONEY GOES
           </h2>
-          <p className="font-jetbrains text-gray-300 text-lg max-w-3xl mx-auto">
-            When you become a supporter, you're not just donating — you become an advisor helping shape the future.
+          <p className="font-jetbrains text-gray-400 text-lg">
+            100% transparent breakdown
           </p>
         </div>
-        
-        <div className="pixel-card bg-black/80 border-2 border-maximally-yellow p-8 md:p-12">
-          <p className="font-jetbrains text-gray-300 text-lg mb-8 text-center">
-            <span className="text-maximally-yellow font-bold">Advisor Circle members</span> help us:
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-4">
-            {advisorRoles.map((role, idx) => (
-              <div key={idx} className="flex items-center gap-3 bg-black/50 border border-maximally-yellow/30 p-4">
-                <role.icon className="h-6 w-6 text-maximally-yellow flex-shrink-0" />
-                <span className="font-jetbrains text-gray-300">{role.text}</span>
-              </div>
-            ))}
-          </div>
-          
-          <p className="font-jetbrains text-gray-400 text-center mt-8 italic">
-            Your supporter tier isn't just symbolic — it makes you useful in shaping hacker culture.
-          </p>
+
+        <div className="grid md:grid-cols-5 gap-4">
+          {breakdown.map((item, idx) => (
+            <div
+              key={idx}
+              className={`bg-gradient-to-br ${item.gradient} border ${item.border} p-6 text-center transition-all duration-300 hover:scale-[1.02]`}
+            >
+              <DollarSign className={`h-8 w-8 ${item.textColor} mx-auto mb-4`} />
+              <p className={`font-press-start text-3xl ${item.textColor} mb-3`}>
+                {item.percentage}%
+              </p>
+              <p className="font-jetbrains text-gray-400 text-sm">
+                {item.label}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 };
 
-const SponsorPackages = () => {
-  const packages = [
+
+const SupportTiers = () => {
+  const tiers = [
     {
-      name: "STARTER SPONSOR",
-      price: "$1,500",
-      iconColor: "text-maximally-yellow",
-      priceColor: "text-maximally-yellow",
-      benefits: [
-        "Logo on event page",
-        "Mention in newsletter & socials",
-        "Recruiter access to top performers",
-        "Sponsor certificate",
-        "Inclusion in MFHOP partner database"
-      ]
-    },
-    {
-      name: "GROWTH SPONSOR",
-      price: "$3,500",
-      iconColor: "text-maximally-red",
-      priceColor: "text-maximally-red",
-      benefits: [
-        "Everything in Starter +",
-        "Dedicated prize track",
-        "Judge/mentor slot",
-        "Branding in opening + closing ceremony",
-        "Feature on Maximally's Instagram + LinkedIn"
+      name: "HACKER",
+      amount: "$5/month",
+      description: "For builders who want to support the movement",
+      perks: [
+        "Supporter badge on profile",
+        "Access to supporter Discord",
+        "Monthly updates from the team",
+        "Early access to new features"
       ],
-      featured: true
+      gradient: "from-purple-600/40 to-pink-600/30",
+      border: "border-purple-500/50",
+      buttonGradient: "from-purple-600 to-pink-600",
+      popular: false
     },
     {
-      name: "FLAGSHIP SPONSOR",
-      price: "$7,500",
-      iconColor: "text-blue-500",
-      priceColor: "text-blue-500",
-      benefits: [
-        "Everything in Growth +",
-        "Category naming rights",
-        "Full integration into hackathon experience",
-        "Access to participant resumes (opt-in)",
-        "Full brand pack across mailers + content",
-        "Year-long MFHOP partnership access"
-      ]
+      name: "BUILDER",
+      amount: "$15/month",
+      description: "For those who want to actively shape the future",
+      perks: [
+        "Everything in Hacker tier",
+        "Quarterly video calls with founders",
+        "Input on new hackathon formats",
+        "Exclusive supporter swag",
+        "Priority support"
+      ],
+      gradient: "from-amber-600/40 to-orange-600/30",
+      border: "border-amber-500/50",
+      buttonGradient: "from-amber-600 to-orange-600",
+      popular: true
+    },
+    {
+      name: "LEGEND",
+      amount: "$50/month",
+      description: "For hackathon legends who want maximum impact",
+      perks: [
+        "Everything in Builder tier",
+        "Monthly 1-on-1 with founder",
+        "Co-design hackathon themes",
+        "Judge at Maximally events",
+        "Your name on supporter wall",
+        "Lifetime access to all events"
+      ],
+      gradient: "from-cyan-600/40 to-blue-600/30",
+      border: "border-cyan-500/50",
+      buttonGradient: "from-cyan-600 to-blue-600",
+      popular: false
     }
   ];
 
   return (
-    <section className="bg-black text-white py-20 relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+    <section className="bg-black text-white py-20 relative" id="tiers">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-950/10 to-transparent" />
       
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-red mb-4">
-            SPONSOR PACKAGES
+          <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+            SUPPORT TIERS
           </h2>
-          <p className="font-jetbrains text-gray-300 text-lg max-w-3xl mx-auto">
-            For companies that want branding, presence, and visibility across the Maximally ecosystem + MFHOP network.
+          <p className="font-jetbrains text-gray-400 text-lg">
+            Choose your level of impact
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8 mb-8">
-          {packages.map((pkg, idx) => (
-            <Card 
+        <div className="grid md:grid-cols-3 gap-6">
+          {tiers.map((tier, idx) => (
+            <div 
               key={idx}
-              className={`bg-black border-2 ${pkg.featured ? 'border-maximally-red' : 'border-gray-700'} p-6 relative overflow-hidden hover-elevate`}
-              data-testid={`card-sponsor-${pkg.name.toLowerCase().replace(/\s+/g, '-')}`}
+              className={`bg-gradient-to-br ${tier.gradient} border ${tier.border} p-8 relative transition-all duration-300 hover:scale-[1.02] ${tier.popular ? 'ring-2 ring-amber-500/50' : ''}`}
             >
-              {pkg.featured && (
-                <div className="absolute top-0 right-0 bg-maximally-red text-black px-3 py-1 font-press-start text-xs">
-                  RECOMMENDED
+              {tier.popular && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <div className="bg-gradient-to-r from-amber-600 to-orange-600 px-4 py-1">
+                    <span className="font-press-start text-xs text-white">MOST POPULAR</span>
+                  </div>
                 </div>
               )}
               
-              <div className="mb-4">
-                <Building2 className={`h-8 w-8 ${pkg.iconColor}`} />
+              <div className="text-center mb-6">
+                <h3 className="font-press-start text-xl text-white mb-2">{tier.name}</h3>
+                <p className="font-press-start text-2xl text-purple-400 mb-3">{tier.amount}</p>
+                <p className="font-jetbrains text-gray-400 text-sm">{tier.description}</p>
               </div>
               
-              <h3 className="font-press-start text-xl text-white mb-2">
-                {pkg.name}
-              </h3>
-              
-              <p className={`font-press-start text-3xl ${pkg.priceColor} mb-6`}>
-                {pkg.price}
-              </p>
-              
               <ul className="space-y-3 mb-8">
-                {pkg.benefits.map((benefit, i) => (
-                  <li key={i} className="flex items-start gap-2 font-jetbrains text-gray-300 text-sm">
-                    <span className="text-maximally-red mt-1">▸</span>
-                    <span>{benefit}</span>
+                {tier.perks.map((perk, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-green-400 flex-shrink-0 mt-0.5" />
+                    <span className="font-jetbrains text-gray-300 text-sm">{perk}</span>
                   </li>
                 ))}
               </ul>
               
-              <a 
-                href="https://www.buymeacoffee.com/maximally" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block"
-              >
-                <Button 
-                  className="w-full bg-maximally-red hover:bg-maximally-red/90 text-black font-press-start"
-                  data-testid={`button-sponsor-${pkg.price.replace('$', '').replace(',', '')}`}
-                >
-                  SPONSOR – {pkg.price}
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
-              </a>
-            </Card>
+              <button className={`w-full bg-gradient-to-r ${tier.buttonGradient} hover:opacity-90 text-white font-press-start text-xs py-3 px-6 transition-all duration-300 border border-white/20`}>
+                BECOME A {tier.name}
+              </button>
+            </div>
           ))}
         </div>
         
-        <Card className="bg-black border-2 border-purple-500 p-8 hover-elevate" data-testid="card-sponsor-custom">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="font-press-start text-2xl text-white mb-3">
-                CUSTOM PARTNERSHIP
-              </h3>
-              <p className="font-jetbrains text-gray-300 text-lg">
-                If your org wants something larger or multi-event
-              </p>
-            </div>
-            <a href="mailto:hello@maximally.in">
-              <Button 
-                className="bg-purple-500 hover:bg-purple-600 text-white font-press-start whitespace-nowrap"
-                data-testid="button-custom-pricing"
-              >
-                GET CUSTOM PRICING
-                <Mail className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
-          </div>
-        </Card>
-        
-        <Card className="bg-black border-2 border-green-500 p-8 mt-8 hover-elevate" data-testid="card-talk-to-us">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="font-press-start text-xl text-green-500 mb-3">
-                WANT A CALL BEFORE SPONSORING?
-              </h3>
-              <p className="font-jetbrains text-gray-300 text-lg">
-                Some people want to ask questions before paying $1500+. We get it.
-              </p>
-            </div>
-            <a href="mailto:hello@maximally.in">
-              <Button 
-                className="bg-green-500 hover:bg-green-600 text-white font-press-start whitespace-nowrap"
-                data-testid="button-talk-to-us"
-              >
-                EMAIL US FIRST
-                <Mail className="ml-2 h-4 w-4" />
-              </Button>
-            </a>
-          </div>
-        </Card>
+        <div className="text-center mt-12">
+          <p className="font-jetbrains text-gray-500 text-sm">
+            All tiers are monthly subscriptions. Cancel anytime.
+          </p>
+        </div>
       </div>
     </section>
   );
 };
 
-const NonMonetarySupport = () => {
-  const supportTypes = [
-    { icon: Zap, text: "credits (AI tools, hosting, APIs)" },
-    { icon: Gift, text: "swag" },
-    { icon: Building2, text: "workspace access" },
-    { icon: Target, text: "marketing reach" },
-    { icon: Users, text: "mentorship" },
-    { icon: Trophy, text: "judge roles" },
-    { icon: Heart, text: "community partnerships" }
-  ];
+const OneTimeSupport = () => {
+  const amounts = ["$10", "$25", "$50", "$100", "$250"];
 
   return (
-    <section className="bg-black text-white py-20">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-red mb-6">
-            DON'T WANT TO SUPPORT MONETARILY?
-          </h2>
-          <p className="font-press-start text-xl text-maximally-yellow mb-4">
-            STILL JOIN US
-          </p>
-        </div>
-        
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-8 md:p-12">
-          <p className="font-jetbrains text-gray-300 text-lg mb-6 text-center">
-            You can support hacker culture by contributing:
-          </p>
+    <section className="bg-black text-white py-20" id="one-time">
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-500/40 p-8 md:p-12">
+          <div className="text-center mb-8">
+            <Gift className="h-12 w-12 text-green-400 mx-auto mb-4" />
+            <h2 className="font-press-start text-xl md:text-2xl text-green-400 mb-4">
+              ONE-TIME SUPPORT
+            </h2>
+            <p className="font-jetbrains text-gray-300 text-lg">
+              Prefer a one-time contribution? Every dollar helps us build better hackathons.
+            </p>
+          </div>
           
-          <div className="grid md:grid-cols-2 gap-4 mb-8">
-            {supportTypes.map((type, idx) => (
-              <div key={idx} className="flex items-center gap-3 bg-black/50 border border-maximally-red/30 p-4">
-                <type.icon className="h-6 w-6 text-maximally-red flex-shrink-0" />
-                <span className="font-jetbrains text-gray-300">{type.text}</span>
-              </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+            {amounts.map((amount, idx) => (
+              <button 
+                key={idx}
+                className="bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 font-press-start text-sm py-3 px-4 transition-all duration-300 hover:scale-[1.02]"
+              >
+                {amount}
+              </button>
             ))}
           </div>
           
           <div className="text-center">
-            <p className="font-jetbrains text-gray-300 text-lg mb-6">
-              Email us to be part of this:
-            </p>
-            <a href="mailto:hello@maximally.in">
-              <Button 
-                className="bg-maximally-red hover:bg-maximally-red/90 text-black font-press-start text-lg px-8 py-6"
-                data-testid="button-email-support"
-              >
-                HELLO@MAXIMALLY.IN
-                <Mail className="ml-2 h-5 w-5" />
-              </Button>
-            </a>
+            <button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-press-start text-xs py-3 px-8 transition-all duration-300 border border-green-500/50">
+              CUSTOM AMOUNT
+            </button>
           </div>
         </div>
       </div>
@@ -631,35 +361,105 @@ const NonMonetarySupport = () => {
   );
 };
 
-const TrustAndSafety = () => {
+
+const CorporateSponsorship = () => {
+  return (
+    <section className="bg-black text-white py-20 relative">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.02)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      
+      <div className="max-w-5xl mx-auto px-4 relative z-10">
+        <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8 md:p-12 text-center">
+          <Building2 className="h-12 w-12 text-purple-400 mx-auto mb-6" />
+          
+          <h2 className="font-press-start text-xl md:text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
+            CORPORATE SPONSORSHIP
+          </h2>
+          
+          <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-8">
+            Want to sponsor at a larger scale? We work with companies to create custom sponsorship packages 
+            that align with your goals and budget.
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-black/30 border border-purple-500/30 p-4">
+              <Target className="h-8 w-8 text-purple-400 mx-auto mb-3" />
+              <p className="font-press-start text-xs text-purple-400 mb-2">BRAND EXPOSURE</p>
+              <p className="font-jetbrains text-gray-400 text-sm">Logo placement, branded challenges, speaking opportunities</p>
+            </div>
+            
+            <div className="bg-black/30 border border-purple-500/30 p-4">
+              <Users className="h-8 w-8 text-pink-400 mx-auto mb-3" />
+              <p className="font-press-start text-xs text-pink-400 mb-2">TALENT ACCESS</p>
+              <p className="font-jetbrains text-gray-400 text-sm">Direct access to top builders and innovators</p>
+            </div>
+            
+            <div className="bg-black/30 border border-purple-500/30 p-4">
+              <Sparkles className="h-8 w-8 text-cyan-400 mx-auto mb-3" />
+              <p className="font-press-start text-xs text-cyan-400 mb-2">CUSTOM EVENTS</p>
+              <p className="font-jetbrains text-gray-400 text-sm">Co-branded hackathons and workshops</p>
+            </div>
+          </div>
+          
+          <a 
+            href="mailto:partnerships@maximally.org"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs py-3 px-8 transition-all duration-300 border border-pink-500/50"
+          >
+            <Mail className="h-4 w-4" />
+            <span>CONTACT FOR SPONSORSHIP</span>
+            <ExternalLink className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const FAQ = () => {
   const faqs = [
-    { q: "Is payment secure?", a: "Yes, all payments are processed through BuyMeACoffee's secure platform." },
-    { q: "Is this a donation?", a: "No — you're supporting an ecosystem + receiving tangible benefits and advisor privileges." },
-    { q: "Is it refundable?", a: "No, but perks are delivered instantly upon payment." },
-    { q: "Will I get a certificate?", a: "Yes, digital certificate + verifiable supporter badge." },
-    { q: "Can I support anonymously?", a: "Yes, you can choose to remain anonymous." }
+    {
+      question: "Where does the money actually go?",
+      answer: "100% transparent: Prize pools (40%), Infrastructure & Tools (20%), Branding & Content (15%), Judges & Mentors (15%), Outreach & Partnerships (10%). We publish quarterly reports showing exactly how funds are used."
+    },
+    {
+      question: "Can I cancel my subscription anytime?",
+      answer: "Yes, absolutely. No contracts, no commitments. Cancel anytime through your supporter dashboard."
+    },
+    {
+      question: "Do I get any tax benefits?",
+      answer: "Maximally is currently structured as a for-profit entity, so contributions are not tax-deductible. However, we're exploring non-profit status for the future."
+    },
+    {
+      question: "How do I know my support is making a difference?",
+      answer: "Supporters get monthly updates with metrics, stories, and behind-the-scenes content showing exactly how their contributions are powering hackathons worldwide."
+    },
+    {
+      question: "Can I support in other ways besides money?",
+      answer: "Yes! We also need judges, mentors, content creators, and community builders. Reach out to us at support@maximally.org to explore non-financial ways to contribute."
+    }
   ];
 
   return (
     <section className="bg-black text-white py-20">
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12">
-          <Shield className="h-12 w-12 text-green-500 mx-auto mb-4" />
-          <h2 className="font-press-start text-2xl md:text-4xl text-green-500 mb-4">
-            TRUST + SAFETY
+          <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+            FREQUENTLY ASKED QUESTIONS
           </h2>
         </div>
         
         <div className="space-y-4">
           {faqs.map((faq, idx) => (
-            <Card key={idx} className="bg-black border-2 border-green-500/30 p-6 hover-elevate" data-testid={`faq-${idx}`}>
-              <h3 className="font-press-start text-lg text-green-500 mb-2">
-                {faq.q}
+            <div 
+              key={idx}
+              className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-6 hover:border-purple-400/50 transition-all"
+            >
+              <h3 className="font-press-start text-sm text-purple-400 mb-3">
+                {faq.question}
               </h3>
-              <p className="font-jetbrains text-gray-300">
-                {faq.a}
+              <p className="font-jetbrains text-gray-300 text-sm leading-relaxed">
+                {faq.answer}
               </p>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
@@ -667,109 +467,38 @@ const TrustAndSafety = () => {
   );
 };
 
-const SupporterOnboarding = () => {
-  const steps = [
-    { icon: Mail, text: "You get an email confirmation" },
-    { icon: Users, text: "You get community access to private supporter channels" },
-    { icon: Trophy, text: "Your name goes on the Maximally Supporter Wall" },
-    { icon: Gift, text: "You get an advisor welcome packet" },
-    { icon: CheckCircle2, text: "You get all your tier perks activated" }
-  ];
-
+const FinalCTA = () => {
   return (
     <section className="bg-black text-white py-20 relative">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
       
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="font-press-start text-2xl md:text-4xl text-maximally-yellow mb-4">
-            WHAT HAPPENS AFTER YOU SUPPORT?
+      <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+        <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/30 border border-purple-500/50 p-12">
+          <Sparkles className="h-16 w-16 text-purple-400 mx-auto mb-6" />
+          
+          <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
+            JOIN THE MOVEMENT
           </h2>
-          <p className="font-jetbrains text-gray-300 text-lg">
-            Your onboarding is instant. Here's what you get immediately:
-          </p>
-        </div>
-        
-        <div className="pixel-card bg-black/80 border-2 border-maximally-yellow p-8 md:p-12">
-          <div className="space-y-4">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex items-start gap-4">
-                <div className="minecraft-block bg-maximally-yellow p-2 flex-shrink-0">
-                  <step.icon className="h-6 w-6 text-black" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-jetbrains text-gray-300 text-lg">
-                    {idx + 1}. {step.text}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
           
-          <p className="font-jetbrains text-gray-400 text-center mt-8 italic">
-            This builds assurance. You know exactly what to expect.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const CTASection = () => {
-  return (
-    <section className="bg-black text-white py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(229,9,20,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(229,9,20,0.1)_1px,transparent_1px)] bg-[size:50px_50px] animate-pulse" />
-      
-      {Array.from({ length: 8 }, (_, i) => (
-        <div
-          key={i}
-          className="absolute w-2 h-2 bg-maximally-red pixel-border animate-float"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${i * 0.5}s`,
-            animationDuration: `${4 + i}s`,
-          }}
-        />
-      ))}
-      
-      <div className="max-w-6xl mx-auto px-4 relative z-10">
-        <div className="pixel-card bg-black/80 border-2 border-maximally-red p-8 md:p-12 text-center">
-          <p className="font-press-start text-xl md:text-2xl text-white mb-8 leading-relaxed">
-            "WE'RE BUILDING THE FUTURE OF HACKATHONS."
+          <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-8">
+            Every supporter helps us build a world where hackathons are everywhere — 
+            where anyone, anywhere can experience the magic of building something from nothing in 48 hours.
           </p>
           
-          <p className="font-jetbrains text-gray-300 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">
-            If you've ever believed in hacker culture, builder energy, or global communities — 
-            come build this with us.
-          </p>
-          
-          <div className="flex flex-wrap gap-4 justify-center">
-            <a href="#individual-supporters">
-              <Button 
-                className="bg-maximally-red hover:bg-maximally-red/90 text-black font-press-start"
-                data-testid="button-support-individually"
-              >
-                SUPPORT INDIVIDUALLY
-              </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="#tiers"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs py-4 px-8 transition-all duration-300 border border-pink-500/50 hover:scale-[1.02]"
+            >
+              BECOME A SUPPORTER
             </a>
-            <a href="#sponsor-packages">
-              <Button 
-                className="bg-maximally-yellow hover:bg-maximally-yellow/90 text-black font-press-start"
-                data-testid="button-sponsor-company"
-              >
-                SPONSOR AS A COMPANY
-              </Button>
-            </a>
-            <a href="mailto:hello@maximally.in">
-              <Button 
-                variant="outline" 
-                className="border-2 border-maximally-red text-maximally-red hover:bg-maximally-red hover:text-black font-press-start"
-                data-testid="button-contact-us"
-              >
-                CONTACT US
-                <Mail className="ml-2 h-4 w-4" />
-              </Button>
+            
+            <a 
+              href="mailto:support@maximally.org"
+              className="bg-gradient-to-r from-gray-900 to-gray-800 border border-purple-500/40 hover:border-purple-400 text-gray-300 hover:text-white font-press-start text-xs py-4 px-8 transition-all duration-300 inline-flex items-center gap-2"
+            >
+              <Mail className="h-4 w-4" />
+              <span>ASK QUESTIONS</span>
             </a>
           </div>
         </div>
@@ -778,34 +507,30 @@ const CTASection = () => {
   );
 };
 
-export default function BecomeASupporter() {
+const BecomeASupporter = () => {
   return (
     <>
       <SEO
-        title="Become a Supporter | Maximally"
-        description="Support Maximally and help us build the future of hackathons. Join the global movement of hacker culture with individual or company sponsorship packages."
-        canonicalUrl="/become-a-supporter"
+        title="Become a Supporter - Maximally"
+        description="Support the global hackathon movement. Help us build the world's most powerful hackathon ecosystem and bring hackathons to every corner of the world."
+        keywords="support hackathons, hackathon funding, become supporter, hackathon movement"
       />
       
-      <div className="min-h-screen bg-black">
+      <div className="bg-black min-h-screen">
         <HeroSection />
         <WhyThisExists />
         <FounderNote />
         <TheMovement />
         <WhatYouFunding />
-        <div id="individual-supporters">
-          <IndividualTiers />
-        </div>
-        <AdvisorCircle />
-        <div id="sponsor-packages">
-          <SponsorPackages />
-        </div>
-        <NonMonetarySupport />
-        <TrustAndSafety />
-        <SupporterOnboarding />
-        <CTASection />
+        <SupportTiers />
+        <OneTimeSupport />
+        <CorporateSponsorship />
+        <FAQ />
+        <FinalCTA />
         <Footer />
       </div>
     </>
   );
-}
+};
+
+export default BecomeASupporter;

@@ -219,14 +219,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setSession(session);
           setUser(session.user);
           
-          // Get user profile
-          const result = await getCurrentUserWithProfile();
-          if (result) {
-            setProfile(result.profile);
-          }
+          // Fetch profile and moderation status in parallel for faster loading
+          const [profileResult, modStatus] = await Promise.all([
+            getCurrentUserWithProfile(),
+            getUserModerationStatus(session.user.id)
+          ]);
           
-          // Get moderation status
-          const modStatus = await getUserModerationStatus(session.user.id);
+          if (profileResult) {
+            setProfile(profileResult.profile);
+          }
           setModerationStatus(modStatus);
         }
       } catch (error) {
@@ -249,24 +250,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        // Get user profile when signed in with timeout protection
+        // Get user profile and moderation status in parallel with timeout protection
         try {
-          // Increase timeout to 15 seconds for slower connections
+          const timeoutMs = 10000; // 10 seconds timeout for faster feedback
+          
           const profilePromise = getCurrentUserWithProfile();
+          const modStatusPromise = getUserModerationStatus(session.user.id);
           const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Profile loading timeout')), 15000)
+            setTimeout(() => reject(new Error('Profile loading timeout')), timeoutMs)
           );
           
-          const result = await Promise.race([profilePromise, timeoutPromise]) as { user: any; profile: any } | null;
+          // Fetch both in parallel with timeout
+          const [result, modStatus] = await Promise.race([
+            Promise.all([profilePromise, modStatusPromise]),
+            timeoutPromise.then(() => [null, null])
+          ]) as [{ user: any; profile: any } | null, any];
+          
           if (result && result.profile) {
             setProfile(result.profile);
           } else {
             console.warn('⚠️ No profile found for user, will retry on next interaction');
           }
           
-          // Also fetch moderation status
-          if (session?.user) {
-            const modStatus = await getUserModerationStatus(session.user.id);
+          if (modStatus) {
             setModerationStatus(modStatus);
           }
         } catch (error: any) {

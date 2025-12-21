@@ -12,11 +12,11 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
   return (
     <Link
       to={`/judge/${judge.username}`}
-      className="pixel-card bg-black p-6 hover:scale-105 transition-all duration-300 group block"
+      className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 hover:border-pink-400 hover:scale-105 transition-all duration-300 group block"
     >
       {/* Profile Photo */}
       <div className="flex justify-center mb-4">
-        <div className="minecraft-block bg-gradient-to-br from-cyan-400 to-maximally-blue w-20 h-20 mx-auto overflow-hidden group-hover:from-maximally-yellow group-hover:to-maximally-red transition-all">
+        <div className="bg-gradient-to-br from-purple-600 to-pink-600 w-20 h-20 mx-auto overflow-hidden group-hover:from-orange-500 group-hover:to-pink-500 transition-all border border-pink-500/50">
           {judge.profilePhoto ? (
             <img
               src={judge.profilePhoto}
@@ -37,24 +37,24 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
       <div className="flex justify-center items-center gap-2 mb-3">
         <TierBadge tier={judge.tier} size="sm" showLabel={false} />
         {judge.availabilityStatus === 'not-available' && (
-          <span className="px-2 py-0.5 text-[8px] font-press-start bg-red-500/20 text-red-400 border border-red-500 rounded">
+          <span className="px-2 py-0.5 text-[8px] font-press-start bg-red-500/20 text-red-400 border border-red-500/50">
             UNAVAILABLE
           </span>
         )}
         {judge.availabilityStatus === 'seasonal' && (
-          <span className="px-2 py-0.5 text-[8px] font-press-start bg-yellow-500/20 text-yellow-400 border border-yellow-500 rounded">
+          <span className="px-2 py-0.5 text-[8px] font-press-start bg-orange-500/20 text-orange-400 border border-orange-500/50">
             SEASONAL
           </span>
         )}
         {judge.availabilityStatus === 'available' && (
-          <span className="px-2 py-0.5 text-[8px] font-press-start bg-green-500/20 text-green-400 border border-green-500 rounded">
+          <span className="px-2 py-0.5 text-[8px] font-press-start bg-green-500/20 text-green-400 border border-green-500/50">
             AVAILABLE
           </span>
         )}
       </div>
 
       {/* Name */}
-      <h3 className="font-press-start text-sm mb-2 text-cyan-400 group-hover:text-maximally-yellow transition-colors text-center line-clamp-1">
+      <h3 className="font-press-start text-sm mb-2 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent group-hover:from-orange-400 group-hover:to-pink-400 transition-colors text-center line-clamp-1">
         {judge.fullName}
       </h3>
 
@@ -79,7 +79,7 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
         {judge.primaryExpertise.slice(0, 3).map((expertise, i) => (
           <span
             key={i}
-            className="minecraft-block bg-maximally-red/20 border border-maximally-red text-maximally-red px-2 py-0.5 text-[10px] font-press-start uppercase"
+            className="bg-orange-500/20 border border-orange-500/50 text-orange-400 px-2 py-0.5 text-[10px] font-press-start uppercase"
           >
             {expertise}
           </span>
@@ -87,31 +87,31 @@ const JudgeCard = ({ judge }: JudgeCardProps) => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-2 pt-4 border-t border-gray-700">
+      <div className="grid grid-cols-3 gap-2 pt-4 border-t border-purple-500/30">
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
-            <Award className="h-3 w-3 text-cyan-400" />
+            <Award className="h-3 w-3 text-purple-400" />
             {judge.eventsJudgedVerified && <VerificationIndicator verified={true} size="sm" />}
           </div>
-          <div className="font-press-start text-xs text-cyan-400">{judge.totalEventsJudged}</div>
+          <div className="font-press-start text-xs text-pink-400">{judge.totalEventsJudged}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Events</div>
         </div>
 
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
-            <Users className="h-3 w-3 text-cyan-400" />
+            <Users className="h-3 w-3 text-purple-400" />
             {judge.teamsEvaluatedVerified && <VerificationIndicator verified={true} size="sm" />}
           </div>
-          <div className="font-press-start text-xs text-cyan-400">{judge.totalTeamsEvaluated}</div>
+          <div className="font-press-start text-xs text-pink-400">{judge.totalTeamsEvaluated}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Teams</div>
         </div>
 
         <div className="text-center">
           <div className="flex items-center justify-center gap-1 mb-1">
-            <Clock className="h-3 w-3 text-cyan-400" />
+            <Clock className="h-3 w-3 text-purple-400" />
             {judge.mentorshipHoursVerified && <VerificationIndicator verified={true} size="sm" />}
           </div>
-          <div className="font-press-start text-xs text-cyan-400">{judge.totalMentorshipHours}</div>
+          <div className="font-press-start text-xs text-pink-400">{judge.totalMentorshipHours}</div>
           <div className="font-jetbrains text-[10px] text-gray-500">Hours</div>
         </div>
       </div>

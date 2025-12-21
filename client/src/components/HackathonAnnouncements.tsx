@@ -137,26 +137,26 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'important':
-        return 'border-red-500 bg-red-900/20';
+        return 'border-red-500/50 bg-gradient-to-br from-red-500/15 to-rose-500/10';
       case 'reminder':
-        return 'border-orange-500 bg-orange-900/20';
+        return 'border-orange-500/50 bg-gradient-to-br from-orange-500/15 to-amber-500/10';
       case 'update':
-        return 'border-blue-500 bg-blue-900/20';
+        return 'border-blue-500/50 bg-gradient-to-br from-blue-500/15 to-cyan-500/10';
       default:
-        return 'border-maximally-yellow bg-maximally-yellow/10';
+        return 'border-purple-500/50 bg-gradient-to-br from-purple-500/15 to-pink-500/10';
     }
   };
 
   const getTypeTextColor = (type: string) => {
     switch (type) {
       case 'important':
-        return 'text-red-500';
+        return 'text-red-400';
       case 'reminder':
-        return 'text-orange-500';
+        return 'text-orange-400';
       case 'update':
-        return 'text-blue-500';
+        return 'text-blue-400';
       default:
-        return 'text-maximally-yellow';
+        return 'text-purple-400';
     }
   };
 
@@ -175,15 +175,17 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 mb-6">
-        <Megaphone className="h-6 w-6 text-maximally-yellow" />
-        <h2 className="font-press-start text-2xl text-maximally-yellow">ANNOUNCEMENTS</h2>
+        <div className="p-2 bg-purple-500/20 border border-purple-500/40">
+          <Megaphone className="h-5 w-5 text-purple-400" />
+        </div>
+        <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">ANNOUNCEMENTS</h2>
       </div>
 
       <div className="space-y-4">
         {announcements.map((announcement) => (
           <div
             key={announcement.id}
-            className={`pixel-card border-2 p-6 ${getTypeColor(announcement.announcement_type)}`}
+            className={`border p-6 transition-all duration-300 ${getTypeColor(announcement.announcement_type)}`}
           >
             {editingId === announcement.id ? (
               // Edit Mode
@@ -194,7 +196,7 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
                     type="text"
                     value={editForm.title}
                     onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-2 font-jetbrains focus:border-purple-400 outline-none"
                   />
                 </div>
                 <div>
@@ -203,7 +205,7 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
                     value={editForm.content}
                     onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
                     rows={4}
-                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-2 font-jetbrains focus:border-purple-400 outline-none"
                   />
                 </div>
                 <div>
@@ -211,7 +213,7 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
                   <select
                     value={editForm.announcement_type}
                     onChange={(e) => setEditForm({ ...editForm, announcement_type: e.target.value as any })}
-                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-2 font-jetbrains focus:border-purple-400 outline-none"
                   >
                     <option value="general">General</option>
                     <option value="important">Important</option>
@@ -222,13 +224,13 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleUpdate(announcement.id)}
-                    className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white"
+                    className="bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300"
                   >
                     SAVE
                   </button>
                   <button
                     onClick={() => setEditingId(null)}
-                    className="pixel-button bg-gray-700 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-600"
+                    className="bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300"
                   >
                     CANCEL
                   </button>
@@ -241,18 +243,18 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
                   {getIcon(announcement.announcement_type)}
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
+                  <div className="flex items-center gap-3 mb-3 flex-wrap">
                     <h3 className="font-press-start text-lg text-white">
                       {announcement.title}
                     </h3>
                     <span className={`px-3 py-1 text-xs font-press-start uppercase border ${
                       announcement.announcement_type === 'important' 
-                        ? 'bg-red-500/20 text-red-500 border-red-500'
+                        ? 'bg-red-500/20 text-red-400 border-red-500/40'
                         : announcement.announcement_type === 'reminder'
-                        ? 'bg-orange-500/20 text-orange-500 border-orange-500'
+                        ? 'bg-orange-500/20 text-orange-400 border-orange-500/40'
                         : announcement.announcement_type === 'update'
-                        ? 'bg-blue-500/20 text-blue-500 border-blue-500'
-                        : 'bg-maximally-yellow/20 text-maximally-yellow border-maximally-yellow'
+                        ? 'bg-blue-500/20 text-blue-400 border-blue-500/40'
+                        : 'bg-purple-500/20 text-purple-400 border-purple-500/40'
                     }`}>
                       {announcement.announcement_type}
                     </span>
@@ -274,14 +276,14 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(announcement)}
-                          className="text-gray-400 hover:text-maximally-yellow transition-colors p-2"
+                          className="text-gray-400 hover:text-purple-400 transition-colors p-2"
                           title="Edit"
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => setDeleteConfirm({ show: true, id: announcement.id })}
-                          className="text-gray-400 hover:text-red-500 transition-colors p-2"
+                          className="text-gray-400 hover:text-red-400 transition-colors p-2"
                           title="Delete"
                         >
                           <Trash2 className="h-4 w-4" />

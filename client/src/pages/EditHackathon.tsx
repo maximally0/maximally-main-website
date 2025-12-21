@@ -206,8 +206,6 @@ export default function EditHackathon() {
     setSaving(true);
     try {
       const headers = await getAuthHeaders();
-      console.log('Submitting edit request for hackathon:', id);
-      console.log('Changes:', hackathon);
       
       const response = await fetch(`/api/organizer/hackathons/${id}/request-edit`, {
         method: 'POST',
@@ -218,9 +216,7 @@ export default function EditHackathon() {
         }),
       });
 
-      console.log('Edit request response status:', response.status);
       const data = await response.json();
-      console.log('Edit request response data:', data);
 
       if (response.ok) {
         toast({

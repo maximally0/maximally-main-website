@@ -71,7 +71,7 @@ export function LoadingBar({ isLoading = false }: LoadingBarProps) {
   return (
     <div className="fixed top-0 left-0 right-0 z-[9999] h-1">
       <div
-        className="h-full bg-maximally-red transition-all duration-300 ease-out shadow-[0_0_10px_rgba(229,9,20,0.5)]"
+        className="h-full bg-gradient-to-r from-orange-500 via-orange-400 to-red-500 transition-all duration-300 ease-out shadow-[0_0_10px_rgba(249,115,22,0.5)]"
         style={{
           width: `${progress}%`,
           transition: progress === 100 ? 'width 0.2s ease-out' : 'width 0.3s ease-out',

@@ -94,11 +94,11 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
 
   const getRoleBadge = (role: string) => {
     const colors = {
-      judge: 'bg-purple-600',
-      organizer: 'bg-blue-600',
-      mentor: 'bg-green-600',
+      judge: 'bg-purple-500/20 border-purple-500/40 text-purple-300',
+      organizer: 'bg-blue-500/20 border-blue-500/40 text-blue-300',
+      mentor: 'bg-green-500/20 border-green-500/40 text-green-300',
     };
-    return colors[role as keyof typeof colors] || 'bg-gray-600';
+    return colors[role as keyof typeof colors] || 'bg-gray-500/20 border-gray-500/40 text-gray-300';
   };
 
   if (loading) {
@@ -123,7 +123,7 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
       <div className="space-y-4">
         {comments.length === 0 ? (
           <div className="text-center py-8">
-            <div className="minecraft-block bg-gray-800 text-gray-400 px-6 py-4 inline-block">
+            <div className="bg-gray-800/50 border border-gray-700 text-gray-400 px-6 py-4 inline-block">
               <span className="font-press-start text-sm">NO COMMENTS YET</span>
             </div>
           </div>
@@ -131,22 +131,22 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
           comments.map((comment) => (
             <div
               key={comment.id}
-              className={`pixel-card border-2 p-4 ${
+              className={`border p-4 ${
                 comment.is_private 
-                  ? 'bg-gray-900 border-yellow-600' 
-                  : 'bg-gray-900 border-gray-700'
+                  ? 'bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30' 
+                  : 'bg-gradient-to-br from-gray-900/60 to-gray-900/30 border-gray-700'
               }`}
             >
               {/* Comment Header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <span className={`minecraft-block ${getRoleBadge(comment.commenter_role)} text-white px-2 py-1`}>
+                  <span className={`border px-2 py-1 ${getRoleBadge(comment.commenter_role)}`}>
                     <span className="font-press-start text-xs">
                       {comment.commenter_role.toUpperCase()}
                     </span>
                   </span>
                   {comment.is_private && (
-                    <span className="minecraft-block bg-yellow-600 text-black px-2 py-1">
+                    <span className="bg-amber-500/20 border border-amber-500/40 text-amber-300 px-2 py-1">
                       <span className="font-press-start text-xs">PRIVATE</span>
                     </span>
                   )}
@@ -167,14 +167,17 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
 
       {/* Add Comment Form (for judges/organizers only) */}
       {canComment && user && (
-        <div className="pixel-card bg-gray-900 border-2 border-cyan-400 p-6">
-          <h4 className="font-press-start text-sm text-cyan-400 mb-4">ADD COMMENT</h4>
+        <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-6">
+          <h4 className="font-press-start text-sm text-cyan-400 mb-4 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+            ADD COMMENT
+          </h4>
           <div className="space-y-4">
             <textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write your feedback or comment..."
-              className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none resize-none"
+              className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none resize-none placeholder:text-gray-600"
               rows={4}
             />
             
@@ -184,7 +187,7 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
                 type="checkbox"
                 checked={isPrivate}
                 onChange={(e) => setIsPrivate(e.target.checked)}
-                className="w-5 h-5"
+                className="w-5 h-5 accent-cyan-500"
               />
               <span className="font-jetbrains text-sm text-gray-300">
                 Private comment (only visible to judges and organizers)
@@ -194,7 +197,7 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
             <button
               onClick={handleSubmitComment}
               disabled={submitting || !newComment.trim()}
-              className="minecraft-block bg-cyan-400 text-black px-6 py-3 hover:bg-maximally-yellow transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 hover:border-cyan-400 text-cyan-200 hover:text-white px-6 py-3 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
             >
               <Send className="h-4 w-4" />
               <span className="font-press-start text-xs">

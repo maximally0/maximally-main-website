@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { AlertCircle, CheckCircle, XCircle, ExternalLink, Download, Eye } from 'lucide-react';
+import { AlertCircle, CheckCircle, XCircle, ExternalLink, Download, Eye, Award } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -38,7 +38,6 @@ const CertificateVerification: React.FC = () => {
       }
 
       try {
-        // For static hosting, query Supabase directly
         if (!supabase) {
           throw new Error('Database connection not available');
         }
@@ -103,26 +102,26 @@ const CertificateVerification: React.FC = () => {
   const renderStatusIcon = (status: string) => {
     switch (status) {
       case 'verified':
-        return <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />;
+        return <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />;
       case 'revoked':
-        return <AlertCircle className="w-16 h-16 text-orange-500 mx-auto mb-4" />;
+        return <AlertCircle className="w-16 h-16 text-amber-400 mx-auto mb-4" />;
       case 'invalid_id':
-        return <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />;
+        return <XCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />;
       default:
-        return <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />;
+        return <XCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />;
     }
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyles = (status: string) => {
     switch (status) {
       case 'verified':
-        return 'border-green-500 shadow-green-500/30';
+        return { gradient: 'from-green-900/40 to-emerald-900/30', border: 'border-green-500/50' };
       case 'revoked':
-        return 'border-maximally-yellow shadow-maximally-yellow/30';
+        return { gradient: 'from-amber-900/40 to-orange-900/30', border: 'border-amber-500/50' };
       case 'invalid_id':
-        return 'border-maximally-red shadow-maximally-red/30';
+        return { gradient: 'from-red-900/40 to-rose-900/30', border: 'border-red-500/50' };
       default:
-        return 'border-maximally-red shadow-maximally-red/30';
+        return { gradient: 'from-red-900/40 to-rose-900/30', border: 'border-red-500/50' };
     }
   };
 
@@ -140,11 +139,14 @@ const CertificateVerification: React.FC = () => {
         <Helmet>
           <title>Verifying Certificate - Maximally</title>
         </Helmet>
-        <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md w-full space-y-8">
+        <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4 relative">
+          <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+          
+          <div className="max-w-md w-full space-y-8 relative z-10">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-maximally-red mx-auto"></div>
-              <h2 className="mt-6 font-press-start text-lg text-maximally-red">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-500 mx-auto"></div>
+              <h2 className="mt-6 font-press-start text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 VERIFYING CERTIFICATE
               </h2>
               <p className="mt-4 text-sm text-gray-400 font-jetbrains">
@@ -163,11 +165,14 @@ const CertificateVerification: React.FC = () => {
         <Helmet>
           <title>Certificate Verification Error - Maximally</title>
         </Helmet>
-        <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-md w-full space-y-8">
+        <div className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4 relative">
+          <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+          <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_center,rgba(239,68,68,0.10)_0%,transparent_50%)]" />
+          
+          <div className="max-w-md w-full space-y-8 relative z-10">
             <div className="text-center">
-              <XCircle className="w-16 h-16 text-maximally-red mx-auto mb-4" />
-              <h2 className="mt-6 font-press-start text-lg text-maximally-red">
+              <XCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <h2 className="mt-6 font-press-start text-lg text-red-400">
                 VERIFICATION ERROR
               </h2>
               <p className="mt-4 text-sm text-gray-400 font-jetbrains">
@@ -176,7 +181,7 @@ const CertificateVerification: React.FC = () => {
               <div className="mt-6">
                 <Link
                   to="/"
-                  className="pixel-button bg-maximally-red text-white font-press-start text-xs px-6 py-3 hover:bg-maximally-red/90 transition-colors"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs px-6 py-3 border border-pink-500/50 transition-all inline-block"
                 >
                   GO_HOME
                 </Link>
@@ -189,6 +194,7 @@ const CertificateVerification: React.FC = () => {
   }
 
   const { status, message, certificate } = verification;
+  const statusStyles = getStatusStyles(status);
 
   return (
     <>
@@ -203,18 +209,31 @@ const CertificateVerification: React.FC = () => {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <div className="min-h-screen bg-black text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-black text-white py-12 px-4 pt-24 relative">
+        {/* Background Effects */}
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+        
+        <div className="absolute top-20 left-10 w-64 h-64 bg-purple-500/15 blur-[100px] rounded-full animate-pulse" />
+        <div className="absolute bottom-40 right-20 w-80 h-80 bg-pink-500/12 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+
+        <div className="max-w-4xl mx-auto relative z-10">
           <div className="text-center mb-8">
-            <h1 className="font-press-start text-2xl md:text-3xl text-maximally-red mb-6">
+            <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/30 to-pink-600/20 border border-purple-500/40 mb-6">
+              <Award className="h-5 w-5 text-purple-400" />
+              <span className="font-press-start text-xs text-purple-300">CERTIFICATE VERIFICATION</span>
+            </div>
+            
+            <h1 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-6">
               CERTIFICATE VERIFICATION
             </h1>
             <p className="text-lg text-gray-300 font-jetbrains">
-              Certificate ID: <span className="font-mono font-bold text-maximally-yellow">{certificate_id}</span>
+              Certificate ID: <span className="font-mono font-bold text-purple-400">{certificate_id}</span>
             </p>
           </div>
 
-          <div className={`bg-gray-900 border-4 ${getStatusColor(status)} p-8 minecraft-block`}>
+          <div className={`bg-gradient-to-br ${statusStyles.gradient} border ${statusStyles.border} p-8`}>
             <div className="text-center">
               {renderStatusIcon(status)}
               
@@ -230,8 +249,8 @@ const CertificateVerification: React.FC = () => {
               </p>
 
               {certificate && (
-                <div className="bg-black border-2 border-gray-700 rounded-lg p-6 text-left">
-                  <h3 className="font-press-start text-base text-maximally-yellow mb-6">
+                <div className="bg-black/50 border border-purple-500/30 p-6 text-left">
+                  <h3 className="font-press-start text-base bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">
                     CERTIFICATE DETAILS
                   </h3>
                   
@@ -254,7 +273,7 @@ const CertificateVerification: React.FC = () => {
                     
                     <div>
                       <span className="font-jetbrains text-sm text-gray-400">Event:</span>
-                      <span className="ml-3 text-maximally-red font-bold font-jetbrains">
+                      <span className="ml-3 text-purple-400 font-bold font-jetbrains">
                         {certificate.hackathon_name}
                       </span>
                     </div>
@@ -269,7 +288,7 @@ const CertificateVerification: React.FC = () => {
                     {certificate.position && (
                       <div>
                         <span className="font-jetbrains text-sm text-gray-400">Position:</span>
-                        <span className="ml-3 text-maximally-yellow font-bold font-jetbrains">
+                        <span className="ml-3 text-amber-400 font-bold font-jetbrains">
                           {certificate.position}
                         </span>
                       </div>
@@ -284,8 +303,8 @@ const CertificateVerification: React.FC = () => {
                   </div>
 
                   {status === 'verified' && (certificate.pdf_url || certificate.jpg_url) && (
-                    <div className="mt-6 pt-6 border-t border-gray-700">
-                      <h4 className="font-press-start text-sm text-maximally-red mb-4">
+                    <div className="mt-6 pt-6 border-t border-purple-500/30">
+                      <h4 className="font-press-start text-sm text-pink-400 mb-4">
                         CERTIFICATE FILES
                       </h4>
                       <div className="flex flex-wrap gap-3">
@@ -294,7 +313,7 @@ const CertificateVerification: React.FC = () => {
                             href={certificate.pdf_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="pixel-button bg-maximally-red text-white font-press-start text-xs px-4 py-2 flex items-center gap-2 hover:bg-maximally-red/90 transition-colors"
+                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs px-4 py-2 flex items-center gap-2 border border-pink-500/50 transition-all"
                           >
                             <Download className="w-3 h-3" />
                             DOWNLOAD_PDF
@@ -306,7 +325,7 @@ const CertificateVerification: React.FC = () => {
                             href={certificate.jpg_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="pixel-button bg-maximally-blue text-white font-press-start text-xs px-4 py-2 flex items-center gap-2 hover:bg-maximally-blue/90 transition-colors"
+                            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-press-start text-xs px-4 py-2 flex items-center gap-2 border border-cyan-500/50 transition-all"
                           >
                             <Eye className="w-3 h-3" />
                             VIEW_IMAGE
@@ -319,17 +338,17 @@ const CertificateVerification: React.FC = () => {
                 </div>
               )}
 
-              <div className="mt-8 flex justify-center space-x-4">
+              <div className="mt-8 flex justify-center gap-4 flex-wrap">
                 <Link
                   to="/"
-                  className="pixel-button bg-gray-800 border-2 border-gray-600 text-white font-press-start text-xs px-6 py-3 hover:bg-gray-700 transition-colors"
+                  className="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-600 hover:border-purple-500/50 text-gray-300 hover:text-white font-press-start text-xs px-6 py-3 transition-all"
                 >
                   GO_HOME
                 </Link>
                 
                 <button
                   onClick={() => window.location.reload()}
-                  className="pixel-button bg-maximally-red text-white font-press-start text-xs px-6 py-3 hover:bg-maximally-red/90 transition-colors"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs px-6 py-3 border border-pink-500/50 transition-all"
                 >
                   VERIFY_AGAIN
                 </button>
@@ -338,11 +357,11 @@ const CertificateVerification: React.FC = () => {
           </div>
 
           <div className="mt-12 text-center">
-            <div className="bg-gray-900 border-2 border-gray-800 rounded-lg p-6">
+            <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-6">
               <p className="text-sm text-gray-400 font-jetbrains">
                 This certificate verification is powered by Maximally's secure verification system.
                 If you have questions about this certificate, please{' '}
-                <Link to="/contact" className="text-maximally-red hover:text-maximally-red/80 transition-colors font-bold">
+                <Link to="/contact" className="text-purple-400 hover:text-pink-400 transition-colors font-bold">
                   contact us
                 </Link>
                 .

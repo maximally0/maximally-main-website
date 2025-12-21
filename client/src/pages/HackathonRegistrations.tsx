@@ -320,42 +320,46 @@ export default function HackathonRegistrations() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto animate-pulse space-y-8">
-            {/* Header skeleton */}
-            <div className="space-y-4">
-              <div className="h-4 w-32 bg-gray-800 rounded"></div>
-              <div className="h-10 w-80 bg-gray-800 rounded"></div>
-              <div className="h-4 w-96 bg-gray-800 rounded"></div>
-            </div>
+      <div className="min-h-screen bg-black text-white relative">
+        <div className="fixed inset-0 bg-black pointer-events-none" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.02)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
+        <div className="relative z-10 pt-24 pb-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto animate-pulse space-y-8">
+              {/* Header skeleton */}
+              <div className="space-y-4">
+                <div className="h-4 w-32 bg-purple-900/30 rounded"></div>
+                <div className="h-10 w-80 bg-purple-900/30 rounded"></div>
+                <div className="h-4 w-96 bg-gray-800/50 rounded"></div>
+              </div>
 
-            {/* Stats skeleton */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              {[1, 2, 3, 4, 5].map(i => (
-                <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-800 p-4">
-                  <div className="h-8 w-12 bg-gray-800 rounded mb-2"></div>
-                  <div className="h-3 w-16 bg-gray-800 rounded"></div>
-                </div>
-              ))}
-            </div>
+              {/* Stats skeleton */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                {[1, 2, 3, 4, 5].map(i => (
+                  <div key={i} className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-4">
+                    <div className="h-8 w-12 bg-purple-900/30 rounded mb-2"></div>
+                    <div className="h-3 w-16 bg-gray-800/50 rounded"></div>
+                  </div>
+                ))}
+              </div>
 
-            {/* Tabs skeleton */}
-            <div className="flex gap-2">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="h-12 w-32 bg-gray-800 rounded"></div>
-              ))}
-            </div>
+              {/* Tabs skeleton */}
+              <div className="flex gap-2">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="h-12 w-32 bg-gray-800/50 border border-gray-700 rounded"></div>
+                ))}
+              </div>
 
-            {/* Content skeleton */}
-            <div className="space-y-4">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                  <div className="h-6 w-48 bg-gray-800 rounded mb-4"></div>
-                  <div className="h-4 w-full bg-gray-800 rounded mb-2"></div>
-                  <div className="h-4 w-3/4 bg-gray-800 rounded"></div>
-                </div>
-              ))}
+              {/* Content skeleton */}
+              <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6">
+                    <div className="h-6 w-48 bg-gray-800 rounded mb-4"></div>
+                    <div className="h-4 w-full bg-gray-800 rounded mb-2"></div>
+                    <div className="h-4 w-3/4 bg-gray-800 rounded"></div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -364,158 +368,99 @@ export default function HackathonRegistrations() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <Link 
-              to="/organizer/dashboard"
-              className="text-maximally-yellow hover:text-maximally-red font-press-start text-sm mb-4 inline-block"
-            >
-              ← BACK_TO_DASHBOARD
-            </Link>
-            <h1 className="font-press-start text-3xl text-maximally-red mb-2">
-              MANAGE_HACKATHON
-            </h1>
-            <p className="text-gray-400 font-jetbrains">
-              Manage participants, teams, judges, and announcements for your hackathon
-            </p>
-          </div>
+    <div className="min-h-screen bg-black text-white relative">
+      {/* Background Effects */}
+      <div className="fixed inset-0 bg-black pointer-events-none" />
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.02)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
+      <div className="fixed inset-0 bg-gradient-to-br from-purple-950/20 via-transparent to-pink-950/20 pointer-events-none" />
+      <div className="fixed top-1/4 left-1/4 w-[300px] h-[300px] bg-purple-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" />
+      <div className="fixed bottom-1/4 right-1/4 w-[250px] h-[250px] bg-pink-500/10 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: '1s' }} />
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-            <div className="pixel-card bg-gray-900 border-2 border-maximally-yellow p-4">
-              <div className="text-2xl font-bold text-maximally-yellow mb-1 font-press-start">
-                {stats.total}
-              </div>
-              <div className="text-xs text-gray-400 font-press-start">TOTAL</div>
+      <div className="relative z-10 pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <Link 
+                to="/organizer/dashboard"
+                className="text-purple-400 hover:text-pink-400 font-press-start text-sm mb-4 inline-flex items-center gap-2 transition-colors"
+              >
+                ← BACK_TO_DASHBOARD
+              </Link>
+              <h1 className="font-press-start text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                MANAGE_HACKATHON
+              </h1>
+              <p className="text-gray-400 font-jetbrains">
+                Manage participants, teams, judges, and announcements for your hackathon
+              </p>
             </div>
-            <div className="pixel-card bg-gray-900 border-2 border-green-500 p-4">
-              <div className="text-2xl font-bold text-green-500 mb-1 font-press-start">
-                {stats.confirmed}
-              </div>
-              <div className="text-xs text-gray-400 font-press-start">CONFIRMED</div>
-            </div>
-            <div className="pixel-card bg-gray-900 border-2 border-blue-500 p-4">
-              <div className="text-2xl font-bold text-blue-500 mb-1 font-press-start">
-                {stats.checkedIn}
-              </div>
-              <div className="text-xs text-gray-400 font-press-start">CHECKED_IN</div>
-            </div>
-            <div className="pixel-card bg-gray-900 border-2 border-orange-500 p-4">
-              <div className="text-2xl font-bold text-orange-500 mb-1 font-press-start">
-                {stats.waitlist}
-              </div>
-              <div className="text-xs text-gray-400 font-press-start">WAITLIST</div>
-            </div>
-            <div className="pixel-card bg-gray-900 border-2 border-purple-500 p-4">
-              <div className="text-2xl font-bold text-purple-500 mb-1 font-press-start">
-                {stats.teams}
-              </div>
-              <div className="text-xs text-gray-400 font-press-start">TEAMS</div>
-            </div>
-          </div>
 
-          {/* Tabs */}
-          <div className="flex gap-2 mb-6 overflow-x-auto">
-            <button
-              onClick={() => setActiveTab('registrations')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'registrations'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              REGISTRATIONS
-            </button>
-            <button
-              onClick={() => setActiveTab('teams')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'teams'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              TEAMS
-            </button>
-            <button
-              onClick={() => setActiveTab('submissions')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'submissions'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              SUBMISSIONS
-            </button>
-            <button
-              onClick={() => setActiveTab('analytics')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'analytics'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              ANALYTICS
-            </button>
-            <button
-              onClick={() => setActiveTab('announcements')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'announcements'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              ANNOUNCEMENTS
-            </button>
-            <button
-              onClick={() => setActiveTab('judges')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'judges'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              JUDGES
-            </button>
-            <button
-              onClick={() => setActiveTab('feedback')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'feedback'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              FEEDBACK
-            </button>
-            <button
-              onClick={() => setActiveTab('winners')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'winners'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              WINNERS
-            </button>
-            <button
-              onClick={() => setActiveTab('settings')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm whitespace-nowrap ${
-                activeTab === 'settings'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              SETTINGS
-            </button>
-          </div>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+              <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/20 border border-purple-500/30 p-4 hover:border-purple-400/50 transition-all">
+                <div className="text-2xl font-bold text-purple-300 mb-1 font-press-start">
+                  {stats.total}
+                </div>
+                <div className="text-xs text-gray-500 font-press-start">TOTAL</div>
+              </div>
+              <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/20 border border-green-500/30 p-4 hover:border-green-400/50 transition-all">
+                <div className="text-2xl font-bold text-green-300 mb-1 font-press-start">
+                  {stats.confirmed}
+                </div>
+                <div className="text-xs text-gray-500 font-press-start">CONFIRMED</div>
+              </div>
+              <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/20 border border-cyan-500/30 p-4 hover:border-cyan-400/50 transition-all">
+                <div className="text-2xl font-bold text-cyan-300 mb-1 font-press-start">
+                  {stats.checkedIn}
+                </div>
+                <div className="text-xs text-gray-500 font-press-start">CHECKED_IN</div>
+              </div>
+              <div className="bg-gradient-to-br from-amber-900/40 to-orange-900/20 border border-amber-500/30 p-4 hover:border-amber-400/50 transition-all">
+                <div className="text-2xl font-bold text-amber-300 mb-1 font-press-start">
+                  {stats.waitlist}
+                </div>
+                <div className="text-xs text-gray-500 font-press-start">WAITLIST</div>
+              </div>
+              <div className="bg-gradient-to-br from-pink-900/40 to-rose-900/20 border border-pink-500/30 p-4 hover:border-pink-400/50 transition-all">
+                <div className="text-2xl font-bold text-pink-300 mb-1 font-press-start">
+                  {stats.teams}
+                </div>
+                <div className="text-xs text-gray-500 font-press-start">TEAMS</div>
+              </div>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+              {[
+                { id: 'registrations', label: 'REGISTRATIONS' },
+                { id: 'teams', label: 'TEAMS' },
+                { id: 'submissions', label: 'SUBMISSIONS' },
+                { id: 'analytics', label: 'ANALYTICS' },
+                { id: 'announcements', label: 'ANNOUNCEMENTS' },
+                { id: 'judges', label: 'JUDGES' },
+                { id: 'feedback', label: 'FEEDBACK' },
+                { id: 'winners', label: 'WINNERS' },
+                { id: 'settings', label: 'SETTINGS' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`px-6 py-3 font-press-start text-xs whitespace-nowrap transition-all ${
+                    activeTab === tab.id
+                      ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200'
+                      : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600 hover:text-gray-300'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
           {/* Registrations Tab */}
           {activeTab === 'registrations' && (
             <div className="space-y-6">
               {/* Filters & Actions */}
-              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+              <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1">
                     <div className="relative">
@@ -525,14 +470,14 @@ export default function HackathonRegistrations() {
                         placeholder="Search by name, email, or registration #"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-black border-2 border-gray-700 text-white pl-10 pr-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                        className="w-full bg-black/50 border border-purple-500/30 text-white pl-10 pr-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
                       />
                     </div>
                   </div>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                    className="bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
                   >
                     <option value="all">All Status</option>
                     <option value="confirmed">Confirmed</option>
@@ -542,7 +487,7 @@ export default function HackathonRegistrations() {
                   </select>
                   <button
                     onClick={exportToCSV}
-                    className="pixel-button bg-maximally-yellow text-black px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white transition-colors flex items-center gap-2"
+                    className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all flex items-center gap-2"
                   >
                     <Download className="h-4 w-4" />
                     EXPORT_CSV
@@ -552,10 +497,10 @@ export default function HackathonRegistrations() {
 
               {/* Bulk Actions Bar */}
               {selectedRegistrations.length > 0 && (
-                <div className="pixel-card bg-maximally-red/20 border-2 border-maximally-red p-4">
+                <div className="bg-gradient-to-r from-purple-600/20 to-pink-500/10 border border-purple-500/50 p-4">
                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <CheckSquare className="h-5 w-5 text-maximally-red" />
+                      <CheckSquare className="h-5 w-5 text-purple-400" />
                       <span className="font-press-start text-sm text-white">
                         {selectedRegistrations.length} SELECTED
                       </span>
@@ -564,7 +509,7 @@ export default function HackathonRegistrations() {
                       <button
                         onClick={handleBulkCheckIn}
                         disabled={bulkActionLoading}
-                        className="pixel-button bg-blue-600 text-white px-4 py-2 font-press-start text-xs hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
+                        className="bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 hover:border-cyan-400 text-cyan-200 px-4 py-2 font-press-start text-xs flex items-center gap-2 disabled:opacity-50 transition-all"
                       >
                         <UserCheck className="h-4 w-4" />
                         BULK_CHECK_IN
@@ -572,14 +517,14 @@ export default function HackathonRegistrations() {
                       <button
                         onClick={handleBulkUnregister}
                         disabled={bulkActionLoading}
-                        className="pixel-button bg-orange-600 text-white px-4 py-2 font-press-start text-xs hover:bg-orange-700 flex items-center gap-2 disabled:opacity-50"
+                        className="bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 hover:border-red-400 text-red-200 px-4 py-2 font-press-start text-xs flex items-center gap-2 disabled:opacity-50 transition-all"
                       >
                         <UserMinus className="h-4 w-4" />
                         BULK_UNREGISTER
                       </button>
                       <button
                         onClick={() => setSelectedRegistrations([])}
-                        className="pixel-button bg-gray-700 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-600"
+                        className="bg-gray-800/50 border border-gray-700 text-gray-300 hover:text-white px-4 py-2 font-press-start text-xs hover:border-gray-600 transition-all"
                       >
                         CLEAR
                       </button>
@@ -613,7 +558,7 @@ export default function HackathonRegistrations() {
               {/* Registrations List */}
               <div className="space-y-4">
                 {filteredRegistrations.length === 0 ? (
-                  <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
+                  <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700 p-12 text-center">
                     <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                     <p className="font-press-start text-gray-400">NO_REGISTRATIONS_FOUND</p>
                   </div>
@@ -621,10 +566,10 @@ export default function HackathonRegistrations() {
                   filteredRegistrations.map((reg) => (
                     <div
                       key={reg.id}
-                      className={`pixel-card bg-gray-900 border-2 p-6 transition-colors ${
+                      className={`bg-gradient-to-br from-gray-900/60 to-gray-900/30 border p-6 transition-all ${
                         selectedRegistrations.includes(reg.id) 
-                          ? 'border-maximally-yellow bg-maximally-yellow/5' 
-                          : 'border-gray-800 hover:border-maximally-yellow'
+                          ? 'border-purple-500/50 bg-purple-500/5' 
+                          : 'border-gray-700 hover:border-purple-500/30'
                       }`}
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -691,7 +636,7 @@ export default function HackathonRegistrations() {
                                   href={reg.github_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-gray-400 hover:text-maximally-yellow transition-colors"
+                                  className="text-gray-400 hover:text-purple-400 transition-colors"
                                 >
                                   <Github className="h-5 w-5" />
                                 </a>
@@ -701,7 +646,7 @@ export default function HackathonRegistrations() {
                                   href={reg.linkedin_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-gray-400 hover:text-maximally-yellow transition-colors"
+                                  className="text-gray-400 hover:text-purple-400 transition-colors"
                                 >
                                   <Linkedin className="h-5 w-5" />
                                 </a>
@@ -731,7 +676,7 @@ export default function HackathonRegistrations() {
                                     toast({ title: "Error", variant: "destructive" });
                                   }
                                 }}
-                                className="pixel-button bg-blue-600 text-white px-4 py-2 font-press-start text-xs hover:bg-blue-700 flex items-center gap-2"
+                                className="bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 hover:border-cyan-400 text-cyan-200 px-4 py-2 font-press-start text-xs flex items-center gap-2 transition-all"
                               >
                                 <UserCheck className="h-4 w-4" />
                                 CHECK_IN
@@ -748,11 +693,11 @@ export default function HackathonRegistrations() {
                               </button>
 
                               {showParticipantMenu === reg.id && (
-                                <div className="absolute right-0 top-full mt-1 bg-gray-900 border-2 border-gray-700 rounded shadow-lg z-50 min-w-[180px]">
+                                <div className="absolute right-0 top-full mt-1 bg-gray-900/95 border border-purple-500/30 shadow-lg z-50 min-w-[180px] backdrop-blur-sm">
                                   {reg.status !== 'cancelled' && (
                                     <button
                                       onClick={() => handleUnregister(reg.id)}
-                                      className="w-full px-4 py-3 text-left text-sm font-jetbrains text-orange-400 hover:bg-gray-800 flex items-center gap-2"
+                                      className="w-full px-4 py-3 text-left text-sm font-jetbrains text-amber-400 hover:bg-purple-500/10 flex items-center gap-2 transition-colors"
                                     >
                                       <UserMinus className="h-4 w-4" />
                                       Unregister
@@ -782,7 +727,7 @@ export default function HackathonRegistrations() {
           {activeTab === 'teams' && (
             <div className="space-y-4">
               {teams.length === 0 ? (
-                <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700 p-12 text-center">
                   <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                   <p className="font-press-start text-gray-400">NO_TEAMS_FORMED_YET</p>
                 </div>
@@ -790,7 +735,7 @@ export default function HackathonRegistrations() {
                 teams.map((team) => (
                   <div
                     key={team.id}
-                    className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 hover:border-maximally-yellow transition-colors"
+                    className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6 hover:border-purple-500/30 transition-all"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <div>
@@ -798,14 +743,14 @@ export default function HackathonRegistrations() {
                           {team.team_name}
                         </h3>
                         <p className="text-sm text-gray-400 font-jetbrains">
-                          Team Code: <span className="text-maximally-yellow font-press-start">{team.team_code}</span>
+                          Team Code: <span className="text-purple-400 font-press-start">{team.team_code}</span>
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-maximally-yellow font-press-start">
+                        <div className="text-2xl font-bold text-purple-300 font-press-start">
                           {team.members[0]?.count || 0}
                         </div>
-                        <div className="text-xs text-gray-400 font-press-start">MEMBERS</div>
+                        <div className="text-xs text-gray-500 font-press-start">MEMBERS</div>
                       </div>
                     </div>
 
@@ -828,13 +773,13 @@ export default function HackathonRegistrations() {
           {activeTab === 'submissions' && (
             <div className="space-y-4">
               {submissions.length === 0 ? (
-                <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
+                <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700 p-12 text-center">
                   <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                   <p className="font-press-start text-gray-400">NO_SUBMISSIONS_YET</p>
                 </div>
               ) : (
                 submissions.map((submission) => (
-                  <div key={submission.id} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 hover:border-maximally-yellow transition-colors">
+                  <div key={submission.id} className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6 hover:border-purple-500/30 transition-all">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-start gap-3 mb-2">
@@ -867,14 +812,14 @@ export default function HackathonRegistrations() {
                         <div className="flex flex-wrap gap-3 mb-3">
                           {submission.github_repo && (
                             <a href={submission.github_repo} target="_blank" rel="noopener noreferrer"
-                               className="text-maximally-yellow hover:text-maximally-red text-sm font-jetbrains flex items-center gap-1">
+                               className="text-purple-400 hover:text-pink-400 text-sm font-jetbrains flex items-center gap-1 transition-colors">
                               <Github className="h-4 w-4" />
                               Code
                             </a>
                           )}
                           {submission.demo_url && (
                             <a href={submission.demo_url} target="_blank" rel="noopener noreferrer"
-                               className="text-maximally-yellow hover:text-maximally-red text-sm font-jetbrains flex items-center gap-1">
+                               className="text-cyan-400 hover:text-cyan-300 text-sm font-jetbrains flex items-center gap-1 transition-colors">
                               <ExternalLink className="h-4 w-4" />
                               Demo
                             </a>
@@ -893,8 +838,8 @@ export default function HackathonRegistrations() {
                           {(submission.average_score || submission.score) ? (
                             <>
                               <div className="flex items-center justify-end gap-2">
-                                <Star className="h-5 w-5 text-maximally-yellow" />
-                                <span className="text-2xl font-bold text-maximally-yellow font-press-start">
+                                <Star className="h-5 w-5 text-amber-400" />
+                                <span className="text-2xl font-bold text-amber-300 font-press-start">
                                   {submission.average_score || submission.score}
                                 </span>
                               </div>
@@ -912,7 +857,7 @@ export default function HackathonRegistrations() {
                         {/* Prize Badge */}
                         {submission.prize_won && (
                           <div className="text-right mb-3">
-                            <span className="px-3 py-1 text-xs font-press-start bg-maximally-yellow/20 text-maximally-yellow border border-maximally-yellow">
+                            <span className="px-3 py-1 text-xs font-press-start bg-amber-500/20 text-amber-300 border border-amber-500/50">
                               {submission.prize_won}
                             </span>
                           </div>
@@ -923,7 +868,7 @@ export default function HackathonRegistrations() {
                           <div className="text-right mb-3">
                             <button
                               onClick={() => setSelectedSubmission(submission)}
-                              className="pixel-button bg-gray-800 text-maximally-yellow px-3 py-2 text-xs font-press-start hover:bg-gray-700 flex items-center gap-2 ml-auto"
+                              className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 px-3 py-2 text-xs font-press-start flex items-center gap-2 ml-auto transition-all"
                             >
                               <Eye className="h-4 w-4" /> DETAILS
                             </button>
@@ -954,7 +899,7 @@ export default function HackathonRegistrations() {
                               {submission.judge_scores.length > 3 && (
                                 <button
                                   onClick={() => setSelectedSubmission(submission)}
-                                  className="text-xs text-gray-500 hover:text-maximally-yellow font-jetbrains"
+                                  className="text-xs text-gray-500 hover:text-purple-400 font-jetbrains transition-colors"
                                 >
                                   +{submission.judge_scores.length - 3} more judges...
                                 </button>
@@ -970,10 +915,10 @@ export default function HackathonRegistrations() {
 
               {/* Submission Details Modal */}
               {selectedSubmission && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                  <div className="bg-gray-900 border-2 border-maximally-yellow max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                  <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-purple-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                     {/* Modal Header */}
-                    <div className="sticky top-0 bg-gray-900 border-b border-gray-700 p-4 flex items-center justify-between">
+                    <div className="sticky top-0 bg-gradient-to-r from-purple-900/50 to-pink-900/30 border-b border-purple-500/30 p-4 flex items-center justify-between">
                       <div>
                         <h3 className="font-press-start text-lg text-white">{selectedSubmission.project_name}</h3>
                         <p className="text-sm text-gray-400 font-jetbrains">
@@ -982,7 +927,7 @@ export default function HackathonRegistrations() {
                       </div>
                       <button
                         onClick={() => setSelectedSubmission(null)}
-                        className="text-gray-400 hover:text-white p-2"
+                        className="text-gray-400 hover:text-pink-400 p-2 transition-colors"
                       >
                         <X className="h-6 w-6" />
                       </button>
@@ -991,11 +936,11 @@ export default function HackathonRegistrations() {
                     {/* Modal Content */}
                     <div className="p-6 space-y-6">
                       {/* Overall Score */}
-                      <div className="text-center p-4 bg-gray-800/50 border border-gray-700 rounded">
+                      <div className="text-center p-4 bg-gradient-to-br from-amber-900/30 to-orange-900/20 border border-amber-500/30">
                         <p className="text-xs text-gray-400 font-press-start mb-2">AVERAGE_SCORE</p>
                         <div className="flex items-center justify-center gap-2">
-                          <Star className="h-8 w-8 text-maximally-yellow" />
-                          <span className="text-4xl font-bold text-maximally-yellow font-press-start">
+                          <Star className="h-8 w-8 text-amber-400" />
+                          <span className="text-4xl font-bold text-amber-300 font-press-start">
                             {selectedSubmission.average_score || selectedSubmission.score || 'N/A'}
                           </span>
                         </div>
@@ -1006,14 +951,14 @@ export default function HackathonRegistrations() {
 
                       {/* Individual Judge Scores */}
                       <div>
-                        <h4 className="font-press-start text-sm text-maximally-red mb-4">SCORES_BY_JUDGE</h4>
+                        <h4 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">SCORES_BY_JUDGE</h4>
                         {selectedSubmission.judge_scores && selectedSubmission.judge_scores.length > 0 ? (
                           <div className="space-y-4">
                             {selectedSubmission.judge_scores.map((js: any, idx: number) => (
-                              <div key={idx} className="bg-gray-800/50 border border-gray-700 p-4 rounded">
+                              <div key={idx} className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-purple-500/20 p-4">
                                 <div className="flex items-center justify-between mb-3">
                                   <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
                                       <span className="text-white font-press-start text-sm">
                                         {js.judge_name?.charAt(0)?.toUpperCase() || 'J'}
                                       </span>
@@ -1026,7 +971,7 @@ export default function HackathonRegistrations() {
                                     </div>
                                   </div>
                                   <div className="text-right">
-                                    <span className="text-2xl font-bold text-maximally-yellow font-press-start">{js.score}</span>
+                                    <span className="text-2xl font-bold text-amber-300 font-press-start">{js.score}</span>
                                     <span className="text-gray-500 font-jetbrains">/100</span>
                                   </div>
                                 </div>
@@ -1065,10 +1010,10 @@ export default function HackathonRegistrations() {
                     </div>
 
                     {/* Modal Footer */}
-                    <div className="sticky bottom-0 bg-gray-900 border-t border-gray-700 p-4">
+                    <div className="sticky bottom-0 bg-gradient-to-r from-gray-900 to-gray-950 border-t border-purple-500/30 p-4">
                       <button
                         onClick={() => setSelectedSubmission(null)}
-                        className="w-full pixel-button bg-gray-700 text-white px-4 py-3 font-press-start text-sm hover:bg-gray-600"
+                        className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-4 py-3 font-press-start text-sm transition-all"
                       >
                         CLOSE
                       </button>
@@ -1106,13 +1051,13 @@ export default function HackathonRegistrations() {
           {/* Settings Tab - Period Controls */}
           {activeTab === 'settings' && hackathon && (
             <div className="space-y-6">
-              <h2 className="font-press-start text-xl text-maximally-red mb-2">PERIOD_CONTROLS</h2>
+              <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">PERIOD_CONTROLS</h2>
               <p className="text-gray-400 font-jetbrains text-sm mb-6">
                 Control when registrations, submissions, and judging are open. Use AUTO to follow timeline dates.
               </p>
               
               {/* Registration Period Control */}
-              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+              <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-6 hover:border-purple-400/50 transition-all">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="font-press-start text-lg text-white mb-2">REGISTRATION_PERIOD</h3>
@@ -1173,30 +1118,30 @@ export default function HackathonRegistrations() {
                 <div className="flex items-center justify-center gap-4 mt-6">
                   <button
                     onClick={() => { setRegistrationControl('closed'); savePeriodControl('registration_control', 'closed'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       registrationControl === 'closed'
-                        ? 'bg-red-600 text-white border-2 border-red-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-red-600/60 to-red-500/40 text-white border border-red-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     CLOSED
                   </button>
                   <button
                     onClick={() => { setRegistrationControl('auto'); savePeriodControl('registration_control', 'auto'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       registrationControl === 'auto'
-                        ? 'bg-blue-600 text-white border-2 border-blue-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-blue-600/60 to-cyan-500/40 text-white border border-blue-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     AUTO
                   </button>
                   <button
                     onClick={() => { setRegistrationControl('open'); savePeriodControl('registration_control', 'open'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       registrationControl === 'open'
-                        ? 'bg-green-600 text-white border-2 border-green-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-green-600/60 to-emerald-500/40 text-white border border-green-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     OPEN
@@ -1213,7 +1158,7 @@ export default function HackathonRegistrations() {
               </div>
 
               {/* Building Phase Control */}
-              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+              <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-orange-500/30 p-6 hover:border-orange-400/50 transition-all">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="font-press-start text-lg text-white mb-2">BUILDING_PHASE</h3>
@@ -1275,30 +1220,30 @@ export default function HackathonRegistrations() {
                 <div className="flex items-center justify-center gap-4 mt-6">
                   <button
                     onClick={() => { setBuildingControl('closed'); savePeriodControl('building_control', 'closed'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       buildingControl === 'closed'
-                        ? 'bg-red-600 text-white border-2 border-red-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-red-600/60 to-red-500/40 text-white border border-red-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     ENDED
                   </button>
                   <button
                     onClick={() => { setBuildingControl('auto'); savePeriodControl('building_control', 'auto'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       buildingControl === 'auto'
-                        ? 'bg-blue-600 text-white border-2 border-blue-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-blue-600/60 to-cyan-500/40 text-white border border-blue-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     AUTO
                   </button>
                   <button
                     onClick={() => { setBuildingControl('open'); savePeriodControl('building_control', 'open'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       buildingControl === 'open'
-                        ? 'bg-orange-600 text-white border-2 border-orange-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-orange-600/60 to-amber-500/40 text-white border border-orange-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     ACTIVE
@@ -1315,7 +1260,7 @@ export default function HackathonRegistrations() {
               </div>
 
               {/* Submission Period Control */}
-              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+              <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-green-500/30 p-6 hover:border-green-400/50 transition-all">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="font-press-start text-lg text-white mb-2">SUBMISSION_PERIOD</h3>
@@ -1376,30 +1321,30 @@ export default function HackathonRegistrations() {
                 <div className="flex items-center justify-center gap-4 mt-6">
                   <button
                     onClick={() => { setSubmissionControl('closed'); savePeriodControl('submission_control', 'closed'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       submissionControl === 'closed'
-                        ? 'bg-red-600 text-white border-2 border-red-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-red-600/60 to-red-500/40 text-white border border-red-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     CLOSED
                   </button>
                   <button
                     onClick={() => { setSubmissionControl('auto'); savePeriodControl('submission_control', 'auto'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       submissionControl === 'auto'
-                        ? 'bg-blue-600 text-white border-2 border-blue-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-blue-600/60 to-cyan-500/40 text-white border border-blue-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     AUTO
                   </button>
                   <button
                     onClick={() => { setSubmissionControl('open'); savePeriodControl('submission_control', 'open'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       submissionControl === 'open'
-                        ? 'bg-green-600 text-white border-2 border-green-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-green-600/60 to-emerald-500/40 text-white border border-green-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     OPEN
@@ -1416,7 +1361,7 @@ export default function HackathonRegistrations() {
               </div>
 
               {/* Judging Period Control */}
-              <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+              <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-cyan-500/30 p-6 hover:border-cyan-400/50 transition-all">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="font-press-start text-lg text-white mb-2">JUDGING_PERIOD</h3>
@@ -1477,30 +1422,30 @@ export default function HackathonRegistrations() {
                 <div className="flex items-center justify-center gap-4 mt-6">
                   <button
                     onClick={() => { setJudgingControl('closed'); savePeriodControl('judging_control', 'closed'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       judgingControl === 'closed'
-                        ? 'bg-red-600 text-white border-2 border-red-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-red-600/60 to-red-500/40 text-white border border-red-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     CLOSED
                   </button>
                   <button
                     onClick={() => { setJudgingControl('auto'); savePeriodControl('judging_control', 'auto'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       judgingControl === 'auto'
-                        ? 'bg-blue-600 text-white border-2 border-blue-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-blue-600/60 to-cyan-500/40 text-white border border-blue-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     AUTO
                   </button>
                   <button
                     onClick={() => { setJudgingControl('open'); savePeriodControl('judging_control', 'open'); }}
-                    className={`pixel-button px-6 py-3 font-press-start text-xs transition-all ${
+                    className={`px-6 py-3 font-press-start text-xs transition-all ${
                       judgingControl === 'open'
-                        ? 'bg-green-600 text-white border-2 border-green-400'
-                        : 'bg-gray-800 text-gray-400 border-2 border-gray-700'
+                        ? 'bg-gradient-to-r from-green-600/60 to-emerald-500/40 text-white border border-green-400/50'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700 hover:border-gray-600'
                     }`}
                   >
                     OPEN
@@ -1517,6 +1462,7 @@ export default function HackathonRegistrations() {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>

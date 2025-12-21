@@ -10,19 +10,25 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/lib/supabaseClient';
 import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
 import { isCaptchaRequired, isValidCaptchaToken } from '@/lib/captcha';
-import { Sparkles, Zap } from 'lucide-react';
+import { Sparkles, Zap, Mail, ArrowLeft, RefreshCw } from 'lucide-react';
+
+type SignupStep = 'form' | 'otp';
 
 export default function Login() {
   const navigate = useNavigate();
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, user } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [signupStep, setSignupStep] = useState<SignupStep>('form');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
   
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string | null>(null);
@@ -30,6 +36,14 @@ export default function Login() {
   const captchaRequired = isCaptchaRequired();
   const recaptchaRef = useRef<RecaptchaRef | null>(null);
   const captchaTokenRef = useRef<string | null>(null);
+
+  // Resend cooldown timer
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -85,30 +99,17 @@ export default function Login() {
     captchaTokenRef.current = null;
   };
 
-  const validateEmailBeforeSignup = async (email: string): Promise<boolean> => {
-    try {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email.trim())) {
-        setError('Please enter a valid email address');
-        return false;
-      }
-      const disposableDomains = ['10minutemail.com', 'tempmail.org', 'guerrillamail.com', 'mailinator.com'];
-      const domain = email.split('@')[1]?.toLowerCase();
-      if (disposableDomains.includes(domain)) {
-        setError('Please use a permanent email address');
-        return false;
-      }
-      return true;
-    } catch (err: any) {
-      setError('Unable to validate email. Please try again.');
-      return false;
-    }
+  const resetSignupForm = () => {
+    setSignupStep('form');
+    setOtp('');
+    setError(null);
+    setSuccessMessage(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Step 1: Request OTP
+  const handleRequestOtp = async () => {
     setError(null);
-    setCaptchaError(null);
+    setSuccessMessage(null);
     setLoading(true);
 
     if (captchaRequired) {
@@ -120,66 +121,174 @@ export default function Login() {
       }
     }
 
-    if (isSignUp) {
-      if (password.length < 8) {
-        setError('Password must be at least 8 characters long');
-        setLoading(false);
-        return;
+    // Validation
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      setLoading(false);
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
+    if (name.trim().length < 2) {
+      setError('Name must be at least 2 characters long');
+      setLoading(false);
+      return;
+    }
+    if (username.trim().length < 3) {
+      setError('Username must be at least 3 characters long');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/auth/signup-request-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+          name: name.trim(),
+          username: username.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSignupStep('otp');
+        setSuccessMessage('Verification code sent! Check your email.');
+        setResendCooldown(60); // 60 second cooldown
+      } else {
+        setError(data.message || 'Failed to send verification code');
       }
-      if (password !== confirmPassword) {
-        setError('Passwords do not match');
-        setLoading(false);
-        return;
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Step 2: Verify OTP
+  const handleVerifyOtp = async () => {
+    setError(null);
+    setSuccessMessage(null);
+    setLoading(true);
+
+    if (otp.length !== 6) {
+      setError('Please enter the 6-digit verification code');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/auth/signup-verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email.trim(),
+          otp: otp.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccessMessage('Account created successfully! Signing you in...');
+        // Auto sign in
+        setTimeout(async () => {
+          const result = await signIn(email, password);
+          if (result.error) {
+            setError('Account created but auto-login failed. Please sign in manually.');
+            setIsSignUp(false);
+            resetSignupForm();
+          } else {
+            navigate('/');
+          }
+        }, 1500);
+      } else {
+        setError(data.message || 'Invalid verification code');
       }
-      if (name.trim().length < 2) {
-        setError('Name must be at least 2 characters long');
-        setLoading(false);
-        return;
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Resend OTP
+  const handleResendOtp = async () => {
+    if (resendCooldown > 0) return;
+    
+    setError(null);
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/resend-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccessMessage('New verification code sent!');
+        setResendCooldown(60);
+      } else {
+        setError(data.message || 'Failed to resend code');
       }
-      if (username.trim().length < 3) {
-        setError('Username must be at least 3 characters long');
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    if (captchaRequired) {
+      const currentToken = captchaToken || captchaTokenRef.current;
+      if (!isValidCaptchaToken(currentToken)) {
+        setError('Please complete the CAPTCHA verification');
         setLoading(false);
         return;
       }
     }
 
     try {
-      if (isSignUp) {
-        const emailIsValid = await validateEmailBeforeSignup(email);
-        if (!emailIsValid) {
-          setLoading(false);
-          return;
-        }
-        const result = await signUp(email, password, name.trim(), username.trim());
-        if (result.error) {
-          setError(result.error.message);
-          setLoading(false);
-          return;
-        }
-        try {
-          const { data: { session } } = await supabase!.auth.getSession();
-          if (!session) {
-            navigate(`/verify-email?email=${encodeURIComponent(email)}`);
-          } else {
-            navigate('/');
-          }
-        } catch {
-          navigate(`/verify-email?email=${encodeURIComponent(email)}`);
-        }
+      const result = await signIn(email, password);
+      if (result.error) {
+        setError(result.error.message);
+        resetCaptcha();
       } else {
-        const result = await signIn(email, password);
-        if (result.error) {
-          setError(result.error.message);
-          resetCaptcha();
-          setLoading(false);
-          return;
-        }
         navigate('/');
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
       resetCaptcha();
+    } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isSignUp) {
+      if (signupStep === 'form') {
+        await handleRequestOtp();
+      } else {
+        await handleVerifyOtp();
+      }
+    } else {
+      await handleLogin(e);
     }
   };
 
@@ -258,18 +367,46 @@ export default function Login() {
           <div className="bg-gradient-to-br from-gray-900/80 to-gray-900/40 border border-purple-500/30 p-6 sm:p-8 backdrop-blur-sm" data-testid="card-auth">
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-14 h-14 mb-4 bg-purple-500/20 border border-purple-500/40">
-                <Zap className="w-7 h-7 text-purple-400" />
-              </div>
-              <h1 className="font-press-start text-lg sm:text-xl md:text-2xl mb-3">
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-                  {isSignUp ? 'JOIN MAXIMALLY' : 'WELCOME BACK'}
-                </span>
-              </h1>
-              <p className="font-jetbrains text-sm text-gray-400">
-                {isSignUp ? 'Join the global innovation league' : 'Access your dashboard'}
-              </p>
+              {isSignUp && signupStep === 'otp' ? (
+                <>
+                  <div className="inline-flex items-center justify-center w-14 h-14 mb-4 bg-orange-500/20 border border-orange-500/40">
+                    <Mail className="w-7 h-7 text-orange-400" />
+                  </div>
+                  <h1 className="font-press-start text-lg sm:text-xl md:text-2xl mb-3">
+                    <span className="bg-gradient-to-r from-orange-400 via-red-400 to-orange-400 bg-clip-text text-transparent">
+                      VERIFY EMAIL
+                    </span>
+                  </h1>
+                  <p className="font-jetbrains text-sm text-gray-400">
+                    Enter the 6-digit code sent to<br />
+                    <span className="text-orange-400">{email}</span>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="inline-flex items-center justify-center w-14 h-14 mb-4 bg-purple-500/20 border border-purple-500/40">
+                    <Zap className="w-7 h-7 text-purple-400" />
+                  </div>
+                  <h1 className="font-press-start text-lg sm:text-xl md:text-2xl mb-3">
+                    <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                      {isSignUp ? 'JOIN MAXIMALLY' : 'WELCOME BACK'}
+                    </span>
+                  </h1>
+                  <p className="font-jetbrains text-sm text-gray-400">
+                    {isSignUp ? 'Join the global innovation league' : 'Access your dashboard'}
+                  </p>
+                </>
+              )}
             </div>
+
+            {/* Success Message */}
+            {successMessage && (
+              <div className="bg-green-500/10 border border-green-500/30 p-3 mb-6">
+                <div className="text-green-400 font-jetbrains text-sm">
+                  ✅ {successMessage}
+                </div>
+              </div>
+            )}
 
             {/* Error Display */}
             {error && (
@@ -282,183 +419,254 @@ export default function Login() {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="font-press-start text-[10px] text-purple-300 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-purple-400"></span>
-                  EMAIL ADDRESS
-                </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="hacker@example.com"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); setError(null); }}
-                  className="bg-black/50 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400 placeholder:text-gray-600"
-                  required
-                  data-testid="input-email"
-                />
-              </div>
-
-              {isSignUp && (
+              {/* OTP Verification Step */}
+              {isSignUp && signupStep === 'otp' ? (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="name" className="font-press-start text-[10px] text-pink-300 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-pink-400"></span>
-                      FULL NAME
+                    <Label htmlFor="otp" className="font-press-start text-[10px] text-orange-300 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-orange-400"></span>
+                      VERIFICATION CODE
                     </Label>
                     <Input
-                      id="name"
+                      id="otp"
                       type="text"
-                      placeholder="Enter your full name"
-                      value={name}
-                      onChange={(e) => { setName(e.target.value); setError(null); }}
-                      className="bg-black/50 border border-pink-500/30 text-white font-jetbrains focus:border-pink-400 placeholder:text-gray-600"
+                      placeholder="000000"
+                      value={otp}
+                      onChange={(e) => { 
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                        setOtp(val); 
+                        setError(null); 
+                      }}
+                      className="bg-black/50 border border-orange-500/30 text-white font-jetbrains focus:border-orange-400 placeholder:text-gray-600 text-center text-2xl tracking-[0.5em]"
+                      maxLength={6}
                       required
-                      data-testid="input-name"
+                      autoFocus
+                      data-testid="input-otp"
                     />
+                    <p className="text-xs text-gray-500 font-jetbrains text-center mt-2">
+                      Code expires in 10 minutes
+                    </p>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="username" className="font-press-start text-[10px] text-cyan-300 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-cyan-400"></span>
-                      USERNAME
-                    </Label>
-                    <Input
-                      id="username"
-                      type="text"
-                      placeholder="choose_a_username"
-                      value={username}
-                      onChange={(e) => { setUsername(e.target.value); setError(null); }}
-                      className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400 placeholder:text-gray-600"
-                      required
-                      data-testid="input-username"
-                    />
-                  </div>
-                </>
-              )}
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-orange-600/40 to-red-500/30 border border-orange-500/50 hover:border-orange-400 text-orange-200 hover:text-white font-press-start text-xs py-5 transition-all duration-300"
+                    data-testid="button-verify-otp"
+                    disabled={loading || otp.length !== 6}
+                  >
+                    {loading ? 'VERIFYING...' : 'VERIFY & CREATE ACCOUNT'}
+                  </Button>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="font-press-start text-[10px] text-green-300 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-green-400"></span>
-                  PASSWORD
-                </Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => { setPassword(e.target.value); setError(null); }}
-                  className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
-                  required
-                  data-testid="input-password"
-                />
-                {!isSignUp && (
-                  <div className="text-right mt-1">
+                  <div className="flex items-center justify-between pt-2">
                     <button
                       type="button"
-                      onClick={() => navigate('/forgot-password')}
-                      className="font-jetbrains text-xs text-gray-500 hover:text-purple-400 transition-colors"
+                      onClick={resetSignupForm}
+                      className="font-jetbrains text-sm text-gray-400 hover:text-purple-400 transition-colors flex items-center gap-1"
                     >
-                      Forgot password?
+                      <ArrowLeft className="w-4 h-4" />
+                      Back
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleResendOtp}
+                      disabled={resendCooldown > 0 || loading}
+                      className="font-jetbrains text-sm text-gray-400 hover:text-orange-400 transition-colors flex items-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                      {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code'}
                     </button>
                   </div>
-                )}
-              </div>
-
-              {isSignUp && (
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="font-press-start text-[10px] text-green-300 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-green-400"></span>
-                    CONFIRM PASSWORD
-                  </Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => { setConfirmPassword(e.target.value); setError(null); }}
-                    className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
-                    required
-                    data-testid="input-confirm-password"
-                  />
-                </div>
-              )}
-
-              {captchaRequired && (
-                <div className="bg-purple-500/5 border border-purple-500/20 p-4">
-                  <h3 className="font-press-start text-[10px] text-purple-300 mb-3 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-purple-400"></span>
-                    VERIFICATION REQUIRED
-                  </h3>
-                  <div className="flex justify-center">
-                    <Recaptcha
-                      ref={recaptchaRef}
-                      onVerify={handleCaptchaVerify}
-                      onError={handleCaptchaError}
-                      size="normal"
+                </>
+              ) : (
+                <>
+                  {/* Regular Form Fields */}
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="font-press-start text-[10px] text-purple-300 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                      EMAIL ADDRESS
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="hacker@example.com"
+                      value={email}
+                      onChange={(e) => { setEmail(e.target.value); setError(null); }}
+                      className="bg-black/50 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400 placeholder:text-gray-600"
+                      required
+                      data-testid="input-email"
                     />
                   </div>
-                  {captchaError && (
-                    <div className="bg-red-500/10 border border-red-500/30 p-2 mt-3">
-                      <div className="text-red-400 font-jetbrains text-xs" role="alert">⚠️ {captchaError}</div>
+
+                  {isSignUp && (
+                    <>
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="font-press-start text-[10px] text-pink-300 flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-pink-400"></span>
+                          FULL NAME
+                        </Label>
+                        <Input
+                          id="name"
+                          type="text"
+                          placeholder="Enter your full name"
+                          value={name}
+                          onChange={(e) => { setName(e.target.value); setError(null); }}
+                          className="bg-black/50 border border-pink-500/30 text-white font-jetbrains focus:border-pink-400 placeholder:text-gray-600"
+                          required
+                          data-testid="input-name"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="username" className="font-press-start text-[10px] text-cyan-300 flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+                          USERNAME
+                        </Label>
+                        <Input
+                          id="username"
+                          type="text"
+                          placeholder="choose_a_username"
+                          value={username}
+                          onChange={(e) => { setUsername(e.target.value); setError(null); }}
+                          className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400 placeholder:text-gray-600"
+                          required
+                          data-testid="input-username"
+                        />
+                      </div>
+                    </>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="font-press-start text-[10px] text-green-300 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-green-400"></span>
+                      PASSWORD
+                    </Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => { setPassword(e.target.value); setError(null); }}
+                      className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
+                      required
+                      data-testid="input-password"
+                    />
+                    {!isSignUp && (
+                      <div className="text-right mt-1">
+                        <button
+                          type="button"
+                          onClick={() => navigate('/forgot-password')}
+                          className="font-jetbrains text-xs text-gray-500 hover:text-purple-400 transition-colors"
+                        >
+                          Forgot password?
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {isSignUp && (
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword" className="font-press-start text-[10px] text-green-300 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-green-400"></span>
+                        CONFIRM PASSWORD
+                      </Label>
+                      <Input
+                        id="confirmPassword"
+                        type="password"
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(e) => { setConfirmPassword(e.target.value); setError(null); }}
+                        className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
+                        required
+                        data-testid="input-confirm-password"
+                      />
                     </div>
                   )}
-                </div>
-              )}
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs py-5 transition-all duration-300"
-                data-testid="button-submit"
-                disabled={loading}
-              >
-                {loading ? 'LOADING...' : (isSignUp ? 'JOIN LEAGUE' : 'ACCESS DASHBOARD')}
-              </Button>
+                  {captchaRequired && (
+                    <div className="bg-purple-500/5 border border-purple-500/20 p-4">
+                      <h3 className="font-press-start text-[10px] text-purple-300 mb-3 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                        VERIFICATION REQUIRED
+                      </h3>
+                      <div className="flex justify-center">
+                        <Recaptcha
+                          ref={recaptchaRef}
+                          onVerify={handleCaptchaVerify}
+                          onError={handleCaptchaError}
+                          size="normal"
+                        />
+                      </div>
+                      {captchaError && (
+                        <div className="bg-red-500/10 border border-red-500/30 p-2 mt-3">
+                          <div className="text-red-400 font-jetbrains text-xs" role="alert">⚠️ {captchaError}</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs py-5 transition-all duration-300"
+                    data-testid="button-submit"
+                    disabled={loading}
+                  >
+                    {loading ? 'LOADING...' : (isSignUp ? 'SEND VERIFICATION CODE' : 'ACCESS DASHBOARD')}
+                  </Button>
+                </>
+              )}
             </form>
 
-            {/* OAuth Separator */}
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-purple-500/20" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-gray-900 px-4 font-jetbrains text-xs text-gray-500">
-                  or connect with
-                </span>
-              </div>
-            </div>
+            {/* OAuth Section - Only show on login or signup form step */}
+            {(!isSignUp || signupStep === 'form') && (
+              <>
+                {/* OAuth Separator */}
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-purple-500/20" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-gray-900 px-4 font-jetbrains text-xs text-gray-500">
+                      or connect with
+                    </span>
+                  </div>
+                </div>
 
-            {/* OAuth Buttons */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <Button
-                onClick={handleGoogleSignIn}
-                className="bg-white hover:bg-gray-100 text-black font-press-start text-[10px] py-3 border border-gray-300 hover:border-purple-400 transition-colors flex items-center justify-center gap-2"
-                data-testid="button-google-signin"
-              >
-                <FcGoogle className="h-4 w-4" />
-                <span className="hidden sm:inline">GOOGLE</span>
-              </Button>
+                {/* OAuth Buttons */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <Button
+                    type="button"
+                    onClick={handleGoogleSignIn}
+                    className="bg-white hover:bg-gray-100 text-black font-press-start text-[10px] py-3 border border-gray-300 hover:border-purple-400 transition-colors flex items-center justify-center gap-2"
+                    data-testid="button-google-signin"
+                  >
+                    <FcGoogle className="h-4 w-4" />
+                    <span className="hidden sm:inline">GOOGLE</span>
+                  </Button>
 
-              <Button
-                onClick={handleGithubSignIn}
-                className="bg-gray-800 hover:bg-gray-700 text-white font-press-start text-[10px] py-3 border border-gray-700 hover:border-purple-400 transition-colors flex items-center justify-center gap-2"
-                data-testid="button-github-signin"
-              >
-                <FaGithub className="h-4 w-4" />
-                <span className="hidden sm:inline">GITHUB</span>
-              </Button>
-            </div>
+                  <Button
+                    type="button"
+                    onClick={handleGithubSignIn}
+                    className="bg-gray-800 hover:bg-gray-700 text-white font-press-start text-[10px] py-3 border border-gray-700 hover:border-purple-400 transition-colors flex items-center justify-center gap-2"
+                    data-testid="button-github-signin"
+                  >
+                    <FaGithub className="h-4 w-4" />
+                    <span className="hidden sm:inline">GITHUB</span>
+                  </Button>
+                </div>
 
-            {/* Toggle Mode */}
-            <div className="text-center border-t border-purple-500/20 pt-4">
-              <button
-                onClick={() => { setIsSignUp(!isSignUp); setError(null); resetCaptcha(); }}
-                className="font-jetbrains text-sm text-gray-400 hover:text-purple-400 transition-colors"
-                data-testid="button-toggle-mode"
-              >
-                {isSignUp ? 'Already have an account? Sign in' : 'New user? Create account'}
-              </button>
-            </div>
+                {/* Toggle Mode */}
+                <div className="text-center border-t border-purple-500/20 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => { setIsSignUp(!isSignUp); setError(null); resetCaptcha(); resetSignupForm(); }}
+                    className="font-jetbrains text-sm text-gray-400 hover:text-purple-400 transition-colors"
+                    data-testid="button-toggle-mode"
+                  >
+                    {isSignUp ? 'Already have an account? Sign in' : 'New user? Create account'}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

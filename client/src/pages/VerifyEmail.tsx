@@ -9,6 +9,7 @@ import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
 import { isCaptchaRequired, verifyCaptcha } from '@/lib/captcha';
 import OTPInput from '@/components/OTPInput';
 import { useRef } from 'react';
+import { Mail } from 'lucide-react';
 
 export default function VerifyEmail() {
   const [params] = useSearchParams();
@@ -23,14 +24,12 @@ export default function VerifyEmail() {
   const [success, setSuccess] = useState(false);
   const [nextResendAt, setNextResendAt] = useState<number>(0);
 
-  // CAPTCHA for resend flow (invisible)
   const captchaRequired = isCaptchaRequired();
   const recaptchaRef = useRef<RecaptchaRef | null>(null);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [resendRequested, setResendRequested] = useState(false);
 
   useEffect(() => {
-    // If already authed (e.g., via magic link), redirect
     (async () => {
       const session = await getSession();
       if (session) navigate('/', { replace: true });
@@ -77,7 +76,7 @@ export default function VerifyEmail() {
   const handleResend = async () => {
     setError(null);
     const now = Date.now();
-    if (now < nextResendAt) return; // cooldown active
+    if (now < nextResendAt) return;
     if (captchaRequired) {
       setResendRequested(true);
       recaptchaRef.current?.execute();
@@ -86,7 +85,6 @@ export default function VerifyEmail() {
     await actuallyResend();
   };
 
-  // When CAPTCHA token arrives and resend was requested, verify server-side then proceed
   useEffect(() => {
     const go = async () => {
       if (!resendRequested || !captchaRequired) return;
@@ -108,64 +106,64 @@ export default function VerifyEmail() {
         <title>Verify Email - Maximally</title>
       </Helmet>
       <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center p-4 pt-24">
-        <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        
+        <div className="absolute top-20 left-[10%] w-60 h-60 bg-purple-500/15 rounded-full blur-[100px]" />
+        <div className="absolute bottom-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
 
         <div className="w-full max-w-lg relative z-10">
-          <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-maximally-red hover:border-maximally-yellow transition-all duration-500 p-8 relative group overflow-hidden">
-            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-maximally-yellow animate-pulse" />
-            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-maximally-yellow animate-pulse delay-200" />
-            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-maximally-yellow animate-pulse delay-400" />
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-maximally-yellow animate-pulse delay-600" />
-
+          <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 hover:border-purple-400/60 transition-all duration-500 p-8 relative overflow-hidden backdrop-blur-sm">
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+            
             <div className="relative z-10">
               <div className="text-center mb-8">
-                <div className="minecraft-block bg-maximally-red/20 border-2 border-maximally-red p-3 inline-block mb-4">
-                  <span className="text-4xl">📩</span>
+                <div className="bg-purple-500/20 border border-purple-500/40 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Mail className="w-8 h-8 text-purple-400" />
                 </div>
-                <h1 className="font-press-start text-2xl md:text-3xl font-bold mb-4 minecraft-text">
-                  <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">VERIFY_EMAIL</span>
+                <h1 className="font-press-start text-xl md:text-2xl mb-4">
+                  <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">VERIFY EMAIL</span>
                 </h1>
                 <p className="font-jetbrains text-sm text-gray-400">Enter the 6-digit code we emailed to you.</p>
               </div>
 
               {error && (
-                <div className="minecraft-block bg-red-900/30 border-2 border-maximally-red p-3 mb-6">
+                <div className="bg-red-500/10 border border-red-500/30 p-3 mb-6">
                   <div className="text-red-300 font-press-start text-xs" role="alert">⚠️ {error}</div>
                 </div>
               )}
               {success && (
-                <div className="minecraft-block bg-green-900/30 border-2 border-green-600 p-3 mb-6">
-                  <div className="text-green-300 font-press-start text-xs" role="status">Verified! Redirecting…</div>
+                <div className="bg-green-500/10 border border-green-500/30 p-3 mb-6">
+                  <div className="text-green-300 font-press-start text-xs" role="status">✓ Verified! Redirecting…</div>
                 </div>
               )}
 
               <form onSubmit={handleVerify} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="font-press-start text-xs text-maximally-blue flex items-center gap-2">
-                    <span className="w-2 h-2 bg-maximally-blue"></span>
-                    EMAIL_ADDRESS
+                  <Label htmlFor="email" className="font-press-start text-xs text-cyan-300 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-cyan-400"></span>
+                    EMAIL ADDRESS
                   </Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-maximally-blue placeholder:text-gray-500 transition-colors" required />
+                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-black/40 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400 placeholder:text-gray-500 transition-colors" required />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="code" className="font-press-start text-xs text-maximally-green flex items-center gap-2">
-                    <span className="w-2 h-2 bg-maximally-green"></span>
-                    VERIFICATION_CODE
+                  <Label htmlFor="code" className="font-press-start text-xs text-green-300 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-green-400"></span>
+                    VERIFICATION CODE
                   </Label>
                   <div className="flex justify-center">
                     <OTPInput length={6} value={code} onChange={setCode} />
                   </div>
                 </div>
 
-                <Button type="submit" disabled={loading || !canSubmit} className="w-full pixel-button bg-maximally-red hover:bg-maximally-red/90 text-white font-press-start text-sm py-4 transition-colors border-4 border-maximally-red hover:border-maximally-yellow">
+                <Button type="submit" disabled={loading || !canSubmit} className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-sm py-4 transition-all">
                   {loading ? 'VERIFYING...' : 'VERIFY'}
                 </Button>
 
                 <div className="text-center">
-                  <button type="button" onClick={handleResend} disabled={resending || Date.now() < nextResendAt} className="font-press-start text-xs text-gray-400 hover:text-maximally-yellow">
-                    {resending ? 'SENDING...' : (Date.now() < nextResendAt ? `WAIT_${Math.ceil((nextResendAt - Date.now())/1000)}s` : 'RESEND_CODE')}
+                  <button type="button" onClick={handleResend} disabled={resending || Date.now() < nextResendAt} className="font-press-start text-xs text-gray-400 hover:text-purple-300 transition-colors">
+                    {resending ? 'SENDING...' : (Date.now() < nextResendAt ? `WAIT ${Math.ceil((nextResendAt - Date.now())/1000)}s` : 'RESEND CODE')}
                   </button>
                 </div>
 

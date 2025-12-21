@@ -63,7 +63,7 @@ const TierBadge = ({ tier, size = 'md', showLabel = true }: TierBadgeProps) => {
   if (!showLabel) {
     return (
       <div
-        className={`minecraft-block ${getBgColor()} border-2 ${getTierColor(tier)} ${getBadgeSize()} inline-flex items-center justify-center`}
+        className={`${getBgColor()} border ${getTierColor(tier)} ${getBadgeSize()} inline-flex items-center justify-center`}
         title={getTierLabel(tier)}
       >
         {getIcon()}
@@ -73,7 +73,7 @@ const TierBadge = ({ tier, size = 'md', showLabel = true }: TierBadgeProps) => {
 
   return (
     <div
-      className={`minecraft-block ${getBgColor()} border-2 ${getTierColor(tier)} ${getBadgeSize()} inline-flex items-center gap-2 font-press-start`}
+      className={`${getBgColor()} border ${getTierColor(tier)} ${getBadgeSize()} inline-flex items-center gap-2 font-press-start`}
     >
       {getIcon()}
       <span className="uppercase">{tier}</span>

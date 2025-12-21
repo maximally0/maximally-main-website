@@ -114,10 +114,10 @@ export default function HackathonRegistration({
 
       if (data.success) {
         toast({
-          title: data.status === 'waitlist' ? "Added to Waitlist!" : "Registration Successful!",
+          title: data.status === 'waitlist' ? "📋 Added to Waitlist!" : "🎮 Registration Successful!",
           description: data.status === 'waitlist' 
             ? "You've been added to the waitlist. We'll notify you if a spot opens up."
-            : "You're registered! Check your email for confirmation.",
+            : "You're registered! A confirmation email has been sent to your inbox.",
         });
         setRegistration(data.data);
         setShowRegisterModal(false);
@@ -259,13 +259,18 @@ export default function HackathonRegistration({
           onClick={() => setShowTeamManagementModal(false)}
         >
           <div
-            className="pixel-card bg-black border-4 border-maximally-red w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+            className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-purple-500/50 w-full max-w-3xl max-h-[90vh] overflow-y-auto backdrop-blur-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b-2 border-maximally-red flex items-center justify-between">
-              <h2 className="font-press-start text-xl text-maximally-red">TEAM</h2>
-              <button onClick={() => setShowTeamManagementModal(false)} className="text-gray-400 hover:text-white">
-                <X className="h-6 w-6" />
+            <div className="p-6 border-b border-purple-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-500/20 border border-purple-500/40">
+                  <Users className="h-5 w-5 text-purple-400" />
+                </div>
+                <h2 className="font-press-start text-xl text-white">TEAM</h2>
+              </div>
+              <button onClick={() => setShowTeamManagementModal(false)} className="p-2 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                <X className="h-5 w-5" />
               </button>
             </div>
 
@@ -284,14 +289,14 @@ export default function HackathonRegistration({
                 {isLeader ? (
                   <button
                     onClick={handleDisbandTeam}
-                    className="pixel-button bg-red-600 text-white px-6 py-3 font-press-start text-xs hover:bg-red-700"
+                    className="bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 hover:border-red-400 text-red-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300"
                   >
                     DISBAND_TEAM
                   </button>
                 ) : (
                   <button
                     onClick={handleLeaveTeam}
-                    className="pixel-button bg-red-600 text-white px-6 py-3 font-press-start text-xs hover:bg-red-700"
+                    className="bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 hover:border-red-400 text-red-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300"
                   >
                     LEAVE_TEAM
                   </button>
@@ -308,79 +313,106 @@ export default function HackathonRegistration({
     <>
       {registration ? (
         <div className="space-y-4">
-          <div className="pixel-card bg-green-900/20 border-2 border-green-500 p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Check className="h-6 w-6 text-green-500" />
-              <div>
-                <h3 className="font-press-start text-sm text-green-500">REGISTERED</h3>
-                <p className="font-jetbrains text-gray-300 text-sm">Registration #{registration.registration_number}</p>
+          {/* Show hackathon ended message if winners announced */}
+          {winnersAnnounced ? (
+            <div 
+              className="bg-gradient-to-br from-yellow-500/20 to-amber-500/10 border border-yellow-500/50 p-6 cursor-pointer hover:border-yellow-400 transition-all duration-300"
+              onClick={onViewWinners}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="text-3xl">🏆</div>
+                  <div>
+                    <h3 className="font-press-start text-sm text-yellow-400">HACKATHON_ENDED</h3>
+                    <p className="font-jetbrains text-gray-300 text-sm">
+                      {winnersAnnouncedAt 
+                        ? `Winners announced on ${new Date(winnersAnnouncedAt).toLocaleDateString()}`
+                        : 'Click to see the winning projects'}
+                    </p>
+                  </div>
+                </div>
+                <span className="font-press-start text-xs text-yellow-400 hidden sm:block">VIEW_WINNERS →</span>
               </div>
             </div>
-
-            {/* Team Display */}
-            {hasTeam && (
-              <div className="bg-gray-900/50 border border-gray-700 p-4 rounded mb-4">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <div>
-                    <h4 className="font-press-start text-xs text-maximally-yellow">TEAM</h4>
-                    <p className="font-jetbrains text-white">{registration.team.team_name}</p>
-                    <p className="font-jetbrains text-gray-400 text-sm">Code: {registration.team.team_code}</p>
-                  </div>
-                  {/* Manage team should only be visible for team registrations */}
-                  {isTeamRegistration && (
-                    <button
-                      onClick={() => setShowTeamManagementModal(true)}
-                      className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white transition-colors"
-                    >
-                      MANAGE_TEAM
-                    </button>
-                  )}
+          ) : (
+            <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-emerald-500/40 p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 bg-green-500/20 border border-green-500/40">
+                  <Check className="h-5 w-5 text-green-400" />
+                </div>
+                <div>
+                  <h3 className="font-press-start text-sm text-green-400">REGISTERED</h3>
+                  <p className="font-jetbrains text-gray-300 text-sm">Registration #{registration.registration_number}</p>
                 </div>
               </div>
-            )}
 
-            {/* Create/join team only for team registrations */}
-            {!hasTeam && teamsAllowed && isTeamRegistration && (
-              <button
-                onClick={() => setShowTeamModal(true)}
-                className="pixel-button bg-maximally-yellow text-black px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white transition-colors w-full mt-4"
-              >
-                <Users className="h-4 w-4 inline mr-2" />
-                CREATE_OR_JOIN_TEAM
-              </button>
-            )}
+              {/* Team Display */}
+              {hasTeam && (
+                <div className="bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 p-4 mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                      <h4 className="font-press-start text-xs text-amber-400">TEAM</h4>
+                      <p className="font-jetbrains text-white">{registration.team.team_name}</p>
+                      <p className="font-jetbrains text-gray-400 text-sm">Code: {registration.team.team_code}</p>
+                    </div>
+                    {/* Manage team only visible when hackathon is still active (not in building phase or closed) */}
+                    {isTeamRegistration && !isBuildingPhaseActive && !isRegistrationForceClosed && (
+                      <button
+                        onClick={() => setShowTeamManagementModal(true)}
+                        className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300"
+                      >
+                        MANAGE_TEAM
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
 
-            {/* Unregister button - hidden when building phase is active */}
-            {!isBuildingPhaseActive && !isRegistrationForceClosed && (
-              <button
-                onClick={() => setShowUnregisterConfirm(true)}
-                className="pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-red-600 transition-colors w-full mt-2"
-              >
-                <X className="h-4 w-4 inline mr-2" />
-                UNREGISTER
-              </button>
-            )}
+              {/* Create/join team only for team registrations and when hackathon is active */}
+              {!hasTeam && teamsAllowed && isTeamRegistration && !isBuildingPhaseActive && !isRegistrationForceClosed && (
+                <button
+                  onClick={() => setShowTeamModal(true)}
+                  className="w-full mt-4 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
+                >
+                  <Users className="h-4 w-4 inline mr-2" />
+                  CREATE_OR_JOIN_TEAM
+                </button>
+              )}
 
-            <ConfirmDialog
-              open={showUnregisterConfirm}
-              onOpenChange={setShowUnregisterConfirm}
-              title="UNREGISTER FROM HACKATHON"
-              description={`Are you sure you want to unregister from ${hackathonName}? This action cannot be undone.`}
-              confirmText="UNREGISTER"
-              cancelText="CANCEL"
-              variant="destructive"
-              onConfirm={async () => {
-                await handleUnregister();
-              }}
-            />
-          </div>
+              {/* Unregister button - hidden when building phase is active */}
+              {!isBuildingPhaseActive && !isRegistrationForceClosed && (
+                <button
+                  onClick={() => setShowUnregisterConfirm(true)}
+                  className="w-full mt-2 bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-red-600/20 hover:border-red-500/50 hover:text-red-300 px-6 py-3 font-press-start text-sm transition-all duration-300"
+                >
+                  <X className="h-4 w-4 inline mr-2" />
+                  UNREGISTER
+                </button>
+              )}
+
+              <ConfirmDialog
+                open={showUnregisterConfirm}
+                onOpenChange={setShowUnregisterConfirm}
+                title="UNREGISTER FROM HACKATHON"
+                description={`Are you sure you want to unregister from ${hackathonName}? This action cannot be undone.`}
+                confirmText="UNREGISTER"
+                cancelText="CANCEL"
+                variant="destructive"
+                onConfirm={async () => {
+                  await handleUnregister();
+                }}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <>
           {isRegistrationNotOpen ? (
-            <div className="pixel-card bg-gray-900/50 border-2 border-gray-700 p-6">
+            <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700 p-6">
               <div className="flex items-center gap-3">
-                <Clock className="h-6 w-6 text-gray-400" />
+                <div className="p-2 bg-gray-700/50 border border-gray-600">
+                  <Clock className="h-5 w-5 text-gray-400" />
+                </div>
                 <div>
                   <h3 className="font-press-start text-sm text-gray-400">REGISTRATION OPENS</h3>
                   <p className="font-jetbrains text-gray-300 text-sm">
@@ -391,7 +423,7 @@ export default function HackathonRegistration({
             </div>
           ) : winnersAnnounced ? (
             <div 
-              className="pixel-card bg-yellow-500/20 border-2 border-yellow-500 p-6 cursor-pointer hover:bg-yellow-500/30 transition-colors"
+              className="bg-gradient-to-br from-yellow-500/20 to-amber-500/10 border border-yellow-500/50 p-6 cursor-pointer hover:border-yellow-400 transition-all duration-300"
               onClick={onViewWinners}
             >
               <div className="flex items-center justify-between">
@@ -410,11 +442,13 @@ export default function HackathonRegistration({
               </div>
             </div>
           ) : isRegistrationClosed ? (
-            <div className="pixel-card bg-red-900/20 border-2 border-red-500 p-6">
+            <div className="bg-gradient-to-br from-red-500/10 to-rose-500/10 border border-red-500/40 p-6">
               <div className="flex items-center gap-3">
-                <X className="h-6 w-6 text-red-500" />
+                <div className="p-2 bg-red-500/20 border border-red-500/40">
+                  <X className="h-5 w-5 text-red-400" />
+                </div>
                 <div>
-                  <h3 className="font-press-start text-sm text-red-500">
+                  <h3 className="font-press-start text-sm text-red-400">
                     {isBuildingPhaseActive ? 'BUILDING PHASE ACTIVE' : 'REGISTRATION CLOSED'}
                   </h3>
                   <p className="font-jetbrains text-gray-300 text-sm">
@@ -431,7 +465,7 @@ export default function HackathonRegistration({
             <>
               <button
                 onClick={() => setShowRegisterModal(true)}
-                className="pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors w-full"
+                className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
               >
                 <UserPlus className="h-4 w-4 inline mr-2" />
                 JOIN_A_HACKATHON
@@ -441,12 +475,17 @@ export default function HackathonRegistration({
               {showRegisterModal &&
                 createPortal(
                   <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-[9999]">
-                    <div className="pixel-card bg-black border-4 border-maximally-red max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-[10000]">
-                      <div className="p-6 border-b-2 border-maximally-red">
+                    <div className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-purple-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-[10000] backdrop-blur-sm">
+                      <div className="p-6 border-b border-purple-500/30">
                         <div className="flex items-center justify-between">
-                          <h2 className="font-press-start text-xl text-maximally-red">REGISTER</h2>
-                          <button onClick={() => setShowRegisterModal(false)} className="text-gray-400 hover:text-white">
-                            <X className="h-6 w-6" />
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-500/20 border border-purple-500/40">
+                              <UserPlus className="h-5 w-5 text-purple-400" />
+                            </div>
+                            <h2 className="font-press-start text-xl text-white">REGISTER</h2>
+                          </div>
+                          <button onClick={() => setShowRegisterModal(false)} className="p-2 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
+                            <X className="h-5 w-5" />
                           </button>
                         </div>
                       </div>
@@ -455,20 +494,27 @@ export default function HackathonRegistration({
                         {/* Registration Type */}
                         {teamsAllowed && (
                           <div>
-                            <label className="font-press-start text-sm text-maximally-yellow mb-3 block">REGISTRATION_TYPE</label>
+                            <label className="font-press-start text-[10px] text-purple-300 mb-3 block flex items-center gap-2">
+                              <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                              REGISTRATION_TYPE
+                            </label>
                             <div className="grid grid-cols-2 gap-4">
                               <button
                                 onClick={() => setRegistrationType('individual')}
-                                className={`pixel-button py-4 font-press-start text-sm ${
-                                  registrationType === 'individual' ? 'bg-maximally-red text-white' : 'bg-gray-800 text-gray-400'
+                                className={`py-4 font-press-start text-sm transition-all duration-300 ${
+                                  registrationType === 'individual' 
+                                    ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200' 
+                                    : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
                                 }`}
                               >
                                 SOLO
                               </button>
                               <button
                                 onClick={() => setRegistrationType('team')}
-                                className={`pixel-button py-4 font-press-start text-sm ${
-                                  registrationType === 'team' ? 'bg-maximally-red text-white' : 'bg-gray-800 text-gray-400'
+                                className={`py-4 font-press-start text-sm transition-all duration-300 ${
+                                  registrationType === 'team' 
+                                    ? 'bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 text-cyan-200' 
+                                    : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
                                 }`}
                               >
                                 TEAM
@@ -484,7 +530,7 @@ export default function HackathonRegistration({
                             type="tel"
                             value={formData.phone_number}
                             onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                            className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
                             placeholder="+91 1234567890"
                           />
                         </div>
@@ -495,7 +541,7 @@ export default function HackathonRegistration({
                             type="text"
                             value={formData.college_university}
                             onChange={(e) => setFormData({ ...formData, college_university: e.target.value })}
-                            className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
                           />
                         </div>
 
@@ -505,7 +551,7 @@ export default function HackathonRegistration({
                             type="url"
                             value={formData.github_url}
                             onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
-                            className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
                             placeholder="https://github.com/username"
                           />
                         </div>
@@ -516,7 +562,7 @@ export default function HackathonRegistration({
                             type="url"
                             value={formData.linkedin_url}
                             onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-                            className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
                             placeholder="https://linkedin.com/in/username"
                           />
                         </div>
@@ -526,7 +572,7 @@ export default function HackathonRegistration({
                           <select
                             value={formData.experience_level}
                             onChange={(e) => setFormData({ ...formData, experience_level: e.target.value })}
-                            className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
                           >
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
@@ -536,7 +582,7 @@ export default function HackathonRegistration({
 
                         <button
                           onClick={handleRegister}
-                          className="pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors w-full"
+                          className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
                         >
                           REGISTER
                         </button>

@@ -32,9 +32,9 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-black border-4 border-maximally-red max-w-md">
+      <AlertDialogContent className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-purple-500/50 max-w-md backdrop-blur-sm">
         <AlertDialogHeader>
-          <AlertDialogTitle className="font-press-start text-lg text-maximally-red">
+          <AlertDialogTitle className={`font-press-start text-lg ${variant === 'destructive' ? 'text-red-400' : 'text-purple-300'}`}>
             {title}
           </AlertDialogTitle>
           <AlertDialogDescription className="font-jetbrains text-sm text-gray-300 leading-relaxed">
@@ -42,15 +42,15 @@ export function ConfirmDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-2 sm:gap-3">
-          <AlertDialogCancel className="pixel-button bg-gray-700 text-white hover:bg-gray-600 font-press-start text-xs">
+          <AlertDialogCancel className="bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50 hover:text-white font-press-start text-xs transition-all duration-300">
             {cancelText}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            className={`pixel-button font-press-start text-xs ${
+            className={`font-press-start text-xs transition-all duration-300 ${
               variant === 'destructive'
-                ? 'bg-maximally-red text-white hover:bg-red-700'
-                : 'bg-maximally-yellow text-black hover:bg-maximally-yellow/90'
+                ? 'bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 text-red-200 hover:border-red-400 hover:text-white'
+                : 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400 hover:text-white'
             }`}
           >
             {confirmText}

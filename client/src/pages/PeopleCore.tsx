@@ -1,4 +1,4 @@
-import { Star, Users, Code, GraduationCap, Linkedin, Twitter, Github, Globe, Loader2, LucideIcon } from 'lucide-react';
+import { Star, Users, Code, GraduationCap, Loader2, LucideIcon, Sparkles } from 'lucide-react';
 import { FaLinkedin, FaTwitter, FaGithub, FaGlobe } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import SEO from '@/components/SEO';
@@ -21,9 +21,10 @@ interface TeamMember {
 }
 
 interface ColorTheme {
-  bg: string;
-  text: string;
+  gradient: string;
   border: string;
+  text: string;
+  iconBg: string;
 }
 
 interface TeamSectionProps {
@@ -39,7 +40,6 @@ const PeopleCore = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch people from database
   useEffect(() => {
     const fetchPeople = async () => {
       if (!supabase) {
@@ -54,10 +54,7 @@ const PeopleCore = () => {
           .select('*')
           .order('display_order', { ascending: true });
 
-        if (error) {
-          throw error;
-        }
-
+        if (error) throw error;
         setPeople(data || []);
       } catch (err: any) {
         setError(err.message || 'Failed to load team members');
@@ -69,7 +66,6 @@ const PeopleCore = () => {
     fetchPeople();
   }, []);
 
-  // Helper function to get people by category
   const getPeopleByCategory = (category: TeamMember['category']): TeamMember[] => {
     return people.filter(person => person.category === category)
                  .sort((a, b) => a.display_order - b.display_order);
@@ -81,18 +77,14 @@ const PeopleCore = () => {
   const alumni = getPeopleByCategory('alumni');
 
   const TeamSection = ({ title, members, icon: Icon, colorTheme, emptyMessage }: TeamSectionProps) => (
-    <section className="mb-16">
-      <div className="text-center mb-8">
-        <div className={`minecraft-block ${colorTheme.bg} text-black px-6 py-3 inline-block mb-4`}>
-          <span className="font-press-start text-sm flex items-center gap-2">
-            <Icon className="h-4 w-4" />
-            {title.toUpperCase()}
-          </span>
+    <section className="mb-20">
+      <div className="text-center mb-10">
+        <div className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${colorTheme.gradient} border ${colorTheme.border} mb-6`}>
+          <Icon className={`h-5 w-5 ${colorTheme.text}`} />
+          <span className={`font-press-start text-xs ${colorTheme.text}`}>{title.toUpperCase()}</span>
         </div>
-        <h2 className="font-press-start text-2xl md:text-4xl mb-4 minecraft-text">
-          <span className={`${colorTheme.text} drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]`}>
-            {title}
-          </span>
+        <h2 className={`font-press-start text-2xl md:text-3xl bg-gradient-to-r ${colorTheme.text === 'text-red-400' ? 'from-red-400 to-orange-400' : colorTheme.text === 'text-amber-400' ? 'from-amber-400 to-yellow-400' : colorTheme.text === 'text-green-400' ? 'from-green-400 to-emerald-400' : 'from-blue-400 to-cyan-400'} bg-clip-text text-transparent`}>
+          {title}
         </h2>
       </div>
       
@@ -101,44 +93,42 @@ const PeopleCore = () => {
           {members.map((member) => (
             <div 
               key={member.id} 
-              className={`pixel-card bg-black border-2 ${colorTheme.border} p-6 hover:scale-105 transition-all duration-300 hover:border-maximally-yellow`}
+              className={`bg-gradient-to-br ${colorTheme.gradient} border ${colorTheme.border} p-6 hover:scale-[1.02] transition-all`}
             >
-              <div className={`minecraft-block ${colorTheme.bg} w-12 h-12 mx-auto mb-4 flex items-center justify-center`}>
-                <Icon className="h-6 w-6 text-black" />
+              <div className={`${colorTheme.iconBg} w-14 h-14 mx-auto mb-4 flex items-center justify-center border ${colorTheme.border}`}>
+                <Icon className={`h-7 w-7 ${colorTheme.text}`} />
               </div>
               
               <h3 className="font-press-start text-sm mb-2 text-center text-white">
                 {member.name}
               </h3>
               
-              <p className="font-jetbrains text-xs text-gray-300 text-center mb-1">
+              <p className="font-jetbrains text-xs text-gray-400 text-center mb-1">
                 {member.role_in_company}
               </p>
               
               {member.company && (
-                <p className="font-jetbrains text-xs font-bold text-white text-center mb-3">
+                <p className={`font-jetbrains text-xs font-bold ${colorTheme.text} text-center mb-3`}>
                   {member.company}
                 </p>
               )}
               
               {member.description && (
-                <p className="font-jetbrains text-xs text-gray-300 text-center italic mb-4">
+                <p className="font-jetbrains text-xs text-gray-400 text-center italic mb-4 line-clamp-3">
                   "{member.description}"
                 </p>
               )}
               
-              {/* Social Media Links */}
               {(member.linkedin_url || member.twitter_url || member.github_url || member.website_url) && (
-                <div className="flex justify-center gap-2 mt-4">
+                <div className="flex justify-center gap-3 mt-4">
                   {member.linkedin_url && (
                     <a
                       href={member.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-8 h-8 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
-                      title="LinkedIn"
+                      className="w-8 h-8 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/50 flex items-center justify-center transition-all"
                     >
-                      <FaLinkedin className="w-4 h-4 text-white" />
+                      <FaLinkedin className="w-4 h-4 text-blue-400" />
                     </a>
                   )}
                   {member.twitter_url && (
@@ -146,10 +136,9 @@ const PeopleCore = () => {
                       href={member.twitter_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-8 h-8 bg-sky-500 hover:bg-sky-600 rounded-full flex items-center justify-center transition-colors duration-200"
-                      title="Twitter"
+                      className="w-8 h-8 bg-cyan-600/30 hover:bg-cyan-600/50 border border-cyan-500/50 flex items-center justify-center transition-all"
                     >
-                      <FaTwitter className="w-4 h-4 text-white" />
+                      <FaTwitter className="w-4 h-4 text-cyan-400" />
                     </a>
                   )}
                   {member.github_url && (
@@ -157,10 +146,9 @@ const PeopleCore = () => {
                       href={member.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors duration-200"
-                      title="GitHub"
+                      className="w-8 h-8 bg-gray-600/30 hover:bg-gray-600/50 border border-gray-500/50 flex items-center justify-center transition-all"
                     >
-                      <FaGithub className="w-4 h-4 text-white" />
+                      <FaGithub className="w-4 h-4 text-gray-400" />
                     </a>
                   )}
                   {member.website_url && (
@@ -168,10 +156,9 @@ const PeopleCore = () => {
                       href={member.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-8 h-8 bg-green-600 hover:bg-green-700 rounded-full flex items-center justify-center transition-colors duration-200"
-                      title="Website"
+                      className="w-8 h-8 bg-green-600/30 hover:bg-green-600/50 border border-green-500/50 flex items-center justify-center transition-all"
                     >
-                      <FaGlobe className="w-4 h-4 text-white" />
+                      <FaGlobe className="w-4 h-4 text-green-400" />
                     </a>
                   )}
                 </div>
@@ -181,8 +168,8 @@ const PeopleCore = () => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <div className="minecraft-block bg-gray-700 text-gray-300 px-6 py-4 inline-block">
-            <span className="font-jetbrains text-sm">{emptyMessage}</span>
+          <div className={`bg-gradient-to-br ${colorTheme.gradient} border ${colorTheme.border} px-8 py-6 inline-block`}>
+            <p className="font-jetbrains text-sm text-gray-400">{emptyMessage}</p>
           </div>
         </div>
       )}
@@ -197,57 +184,51 @@ const PeopleCore = () => {
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        {/* Pixel Grid Background */}
-        <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        {/* Background Effects */}
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(239,68,68,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(239,68,68,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(239,68,68,0.15)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(251,191,36,0.10)_0%,transparent_50%)]" />
         
-        {/* Floating Pixels */}
-        {Array.from({ length: 12 }, (_, i) => (
-          <div
-            key={i}
-            className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.3}s`,
-              animationDuration: `${3 + i}s`,
-            }}
-          />
-        ))}
+        {/* Glowing Orbs */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-red-500/15 blur-[100px] rounded-full animate-pulse" />
+        <div className="absolute bottom-40 right-20 w-80 h-80 bg-amber-500/12 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 left-1/3 w-56 h-56 bg-orange-500/10 blur-[80px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
 
         <main className="min-h-screen pt-24 pb-16 px-4 relative z-10">
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
             <section className="text-center mb-16">
-              <div className="minecraft-block bg-maximally-red text-black px-6 py-3 inline-block mb-8">
-                <span className="font-press-start text-sm">⚡ THE CORE TEAM</span>
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600/30 to-orange-600/20 border border-red-500/40 mb-8">
+                <Star className="h-5 w-5 text-red-400" />
+                <span className="font-press-start text-xs text-red-300">THE BUILDERS</span>
+                <Sparkles className="h-5 w-5 text-orange-400" />
               </div>
-              <h1 className="font-press-start text-4xl md:text-6xl lg:text-8xl mb-8 minecraft-text">
-                <span className="text-maximally-red drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+              
+              <h1 className="font-press-start text-4xl md:text-5xl lg:text-6xl mb-8">
+                <span className="bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
                   CORE TEAM
                 </span>
               </h1>
+              
               <p className="text-gray-300 text-lg md:text-xl font-jetbrains max-w-4xl mx-auto leading-relaxed mb-8">
-                The builders, mentors, and organizers making Maximally the world's premier hackathon league.
+                The builders, mentors, and organizers making Maximally 
+                <span className="text-red-400 font-bold"> the world's premier hackathon league.</span>
               </p>
               
-              {/* Back to People Button */}
               <Link
                 to="/people"
-                className="inline-block minecraft-block bg-maximally-yellow text-black px-4 py-2 hover:bg-maximally-red transition-colors"
+                className="inline-block bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-6 py-3 font-press-start text-xs border border-red-500/50 transition-all hover:scale-[1.02]"
               >
-                <span className="font-press-start text-xs">← BACK TO PEOPLE</span>
+                ← BACK TO PEOPLE
               </Link>
             </section>
 
             {/* Loading State */}
             {loading && (
               <div className="text-center py-16">
-                <div className="minecraft-block bg-maximally-red text-white px-6 py-4 inline-block mb-4">
-                  <span className="font-press-start text-sm flex items-center gap-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    LOADING TEAM DATA
-                  </span>
+                <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 border border-red-500/40 px-8 py-6 inline-block mb-4">
+                  <Loader2 className="h-8 w-8 text-red-400 animate-spin mx-auto mb-4" />
+                  <span className="font-press-start text-sm text-red-300">LOADING TEAM DATA</span>
                 </div>
                 <p className="text-gray-400 font-jetbrains">Fetching our amazing team members...</p>
               </div>
@@ -256,20 +237,20 @@ const PeopleCore = () => {
             {/* Error State */}
             {error && !loading && (
               <div className="text-center py-16">
-                <div className="minecraft-block bg-red-600 text-white px-6 py-4 inline-block mb-4">
-                  <span className="font-press-start text-sm">ERROR LOADING TEAM</span>
+                <div className="bg-gradient-to-br from-red-900/30 to-rose-900/20 border border-red-500/40 px-8 py-6 inline-block mb-4">
+                  <span className="font-press-start text-sm text-red-400">ERROR LOADING TEAM</span>
                 </div>
-                <p className="text-red-400 font-jetbrains mb-4">{error}</p>
+                <p className="text-red-400 font-jetbrains mb-6">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="minecraft-block bg-maximally-red text-white px-4 py-2 hover:bg-red-700 transition-colors"
+                  className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-6 py-3 font-press-start text-xs border border-red-500/50 transition-all"
                 >
-                  <span className="font-press-start text-xs">RETRY</span>
+                  RETRY
                 </button>
               </div>
             )}
 
-            {/* Team Sections - Only show when data is loaded */}
+            {/* Team Sections */}
             {!loading && !error && (
               <>
                 <TeamSection
@@ -277,9 +258,10 @@ const PeopleCore = () => {
                   members={advisors}
                   icon={Star}
                   colorTheme={{
-                    bg: "bg-maximally-red",
-                    text: "text-maximally-red", 
-                    border: "border-maximally-red"
+                    gradient: "from-red-900/30 to-orange-900/20",
+                    border: "border-red-500/40",
+                    text: "text-red-400",
+                    iconBg: "bg-red-600/30"
                   }}
                   emptyMessage="Our amazing advisors guide our strategic direction."
                 />
@@ -289,9 +271,10 @@ const PeopleCore = () => {
                   members={organizingBoard}
                   icon={Users}
                   colorTheme={{
-                    bg: "bg-maximally-yellow",
-                    text: "text-maximally-yellow",
-                    border: "border-maximally-yellow"
+                    gradient: "from-amber-900/30 to-yellow-900/20",
+                    border: "border-amber-500/40",
+                    text: "text-amber-400",
+                    iconBg: "bg-amber-600/30"
                   }}
                   emptyMessage="The leadership team driving Maximally forward."
                 />
@@ -301,9 +284,10 @@ const PeopleCore = () => {
                   members={developers}
                   icon={Code}
                   colorTheme={{
-                    bg: "bg-green-500",
-                    text: "text-green-500",
-                    border: "border-green-500"
+                    gradient: "from-green-900/30 to-emerald-900/20",
+                    border: "border-green-500/40",
+                    text: "text-green-400",
+                    iconBg: "bg-green-600/30"
                   }}
                   emptyMessage="The technical team building our platform."
                 />
@@ -313,9 +297,10 @@ const PeopleCore = () => {
                   members={alumni}
                   icon={GraduationCap}
                   colorTheme={{
-                    bg: "bg-blue-500",
-                    text: "text-blue-500",
-                    border: "border-blue-500"
+                    gradient: "from-blue-900/30 to-cyan-900/20",
+                    border: "border-blue-500/40",
+                    text: "text-blue-400",
+                    iconBg: "bg-blue-600/30"
                   }}
                   emptyMessage="Past core members who helped build our foundation."
                 />

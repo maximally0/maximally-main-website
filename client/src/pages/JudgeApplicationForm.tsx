@@ -200,8 +200,6 @@ const JudgeApplicationForm = () => {
         ),
       };
 
-      console.log('Submitting judge application:', submitData);
-
       await apiRequest('/api/judges/apply', {
         method: 'POST',
         body: JSON.stringify(submitData),
@@ -236,12 +234,12 @@ const JudgeApplicationForm = () => {
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
         
         {Array.from({ length: 8 }, (_, i) => (
           <div
             key={i}
-            className="fixed w-2 h-2 bg-maximally-yellow pixel-border animate-float pointer-events-none"
+            className="fixed w-2 h-2 bg-gradient-to-r from-purple-600 to-pink-600 pixel-border animate-float pointer-events-none"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -255,7 +253,7 @@ const JudgeApplicationForm = () => {
           <div className="max-w-5xl mx-auto">
             <Link
               to="/people/judges"
-              className="minecraft-block bg-cyan-400 text-black px-4 py-2 hover:bg-maximally-yellow transition-colors mb-8 flex items-center gap-2 inline-flex"
+              className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400 px-4 py-2 transition-colors mb-8 flex items-center gap-2 inline-flex"
               data-testid="link-back-to-judges"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -263,11 +261,11 @@ const JudgeApplicationForm = () => {
             </Link>
 
             <section className="text-center mb-12">
-              <div className="minecraft-block bg-maximally-yellow text-black px-6 py-3 inline-block mb-8">
+              <div className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 px-6 py-3 inline-block mb-8">
                 <span className="font-press-start text-sm">⚡ JOIN THE ELITE</span>
               </div>
               <h1 className="font-press-start text-4xl md:text-6xl mb-8 minecraft-text">
-                <span className="text-cyan-400 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                <span className="text-pink-400 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                   JUDGE APPLICATION
                 </span>
               </h1>
@@ -292,10 +290,10 @@ const JudgeApplicationForm = () => {
                 <button
                   type="button"
                   onClick={() => setFormSection('public')}
-                  className={`minecraft-block px-6 py-3 transition-colors ${
+                  className={`px-6 py-3 transition-colors ${
                     formSection === 'public'
-                      ? 'bg-cyan-400 text-black'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
                   }`}
                   data-testid="button-toggle-public"
                 >
@@ -304,10 +302,10 @@ const JudgeApplicationForm = () => {
                 <button
                   type="button"
                   onClick={() => setFormSection('private')}
-                  className={`minecraft-block px-6 py-3 transition-colors ${
+                  className={`px-6 py-3 transition-colors ${
                     formSection === 'private'
-                      ? 'bg-cyan-400 text-black'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
                   }`}
                   data-testid="button-toggle-private"
                 >
@@ -316,20 +314,20 @@ const JudgeApplicationForm = () => {
               </div>
             </section>
 
-            <section className="pixel-card bg-gray-900 border-2 border-cyan-400 p-8 mb-8">
+            <section className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8 mb-8">
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 {formSection === 'public' && (
                   <div className="space-y-6">
-                    <h2 className="font-press-start text-2xl mb-6 text-cyan-400">PUBLIC PROFILE</h2>
+                    <h2 className="font-press-start text-2xl mb-6 text-pink-400">PUBLIC PROFILE</h2>
                     <p className="font-jetbrains text-gray-400 text-sm mb-6">This information will be visible on your public judge profile.</p>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">FULL NAME *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">FULL NAME *</label>
                       <input
                         {...form.register('fullName')}
                         type="text"
                         placeholder="John Doe"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-full-name"
                       />
                       {form.formState.errors.fullName && (
@@ -339,12 +337,12 @@ const JudgeApplicationForm = () => {
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <label className="font-press-start text-xs text-cyan-400 mb-2 block">CURRENT ROLE *</label>
+                        <label className="font-press-start text-xs text-pink-400 mb-2 block">CURRENT ROLE *</label>
                         <input
                           {...form.register('currentRole')}
                           type="text"
                           placeholder="Senior Software Engineer"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                           data-testid="input-current-role"
                         />
                         {form.formState.errors.currentRole && (
@@ -352,12 +350,12 @@ const JudgeApplicationForm = () => {
                         )}
                       </div>
                       <div>
-                        <label className="font-press-start text-xs text-cyan-400 mb-2 block">COMPANY *</label>
+                        <label className="font-press-start text-xs text-pink-400 mb-2 block">COMPANY *</label>
                         <input
                           {...form.register('company')}
                           type="text"
                           placeholder="Google"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                           data-testid="input-company"
                         />
                         {form.formState.errors.company && (
@@ -367,12 +365,12 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">LOCATION *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">LOCATION *</label>
                       <input
                         {...form.register('location')}
                         type="text"
                         placeholder="San Francisco, USA"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-location"
                       />
                       {form.formState.errors.location && (
@@ -381,12 +379,12 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">SHORT BIO *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">SHORT BIO *</label>
                       <textarea
                         {...form.register('shortBio')}
                         rows={4}
                         placeholder="Tell us about yourself, your experience, and why you want to judge hackathons..."
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors resize-none"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors resize-none"
                         data-testid="textarea-short-bio"
                       />
                       {form.formState.errors.shortBio && (
@@ -395,10 +393,10 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">PRIMARY EXPERTISE * (Select 1-3)</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">PRIMARY EXPERTISE * (Select 1-3)</label>
                       <div className="grid md:grid-cols-3 gap-2">
                         {expertiseAreas.slice(0, 9).map((area) => (
-                          <label key={area} className="flex items-center gap-2 cursor-pointer pixel-card bg-gray-800 border border-gray-600 p-3 hover:border-cyan-400 transition-colors">
+                          <label key={area} className="flex items-center gap-2 cursor-pointer pixel-card bg-gray-800 border border-gray-600 p-3 hover:border-purple-500/40 transition-colors">
                             <input
                               type="checkbox"
                               value={area}
@@ -434,14 +432,14 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">YEARS OF EXPERIENCE *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">YEARS OF EXPERIENCE *</label>
                       <input
                         {...form.register('yearsOfExperience', { valueAsNumber: true })}
                         type="number"
                         min="0"
                         max="50"
                         placeholder="5"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-years-of-experience"
                       />
                       {form.formState.errors.yearsOfExperience && (
@@ -450,12 +448,12 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">LINKEDIN URL *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">LINKEDIN URL *</label>
                       <input
                         {...form.register('linkedin')}
                         type="url"
                         placeholder="https://linkedin.com/in/yourusername"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-linkedin"
                       />
                       {form.formState.errors.linkedin && (
@@ -498,7 +496,7 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">LANGUAGES SPOKEN *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">LANGUAGES SPOKEN *</label>
                       <input
                         type="text"
                         value={languagesInput}
@@ -511,7 +509,7 @@ const JudgeApplicationForm = () => {
                           form.setValue('languagesSpoken', languagesArray, { shouldValidate: true });
                         }}
                         placeholder="English, Spanish, French"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-languages-spoken"
                       />
                       <p className="font-jetbrains text-gray-500 text-xs mt-1">Separate multiple languages with commas</p>
@@ -521,12 +519,12 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">PUBLIC ACHIEVEMENTS *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">PUBLIC ACHIEVEMENTS *</label>
                       <textarea
                         {...form.register('publicAchievements')}
                         rows={3}
                         placeholder="Notable awards, publications, talks, open-source contributions..."
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors resize-none"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors resize-none"
                         data-testid="textarea-public-achievements"
                       />
                       {form.formState.errors.publicAchievements && (
@@ -535,12 +533,12 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">MENTORSHIP PHILOSOPHY *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">MENTORSHIP PHILOSOPHY *</label>
                       <textarea
                         {...form.register('mentorshipStatement')}
                         rows={3}
                         placeholder="Share your philosophy on mentoring and evaluating young builders..."
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors resize-none"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors resize-none"
                         data-testid="textarea-mentorship-statement"
                       />
                       {form.formState.errors.mentorshipStatement && (
@@ -549,12 +547,12 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">TOP EVENTS JUDGED (Optional)</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">TOP EVENTS JUDGED (Optional)</label>
                       <div className="space-y-4">
                         {topEventsJudged.map((event, index) => (
                           <div key={index} className="pixel-card bg-gray-800 border border-gray-600 p-4">
                             <div className="flex justify-between items-center mb-3">
-                              <span className="font-press-start text-xs text-cyan-400">EVENT {index + 1}</span>
+                              <span className="font-press-start text-xs text-pink-400">EVENT {index + 1}</span>
                               <button
                                 type="button"
                                 onClick={() => removeEvent(index)}
@@ -570,7 +568,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Event Name"
                                 value={event.eventName}
                                 onChange={(e) => updateEvent(index, 'eventName', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-cyan-400 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
                                 data-testid={`input-event-name-${index}`}
                               />
                               <input
@@ -578,7 +576,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Your Role"
                                 value={event.role}
                                 onChange={(e) => updateEvent(index, 'role', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-cyan-400 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
                                 data-testid={`input-event-role-${index}`}
                               />
                               <input
@@ -586,7 +584,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Date (e.g., March 2024)"
                                 value={event.date}
                                 onChange={(e) => updateEvent(index, 'date', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-cyan-400 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
                                 data-testid={`input-event-date-${index}`}
                               />
                               <input
@@ -594,7 +592,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Link (optional)"
                                 value={event.link || ''}
                                 onChange={(e) => updateEvent(index, 'link', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-cyan-400 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
                                 data-testid={`input-event-link-${index}`}
                               />
                             </div>
@@ -616,16 +614,16 @@ const JudgeApplicationForm = () => {
 
                 {formSection === 'private' && (
                   <div className="space-y-6">
-                    <h2 className="font-press-start text-2xl mb-6 text-cyan-400">PRIVATE INFORMATION</h2>
+                    <h2 className="font-press-start text-2xl mb-6 text-pink-400">PRIVATE INFORMATION</h2>
                     <p className="font-jetbrains text-gray-400 text-sm mb-6">This information is kept confidential and used only for verification and communication.</p>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">EMAIL ADDRESS *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">EMAIL ADDRESS *</label>
                       <input
                         {...form.register('email')}
                         type="email"
                         placeholder="john@example.com"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-email"
                       />
                       {form.formState.errors.email && (
@@ -634,32 +632,32 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">PHONE NUMBER</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">PHONE NUMBER</label>
                       <input
                         {...form.register('phone')}
                         type="tel"
                         placeholder="+1 234 567 8900"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-phone"
                       />
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">TIMEZONE</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">TIMEZONE</label>
                       <input
                         {...form.register('timezone')}
                         type="text"
                         placeholder="America/New_York or PST"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="input-timezone"
                       />
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">AVAILABILITY STATUS *</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">AVAILABILITY STATUS *</label>
                       <select
                         {...form.register('availabilityStatus')}
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="select-availability-status"
                       >
                         <option value="available">Available - Ready to judge regularly</option>
@@ -672,10 +670,10 @@ const JudgeApplicationForm = () => {
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">COMPENSATION PREFERENCE</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">COMPENSATION PREFERENCE</label>
                       <select
                         {...form.register('compensationPreference')}
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
                         data-testid="select-compensation-preference"
                       >
                         <option value="volunteer">Volunteer - I judge for free</option>
@@ -767,7 +765,7 @@ const JudgeApplicationForm = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="minecraft-block bg-maximally-yellow text-black px-6 py-3 hover:bg-yellow-400 transition-colors flex-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 transition-colors flex-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         data-testid="button-submit-application"
                       >
                         {isSubmitting ? (

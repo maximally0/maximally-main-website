@@ -180,8 +180,6 @@ const handler: Handler = async (event: HandlerEvent, context: HandlerContext) =>
   const path = event.path.replace('/.netlify/functions/judges', '').replace('/api/judges', '');
   const username = path.replace(/^\//, '');
 
-  console.log('Path:', event.path, 'Username:', username);
-
   if (!username) {
     // List all judges
     const { data: judges, error } = await supabase

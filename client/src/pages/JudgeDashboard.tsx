@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
   Award, 
@@ -403,20 +403,20 @@ const JudgeDashboard = () => {
                 {/* Stats skeleton */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {[1, 2, 3, 4].map(i => (
-                    <div key={i} className="minecraft-block bg-gray-900/50 border-2 border-gray-800 p-6">
-                      <div className="h-8 w-8 bg-gray-800 rounded mb-4"></div>
-                      <div className="h-8 w-16 bg-gray-800 rounded mb-2"></div>
-                      <div className="h-4 w-24 bg-gray-800 rounded"></div>
+                    <div key={i} className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/30 p-6">
+                      <div className="h-8 w-8 bg-gray-800 mb-4"></div>
+                      <div className="h-8 w-16 bg-gray-800 mb-2"></div>
+                      <div className="h-4 w-24 bg-gray-800"></div>
                     </div>
                   ))}
                 </div>
 
                 {/* Content skeleton */}
-                <div className="minecraft-block bg-gray-900/50 border-2 border-gray-800 p-6">
-                  <div className="h-6 w-48 bg-gray-800 rounded mb-6"></div>
+                <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-6">
+                  <div className="h-6 w-48 bg-gray-800 mb-6"></div>
                   <div className="space-y-4">
                     {[1, 2, 3].map(i => (
-                      <div key={i} className="h-24 bg-gray-800 rounded"></div>
+                      <div key={i} className="h-24 bg-gray-800"></div>
                     ))}
                   </div>
                 </div>
@@ -445,13 +445,13 @@ const JudgeDashboard = () => {
                   window.location.reload();
                 }, 1000);
               }}
-              className="pixel-button bg-maximally-yellow text-maximally-black px-6 py-2 font-press-start text-sm"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-2 font-press-start text-sm border border-pink-500/50 transition-all"
             >
               Refresh Profile & Retry
             </button>
             <button 
               onClick={() => navigate('/')}
-              className="pixel-button bg-cyan-600 text-white px-6 py-2 font-press-start text-sm"
+              className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-2 font-press-start text-sm border border-cyan-500/50 transition-all"
             >
               Go Home
             </button>
@@ -472,14 +472,15 @@ const JudgeDashboard = () => {
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
 
         <main className="relative z-10 pt-24">
           {/* Header */}
           <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
               <div>
-                <h1 className="font-press-start text-2xl md:text-3xl text-cyan-400 mb-2">
+                <h1 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
                   JUDGE DASHBOARD
                 </h1>
                 <p className="font-jetbrains text-gray-300">
@@ -488,14 +489,14 @@ const JudgeDashboard = () => {
               </div>
               
               <div className="flex items-center gap-4">
-                <div className={`minecraft-block border-2 ${tierInfo.color} px-4 py-2 flex items-center gap-2`}>
+                <div className={`border-2 ${tierInfo.color} px-4 py-2 flex items-center gap-2 bg-black/50`}>
                   {tierInfo.icon}
                   <span className="font-press-start text-xs">{tierInfo.label}</span>
                 </div>
                 
                 <button
                   onClick={handleLogout}
-                  className="pixel-button bg-red-600 text-white px-4 py-2 font-press-start text-xs hover:bg-red-700 flex items-center gap-2"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-pink-500/50 transition-all"
                 >
                   <LogOut className="h-4 w-4" />
                   LOGOUT
@@ -515,10 +516,10 @@ const JudgeDashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`pixel-button px-4 py-2 font-press-start text-xs flex items-center gap-2 ${
+                  className={`px-4 py-2 font-press-start text-xs flex items-center gap-2 transition-all ${
                     activeTab === tab.id 
-                      ? 'bg-cyan-600 text-white' 
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border border-pink-500/50' 
+                      : 'bg-gray-900 text-gray-400 hover:text-pink-400 border border-gray-700 hover:border-pink-500/50'
                   }`}
                 >
                   {tab.icon}
@@ -529,12 +530,12 @@ const JudgeDashboard = () => {
               {/* Inbox Button with Badge */}
               <button
                 onClick={() => navigate('/judge-inbox')}
-                className="pixel-button px-4 py-2 font-press-start text-xs flex items-center gap-2 bg-gray-800 text-gray-300 hover:bg-gray-700 relative"
+                className="px-4 py-2 font-press-start text-xs flex items-center gap-2 bg-gray-900 text-gray-400 hover:text-pink-400 border border-gray-700 hover:border-pink-500/50 relative transition-all"
               >
                 <Mail className="h-4 w-4" />
                 INBOX
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-maximally-red text-maximally-yellow text-xs font-press-start px-2 py-0.5 rounded-sm">
+                  <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs font-press-start px-2 py-0.5">
                     {unreadCount > 99 ? '99+' : unreadCount}
                   </span>
                 )}
@@ -546,45 +547,45 @@ const JudgeDashboard = () => {
               <div className="space-y-8">
                 {/* Stats Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="minecraft-block bg-gray-900/50 border-2 border-cyan-400 p-6">
+                  <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 hover:border-pink-400 transition-all">
                     <div className="flex items-center justify-between mb-4">
-                      <Award className="h-8 w-8 text-cyan-400" />
+                      <Award className="h-8 w-8 text-purple-400" />
                       {judgeProfile.eventsJudgedVerified && <CheckCircle2 className="h-5 w-5 text-green-400" />}
                     </div>
-                    <div className="font-press-start text-2xl text-cyan-400 mb-2">
+                    <div className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
                       {judgeProfile.totalEventsJudged + assignedHackathons.length}
                     </div>
                     <div className="font-jetbrains text-gray-300 text-sm">Events Judged</div>
                   </div>
 
-                  <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-yellow p-6">
+                  <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/20 border border-pink-500/40 p-6 hover:border-purple-400 transition-all">
                     <div className="flex items-center justify-between mb-4">
-                      <Users className="h-8 w-8 text-maximally-yellow" />
+                      <Users className="h-8 w-8 text-pink-400" />
                       {judgeProfile.teamsEvaluatedVerified && <CheckCircle2 className="h-5 w-5 text-green-400" />}
                     </div>
-                    <div className="font-press-start text-2xl text-maximally-yellow mb-2">
+                    <div className="font-press-start text-2xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
                       {judgeProfile.totalTeamsEvaluated}
                     </div>
                     <div className="font-jetbrains text-gray-300 text-sm">Teams Evaluated</div>
                   </div>
 
-                  <div className="minecraft-block bg-gray-900/50 border-2 border-maximally-red p-6">
+                  <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 hover:border-pink-400 transition-all">
                     <div className="flex items-center justify-between mb-4">
-                      <Clock className="h-8 w-8 text-maximally-red" />
+                      <Clock className="h-8 w-8 text-purple-400" />
                       {judgeProfile.mentorshipHoursVerified && <CheckCircle2 className="h-5 w-5 text-green-400" />}
                     </div>
-                    <div className="font-press-start text-2xl text-maximally-red mb-2">
+                    <div className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
                       {judgeProfile.totalMentorshipHours}
                     </div>
                     <div className="font-jetbrains text-gray-300 text-sm">Mentorship Hours</div>
                   </div>
 
-                  <div className="minecraft-block bg-gray-900/50 border-2 border-green-400 p-6">
+                  <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/20 border border-pink-500/40 p-6 hover:border-purple-400 transition-all">
                     <div className="flex items-center justify-between mb-4">
-                      <Star className="h-8 w-8 text-green-400" />
+                      <Star className="h-8 w-8 text-pink-400" />
                       <TrendingUp className="h-5 w-5 text-green-400" />
                     </div>
-                    <div className="font-press-start text-2xl text-green-400 mb-2">
+                    <div className="font-press-start text-2xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
                       {judgeProfile.averageFeedbackRating?.toFixed(1) || 'N/A'}
                     </div>
                     <div className="font-jetbrains text-gray-300 text-sm">Avg Rating</div>
@@ -592,12 +593,12 @@ const JudgeDashboard = () => {
                 </div>
 
                 {/* Recent Events */}
-                <div className="minecraft-block bg-gray-900/50 border-2 border-cyan-400 p-6">
+                <div className="bg-black/60 border border-pink-500/40 p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-press-start text-xl text-cyan-400">RECENT EVENTS</h2>
+                    <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">RECENT EVENTS</h2>
                     <button
                       onClick={handleAddEvent}
-                      className="pixel-button bg-maximally-yellow text-maximally-black px-4 py-2 font-press-start text-xs flex items-center gap-2 hover:scale-105 transition-transform"
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-pink-500/50 transition-all"
                     >
                       <Plus className="h-4 w-4" />
                       ADD EVENT
@@ -607,14 +608,14 @@ const JudgeDashboard = () => {
                   <div className="space-y-4">
                     {/* Show assigned hackathons first */}
                     {assignedHackathons.slice(0, 3).map((hackathon) => (
-                      <div key={`hackathon-${hackathon.id}`} className="minecraft-block bg-gray-800 border-2 border-maximally-yellow p-4 hover:border-cyan-400 transition-colors">
+                      <div key={`hackathon-${hackathon.id}`} className="bg-gradient-to-br from-pink-900/20 to-purple-900/20 border border-pink-500/40 p-4 hover:border-pink-400 transition-colors">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
                             <h3 className="font-jetbrains text-white font-bold flex items-center gap-2 mb-1">
-                              <a href={`/judge/hackathons/${hackathon.id}/submissions`} className="hover:text-cyan-400 transition-colors">
+                              <a href={`/judge/hackathons/${hackathon.id}/submissions`} className="hover:text-pink-400 transition-colors">
                                 {hackathon.hackathon_name}
                               </a>
-                              <span className="px-2 py-0.5 text-xs bg-maximally-yellow/20 text-maximally-yellow border border-maximally-yellow font-press-start">
+                              <span className="px-2 py-0.5 text-xs bg-pink-500/20 text-pink-400 border border-pink-500/50 font-press-start">
                                 ACTIVE
                               </span>
                             </h3>
@@ -631,12 +632,12 @@ const JudgeDashboard = () => {
 
                     {/* Then show manual events */}
                     {judgeEvents.slice(0, Math.max(0, 3 - assignedHackathons.length)).map((event) => (
-                      <div key={event.id} className="minecraft-block bg-gray-800 border border-gray-600 p-4 hover:border-cyan-400 transition-colors">
+                      <div key={event.id} className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/40 p-4 hover:border-pink-400 transition-colors">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
                             <h3 className="font-jetbrains text-white font-bold flex items-center gap-2 mb-1">
                               {event.link ? (
-                                <a href={event.link} target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
+                                <a href={event.link} target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors">
                                   {event.eventName}
                                 </a>
                               ) : (
@@ -656,7 +657,7 @@ const JudgeDashboard = () => {
                     <div className="text-center mt-4">
                       <button
                         onClick={() => setActiveTab('events')}
-                        className="font-jetbrains text-cyan-400 hover:text-cyan-300 text-sm"
+                        className="font-jetbrains text-pink-400 hover:text-pink-300 text-sm"
                       >
                         View all {judgeEvents.length + assignedHackathons.length} events →
                       </button>
@@ -665,8 +666,8 @@ const JudgeDashboard = () => {
                 </div>
 
                 {/* Current Tier Status */}
-                <div className="minecraft-block bg-gray-900/50 border-2 border-purple-400 p-6">
-                  <h2 className="font-press-start text-xl text-purple-400 mb-6">CURRENT TIER</h2>
+                <div className="bg-black/60 border border-purple-500/40 p-6">
+                  <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">CURRENT TIER</h2>
                   
                   <div className="mb-6">
                     <div className="flex items-center gap-3 mb-2">
@@ -687,31 +688,40 @@ const JudgeDashboard = () => {
             {/* Events Tab */}
             {activeTab === 'events' && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-press-start text-xl text-cyan-400">ALL JUDGING EVENTS</h2>
-                  <button
-                    onClick={handleAddEvent}
-                    className="pixel-button bg-maximally-yellow text-maximally-black px-4 py-2 font-press-start text-xs flex items-center gap-2 hover:scale-105 transition-transform"
-                  >
-                    <Plus className="h-4 w-4" />
-                    ADD EVENT
-                  </button>
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">ALL JUDGING EVENTS</h2>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      to="/judge/hackathons"
+                      className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-cyan-500/50 transition-all"
+                    >
+                      <Trophy className="h-4 w-4" />
+                      VIEW ALL HACKATHONS
+                    </Link>
+                    <button
+                      onClick={handleAddEvent}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-pink-500/50 transition-all"
+                    >
+                      <Plus className="h-4 w-4" />
+                      ADD EVENT
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid gap-4">
                   {/* Show assigned hackathons */}
                   {assignedHackathons.length > 0 && (
                     <>
-                      <h3 className="font-press-start text-lg text-maximally-yellow mt-4">ASSIGNED HACKATHONS</h3>
+                      <h3 className="font-press-start text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mt-4">ASSIGNED HACKATHONS</h3>
                       {assignedHackathons.map((hackathon) => (
-                        <div key={`hackathon-${hackathon.id}`} className="minecraft-block bg-gray-800 border-2 border-maximally-yellow p-4 hover:border-cyan-400 transition-colors">
+                        <div key={`hackathon-${hackathon.id}`} className="bg-gradient-to-br from-pink-900/20 to-purple-900/20 border border-pink-500/40 p-4 hover:border-pink-400 transition-colors">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
                               <h3 className="font-jetbrains text-white font-bold flex items-center gap-2 mb-1">
-                                <a href={`/judge/hackathons/${hackathon.id}/submissions`} className="hover:text-cyan-400 transition-colors">
+                                <a href={`/judge/hackathons/${hackathon.id}/submissions`} className="hover:text-pink-400 transition-colors">
                                   {hackathon.hackathon_name}
                                 </a>
-                                <span className="px-2 py-0.5 text-xs bg-maximally-yellow/20 text-maximally-yellow border border-maximally-yellow font-press-start">
+                                <span className="px-2 py-0.5 text-xs bg-pink-500/20 text-pink-400 border border-pink-500/50 font-press-start">
                                   ACTIVE
                                 </span>
                               </h3>
@@ -720,7 +730,7 @@ const JudgeDashboard = () => {
                             <div className="flex items-center gap-2">
                               <a 
                                 href={`/judge/hackathons/${hackathon.id}/submissions`}
-                                className="pixel-button bg-maximally-red text-white px-3 py-2 text-xs hover:bg-maximally-yellow hover:text-black"
+                                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-3 py-2 text-xs font-press-start border border-pink-500/50 transition-all"
                               >
                                 VIEW SUBMISSIONS
                               </a>
@@ -741,14 +751,14 @@ const JudgeDashboard = () => {
                   {/* Show manual events */}
                   {judgeEvents.length > 0 && (
                     <>
-                      <h3 className="font-press-start text-lg text-cyan-400 mt-4">MANUAL EVENTS</h3>
+                      <h3 className="font-press-start text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mt-4">MANUAL EVENTS</h3>
                       {judgeEvents.map((event) => (
-                        <div key={event.id} className="minecraft-block bg-gray-800 border border-gray-600 p-4 hover:border-cyan-400 transition-colors">
+                        <div key={event.id} className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/40 p-4 hover:border-pink-400 transition-colors">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex-1">
                               <h3 className="font-jetbrains text-white font-bold flex items-center gap-2 mb-1">
                                 {event.link ? (
-                                  <a href={event.link} target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
+                                  <a href={event.link} target="_blank" rel="noopener noreferrer" className="hover:text-pink-400 transition-colors flex items-center gap-1">
                                     {event.eventName}
                                   </a>
                                 ) : (
@@ -765,7 +775,7 @@ const JudgeDashboard = () => {
                             <div className="flex items-center gap-2">
                               <button 
                                 onClick={() => handleEditEvent(event)}
-                                className="pixel-button bg-cyan-600 text-white px-3 py-2 text-xs hover:bg-cyan-700"
+                                className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-2 text-xs border border-purple-500/50 transition-all"
                               >
                                 <Edit3 className="h-3 w-3" />
                               </button>
@@ -783,11 +793,11 @@ const JudgeDashboard = () => {
             {/* Profile Tab */}
             {activeTab === 'profile' && (
               <div className="space-y-6">
-                <h2 className="font-press-start text-xl text-cyan-400">JUDGE PROFILE</h2>
+                <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">JUDGE PROFILE</h2>
                 
-                <div className="minecraft-block bg-gray-900/50 border-2 border-cyan-400 p-6">
+                <div className="bg-black/60 border border-pink-500/40 p-6">
                   <div className="flex items-start gap-6 mb-6">
-                    <div className="minecraft-block bg-gradient-to-br from-cyan-400 to-maximally-blue w-24 h-24 overflow-hidden">
+                    <div className="bg-gradient-to-br from-purple-600 to-pink-600 w-24 h-24 overflow-hidden border border-pink-500/50">
                       {judgeProfile.profilePhoto ? (
                         <img
                           src={judgeProfile.profilePhoto}
@@ -806,7 +816,7 @@ const JudgeDashboard = () => {
                       <h3 className="font-press-start text-xl text-white mb-2">{judgeProfile.fullName}</h3>
                       <p className="font-jetbrains text-gray-300 mb-2">{judgeProfile.headline}</p>
                       <p className="font-jetbrains text-gray-400 text-sm mb-4">{judgeProfile.location}</p>
-                      <div className={`inline-flex items-center gap-2 minecraft-block border ${tierInfo.color} px-3 py-1`}>
+                      <div className={`inline-flex items-center gap-2 border ${tierInfo.color} px-3 py-1 bg-black/50`}>
                         {tierInfo.icon}
                         <span className="font-press-start text-xs">{tierInfo.label}</span>
                       </div>
@@ -814,13 +824,13 @@ const JudgeDashboard = () => {
                     <div className="flex gap-2">
                       <button 
                         onClick={handleEditProfile}
-                        className="pixel-button bg-maximally-yellow text-maximally-black px-4 py-2 font-press-start text-xs hover:scale-105 transition-transform"
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs border border-pink-500/50 transition-all"
                       >
                         EDIT PROFILE
                       </button>
                       <button 
                         onClick={handleViewPublicProfile}
-                        className="pixel-button bg-cyan-600 text-white px-4 py-2 font-press-start text-xs hover:scale-105 transition-transform"
+                        className="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 font-press-start text-xs border border-purple-500/50 transition-all"
                       >
                         VIEW PUBLIC
                       </button>
@@ -829,12 +839,12 @@ const JudgeDashboard = () => {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <h4 className="font-press-start text-sm text-cyan-400 mb-3">PRIMARY EXPERTISE</h4>
+                      <h4 className="font-press-start text-sm text-pink-400 mb-3">PRIMARY EXPERTISE</h4>
                       <div className="flex flex-wrap gap-2">
                         {judgeProfile.primaryExpertise.map((skill, index) => (
                           <span
                             key={index}
-                            className="minecraft-block bg-maximally-red/20 border border-maximally-red text-maximally-red px-2 py-1 text-xs font-press-start"
+                            className="bg-pink-500/20 border border-pink-500/50 text-pink-300 px-2 py-1 text-xs font-press-start"
                           >
                             {skill}
                           </span>
@@ -843,12 +853,12 @@ const JudgeDashboard = () => {
                     </div>
 
                     <div>
-                      <h4 className="font-press-start text-sm text-cyan-400 mb-3">SECONDARY EXPERTISE</h4>
+                      <h4 className="font-press-start text-sm text-purple-400 mb-3">SECONDARY EXPERTISE</h4>
                       <div className="flex flex-wrap gap-2">
                         {judgeProfile.secondaryExpertise.map((skill, index) => (
                           <span
                             key={index}
-                            className="minecraft-block bg-gray-700/50 border border-gray-600 text-gray-300 px-2 py-1 text-xs font-press-start"
+                            className="bg-purple-500/20 border border-purple-500/50 text-purple-300 px-2 py-1 text-xs font-press-start"
                           >
                             {skill}
                           </span>
@@ -858,7 +868,7 @@ const JudgeDashboard = () => {
                   </div>
 
                   <div className="mt-6">
-                    <h4 className="font-press-start text-sm text-cyan-400 mb-3">BIO</h4>
+                    <h4 className="font-press-start text-sm text-pink-400 mb-3">BIO</h4>
                     <p className="font-jetbrains text-gray-300 leading-relaxed">{judgeProfile.shortBio}</p>
                   </div>
                 </div>
@@ -868,9 +878,9 @@ const JudgeDashboard = () => {
             {/* Settings Tab */}
             {activeTab === 'settings' && (
               <div className="space-y-6">
-                <h2 className="font-press-start text-xl text-cyan-400">SETTINGS</h2>
+                <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">SETTINGS</h2>
                 
-                <div className="minecraft-block bg-gray-900/50 border-2 border-cyan-400 p-6">
+                <div className="bg-black/60 border border-purple-500/40 p-6">
                   <h3 className="font-press-start text-lg text-white mb-4">AVAILABILITY STATUS</h3>
                   <div className="space-y-3">
                     {[
@@ -892,12 +902,12 @@ const JudgeDashboard = () => {
                   </div>
                 </div>
 
-                <div className="minecraft-block bg-gray-900/50 border-2 border-red-400 p-6">
+                <div className="bg-red-900/20 border border-red-500/50 p-6">
                   <h3 className="font-press-start text-lg text-red-400 mb-4">DANGER ZONE</h3>
                   <p className="font-jetbrains text-gray-300 mb-4">
                     These actions cannot be undone. Please proceed with caution.
                   </p>
-                  <button className="pixel-button bg-red-600 text-white px-4 py-2 font-press-start text-xs hover:bg-red-700">
+                  <button className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 font-press-start text-xs border border-red-500/50 transition-all">
                     DELETE JUDGE PROFILE
                   </button>
                 </div>

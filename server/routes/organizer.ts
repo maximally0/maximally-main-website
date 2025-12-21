@@ -2,6 +2,7 @@
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { sendWinnerNotification } from "../services/email";
 
 // Helper to get user ID from bearer token
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
@@ -1115,12 +1116,43 @@ export function registerOrganizerRoutes(app: Express) {
         })
         .eq('id', id);
 
-      // Update submissions with prize won
+      // Update submissions with prize won and send winner emails
+      const { data: hackathonDetails } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('hackathon_name, slug')
+        .eq('id', id)
+        .single();
+
       for (const winner of winners) {
         await supabaseAdmin
           .from('hackathon_submissions')
           .update({ prize_won: winner.prize_position })
           .eq('id', winner.submission_id);
+
+        // Send winner notification email
+        if (hackathonDetails) {
+          const submission = submissionMap.get(winner.submission_id);
+          if (submission?.user_id) {
+            const { data: winnerProfile } = await supabaseAdmin
+              .from('profiles')
+              .select('email, full_name, username')
+              .eq('id', submission.user_id)
+              .single();
+
+            if (winnerProfile?.email) {
+              sendWinnerNotification({
+                email: winnerProfile.email,
+                userName: winnerProfile.full_name || winnerProfile.username || 'there',
+                hackathonName: hackathonDetails.hackathon_name,
+                hackathonSlug: hackathonDetails.slug,
+                projectName: submission.project_name || 'Your Project',
+                projectId: winner.submission_id,
+                prize: winner.prize_position || 'Winner',
+                score: winner.score || 0,
+              }).catch(err => console.error('Winner notification email failed:', err));
+            }
+          }
+        }
       }
 
       return res.json({ success: true, data, message: 'Winners announced successfully' });

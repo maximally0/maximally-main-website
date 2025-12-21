@@ -28,7 +28,6 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import About from './pages/About';
 import Profile from './pages/Profile';
-import AdminPanel from './pages/AdminPanel';
 import RequireAuth from '@/components/RequireAuth';
 import MyProfileRedirect from './pages/MyProfileRedirect';
 
@@ -159,7 +158,6 @@ import JudgeSubmissions from './pages/JudgeSubmissions';
 import ProjectDetail from './pages/ProjectDetail';
 import SubmissionDetail from './pages/SubmissionDetail';
 import ParticipantDashboard from './pages/ParticipantDashboard';
-import AdminNotifications from './pages/AdminNotifications';
 // Resources page removed
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
@@ -196,7 +194,6 @@ const AppContent = () => {
         <Route path="/certificates/verify/:certificate_id" element={<CertificateVerification />} />
         <Route path="/profile" element={<MyProfileRedirect />} />
         <Route path="/profile/:username" element={<Profile />} />
-        <Route path="/admin" element={<AdminPanel />} />
         <Route path="/bootcamps" element={<Navigate to="/" replace />} />
         <Route path="/makeathon" element={<Makeathon />} />
         {/* Team route removed */}
@@ -355,7 +352,6 @@ const AppContent = () => {
         <Route path="/project/:projectId" element={<ProjectDetail />} />
         <Route path="/submissions/:slug" element={<SubmissionDetail />} />
         <Route path="/my-hackathons" element={<ParticipantDashboard />} />
-        <Route path="/admin/notifications" element={<AdminNotifications />} />
         
         {/* Project Gallery */}
         <Route path="/gallery" element={<Gallery />} />

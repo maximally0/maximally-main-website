@@ -10,8 +10,10 @@ import {
   WhyMaximallySection,
   ForOrganizersSection,
   BecomeJudgeSection,
+  BecomeOrganizerSection,
   GlobalGallerySection,
   PartnersSection,
+  DotNavigation,
 } from "@/components/landing";
 
 const Index = () => {
@@ -32,24 +34,44 @@ const Index = () => {
       />
 
       <div className="min-h-screen bg-black text-white">
+        <DotNavigation />
         <MyHackathonsQuickAccess />
-        <HeroSection />
+        
+        <div id="section-1">
+          <HeroSection />
+        </div>
         
         <CredibilitySection />
         
         <UpcomingHackathonsSection />
         
-        <BlogFeedSection />
+        <div id="section-2">
+          <BlogFeedSection />
+        </div>
         
-        <ExploreMaximallySection />
+        <div id="section-3">
+          <ExploreMaximallySection />
+        </div>
         
-        <WhyMaximallySection />
+        <div id="section-4">
+          <WhyMaximallySection />
+        </div>
         
-        <ForOrganizersSection />
+        <div id="section-5">
+          <ForOrganizersSection />
+        </div>
         
-        <BecomeJudgeSection />
+        <div id="section-6">
+          <BecomeJudgeSection />
+        </div>
         
-        <GlobalGallerySection />
+        <div id="section-7">
+          <BecomeOrganizerSection />
+        </div>
+        
+        <div id="section-8">
+          <GlobalGallerySection />
+        </div>
         
         <PartnersSection />
         

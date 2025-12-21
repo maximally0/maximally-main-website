@@ -31,7 +31,7 @@ export default function HackathonTracks({ tracks: tracksData }: HackathonTracksP
   if (!tracks || tracks.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="minecraft-block bg-gray-800 text-gray-400 px-6 py-4 inline-block">
+        <div className="bg-gray-800/50 border border-gray-700 text-gray-400 px-6 py-4 inline-block">
           <span className="font-press-start text-sm">NO TRACKS DEFINED</span>
         </div>
       </div>
@@ -43,15 +43,15 @@ export default function HackathonTracks({ tracks: tracksData }: HackathonTracksP
       {tracks.map((track, index) => (
         <div
           key={index}
-          className="pixel-card bg-gray-900 border-2 border-cyan-400 p-6 hover:border-maximally-yellow transition-all hover:scale-105"
+          className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 p-6 hover:border-purple-400/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]"
         >
           {/* Icon */}
-          <div className="minecraft-block bg-cyan-400 text-black p-3 inline-block mb-4">
-            <Zap className="h-8 w-8" />
+          <div className="p-3 bg-purple-500/20 border border-purple-500/40 inline-block mb-4">
+            <Zap className="h-8 w-8 text-purple-400" />
           </div>
 
           {/* Track Name */}
-          <h3 className="font-press-start text-lg text-cyan-400 mb-3">
+          <h3 className="font-press-start text-lg text-purple-300 mb-3">
             {track.name}
           </h3>
 
@@ -62,8 +62,8 @@ export default function HackathonTracks({ tracks: tracksData }: HackathonTracksP
 
           {/* Prize */}
           {track.prize && (
-            <div className="minecraft-block bg-maximally-yellow text-black px-3 py-2">
-              <span className="font-press-start text-xs">
+            <div className="bg-amber-500/20 border border-amber-500/40 px-3 py-2 inline-block">
+              <span className="font-press-start text-xs text-amber-300">
                 💰 {track.prize}
               </span>
             </div>

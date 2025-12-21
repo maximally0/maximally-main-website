@@ -18,7 +18,15 @@ import { registerOrganizerMessageRoutes } from "./routes/organizer-messages";
 import { registerModerationRoutes } from "./routes/moderation";
 import { registerGalleryRoutes } from "./routes/gallery";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
-import { sendSubmissionConfirmation, sendAnnouncement, sendWinnerNotification } from "./services/email";
+import { 
+  sendSubmissionConfirmation, 
+  sendAnnouncement, 
+  sendWinnerNotification, 
+  sendWelcomeEmail,
+  sendDeadlineReminder,
+  sendHackathonStartingSoonEmail,
+  sendOtpEmail
+} from "./services/email";
 
 // Simple per-user rate limiter (token bucket) in memory
 const rateBuckets = new Map<string, { tokens: number; last: number }>();
@@ -41,6 +49,33 @@ function rateLimit(userId: string, key: string, capacity = 10, refillMs = 60_000
   rateBuckets.set(bucketKey, b);
   return true;
 }
+
+// OTP Storage (in-memory, expires after 10 minutes)
+interface OtpEntry {
+  otp: string;
+  email: string;
+  password: string;
+  name?: string;
+  username?: string;
+  expiresAt: number;
+  attempts: number;
+}
+const otpStore = new Map<string, OtpEntry>();
+
+// Generate 6-digit OTP
+function generateOtp(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Clean expired OTPs periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, entry] of otpStore.entries()) {
+    if (entry.expiresAt < now) {
+      otpStore.delete(key);
+    }
+  }
+}, 60_000); // Clean every minute
 
 function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   return supabaseAdmin.auth.getUser(token).then((r: any) => (r?.data?.user?.id ? r.data.user.id : null));
@@ -283,8 +318,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Secure email signup endpoint with validation
-  app.post("/api/auth/signup-validate", async (req: Request, res: Response) => {
+  // Step 1: Request OTP for signup (validates email and sends OTP)
+  app.post("/api/auth/signup-request-otp", async (req: Request, res: Response) => {
     try {
       const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
       if (!supabaseAdmin) {
@@ -306,17 +341,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ success: false, message: 'Password must be at least 8 characters long' });
       }
 
-      // Rate limiting - 5 signup attempts per IP per hour
+      const normalizedEmail = email.trim().toLowerCase();
+
+      // Rate limiting - 5 OTP requests per IP per hour
       const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
-      if (!rateLimit(clientIP, 'signup:attempt', 5, 3600_000)) {
-        return res.status(429).json({ success: false, message: 'Too many signup attempts. Please try again later.' });
+      if (!rateLimit(clientIP, 'otp:request', 5, 3600_000)) {
+        return res.status(429).json({ success: false, message: 'Too many OTP requests. Please try again later.' });
       }
 
       // Import email validation utilities
       const { validateEmail } = await import('../shared/emailValidation');
 
       // Validate email comprehensively
-      const emailValidation = await validateEmail(email);
+      const emailValidation = await validateEmail(normalizedEmail);
 
       if (!emailValidation.isValid) {
         return res.status(400).json({
@@ -330,26 +367,129 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Create user with admin client (bypasses email confirmation if configured)
+      // Check if user already exists
+      const { data: existingUsers } = await (supabaseAdmin as any).auth.admin.listUsers();
+      const userExists = existingUsers?.users?.some((u: any) => u.email?.toLowerCase() === normalizedEmail);
+      
+      if (userExists) {
+        return res.status(409).json({ success: false, message: 'An account with this email already exists' });
+      }
+
+      // Generate OTP
+      const otp = generateOtp();
+      const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+      // Store OTP with signup data
+      otpStore.set(normalizedEmail, {
+        otp,
+        email: normalizedEmail,
+        password,
+        name: name?.trim(),
+        username: username?.trim(),
+        expiresAt,
+        attempts: 0,
+      });
+
+      // Send OTP email
+      const emailResult = await sendOtpEmail({
+        email: normalizedEmail,
+        otp,
+        expiresInMinutes: 10,
+      });
+
+      if (!emailResult.success) {
+        otpStore.delete(normalizedEmail);
+        return res.status(500).json({ success: false, message: 'Failed to send verification email. Please try again.' });
+      }
+
+      return res.json({
+        success: true,
+        message: 'Verification code sent to your email',
+        email: normalizedEmail,
+      });
+
+    } catch (err: any) {
+      console.error('OTP request error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to send verification code' });
+    }
+  });
+
+  // Step 2: Verify OTP and create account
+  app.post("/api/auth/signup-verify-otp", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+      }
+
+      const { email, otp } = req.body as {
+        email?: string;
+        otp?: string;
+      };
+
+      if (!email || !otp) {
+        return res.status(400).json({ success: false, message: 'Email and verification code are required' });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+
+      // Rate limiting - 10 OTP verification attempts per IP per hour
+      const clientIP = req.ip || req.connection.remoteAddress || 'unknown';
+      if (!rateLimit(clientIP, 'otp:verify', 10, 3600_000)) {
+        return res.status(429).json({ success: false, message: 'Too many verification attempts. Please try again later.' });
+      }
+
+      // Get stored OTP entry
+      const otpEntry = otpStore.get(normalizedEmail);
+
+      if (!otpEntry) {
+        return res.status(400).json({ success: false, message: 'No pending verification found. Please request a new code.' });
+      }
+
+      // Check if expired
+      if (otpEntry.expiresAt < Date.now()) {
+        otpStore.delete(normalizedEmail);
+        return res.status(400).json({ success: false, message: 'Verification code has expired. Please request a new one.' });
+      }
+
+      // Check attempts (max 5)
+      if (otpEntry.attempts >= 5) {
+        otpStore.delete(normalizedEmail);
+        return res.status(400).json({ success: false, message: 'Too many failed attempts. Please request a new code.' });
+      }
+
+      // Verify OTP
+      if (otpEntry.otp !== otp.trim()) {
+        otpEntry.attempts += 1;
+        otpStore.set(normalizedEmail, otpEntry);
+        const remainingAttempts = 5 - otpEntry.attempts;
+        return res.status(400).json({ 
+          success: false, 
+          message: `Invalid verification code. ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining.` 
+        });
+      }
+
+      // OTP verified! Create the user
       const { data: userData, error: createError } = await (supabaseAdmin as any).auth.admin.createUser({
-        email: email.trim().toLowerCase(),
-        password: password,
-        email_confirm: true, // Auto-confirm email since we validated it
+        email: otpEntry.email,
+        password: otpEntry.password,
+        email_confirm: true, // Email is verified via OTP
         user_metadata: {
-          full_name: name?.trim() || null,
-          username: username?.trim() || null, // Store the provided username
-          signup_method: 'validated_email',
+          full_name: otpEntry.name || null,
+          username: otpEntry.username || null,
+          signup_method: 'otp_verified',
           validated_at: new Date().toISOString(),
-          domain_validated: true,
-          mx_verified: emailValidation.hasMx
+          otp_verified: true,
         },
         app_metadata: {
-          username: username?.trim() || null // Also store in app_metadata for server access
+          username: otpEntry.username || null
         }
       });
 
+      // Clean up OTP entry
+      otpStore.delete(normalizedEmail);
+
       if (createError) {
-        // Handle duplicate user error specifically
         if (createError.message?.includes('already registered') || createError.message?.includes('already exists')) {
           return res.status(409).json({ success: false, message: 'An account with this email already exists' });
         }
@@ -361,13 +501,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ success: false, message: 'User created but no user data returned' });
       }
 
-      // Note: This project uses Drizzle ORM with local database, not Supabase profiles table
-      // The user creation in Supabase auth is sufficient for now
-      // Profile creation would need to be handled through your Drizzle schema if needed
+      // Send welcome email
+      sendWelcomeEmail({
+        email: user.email!,
+        userName: otpEntry.name || otpEntry.username || user.email!.split('@')[0],
+      }).catch(err => console.error('Welcome email failed:', err));
 
       return res.json({
         success: true,
-        message: 'Account created successfully',
+        message: 'Account created successfully! You can now sign in.',
         user: {
           id: user.id,
           email: user.email,
@@ -377,9 +519,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
     } catch (err: any) {
-      console.error('Signup validation error:', err);
-      return res.status(500).json({ success: false, message: err?.message || 'Failed to create account' });
+      console.error('OTP verification error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to verify code' });
     }
+  });
+
+  // Resend OTP endpoint
+  app.post("/api/auth/resend-otp", async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body as { email?: string };
+
+      if (!email) {
+        return res.status(400).json({ success: false, message: 'Email is required' });
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
+
+      // Rate limiting - 3 resend requests per email per 10 minutes
+      if (!rateLimit(normalizedEmail, 'otp:resend', 3, 600_000)) {
+        return res.status(429).json({ success: false, message: 'Please wait before requesting another code.' });
+      }
+
+      // Get existing OTP entry
+      const existingEntry = otpStore.get(normalizedEmail);
+
+      if (!existingEntry) {
+        return res.status(400).json({ success: false, message: 'No pending signup found. Please start the signup process again.' });
+      }
+
+      // Generate new OTP
+      const newOtp = generateOtp();
+      existingEntry.otp = newOtp;
+      existingEntry.expiresAt = Date.now() + 10 * 60 * 1000;
+      existingEntry.attempts = 0;
+      otpStore.set(normalizedEmail, existingEntry);
+
+      // Send new OTP email
+      const emailResult = await sendOtpEmail({
+        email: normalizedEmail,
+        otp: newOtp,
+        expiresInMinutes: 10,
+      });
+
+      if (!emailResult.success) {
+        return res.status(500).json({ success: false, message: 'Failed to send verification email. Please try again.' });
+      }
+
+      return res.json({
+        success: true,
+        message: 'New verification code sent to your email',
+      });
+
+    } catch (err: any) {
+      console.error('Resend OTP error:', err);
+      return res.status(500).json({ success: false, message: err?.message || 'Failed to resend code' });
+    }
+  });
+
+  // Legacy endpoint - redirect to new OTP flow (for backwards compatibility)
+  app.post("/api/auth/signup-validate", async (req: Request, res: Response) => {
+    // Redirect to the new OTP flow
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Please use the new signup flow with email verification',
+      useOtpFlow: true 
+    });
   });
 
   // Email validation endpoint (for real-time frontend validation)
@@ -662,6 +866,179 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Lightweight notifications stub to avoid 404s from the client navbar
   app.get("/api/notifications/unread-count", async (_req: Request, res: Response) => {
     return res.json({ success: true, count: 0 });
+  });
+
+  // ============================================
+  // SCHEDULED EMAIL NOTIFICATIONS
+  // These endpoints can be called by a cron job (e.g., every hour)
+  // ============================================
+
+  // Send deadline reminder emails (call this via cron every hour)
+  // Sends reminders at 24h and 6h before deadline
+  app.post("/api/scheduler/deadline-reminders", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server not configured" });
+      }
+
+      // Optional: Add a secret key check for security
+      const schedulerKey = req.headers['x-scheduler-key'];
+      if (process.env.SCHEDULER_SECRET && schedulerKey !== process.env.SCHEDULER_SECRET) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const now = new Date();
+      const in24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+      const in6Hours = new Date(now.getTime() + 6 * 60 * 60 * 1000);
+      const in25Hours = new Date(now.getTime() + 25 * 60 * 60 * 1000);
+      const in7Hours = new Date(now.getTime() + 7 * 60 * 60 * 1000);
+
+      // Find hackathons with deadlines in the next 24-25 hours or 6-7 hours
+      const { data: hackathons } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, hackathon_name, slug, submission_closes_at')
+        .eq('status', 'published')
+        .not('submission_closes_at', 'is', null);
+
+      let emailsSent = 0;
+      const errors: string[] = [];
+
+      for (const hackathon of hackathons || []) {
+        const deadline = new Date(hackathon.submission_closes_at);
+        
+        // Check if deadline is in 24h window or 6h window
+        const isIn24hWindow = deadline >= in24Hours && deadline < in25Hours;
+        const isIn6hWindow = deadline >= in6Hours && deadline < in7Hours;
+        
+        if (!isIn24hWindow && !isIn6hWindow) continue;
+
+        const hoursLeft = isIn6hWindow ? 6 : 24;
+
+        // Get all registered participants who haven't submitted yet
+        const { data: registrations } = await supabaseAdmin
+          .from('hackathon_registrations')
+          .select('user_id, email, full_name, username')
+          .eq('hackathon_id', hackathon.id)
+          .in('status', ['confirmed', 'checked_in']);
+
+        // Get submissions for this hackathon
+        const { data: submissions } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .select('user_id')
+          .eq('hackathon_id', hackathon.id)
+          .eq('status', 'submitted');
+
+        const submittedUserIds = new Set((submissions || []).map(s => s.user_id));
+
+        for (const reg of registrations || []) {
+          // Skip if already submitted
+          if (submittedUserIds.has(reg.user_id)) continue;
+
+          try {
+            await sendDeadlineReminder({
+              email: reg.email,
+              userName: reg.full_name || reg.username || 'there',
+              hackathonName: hackathon.hackathon_name,
+              hackathonSlug: hackathon.slug,
+              deadline: hackathon.submission_closes_at,
+              hoursLeft: hoursLeft,
+            });
+            emailsSent++;
+          } catch (err: any) {
+            errors.push(`Failed to send to ${reg.email}: ${err.message}`);
+          }
+        }
+      }
+
+      return res.json({ 
+        success: true, 
+        message: `Sent ${emailsSent} deadline reminder emails`,
+        emailsSent,
+        errors: errors.length > 0 ? errors : undefined
+      });
+    } catch (err: any) {
+      console.error('Deadline reminder scheduler error:', err);
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  // Send hackathon starting soon emails (call this via cron every hour)
+  // Sends reminders at 24h and 2h before start
+  app.post("/api/scheduler/starting-soon", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      if (!supabaseAdmin) {
+        return res.status(500).json({ success: false, message: "Server not configured" });
+      }
+
+      // Optional: Add a secret key check for security
+      const schedulerKey = req.headers['x-scheduler-key'];
+      if (process.env.SCHEDULER_SECRET && schedulerKey !== process.env.SCHEDULER_SECRET) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const now = new Date();
+      const in24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+      const in2Hours = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+      const in25Hours = new Date(now.getTime() + 25 * 60 * 60 * 1000);
+      const in3Hours = new Date(now.getTime() + 3 * 60 * 60 * 1000);
+
+      // Find hackathons starting in the next 24-25 hours or 2-3 hours
+      const { data: hackathons } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, hackathon_name, slug, start_date')
+        .eq('status', 'published')
+        .not('start_date', 'is', null);
+
+      let emailsSent = 0;
+      const errors: string[] = [];
+
+      for (const hackathon of hackathons || []) {
+        const startDate = new Date(hackathon.start_date);
+        
+        // Check if start is in 24h window or 2h window
+        const isIn24hWindow = startDate >= in24Hours && startDate < in25Hours;
+        const isIn2hWindow = startDate >= in2Hours && startDate < in3Hours;
+        
+        if (!isIn24hWindow && !isIn2hWindow) continue;
+
+        const hoursUntilStart = isIn2hWindow ? 2 : 24;
+
+        // Get all registered participants
+        const { data: registrations } = await supabaseAdmin
+          .from('hackathon_registrations')
+          .select('user_id, email, full_name, username')
+          .eq('hackathon_id', hackathon.id)
+          .in('status', ['confirmed', 'checked_in']);
+
+        for (const reg of registrations || []) {
+          try {
+            await sendHackathonStartingSoonEmail({
+              email: reg.email,
+              userName: reg.full_name || reg.username || 'there',
+              hackathonName: hackathon.hackathon_name,
+              hackathonSlug: hackathon.slug,
+              startDate: hackathon.start_date,
+              hoursUntilStart: hoursUntilStart,
+            });
+            emailsSent++;
+          } catch (err: any) {
+            errors.push(`Failed to send to ${reg.email}: ${err.message}`);
+          }
+        }
+      }
+
+      return res.json({ 
+        success: true, 
+        message: `Sent ${emailsSent} starting soon emails`,
+        emailsSent,
+        errors: errors.length > 0 ? errors : undefined
+      });
+    } catch (err: any) {
+      console.error('Starting soon scheduler error:', err);
+      return res.status(500).json({ success: false, message: err.message });
+    }
   });
 
   // User data export endpoint
@@ -1417,21 +1794,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const body = req.body;
-      console.log('Received organizer application request:', {
-        username: body.username,
-        full_name: body.full_name,
-        email: body.email,
-        hasAllFields: !!(body.username && body.full_name && body.email)
-      });
 
       // Validate required fields
       if (!body.username || !body.full_name || !body.email) {
-        console.error('VALIDATION FAILED - Missing required fields:', {
-          username: body.username || 'MISSING',
-          full_name: body.full_name || 'MISSING',
-          email: body.email || 'MISSING',
-          bodyKeys: Object.keys(body)
-        });
         return res.status(400).json({ 
           message: 'Missing required fields',
           details: {
@@ -1441,8 +1806,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         });
       }
-
-      console.log('Validation passed, proceeding with application...');
 
       // Check for existing username in applications
       const { data: existingUsername } = await supabaseAdmin
@@ -1488,7 +1851,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
 
       // Insert application
-      console.log('Attempting to insert application data:', applicationData);
       const { data: application, error: applicationError } = await supabaseAdmin
         .from('organizer_applications')
         .insert(applicationData as any)
@@ -1497,11 +1859,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       if (applicationError) {
         console.error('Application insert error:', applicationError);
-        console.error('Application data that failed:', applicationData);
         return res.status(500).json({ 
           message: `Failed to submit application: ${applicationError.message}`,
-          error: applicationError.message,
-          details: applicationError
+          error: applicationError.message
         });
       }
 
@@ -1602,10 +1962,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const appData = application as any;
-      console.log('Approving application:', { id, user_id: appData.user_id, username: appData.username });
 
       // Update application status
-      console.log('Step 1: Updating application status...');
       const { error: updateError } = await supabaseAdmin
         .from('organizer_applications')
         .update({
@@ -1619,11 +1977,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         console.error('Failed to update application status:', updateError);
         return res.status(500).json({ message: `Failed to approve application: ${updateError.message}`, error: updateError });
       }
-      console.log('Step 1: Application status updated successfully');
 
       // Update user role to organizer if user_id exists
       if (appData.user_id) {
-        console.log('Step 2: Updating user role to organizer...');
         const { error: roleError } = await supabaseAdmin
           .from('profiles')
           .update({ role: 'organizer' })
@@ -1633,10 +1989,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           console.error('Failed to update user role:', roleError);
           return res.status(500).json({ message: `Failed to update user role: ${roleError.message}`, error: roleError });
         }
-        console.log('Step 2: User role updated successfully');
 
         // Create organizer profile
-        console.log('Step 3: Creating organizer profile...');
         const { error: profileCreateError } = await supabaseAdmin
           .from('organizer_profiles')
           .insert({
@@ -1652,19 +2006,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
 
         if (profileCreateError) {
-          console.error('Failed to create organizer profile:', profileCreateError);
           // Check if it's a duplicate key error (profile already exists)
-          if (profileCreateError.code === '23505') {
-            console.log('Organizer profile already exists, continuing...');
-          } else {
+          if (profileCreateError.code !== '23505') {
+            console.error('Failed to create organizer profile:', profileCreateError);
             return res.status(500).json({ message: `Failed to create organizer profile: ${profileCreateError.message}`, error: profileCreateError });
           }
-        } else {
-          console.log('Step 3: Organizer profile created successfully');
         }
       }
-
-      console.log('Application approved successfully!');
       return res.json({ message: 'Application approved successfully' });
     } catch (err: any) {
       console.error('Approve application error:', err);
@@ -3657,23 +4005,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerFileUploadRoutes(app); // File upload endpoints for logos
   registerHackathonFeatureRoutes(app); // Tracks, sponsors, feedback, tasks, etc.
   registerOrganizerMessageRoutes(app); // Organizer inbox messages
-  
-  console.log('[Routes] About to register moderation routes...');
-  try {
-    registerModerationRoutes(app); // User reporting and moderation system
-    console.log('[Routes] Moderation routes registered successfully');
-  } catch (err) {
-    console.error('[Routes] ERROR registering moderation routes:', err);
-  }
-  
-  console.log('[Routes] About to register gallery routes...');
-  try {
-    registerGalleryRoutes(app); // Project gallery system
-    console.log('[Routes] Gallery routes registered successfully');
-  } catch (err) {
-    console.error('[Routes] ERROR registering gallery routes:', err);
-  }
-  // registerSimpleJudgeRoutes(app); // Disabled
+  registerModerationRoutes(app); // User reporting and moderation system
+  registerGalleryRoutes(app); // Project gallery system
 
   const httpServer = createServer(app);
   return httpServer;

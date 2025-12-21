@@ -21,6 +21,7 @@ interface Submission {
   team?: { team_name: string };
   user_name: string;
   submitted_at: string;
+  prize_won?: string;
 }
 
 export default function JudgeSubmissions() {
@@ -163,38 +164,44 @@ export default function JudgeSubmissions() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto animate-pulse space-y-8">
-            <div className="h-4 w-24 bg-gray-800 rounded mb-4"></div>
-            <div className="h-10 w-80 bg-gray-800 rounded mb-8"></div>
+      <div className="min-h-screen bg-black text-white relative overflow-hidden">
+        <div className="fixed inset-0 bg-black" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        
+        <div className="relative z-10 pt-24 pb-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto animate-pulse space-y-8">
+              <div className="h-4 w-24 bg-purple-900/50 rounded mb-4"></div>
+              <div className="h-10 w-80 bg-purple-900/50 rounded mb-8"></div>
 
-            {/* Tabs skeleton */}
-            <div className="flex gap-2 mb-6">
-              <div className="h-12 w-40 bg-gray-800 rounded"></div>
-              <div className="h-12 w-40 bg-gray-800 rounded"></div>
-            </div>
+              {/* Tabs skeleton */}
+              <div className="flex gap-2 mb-6">
+                <div className="h-12 w-40 bg-purple-900/50 rounded"></div>
+                <div className="h-12 w-40 bg-purple-900/50 rounded"></div>
+              </div>
 
-            {/* Submissions skeleton */}
-            <div className="space-y-6">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                  <div className="flex gap-6">
-                    <div className="flex-1 space-y-4">
-                      <div className="h-6 w-64 bg-gray-800 rounded"></div>
-                      <div className="h-4 w-full bg-gray-800 rounded"></div>
-                      <div className="h-4 w-5/6 bg-gray-800 rounded"></div>
-                      <div className="flex gap-2">
-                        <div className="h-8 w-20 bg-gray-800 rounded"></div>
-                        <div className="h-8 w-20 bg-gray-800 rounded"></div>
+              {/* Submissions skeleton */}
+              <div className="space-y-6">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6">
+                    <div className="flex gap-6">
+                      <div className="flex-1 space-y-4">
+                        <div className="h-6 w-64 bg-purple-900/50 rounded"></div>
+                        <div className="h-4 w-full bg-purple-900/50 rounded"></div>
+                        <div className="h-4 w-5/6 bg-purple-900/50 rounded"></div>
+                        <div className="flex gap-2">
+                          <div className="h-8 w-20 bg-purple-900/50 rounded"></div>
+                          <div className="h-8 w-20 bg-purple-900/50 rounded"></div>
+                        </div>
+                      </div>
+                      <div className="w-48">
+                        <div className="h-12 w-full bg-purple-900/50 rounded"></div>
                       </div>
                     </div>
-                    <div className="w-48">
-                      <div className="h-12 w-full bg-gray-800 rounded"></div>
-                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -206,263 +213,269 @@ export default function JudgeSubmissions() {
   const scoredSubmissions = submissions.filter(s => s.score);
 
   return (
-    <div className="min-h-screen bg-black text-white pt-24 pb-16">
-      <div className="container mx-auto px-4">
-        <div className="max-w-7xl mx-auto">
-          <Link to="/judge-dashboard" className="text-maximally-yellow hover:text-maximally-red font-press-start text-sm mb-4 inline-block">
-            ← BACK
-          </Link>
+    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="fixed inset-0 bg-black" />
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+      
+      <div className="relative z-10 pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-7xl mx-auto">
+            <Link to="/judge-dashboard" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs mb-6 inline-flex items-center gap-2 border border-pink-500/50 transition-all">
+              ← BACK
+            </Link>
 
-          <h1 className="font-press-start text-3xl text-maximally-red mb-8">JUDGE_SUBMISSIONS</h1>
+            <h1 className="font-press-start text-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-8">JUDGE SUBMISSIONS</h1>
 
-          {/* Judging Period Status */}
-          {hackathon && !isJudgingOpen() && (
-            <div className="pixel-card bg-yellow-900/20 border-2 border-yellow-500 p-4 mb-6">
-              <div className="flex items-center gap-3">
-                <Award className="h-6 w-6 text-yellow-500" />
-                <div>
-                  <p className="font-press-start text-sm text-yellow-500">JUDGING_NOT_OPEN</p>
-                  <p className="font-jetbrains text-gray-400 text-sm mt-1">
-                    {hackathon.judging_control === 'closed' 
-                      ? 'Judging has been closed by the organizer.'
-                      : hackathon.judging_starts_at && new Date(hackathon.judging_starts_at) > new Date()
-                        ? `Judging starts on ${new Date(hackathon.judging_starts_at).toLocaleDateString()}`
-                        : 'Judging period has ended.'}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Tabs */}
-          <div className="flex gap-2 mb-6">
-            <button
-              onClick={() => setActiveTab('unscored')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm ${
-                activeTab === 'unscored'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              UNSCORED ({unscoredSubmissions.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('scored')}
-              className={`pixel-button px-6 py-3 font-press-start text-sm ${
-                activeTab === 'scored'
-                  ? 'bg-maximally-red text-white'
-                  : 'bg-gray-800 text-gray-400'
-              }`}
-            >
-              SCORED ({scoredSubmissions.length})
-            </button>
-          </div>
-
-          {/* Unscored Tab */}
-          {activeTab === 'unscored' && (
-            <>
-              {unscoredSubmissions.length === 0 ? (
-                <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
-                  <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                  <p className="font-press-start text-gray-400">ALL_SUBMISSIONS_SCORED!</p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {unscoredSubmissions.map((submission) => (
-                    <div key={submission.id} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 hover:border-maximally-yellow transition-colors">
-                      <div className="flex flex-col lg:flex-row gap-6">
-                        {/* Project Info */}
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between mb-4">
-                            <div>
-                              <h3 className="font-press-start text-xl text-white mb-2">{submission.project_name}</h3>
-                              {submission.tagline && (
-                                <p className="text-sm text-gray-400 font-jetbrains italic mb-2">"{submission.tagline}"</p>
-                              )}
-                              {submission.team ? (
-                                <p className="text-sm text-maximally-yellow font-jetbrains">Team: {submission.team.team_name}</p>
-                              ) : (
-                                <p className="text-sm text-gray-400 font-jetbrains">By: {submission.user_name}</p>
-                              )}
-                            </div>
-                          </div>
-
-                          <p className="text-gray-300 font-jetbrains mb-4 leading-relaxed">{submission.description}</p>
-
-                          {submission.technologies_used && submission.technologies_used.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mb-4">
-                              {submission.technologies_used.map((tech, i) => (
-                                <span key={i} className="text-xs bg-gray-800 border border-gray-700 px-2 py-1 text-gray-400 font-jetbrains">
-                                  {tech}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Links */}
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {submission.github_repo && (
-                              <a href={submission.github_repo} target="_blank" rel="noopener noreferrer"
-                                 className="pixel-button bg-gray-800 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-700 flex items-center gap-2">
-                                <Github className="h-4 w-4" />
-                                CODE
-                              </a>
-                            )}
-                            {submission.demo_url && (
-                              <a href={submission.demo_url} target="_blank" rel="noopener noreferrer"
-                                 className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white flex items-center gap-2">
-                                <ExternalLink className="h-4 w-4" />
-                                DEMO
-                              </a>
-                            )}
-                            {submission.video_url && (
-                              <a href={submission.video_url} target="_blank" rel="noopener noreferrer"
-                                 className="pixel-button bg-red-600 text-white px-4 py-2 font-press-start text-xs hover:bg-red-700 flex items-center gap-2">
-                                <Video className="h-4 w-4" />
-                                VIDEO
-                              </a>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Score Button */}
-                        <div className="lg:w-48 flex flex-col gap-2">
-                          <button
-                            onClick={() => handleScore(submission)}
-                            disabled={!isJudgingOpen()}
-                            className={`pixel-button px-6 py-3 font-press-start text-sm transition-colors flex items-center justify-center gap-2 ${
-                              isJudgingOpen()
-                                ? 'bg-maximally-red text-white hover:bg-maximally-yellow hover:text-black'
-                                : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                            }`}
-                          >
-                            <Star className="h-4 w-4" />
-                            SCORE
-                          </button>
-                          {!isJudgingOpen() && (
-                            <p className="text-xs text-gray-500 font-jetbrains text-center">Judging not open</p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Scored Tab */}
-          {activeTab === 'scored' && (
-            <>
-              {scoredSubmissions.length === 0 ? (
-                <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
-                  <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                  <p className="font-press-start text-gray-400">NO_SCORED_SUBMISSIONS_YET</p>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {scoredSubmissions.map((submission) => (
-                <div key={submission.id} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6 hover:border-maximally-yellow transition-colors">
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Project Info */}
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="font-press-start text-xl text-white mb-2">{submission.project_name}</h3>
-                          {submission.tagline && (
-                            <p className="text-sm text-gray-400 font-jetbrains italic mb-2">"{submission.tagline}"</p>
-                          )}
-                          {submission.team ? (
-                            <p className="text-sm text-maximally-yellow font-jetbrains">Team: {submission.team.team_name}</p>
-                          ) : (
-                            <p className="text-sm text-gray-400 font-jetbrains">By: {submission.user_name}</p>
-                          )}
-                        </div>
-                        {submission.score && (
-                          <div className="text-right">
-                            <div className="text-3xl font-bold text-maximally-yellow font-press-start">{submission.score}</div>
-                            <div className="text-xs text-gray-400 font-press-start">SCORE</div>
-                          </div>
-                        )}
-                      </div>
-
-                      <p className="text-gray-300 font-jetbrains mb-4 leading-relaxed">{submission.description}</p>
-
-                      {submission.technologies_used && submission.technologies_used.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {submission.technologies_used.map((tech, i) => (
-                            <span key={i} className="text-xs bg-gray-800 border border-gray-700 px-2 py-1 text-gray-400 font-jetbrains">
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Links */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {submission.github_repo && (
-                          <a href={submission.github_repo} target="_blank" rel="noopener noreferrer"
-                             className="pixel-button bg-gray-800 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-700 flex items-center gap-2">
-                            <Github className="h-4 w-4" />
-                            CODE
-                          </a>
-                        )}
-                        {submission.demo_url && (
-                          <a href={submission.demo_url} target="_blank" rel="noopener noreferrer"
-                             className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white flex items-center gap-2">
-                            <ExternalLink className="h-4 w-4" />
-                            DEMO
-                          </a>
-                        )}
-                        {submission.video_url && (
-                          <a href={submission.video_url} target="_blank" rel="noopener noreferrer"
-                             className="pixel-button bg-red-600 text-white px-4 py-2 font-press-start text-xs hover:bg-red-700 flex items-center gap-2">
-                            <Video className="h-4 w-4" />
-                            VIDEO
-                          </a>
-                        )}
-                      </div>
-
-                      {submission.feedback && (
-                        <div className="pixel-card bg-black/50 border border-gray-700 p-4 mb-4">
-                          <p className="font-press-start text-xs text-maximally-yellow mb-2">YOUR_FEEDBACK:</p>
-                          <p className="text-sm text-gray-300 font-jetbrains">{submission.feedback}</p>
-                        </div>
-                      )}
-
-                      {submission.prize_won && (
-                        <div className="inline-flex items-center gap-2 bg-maximally-yellow/20 border border-maximally-yellow px-4 py-2">
-                          <Trophy className="h-4 w-4 text-maximally-yellow" />
-                          <span className="font-press-start text-sm text-maximally-yellow">{submission.prize_won}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Score Button */}
-                    <div className="lg:w-48 flex flex-col gap-2">
-                      <button
-                        onClick={() => handleScore(submission)}
-                        disabled={!isJudgingOpen()}
-                        className={`pixel-button px-6 py-3 font-press-start text-sm transition-colors flex items-center justify-center gap-2 ${
-                          isJudgingOpen()
-                            ? 'bg-cyan-600 text-white hover:bg-cyan-700'
-                            : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                        }`}
-                      >
-                        <Star className="h-4 w-4" />
-                        EDIT_SCORE
-                      </button>
-                      {!isJudgingOpen() && (
-                        <p className="text-xs text-gray-500 font-jetbrains text-center">Judging not open</p>
-                      )}
-                    </div>
+            {/* Judging Period Status */}
+            {hackathon && !isJudgingOpen() && (
+              <div className="bg-yellow-900/20 border border-yellow-500/50 p-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <Award className="h-6 w-6 text-yellow-400" />
+                  <div>
+                    <p className="font-press-start text-sm text-yellow-400">JUDGING NOT OPEN</p>
+                    <p className="font-jetbrains text-gray-400 text-sm mt-1">
+                      {hackathon.judging_control === 'closed' 
+                        ? 'Judging has been closed by the organizer.'
+                        : hackathon.judging_starts_at && new Date(hackathon.judging_starts_at) > new Date()
+                          ? `Judging starts on ${new Date(hackathon.judging_starts_at).toLocaleDateString()}`
+                          : 'Judging period has ended.'}
+                    </p>
                   </div>
                 </div>
-              ))}
+              </div>
+            )}
+
+            {/* Tabs */}
+            <div className="flex gap-2 mb-6">
+              <button
+                onClick={() => setActiveTab('unscored')}
+                className={`px-6 py-3 font-press-start text-sm transition-all ${
+                  activeTab === 'unscored'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border border-pink-500/50'
+                    : 'bg-gray-900 text-gray-400 hover:text-pink-400 border border-gray-700 hover:border-pink-500/50'
+                }`}
+              >
+                UNSCORED ({unscoredSubmissions.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('scored')}
+                className={`px-6 py-3 font-press-start text-sm transition-all ${
+                  activeTab === 'scored'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border border-pink-500/50'
+                    : 'bg-gray-900 text-gray-400 hover:text-pink-400 border border-gray-700 hover:border-pink-500/50'
+                }`}
+              >
+                SCORED ({scoredSubmissions.length})
+              </button>
             </div>
-          )}
-            </>
-          )}
+
+            {/* Unscored Tab */}
+            {activeTab === 'unscored' && (
+              <>
+                {unscoredSubmissions.length === 0 ? (
+                  <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-12 text-center">
+                    <Trophy className="h-12 w-12 text-purple-400 mx-auto mb-4" />
+                    <p className="font-press-start text-gray-400">ALL SUBMISSIONS SCORED!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {unscoredSubmissions.map((submission) => (
+                      <div key={submission.id} className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 hover:border-pink-400 transition-colors">
+                        <div className="flex flex-col lg:flex-row gap-6">
+                          {/* Project Info */}
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-4">
+                              <div>
+                                <h3 className="font-press-start text-xl text-white mb-2">{submission.project_name}</h3>
+                                {submission.tagline && (
+                                  <p className="text-sm text-gray-400 font-jetbrains italic mb-2">"{submission.tagline}"</p>
+                                )}
+                                {submission.team ? (
+                                  <p className="text-sm text-pink-400 font-jetbrains">Team: {submission.team.team_name}</p>
+                                ) : (
+                                  <p className="text-sm text-gray-400 font-jetbrains">By: {submission.user_name}</p>
+                                )}
+                              </div>
+                            </div>
+
+                            <p className="text-gray-300 font-jetbrains mb-4 leading-relaxed">{submission.description}</p>
+
+                            {submission.technologies_used && submission.technologies_used.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mb-4">
+                                {submission.technologies_used.map((tech, i) => (
+                                  <span key={i} className="text-xs bg-purple-500/20 border border-purple-500/50 px-2 py-1 text-purple-300 font-jetbrains">
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Links */}
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              {submission.github_repo && (
+                                <a href={submission.github_repo} target="_blank" rel="noopener noreferrer"
+                                   className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-gray-700 transition-all">
+                                  <Github className="h-4 w-4" />
+                                  CODE
+                                </a>
+                              )}
+                              {submission.demo_url && (
+                                <a href={submission.demo_url} target="_blank" rel="noopener noreferrer"
+                                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-pink-500/50 transition-all">
+                                  <ExternalLink className="h-4 w-4" />
+                                  DEMO
+                                </a>
+                              )}
+                              {submission.video_url && (
+                                <a href={submission.video_url} target="_blank" rel="noopener noreferrer"
+                                   className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-pink-500/50 transition-all">
+                                  <Video className="h-4 w-4" />
+                                  VIDEO
+                                </a>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Score Button */}
+                          <div className="lg:w-48 flex flex-col gap-2">
+                            <button
+                              onClick={() => handleScore(submission)}
+                              disabled={!isJudgingOpen()}
+                              className={`px-6 py-3 font-press-start text-sm transition-all flex items-center justify-center gap-2 ${
+                                isJudgingOpen()
+                                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white border border-pink-500/50'
+                                  : 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600'
+                              }`}
+                            >
+                              <Star className="h-4 w-4" />
+                              SCORE
+                            </button>
+                            {!isJudgingOpen() && (
+                              <p className="text-xs text-gray-500 font-jetbrains text-center">Judging not open</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+
+            {/* Scored Tab */}
+            {activeTab === 'scored' && (
+              <>
+                {scoredSubmissions.length === 0 ? (
+                  <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-12 text-center">
+                    <Trophy className="h-12 w-12 text-purple-400 mx-auto mb-4" />
+                    <p className="font-press-start text-gray-400">NO SCORED SUBMISSIONS YET</p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {scoredSubmissions.map((submission) => (
+                      <div key={submission.id} className="bg-gradient-to-br from-pink-900/30 to-purple-900/20 border border-pink-500/40 p-6 hover:border-purple-400 transition-colors">
+                        <div className="flex flex-col lg:flex-row gap-6">
+                          {/* Project Info */}
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between mb-4">
+                              <div>
+                                <h3 className="font-press-start text-xl text-white mb-2">{submission.project_name}</h3>
+                                {submission.tagline && (
+                                  <p className="text-sm text-gray-400 font-jetbrains italic mb-2">"{submission.tagline}"</p>
+                                )}
+                                {submission.team ? (
+                                  <p className="text-sm text-pink-400 font-jetbrains">Team: {submission.team.team_name}</p>
+                                ) : (
+                                  <p className="text-sm text-gray-400 font-jetbrains">By: {submission.user_name}</p>
+                                )}
+                              </div>
+                              {submission.score && (
+                                <div className="text-right">
+                                  <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-press-start">{submission.score}</div>
+                                  <div className="text-xs text-gray-400 font-press-start">SCORE</div>
+                                </div>
+                              )}
+                            </div>
+
+                            <p className="text-gray-300 font-jetbrains mb-4 leading-relaxed">{submission.description}</p>
+
+                            {submission.technologies_used && submission.technologies_used.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mb-4">
+                                {submission.technologies_used.map((tech, i) => (
+                                  <span key={i} className="text-xs bg-purple-500/20 border border-purple-500/50 px-2 py-1 text-purple-300 font-jetbrains">
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Links */}
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              {submission.github_repo && (
+                                <a href={submission.github_repo} target="_blank" rel="noopener noreferrer"
+                                   className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-gray-700 transition-all">
+                                  <Github className="h-4 w-4" />
+                                  CODE
+                                </a>
+                              )}
+                              {submission.demo_url && (
+                                <a href={submission.demo_url} target="_blank" rel="noopener noreferrer"
+                                   className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-pink-500/50 transition-all">
+                                  <ExternalLink className="h-4 w-4" />
+                                  DEMO
+                                </a>
+                              )}
+                              {submission.video_url && (
+                                <a href={submission.video_url} target="_blank" rel="noopener noreferrer"
+                                   className="bg-pink-600 hover:bg-pink-500 text-white px-4 py-2 font-press-start text-xs flex items-center gap-2 border border-pink-500/50 transition-all">
+                                  <Video className="h-4 w-4" />
+                                  VIDEO
+                                </a>
+                              )}
+                            </div>
+
+                            {submission.feedback && (
+                              <div className="bg-black/50 border border-purple-500/40 p-4 mb-4">
+                                <p className="font-press-start text-xs text-pink-400 mb-2">YOUR FEEDBACK:</p>
+                                <p className="text-sm text-gray-300 font-jetbrains">{submission.feedback}</p>
+                              </div>
+                            )}
+
+                            {submission.prize_won && (
+                              <div className="inline-flex items-center gap-2 bg-pink-500/20 border border-pink-500/50 px-4 py-2">
+                                <Trophy className="h-4 w-4 text-pink-400" />
+                                <span className="font-press-start text-sm text-pink-400">{submission.prize_won}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Score Button */}
+                          <div className="lg:w-48 flex flex-col gap-2">
+                            <button
+                              onClick={() => handleScore(submission)}
+                              disabled={!isJudgingOpen()}
+                              className={`px-6 py-3 font-press-start text-sm transition-all flex items-center justify-center gap-2 ${
+                                isJudgingOpen()
+                                  ? 'bg-purple-600 hover:bg-purple-500 text-white border border-purple-500/50'
+                                  : 'bg-gray-700 text-gray-500 cursor-not-allowed border border-gray-600'
+                              }`}
+                            >
+                              <Star className="h-4 w-4" />
+                              EDIT SCORE
+                            </button>
+                            {!isJudgingOpen() && (
+                              <p className="text-xs text-gray-500 font-jetbrains text-center">Judging not open</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -470,26 +483,26 @@ export default function JudgeSubmissions() {
       {showScoreModal && selectedSubmission && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto">
           <div className="min-h-full flex items-center justify-center p-4">
-            <div className="pixel-card bg-black border-4 border-maximally-red max-w-2xl w-full my-8">
-              <div className="p-6 border-b-2 border-maximally-red">
-                <h2 className="font-press-start text-xl text-maximally-red">SCORE_PROJECT</h2>
+            <div className="bg-black border-2 border-purple-500/50 max-w-2xl w-full my-8">
+              <div className="p-6 border-b border-purple-500/40 bg-gradient-to-r from-purple-900/30 to-pink-900/20">
+                <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">SCORE PROJECT</h2>
                 <p className="font-jetbrains text-gray-400 text-sm mt-2">{selectedSubmission.project_name}</p>
               </div>
 
               <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
                 {/* Overall Score Display */}
-                <div className="bg-gray-900 border-2 border-maximally-yellow p-4 rounded text-center">
-                  <p className="font-press-start text-xs text-gray-400 mb-1">OVERALL_SCORE</p>
-                  <p className="font-press-start text-3xl text-maximally-yellow">{calculateOverallScore()}</p>
+                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-pink-500/40 p-4 text-center">
+                  <p className="font-press-start text-xs text-gray-400 mb-1">OVERALL SCORE</p>
+                  <p className="font-press-start text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{calculateOverallScore()}</p>
                   <p className="font-jetbrains text-xs text-gray-500 mt-1">Average of all criteria</p>
                 </div>
 
                 {/* Scoring Criteria */}
                 <div className="space-y-4">
-                  <p className="font-press-start text-sm text-white">SCORING_CRITERIA</p>
+                  <p className="font-press-start text-sm text-white">SCORING CRITERIA</p>
                   
                   {/* Innovation */}
-                  <div className="bg-gray-900/50 p-3 rounded">
+                  <div className="bg-purple-900/20 border border-purple-500/30 p-3">
                     <div className="flex justify-between items-center mb-2">
                       <label className="font-jetbrains text-sm text-gray-300">Innovation</label>
                       <input
@@ -498,7 +511,7 @@ export default function JudgeSubmissions() {
                         max="100"
                         value={scoreData.innovation}
                         onChange={(e) => setScoreData({ ...scoreData, innovation: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
-                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                        className="w-16 bg-black border border-purple-500/50 text-white px-2 py-1 text-center font-jetbrains text-sm focus:border-pink-400 outline-none"
                       />
                     </div>
                     <input
@@ -507,12 +520,12 @@ export default function JudgeSubmissions() {
                       max="100"
                       value={scoreData.innovation}
                       onChange={(e) => setScoreData({ ...scoreData, innovation: parseInt(e.target.value) })}
-                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
                     />
                   </div>
 
                   {/* Technical */}
-                  <div className="bg-gray-900/50 p-3 rounded">
+                  <div className="bg-purple-900/20 border border-purple-500/30 p-3">
                     <div className="flex justify-between items-center mb-2">
                       <label className="font-jetbrains text-sm text-gray-300">Technical Excellence</label>
                       <input
@@ -521,7 +534,7 @@ export default function JudgeSubmissions() {
                         max="100"
                         value={scoreData.technical}
                         onChange={(e) => setScoreData({ ...scoreData, technical: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
-                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                        className="w-16 bg-black border border-purple-500/50 text-white px-2 py-1 text-center font-jetbrains text-sm focus:border-pink-400 outline-none"
                       />
                     </div>
                     <input
@@ -530,12 +543,12 @@ export default function JudgeSubmissions() {
                       max="100"
                       value={scoreData.technical}
                       onChange={(e) => setScoreData({ ...scoreData, technical: parseInt(e.target.value) })}
-                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
                     />
                   </div>
 
                   {/* Design */}
-                  <div className="bg-gray-900/50 p-3 rounded">
+                  <div className="bg-purple-900/20 border border-purple-500/30 p-3">
                     <div className="flex justify-between items-center mb-2">
                       <label className="font-jetbrains text-sm text-gray-300">Design & UX</label>
                       <input
@@ -544,7 +557,7 @@ export default function JudgeSubmissions() {
                         max="100"
                         value={scoreData.design}
                         onChange={(e) => setScoreData({ ...scoreData, design: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
-                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                        className="w-16 bg-black border border-purple-500/50 text-white px-2 py-1 text-center font-jetbrains text-sm focus:border-pink-400 outline-none"
                       />
                     </div>
                     <input
@@ -553,12 +566,12 @@ export default function JudgeSubmissions() {
                       max="100"
                       value={scoreData.design}
                       onChange={(e) => setScoreData({ ...scoreData, design: parseInt(e.target.value) })}
-                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
                     />
                   </div>
 
                   {/* Presentation */}
-                  <div className="bg-gray-900/50 p-3 rounded">
+                  <div className="bg-purple-900/20 border border-purple-500/30 p-3">
                     <div className="flex justify-between items-center mb-2">
                       <label className="font-jetbrains text-sm text-gray-300">Presentation</label>
                       <input
@@ -567,7 +580,7 @@ export default function JudgeSubmissions() {
                         max="100"
                         value={scoreData.presentation}
                         onChange={(e) => setScoreData({ ...scoreData, presentation: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
-                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                        className="w-16 bg-black border border-purple-500/50 text-white px-2 py-1 text-center font-jetbrains text-sm focus:border-pink-400 outline-none"
                       />
                     </div>
                     <input
@@ -576,12 +589,12 @@ export default function JudgeSubmissions() {
                       max="100"
                       value={scoreData.presentation}
                       onChange={(e) => setScoreData({ ...scoreData, presentation: parseInt(e.target.value) })}
-                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
                     />
                   </div>
 
                   {/* Impact */}
-                  <div className="bg-gray-900/50 p-3 rounded">
+                  <div className="bg-purple-900/20 border border-purple-500/30 p-3">
                     <div className="flex justify-between items-center mb-2">
                       <label className="font-jetbrains text-sm text-gray-300">Impact & Usefulness</label>
                       <input
@@ -590,7 +603,7 @@ export default function JudgeSubmissions() {
                         max="100"
                         value={scoreData.impact}
                         onChange={(e) => setScoreData({ ...scoreData, impact: Math.min(100, Math.max(0, parseInt(e.target.value) || 0)) })}
-                        className="w-16 bg-gray-800 border border-gray-600 text-white px-2 py-1 text-center font-jetbrains text-sm"
+                        className="w-16 bg-black border border-purple-500/50 text-white px-2 py-1 text-center font-jetbrains text-sm focus:border-pink-400 outline-none"
                       />
                     </div>
                     <input
@@ -599,7 +612,7 @@ export default function JudgeSubmissions() {
                       max="100"
                       value={scoreData.impact}
                       onChange={(e) => setScoreData({ ...scoreData, impact: parseInt(e.target.value) })}
-                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-maximally-red"
+                      className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-pink-500"
                     />
                   </div>
                 </div>
@@ -611,25 +624,25 @@ export default function JudgeSubmissions() {
                     value={scoreData.feedback}
                     onChange={(e) => setScoreData({ ...scoreData, feedback: e.target.value })}
                     rows={3}
-                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                    className="w-full bg-black border border-purple-500/50 text-white px-4 py-3 font-jetbrains focus:border-pink-400 outline-none resize-none"
                     placeholder="Great project! The implementation is solid..."
                   />
                 </div>
               </div>
 
               {/* Buttons - Fixed at bottom */}
-              <div className="p-6 border-t-2 border-gray-800 flex gap-3">
+              <div className="p-6 border-t border-purple-500/40 flex gap-3">
                 <button
                   onClick={() => setShowScoreModal(false)}
-                  className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600"
+                  className="flex-1 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 font-press-start text-sm border border-gray-700 transition-all"
                 >
                   CANCEL
                 </button>
                 <button
                   onClick={handleSubmitScore}
-                  className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black"
+                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm border border-pink-500/50 transition-all"
                 >
-                  SUBMIT_SCORE
+                  SUBMIT SCORE
                 </button>
               </div>
             </div>

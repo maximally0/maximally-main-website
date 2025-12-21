@@ -53,42 +53,42 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
     <div className="space-y-6">
       {/* Overview Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="pixel-card bg-gray-900 border-2 border-green-500 p-4">
+        <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/20 border border-green-500/30 p-4 hover:border-green-400/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="h-5 w-5 text-green-500" />
+            <Users className="h-5 w-5 text-green-400" />
             <span className="font-press-start text-xs text-gray-400">CHECK-IN_RATE</span>
           </div>
-          <div className="text-3xl font-bold text-green-500 font-press-start">
+          <div className="text-3xl font-bold text-green-300 font-press-start">
             {overview.checkInRate}%
           </div>
         </div>
 
-        <div className="pixel-card bg-gray-900 border-2 border-purple-500 p-4">
+        <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/20 border border-purple-500/30 p-4 hover:border-purple-400/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="h-5 w-5 text-purple-500" />
+            <Users className="h-5 w-5 text-purple-400" />
             <span className="font-press-start text-xs text-gray-400">TEAMS</span>
           </div>
-          <div className="text-3xl font-bold text-purple-500 font-press-start">
+          <div className="text-3xl font-bold text-purple-300 font-press-start">
             {overview.teams}
           </div>
         </div>
 
-        <div className="pixel-card bg-gray-900 border-2 border-blue-500 p-4">
+        <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/20 border border-cyan-500/30 p-4 hover:border-cyan-400/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="h-5 w-5 text-blue-500" />
+            <Users className="h-5 w-5 text-cyan-400" />
             <span className="font-press-start text-xs text-gray-400">INDIVIDUALS</span>
           </div>
-          <div className="text-3xl font-bold text-blue-500 font-press-start">
+          <div className="text-3xl font-bold text-cyan-300 font-press-start">
             {overview.individuals}
           </div>
         </div>
 
-        <div className="pixel-card bg-gray-900 border-2 border-orange-500 p-4">
+        <div className="bg-gradient-to-br from-amber-900/40 to-orange-900/20 border border-amber-500/30 p-4 hover:border-amber-400/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="h-5 w-5 text-orange-500" />
+            <Users className="h-5 w-5 text-amber-400" />
             <span className="font-press-start text-xs text-gray-400">WAITLIST</span>
           </div>
-          <div className="text-3xl font-bold text-orange-500 font-press-start">
+          <div className="text-3xl font-bold text-amber-300 font-press-start">
             {overview.waitlist}
           </div>
         </div>
@@ -96,24 +96,24 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
 
       {/* Top Colleges */}
       {collegeStats && collegeStats.length > 0 && (
-        <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-amber-500/30 p-6 hover:border-amber-400/50 transition-all">
           <div className="flex items-center gap-2 mb-4">
-            <School className="h-5 w-5 text-maximally-yellow" />
-            <h3 className="font-press-start text-sm text-maximally-yellow">TOP_COLLEGES</h3>
+            <School className="h-5 w-5 text-amber-400" />
+            <h3 className="font-press-start text-sm bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">TOP_COLLEGES</h3>
           </div>
           <div className="space-y-3">
             {collegeStats.slice(0, 5).map((college: any, i: number) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="font-jetbrains text-white text-sm">{college.college_university}</div>
-                  <div className="w-full bg-gray-800 h-2 mt-1 rounded-full overflow-hidden">
+                  <div className="w-full bg-gray-800/50 h-2 mt-1 overflow-hidden">
                     <div 
-                      className="bg-maximally-yellow h-full"
+                      className="bg-gradient-to-r from-amber-500 to-orange-500 h-full"
                       style={{ width: `${(college.total_registrations / collegeStats[0].total_registrations) * 100}%` }}
                     />
                   </div>
                 </div>
-                <div className="ml-4 font-press-start text-sm text-maximally-yellow">
+                <div className="ml-4 font-press-start text-sm text-amber-300">
                   {college.total_registrations}
                 </div>
               </div>
@@ -124,14 +124,14 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
 
       {/* Experience Level Distribution */}
       {experienceStats && experienceStats.length > 0 && (
-        <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-pink-500/30 p-6 hover:border-pink-400/50 transition-all">
           <div className="flex items-center gap-2 mb-4">
-            <Award className="h-5 w-5 text-maximally-red" />
-            <h3 className="font-press-start text-sm text-maximally-red">EXPERIENCE_LEVELS</h3>
+            <Award className="h-5 w-5 text-pink-400" />
+            <h3 className="font-press-start text-sm bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">EXPERIENCE_LEVELS</h3>
           </div>
           <div className="grid grid-cols-3 gap-4">
             {experienceStats.map((exp: any) => (
-              <div key={exp.experience_level} className="text-center">
+              <div key={exp.experience_level} className="text-center bg-black/30 border border-purple-500/20 p-3">
                 <div className="text-2xl font-bold text-white font-press-start mb-1">
                   {exp.total_registrations}
                 </div>
@@ -146,10 +146,10 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
 
       {/* Registration Timeline */}
       {timeline && Object.keys(timeline).length > 0 && (
-        <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-green-500/30 p-6 hover:border-green-400/50 transition-all">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-green-500" />
-            <h3 className="font-press-start text-sm text-green-500">REGISTRATION_TIMELINE</h3>
+            <TrendingUp className="h-5 w-5 text-green-400" />
+            <h3 className="font-press-start text-sm bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">REGISTRATION_TIMELINE</h3>
           </div>
           <div className="space-y-2">
             {Object.entries(timeline).slice(-7).map(([date, count]: [string, any]) => (
@@ -157,9 +157,9 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
                 <div className="font-jetbrains text-xs text-gray-400 w-24">
                   {new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </div>
-                <div className="flex-1 bg-gray-800 h-6 rounded-full overflow-hidden">
+                <div className="flex-1 bg-gray-800/50 h-6 overflow-hidden">
                   <div 
-                    className="bg-green-500 h-full flex items-center justify-end pr-2"
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 h-full flex items-center justify-end pr-2"
                     style={{ width: `${Math.min((count / Math.max(...Object.values(timeline) as number[])) * 100, 100)}%` }}
                   >
                     <span className="font-press-start text-xs text-white">{count}</span>

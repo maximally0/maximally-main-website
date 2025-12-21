@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Trophy, CheckCircle, XCircle, Clock, Award, Users } from 'lucide-react';
+import { Trophy, CheckCircle, Award, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 
@@ -23,8 +23,6 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
   const fetchWinners = async () => {
     try {
       const headers = await getAuthHeaders();
-      
-      // Fetch all winners (pending and approved)
       const response = await fetch(`/api/hackathons/${hackathonId}/winners`, { headers });
       const data = await response.json();
       
@@ -88,7 +86,7 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
         submission_id: winner.submission_id,
         position: winner.suggested_position,
         prize_name: winner.suggested_prize,
-        prize_amount: null // Can be customized
+        prize_amount: null
       }));
 
       const response = await fetch(`/api/organizer/hackathons/${hackathonId}/propose-winners`, {
@@ -147,7 +145,7 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
   if (loading) {
     return (
       <div className="text-center py-8">
-        <div className="font-press-start text-maximally-red">LOADING...</div>
+        <div className="font-press-start text-purple-400">LOADING...</div>
       </div>
     );
   }
@@ -157,7 +155,10 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-press-start text-2xl text-maximally-red mb-2">WINNER MANAGEMENT</h2>
+          <h2 className="font-press-start text-xl text-purple-400 mb-2 flex items-center gap-3">
+            <span className="w-2 h-2 bg-purple-400"></span>
+            WINNER MANAGEMENT
+          </h2>
           <p className="font-jetbrains text-gray-400">
             Calculate, review, and announce hackathon winners
           </p>
@@ -165,47 +166,48 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
         <button
           onClick={handleCalculateWinners}
           disabled={calculating}
-          className="pixel-button bg-maximally-yellow text-black px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white disabled:opacity-50 flex items-center gap-2"
+          className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
         >
           <Trophy className="h-5 w-5" />
-          {calculating ? 'CALCULATING...' : 'CALCULATE_WINNERS'}
+          {calculating ? 'CALCULATING...' : 'CALCULATE WINNERS'}
         </button>
       </div>
 
       {/* Calculated Winners (Not Yet Proposed) */}
       {calculatedWinners.length > 0 && (
-        <div className="pixel-card bg-gray-900 border-2 border-maximally-yellow p-6">
+        <div className="bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-press-start text-lg text-maximally-yellow">
+            <h3 className="font-press-start text-lg text-amber-400 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-amber-400"></span>
               CALCULATED WINNERS ({calculatedWinners.length})
             </h3>
             <button
               onClick={handleProposeWinners}
               disabled={proposing}
-              className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white disabled:opacity-50"
+              className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300 disabled:opacity-50"
             >
-              {proposing ? 'PROPOSING...' : 'PROPOSE_THESE_WINNERS'}
+              {proposing ? 'PROPOSING...' : 'PROPOSE THESE WINNERS'}
             </button>
           </div>
 
           <div className="space-y-4">
             {calculatedWinners.map((winner, index) => (
-              <div key={index} className="pixel-card bg-black border border-gray-700 p-4">
+              <div key={index} className="bg-black/30 border border-gray-700 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-maximally-yellow font-press-start">
+                      <div className="text-3xl font-bold text-amber-400 font-press-start">
                         #{winner.suggested_position}
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-press-start text-white mb-1">{winner.project_name}</h4>
+                      <h4 className="font-press-start text-white text-sm mb-1">{winner.project_name}</h4>
                       <p className="font-jetbrains text-sm text-gray-400">
                         Score: {winner.final_score?.toFixed(2)} | Prize: {winner.suggested_prize}
                       </p>
                     </div>
                   </div>
-                  <Trophy className="h-8 w-8 text-maximally-yellow" />
+                  <Trophy className="h-8 w-8 text-amber-400" />
                 </div>
               </div>
             ))}
@@ -215,14 +217,15 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
 
       {/* Proposed Winners (Pending Approval) */}
       {proposedWinners.length > 0 && (
-        <div className="pixel-card bg-gray-900 border-2 border-cyan-400 p-6">
-          <h3 className="font-press-start text-lg text-cyan-400 mb-6">
+        <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-6">
+          <h3 className="font-press-start text-lg text-cyan-400 mb-6 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-cyan-400"></span>
             PENDING APPROVAL ({proposedWinners.length})
           </h3>
 
           <div className="space-y-4">
             {proposedWinners.map((winner) => (
-              <div key={winner.id} className="pixel-card bg-black border border-gray-700 p-4">
+              <div key={winner.id} className="bg-black/30 border border-gray-700 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="text-center">
@@ -231,7 +234,7 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-press-start text-white mb-1">
+                      <h4 className="font-press-start text-white text-sm mb-1">
                         {winner.submission?.project_name || 'Unknown Project'}
                       </h4>
                       <p className="font-jetbrains text-sm text-gray-400">
@@ -248,7 +251,7 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
                   </div>
                   <button
                     onClick={() => handleApproveWinner(winner.id)}
-                    className="pixel-button bg-green-600 text-white px-4 py-2 font-press-start text-xs hover:bg-green-700 flex items-center gap-2"
+                    className="bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
                   >
                     <CheckCircle className="h-4 w-4" />
                     APPROVE
@@ -262,14 +265,15 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
 
       {/* Approved Winners */}
       {approvedWinners.length > 0 && (
-        <div className="pixel-card bg-gray-900 border-2 border-green-400 p-6">
-          <h3 className="font-press-start text-lg text-green-400 mb-6">
+        <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 p-6">
+          <h3 className="font-press-start text-lg text-green-400 mb-6 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-green-400"></span>
             ANNOUNCED WINNERS ({approvedWinners.length})
           </h3>
 
           <div className="space-y-4">
             {approvedWinners.map((winner) => (
-              <div key={winner.id} className="pixel-card bg-black border border-green-600 p-4">
+              <div key={winner.id} className="bg-black/30 border border-green-600/50 p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="text-center">
@@ -278,7 +282,7 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-press-start text-white mb-1">
+                      <h4 className="font-press-start text-white text-sm mb-1">
                         {winner.submission?.project_name || 'Unknown Project'}
                       </h4>
                       <p className="font-jetbrains text-sm text-gray-400">
@@ -306,7 +310,7 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
 
       {/* Empty State */}
       {calculatedWinners.length === 0 && proposedWinners.length === 0 && approvedWinners.length === 0 && (
-        <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-12 text-center">
           <Trophy className="h-16 w-16 text-gray-600 mx-auto mb-4" />
           <h3 className="font-press-start text-lg text-gray-400 mb-2">NO WINNERS YET</h3>
           <p className="font-jetbrains text-gray-500 mb-6">
@@ -315,16 +319,19 @@ export default function WinnerManagement({ hackathonId }: WinnerManagementProps)
           <button
             onClick={handleCalculateWinners}
             disabled={calculating}
-            className="pixel-button bg-maximally-yellow text-black px-6 py-3 font-press-start text-sm hover:bg-maximally-red hover:text-white disabled:opacity-50"
+            className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 disabled:opacity-50"
           >
-            {calculating ? 'CALCULATING...' : 'CALCULATE_WINNERS_NOW'}
+            {calculating ? 'CALCULATING...' : 'CALCULATE WINNERS NOW'}
           </button>
         </div>
       )}
 
       {/* Info Box */}
-      <div className="pixel-card bg-cyan-900/20 border border-cyan-600 p-4">
-        <h4 className="font-press-start text-sm text-cyan-400 mb-2">HOW IT WORKS</h4>
+      <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-4">
+        <h4 className="font-press-start text-sm text-cyan-400 mb-2 flex items-center gap-2">
+          <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+          HOW IT WORKS
+        </h4>
         <ol className="font-jetbrains text-sm text-gray-300 space-y-2 list-decimal list-inside">
           <li>Click "Calculate Winners" to rank submissions by weighted scores</li>
           <li>Review the calculated rankings and click "Propose These Winners"</li>

@@ -43,16 +43,7 @@
   width: 100%;
 }
 
-/* First letter styling for better typography */
-.prose p:first-of-type::first-letter {
-  font-size: 3rem;
-  line-height: 1;
-  float: left;
-  margin-right: 0.5rem;
-  margin-top: 0.1rem;
-  font-family: 'Press Start 2P', monospace;
-  color: #E50914;
-}
+/* Drop cap styling removed - using normal text flow */
 
 /* Dark theme blog post styling */
 .blog-dark-theme {
@@ -293,8 +284,5 @@
 
 /* Responsive typography adjustments */
 @media (max-width: 640px) {
-  .prose p:first-of-type::first-letter {
-    font-size: 2.5rem;
-    margin-right: 0.25rem;
-  }
+  /* Drop cap removed */
 }

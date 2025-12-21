@@ -10,7 +10,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [role, setRole] = useState<'user' | 'admin' | 'judge'>('user');
+  const [role, setRole] = useState<'user' | 'admin' | 'judge' | 'organizer'>('user');
 
   useEffect(() => {
     (async () => {

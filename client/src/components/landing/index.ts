@@ -1,5 +1,6 @@
 export { HackathonCard } from "./HackathonCard";
 export { ExploreCard } from "./ExploreCard";
+export { DotNavigation } from "./DotNavigation";
 export { EventCard } from "./EventCard";
 export { HappeningNowCard } from "./HappeningNowCard";
 export { PartnerLogoRow, CompanyMarquee } from "./PartnerLogoRow";
@@ -13,5 +14,6 @@ export { ExploreMaximallySection } from "./sections/ExploreMaximallySection";
 export { WhyMaximallySection } from "./sections/WhyMaximallySection";
 export { ForOrganizersSection } from "./sections/ForOrganizersSection";
 export { BecomeJudgeSection } from "./sections/BecomeJudgeSection";
+export { BecomeOrganizerSection } from "./sections/BecomeOrganizerSection";
 export { GlobalGallerySection } from "./sections/GlobalGallerySection";
 export { PartnersSection } from "./sections/PartnersSection";

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
+import { sendProjectFeedbackEmail } from "../services/email";
 
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   const { data, error } = await supabaseAdmin.auth.getUser(token);
@@ -283,7 +284,52 @@ export function registerJudgeProfileRoutes(app: Express) {
         throw error;
       }
 
-      console.log('[JUDGE SCORE] Score saved successfully:', data);
+      // Send feedback email to participant if feedback was provided
+      if (feedback) {
+        // Get submission details with user info
+        const { data: submissionDetails } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .select('project_name, user_id, hackathon_id')
+          .eq('id', submissionId)
+          .single();
+
+        if (submissionDetails) {
+          // Get participant profile
+          const { data: participantProfile } = await supabaseAdmin
+            .from('profiles')
+            .select('email, full_name, username')
+            .eq('id', submissionDetails.user_id)
+            .single();
+
+          // Get hackathon name
+          const { data: hackathon } = await supabaseAdmin
+            .from('organizer_hackathons')
+            .select('hackathon_name')
+            .eq('id', submissionDetails.hackathon_id)
+            .single();
+
+          // Get judge name
+          const { data: judgeProfile } = await supabaseAdmin
+            .from('profiles')
+            .select('full_name, username')
+            .eq('id', userId)
+            .single();
+
+          if (participantProfile?.email && hackathon) {
+            sendProjectFeedbackEmail({
+              email: participantProfile.email,
+              userName: participantProfile.full_name || participantProfile.username || 'there',
+              hackathonName: hackathon.hackathon_name,
+              projectName: submissionDetails.project_name,
+              projectId: parseInt(submissionId),
+              judgeName: judgeProfile?.full_name || judgeProfile?.username || 'A Judge',
+              score: parseFloat(score),
+              feedback: feedback,
+            }).catch(err => console.error('Project feedback email failed:', err));
+          }
+        }
+      }
+
       return res.json({ success: true, data });
     } catch (error: any) {
       console.error('Error in score submission:', error);

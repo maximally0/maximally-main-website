@@ -566,4 +566,269 @@ export function registerHackathonFeatureRoutes(app: Express) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
+
+  // ============================================================================
+  // PARTICIPANT FEEDBACK (Simple feedback for ended hackathons)
+  // ============================================================================
+
+  // Get participant feedback for a hackathon (public - shows on hackathon page)
+  app.get("/api/hackathons/:hackathonId/participant-feedback", async (req, res) => {
+    try {
+      const { hackathonId } = req.params;
+      
+      // First get the feedback
+      const { data: feedbackData, error: feedbackError } = await supabaseAdmin
+        .from('hackathon_participant_feedback')
+        .select('*')
+        .eq('hackathon_id', hackathonId)
+        .eq('is_public', true)
+        .order('created_at', { ascending: false });
+
+      if (feedbackError) throw feedbackError;
+
+      // Then get profiles for each feedback
+      const feedbackWithProfiles = await Promise.all(
+        (feedbackData || []).map(async (feedback) => {
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('username, full_name, avatar_url')
+            .eq('id', feedback.user_id)
+            .single();
+          
+          return {
+            ...feedback,
+            profiles: profile || null
+          };
+        })
+      );
+
+      return res.json({ success: true, data: feedbackWithProfiles });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get all feedback for organizer (includes private)
+  app.get("/api/hackathons/:hackathonId/participant-feedback/all", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+
+      // Verify organizer owns this hackathon
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon || hackathon.organizer_id !== userId) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      const { data: feedbackData, error } = await supabaseAdmin
+        .from('hackathon_participant_feedback')
+        .select('*')
+        .eq('hackathon_id', hackathonId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Get profiles for each feedback
+      const data = await Promise.all(
+        (feedbackData || []).map(async (feedback) => {
+          const { data: profile } = await supabaseAdmin
+            .from('profiles')
+            .select('username, full_name, avatar_url, email')
+            .eq('id', feedback.user_id)
+            .single();
+          
+          return {
+            ...feedback,
+            profiles: profile || null
+          };
+        })
+      );
+
+      return res.json({ success: true, data: data || [] });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Check if user has already submitted feedback
+  app.get("/api/hackathons/:hackathonId/participant-feedback/my-feedback", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_participant_feedback')
+        .select('*')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+
+      return res.json({ success: true, data: data || null });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Submit participant feedback (only for registered participants of ended hackathons)
+  app.post("/api/hackathons/:hackathonId/participant-feedback", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+      const {
+        overall_rating,
+        organization_rating,
+        mentorship_rating,
+        experience_highlights,
+        improvement_suggestions,
+        would_recommend,
+        testimonial,
+        is_public
+      } = req.body;
+
+      // Verify hackathon has ended (winners announced)
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('winners_announced')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      if (!hackathon.winners_announced) {
+        return res.status(400).json({ success: false, message: 'Feedback can only be submitted after hackathon ends' });
+      }
+
+      // Verify user is a registered participant
+      const { data: registration } = await supabaseAdmin
+        .from('hackathon_registrations')
+        .select('id')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .single();
+
+      if (!registration) {
+        return res.status(403).json({ success: false, message: 'Only registered participants can submit feedback' });
+      }
+
+      // Check if user already submitted feedback
+      const { data: existingFeedback } = await supabaseAdmin
+        .from('hackathon_participant_feedback')
+        .select('id')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .single();
+
+      if (existingFeedback) {
+        return res.status(400).json({ success: false, message: 'You have already submitted feedback for this hackathon' });
+      }
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_participant_feedback')
+        .insert({
+          hackathon_id: parseInt(hackathonId),
+          user_id: userId,
+          overall_rating,
+          organization_rating,
+          mentorship_rating,
+          experience_highlights,
+          improvement_suggestions,
+          would_recommend,
+          testimonial,
+          is_public: is_public || false,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return res.json({ success: true, data });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get feedback stats for a hackathon
+  app.get("/api/hackathons/:hackathonId/participant-feedback/stats", async (req, res) => {
+    try {
+      const { hackathonId } = req.params;
+
+      const { data, error } = await supabaseAdmin
+        .from('hackathon_participant_feedback')
+        .select('overall_rating, organization_rating, mentorship_rating, would_recommend')
+        .eq('hackathon_id', hackathonId);
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        return res.json({
+          success: true,
+          data: {
+            total_responses: 0,
+            avg_overall: 0,
+            avg_organization: 0,
+            avg_mentorship: 0,
+            recommend_percentage: 0
+          }
+        });
+      }
+
+      const total = data.length;
+      const avgOverall = data.reduce((sum, f) => sum + (f.overall_rating || 0), 0) / total;
+      const avgOrganization = data.reduce((sum, f) => sum + (f.organization_rating || 0), 0) / total;
+      const avgMentorship = data.reduce((sum, f) => sum + (f.mentorship_rating || 0), 0) / total;
+      const recommendCount = data.filter(f => f.would_recommend).length;
+
+      return res.json({
+        success: true,
+        data: {
+          total_responses: total,
+          avg_overall: Math.round(avgOverall * 10) / 10,
+          avg_organization: Math.round(avgOrganization * 10) / 10,
+          avg_mentorship: Math.round(avgMentorship * 10) / 10,
+          recommend_percentage: Math.round((recommendCount / total) * 100)
+        }
+      });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
 }

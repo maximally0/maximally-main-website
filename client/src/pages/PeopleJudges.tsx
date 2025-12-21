@@ -179,13 +179,13 @@ const PeopleJudges = () => {
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         {/* Pixel Grid Background */}
         <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
         
         {/* Floating Pixels */}
         {Array.from({ length: 12 }, (_, i) => (
           <div
             key={i}
-            className="fixed w-2 h-2 bg-maximally-red pixel-border animate-float pointer-events-none"
+            className="fixed w-2 h-2 bg-gradient-to-r from-purple-600 to-pink-600 pixel-border animate-float pointer-events-none"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -199,11 +199,11 @@ const PeopleJudges = () => {
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
             <section className="text-center mb-12">
-              <div className="minecraft-block bg-cyan-400 text-black px-6 py-3 inline-block mb-8">
+              <div className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 px-6 py-3 inline-block mb-8">
                 <span className="font-press-start text-sm">⚡ ELITE PANEL</span>
               </div>
               <h1 className="font-press-start text-4xl md:text-6xl lg:text-8xl mb-8 minecraft-text">
-                <span className="text-cyan-400 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                <span className="text-pink-400 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                   JUDGES
                 </span>
               </h1>
@@ -213,10 +213,10 @@ const PeopleJudges = () => {
               
               {/* Stats */}
               <div className="flex justify-center gap-8 mb-8">
-                <div className="minecraft-block bg-maximally-red text-black px-4 py-2">
+                <div className="minecraft-block bg-gradient-to-r from-purple-600 to-pink-600 text-black px-4 py-2">
                   <span className="font-press-start text-xs">{allJudges.length} JUDGES</span>
                 </div>
-                <div className="minecraft-block bg-maximally-yellow text-black px-4 py-2">
+                <div className="bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 text-cyan-200 px-4 py-2">
                   <span className="font-press-start text-xs">5 TIERS</span>
                 </div>
               </div>
@@ -224,7 +224,7 @@ const PeopleJudges = () => {
               {/* Back to People Button */}
               <Link
                 to="/people"
-                className="inline-block minecraft-block bg-maximally-yellow text-black px-4 py-2 hover:bg-maximally-red transition-colors"
+                className="inline-block bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400 px-4 py-2 transition-colors"
               >
                 <span className="font-press-start text-xs">← BACK TO PEOPLE</span>
               </Link>
@@ -244,7 +244,7 @@ const PeopleJudges = () => {
                       setSearchQuery(e.target.value);
                       handleFilterChange();
                     }}
-                    className="w-full pixel-card bg-gray-900 border-2 border-cyan-400 text-white pl-12 pr-4 py-3 font-jetbrains focus:border-maximally-yellow focus:outline-none transition-colors"
+                    className="w-full bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-purple-500/40 text-white pl-12 pr-4 py-3 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -252,7 +252,7 @@ const PeopleJudges = () => {
                 <div className="flex items-center justify-between mb-4">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="minecraft-block bg-cyan-400 text-black px-4 py-2 hover:bg-maximally-yellow transition-colors flex items-center gap-2"
+                    className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400 px-4 py-2 transition-colors flex items-center gap-2"
                   >
                     <Filter className="h-4 w-4" />
                     <span className="font-press-start text-xs">
@@ -276,14 +276,14 @@ const PeopleJudges = () => {
                   <div className="grid md:grid-cols-2 gap-4 mb-6">
                     {/* Tier Filter */}
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">TIER</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">TIER</label>
                       <select
                         value={selectedTier}
                         onChange={(e) => {
                           setSelectedTier(e.target.value as JudgeTier | 'all');
                           handleFilterChange();
                         }}
-                        className="w-full pixel-card bg-gray-900 border-2 border-cyan-400 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow focus:outline-none transition-colors"
+                        className="w-full bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-purple-500/40 text-white px-4 py-2 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
                       >
                         <option value="all">All Tiers</option>
                         <option value="legacy">Legacy Judge</option>
@@ -296,14 +296,14 @@ const PeopleJudges = () => {
 
                     {/* Expertise Filter */}
                     <div>
-                      <label className="font-press-start text-xs text-cyan-400 mb-2 block">EXPERTISE</label>
+                      <label className="font-press-start text-xs text-pink-400 mb-2 block">EXPERTISE</label>
                       <select
                         value={selectedExpertise}
                         onChange={(e) => {
                           setSelectedExpertise(e.target.value as ExpertiseArea | 'all');
                           handleFilterChange();
                         }}
-                        className="w-full pixel-card bg-gray-900 border-2 border-cyan-400 text-white px-4 py-2 font-jetbrains focus:border-maximally-yellow focus:outline-none transition-colors"
+                        className="w-full bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-purple-500/40 text-white px-4 py-2 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
                       >
                         <option value="all">All Expertise</option>
                         {expertiseAreas.map(area => (
@@ -329,7 +329,7 @@ const PeopleJudges = () => {
               {isLoading ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
                   {[...Array(8)].map((_, i) => (
-                    <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-700 p-6 animate-pulse">
+                    <div key={i} className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-gray-700 p-6 animate-pulse">
                       <div className="h-32 bg-gray-800 mb-4"></div>
                       <div className="h-4 bg-gray-800 mb-2"></div>
                       <div className="h-3 bg-gray-800"></div>
@@ -353,7 +353,7 @@ const PeopleJudges = () => {
                         className={`minecraft-block px-3 py-2 ${
                           currentPage === 1 
                             ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
-                            : 'bg-cyan-400 text-black hover:bg-maximally-yellow'
+                            : 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400'
                         } transition-colors`}
                       >
                         <ChevronLeft className="h-4 w-4" />
@@ -364,11 +364,11 @@ const PeopleJudges = () => {
                           key={index}
                           onClick={() => typeof page === 'number' ? goToPage(page) : undefined}
                           disabled={typeof page === 'string'}
-                          className={`minecraft-block px-3 py-2 font-press-start text-xs transition-colors ${
+                          className={`px-3 py-2 font-press-start text-xs transition-colors ${
                             page === currentPage
-                              ? 'bg-maximally-red text-white'
+                              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border border-purple-400'
                               : typeof page === 'number'
-                              ? 'bg-cyan-400 text-black hover:bg-maximally-yellow'
+                              ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400'
                               : 'bg-gray-700 text-gray-400 cursor-default'
                           }`}
                         >
@@ -379,10 +379,10 @@ const PeopleJudges = () => {
                       <button
                         onClick={() => goToPage(currentPage + 1)}
                         disabled={currentPage === totalPages}
-                        className={`minecraft-block px-3 py-2 ${
+                        className={`px-3 py-2 ${
                           currentPage === totalPages 
                             ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
-                            : 'bg-cyan-400 text-black hover:bg-maximally-yellow'
+                            : 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400'
                         } transition-colors`}
                       >
                         <ChevronRight className="h-4 w-4" />
@@ -392,7 +392,7 @@ const PeopleJudges = () => {
                 </>
               ) : (
                 <div className="text-center py-16">
-                  <div className="minecraft-block bg-gray-800 text-gray-300 px-6 py-4 inline-block mb-4">
+                  <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 text-gray-300 px-6 py-4 inline-block mb-4">
                     <span className="font-press-start text-sm">NO JUDGES FOUND</span>
                   </div>
                   <p className="text-gray-400 font-jetbrains mb-4">
@@ -400,7 +400,7 @@ const PeopleJudges = () => {
                   </p>
                   <button
                     onClick={clearFilters}
-                    className="minecraft-block bg-cyan-400 text-black px-4 py-2 hover:bg-maximally-yellow transition-colors"
+                    className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400 px-4 py-2 transition-colors"
                   >
                     <span className="font-press-start text-xs">CLEAR FILTERS</span>
                   </button>
@@ -408,15 +408,15 @@ const PeopleJudges = () => {
               )}
 
               {/* CTA Section */}
-              <div className="text-center mt-12">
-                <div className="minecraft-block bg-gray-800 text-gray-300 px-6 py-4 inline-block mb-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
+                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 text-gray-300 px-6 py-3 flex items-center justify-center min-w-[280px]">
                   <span className="font-jetbrains text-sm">
                     Want to become a Maximally Judge?
                   </span>
                 </div>
                 <Link
                   to="/judges/apply"
-                  className="minecraft-block bg-maximally-red text-white px-6 py-3 hover:bg-maximally-yellow hover:text-black transition-colors inline-block"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 transition-all flex items-center justify-center min-w-[280px] border border-pink-500/50"
                 >
                   <span className="font-press-start text-sm">APPLY TO BE A JUDGE</span>
                 </Link>

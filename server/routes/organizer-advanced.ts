@@ -228,8 +228,6 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
           .from('judge_scores')
           .select('judge_id, score, feedback, criteria_scores, created_at, updated_at')
           .eq('submission_id', submission.id);
-        
-        console.log(`[SUBMISSIONS] Submission ${submission.id} (${submission.project_name}): scores query result:`, scores, 'error:', scoresError);
 
         // Get judge names for each score
         const judgeScores = await Promise.all((scores || []).map(async (scoreEntry: any) => {

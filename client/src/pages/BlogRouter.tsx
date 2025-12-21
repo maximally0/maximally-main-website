@@ -250,7 +250,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
       </h5>
     ),
     p: ({ children }: any) => (
-      <p className="mb-6 font-jetbrains text-base sm:text-lg leading-relaxed text-maximally-black/90 first-letter:text-2xl first-letter:font-press-start first-letter:text-maximally-red first-letter:mr-1 first-letter:float-left first-letter:leading-none">
+      <p className="mb-6 font-jetbrains text-base sm:text-lg leading-relaxed text-gray-300">
         {children}
       </p>
     ),

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Terminal, Mail, User, LogOut } from "lucide-react";
+import { Menu, X, Terminal, Mail, User, LogOut, Trophy } from "lucide-react";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
 import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
@@ -62,7 +62,9 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  const isLoggedIn = !!user && !loading;
+  // Only show logged in state when both user exists AND profile is loaded
+  const isProfileLoaded = !!profile;
+  const isLoggedIn = !!user && !loading && isProfileLoaded;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : '/profile';
   const isJudge = profile?.role === 'judge';
   const isOrganizer = (profile?.role as string) === 'organizer';
@@ -91,11 +93,8 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { path: "/", label: "HOME" },
-    { path: "/events", label: "HACKATHONS" },
-    { path: "/host-hackathon", label: "ORGANIZERS" },
-    { path: "/explore", label: "EXPLORE" },
-    { path: "/about", label: "ABOUT" },
+    { path: "/events", label: "JOIN HACKATHON" },
+    { path: "/host-hackathon", label: "HOST HACKATHON" },
   ];
 
   const isActiveRoute = (path: string) => {
@@ -118,28 +117,28 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center group" data-testid="link-home">
-            <div className="bg-red-600 p-1.5 sm:p-2 mr-2 sm:mr-3 group-hover:bg-yellow-400 transition-colors">
+            <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1.5 sm:p-2 mr-2 sm:mr-3 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
               <Terminal className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-black" />
             </div>
-            <span className="font-press-start text-white text-xs sm:text-sm md:text-base lg:text-lg group-hover:text-red-500 transition-colors">
+            <span className="font-press-start text-white text-xs sm:text-sm md:text-base lg:text-lg group-hover:text-orange-400 transition-colors">
               MAXIMALLY
             </span>
           </Link>
 
-          <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
+          <div className="hidden lg:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2 space-x-1 xl:space-x-2">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={`relative font-press-start text-[10px] xl:text-xs px-3 xl:px-4 py-2 transition-colors duration-200 group ${
                   isActiveRoute(item.path) 
-                    ? 'text-red-500' 
+                    ? 'text-orange-500' 
                     : 'text-gray-300 hover:text-white'
                 }`}
                 data-testid={`link-nav-${item.label.toLowerCase()}`}
               >
                 {item.label}
-                <span className={`absolute bottom-0 left-0 h-0.5 bg-red-500 transition-all duration-200 ${
+                <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-200 ${
                   isActiveRoute(item.path) ? 'w-full' : 'w-0 group-hover:w-full'
                 }`} />
               </Link>
@@ -147,8 +146,8 @@ const Navbar = () => {
           </div>
 
           <div className="hidden lg:flex items-center space-x-4">
-            {loading ? (
-              <div className="font-press-start text-xs px-4 py-2 text-gray-500">
+            {loading || (user && !profile) ? (
+              <div className="font-press-start text-xs px-4 py-2 text-gray-500 animate-pulse">
                 LOADING...
               </div>
             ) : isLoggedIn ? (
@@ -157,18 +156,18 @@ const Navbar = () => {
                   <>
                     <Link
                       to="/judge-dashboard"
-                      className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 text-cyan-400 hover:text-cyan-300 transition-colors duration-200"
+                      className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent hover:from-purple-300 hover:via-pink-400 hover:to-pink-300 transition-all duration-200"
                       data-testid="button-judge-dashboard"
                     >
-                      JUDGE
+                      JUDGE DASHBOARD
                     </Link>
                     <Link
                       to="/judge-inbox"
-                      className="relative p-2 text-cyan-400 hover:text-cyan-300 transition-colors duration-200"
+                      className="relative p-2 transition-colors duration-200"
                       data-testid="button-judge-inbox"
                       aria-label={`Judge inbox${unreadCount > 0 ? ` - ${unreadCount} unread` : ''}`}
                     >
-                      <Mail className="h-5 w-5" />
+                      <Mail className="h-5 w-5 text-pink-500" style={{ filter: 'drop-shadow(0 0 4px rgba(236, 72, 153, 0.5))' }} />
                       {unreadCount > 0 && (
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-press-start px-1.5 py-0.5 min-w-[18px] text-center leading-none">
                           {unreadCount > 99 ? '99+' : unreadCount}
@@ -181,18 +180,18 @@ const Navbar = () => {
                   <>
                     <Link
                       to="/organizer/dashboard"
-                      className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
+                      className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent hover:from-purple-300 hover:via-pink-400 hover:to-pink-300 transition-all duration-200"
                       data-testid="button-organizer-dashboard"
                     >
-                      ORGANIZER
+                      ORGANIZER DASHBOARD
                     </Link>
                     <Link
                       to="/organizer-inbox"
-                      className="relative p-2 text-yellow-400 hover:text-yellow-300 transition-colors duration-200"
+                      className="relative p-2 transition-colors duration-200"
                       data-testid="button-organizer-inbox"
                       aria-label={`Organizer inbox${organizerUnreadCount > 0 ? ` - ${organizerUnreadCount} unread` : ''}`}
                     >
-                      <Mail className="h-5 w-5" />
+                      <Mail className="h-5 w-5 text-pink-500" style={{ filter: 'drop-shadow(0 0 4px rgba(236, 72, 153, 0.5))' }} />
                       {organizerUnreadCount > 0 && (
                         <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-press-start px-1.5 py-0.5 min-w-[18px] text-center leading-none">
                           {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
@@ -223,39 +222,49 @@ const Navbar = () => {
                         />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-red-500 transition-colors duration-200 flex items-center justify-center bg-red-600/20">
+                      <div className="w-10 h-10 border-2 border-pink-500/60 group-hover:border-pink-400 transition-colors duration-200 flex items-center justify-center bg-gradient-to-br from-purple-900/40 to-pink-900/40 group-hover:from-purple-800/50 group-hover:to-pink-800/50">
                         {profile?.username || user?.email ? (
-                          <span className="font-press-start text-lg text-red-500">
+                          <span className="font-press-start text-lg bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent" style={{ textShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
                             {(profile?.username || user?.email || 'U')[0].toUpperCase()}
                           </span>
                         ) : (
-                          <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-red-500 transition-colors duration-200" />
+                          <PixelUserIcon className="w-6 h-6 text-pink-400 group-hover:text-pink-300 transition-colors duration-200" />
                         )}
                       </div>
                     )}
                   </button>
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-56 border-2 border-red-500 shadow-2xl shadow-red-500/20 z-50 overflow-hidden bg-black">
-                      <div className="px-5 py-4 border-b-2 border-red-500/40 bg-gray-900/50">
-                        <p className="font-press-start text-[9px] text-gray-500 mb-1.5">SIGNED IN AS</p>
-                        <p className="font-press-start text-xs text-white truncate">
-                          {profile?.username ? `@${profile.username}` : (user?.email?.split('@')[0]?.toUpperCase() || 'USER')}
+                    <div className="absolute right-0 mt-3 w-60 border-2 border-pink-500/60 shadow-2xl shadow-pink-500/30 z-50 overflow-hidden bg-black/95 backdrop-blur-sm">
+                      <div className="px-5 py-4 border-b border-pink-500/30 bg-gradient-to-r from-purple-900/30 to-pink-900/30">
+                        <p className="font-press-start text-[9px] text-pink-300/70 mb-2 tracking-wider">SIGNED IN AS</p>
+                        <p className="font-press-start text-xs bg-gradient-to-r from-purple-400 via-pink-400 to-pink-300 bg-clip-text text-transparent truncate">
+                          @{profile?.username || 'user'}
                         </p>
                       </div>
-                      <div className="py-2">
+                      <div className="py-2 bg-gray-900/50">
                         <Link
                           to={profileUrl}
-                          className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-red-600 hover:text-white transition-all duration-200 group"
+                          className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-[10px] text-gray-300 hover:bg-gradient-to-r hover:from-purple-600/50 hover:to-pink-600/50 hover:text-white transition-all duration-200 group"
                           onClick={() => setProfileDropdownOpen(false)}
                         >
-                          <User className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                          <User className="h-4 w-4 text-pink-400 group-hover:text-white group-hover:scale-110 transition-all" />
                           <span>MY PROFILE</span>
                         </Link>
+                        {!isJudge && !isOrganizer && (
+                          <Link
+                            to="/my-hackathons"
+                            className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-[10px] text-gray-300 hover:bg-gradient-to-r hover:from-purple-600/50 hover:to-pink-600/50 hover:text-white transition-all duration-200 group"
+                            onClick={() => setProfileDropdownOpen(false)}
+                          >
+                            <Trophy className="h-4 w-4 text-pink-400 group-hover:text-white group-hover:scale-110 transition-all" />
+                            <span>MY HACKATHONS</span>
+                          </Link>
+                        )}
                         <button
                           onClick={handleSignOut}
-                          className="w-full flex items-center space-x-3 px-5 py-3.5 font-press-start text-xs text-gray-300 hover:bg-red-600 hover:text-white transition-all duration-200 group"
+                          className="w-full flex items-center space-x-3 px-5 py-3.5 font-press-start text-[10px] text-gray-300 hover:bg-gradient-to-r hover:from-purple-600/50 hover:to-pink-600/50 hover:text-white transition-all duration-200 group"
                         >
-                          <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                          <LogOut className="h-4 w-4 text-pink-400 group-hover:text-white group-hover:scale-110 transition-all" />
                           <span>SIGN OUT</span>
                         </button>
                       </div>
@@ -302,8 +311,8 @@ const Navbar = () => {
                     onClick={() => setIsMenuOpen(false)}
                     className={`font-press-start text-center py-4 px-6 text-sm border transition-all duration-300 ${
                       isActiveRoute(item.path)
-                        ? 'bg-red-600 text-white border-red-500'
-                        : 'bg-gray-900 text-gray-300 border-gray-800 hover:border-red-500 hover:text-white'
+                        ? 'bg-orange-600 text-white border-orange-500'
+                        : 'bg-gray-900 text-gray-300 border-gray-800 hover:border-orange-500 hover:text-white'
                     }`}
                     data-testid={`link-nav-mobile-${item.label.toLowerCase()}`}
                   >
@@ -312,8 +321,8 @@ const Navbar = () => {
                 ))}
                 
                 <div className="border-t border-gray-800 pt-4 mt-2">
-                  {loading ? (
-                    <div className="font-press-start text-center py-4 text-gray-500">
+                  {loading || (user && !profile) ? (
+                    <div className="font-press-start text-center py-4 text-gray-500 animate-pulse">
                       LOADING...
                     </div>
                   ) : isLoggedIn ? (
@@ -323,7 +332,7 @@ const Navbar = () => {
                           <Link
                             to="/judge-dashboard"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-cyan-900/30 text-cyan-400 border border-cyan-500/50 hover:bg-cyan-900/50 transition-all duration-300"
+                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300"
                             data-testid="button-judge-dashboard-mobile"
                           >
                             JUDGE DASHBOARD
@@ -331,7 +340,7 @@ const Navbar = () => {
                           <Link
                             to="/judge-inbox"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-cyan-900/30 text-cyan-400 border border-cyan-500/50 hover:bg-cyan-900/50 transition-all duration-300 relative"
+                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300 relative"
                             data-testid="button-judge-inbox-mobile"
                           >
                             JUDGE INBOX
@@ -348,7 +357,7 @@ const Navbar = () => {
                           <Link
                             to="/organizer/dashboard"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-yellow-900/30 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-900/50 transition-all duration-300"
+                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300"
                             data-testid="button-organizer-dashboard-mobile"
                           >
                             ORGANIZER DASHBOARD
@@ -356,7 +365,7 @@ const Navbar = () => {
                           <Link
                             to="/organizer-inbox"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-yellow-900/30 text-yellow-400 border border-yellow-500/50 hover:bg-yellow-900/50 transition-all duration-300 relative"
+                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300 relative"
                             data-testid="button-organizer-inbox-mobile"
                           >
                             ORGANIZER INBOX
@@ -376,6 +385,16 @@ const Navbar = () => {
                       >
                         MY PROFILE
                       </Link>
+                      {!isJudge && !isOrganizer && (
+                        <Link
+                          to="/my-hackathons"
+                          onClick={() => setIsMenuOpen(false)}
+                          className="block font-press-start text-center py-4 px-6 text-sm bg-gray-900 text-white border border-gray-700 hover:border-pink-500 transition-all duration-300"
+                          data-testid="button-my-hackathons-mobile"
+                        >
+                          MY HACKATHONS
+                        </Link>
+                      )}
                       <button
                         onClick={() => {
                           handleSignOut();

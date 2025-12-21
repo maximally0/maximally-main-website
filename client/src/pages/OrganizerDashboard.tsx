@@ -191,7 +191,7 @@ export default function OrganizerDashboard() {
     };
 
     return (
-      <span className={`pixel-card ${styles[status as keyof typeof styles]} px-3 py-1 text-xs font-press-start`}>
+      <span className={`${styles[status as keyof typeof styles]} px-3 py-1 text-xs font-press-start border border-white/20`}>
         {status.replace('_', ' ').toUpperCase()}
       </span>
     );
@@ -214,13 +214,13 @@ export default function OrganizerDashboard() {
             {/* Cards skeleton */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map(i => (
-                <div key={i} className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                  <div className="h-6 w-48 bg-gray-800 rounded mb-4"></div>
-                  <div className="h-4 w-32 bg-gray-800 rounded mb-2"></div>
-                  <div className="h-4 w-40 bg-gray-800 rounded mb-4"></div>
+                <div key={i} className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/30 p-6">
+                  <div className="h-6 w-48 bg-gray-800 mb-4"></div>
+                  <div className="h-4 w-32 bg-gray-800 mb-2"></div>
+                  <div className="h-4 w-40 bg-gray-800 mb-4"></div>
                   <div className="flex gap-2">
-                    <div className="h-10 w-20 bg-gray-800 rounded"></div>
-                    <div className="h-10 w-20 bg-gray-800 rounded"></div>
+                    <div className="h-10 w-20 bg-gray-800"></div>
+                    <div className="h-10 w-20 bg-gray-800"></div>
                   </div>
                 </div>
               ))}
@@ -236,13 +236,15 @@ export default function OrganizerDashboard() {
 
   return (
     <>
-      <div className="min-h-screen bg-black text-white pt-24 pb-12">
-        <div className="container mx-auto px-4">
+      <div className="min-h-screen bg-black text-white pt-24 pb-12 relative overflow-hidden">
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="container mx-auto px-4 relative z-10">
           {/* Header */}
           <div className="mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
-                <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl text-maximally-red mb-4">
+                <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-4">
                   ORGANIZER DASHBOARD
                 </h1>
                 <p className="font-jetbrains text-gray-400">
@@ -250,7 +252,7 @@ export default function OrganizerDashboard() {
                 </p>
               </div>
               {organizerProfile && (
-                <div className={`minecraft-block border-2 ${getTierInfo(organizerProfile.tier).color} px-4 py-2 flex items-center gap-2`}>
+                <div className={`border-2 ${getTierInfo(organizerProfile.tier).color} px-4 py-2 flex items-center gap-2 bg-black/50`}>
                   {getTierInfo(organizerProfile.tier).icon}
                   <span className="font-press-start text-xs">{getTierInfo(organizerProfile.tier).label}</span>
                 </div>
@@ -261,7 +263,7 @@ export default function OrganizerDashboard() {
           {/* Create New Button */}
           <Link
             to="/create-hackathon"
-            className="pixel-button bg-maximally-red text-white flex items-center gap-2 px-6 py-4 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors mb-8 inline-flex"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white flex items-center gap-2 px-6 py-4 font-press-start text-sm transition-all mb-8 inline-flex border border-pink-500/50"
           >
             <Plus className="h-5 w-5" />
             CREATE_NEW_HACKATHON
@@ -270,14 +272,14 @@ export default function OrganizerDashboard() {
           {/* Unpublished Hackathons */}
           {unpublishedHackathons.length > 0 && (
             <div className="mb-12">
-              <h2 className="font-press-start text-xl text-maximally-yellow mb-6">
+              <h2 className="font-press-start text-xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-6">
                 DRAFTS & PENDING ({unpublishedHackathons.length})
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {unpublishedHackathons.map((hackathon) => (
                   <div
                     key={hackathon.id}
-                    className="pixel-card bg-gray-900 border-2 border-maximally-red p-6 hover:border-maximally-yellow transition-all duration-300"
+                    className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/40 p-6 hover:border-pink-400 transition-all duration-300"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="font-press-start text-sm text-white mb-2">
@@ -304,7 +306,7 @@ export default function OrganizerDashboard() {
                     </div>
 
                     {hackathon.status === 'rejected' && hackathon.rejection_reason && (
-                      <div className="pixel-card bg-red-900/20 border border-red-600 p-3 mb-4">
+                      <div className="bg-gradient-to-br from-red-900/30 to-rose-900/20 border border-red-500/40 p-3 mb-4">
                         <p className="font-press-start text-xs text-red-400 mb-1">REJECTED:</p>
                         <p className="font-jetbrains text-xs text-gray-300">
                           {hackathon.rejection_reason}
@@ -315,14 +317,14 @@ export default function OrganizerDashboard() {
                     <div className="flex gap-2">
                       <Link
                         to={`/organizer/hackathons/${hackathon.id}`}
-                        className="flex-1 pixel-button bg-maximally-yellow text-black text-center py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white transition-colors"
+                        className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-center py-2 font-press-start text-xs border border-pink-500/50 transition-all"
                       >
                         <Edit className="h-4 w-4 inline mr-1" />
                         EDIT
                       </Link>
                       <button
                         onClick={() => handleClone(hackathon.id)}
-                        className="pixel-button bg-cyan-600 text-white px-3 py-2 hover:bg-cyan-700 transition-colors"
+                        className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-2 border border-purple-500/50 transition-all"
                         title="Clone hackathon"
                       >
                         <Copy className="h-4 w-4" />
@@ -330,7 +332,7 @@ export default function OrganizerDashboard() {
                       {hackathon.status === 'draft' && (
                         <button
                           onClick={() => handleDeleteClick(hackathon.id)}
-                          className="pixel-button bg-red-600 text-white px-3 py-2 hover:bg-red-700 transition-colors"
+                          className="bg-red-600 hover:bg-red-500 text-white px-3 py-2 border border-red-500/50 transition-all"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -352,7 +354,7 @@ export default function OrganizerDashboard() {
                 {publishedHackathons.map((hackathon) => (
                   <div
                     key={hackathon.id}
-                    className="pixel-card bg-gray-900 border-2 border-green-600 p-6 hover:border-maximally-yellow transition-all duration-300"
+                    className="bg-gradient-to-br from-green-900/20 to-purple-900/20 border border-green-500/40 p-6 hover:border-pink-400 transition-all duration-300"
                   >
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="font-press-start text-sm text-white mb-2">
@@ -369,27 +371,27 @@ export default function OrganizerDashboard() {
 
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center gap-2 text-xs font-jetbrains text-gray-400">
-                        <Calendar className="h-4 w-4" />
+                        <Calendar className="h-4 w-4 text-purple-400" />
                         {new Date(hackathon.start_date).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-2 text-xs font-jetbrains text-gray-400">
-                        <MapPin className="h-4 w-4" />
+                        <MapPin className="h-4 w-4 text-pink-400" />
                         {hackathon.format}
                       </div>
                     </div>
 
                     {/* Analytics */}
                     <div className="grid grid-cols-2 gap-2 mb-4">
-                      <div className="pixel-card bg-black/50 border border-maximally-red p-2">
+                      <div className="bg-black/50 border border-purple-500/40 p-2">
                         <div className="flex items-center gap-1 mb-1">
-                          <Eye className="h-3 w-3 text-maximally-yellow" />
+                          <Eye className="h-3 w-3 text-pink-400" />
                           <span className="font-press-start text-xs text-gray-400">VIEWS</span>
                         </div>
                         <p className="font-press-start text-sm text-white">{hackathon.views_count}</p>
                       </div>
-                      <div className="pixel-card bg-black/50 border border-maximally-red p-2">
+                      <div className="bg-black/50 border border-pink-500/40 p-2">
                         <div className="flex items-center gap-1 mb-1">
-                          <Users className="h-3 w-3 text-maximally-yellow" />
+                          <Users className="h-3 w-3 text-purple-400" />
                           <span className="font-press-start text-xs text-gray-400">REGS</span>
                         </div>
                         <p className="font-press-start text-sm text-white">{hackathon.registrations_count}</p>
@@ -400,33 +402,33 @@ export default function OrganizerDashboard() {
                       <div className="flex gap-2">
                         <Link
                           to={`/hackathon/${hackathon.slug}`}
-                          className="flex-1 pixel-button bg-green-600 text-white text-center py-2 font-press-start text-xs hover:bg-green-700 transition-colors"
+                          className="flex-1 bg-green-600 hover:bg-green-500 text-white text-center py-2 font-press-start text-xs border border-green-500/50 transition-all"
                         >
                           VIEW_PAGE
                         </Link>
                         <Link
                           to={`/organizer/hackathons/${hackathon.id}`}
-                          className="pixel-button bg-maximally-yellow text-black px-3 py-2 hover:bg-maximally-red hover:text-white transition-colors"
+                          className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-2 border border-purple-500/50 transition-all"
                         >
                           <Edit className="h-4 w-4" />
                         </Link>
                         <button
                           onClick={() => handleClone(hackathon.id)}
-                          className="pixel-button bg-cyan-600 text-white px-3 py-2 hover:bg-cyan-700 transition-colors"
+                          className="bg-pink-600 hover:bg-pink-500 text-white px-3 py-2 border border-pink-500/50 transition-all"
                           title="Clone hackathon"
                         >
                           <Copy className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteClick(hackathon.id)}
-                          className="pixel-button bg-red-600 text-white px-3 py-2 hover:bg-red-700 transition-colors"
+                          className="bg-red-600 hover:bg-red-500 text-white px-3 py-2 border border-red-500/50 transition-all"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                       <Link
                         to={`/organizer/hackathons/${hackathon.id}/manage`}
-                        className="w-full pixel-button bg-purple-600 text-white text-center py-2 font-press-start text-xs hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-center py-2 font-press-start text-xs border border-pink-500/50 transition-all flex items-center justify-center gap-2"
                       >
                         <Users className="h-4 w-4" />
                         MANAGE_HACKATHON
@@ -440,8 +442,8 @@ export default function OrganizerDashboard() {
 
           {/* Empty State */}
           {hackathons.length === 0 && (
-            <div className="pixel-card bg-gray-900 border-2 border-maximally-red p-12 text-center">
-              <div className="minecraft-block bg-maximally-red w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+            <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/40 p-12 text-center">
+              <div className="bg-gradient-to-br from-purple-600 to-pink-600 w-20 h-20 mx-auto mb-6 flex items-center justify-center border border-pink-500/50">
                 <Calendar className="h-10 w-10 text-white" />
               </div>
               <h3 className="font-press-start text-lg text-white mb-4">
@@ -452,7 +454,7 @@ export default function OrganizerDashboard() {
               </p>
               <Link
                 to="/create-hackathon"
-                className="pixel-button bg-maximally-red text-white px-8 py-4 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors inline-block"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-8 py-4 font-press-start text-sm border border-pink-500/50 transition-all inline-block"
               >
                 CREATE_YOUR_FIRST_HACKATHON
               </Link>

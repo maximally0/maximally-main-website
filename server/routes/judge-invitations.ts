@@ -274,24 +274,18 @@ export function registerJudgeInvitationRoutes(app: Express) {
   // Get judge assignments for a specific hackathon (organizer)
   app.get("/api/organizer/hackathons/:hackathonId/judge-assignments", async (req, res) => {
     try {
-      console.log('📋 [JUDGE ASSIGNMENTS] Fetching assignments for hackathon');
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
-        console.log('❌ [JUDGE ASSIGNMENTS] No auth header');
         return res.status(401).json({ success: false, message: 'Unauthorized' });
       }
 
       const token = authHeader.slice('Bearer '.length);
       const userId = await bearerUserId(supabaseAdmin, token);
       if (!userId) {
-        console.log('❌ [JUDGE ASSIGNMENTS] Invalid token');
         return res.status(401).json({ success: false, message: 'Invalid token' });
       }
 
-      console.log('✅ [JUDGE ASSIGNMENTS] User ID:', userId);
-
       const { hackathonId } = req.params;
-      console.log('📋 [JUDGE ASSIGNMENTS] Hackathon ID:', hackathonId);
 
       // Verify ownership
       const { data: hackathon } = await supabaseAdmin
@@ -300,11 +294,7 @@ export function registerJudgeInvitationRoutes(app: Express) {
         .eq('id', hackathonId)
         .single();
 
-      console.log('📋 [JUDGE ASSIGNMENTS] Hackathon organizer_id:', hackathon?.organizer_id);
-      console.log('📋 [JUDGE ASSIGNMENTS] Match:', hackathon?.organizer_id === userId);
-
       if (hackathon?.organizer_id !== userId) {
-        console.log('❌ [JUDGE ASSIGNMENTS] Not authorized - organizer mismatch');
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
 

@@ -41,6 +41,16 @@
       "color": "amber"
     },
     {
+      "id": "organizer-network",
+      "title": "Organizer Network",
+      "description": "Connect with hackathon organizers, learn best practices, and collaborate on events.",
+      "icon": "briefcase",
+      "url": "/people/organizers",
+      "status": "active",
+      "badge": "New",
+      "color": "orange"
+    },
+    {
       "id": "mfhop",
       "title": "MFHOP",
       "description": "Maximally For Hackathon Organizer Program - resources for event organizers.",

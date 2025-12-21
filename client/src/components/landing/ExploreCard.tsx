@@ -127,10 +127,10 @@ export function ExploreCard({
   const styles = colorStyles[color] || colorStyles.red;
 
   const CardContent = () => (
-    <>
-      <div className={`absolute inset-0 bg-gradient-to-br ${styles.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+    <div className="relative h-full overflow-hidden">
+      <div className={`absolute inset-0 bg-gradient-to-br ${styles.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`} />
       
-      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${styles.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${styles.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`} />
       
       <div className="relative p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4 h-full flex flex-col min-h-[140px] sm:min-h-[160px]">
         <div className="flex items-start justify-between gap-2">
@@ -167,7 +167,7 @@ export function ExploreCard({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 
   const cardClasses = `group relative h-full bg-gradient-to-br from-gray-900/80 via-black to-gray-900/80 border ${

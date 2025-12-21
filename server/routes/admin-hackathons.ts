@@ -2,6 +2,7 @@
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { sendHackathonApprovedEmail, sendHackathonRejectedEmail } from "../services/email";
 
 // Helper to get user ID from bearer token
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
@@ -17,12 +18,6 @@ async function isAdmin(supabaseAdmin: any, userId: string): Promise<boolean> {
     .eq('id', userId)
     .single();
   return data?.role === 'admin';
-}
-
-// Helper to send email (placeholder - implement with your email service)
-async function sendEmail(to: string, subject: string, body: string) {
-  // TODO: Implement email sending with Resend or your email service
-  console.log(`Email to ${to}: ${subject}\n${body}`);
 }
 
 export function registerAdminHackathonRoutes(app: Express) {
@@ -160,11 +155,18 @@ export function registerAdminHackathonRoutes(app: Express) {
       }
 
       // Send approval email
-      await sendEmail(
-        hackathon.organizer_email,
-        `🎉 Your hackathon "${hackathon.hackathon_name}" has been approved!`,
-        `Congratulations! Your hackathon "${hackathon.hackathon_name}" has been approved and is now live on Maximally.\n\nView it here: https://maximally.in/hackathon/${hackathon.slug}\n\nYou can now share this link with participants and start promoting your event!\n\n${adminNotes ? `Admin notes: ${adminNotes}` : ''}\n\nBest regards,\nMaximally Team`
-      );
+      const { data: organizerProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('full_name, username')
+        .eq('id', hackathon.organizer_id)
+        .single();
+
+      sendHackathonApprovedEmail({
+        email: hackathon.organizer_email,
+        organizerName: organizerProfile?.full_name || organizerProfile?.username || 'Organizer',
+        hackathonName: hackathon.hackathon_name,
+        hackathonSlug: hackathon.slug,
+      }).catch(err => console.error('Hackathon approved email failed:', err));
 
       return res.json({ success: true, data });
     } catch (error: any) {
@@ -228,11 +230,18 @@ export function registerAdminHackathonRoutes(app: Express) {
       }
 
       // Send rejection email
-      await sendEmail(
-        hackathon.organizer_email,
-        `Update on your hackathon "${hackathon.hackathon_name}"`,
-        `Hello,\n\nThank you for submitting "${hackathon.hackathon_name}" to Maximally.\n\nUnfortunately, we cannot approve your hackathon at this time for the following reason:\n\n${rejectionReason}\n\n${adminNotes ? `Additional notes: ${adminNotes}\n\n` : ''}You can make the necessary changes and resubmit your hackathon for review.\n\nIf you have any questions, please don't hesitate to reach out to us.\n\nBest regards,\nMaximally Team`
-      );
+      const { data: organizerProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('full_name, username')
+        .eq('id', hackathon.organizer_id)
+        .single();
+
+      sendHackathonRejectedEmail({
+        email: hackathon.organizer_email,
+        organizerName: organizerProfile?.full_name || organizerProfile?.username || 'Organizer',
+        hackathonName: hackathon.hackathon_name,
+        reason: rejectionReason,
+      }).catch(err => console.error('Hackathon rejected email failed:', err));
 
       return res.json({ success: true, data });
     } catch (error: any) {

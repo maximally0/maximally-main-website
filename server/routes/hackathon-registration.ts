@@ -1,7 +1,12 @@
 // @ts-nocheck
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
-import { sendRegistrationConfirmation } from "../services/email";
+import { 
+  sendRegistrationConfirmation, 
+  sendTeamCreatedEmail, 
+  sendTeamJoinedEmail,
+  sendTeamInvitationEmail 
+} from "../services/email";
 
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   const { data, error } = await supabaseAdmin.auth.getUser(token);
@@ -295,70 +300,28 @@ export function registerHackathonRegistrationRoutes(app: Express) {
   // TEAM ENDPOINTS
   // ============================================
 
-  // Test endpoint to debug team creation
-  app.post("/api/hackathons/:hackathonId/teams/test", async (req, res) => {
-    try {
-      console.log('🧪 [TEST] Test endpoint hit');
-      return res.json({ success: true, message: 'Test endpoint working' });
-    } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
-    }
-  });
-
-  // Debug endpoint for join requests
-  app.post("/api/hackathons/:hackathonId/teams/join-debug", async (req, res) => {
-    try {
-      console.log('🐛 [DEBUG JOIN] Debug join endpoint hit');
-      console.log('🐛 [DEBUG JOIN] Request body:', req.body);
-      console.log('🐛 [DEBUG JOIN] Headers:', req.headers);
-      return res.json({ 
-        success: true, 
-        message: 'Debug endpoint working',
-        received: {
-          body: req.body,
-          params: req.params,
-          method: req.method
-        }
-      });
-    } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
-    }
-  });
-
   // Create team
   app.post("/api/hackathons/:hackathonId/teams", async (req, res) => {
     try {
-      console.log('🏗️ [TEAM CREATE] Starting team creation request');
-      console.log('Request body:', req.body);
-      console.log('Hackathon ID:', req.params.hackathonId);
-
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
-        console.log('❌ [TEAM CREATE] No auth header');
         return res.status(401).json({ success: false, message: 'Unauthorized' });
       }
 
       const token = authHeader.slice('Bearer '.length);
       const userId = await bearerUserId(supabaseAdmin, token);
       if (!userId) {
-        console.log('❌ [TEAM CREATE] Invalid token');
         return res.status(401).json({ success: false, message: 'Invalid token' });
       }
-
-      console.log('✅ [TEAM CREATE] User authenticated:', userId);
 
       const { hackathonId } = req.params;
       const { team_name } = req.body;
 
       if (!team_name || !String(team_name).trim()) {
-        console.log('❌ [TEAM CREATE] Team name is required');
         return res.status(400).json({ success: false, message: 'Team name is required' });
       }
 
-      console.log('✅ [TEAM CREATE] Team name:', team_name);
-
       // Must be registered to create a team
-      console.log('🔍 [TEAM CREATE] Checking registration...');
       const { data: registration, error: regError } = await supabaseAdmin
         .from('hackathon_registrations')
         .select('id, team_id')
@@ -367,31 +330,18 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .single();
 
       if (regError) {
-        console.log('❌ [TEAM CREATE] Registration error:', regError);
         return res.status(403).json({ success: false, message: 'You must be registered to create a team' });
       }
 
       if (!registration) {
-        console.log('❌ [TEAM CREATE] No registration found');
         return res.status(403).json({ success: false, message: 'You must be registered to create a team' });
       }
 
-      console.log('✅ [TEAM CREATE] Registration found:', registration);
-
       if (registration.team_id) {
-        console.log('❌ [TEAM CREATE] User already in team:', registration.team_id);
         return res.status(400).json({ success: false, message: 'You are already in a team' });
       }
 
-      // Generate simple team code
-      const teamCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-      
-      // Try bypassing the issue by creating team without team_code first
-      console.log('🏗️ [TEAM CREATE] Creating team without team_code');
-      console.log('User ID:', userId, 'Type:', typeof userId);
-      console.log('Hackathon ID:', hackathonId, 'Parsed:', parseInt(hackathonId));
-      
-      // First, create team without team_code (since it's causing the ambiguous reference)
+      // Create team with generated code
       const { data: team, error: teamError } = await supabaseAdmin
         .from('hackathon_teams')
         .insert({
@@ -402,13 +352,10 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         });
 
       if (teamError) {
-        console.log('❌ [TEAM CREATE] Team creation error:', teamError);
         throw teamError;
       }
-
-      console.log('✅ [TEAM CREATE] Team created successfully');
       
-      // Get the created team data separately
+      // Get the created team data
       const { data: createdTeam, error: fetchError } = await supabaseAdmin
         .from('hackathon_teams')
         .select('id, team_name, hackathon_id, team_leader_id, team_code, created_at')
@@ -419,14 +366,10 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .single();
 
       if (fetchError) {
-        console.log('❌ [TEAM CREATE] Error fetching created team:', fetchError);
         throw fetchError;
       }
 
-      console.log('✅ [TEAM CREATE] Team data fetched:', createdTeam);
-
       // Update user's registration to link to team
-      console.log('🔗 [TEAM CREATE] Linking registration to team...');
       const { error: updateError } = await supabaseAdmin
         .from('hackathon_registrations')
         .update({
@@ -437,17 +380,39 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .eq('user_id', userId);
 
       if (updateError) {
-        console.log('❌ [TEAM CREATE] Registration update error:', updateError);
         throw updateError;
       }
 
-      console.log('✅ [TEAM CREATE] Team creation successful!');
+      // Send team created email
+      const { data: hackathonDetails } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('hackathon_name, slug')
+        .eq('id', hackathonId)
+        .single();
+
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('email, full_name, username')
+        .eq('id', userId)
+        .single();
+
+      if (hackathonDetails && profile?.email) {
+        sendTeamCreatedEmail({
+          email: profile.email,
+          userName: profile.full_name || profile.username || 'there',
+          hackathonName: hackathonDetails.hackathon_name,
+          hackathonSlug: hackathonDetails.slug,
+          teamName: createdTeam.team_name,
+          teamCode: createdTeam.team_code,
+        }).catch(err => console.error('Team created email failed:', err));
+      }
+
       return res.json({ 
         success: true, 
         data: createdTeam
       });
     } catch (error: any) {
-      console.log('💥 [TEAM CREATE] Fatal error:', error);
+      console.error('Team creation error:', error);
       return res.status(500).json({ success: false, message: error.message });
     }
   });
@@ -455,35 +420,21 @@ export function registerHackathonRegistrationRoutes(app: Express) {
   // Join team with code
   app.post("/api/hackathons/:hackathonId/teams/join", async (req, res) => {
     try {
-      console.log('🔗 [TEAM JOIN] Join team request received');
-      console.log('🔗 [TEAM JOIN] Request method:', req.method);
-      console.log('🔗 [TEAM JOIN] Request URL:', req.url);
-      console.log('🔗 [TEAM JOIN] Request headers:', req.headers);
-      console.log('🔗 [TEAM JOIN] Request body:', req.body);
-      console.log('🔗 [TEAM JOIN] Hackathon ID from params:', req.params.hackathonId);
-      
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
-        console.log('❌ [TEAM JOIN] No auth header');
         return res.status(401).json({ success: false, message: 'Unauthorized' });
       }
 
       const token = authHeader.slice('Bearer '.length);
       const userId = await bearerUserId(supabaseAdmin, token);
       if (!userId) {
-        console.log('❌ [TEAM JOIN] Invalid token');
         return res.status(401).json({ success: false, message: 'Invalid token' });
       }
-
-      console.log('✅ [TEAM JOIN] User authenticated:', userId);
 
       const { hackathonId } = req.params;
       const { team_code } = req.body;
 
-      console.log('🔗 [TEAM JOIN] Extracted data - hackathonId:', hackathonId, 'team_code:', team_code);
-
       if (!team_code || String(team_code).trim().length < 4) {
-        console.log('❌ [TEAM JOIN] Invalid team code:', team_code);
         return res.status(400).json({ success: false, message: 'Invalid team code' });
       }
 
@@ -543,6 +494,36 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .eq('user_id', userId);
 
       if (updateError) throw updateError;
+
+      // Send team joined email
+      const { data: hackathonDetails } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('hackathon_name, slug')
+        .eq('id', hackathonId)
+        .single();
+
+      const { data: profile } = await supabaseAdmin
+        .from('profiles')
+        .select('email, full_name, username')
+        .eq('id', userId)
+        .single();
+
+      const { data: leaderProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('full_name, username')
+        .eq('id', team.team_leader_id)
+        .single();
+
+      if (hackathonDetails && profile?.email) {
+        sendTeamJoinedEmail({
+          email: profile.email,
+          userName: profile.full_name || profile.username || 'there',
+          hackathonName: hackathonDetails.hackathon_name,
+          hackathonSlug: hackathonDetails.slug,
+          teamName: team.team_name,
+          teamLeaderName: leaderProfile?.full_name || leaderProfile?.username || 'Team Leader',
+        }).catch(err => console.error('Team joined email failed:', err));
+      }
 
       return res.json({ success: true, data: team });
     } catch (error: any) {
@@ -1070,7 +1051,30 @@ export function registerHackathonRegistrationRoutes(app: Express) {
 
       if (error) throw error;
 
-      // TODO: Send email notification
+      // Send team invitation email
+      const { data: hackathonDetails } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('hackathon_name, slug')
+        .eq('id', team.hackathon_id)
+        .single();
+
+      const { data: inviterProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('full_name, username')
+        .eq('id', userId)
+        .single();
+
+      if (hackathonDetails) {
+        sendTeamInvitationEmail({
+          email: email,
+          inviteeName: email.split('@')[0], // Use email prefix as name
+          inviterName: inviterProfile?.full_name || inviterProfile?.username || 'A teammate',
+          teamName: team.team_name,
+          hackathonName: hackathonDetails.hackathon_name,
+          hackathonSlug: hackathonDetails.slug,
+          teamCode: team.team_code,
+        }).catch(err => console.error('Team invitation email failed:', err));
+      }
 
       return res.json({ success: true, data });
     } catch (error: any) {

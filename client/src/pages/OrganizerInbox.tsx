@@ -87,7 +87,7 @@ const OrganizerInbox = () => {
       low: { bg: 'bg-green-600', text: 'text-black', label: 'LOW' },
       normal: { bg: 'bg-blue-600', text: 'text-black', label: 'NORMAL' },
       high: { bg: 'bg-orange-600', text: 'text-black', label: 'HIGH' },
-      urgent: { bg: 'bg-red-700', text: 'text-maximally-yellow', label: 'URGENT' }
+      urgent: { bg: 'bg-red-700', text: 'text-amber-300', label: 'URGENT' }
     };
     return config[priority] || config.normal;
   };
@@ -127,7 +127,7 @@ const OrganizerInbox = () => {
         <div className="text-center max-w-md">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
           <p className="font-jetbrains text-red-400 mb-6">{error}</p>
-          <button onClick={() => refetch()} className="pixel-button bg-cyan-600 text-white px-6 py-2 font-press-start text-sm">
+          <button onClick={() => refetch()} className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-2 font-press-start text-sm border border-cyan-500/50 transition-all">
             RETRY
           </button>
         </div>
@@ -142,42 +142,43 @@ const OrganizerInbox = () => {
       
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,0,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
         
         <main className="relative z-10 pt-24 pb-12">
           <div className="container mx-auto px-4">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="font-press-start text-3xl md:text-4xl text-maximally-yellow mb-4 flex items-center gap-4">
-                <InboxIcon className="h-8 w-8" />
+              <h1 className="font-press-start text-3xl md:text-4xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-4 flex items-center gap-4">
+                <InboxIcon className="h-8 w-8 text-pink-400" />
                 ORGANIZER INBOX
               </h1>
-              <p className="font-jetbrains text-cyan-400">Messages from the Maximally Team</p>
+              <p className="font-jetbrains text-pink-400">Messages from the Maximally Team</p>
             </div>
             
             {/* Filters */}
-            <div className="minecraft-block bg-gray-900/50 border-2 border-cyan-400 p-6 mb-8">
+            <div className="bg-black/60 border border-pink-500/40 p-6 mb-8">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
                 <div>
-                  <label className="font-press-start text-xs text-cyan-400 mb-2 block">SEARCH SUBJECT</label>
+                  <label className="font-press-start text-xs text-pink-400 mb-2 block">SEARCH SUBJECT</label>
                   <div className="relative">
                     <input
                       type="text"
                       value={searchSubject}
                       onChange={(e) => setSearchSubject(e.target.value)}
                       placeholder="Type to search..."
-                      className="w-full bg-black border-2 border-gray-700 text-white font-jetbrains px-4 py-2 pr-10 focus:border-cyan-400 focus:outline-none"
+                      className="w-full bg-black border border-purple-500/40 text-white font-jetbrains px-4 py-2 pr-10 focus:border-pink-400 focus:outline-none"
                     />
                     <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                   </div>
                 </div>
                 
                 <div>
-                  <label className="font-press-start text-xs text-cyan-400 mb-2 block">PRIORITY</label>
+                  <label className="font-press-start text-xs text-pink-400 mb-2 block">PRIORITY</label>
                   <select
                     value={selectedPriority}
                     onChange={(e) => setSelectedPriority(e.target.value as Priority | '')}
-                    className="w-full bg-black border-2 border-gray-700 text-white font-jetbrains px-4 py-2 focus:border-cyan-400 focus:outline-none"
+                    className="w-full bg-black border border-purple-500/40 text-white font-jetbrains px-4 py-2 focus:border-pink-400 focus:outline-none"
                   >
                     <option value="">All Priorities</option>
                     <option value="low">Low</option>
@@ -188,11 +189,11 @@ const OrganizerInbox = () => {
                 </div>
                 
                 <div>
-                  <label className="font-press-start text-xs text-cyan-400 mb-2 block">STATUS</label>
+                  <label className="font-press-start text-xs text-pink-400 mb-2 block">STATUS</label>
                   <select
                     value={selectedReadStatus}
                     onChange={(e) => setSelectedReadStatus(e.target.value as '' | 'unread' | 'read')}
-                    className="w-full bg-black border-2 border-gray-700 text-white font-jetbrains px-4 py-2 focus:border-cyan-400 focus:outline-none"
+                    className="w-full bg-black border border-purple-500/40 text-white font-jetbrains px-4 py-2 focus:border-pink-400 focus:outline-none"
                   >
                     <option value="">All Messages</option>
                     <option value="unread">Unread Only</option>
@@ -223,7 +224,7 @@ const OrganizerInbox = () => {
                 <div className="flex items-end">
                   <button
                     onClick={handleResetFilters}
-                    className="pixel-button bg-gray-700 text-white px-6 py-2 font-press-start text-xs hover:bg-gray-600 w-full"
+                    className="bg-gray-800 hover:bg-pink-600/30 text-gray-300 hover:text-white px-6 py-2 font-press-start text-xs w-full border border-gray-700 hover:border-pink-500/50 transition-all"
                   >
                     RESET
                   </button>
@@ -235,14 +236,14 @@ const OrganizerInbox = () => {
             <div className="space-y-4">
               {loading && messages.length === 0 ? (
                 Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="minecraft-block bg-gray-900/30 border-2 border-gray-700 p-6 animate-pulse">
+                  <div key={i} className="bg-gray-900/30 border border-purple-500/30 p-6 animate-pulse">
                     <div className="h-6 bg-gray-700 w-3/4 mb-3"></div>
                     <div className="h-4 bg-gray-700 w-1/2"></div>
                   </div>
                 ))
               ) : messages.length === 0 ? (
-                <div className="minecraft-block bg-gray-900/50 border-2 border-gray-700 p-12 text-center">
-                  <Mail className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+                <div className="bg-black/60 border border-purple-500/30 p-12 text-center">
+                  <Mail className="h-16 w-16 text-pink-500/50 mx-auto mb-4" />
                   <p className="font-press-start text-gray-500 mb-2">NO MESSAGES FOUND</p>
                   <p className="font-jetbrains text-gray-600">Try adjusting your filters</p>
                 </div>
@@ -255,18 +256,18 @@ const OrganizerInbox = () => {
                     <div
                       key={message.id}
                       onClick={() => handleMessageClick(message)}
-                      className={`minecraft-block bg-gray-900/50 p-6 cursor-pointer transition-all hover:bg-gray-800/50 hover:border-cyan-400 ${
-                        isUnread ? 'border-2 border-maximally-red' : 'border-2 border-gray-700'
+                      className={`bg-gradient-to-br from-purple-900/20 to-pink-900/20 p-6 cursor-pointer transition-all hover:border-pink-400 ${
+                        isUnread ? 'border border-pink-500' : 'border border-purple-500/40'
                       }`}
                     >
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2 flex-wrap">
-                            {isUnread && <div className="w-3 h-3 bg-maximally-red rounded-sm flex-shrink-0" />}
-                            <h3 className={`font-press-start text-sm md:text-base text-cyan-400 truncate ${isUnread ? 'font-bold' : ''}`}>
+                            {isUnread && <div className="w-3 h-3 bg-pink-500 flex-shrink-0" />}
+                            <h3 className={`font-press-start text-sm md:text-base bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent truncate ${isUnread ? 'font-bold' : ''}`}>
                               {message.subject}
                             </h3>
-                            <span className={`pixel-button ${priorityBadge.bg} ${priorityBadge.text} px-3 py-1 font-press-start text-xs flex-shrink-0`}>
+                            <span className={`${priorityBadge.bg} ${priorityBadge.text} px-3 py-1 font-press-start text-xs flex-shrink-0 border border-white/20`}>
                               {priorityBadge.label}
                             </span>
                           </div>
@@ -288,12 +289,12 @@ const OrganizerInbox = () => {
         {/* Message Detail Modal */}
         {showModal && selectedMessage && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <div className="minecraft-block bg-gray-900 border-4 border-cyan-400 p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-gradient-to-br from-gray-900 to-gray-900/90 border-2 border-purple-500/50 p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
               <div className="flex items-start justify-between mb-6">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2 flex-wrap">
-                    <h2 className="font-press-start text-xl text-maximally-yellow">{selectedMessage.subject}</h2>
-                    <span className={`pixel-button ${getPriorityBadge(selectedMessage.priority).bg} ${getPriorityBadge(selectedMessage.priority).text} px-3 py-1 font-press-start text-xs`}>
+                    <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{selectedMessage.subject}</h2>
+                    <span className={`${getPriorityBadge(selectedMessage.priority).bg} ${getPriorityBadge(selectedMessage.priority).text} px-3 py-1 font-press-start text-xs border border-white/20`}>
                       {getPriorityBadge(selectedMessage.priority).label}
                     </span>
                   </div>
@@ -302,13 +303,13 @@ const OrganizerInbox = () => {
                     <p>Date: {formatDate(selectedMessage.sent_at || selectedMessage.created_at)}</p>
                   </div>
                 </div>
-                <button onClick={handleCloseModal} className="pixel-button bg-red-600 text-white p-2 hover:bg-red-700" aria-label="Close">
+                <button onClick={handleCloseModal} className="bg-red-600 hover:bg-red-500 text-white p-2 border border-red-500/50 transition-all" aria-label="Close">
                   <X className="h-5 w-5" />
                 </button>
               </div>
               
-              <div className="minecraft-block bg-black border-2 border-gray-700 p-6 mb-4">
-                <p className="font-jetbrains text-cyan-400 whitespace-pre-wrap">{selectedMessage.content}</p>
+              <div className="bg-black/50 border border-purple-500/30 p-6 mb-4">
+                <p className="font-jetbrains text-purple-300 whitespace-pre-wrap">{selectedMessage.content}</p>
               </div>
               
               {selectedMessage.recipient.is_read && selectedMessage.recipient.read_at && (

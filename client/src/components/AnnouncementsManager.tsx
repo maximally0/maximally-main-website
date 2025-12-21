@@ -208,12 +208,12 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Megaphone className="h-6 w-6 text-maximally-yellow" />
-          <h2 className="font-press-start text-xl text-maximally-yellow">ANNOUNCEMENTS</h2>
+          <Megaphone className="h-6 w-6 text-purple-400" />
+          <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">ANNOUNCEMENTS</h2>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors flex items-center gap-2"
+          className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all flex items-center gap-2 border border-pink-500/50"
         >
           <Plus className="h-4 w-4" />
           CREATE
@@ -223,7 +223,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
       {/* Announcements List */}
       <div className="space-y-4">
         {announcements.length === 0 ? (
-          <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
+          <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700 p-12 text-center">
             <Megaphone className="h-12 w-12 text-gray-600 mx-auto mb-4" />
             <p className="font-press-start text-gray-400">NO_ANNOUNCEMENTS_YET</p>
           </div>
@@ -231,50 +231,50 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
           announcements.map((announcement) => (
             <div
               key={announcement.id}
-              className={`pixel-card bg-gray-900 border-2 p-6 ${
-                announcement.is_published ? 'border-green-500' : 'border-gray-700'
+              className={`bg-gradient-to-br from-gray-900/60 to-gray-900/30 border p-6 transition-all ${
+                announcement.is_published ? 'border-green-500/50 hover:border-green-400/70' : 'border-gray-700 hover:border-purple-500/30'
               }`}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
+                  <div className="flex items-center gap-3 mb-2 flex-wrap">
                     <h3 className="font-press-start text-lg text-white">{announcement.title}</h3>
                     <span className={`px-3 py-1 text-xs font-press-start ${
                       announcement.is_published 
-                        ? 'bg-green-500/20 text-green-500 border border-green-500'
-                        : 'bg-gray-500/20 text-gray-500 border border-gray-500'
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/50'
+                        : 'bg-gray-500/20 text-gray-400 border border-gray-500/50'
                     }`}>
                       {announcement.is_published ? 'PUBLISHED' : 'DRAFT'}
                     </span>
-                    <span className="px-3 py-1 text-xs font-press-start bg-maximally-yellow/20 text-maximally-yellow border border-maximally-yellow uppercase">
+                    <span className="px-3 py-1 text-xs font-press-start bg-purple-500/20 text-purple-300 border border-purple-500/50 uppercase">
                       {announcement.announcement_type}
                     </span>
                   </div>
                   <p className="text-gray-300 font-jetbrains text-sm mb-3">{announcement.content}</p>
-                  <div className="flex items-center gap-4 text-xs text-gray-400 font-jetbrains">
+                  <div className="flex items-center gap-4 text-xs text-gray-400 font-jetbrains flex-wrap">
                     <span>Target: {announcement.target_audience}</span>
                     <span>•</span>
                     <span>
                       {new Date(announcement.created_at).toLocaleDateString()}
                       {announcement.updated_at && announcement.updated_at !== announcement.created_at && (
-                        <span className="text-yellow-400"> (edited)</span>
+                        <span className="text-amber-400"> (edited)</span>
                       )}
                     </span>
                     {announcement.send_email && (
                       <>
                         <span>•</span>
-                        <span className="text-blue-400">Email Sent</span>
+                        <span className="text-cyan-400">Email Sent</span>
                       </>
                     )}
                   </div>
                 </div>
                 
                 {/* Action Buttons */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   {!announcement.is_published && (
                     <button
                       onClick={() => handlePublish(announcement.id)}
-                      className="pixel-button bg-green-600 hover:bg-green-700 text-white px-3 py-2 font-press-start text-xs transition-colors flex items-center gap-1"
+                      className="bg-gradient-to-r from-green-600/60 to-emerald-500/40 border border-green-500/50 hover:border-green-400 text-green-200 px-3 py-2 font-press-start text-xs transition-all flex items-center gap-1"
                       title="Publish Draft"
                     >
                       <Send className="h-3 w-3" />
@@ -283,7 +283,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   )}
                   <button
                     onClick={() => handleEdit(announcement)}
-                    className="pixel-button bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 font-press-start text-xs transition-colors flex items-center gap-1"
+                    className="bg-gradient-to-r from-cyan-600/60 to-blue-500/40 border border-cyan-500/50 hover:border-cyan-400 text-cyan-200 px-3 py-2 font-press-start text-xs transition-all flex items-center gap-1"
                     title="Edit Announcement"
                   >
                     <Edit2 className="h-3 w-3" />
@@ -291,7 +291,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   </button>
                   <button
                     onClick={() => setShowDeleteConfirm(announcement.id)}
-                    className="pixel-button bg-red-600 hover:bg-red-700 text-white px-3 py-2 font-press-start text-xs transition-colors flex items-center gap-1"
+                    className="bg-gradient-to-r from-red-600/60 to-rose-500/40 border border-red-500/50 hover:border-red-400 text-red-200 px-3 py-2 font-press-start text-xs transition-all flex items-center gap-1"
                     title="Delete Announcement"
                   >
                     <Trash2 className="h-3 w-3" />
@@ -306,14 +306,14 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
 
       {/* Create Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="pixel-card bg-black border-4 border-maximally-red max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b-2 border-maximally-red">
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-purple-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-purple-500/30 bg-gradient-to-r from-purple-900/30 to-pink-900/20">
               <div className="flex items-center justify-between">
-                <h2 className="font-press-start text-xl text-maximally-red">
+                <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                   {editingAnnouncement ? 'EDIT_ANNOUNCEMENT' : 'CREATE_ANNOUNCEMENT'}
                 </h2>
-                <button onClick={closeModal} className="text-gray-400 hover:text-white">
+                <button onClick={closeModal} className="text-gray-400 hover:text-pink-400 transition-colors">
                   <X className="h-6 w-6" />
                 </button>
               </div>
@@ -326,7 +326,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   type="text"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
                   placeholder="Announcement title"
                 />
               </div>
@@ -337,7 +337,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   rows={6}
-                  className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none resize-none"
+                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none resize-none"
                   placeholder="Announcement content..."
                 />
               </div>
@@ -348,7 +348,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   <select
                     value={formData.announcement_type}
                     onChange={(e) => setFormData({ ...formData, announcement_type: e.target.value })}
-                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
                   >
                     <option value="general">General</option>
                     <option value="important">Important</option>
@@ -362,7 +362,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   <select
                     value={formData.target_audience}
                     onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
-                    className="w-full bg-gray-900 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
                   >
                     <option value="all">All Participants</option>
                     <option value="confirmed">Confirmed Only</option>
@@ -380,7 +380,7 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   id="send_email"
                   checked={formData.send_email}
                   onChange={(e) => setFormData({ ...formData, send_email: e.target.checked })}
-                  className="w-5 h-5"
+                  className="w-5 h-5 accent-purple-500"
                 />
                 <label htmlFor="send_email" className="font-jetbrains text-sm text-gray-300">
                   Send email notification to participants
@@ -392,14 +392,14 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   <>
                     <button
                       onClick={() => handleUpdate()}
-                      className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 transition-colors"
+                      className="flex-1 bg-gray-800/50 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white px-6 py-3 font-press-start text-sm transition-all"
                     >
                       SAVE_CHANGES
                     </button>
                     {!editingAnnouncement.is_published && (
                       <button
                         onClick={() => handleUpdate(true)}
-                        className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors flex items-center justify-center gap-2"
+                        className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all flex items-center justify-center gap-2 border border-pink-500/50"
                       >
                         <Send className="h-4 w-4" />
                         PUBLISH
@@ -410,13 +410,13 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
                   <>
                     <button
                       onClick={() => handleCreate(false)}
-                      className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 transition-colors"
+                      className="flex-1 bg-gray-800/50 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white px-6 py-3 font-press-start text-sm transition-all"
                     >
                       SAVE_DRAFT
                     </button>
                     <button
                       onClick={() => handleCreate(true)}
-                      className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors flex items-center justify-center gap-2"
+                      className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all flex items-center justify-center gap-2 border border-pink-500/50"
                     >
                       <Send className="h-4 w-4" />
                       PUBLISH
@@ -431,10 +431,10 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
 
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="pixel-card bg-black border-4 border-red-500 max-w-md w-full">
-            <div className="p-6 border-b-2 border-red-500">
-              <h2 className="font-press-start text-xl text-red-500">DELETE_ANNOUNCEMENT</h2>
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-red-500/50 max-w-md w-full">
+            <div className="p-6 border-b border-red-500/30 bg-gradient-to-r from-red-900/30 to-rose-900/20">
+              <h2 className="font-press-start text-xl text-red-400">DELETE_ANNOUNCEMENT</h2>
             </div>
             <div className="p-6 space-y-4">
               <p className="font-jetbrains text-gray-300">
@@ -443,13 +443,13 @@ export default function AnnouncementsManager({ hackathonId }: AnnouncementsProps
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowDeleteConfirm(null)}
-                  className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 transition-colors"
+                  className="flex-1 bg-gray-800/50 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white px-6 py-3 font-press-start text-sm transition-all"
                 >
                   CANCEL
                 </button>
                 <button
                   onClick={() => handleDelete(showDeleteConfirm)}
-                  className="flex-1 pixel-button bg-red-600 text-white px-6 py-3 font-press-start text-sm hover:bg-red-700 transition-colors"
+                  className="flex-1 bg-gradient-to-r from-red-600/60 to-rose-500/40 border border-red-500/50 hover:border-red-400 text-red-200 px-6 py-3 font-press-start text-sm transition-all"
                 >
                   DELETE
                 </button>
