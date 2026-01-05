@@ -5,13 +5,29 @@ import {
   School, 
   Award,
   BarChart3,
-  PieChart
+  PieChart,
+  Code,
+  Palette,
+  Briefcase,
+  Megaphone,
+  Crown,
+  HelpCircle
 } from 'lucide-react';
 import { getAuthHeaders } from '@/lib/auth';
 
 interface AnalyticsProps {
   hackathonId: number;
 }
+
+// Team role icons and colors
+const ROLE_CONFIG: Record<string, { icon: any; color: string; bgColor: string }> = {
+  leader: { icon: Crown, color: 'text-yellow-400', bgColor: 'from-yellow-900/40 to-amber-900/20' },
+  developer: { icon: Code, color: 'text-blue-400', bgColor: 'from-blue-900/40 to-cyan-900/20' },
+  designer: { icon: Palette, color: 'text-pink-400', bgColor: 'from-pink-900/40 to-rose-900/20' },
+  pm: { icon: Briefcase, color: 'text-purple-400', bgColor: 'from-purple-900/40 to-violet-900/20' },
+  marketing: { icon: Megaphone, color: 'text-green-400', bgColor: 'from-green-900/40 to-emerald-900/20' },
+  other: { icon: HelpCircle, color: 'text-gray-400', bgColor: 'from-gray-900/40 to-gray-800/20' },
+};
 
 export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
   const [analytics, setAnalytics] = useState<any>(null);
@@ -140,6 +156,45 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Team Role Distribution */}
+      {analytics.teamRoleStats && analytics.teamRoleStats.length > 0 && (
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-cyan-500/30 p-6 hover:border-cyan-400/50 transition-all">
+          <div className="flex items-center gap-2 mb-4">
+            <Users className="h-5 w-5 text-cyan-400" />
+            <h3 className="font-press-start text-sm bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">TEAM_ROLE_DISTRIBUTION</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {analytics.teamRoleStats.map((role: any) => {
+              const config = ROLE_CONFIG[role.team_role] || ROLE_CONFIG.other;
+              const Icon = config.icon;
+              return (
+                <div 
+                  key={role.team_role || 'unassigned'} 
+                  className={`bg-gradient-to-br ${config.bgColor} border border-gray-700 p-4 hover:border-gray-600 transition-all`}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <Icon className={`h-5 w-5 ${config.color}`} />
+                    <span className="font-press-start text-xs text-gray-300 uppercase">
+                      {role.team_role || 'UNASSIGNED'}
+                    </span>
+                  </div>
+                  <div className="flex items-end justify-between">
+                    <div className="text-2xl font-bold text-white font-press-start">
+                      {role.count}
+                    </div>
+                    {role.percentage && (
+                      <div className="text-xs text-gray-400 font-jetbrains">
+                        {role.percentage}%
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

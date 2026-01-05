@@ -65,7 +65,16 @@ export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
         setInviteMessage('');
         fetchData();
       } else {
-        throw new Error(data.message);
+        // Check if judge is not available
+        if (data.availability_status === 'not-available') {
+          toast({
+            title: "Judge Not Available",
+            description: "This judge has set their status to 'Not Available' and cannot receive invitations at this time.",
+            variant: "destructive",
+          });
+        } else {
+          throw new Error(data.message);
+        }
       }
     } catch (error: any) {
       toast({

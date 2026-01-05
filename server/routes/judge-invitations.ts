@@ -10,6 +10,47 @@ async function bearerUserId(supabaseAdmin: any, token: string): Promise<string |
 export function registerJudgeInvitationRoutes(app: Express) {
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
+  // Helper function to check if user has access to hackathon (owner or co-organizer)
+  async function checkHackathonAccess(
+    hackathonId: string | number, 
+    userId: string,
+    requiredPermission?: string
+  ): Promise<{ hasAccess: boolean; isOwner: boolean; role?: string; permissions?: any }> {
+    // Check if user is the owner
+    const { data: hackathon } = await supabaseAdmin
+      .from('organizer_hackathons')
+      .select('organizer_id')
+      .eq('id', hackathonId)
+      .single();
+
+    if (hackathon?.organizer_id === userId) {
+      return { hasAccess: true, isOwner: true, role: 'owner' };
+    }
+
+    // Check if user is a co-organizer
+    const { data: coOrg } = await supabaseAdmin
+      .from('hackathon_organizers')
+      .select('role, permissions, status')
+      .eq('hackathon_id', hackathonId)
+      .eq('user_id', userId)
+      .eq('status', 'accepted')
+      .single();
+
+    if (!coOrg) {
+      return { hasAccess: false, isOwner: false };
+    }
+
+    // Check specific permission if required
+    if (requiredPermission && coOrg.permissions) {
+      const hasPermission = coOrg.permissions[requiredPermission] === true;
+      if (!hasPermission) {
+        return { hasAccess: false, isOwner: false, role: coOrg.role, permissions: coOrg.permissions };
+      }
+    }
+
+    return { hasAccess: true, isOwner: false, role: coOrg.role, permissions: coOrg.permissions };
+  }
+
   // Organizer: Invite judge to hackathon (by email)
   app.post("/api/organizer/hackathons/:hackathonId/invite-judge", async (req, res) => {
     try {
@@ -59,17 +100,18 @@ export function registerJudgeInvitationRoutes(app: Express) {
         });
       }
 
-      // Verify organizer owns this hackathon
+      // Verify access (owner or co-organizer with can_manage_judges)
+      const access = await checkHackathonAccess(hackathonId, userId, 'can_manage_judges');
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized to manage judges' });
+      }
+
+      // Get hackathon organizer_id for the request
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
-        .select('*')
+        .select('organizer_id')
         .eq('id', hackathonId)
-        .eq('organizer_id', userId)
         .single();
-
-      if (!hackathon) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
-      }
 
       // Create invitation
       const { data, error } = await supabaseAdmin
@@ -77,7 +119,7 @@ export function registerJudgeInvitationRoutes(app: Express) {
         .insert({
           hackathon_id: parseInt(hackathonId),
           judge_id: judgeId,
-          organizer_id: userId,
+          organizer_id: hackathon?.organizer_id || userId,
           request_type: 'organizer_invite',
           message: message || null,
           status: 'pending'
@@ -231,15 +273,10 @@ export function registerJudgeInvitationRoutes(app: Express) {
 
       const { hackathonId } = req.params;
 
-      // Verify ownership
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id')
-        .eq('id', hackathonId)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
+      // Verify access (owner or co-organizer with can_manage_judges)
+      const access = await checkHackathonAccess(hackathonId, userId, 'can_manage_judges');
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized to manage judges' });
       }
 
       const { data, error } = await supabaseAdmin
@@ -287,15 +324,10 @@ export function registerJudgeInvitationRoutes(app: Express) {
 
       const { hackathonId } = req.params;
 
-      // Verify ownership
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id')
-        .eq('id', hackathonId)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
+      // Verify access (owner or co-organizer with can_manage_judges)
+      const access = await checkHackathonAccess(hackathonId, userId, 'can_manage_judges');
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized to manage judges' });
       }
 
       const { data, error } = await supabaseAdmin
@@ -550,15 +582,10 @@ export function registerJudgeInvitationRoutes(app: Express) {
 
       const { hackathonId, assignmentId } = req.params;
 
-      // Verify organizer owns this hackathon
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id')
-        .eq('id', hackathonId)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
+      // Verify access (owner or co-organizer with can_manage_judges)
+      const access = await checkHackathonAccess(hackathonId, userId, 'can_manage_judges');
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized to manage judges' });
       }
 
       // Update assignment status to 'removed'

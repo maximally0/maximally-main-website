@@ -21,7 +21,8 @@ import PasswordSettings from '@/components/PasswordSettings';
 import ExportDataButton from '@/components/ExportDataButton';
 import ReportUserDialog from '@/components/ReportUserDialog';
 import { useToast } from '@/hooks/use-toast';
-import { Flag } from 'lucide-react';
+import { Flag, Users } from 'lucide-react';
+import TeammatesHistory from '@/components/TeammatesHistory';
 
 interface Certificate {
   id: string;
@@ -1282,6 +1283,12 @@ export default function Profile() {
               >
                 PROJECTS
               </TabsTrigger>
+              <TabsTrigger 
+                value="teammates" 
+                className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
+              >
+                TEAMMATES
+              </TabsTrigger>
               {isOwner && (
                 <TabsTrigger 
                   value="settings" 
@@ -1467,6 +1474,18 @@ export default function Profile() {
                 <FolderOpen className="w-16 h-16 text-purple-500/50 mx-auto mb-4" />
                 <h3 className="font-press-start text-sm text-gray-400 mb-2">NO PROJECTS YET</h3>
                 <p className="text-gray-500 font-jetbrains">This user hasn't submitted any projects yet.</p>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="teammates" className="space-y-6">
+            {dbProfile?.id ? (
+              <TeammatesHistory userId={dbProfile.id} showTitle={false} />
+            ) : (
+              <div className="text-center py-12 bg-black/40 border border-purple-500/30 p-8">
+                <Users className="w-16 h-16 text-purple-500/50 mx-auto mb-4" />
+                <h3 className="font-press-start text-sm text-gray-400 mb-2">NO TEAMMATES YET</h3>
+                <p className="text-gray-500 font-jetbrains">Join a hackathon with a team to see your teammates here!</p>
               </div>
             )}
           </TabsContent>

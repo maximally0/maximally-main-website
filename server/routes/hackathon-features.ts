@@ -831,4 +831,140 @@ export function registerHackathonFeatureRoutes(app: Express) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
+
+  // ============================================================================
+  // MENTORS (for certificate generation)
+  // ============================================================================
+
+  // Get mentors for a hackathon (organizer only - for certificates)
+  app.get("/api/organizer/hackathons/:hackathonId/mentors", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+
+      // Verify organizer owns this hackathon
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon || hackathon.organizer_id !== userId) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Get mentors from hackathon_mentors table
+      const { data: mentors, error } = await supabaseAdmin
+        .from('hackathon_mentors')
+        .select(`
+          id,
+          mentor_id,
+          expertise_areas,
+          bio,
+          status,
+          mentor:profiles!hackathon_mentors_mentor_id_fkey(
+            id,
+            email,
+            full_name,
+            username,
+            avatar_url
+          )
+        `)
+        .eq('hackathon_id', hackathonId)
+        .eq('status', 'active');
+
+      if (error) throw error;
+
+      // Map to expected format
+      const mappedMentors = (mentors || []).map((m: any) => ({
+        id: m.id,
+        mentor_id: m.mentor_id,
+        mentor_name: m.mentor?.full_name || m.mentor?.username || 'Unknown',
+        full_name: m.mentor?.full_name,
+        email: m.mentor?.email,
+        avatar_url: m.mentor?.avatar_url,
+        expertise_areas: m.expertise_areas,
+        bio: m.bio,
+      }));
+
+      return res.json({ success: true, data: mappedMentors });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get judges for a hackathon (organizer only - for certificates)
+  app.get("/api/organizer/hackathons/:hackathonId/judges", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+
+      // Verify organizer owns this hackathon
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon || hackathon.organizer_id !== userId) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Get judges from judge_hackathon_assignments table
+      const { data: judges, error } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .select(`
+          id,
+          judge_id,
+          role,
+          status,
+          judge:profiles!judge_hackathon_assignments_judge_id_fkey(
+            id,
+            email,
+            full_name,
+            username,
+            avatar_url
+          )
+        `)
+        .eq('hackathon_id', hackathonId)
+        .eq('status', 'active');
+
+      if (error) throw error;
+
+      // Map to expected format
+      const mappedJudges = (judges || []).map((j: any) => ({
+        id: j.id,
+        judge_id: j.judge_id,
+        judge_name: j.judge?.full_name || j.judge?.username || 'Unknown',
+        full_name: j.judge?.full_name,
+        email: j.judge?.email,
+        avatar_url: j.judge?.avatar_url,
+        role: j.role,
+      }));
+
+      return res.json({ success: true, data: mappedJudges });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
 }

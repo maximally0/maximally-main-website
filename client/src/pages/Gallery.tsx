@@ -21,6 +21,7 @@ import {
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/contexts/AuthContext';
+import RecommendedProjects from '@/components/RecommendedProjects';
 
 interface GalleryProject {
   id: number;
@@ -384,6 +385,15 @@ export default function Gallery() {
             )}
           </div>
         </section>
+
+        {/* Recommended Projects Section */}
+        {user && (
+          <section className="py-8 sm:py-12">
+            <div className="container mx-auto px-6 sm:px-8 lg:px-12">
+              <RecommendedProjects limit={6} />
+            </div>
+          </section>
+        )}
 
         <Footer />
       </div>

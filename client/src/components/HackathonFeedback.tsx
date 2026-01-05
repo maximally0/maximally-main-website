@@ -34,9 +34,19 @@ interface HackathonFeedbackProps {
   hackathonId: number;
   winnersAnnounced?: boolean;
   isParticipant?: boolean;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
 }
 
-export default function HackathonFeedback({ hackathonId, winnersAnnounced = false, isParticipant = false }: HackathonFeedbackProps) {
+export default function HackathonFeedback({ 
+  hackathonId, 
+  winnersAnnounced = false, 
+  isParticipant = false,
+  primaryColor = '#8B5CF6',
+  secondaryColor = '#EC4899',
+  accentColor = '#06B6D4'
+}: HackathonFeedbackProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const [feedbacks, setFeedbacks] = useState<ParticipantFeedback[]>([]);
@@ -164,8 +174,14 @@ export default function HackathonFeedback({ hackathonId, winnersAnnounced = fals
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-500/20 border border-purple-500/40">
-            <MessageCircle className="h-5 w-5 text-purple-400" />
+          <div 
+            className="p-2 border"
+            style={{
+              backgroundColor: `${primaryColor}20`,
+              borderColor: `${primaryColor}40`
+            }}
+          >
+            <MessageCircle className="h-5 w-5" style={{ color: primaryColor }} />
           </div>
           <h3 className="font-press-start text-xl text-white">PARTICIPANT_FEEDBACK</h3>
         </div>
@@ -173,7 +189,12 @@ export default function HackathonFeedback({ hackathonId, winnersAnnounced = fals
         {winnersAnnounced && isParticipant && user && !myFeedback && (
           <button
             onClick={() => setShowForm(true)}
-            className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
+            className="border px-6 py-3 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
+            style={{
+              background: `linear-gradient(to right, ${primaryColor}40, ${secondaryColor}30)`,
+              borderColor: `${primaryColor}50`,
+              color: primaryColor
+            }}
           >
             <Star className="h-4 w-4" />
             GIVE_FEEDBACK

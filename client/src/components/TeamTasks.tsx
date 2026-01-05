@@ -223,12 +223,12 @@ export default function TeamTasks({ teamId }: TeamTasksProps) {
       )}
 
       {/* Task Board */}
-      <div className="grid md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {Object.entries(groupedTasks).map(([status, statusTasks]) => (
           <div key={status} className="space-y-3">
-            <div className={`border ${statusColors[status as keyof typeof statusColors]} px-3 py-2`}>
-              <span className={`font-press-start text-xs ${statusTextColors[status as keyof typeof statusTextColors]}`}>
-                {status.toUpperCase().replace('-', ' ')} ({statusTasks.length})
+            <div className={`border ${statusColors[status as keyof typeof statusColors]} px-3 py-2 text-center`}>
+              <span className={`font-press-start text-[10px] ${statusTextColors[status as keyof typeof statusTextColors]} whitespace-nowrap`}>
+                {status === 'in-progress' ? 'PROGRESS' : status.toUpperCase()} ({statusTasks.length})
               </span>
             </div>
             <div className="space-y-2">

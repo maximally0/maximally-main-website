@@ -31,41 +31,74 @@ import { getAuthHeaders } from '@/lib/auth';
 
 const HostHackathon = () => {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const [hasHackathons, setHasHackathons] = useState(false);
-  const [checkingHackathons, setCheckingHackathons] = useState(true);
+  const [checkingStatus, setCheckingStatus] = useState(true);
+  const [isOrganizer, setIsOrganizer] = useState(false);
 
   useEffect(() => {
-    const checkHackathons = async () => {
+    const checkOrganizerStatus = async () => {
       if (!authLoading) {
         if (user) {
-          try {
-            const headers = await getAuthHeaders();
-            const response = await fetch('/api/organizer/hackathons', { headers });
-            const data = await response.json();
-            if (data.success && data.data && data.data.length > 0) {
-              setHasHackathons(true);
+          // Check if user has organizer role
+          const userIsOrganizer = profile?.role === 'organizer' || profile?.role === 'admin';
+          setIsOrganizer(userIsOrganizer);
+
+          if (userIsOrganizer) {
+            // Only check for hackathons if user is an organizer
+            try {
+              const headers = await getAuthHeaders();
+              const response = await fetch('/api/organizer/hackathons', { headers });
+              const data = await response.json();
+              if (data.success && data.data && data.data.length > 0) {
+                setHasHackathons(true);
+              }
+            } catch (error) {
+              console.error('Error checking hackathons:', error);
             }
-          } catch (error) {
-            console.error('Error checking hackathons:', error);
           }
         }
-        setCheckingHackathons(false);
+        setCheckingStatus(false);
       }
     };
 
-    checkHackathons();
-  }, [user, authLoading]);
+    checkOrganizerStatus();
+  }, [user, profile, authLoading]);
 
   const handleGetStarted = () => {
     if (!user) {
-      navigate('/login?redirect=/create-hackathon');
+      // Not logged in - redirect to login, then to organizer application
+      navigate('/login?redirect=/organizer/apply');
+    } else if (!isOrganizer) {
+      // Logged in but not an organizer - go to application form
+      navigate('/organizer/apply');
     } else if (hasHackathons) {
+      // Organizer with hackathons - go to dashboard
       navigate('/organizer/dashboard');
     } else {
+      // Organizer with no hackathons - go to create hackathon
       navigate('/create-hackathon');
     }
   };
+
+  // Determine button text and icon
+  const getButtonContent = () => {
+    if (authLoading || checkingStatus) {
+      return { text: 'LOADING...', icon: Rocket, showArrow: false };
+    }
+    if (!user) {
+      return { text: 'GET STARTED', icon: Rocket, showArrow: true };
+    }
+    if (!isOrganizer) {
+      return { text: 'APPLY TO HOST', icon: FileText, showArrow: true };
+    }
+    if (hasHackathons) {
+      return { text: 'MY DASHBOARD', icon: BarChart3, showArrow: true };
+    }
+    return { text: 'CREATE HACKATHON', icon: Rocket, showArrow: true };
+  };
+
+  const buttonContent = getButtonContent();
 
   const benefits = [
     {
@@ -203,22 +236,15 @@ const HostHackathon = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                 <button
                   onClick={handleGetStarted}
-                  disabled={authLoading || checkingHackathons}
+                  disabled={authLoading || checkingStatus}
                   className="group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600/30 to-pink-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs sm:text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   data-testid="button-get-started"
                 >
-                  {user && hasHackathons ? (
-                    <>
-                      <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-                      <span>{checkingHackathons ? 'LOADING...' : 'MY DASHBOARD'}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Rocket className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-bounce" />
-                      <span>{authLoading || checkingHackathons ? 'LOADING...' : 'GET STARTED'}</span>
-                    </>
+                  <buttonContent.icon className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-bounce" />
+                  <span>{buttonContent.text}</span>
+                  {buttonContent.showArrow && (
+                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                   )}
-                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
 
                 <a
@@ -449,13 +475,13 @@ const HostHackathon = () => {
                   </p>
                   <button
                     onClick={handleGetStarted}
-                    disabled={authLoading || checkingHackathons}
+                    disabled={authLoading || checkingStatus}
                     className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs sm:text-sm transition-all duration-300 disabled:opacity-50"
                     data-testid="button-cta-get-started"
                   >
-                    <Rocket className="h-5 w-5" />
-                    {user && hasHackathons ? 'GO TO DASHBOARD' : 'START NOW'}
-                    <ArrowRight className="h-5 w-5" />
+                    <buttonContent.icon className="h-5 w-5" />
+                    {buttonContent.text}
+                    {buttonContent.showArrow && <ArrowRight className="h-5 w-5" />}
                   </button>
                 </div>
               </div>

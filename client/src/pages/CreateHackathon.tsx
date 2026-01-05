@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Rocket, Calendar, Link as LinkIcon, ArrowRight, Sparkles, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { getAuthHeaders } from '@/lib/auth';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -9,6 +10,7 @@ import SEO from '@/components/SEO';
 export default function CreateHackathon() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, profile, loading: authLoading } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     hackathonName: '',
@@ -16,6 +18,28 @@ export default function CreateHackathon() {
     startDate: '',
     endDate: '',
   });
+
+  // Check if user is an organizer, redirect if not
+  useEffect(() => {
+    if (!authLoading) {
+      if (!user) {
+        // Not logged in - redirect to login
+        navigate('/login?redirect=/organizer/apply');
+        return;
+      }
+      
+      const isOrganizer = profile?.role === 'organizer' || profile?.role === 'admin';
+      if (!isOrganizer) {
+        // Logged in but not an organizer - redirect to application form
+        toast({
+          title: "Organizer Access Required",
+          description: "Please apply to become an organizer first.",
+          variant: "destructive",
+        });
+        navigate('/organizer/apply');
+      }
+    }
+  }, [user, profile, authLoading, navigate, toast]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

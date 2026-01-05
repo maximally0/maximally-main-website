@@ -1860,5 +1860,249 @@ export async function sendBulkEmails(emails: string[], subject: string, html: st
   }
 }
 
+export async function sendCertificateEmail(data: {
+  email: string;
+  userName: string;
+  hackathonName: string;
+  certificateId: string;
+  certificateType: 'participant' | 'winner' | 'judge';
+  position?: string;
+}) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping certificate email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+  
+  const typeLabels = {
+    participant: 'Participation',
+    winner: 'Winner',
+    judge: 'Judge Appreciation'
+  };
+  
+  const typeEmoji = {
+    participant: '🎓',
+    winner: '🏆',
+    judge: '⚖️'
+  };
+  
+  const verificationUrl = `${PLATFORM_URL}/certificates/verify/${data.certificateId}`;
+  
+  const html = getBaseTemplate(`
+    <div class="emoji-header">${typeEmoji[data.certificateType]}</div>
+    <h1 class="title title-fallback">YOUR CERTIFICATE IS READY!</h1>
+    
+    <p class="greeting">Congratulations, <span class="highlight-name">${data.userName}</span>! 🎉</p>
+    
+    <p class="message">
+      Your <strong>${typeLabels[data.certificateType]} Certificate</strong> for 
+      <strong>${data.hackathonName}</strong> has been generated and is ready for download!
+    </p>
+    
+    <div class="info-box success">
+      <div class="info-label">📜 Certificate Details</div>
+      <div class="info-row">
+        <span class="info-row-label">Certificate ID</span>
+        <span class="info-row-value" style="font-family: monospace;">${data.certificateId}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Type</span>
+        <span class="info-row-value">${typeLabels[data.certificateType]}</span>
+      </div>
+      ${data.position ? `
+      <div class="info-row">
+        <span class="info-row-label">Achievement</span>
+        <span class="info-row-value highlight-orange">${data.position}</span>
+      </div>
+      ` : ''}
+      <div class="info-row">
+        <span class="info-row-label">Event</span>
+        <span class="info-row-value">${data.hackathonName}</span>
+      </div>
+    </div>
+    
+    <div class="button-container">
+      <a href="${verificationUrl}" class="button">VIEW & DOWNLOAD CERTIFICATE →</a>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <p class="message" style="text-align: center; font-size: 12px;">
+      You can verify this certificate anytime at:<br>
+      <a href="${verificationUrl}" style="color: ${BRAND_COLORS.purple}; word-break: break-all;">${verificationUrl}</a>
+    </p>
+    
+    <p class="message" style="text-align: center;">
+      Thank you for being part of ${data.hackathonName}! 🚀
+    </p>
+  `, `Your ${typeLabels[data.certificateType]} Certificate for ${data.hackathonName} is ready!`);
+  
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: `${typeEmoji[data.certificateType]} Your ${typeLabels[data.certificateType]} Certificate - ${data.hackathonName}`,
+      html,
+    });
+    console.log(`✅ Certificate email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send certificate email:', error);
+    return { success: false, error };
+  }
+}
+
+// Judge Reminder Email
+export async function sendJudgeReminderEmail(data: {
+  email: string;
+  judgeName: string;
+  hackathonName: string;
+  hackathonSlug: string;
+  unscoredCount: number;
+  totalSubmissions: number;
+  judgingDeadline?: string;
+}) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping judge reminder email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+  
+  const deadlineText = data.judgingDeadline 
+    ? new Date(data.judgingDeadline).toLocaleString('en-US', { dateStyle: 'full', timeStyle: 'short' })
+    : 'Soon';
+  
+  const html = getBaseTemplate(`
+    <div class="emoji-header">⚖️</div>
+    <h1 class="title title-fallback">JUDGING REMINDER</h1>
+    
+    <p class="greeting">Hey <span class="highlight-name">${data.judgeName}</span>! 👋</p>
+    
+    <p class="message">
+      This is a friendly reminder that you have submissions waiting to be scored for 
+      <strong>${data.hackathonName}</strong>.
+    </p>
+    
+    <div class="countdown-box">
+      <div class="info-label">📊 Your Progress</div>
+      <div class="countdown-time">${data.unscoredCount}</div>
+      <p style="color: ${BRAND_COLORS.gray}; font-size: 14px; margin-top: 12px;">
+        submissions still need your review
+      </p>
+    </div>
+    
+    <div class="info-box warning">
+      <div class="info-label">⏰ Judging Deadline</div>
+      <p style="color: ${BRAND_COLORS.lightGray}; font-size: 16px; margin-top: 8px; font-weight: 600;">
+        ${deadlineText}
+      </p>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <p class="message"><strong>Quick Stats:</strong></p>
+    
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-value red">${data.totalSubmissions}</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value purple">${data.totalSubmissions - data.unscoredCount}</div>
+        <div class="stat-label">Scored</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value cyan">${data.unscoredCount}</div>
+        <div class="stat-label">Remaining</div>
+      </div>
+    </div>
+    
+    <div class="button-container">
+      <a href="${PLATFORM_URL}/judge/hackathons/${data.hackathonSlug}/submissions" class="button">CONTINUE JUDGING →</a>
+    </div>
+    
+    <p class="message" style="text-align: center;">
+      Thank you for helping evaluate these amazing projects! 🙏
+    </p>
+  `, `Reminder: ${data.unscoredCount} submissions need your review for ${data.hackathonName}`);
+  
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: `⚖️ Judging Reminder: ${data.unscoredCount} Submissions Awaiting Review - ${data.hackathonName}`,
+      html,
+    });
+    console.log(`✅ Judge reminder email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send judge reminder email:', error);
+    return { success: false, error };
+  }
+}
+
+// Mentor Certificate Email
+export async function sendMentorCertificateEmail(data: {
+  email: string;
+  mentorName: string;
+  hackathonName: string;
+  certificateId: string;
+}) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping mentor certificate email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+  
+  const verificationUrl = `${PLATFORM_URL}/certificates/verify/${data.certificateId}`;
+  
+  const html = getBaseTemplate(`
+    <div class="emoji-header">🎓</div>
+    <h1 class="title title-fallback">MENTOR CERTIFICATE READY!</h1>
+    
+    <p class="greeting">Thank you, <span class="highlight-name">${data.mentorName}</span>! 🙏</p>
+    
+    <p class="message">
+      Your <strong>Mentor Appreciation Certificate</strong> for 
+      <strong>${data.hackathonName}</strong> has been generated!
+    </p>
+    
+    <div class="info-box purple">
+      <div class="info-label">📜 Certificate Details</div>
+      <div class="info-row">
+        <span class="info-row-label">Certificate ID</span>
+        <span class="info-row-value" style="font-family: monospace;">${data.certificateId}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Type</span>
+        <span class="info-row-value">Mentor Appreciation</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Event</span>
+        <span class="info-row-value">${data.hackathonName}</span>
+      </div>
+    </div>
+    
+    <div class="button-container">
+      <a href="${verificationUrl}" class="button">VIEW & DOWNLOAD CERTIFICATE →</a>
+    </div>
+    
+    <p class="message" style="text-align: center;">
+      Your guidance made a real difference. Thank you for mentoring! 💜
+    </p>
+  `, `Your Mentor Certificate for ${data.hackathonName} is ready!`);
+  
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: `🎓 Your Mentor Certificate - ${data.hackathonName}`,
+      html,
+    });
+    console.log(`✅ Mentor certificate email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send mentor certificate email:', error);
+    return { success: false, error };
+  }
+}
+
 // Export email templates for external use (e.g., preview)
 export { emailTemplates, getBaseTemplate, BRAND_COLORS };

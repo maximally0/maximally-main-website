@@ -17,9 +17,17 @@ interface Announcement {
 
 interface Props {
   hackathonId: number;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
 }
 
-export default function HackathonAnnouncements({ hackathonId }: Props) {
+export default function HackathonAnnouncements({ 
+  hackathonId,
+  primaryColor = '#8B5CF6',
+  secondaryColor = '#EC4899',
+  accentColor = '#06B6D4'
+}: Props) {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -175,10 +183,21 @@ export default function HackathonAnnouncements({ hackathonId }: Props) {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-purple-500/20 border border-purple-500/40">
-          <Megaphone className="h-5 w-5 text-purple-400" />
+        <div 
+          className="p-2 border"
+          style={{
+            backgroundColor: `${primaryColor}20`,
+            borderColor: `${primaryColor}40`
+          }}
+        >
+          <Megaphone className="h-5 w-5" style={{ color: primaryColor }} />
         </div>
-        <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">ANNOUNCEMENTS</h2>
+        <h2 
+          className="font-press-start text-2xl bg-clip-text text-transparent"
+          style={{
+            backgroundImage: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`
+          }}
+        >ANNOUNCEMENTS</h2>
       </div>
 
       <div className="space-y-4">

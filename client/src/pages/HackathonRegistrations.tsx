@@ -23,7 +23,8 @@ import {
   Square,
   Trash2,
   X,
-  Eye
+  Eye,
+  BarChart3
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -33,6 +34,8 @@ import AnnouncementsManager from '@/components/AnnouncementsManager';
 import JudgesManager from '@/components/JudgesManager';
 import OrganizerFeedbackViewer from '@/components/OrganizerFeedbackViewer';
 import WinnersManager from '@/components/WinnersManager';
+import CertificateGenerator from '@/components/CertificateGenerator';
+import OrganizerInsights from '@/components/OrganizerInsights';
 
 interface Registration {
   id: number;
@@ -66,6 +69,32 @@ interface Team {
   members: { count: number }[];
 }
 
+interface UserRole {
+  isOwner: boolean;
+  role: string;
+  permissions: {
+    can_view_registrations: boolean;
+    can_manage_registrations: boolean;
+    can_view_teams: boolean;
+    can_manage_teams: boolean;
+    can_view_submissions: boolean;
+    can_manage_submissions: boolean;
+    can_view_judges: boolean;
+    can_manage_judges: boolean;
+    can_view_announcements: boolean;
+    can_manage_announcements: boolean;
+    can_view_analytics: boolean;
+    can_view_insights: boolean;
+    can_view_feedback: boolean;
+    can_view_winners: boolean;
+    can_manage_winners: boolean;
+    can_view_certificates: boolean;
+    can_manage_certificates: boolean;
+    can_view_settings: boolean;
+    can_manage_settings: boolean;
+  };
+}
+
 export default function HackathonRegistrations() {
   const { hackathonId } = useParams();
   const { user } = useAuth();
@@ -74,8 +103,9 @@ export default function HackathonRegistrations() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [hackathon, setHackathon] = useState<any>(null);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'registrations' | 'teams' | 'submissions' | 'analytics' | 'announcements' | 'judges' | 'winners' | 'timeline' | 'settings' | 'feedback'>('registrations');
+  const [activeTab, setActiveTab] = useState<'registrations' | 'teams' | 'submissions' | 'analytics' | 'announcements' | 'judges' | 'winners' | 'timeline' | 'settings' | 'feedback' | 'certificates' | 'insights'>('registrations');
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [selectedRegistrations, setSelectedRegistrations] = useState<number[]>([]);
@@ -99,6 +129,24 @@ export default function HackathonRegistrations() {
     try {
       const headers = await getAuthHeaders();
       
+      // First fetch user role to know what data to fetch
+      const roleResponse = await fetch(`/api/organizer/hackathons/${hackathonId}/my-role`, { headers });
+      const roleData = await roleResponse.json();
+      
+      if (roleData.success) {
+        setUserRole(roleData.data);
+        
+        // Set initial active tab based on permissions
+        const perms = roleData.data.permissions;
+        if (roleData.data.isOwner || perms.can_view_registrations) {
+          setActiveTab('registrations');
+        } else if (perms.can_view_submissions) {
+          setActiveTab('submissions');
+        } else if (perms.can_view_analytics) {
+          setActiveTab('analytics');
+        }
+      }
+      
       const [regResponse, teamsResponse, submissionsResponse, hackathonResponse] = await Promise.all([
         fetch(`/api/organizer/hackathons/${hackathonId}/registrations`, { headers }),
         fetch(`/api/organizer/hackathons/${hackathonId}/teams`, { headers }),
@@ -111,9 +159,9 @@ export default function HackathonRegistrations() {
       const submissionsData = await submissionsResponse.json();
       const hackathonData = await hackathonResponse.json();
 
-      if (regData.success) setRegistrations(regData.data);
-      if (teamsData.success) setTeams(teamsData.data);
-      if (submissionsData.success) setSubmissions(submissionsData.data);
+      if (regData.success) setRegistrations(regData.data || []);
+      if (teamsData.success) setTeams(teamsData.data || []);
+      if (submissionsData.success) setSubmissions(submissionsData.data || []);
       if (hackathonData.success) {
         setHackathon(hackathonData.data);
         // Load period controls from hackathon data
@@ -132,6 +180,13 @@ export default function HackathonRegistrations() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper to check if user has a specific permission
+  const hasPermission = (permission: keyof UserRole['permissions']) => {
+    if (!userRole) return false;
+    if (userRole.isOwner) return true;
+    return userRole.permissions?.[permission] === true;
   };
 
   const exportToCSV = () => {
@@ -432,16 +487,23 @@ export default function HackathonRegistrations() {
             {/* Tabs */}
             <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
               {[
-                { id: 'registrations', label: 'REGISTRATIONS' },
-                { id: 'teams', label: 'TEAMS' },
-                { id: 'submissions', label: 'SUBMISSIONS' },
-                { id: 'analytics', label: 'ANALYTICS' },
-                { id: 'announcements', label: 'ANNOUNCEMENTS' },
-                { id: 'judges', label: 'JUDGES' },
-                { id: 'feedback', label: 'FEEDBACK' },
-                { id: 'winners', label: 'WINNERS' },
-                { id: 'settings', label: 'SETTINGS' },
-              ].map((tab) => (
+                { id: 'registrations', label: 'REGISTRATIONS', permission: 'can_view_registrations' },
+                { id: 'teams', label: 'TEAMS', permission: 'can_view_teams' },
+                { id: 'submissions', label: 'SUBMISSIONS', permission: 'can_view_submissions' },
+                { id: 'analytics', label: 'ANALYTICS', permission: 'can_view_analytics' },
+                { id: 'insights', label: 'INSIGHTS', permission: 'can_view_insights' },
+                { id: 'announcements', label: 'ANNOUNCEMENTS', permission: 'can_view_announcements' },
+                { id: 'judges', label: 'JUDGES', permission: 'can_view_judges' },
+                { id: 'feedback', label: 'FEEDBACK', permission: 'can_view_feedback' },
+                { id: 'winners', label: 'WINNERS', permission: 'can_view_winners' },
+                { id: 'certificates', label: 'CERTIFICATES', permission: 'can_view_certificates' },
+                { id: 'settings', label: 'SETTINGS', permission: 'can_view_settings' },
+              ].filter(tab => {
+                // Filter tabs based on user permissions
+                if (!userRole) return false;
+                if (userRole.isOwner) return true;
+                return userRole.permissions?.[tab.permission as keyof UserRole['permissions']] === true;
+              }).map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
@@ -772,6 +834,70 @@ export default function HackathonRegistrations() {
           {/* Submissions Tab */}
           {activeTab === 'submissions' && (
             <div className="space-y-4">
+              {/* Track-wise Scoring Analytics */}
+              {submissions.length > 0 && (() => {
+                // Get unique tracks from submissions
+                const trackStats = submissions.reduce((acc: any, sub: any) => {
+                  const track = sub.track || 'No Track';
+                  if (!acc[track]) {
+                    acc[track] = { count: 0, scored: 0, totalScore: 0, avgScore: 0 };
+                  }
+                  acc[track].count++;
+                  if (sub.average_score || sub.score) {
+                    acc[track].scored++;
+                    acc[track].totalScore += parseFloat(sub.average_score || sub.score);
+                  }
+                  return acc;
+                }, {});
+                
+                // Calculate averages
+                Object.keys(trackStats).forEach(track => {
+                  if (trackStats[track].scored > 0) {
+                    trackStats[track].avgScore = (trackStats[track].totalScore / trackStats[track].scored).toFixed(1);
+                  }
+                });
+
+                const tracks = Object.keys(trackStats);
+                if (tracks.length <= 1 && tracks[0] === 'No Track') return null;
+
+                return (
+                  <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/10 border border-purple-500/30 p-6 mb-6">
+                    <h3 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+                      TRACK-WISE SCORING SUMMARY
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {tracks.map(track => (
+                        <div key={track} className="bg-black/30 border border-gray-700 p-4 hover:border-purple-500/50 transition-all">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-press-start text-xs text-cyan-400 truncate max-w-[150px]" title={track}>
+                              {track.toUpperCase()}
+                            </span>
+                            {trackStats[track].avgScore > 0 && (
+                              <div className="flex items-center gap-1">
+                                <Star className="h-4 w-4 text-amber-400" />
+                                <span className="font-press-start text-sm text-amber-300">{trackStats[track].avgScore}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center justify-between text-xs text-gray-400 font-jetbrains">
+                            <span>{trackStats[track].count} submissions</span>
+                            <span>{trackStats[track].scored} scored</span>
+                          </div>
+                          {trackStats[track].count > 0 && (
+                            <div className="mt-2 h-1 bg-gray-700 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
+                                style={{ width: `${(trackStats[track].scored / trackStats[track].count) * 100}%` }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {submissions.length === 0 ? (
                 <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700 p-12 text-center">
                   <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
@@ -828,6 +954,11 @@ export default function HackathonRegistrations() {
 
                         <div className="text-xs text-gray-500 font-jetbrains">
                           {submission.team ? `Team: ${submission.team.team_name}` : `By: ${submission.user_name}`}
+                          {submission.track && (
+                            <span className="ml-2 px-2 py-0.5 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded">
+                              {submission.track}
+                            </span>
+                          )}
                         </div>
                       </div>
 
@@ -1461,6 +1592,19 @@ export default function HackathonRegistrations() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* Certificates Tab */}
+          {activeTab === 'certificates' && hackathon && (
+            <CertificateGenerator 
+              hackathonId={hackathon.id} 
+              hackathonName={hackathon.hackathon_name} 
+            />
+          )}
+
+          {/* Insights Tab */}
+          {activeTab === 'insights' && hackathon && (
+            <OrganizerInsights hackathonId={hackathon.id} />
           )}
           </div>
         </div>

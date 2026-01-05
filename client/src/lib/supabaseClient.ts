@@ -1005,3 +1005,90 @@ export async function deleteAccountRequest(): Promise<{ success: boolean; messag
     throw new Error(err.message || 'Failed to delete account');
   }
 }
+
+
+// -------------------- Hackathon Image Upload Helpers --------------------
+export async function uploadHackathonImage(
+  file: File, 
+  hackathonId: number | string, 
+  imageType: 'logo' | 'banner' | 'cover'
+): Promise<string> {
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: u } = await supabase.auth.getUser();
+  if (!u.user) throw new Error('Not authenticated');
+
+  if (!file || !file.size) throw new Error('No file provided');
+  if (!file.type.startsWith('image/')) throw new Error('Only image files allowed');
+  
+  const MAX = 5 * 1024 * 1024; // 5MB
+  if (file.size > MAX) throw new Error('Image must be <= 5MB');
+
+  const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+  const safeExt = ['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext) ? ext : 'png';
+  const key = `${hackathonId}/${imageType}.${safeExt}`;
+
+  // Use hackathon-logos bucket for all hackathon images
+  const { error: upErr } = await supabase.storage.from('hackathon-logos').upload(key, file, {
+    contentType: file.type || 'image/png',
+    upsert: true,
+  });
+  if (upErr) throw upErr;
+
+  const { data } = supabase.storage.from('hackathon-logos').getPublicUrl(key);
+  return data.publicUrl;
+}
+
+export async function deleteHackathonImage(
+  hackathonId: number | string, 
+  imageType: 'logo' | 'banner' | 'cover'
+): Promise<void> {
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: u } = await supabase.auth.getUser();
+  if (!u.user) throw new Error('Not authenticated');
+
+  const candidates = ['png', 'jpg', 'jpeg', 'webp', 'svg'].map(
+    ext => `${hackathonId}/${imageType}.${ext}`
+  );
+  
+  try {
+    await supabase.storage.from('hackathon-logos').remove(candidates);
+  } catch (err) {
+    console.warn('Failed to delete hackathon image:', err);
+  }
+}
+
+// -------------------- Project/Submission Image Upload Helpers --------------------
+export async function uploadSubmissionImage(
+  file: File, 
+  submissionId: number | string, 
+  imageType: 'logo' | 'cover' | 'screenshot',
+  index?: number
+): Promise<string> {
+  if (!supabase) throw new Error('Supabase not configured');
+  const { data: u } = await supabase.auth.getUser();
+  if (!u.user) throw new Error('Not authenticated');
+
+  if (!file || !file.size) throw new Error('No file provided');
+  if (!file.type.startsWith('image/')) throw new Error('Only image files allowed');
+  
+  const MAX = 5 * 1024 * 1024; // 5MB
+  if (file.size > MAX) throw new Error('Image must be <= 5MB');
+
+  const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+  const safeExt = ['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext) ? ext : 'png';
+  
+  // For screenshots, include index in filename
+  const filename = imageType === 'screenshot' && index !== undefined 
+    ? `${imageType}_${index}.${safeExt}` 
+    : `${imageType}.${safeExt}`;
+  const key = `${submissionId}/${filename}`;
+
+  const { error: upErr } = await supabase.storage.from('project-logos').upload(key, file, {
+    contentType: file.type || 'image/png',
+    upsert: true,
+  });
+  if (upErr) throw upErr;
+
+  const { data } = supabase.storage.from('project-logos').getPublicUrl(key);
+  return data.publicUrl;
+}

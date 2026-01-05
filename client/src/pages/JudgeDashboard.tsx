@@ -49,7 +49,7 @@ interface JudgeProfile {
   eventsJudgedVerified: boolean;
   teamsEvaluatedVerified: boolean;
   mentorshipHoursVerified: boolean;
-  availabilityStatus: 'available' | 'not-available' | 'seasonal';
+  availabilityStatus: 'available' | 'not-available';
   primaryExpertise: string[];
   secondaryExpertise: string[];
 }
@@ -885,7 +885,6 @@ const JudgeDashboard = () => {
                   <div className="space-y-3">
                     {[
                       { value: 'available', label: 'Available for Judging', color: 'text-green-400' },
-                      { value: 'seasonal', label: 'Seasonally Available', color: 'text-yellow-400' },
                       { value: 'not-available', label: 'Not Available', color: 'text-red-400' }
                     ].map((status) => (
                       <label key={status.value} className="flex items-center gap-3 cursor-pointer">
@@ -894,12 +893,29 @@ const JudgeDashboard = () => {
                           name="availability"
                           value={status.value}
                           checked={judgeProfile.availabilityStatus === status.value}
+                          onChange={async (e) => {
+                            const newStatus = e.target.value as 'available' | 'not-available';
+                            setJudgeProfile(prev => prev ? { ...prev, availabilityStatus: newStatus } : null);
+                            try {
+                              const headers = await getAuthHeaders();
+                              await fetch('/api/judge/profile', {
+                                method: 'PUT',
+                                headers,
+                                body: JSON.stringify({ availability_status: newStatus })
+                              });
+                            } catch (err) {
+                              console.error('Failed to update availability:', err);
+                            }
+                          }}
                           className="w-4 h-4"
                         />
                         <span className={`font-jetbrains ${status.color}`}>{status.label}</span>
                       </label>
                     ))}
                   </div>
+                  <p className="font-jetbrains text-gray-400 text-sm mt-4">
+                    When set to "Not Available", organizers will not be able to send you judging invitations.
+                  </p>
                 </div>
 
                 <div className="bg-red-900/20 border border-red-500/50 p-6">

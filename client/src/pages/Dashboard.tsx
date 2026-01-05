@@ -4,6 +4,10 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getCurrentUserWithProfile } from '@/lib/supabaseClient';
 import { Settings, User, Mail, Shield, ArrowLeft, Loader2 } from 'lucide-react';
+import RecommendedHackathons from '@/components/RecommendedHackathons';
+import RecommendedProjects from '@/components/RecommendedProjects';
+import RecommendedTools from '@/components/RecommendedTools';
+import SuggestedTeammates from '@/components/SuggestedTeammates';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -107,6 +111,26 @@ export default function Dashboard() {
               </div>
             </div>
           </Card>
+
+          {/* Recommended Hackathons */}
+          <div className="mt-8">
+            <RecommendedHackathons limit={5} />
+          </div>
+
+          {/* Recommended Projects */}
+          <div className="mt-8">
+            <RecommendedProjects limit={4} />
+          </div>
+
+          {/* Suggested Teammates */}
+          <div className="mt-8">
+            <SuggestedTeammates limit={4} />
+          </div>
+
+          {/* Recommended Tools */}
+          <div className="mt-8">
+            <RecommendedTools limit={6} />
+          </div>
         </div>
       </div>
     </div>

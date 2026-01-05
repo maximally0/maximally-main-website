@@ -17,6 +17,8 @@ import { registerHackathonFeatureRoutes } from "./routes/hackathon-features";
 import { registerOrganizerMessageRoutes } from "./routes/organizer-messages";
 import { registerModerationRoutes } from "./routes/moderation";
 import { registerGalleryRoutes } from "./routes/gallery";
+import { registerCustomQuestionsRoutes } from "./routes/custom-questions";
+import { registerJudgeReminderRoutes } from "./routes/judge-reminders";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
 import { 
   sendSubmissionConfirmation, 
@@ -375,8 +377,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(409).json({ success: false, message: 'An account with this email already exists' });
       }
 
-      // Generate OTP
-      const otp = generateOtp();
+      // Check if OTP verification should be skipped (for testing)
+      const skipOtp = process.env.SKIP_EMAIL_OTP === 'true';
+      const otp = skipOtp ? '123456' : generateOtp();
       const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
 
       // Store OTP with signup data
@@ -389,6 +392,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         expiresAt,
         attempts: 0,
       });
+
+      // Skip sending email if OTP verification is disabled
+      if (skipOtp) {
+        console.log(`[DEV] OTP verification skipped. Use code: ${otp} for ${normalizedEmail}`);
+        return res.json({
+          success: true,
+          message: 'Verification code sent to your email',
+          email: normalizedEmail,
+          // Include OTP in response for testing (only when SKIP_EMAIL_OTP=true)
+          dev_otp: otp,
+        });
+      }
 
       // Send OTP email
       const emailResult = await sendOtpEmail({
@@ -4007,6 +4022,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerOrganizerMessageRoutes(app); // Organizer inbox messages
   registerModerationRoutes(app); // User reporting and moderation system
   registerGalleryRoutes(app); // Project gallery system
+  registerCustomQuestionsRoutes(app); // Custom registration questions
+  registerJudgeReminderRoutes(app); // Judge reminder emails and progress tracking
 
   const httpServer = createServer(app);
   return httpServer;

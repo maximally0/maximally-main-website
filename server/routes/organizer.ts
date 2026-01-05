@@ -145,7 +145,7 @@ export function registerOrganizerRoutes(app: Express) {
     }
   });
 
-  // Get all hackathons for current user
+  // Get all hackathons for current user (owned + co-organized)
   app.get("/api/organizer/hackathons", async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
@@ -159,18 +159,74 @@ export function registerOrganizerRoutes(app: Express) {
         return res.status(401).json({ success: false, message: 'Invalid token' });
       }
 
-      const { data, error } = await supabaseAdmin
+      console.log('Fetching hackathons for user:', userId);
+
+      // Get hackathons owned by user
+      const { data: ownedHackathons, error: ownedError } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('*')
         .eq('organizer_id', userId)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching hackathons:', error);
+      if (ownedError) {
+        console.error('Error fetching owned hackathons:', ownedError);
         return res.status(500).json({ success: false, message: 'Failed to fetch hackathons' });
       }
 
-      return res.json({ success: true, data });
+      console.log('Owned hackathons:', ownedHackathons?.length || 0);
+
+      // Get hackathons where user is a co-organizer (accepted status)
+      // Note: user_id in hackathon_organizers is UUID type
+      const { data: coOrgAssignments, error: coOrgError } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .select('hackathon_id, role, user_id, status')
+        .eq('user_id', userId)
+        .eq('status', 'accepted');
+
+      console.log('Co-org query for user_id:', userId);
+      console.log('Co-org assignments:', coOrgAssignments);
+      if (coOrgError) {
+        console.error('Co-org error:', coOrgError);
+      }
+
+      let coOrganizedHackathons: any[] = [];
+      if (!coOrgError && coOrgAssignments && coOrgAssignments.length > 0) {
+        const hackathonIds = coOrgAssignments.map(a => a.hackathon_id);
+        console.log('Fetching hackathons with IDs:', hackathonIds);
+        
+        const { data: hackathons, error: hackathonsError } = await supabaseAdmin
+          .from('organizer_hackathons')
+          .select('*')
+          .in('id', hackathonIds)
+          .order('created_at', { ascending: false });
+        
+        if (hackathonsError) {
+          console.error('Error fetching co-organized hackathons:', hackathonsError);
+        }
+        
+        // Add role info to each hackathon
+        coOrganizedHackathons = (hackathons || []).map(h => ({
+          ...h,
+          _coOrganizerRole: coOrgAssignments.find(a => a.hackathon_id === h.id)?.role,
+          _isCoOrganizer: true
+        }));
+        
+        console.log('Co-organized hackathons:', coOrganizedHackathons.length);
+      }
+
+      // Combine and deduplicate (in case someone is both owner and co-organizer)
+      const ownedIds = new Set((ownedHackathons || []).map(h => h.id));
+      const allHackathons = [
+        ...(ownedHackathons || []).map(h => ({ ...h, _isOwner: true })),
+        ...coOrganizedHackathons.filter(h => !ownedIds.has(h.id))
+      ];
+
+      // Sort by created_at descending
+      allHackathons.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      console.log('Total hackathons returned:', allHackathons.length);
+
+      return res.json({ success: true, data: allHackathons });
     } catch (error: any) {
       console.error('Error in get hackathons:', error);
       return res.status(500).json({ success: false, message: error.message });

@@ -11,7 +11,9 @@ import {
   Zap,
   CheckCircle,
   FileText,
-  Sparkles
+  Sparkles,
+  Gem,
+  Handshake
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -78,6 +80,12 @@ interface Hackathon {
   building_control?: 'auto' | 'open' | 'closed';
   submission_control?: 'auto' | 'open' | 'closed';
   judging_control?: 'auto' | 'open' | 'closed';
+  // Branding fields
+  banner_image?: string;
+  primary_color?: string;
+  secondary_color?: string;
+  accent_color?: string;
+  font_style?: string;
   [key: string]: any; // Allow additional properties for type flexibility
   // Winners
   winners_announced?: boolean;
@@ -472,6 +480,11 @@ export default function PublicHackathon() {
 
   const status = getHackathonStatus();
 
+  // Get branding colors with fallbacks
+  const primaryColor = hackathon.primary_color || '#8B5CF6';
+  const secondaryColor = hackathon.secondary_color || '#EC4899';
+  const accentColor = hackathon.accent_color || '#06B6D4';
+
   return (
     <>
       <SEO
@@ -481,24 +494,62 @@ export default function PublicHackathon() {
       />
 
       <div className="min-h-screen bg-black text-white relative">
-        {/* Global Background Effects */}
+        {/* Global Background Effects - Use branding colors */}
         <div className="fixed inset-0 bg-black pointer-events-none" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.02)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
-        <div className="fixed inset-0 bg-gradient-to-br from-purple-950/20 via-transparent to-pink-950/20 pointer-events-none" />
+        <div 
+          className="fixed inset-0 pointer-events-none" 
+          style={{
+            backgroundImage: `linear-gradient(${primaryColor}08 1px, transparent 1px), linear-gradient(90deg, ${primaryColor}08 1px, transparent 1px)`,
+            backgroundSize: '50px 50px'
+          }}
+        />
+        <div 
+          className="fixed inset-0 pointer-events-none"
+          style={{
+            background: `linear-gradient(to bottom right, ${primaryColor}15, transparent, ${secondaryColor}15)`
+          }}
+        />
         
-        {/* Glowing Orbs */}
-        <div className="fixed top-1/4 left-1/4 w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[150px] animate-pulse pointer-events-none" />
-        <div className="fixed bottom-1/4 right-1/4 w-[350px] h-[350px] bg-pink-500/10 rounded-full blur-[120px] animate-pulse pointer-events-none" style={{ animationDelay: '1s' }} />
-        <div className="fixed top-1/2 right-1/3 w-[250px] h-[250px] bg-cyan-500/8 rounded-full blur-[100px] animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+        {/* Glowing Orbs - Use branding colors */}
+        <div 
+          className="fixed top-1/4 left-1/4 w-[400px] h-[400px] rounded-full blur-[150px] animate-pulse pointer-events-none" 
+          style={{ backgroundColor: `${primaryColor}15` }}
+        />
+        <div 
+          className="fixed bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full blur-[120px] animate-pulse pointer-events-none" 
+          style={{ backgroundColor: `${secondaryColor}15`, animationDelay: '1s' }}
+        />
+        <div 
+          className="fixed top-1/2 right-1/3 w-[250px] h-[250px] rounded-full blur-[100px] animate-pulse pointer-events-none" 
+          style={{ backgroundColor: `${accentColor}12`, animationDelay: '2s' }}
+        />
+
+        {/* Banner Image */}
+        {hackathon.banner_image && (
+          <div className="absolute top-16 left-0 right-0 h-64 md:h-80 overflow-hidden z-10">
+            <img 
+              src={hackathon.banner_image} 
+              alt={`${hackathon.hackathon_name} banner`}
+              className="w-full h-full object-cover"
+            />
+            <div 
+              className="absolute inset-0"
+              style={{
+                background: `linear-gradient(to bottom, transparent 0%, black 100%)`
+              }}
+            />
+          </div>
+        )}
 
         {/* Hero Section */}
-        <section className="pt-32 pb-12 relative overflow-hidden">
-          {/* Floating Pixels */}
+        <section className={`${hackathon.banner_image ? 'pt-72 md:pt-80' : 'pt-32'} pb-12 relative overflow-hidden`}>
+          {/* Floating Pixels - Use branding colors */}
           {Array.from({ length: 15 }, (_, i) => (
             <div
               key={i}
-              className={`absolute w-2 h-2 ${['bg-purple-500', 'bg-pink-500', 'bg-cyan-500', 'bg-red-500'][i % 4]} opacity-30 animate-float pointer-events-none`}
+              className="absolute w-2 h-2 opacity-30 animate-float pointer-events-none"
               style={{
+                backgroundColor: [primaryColor, secondaryColor, accentColor, primaryColor][i % 4],
                 left: `${(i * 7) % 100}%`,
                 top: `${(i * 11) % 100}%`,
                 animationDelay: `${i * 0.5}s`,
@@ -518,35 +569,63 @@ export default function PublicHackathon() {
               </div>
 
               {/* Title */}
-              <h1 className="font-press-start text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 text-white leading-tight bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-fade-in">
+              <h1 
+                className="font-press-start text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight animate-fade-in"
+                style={{
+                  background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor}, ${accentColor})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
                 {hackathon.hackathon_name}
               </h1>
 
               {/* Tagline */}
               {hackathon.tagline && (
-                <p className="text-xl sm:text-2xl text-gray-400 mb-8 font-jetbrains leading-relaxed">
+                <p 
+                  className="text-xl sm:text-2xl mb-8 font-jetbrains leading-relaxed"
+                  style={{ color: `${secondaryColor}cc` }}
+                >
                   {hackathon.tagline}
                 </p>
               )}
 
               {/* CTA Buttons */}
               <div className="flex flex-wrap gap-4 mb-10 animate-fade-in">
-                <div className="flex-1 min-w-[250px]">
-                  <HackathonRegistration
-                    hackathonId={hackathon.id}
-                    hackathonName={hackathon.hackathon_name}
-                    teamSizeMin={hackathon.team_size_min || 1}
-                    teamSizeMax={hackathon.team_size_max || 4}
-                    registrationOpensAt={hackathon.registration_opens_at}
-                    registrationClosesAt={hackathon.registration_closes_at}
-                    registrationControl={hackathon.registration_control}
-                    buildingControl={hackathon.building_control}
-                    winnersAnnounced={hackathon.winners_announced}
-                    winnersAnnouncedAt={hackathon.winners_announced_at}
-                    onRegistrationChange={fetchHackathon}
-                    onViewWinners={() => setActiveTab('winners')}
-                  />
-                </div>
+                {/* Hide registration for judges assigned to this hackathon */}
+                {!(user && profile?.role === 'judge' && judgeStatus?.isAssigned) && (
+                  <div className="flex-1 min-w-[250px]">
+                    <HackathonRegistration
+                      hackathonId={hackathon.id}
+                      hackathonName={hackathon.hackathon_name}
+                      hackathonSlug={hackathon.slug}
+                      teamSizeMin={hackathon.team_size_min || 1}
+                      teamSizeMax={hackathon.team_size_max || 4}
+                      registrationOpensAt={hackathon.registration_opens_at}
+                      registrationClosesAt={hackathon.registration_closes_at}
+                      registrationControl={hackathon.registration_control}
+                      buildingControl={hackathon.building_control}
+                      winnersAnnounced={hackathon.winners_announced}
+                      winnersAnnouncedAt={hackathon.winners_announced_at}
+                      onRegistrationChange={fetchHackathon}
+                      onViewWinners={() => setActiveTab('winners')}
+                      primaryColor={primaryColor}
+                      secondaryColor={secondaryColor}
+                      accentColor={accentColor}
+                    />
+                  </div>
+                )}
+                {/* Judge Submissions Button - Show only if user is assigned as judge */}
+                {user && profile?.role === 'judge' && judgeStatus?.isAssigned && (
+                  <Link
+                    to={`/judge/hackathons/${hackathon.id}/submissions`}
+                    className="bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 text-white px-6 py-3 font-press-start text-xs transition-all inline-flex items-center gap-2 border border-red-500/50 hover:scale-105"
+                  >
+                    <Trophy className="h-4 w-4" />
+                    JUDGE_SUBMISSIONS
+                  </Link>
+                )}
                 <RequestToJudge hackathonId={hackathon.id} />
                 <SocialShare
                   title={hackathon.hackathon_name}
@@ -555,41 +634,68 @@ export default function PublicHackathon() {
                 />
               </div>
 
-              {/* Judge Interface Button - Show only if user is assigned as judge for this hackathon */}
-              {user && profile?.role === 'judge' && judgeStatus?.isAssigned && (
-                <div className="mb-10 animate-fade-in">
-                  <Link
-                    to={`/judge/hackathons/${hackathon.id}/submissions`}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:bg-purple-700 text-white px-8 py-4 font-press-start text-sm transition-all inline-flex items-center gap-3 border-2 border-purple-500 hover:scale-105"
-                  >
-                    <Trophy className="h-5 w-5" />
-                    JUDGE_SUBMISSIONS
-                  </Link>
-                </div>
-              )}
-
-              {/* Quick Stats Grid */}
+              {/* Quick Stats Grid - Use branding colors */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in">
-                <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/20 border border-purple-500/30 p-5 hover:border-purple-400/50 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-sm group">
-                  <div className="text-2xl font-bold text-purple-300 mb-2 font-press-start group-hover:text-purple-200 transition-colors">
+                <div 
+                  className="border p-5 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm group"
+                  style={{
+                    background: `linear-gradient(to bottom right, ${primaryColor}30, ${primaryColor}10)`,
+                    borderColor: `${primaryColor}40`,
+                    boxShadow: `0 0 20px ${primaryColor}10`
+                  }}
+                >
+                  <div 
+                    className="text-2xl font-bold mb-2 font-press-start transition-colors"
+                    style={{ color: primaryColor }}
+                  >
                     {startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </div>
                   <div className="text-xs text-gray-500 font-press-start">START_DATE</div>
                 </div>
-                <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/20 border border-cyan-500/30 p-5 hover:border-cyan-400/50 transition-all hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 backdrop-blur-sm group">
-                  <div className="text-2xl font-bold text-cyan-300 mb-2 font-press-start capitalize group-hover:text-cyan-200 transition-colors">
+                <div 
+                  className="border p-5 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm group"
+                  style={{
+                    background: `linear-gradient(to bottom right, ${accentColor}30, ${accentColor}10)`,
+                    borderColor: `${accentColor}40`,
+                    boxShadow: `0 0 20px ${accentColor}10`
+                  }}
+                >
+                  <div 
+                    className="text-2xl font-bold mb-2 font-press-start capitalize transition-colors"
+                    style={{ color: accentColor }}
+                  >
                     {hackathon.format}
                   </div>
                   <div className="text-xs text-gray-500 font-press-start">FORMAT</div>
                 </div>
-                <div className="bg-gradient-to-br from-pink-900/40 to-rose-900/20 border border-pink-500/30 p-5 hover:border-pink-400/50 transition-all hover:scale-105 hover:shadow-lg hover:shadow-pink-500/20 backdrop-blur-sm group">
-                  <div className="text-2xl font-bold text-pink-300 mb-2 font-press-start group-hover:text-pink-200 transition-colors">
+                <div 
+                  className="border p-5 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm group"
+                  style={{
+                    background: `linear-gradient(to bottom right, ${secondaryColor}30, ${secondaryColor}10)`,
+                    borderColor: `${secondaryColor}40`,
+                    boxShadow: `0 0 20px ${secondaryColor}10`
+                  }}
+                >
+                  <div 
+                    className="text-2xl font-bold mb-2 font-press-start transition-colors"
+                    style={{ color: secondaryColor }}
+                  >
                     {hackathon.team_size_min || 1}-{hackathon.team_size_max || 4}
                   </div>
                   <div className="text-xs text-gray-500 font-press-start">TEAM_SIZE</div>
                 </div>
-                <div className="bg-gradient-to-br from-amber-900/40 to-yellow-900/20 border border-amber-500/30 p-5 hover:border-amber-400/50 transition-all hover:scale-105 hover:shadow-lg hover:shadow-amber-500/20 backdrop-blur-sm group">
-                  <div className="text-2xl font-bold text-amber-300 mb-2 font-press-start group-hover:text-amber-200 transition-colors">
+                <div 
+                  className="border p-5 transition-all hover:scale-105 hover:shadow-lg backdrop-blur-sm group"
+                  style={{
+                    background: `linear-gradient(to bottom right, ${accentColor}30, ${primaryColor}10)`,
+                    borderColor: `${accentColor}40`,
+                    boxShadow: `0 0 20px ${accentColor}10`
+                  }}
+                >
+                  <div 
+                    className="text-2xl font-bold mb-2 font-press-start transition-colors"
+                    style={{ color: accentColor }}
+                  >
                     {hackathon.total_prize_pool || 'TBA'}
                   </div>
                   <div className="text-xs text-gray-500 font-press-start">PRIZE_POOL</div>
@@ -599,8 +705,14 @@ export default function PublicHackathon() {
           </div>
         </section>
 
-        {/* Tabs Navigation */}
-        <section className="bg-gray-900/80 border-b border-purple-500/20 sticky top-16 z-40 backdrop-blur-md">
+        {/* Tabs Navigation - Use branding colors */}
+        <section 
+          className="border-b sticky top-16 z-40 backdrop-blur-md"
+          style={{
+            backgroundColor: 'rgba(17, 17, 17, 0.9)',
+            borderColor: `${primaryColor}30`
+          }}
+        >
           <div className="container mx-auto px-4">
             <div className="max-w-7xl mx-auto">
               <div className="flex gap-0 overflow-x-auto scrollbar-hide">
@@ -625,10 +737,14 @@ export default function PublicHackathon() {
                         ? 'text-white bg-black/50'
                         : 'text-gray-500 hover:text-gray-300 hover:bg-black/30'
                     }`}
+                    style={activeTab === tab.id ? { color: primaryColor } : {}}
                   >
                     {tab.label}
                     {activeTab === tab.id && (
-                      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600"></div>
+                      <div 
+                        className="absolute bottom-0 left-0 right-0 h-0.5"
+                        style={{ background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})` }}
+                      ></div>
                     )}
                   </button>
                 ))}
@@ -647,10 +763,24 @@ export default function PublicHackathon() {
               {/* Overview Tab */}
               {activeTab === 'overview' && (
                 <div className="space-y-8">
-                  {/* About Section */}
+                  {/* About Section - Use branding colors */}
                   {hackathon.description && (
-                    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">ABOUT</h2>
+                    <div 
+                      className="border p-8"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                        borderColor: `${primaryColor}40`
+                      }}
+                    >
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >ABOUT</h2>
                       <div className="max-w-none">
                         <p className="text-gray-300 leading-relaxed whitespace-pre-wrap font-jetbrains text-lg">
                           {hackathon.description}
@@ -665,9 +795,19 @@ export default function PublicHackathon() {
               {activeTab === 'announcements' && (
                 <div className="space-y-8">
                   {user ? (
-                    <ParticipantAnnouncements hackathonId={hackathon.id} />
+                    <ParticipantAnnouncements 
+                      hackathonId={hackathon.id} 
+                      primaryColor={primaryColor}
+                      secondaryColor={secondaryColor}
+                      accentColor={accentColor}
+                    />
                   ) : (
-                    <HackathonAnnouncements hackathonId={hackathon.id} />
+                    <HackathonAnnouncements 
+                      hackathonId={hackathon.id}
+                      primaryColor={primaryColor}
+                      secondaryColor={secondaryColor}
+                      accentColor={accentColor}
+                    />
                   )}
                 </div>
               )}
@@ -676,17 +816,37 @@ export default function PublicHackathon() {
               {activeTab === 'timeline' && (
                 <div className="space-y-8">
                   <div>
-                    <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">EVENT_TIMELINE</h2>
+                    <h2 
+                      className="font-press-start text-2xl mb-6"
+                      style={{
+                        background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}
+                    >EVENT_TIMELINE</h2>
                     <div className="space-y-4">
                       {/* Registration Period */}
                       {(hackathon.registration_opens_at || hackathon.registration_closes_at) && (
-                        <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/40 p-6 hover:border-blue-400/60 transition-all duration-300">
+                        <div 
+                          className="border p-6 transition-all duration-300"
+                          style={{
+                            background: `linear-gradient(to bottom right, ${primaryColor}15, ${accentColor}08)`,
+                            borderColor: `${primaryColor}40`
+                          }}
+                        >
                           <div className="flex items-start gap-4">
-                            <div className="p-3 bg-blue-500/20 border border-blue-500/40">
-                              <Users className="h-6 w-6 text-blue-400" />
+                            <div 
+                              className="p-3 border"
+                              style={{
+                                backgroundColor: `${primaryColor}20`,
+                                borderColor: `${primaryColor}40`
+                              }}
+                            >
+                              <Users className="h-6 w-6" style={{ color: primaryColor }} />
                             </div>
                             <div className="flex-1">
-                              <h3 className="font-press-start text-sm text-blue-400 mb-2">REGISTRATION_PERIOD</h3>
+                              <h3 className="font-press-start text-sm mb-2" style={{ color: primaryColor }}>REGISTRATION_PERIOD</h3>
                               <div className="space-y-1 font-jetbrains text-sm text-gray-300">
                                 {hackathon.registration_opens_at && (
                                   <p>
@@ -727,13 +887,33 @@ export default function PublicHackathon() {
                       )}
 
                       {/* Hackathon Duration */}
-                      <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/40 p-6 hover:border-purple-400/60 transition-all duration-300">
+                      <div 
+                        className="border p-6 transition-all duration-300"
+                        style={{
+                          background: `linear-gradient(to bottom right, ${primaryColor}15, ${secondaryColor}10)`,
+                          borderColor: `${primaryColor}40`
+                        }}
+                      >
                         <div className="flex items-start gap-4">
-                          <div className="p-3 bg-purple-500/20 border border-purple-500/40">
-                            <Calendar className="h-6 w-6 text-purple-400" />
+                          <div 
+                            className="p-3 border"
+                            style={{
+                              backgroundColor: `${primaryColor}20`,
+                              borderColor: `${primaryColor}40`
+                            }}
+                          >
+                            <Calendar className="h-6 w-6" style={{ color: primaryColor }} />
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">HACKATHON_DURATION</h3>
+                            <h3 
+                              className="font-press-start text-sm mb-2"
+                              style={{
+                                background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                backgroundClip: 'text'
+                              }}
+                            >HACKATHON_DURATION</h3>
                             <div className="space-y-1 font-jetbrains text-sm text-gray-300">
                               <p>
                                 <span className="text-gray-500">Starts:</span>{' '}
@@ -770,13 +950,25 @@ export default function PublicHackathon() {
 
                       {/* Building/Hacking Phase */}
                       {(hackathon.building_starts_at || hackathon.building_ends_at) && (
-                        <div className="bg-gradient-to-br from-orange-500/10 to-amber-500/10 border border-orange-500/40 p-6 hover:border-orange-400/60 transition-all duration-300">
+                        <div 
+                          className="border p-6 transition-all duration-300"
+                          style={{
+                            background: `linear-gradient(to bottom right, ${accentColor}15, ${accentColor}08)`,
+                            borderColor: `${accentColor}40`
+                          }}
+                        >
                           <div className="flex items-start gap-4">
-                            <div className="p-3 bg-orange-500/20 border border-orange-500/40">
-                              <Zap className="h-6 w-6 text-orange-400" />
+                            <div 
+                              className="p-3 border"
+                              style={{
+                                backgroundColor: `${accentColor}20`,
+                                borderColor: `${accentColor}40`
+                              }}
+                            >
+                              <Zap className="h-6 w-6" style={{ color: accentColor }} />
                             </div>
                             <div className="flex-1">
-                              <h3 className="font-press-start text-sm text-orange-400 mb-2">BUILDING_PHASE</h3>
+                              <h3 className="font-press-start text-sm mb-2" style={{ color: accentColor }}>BUILDING_PHASE</h3>
                               <p className="text-xs text-gray-500 font-jetbrains mb-2">Hacking time! No submissions during this phase.</p>
                               <div className="space-y-1 font-jetbrains text-sm text-gray-300">
                                 {hackathon.building_starts_at && (
@@ -867,13 +1059,25 @@ export default function PublicHackathon() {
 
                       {/* Judging Period */}
                       {(hackathon.judging_starts_at || hackathon.judging_ends_at) && (
-                        <div className="bg-gradient-to-br from-purple-500/10 to-violet-500/10 border border-purple-500/40 p-6 hover:border-purple-400/60 transition-all duration-300">
+                        <div 
+                          className="border p-6 transition-all duration-300"
+                          style={{
+                            background: `linear-gradient(to bottom right, ${secondaryColor}15, ${primaryColor}08)`,
+                            borderColor: `${secondaryColor}40`
+                          }}
+                        >
                           <div className="flex items-start gap-4">
-                            <div className="p-3 bg-purple-500/20 border border-purple-500/40">
-                              <Trophy className="h-6 w-6 text-purple-400" />
+                            <div 
+                              className="p-3 border"
+                              style={{
+                                backgroundColor: `${secondaryColor}20`,
+                                borderColor: `${secondaryColor}40`
+                              }}
+                            >
+                              <Trophy className="h-6 w-6" style={{ color: secondaryColor }} />
                             </div>
                             <div className="flex-1">
-                              <h3 className="font-press-start text-sm text-purple-400 mb-2">JUDGING_PERIOD</h3>
+                              <h3 className="font-press-start text-sm mb-2" style={{ color: secondaryColor }}>JUDGING_PERIOD</h3>
                               <div className="space-y-1 font-jetbrains text-sm text-gray-300">
                                 {hackathon.judging_starts_at && (
                                   <p>
@@ -969,16 +1173,31 @@ export default function PublicHackathon() {
                 <div className="space-y-8">
                   {prizes.length > 0 && (
                     <div>
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">PRIZES_&_REWARDS</h2>
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >PRIZES_&_REWARDS</h2>
                       <div className="space-y-4">
                         {prizes.map((prize: any, i: number) => (
-                          <div key={i} className=" bg-gray-900 border-2 border-orange-500/40 p-6 hover:border-purple-500/40 transition-colors">
+                          <div 
+                            key={i} 
+                            className="bg-gray-900 border-2 p-6 transition-colors"
+                            style={{ borderColor: `${accentColor}40` }}
+                          >
                             <div className="flex items-center gap-4">
-                              <div className=" bg-gradient-to-r from-amber-500 to-yellow-500 w-14 h-14 flex items-center justify-center flex-shrink-0">
+                              <div 
+                                className="w-14 h-14 flex items-center justify-center flex-shrink-0"
+                                style={{ background: `linear-gradient(to right, ${primaryColor}, ${accentColor})` }}
+                              >
                                 <Trophy className="h-7 w-7 text-black" />
                               </div>
                               <div className="flex-1">
-                                <h3 className="font-press-start text-sm text-orange-400 mb-2">
+                                <h3 className="font-press-start text-sm mb-2" style={{ color: accentColor }}>
                                   {prize.position}
                                 </h3>
                                 <p className="text-3xl font-bold text-white font-press-start">{prize.amount}</p>
@@ -996,12 +1215,24 @@ export default function PublicHackathon() {
                   {/* Perks Section */}
                   {hackathon.perks && hackathon.perks.length > 0 && (
                     <div className="mt-8">
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">PERKS_&_BENEFITS</h2>
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >PERKS_&_BENEFITS</h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {hackathon.perks.map((perk, i) => (
-                          <div key={i} className=" bg-gray-900 border-2 border-gray-700 p-4 hover:border-orange-500/40 transition-colors">
+                          <div 
+                            key={i} 
+                            className="bg-gray-900 border-2 p-4 transition-colors"
+                            style={{ borderColor: `${primaryColor}30` }}
+                          >
                             <div className="flex items-start gap-3">
-                              <CheckCircle className="h-5 w-5 text-orange-400 mt-1 flex-shrink-0" />
+                              <CheckCircle className="h-5 w-5 mt-1 flex-shrink-0" style={{ color: accentColor }} />
                               <p className="text-gray-300 font-jetbrains">{perk}</p>
                             </div>
                           </div>
@@ -1016,8 +1247,22 @@ export default function PublicHackathon() {
               {activeTab === 'rules' && (
                 <div className="space-y-8">
                   {hackathon.rules_content && (
-                    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">RULES_&_REGULATIONS</h2>
+                    <div 
+                      className="border p-8"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                        borderColor: `${primaryColor}40`
+                      }}
+                    >
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >RULES_&_REGULATIONS</h2>
                       <div className="max-w-none">
                         <p className="text-gray-300 leading-relaxed whitespace-pre-wrap font-jetbrains">
                           {hackathon.rules_content}
@@ -1027,8 +1272,22 @@ export default function PublicHackathon() {
                   )}
 
                   {hackathon.eligibility_criteria && (
-                    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">ELIGIBILITY</h2>
+                    <div 
+                      className="border p-8"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                        borderColor: `${primaryColor}40`
+                      }}
+                    >
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >ELIGIBILITY</h2>
                       <div className="max-w-none">
                         <p className="text-gray-300 leading-relaxed whitespace-pre-wrap font-jetbrains">
                           {hackathon.eligibility_criteria}
@@ -1038,8 +1297,22 @@ export default function PublicHackathon() {
                   )}
 
                   {hackathon.submission_guidelines && (
-                    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">SUBMISSION_GUIDELINES</h2>
+                    <div 
+                      className="border p-8"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                        borderColor: `${primaryColor}40`
+                      }}
+                    >
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >SUBMISSION_GUIDELINES</h2>
                       <div className="max-w-none">
                         <p className="text-gray-300 leading-relaxed whitespace-pre-wrap font-jetbrains">
                           {hackathon.submission_guidelines}
@@ -1049,8 +1322,22 @@ export default function PublicHackathon() {
                   )}
 
                   {hackathon.judging_process && (
-                    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">JUDGING_PROCESS</h2>
+                    <div 
+                      className="border p-8"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                        borderColor: `${primaryColor}40`
+                      }}
+                    >
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >JUDGING_PROCESS</h2>
                       <div className="max-w-none">
                         <p className="text-gray-300 leading-relaxed whitespace-pre-wrap font-jetbrains">
                           {hackathon.judging_process}
@@ -1060,8 +1347,22 @@ export default function PublicHackathon() {
                   )}
 
                   {hackathon.code_of_conduct && (
-                    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
-                      <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">CODE_OF_CONDUCT</h2>
+                    <div 
+                      className="border p-8"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                        borderColor: `${primaryColor}40`
+                      }}
+                    >
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >CODE_OF_CONDUCT</h2>
                       <div className="max-w-none">
                         <p className="text-gray-300 leading-relaxed whitespace-pre-wrap font-jetbrains">
                           {hackathon.code_of_conduct}
@@ -1075,19 +1376,39 @@ export default function PublicHackathon() {
               {/* Tracks Tab */}
               {activeTab === 'tracks' && (
                 <div>
-                  <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">HACKATHON_TRACKS</h2>
+                  <h2 
+                    className="font-press-start text-2xl mb-6"
+                    style={{
+                      background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text'
+                    }}
+                  >HACKATHON_TRACKS</h2>
                   
                   {/* Display tracks from JSON field */}
-                  <HackathonTracks tracks={hackathon.tracks} />
+                  <HackathonTracks tracks={hackathon.tracks} primaryColor={primaryColor} secondaryColor={secondaryColor} accentColor={accentColor} />
 
                   {hackathon.open_innovation && (
-                    <div className="bg-gradient-to-br from-orange-500/15 to-amber-500/10 border border-orange-500/40 p-6 mt-6">
+                    <div 
+                      className="border p-6 mt-6"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${accentColor}15, ${accentColor}08)`,
+                        borderColor: `${accentColor}40`
+                      }}
+                    >
                       <div className="flex items-start gap-3">
-                        <div className="p-2 bg-orange-500/20 border border-orange-500/40">
-                          <Zap className="h-5 w-5 text-orange-400" />
+                        <div 
+                          className="p-2 border"
+                          style={{
+                            backgroundColor: `${accentColor}20`,
+                            borderColor: `${accentColor}40`
+                          }}
+                        >
+                          <Zap className="h-5 w-5" style={{ color: accentColor }} />
                         </div>
                         <div>
-                          <h3 className="font-press-start text-sm text-orange-400 mb-2">OPEN_INNOVATION</h3>
+                          <h3 className="font-press-start text-sm mb-2" style={{ color: accentColor }}>OPEN_INNOVATION</h3>
                           <p className="text-gray-300 font-jetbrains">
                             Not limited to specific tracks! Feel free to work on any innovative idea.
                           </p>
@@ -1101,15 +1422,33 @@ export default function PublicHackathon() {
               {/* Sponsors Tab */}
               {activeTab === 'sponsors' && (
                 <div className="space-y-8">
-                  <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">SPONSORS & PARTNERS</h2>
+                  <h2 
+                    className="font-press-start text-2xl mb-6"
+                    style={{
+                      background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text'
+                    }}
+                  >SPONSORS & PARTNERS</h2>
                   
                   {/* Display sponsors from JSON field */}
                   {hackathon.sponsors && hackathon.sponsors.length > 0 ? (
                     <div>
-                      <h3 className="font-press-start text-lg text-cyan-400 mb-4">💎 SPONSORS</h3>
+                      <h3 className="font-press-start text-lg mb-4 flex items-center gap-2" style={{ color: accentColor }}>
+                        <Gem className="h-5 w-5" style={{ color: accentColor }} />
+                        SPONSORS
+                      </h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {hackathon.sponsors.map((sponsor, i) => (
-                          <div key={i} className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/40 p-6 hover:border-cyan-400/60 transition-all duration-300 flex items-center justify-center hover:scale-105">
+                          <div 
+                            key={i} 
+                            className="border p-6 transition-all duration-300 flex items-center justify-center hover:scale-105"
+                            style={{
+                              background: `linear-gradient(to bottom right, ${accentColor}15, ${primaryColor}08)`,
+                              borderColor: `${accentColor}40`
+                            }}
+                          >
                             <p className="font-press-start text-sm text-white text-center">{sponsor}</p>
                           </div>
                         ))}
@@ -1125,10 +1464,20 @@ export default function PublicHackathon() {
 
                   {hackathon.partners && hackathon.partners.length > 0 && (
                     <div className="mt-8">
-                      <h3 className="font-press-start text-lg text-purple-400 mb-4">🤝 COMMUNITY PARTNERS</h3>
+                      <h3 className="font-press-start text-lg mb-4 flex items-center gap-2" style={{ color: primaryColor }}>
+                        <Handshake className="h-5 w-5" style={{ color: primaryColor }} />
+                        COMMUNITY PARTNERS
+                      </h3>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {hackathon.partners.map((partner, i) => (
-                          <div key={i} className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/40 p-6 hover:border-purple-400/60 transition-all duration-300 flex items-center justify-center hover:scale-105">
+                          <div 
+                            key={i} 
+                            className="border p-6 transition-all duration-300 flex items-center justify-center hover:scale-105"
+                            style={{
+                              background: `linear-gradient(to bottom right, ${primaryColor}15, ${secondaryColor}10)`,
+                              borderColor: `${primaryColor}40`
+                            }}
+                          >
                             <p className="font-press-start text-sm text-white text-center">{partner}</p>
                           </div>
                         ))}
@@ -1141,11 +1490,26 @@ export default function PublicHackathon() {
               {/* FAQs Tab */}
               {activeTab === 'faqs' && hackathon.faqs && (
                 <div>
-                  <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">FREQUENTLY_ASKED_QUESTIONS</h2>
+                  <h2 
+                    className="font-press-start text-2xl mb-6"
+                    style={{
+                      background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text'
+                    }}
+                  >FREQUENTLY_ASKED_QUESTIONS</h2>
                   <div className="space-y-4">
                     {JSON.parse(hackathon.faqs || '[]').map((faq: any, i: number) => (
-                      <div key={i} className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 hover:border-orange-500/40 transition-colors">
-                        <h3 className="font-press-start text-sm text-orange-400 mb-3">
+                      <div 
+                        key={i} 
+                        className="border p-6 transition-colors"
+                        style={{
+                          background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                          borderColor: `${primaryColor}40`
+                        }}
+                      >
+                        <h3 className="font-press-start text-sm mb-3" style={{ color: accentColor }}>
                           Q: {faq.question}
                         </h3>
                         <p className="text-gray-300 font-jetbrains leading-relaxed">
@@ -1343,14 +1707,33 @@ export default function PublicHackathon() {
                       }
 
                       return (
-                        <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/40 p-6">
-                          <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">SUBMIT_YOUR_PROJECT</h2>
+                        <div 
+                          className="border p-6"
+                          style={{
+                            background: `linear-gradient(to bottom right, ${primaryColor}15, ${secondaryColor}10)`,
+                            borderColor: `${primaryColor}40`
+                          }}
+                        >
+                          <h2 
+                            className="font-press-start text-xl mb-4"
+                            style={{
+                              background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                              WebkitBackgroundClip: 'text',
+                              WebkitTextFillColor: 'transparent',
+                              backgroundClip: 'text'
+                            }}
+                          >SUBMIT_YOUR_PROJECT</h2>
                           <p className="text-gray-300 font-jetbrains mb-4">
                             Ready to showcase your work? Submit your project on our dedicated submission page!
                           </p>
                           <Link
                             to={`/hackathon/${slug}/submit`}
-                            className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-8 py-4 font-press-start text-sm transition-all duration-300 inline-flex items-center gap-3"
+                            className="border px-8 py-4 font-press-start text-sm transition-all duration-300 inline-flex items-center gap-3"
+                            style={{
+                              background: `linear-gradient(to right, ${primaryColor}40, ${secondaryColor}30)`,
+                              borderColor: `${primaryColor}50`,
+                              color: primaryColor
+                            }}
                           >
                             <Trophy className="h-5 w-5" />
                             SUBMIT_PROJECT
@@ -1377,7 +1760,15 @@ export default function PublicHackathon() {
 
                   {/* Projects Gallery */}
                   <div>
-                    <h2 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">SUBMITTED_PROJECTS</h2>
+                    <h2 
+                      className="font-press-start text-2xl mb-6"
+                      style={{
+                        background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}
+                    >SUBMITTED_PROJECTS</h2>
                     <ProjectsGallery hackathonId={hackathon.id} />
                   </div>
                 </div>
@@ -1387,7 +1778,15 @@ export default function PublicHackathon() {
               {activeTab === 'winners' && hackathon.winners_announced && (
                 <div className="space-y-8">
                   <div>
-                    <h2 className="font-press-start text-2xl bg-gradient-to-r from-amber-400 to-yellow-300 bg-clip-text text-transparent mb-2">🏆 WINNERS_ANNOUNCED</h2>
+                    <h2 
+                      className="font-press-start text-2xl mb-2"
+                      style={{
+                        background: `linear-gradient(to right, ${accentColor}, ${primaryColor})`,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}
+                    >🏆 WINNERS_ANNOUNCED</h2>
                     {hackathon.winners_announced_at && (
                       <p className="text-gray-400 font-jetbrains text-sm mb-6">
                         Announced on {new Date(hackathon.winners_announced_at).toLocaleDateString('en-US', {
@@ -1400,7 +1799,13 @@ export default function PublicHackathon() {
                   </div>
 
                   {winners.length === 0 ? (
-                    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-12 text-center">
+                    <div 
+                      className="border p-12 text-center"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                        borderColor: `${primaryColor}40`
+                      }}
+                    >
                       <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                       <p className="font-press-start text-gray-400">LOADING_WINNERS...</p>
                     </div>
@@ -1459,6 +1864,11 @@ export default function PublicHackathon() {
                               
                               <p className="text-gray-500 font-jetbrains text-sm mb-3">
                                 By: {winner.team_name || winner.submission?.user_name || 'Anonymous'}
+                                {winner.submission?.track && (
+                                  <span className="ml-2 px-2 py-0.5 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded text-xs">
+                                    {winner.submission.track}
+                                  </span>
+                                )}
                               </p>
                               
                               <div className="flex flex-wrap gap-3">
@@ -1507,6 +1917,9 @@ export default function PublicHackathon() {
                     hackathonId={hackathon.id} 
                     winnersAnnounced={hackathon.winners_announced}
                     isParticipant={!!userRegistration}
+                    primaryColor={primaryColor}
+                    secondaryColor={secondaryColor}
+                    accentColor={accentColor}
                   />
                 </div>
               )}
@@ -1514,15 +1927,29 @@ export default function PublicHackathon() {
 
                 {/* Sidebar */}
                 <div className="lg:col-span-1 space-y-6">
-                  {/* Event Details Card */}
-                  <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 sticky top-32">
-                    <h3 className="font-press-start text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">EVENT_DETAILS</h3>
+                  {/* Event Details Card - Use branding colors */}
+                  <div 
+                    className="border p-6 sticky top-32"
+                    style={{
+                      background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
+                      borderColor: `${primaryColor}40`
+                    }}
+                  >
+                    <h3 
+                      className="font-press-start text-lg mb-6"
+                      style={{
+                        background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}
+                    >EVENT_DETAILS</h3>
                     
                     <div className="space-y-4">
                       <div className="flex items-start gap-3 p-3 bg-black/50 rounded border border-gray-800">
-                        <Calendar className="h-5 w-5 text-orange-400 mt-1 flex-shrink-0" />
+                        <Calendar className="h-5 w-5 mt-1 flex-shrink-0" style={{ color: accentColor }} />
                         <div>
-                          <div className="font-press-start text-xs text-orange-400 mb-1">START</div>
+                          <div className="font-press-start text-xs mb-1" style={{ color: accentColor }}>START</div>
                           <div className="text-sm text-gray-300 font-jetbrains">
                             {startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </div>
@@ -1530,9 +1957,9 @@ export default function PublicHackathon() {
                       </div>
 
                       <div className="flex items-start gap-3 p-3 bg-black/50 rounded border border-gray-800">
-                        <Calendar className="h-5 w-5 text-orange-400 mt-1 flex-shrink-0" />
+                        <Calendar className="h-5 w-5 mt-1 flex-shrink-0" style={{ color: accentColor }} />
                         <div>
-                          <div className="font-press-start text-xs text-orange-400 mb-1">END</div>
+                          <div className="font-press-start text-xs mb-1" style={{ color: accentColor }}>END</div>
                           <div className="text-sm text-gray-300 font-jetbrains">
                             {endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                           </div>
@@ -1541,18 +1968,18 @@ export default function PublicHackathon() {
 
                       {hackathon.venue && hackathon.format !== 'online' && (
                         <div className="flex items-start gap-3 p-3 bg-black/50 rounded border border-gray-800">
-                          <MapPin className="h-5 w-5 text-orange-400 mt-1 flex-shrink-0" />
+                          <MapPin className="h-5 w-5 mt-1 flex-shrink-0" style={{ color: accentColor }} />
                           <div>
-                            <div className="font-press-start text-xs text-orange-400 mb-1">VENUE</div>
+                            <div className="font-press-start text-xs mb-1" style={{ color: accentColor }}>VENUE</div>
                             <div className="text-sm text-gray-300 font-jetbrains">{hackathon.venue}</div>
                           </div>
                         </div>
                       )}
 
                       <div className="flex items-start gap-3 p-3 bg-black/50 rounded border border-gray-800">
-                        <Users className="h-5 w-5 text-orange-400 mt-1 flex-shrink-0" />
+                        <Users className="h-5 w-5 mt-1 flex-shrink-0" style={{ color: accentColor }} />
                         <div>
-                          <div className="font-press-start text-xs text-orange-400 mb-1">TEAM_SIZE</div>
+                          <div className="font-press-start text-xs mb-1" style={{ color: accentColor }}>TEAM_SIZE</div>
                           <div className="text-sm text-gray-300 font-jetbrains">
                             {hackathon.team_size_min || 1}-{hackathon.team_size_max || 4} members
                           </div>
@@ -1561,9 +1988,9 @@ export default function PublicHackathon() {
 
                       {hackathon.registration_fee !== undefined && (
                         <div className="flex items-start gap-3 p-3 bg-black/50 rounded border border-gray-800">
-                          <Trophy className="h-5 w-5 text-orange-400 mt-1 flex-shrink-0" />
+                          <Trophy className="h-5 w-5 mt-1 flex-shrink-0" style={{ color: accentColor }} />
                           <div>
-                            <div className="font-press-start text-xs text-orange-400 mb-1">FEE</div>
+                            <div className="font-press-start text-xs mb-1" style={{ color: accentColor }}>FEE</div>
                             <div className="text-sm text-gray-300 font-jetbrains">
                               {hackathon.registration_fee === 0 ? 'FREE' : `₹${hackathon.registration_fee}`}
                             </div>
@@ -1575,14 +2002,26 @@ export default function PublicHackathon() {
                     {/* Connect Links */}
                     {(hackathon.discord_link || hackathon.whatsapp_link || hackathon.website_url || hackathon.contact_email) && (
                       <div className="mt-6 pt-6 border-t border-gray-800">
-                        <h4 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">CONNECT</h4>
+                        <h4 
+                          className="font-press-start text-sm mb-4"
+                          style={{
+                            background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                          }}
+                        >CONNECT</h4>
                         <div className="space-y-2">
                           {hackathon.discord_link && (
                             <a
                               href={hackathon.discord_link}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className=" bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 font-press-start text-xs transition-all flex items-center justify-center gap-2 border-2 border-indigo-500 w-full"
+                              className="text-white px-4 py-3 font-press-start text-xs transition-all flex items-center justify-center gap-2 border-2 w-full"
+                              style={{ 
+                                backgroundColor: primaryColor,
+                                borderColor: primaryColor
+                              }}
                             >
                               DISCORD
                               <ExternalLink className="h-4 w-4" />
@@ -1629,10 +2068,26 @@ export default function PublicHackathon() {
                     {/* Themes/Tags */}
                     {hackathon.themes && hackathon.themes.length > 0 && (
                       <div className="mt-6 pt-6 border-t border-gray-800">
-                        <h4 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">THEMES</h4>
+                        <h4 
+                          className="font-press-start text-sm mb-4"
+                          style={{
+                            background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                          }}
+                        >THEMES</h4>
                         <div className="flex flex-wrap gap-2">
                           {hackathon.themes.map((theme, i) => (
-                            <span key={i} className="inline-block bg-gradient-to-r from-purple-600/20 to-pink-500/10 border border-purple-500/40 px-3 py-1 rounded font-mono text-xs text-purple-300">
+                            <span 
+                              key={i} 
+                              className="inline-block border px-3 py-1 rounded font-mono text-xs"
+                              style={{
+                                background: `linear-gradient(to right, ${primaryColor}20, ${secondaryColor}10)`,
+                                borderColor: `${primaryColor}40`,
+                                color: primaryColor
+                              }}
+                            >
                               {theme}
                             </span>
                           ))}
@@ -1646,9 +2101,15 @@ export default function PublicHackathon() {
           </div>
         </section>
 
-        {/* Bottom CTA - Hide when hackathon has ended */}
-        {!hackathon.winners_announced && (
-          <section className="py-16 bg-gradient-to-r from-maximally-red to-red-700 border-t-4 border-orange-500/40">
+        {/* Bottom CTA - Hide when hackathon has ended or user is assigned judge */}
+        {!hackathon.winners_announced && !(user && profile?.role === 'judge' && judgeStatus?.isAssigned) && (
+          <section 
+            className="py-16 border-t-4"
+            style={{
+              background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+              borderColor: `${accentColor}60`
+            }}
+          >
             <div className="container mx-auto px-4">
               <div className="max-w-3xl mx-auto text-center">
                 <h2 className="font-press-start text-2xl md:text-3xl text-white mb-4">
@@ -1661,6 +2122,7 @@ export default function PublicHackathon() {
                   <HackathonRegistration
                     hackathonId={hackathon.id}
                     hackathonName={hackathon.hackathon_name}
+                    hackathonSlug={hackathon.slug}
                     teamSizeMin={hackathon.team_size_min || 1}
                     teamSizeMax={hackathon.team_size_max || 4}
                     registrationOpensAt={hackathon.registration_opens_at}
@@ -1671,6 +2133,9 @@ export default function PublicHackathon() {
                     winnersAnnouncedAt={hackathon.winners_announced_at}
                     onRegistrationChange={fetchHackathon}
                     onViewWinners={() => setActiveTab('winners')}
+                    primaryColor={primaryColor}
+                    secondaryColor={secondaryColor}
+                    accentColor={accentColor}
                   />
                 </div>
               </div>

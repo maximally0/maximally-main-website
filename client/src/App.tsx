@@ -165,6 +165,7 @@ import Gallery from './pages/Gallery';
 import GalleryProjectDetail from './pages/GalleryProjectDetail';
 import GallerySubmit from './pages/GallerySubmit';
 import GalleryEdit from './pages/GalleryEdit';
+import PlatformAnalytics from './pages/PlatformAnalytics';
 
 const queryClient = new QueryClient();
 
@@ -358,6 +359,9 @@ const AppContent = () => {
         <Route path="/gallery/submit" element={<GallerySubmit />} />
         <Route path="/gallery/edit/:id" element={<GalleryEdit />} />
         <Route path="/gallery/:id" element={<GalleryProjectDetail />} />
+        
+        {/* Platform Analytics */}
+        <Route path="/analytics" element={<PlatformAnalytics />} />
         
         {/* Legacy redirect */}
         <Route path="/featured" element={<Navigate to="/people" replace />} />

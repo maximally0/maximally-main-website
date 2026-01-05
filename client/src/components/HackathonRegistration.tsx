@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Users, UserPlus, Check, X, Clock } from 'lucide-react';
+import { Users, UserPlus, Check, X, Clock, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useModeration } from '@/hooks/useModeration';
@@ -12,6 +13,7 @@ import TeamManagement from '@/components/TeamManagement';
 interface RegistrationProps {
   hackathonId: number;
   hackathonName: string;
+  hackathonSlug?: string;
   teamSizeMin: number;
   teamSizeMax: number;
   registrationOpensAt?: string;
@@ -22,11 +24,15 @@ interface RegistrationProps {
   winnersAnnouncedAt?: string;
   onRegistrationChange?: () => void;
   onViewWinners?: () => void;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
 }
 
 export default function HackathonRegistration({
   hackathonId,
   hackathonName,
+  hackathonSlug,
   teamSizeMin,
   teamSizeMax,
   registrationOpensAt,
@@ -36,13 +42,17 @@ export default function HackathonRegistration({
   winnersAnnounced = false,
   winnersAnnouncedAt,
   onRegistrationChange,
-  onViewWinners
+  onViewWinners,
+  primaryColor = '#8B5CF6',
+  secondaryColor = '#EC4899',
+  accentColor = '#06B6D4'
 }: RegistrationProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const { canParticipate } = useModeration();
   const [registration, setRegistration] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isOrganizer, setIsOrganizer] = useState(false);
 
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showTeamModal, setShowTeamModal] = useState(false); // create/join team
@@ -58,6 +68,28 @@ export default function HackathonRegistration({
     linkedin_url: '',
     experience_level: 'intermediate'
   });
+
+  useEffect(() => {
+    if (user) {
+      checkRegistration();
+      checkIfOrganizer();
+    } else {
+      // If not logged in, stop loading immediately
+      setLoading(false);
+    }
+  }, [user, hackathonId]);
+
+  const checkIfOrganizer = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/hackathons/${hackathonId}/is-organizer`, { headers });
+      const data = await response.json();
+      setIsOrganizer(data.isOrganizer || false);
+    } catch (error) {
+      console.error('Error checking organizer status:', error);
+      setIsOrganizer(false);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -259,13 +291,13 @@ export default function HackathonRegistration({
           onClick={() => setShowTeamManagementModal(false)}
         >
           <div
-            className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-purple-500/50 w-full max-w-3xl max-h-[90vh] overflow-y-auto backdrop-blur-sm"
+            className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-red-500/50 w-full max-w-5xl max-h-[90vh] overflow-y-auto backdrop-blur-sm"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-6 border-b border-purple-500/30 flex items-center justify-between">
+            <div className="p-6 border-b border-red-500/30 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-500/20 border border-purple-500/40">
-                  <Users className="h-5 w-5 text-purple-400" />
+                <div className="p-2 bg-red-500/20 border border-red-500/40">
+                  <Users className="h-5 w-5 text-red-400" />
                 </div>
                 <h2 className="font-press-start text-xl text-white">TEAM</h2>
               </div>
@@ -461,26 +493,60 @@ export default function HackathonRegistration({
                 </div>
               </div>
             </div>
+          ) : isOrganizer ? (
+            <Link
+              to={`/organizer/hackathons/${hackathonId}/manage`}
+              className="w-full border px-6 py-3 font-press-start text-sm transition-all duration-300 flex items-center justify-center gap-2"
+              style={{
+                background: `linear-gradient(to right, ${primaryColor}40, ${secondaryColor}30)`,
+                borderColor: `${primaryColor}50`,
+                color: primaryColor
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = primaryColor;
+                e.currentTarget.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = `${primaryColor}50`;
+                e.currentTarget.style.color = primaryColor;
+              }}
+            >
+              <Settings className="h-4 w-4" />
+              MANAGE_HACKATHON
+            </Link>
           ) : (
             <>
               <button
                 onClick={() => setShowRegisterModal(true)}
-                className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
+                className="w-full border px-6 py-3 font-press-start text-sm transition-all duration-300"
+                style={{
+                  background: `linear-gradient(to right, ${primaryColor}40, ${secondaryColor}30)`,
+                  borderColor: `${primaryColor}50`,
+                  color: primaryColor
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = primaryColor;
+                  e.currentTarget.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = `${primaryColor}50`;
+                  e.currentTarget.style.color = primaryColor;
+                }}
               >
                 <UserPlus className="h-4 w-4 inline mr-2" />
-                JOIN_A_HACKATHON
+                JOIN_HACKATHON
               </button>
 
               {/* Registration Modal */}
               {showRegisterModal &&
                 createPortal(
                   <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-[9999]">
-                    <div className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-purple-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-[10000] backdrop-blur-sm">
-                      <div className="p-6 border-b border-purple-500/30">
+                    <div className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-red-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-[10000] backdrop-blur-sm">
+                      <div className="p-6 border-b border-red-500/30">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 bg-purple-500/20 border border-purple-500/40">
-                              <UserPlus className="h-5 w-5 text-purple-400" />
+                            <div className="p-2 bg-red-500/20 border border-red-500/40">
+                              <UserPlus className="h-5 w-5 text-red-400" />
                             </div>
                             <h2 className="font-press-start text-xl text-white">REGISTER</h2>
                           </div>
@@ -494,8 +560,8 @@ export default function HackathonRegistration({
                         {/* Registration Type */}
                         {teamsAllowed && (
                           <div>
-                            <label className="font-press-start text-[10px] text-purple-300 mb-3 block flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 bg-purple-400"></span>
+                            <label className="font-press-start text-[10px] text-red-300 mb-3 block flex items-center gap-2">
+                              <span className="w-1.5 h-1.5 bg-red-400"></span>
                               REGISTRATION_TYPE
                             </label>
                             <div className="grid grid-cols-2 gap-4">
@@ -503,7 +569,7 @@ export default function HackathonRegistration({
                                 onClick={() => setRegistrationType('individual')}
                                 className={`py-4 font-press-start text-sm transition-all duration-300 ${
                                   registrationType === 'individual' 
-                                    ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200' 
+                                    ? 'bg-gradient-to-r from-red-600/40 to-orange-500/30 border border-red-500/50 text-red-200' 
                                     : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
                                 }`}
                               >
@@ -530,7 +596,7 @@ export default function HackathonRegistration({
                             type="tel"
                             value={formData.phone_number}
                             onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
                             placeholder="+91 1234567890"
                           />
                         </div>
@@ -541,7 +607,7 @@ export default function HackathonRegistration({
                             type="text"
                             value={formData.college_university}
                             onChange={(e) => setFormData({ ...formData, college_university: e.target.value })}
-                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
                           />
                         </div>
 
@@ -551,7 +617,7 @@ export default function HackathonRegistration({
                             type="url"
                             value={formData.github_url}
                             onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
-                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
                             placeholder="https://github.com/username"
                           />
                         </div>
@@ -562,7 +628,7 @@ export default function HackathonRegistration({
                             type="url"
                             value={formData.linkedin_url}
                             onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
                             placeholder="https://linkedin.com/in/username"
                           />
                         </div>
@@ -572,7 +638,7 @@ export default function HackathonRegistration({
                           <select
                             value={formData.experience_level}
                             onChange={(e) => setFormData({ ...formData, experience_level: e.target.value })}
-                            className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none"
                           >
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
@@ -582,7 +648,7 @@ export default function HackathonRegistration({
 
                         <button
                           onClick={handleRegister}
-                          className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
+                          className="w-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 border border-red-500/50 hover:border-red-400 text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
                         >
                           REGISTER
                         </button>

@@ -347,7 +347,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .insert({
           hackathon_id: parseInt(hackathonId),
           team_name: String(team_name).trim(),
-          team_leader_id: String(userId),
+          team_leader_id: userId,
           team_code: Math.random().toString(36).substring(2, 8).toUpperCase()
         });
 
@@ -660,9 +660,226 @@ export function registerHackathonRegistrationRoutes(app: Express) {
     }
   });
 
+  // Helper function to check if user has access to hackathon (owner or co-organizer)
+  async function checkHackathonAccess(
+    hackathonId: string | number, 
+    userId: string,
+    requiredPermission?: string
+  ): Promise<{ hasAccess: boolean; isOwner: boolean; role?: string; permissions?: any }> {
+    console.log('checkHackathonAccess called:', { hackathonId, userId, requiredPermission });
+    
+    // Check if user is the owner
+    const { data: hackathon, error: hackathonError } = await supabaseAdmin
+      .from('organizer_hackathons')
+      .select('organizer_id')
+      .eq('id', hackathonId)
+      .single();
+
+    console.log('Owner check:', { hackathon, hackathonError, isOwner: hackathon?.organizer_id === userId });
+
+    if (hackathon?.organizer_id === userId) {
+      return { hasAccess: true, isOwner: true, role: 'owner' };
+    }
+
+    // Check if user is a co-organizer
+    const { data: coOrg, error: coOrgError } = await supabaseAdmin
+      .from('hackathon_organizers')
+      .select('role, permissions, status')
+      .eq('hackathon_id', hackathonId)
+      .eq('user_id', userId)
+      .eq('status', 'accepted')
+      .single();
+
+    console.log('Co-org check:', { coOrg, coOrgError });
+
+    if (!coOrg) {
+      return { hasAccess: false, isOwner: false };
+    }
+
+    // Check specific permission if required
+    if (requiredPermission && coOrg.permissions) {
+      const hasPermission = coOrg.permissions[requiredPermission] === true;
+      if (!hasPermission) {
+        return { hasAccess: false, isOwner: false, role: coOrg.role, permissions: coOrg.permissions };
+      }
+    }
+
+    return { hasAccess: true, isOwner: false, role: coOrg.role, permissions: coOrg.permissions };
+  }
+
   // ============================================
   // ORGANIZER ENDPOINTS
   // ============================================
+
+  // Get user's role and permissions for a hackathon
+  app.get("/api/organizer/hackathons/:hackathonId/my-role", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+
+      const access = await checkHackathonAccess(hackathonId, userId);
+      
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Define role-based permissions
+      // Owner: Full control including team management
+      // Co-Organizer: Full access except judge management
+      // Admin: Manage registrations & submissions
+      // Viewer: View-only access to analytics
+      let permissions = {
+        can_view_registrations: false,
+        can_manage_registrations: false,
+        can_view_teams: false,
+        can_manage_teams: false,
+        can_view_submissions: false,
+        can_manage_submissions: false,
+        can_view_judges: false,
+        can_manage_judges: false,
+        can_view_announcements: false,
+        can_manage_announcements: false,
+        can_view_analytics: false,
+        can_view_insights: false,
+        can_view_feedback: false,
+        can_view_winners: false,
+        can_manage_winners: false,
+        can_view_certificates: false,
+        can_manage_certificates: false,
+        can_view_settings: false,
+        can_manage_settings: false
+      };
+
+      if (access.isOwner) {
+        // Owner has full access
+        permissions = {
+          can_view_registrations: true,
+          can_manage_registrations: true,
+          can_view_teams: true,
+          can_manage_teams: true,
+          can_view_submissions: true,
+          can_manage_submissions: true,
+          can_view_judges: true,
+          can_manage_judges: true,
+          can_view_announcements: true,
+          can_manage_announcements: true,
+          can_view_analytics: true,
+          can_view_insights: true,
+          can_view_feedback: true,
+          can_view_winners: true,
+          can_manage_winners: true,
+          can_view_certificates: true,
+          can_manage_certificates: true,
+          can_view_settings: true,
+          can_manage_settings: true
+        };
+      } else {
+        // Role-based permissions for co-organizers
+        const role = access.role?.toLowerCase();
+        
+        switch (role) {
+          case 'co-organizer':
+            // Full access except judge management
+            permissions = {
+              can_view_registrations: true,
+              can_manage_registrations: true,
+              can_view_teams: true,
+              can_manage_teams: true,
+              can_view_submissions: true,
+              can_manage_submissions: true,
+              can_view_judges: false,
+              can_manage_judges: false,
+              can_view_announcements: true,
+              can_manage_announcements: true,
+              can_view_analytics: true,
+              can_view_insights: true,
+              can_view_feedback: true,
+              can_view_winners: true,
+              can_manage_winners: true,
+              can_view_certificates: true,
+              can_manage_certificates: true,
+              can_view_settings: false,
+              can_manage_settings: false
+            };
+            break;
+          case 'admin':
+            // Manage registrations & submissions only
+            permissions = {
+              can_view_registrations: true,
+              can_manage_registrations: true,
+              can_view_teams: false,
+              can_manage_teams: false,
+              can_view_submissions: true,
+              can_manage_submissions: true,
+              can_view_judges: false,
+              can_manage_judges: false,
+              can_view_announcements: false,
+              can_manage_announcements: false,
+              can_view_analytics: false,
+              can_view_insights: false,
+              can_view_feedback: false,
+              can_view_winners: false,
+              can_manage_winners: false,
+              can_view_certificates: false,
+              can_manage_certificates: false,
+              can_view_settings: false,
+              can_manage_settings: false
+            };
+            break;
+          case 'viewer':
+            // View-only access to analytics
+            permissions = {
+              can_view_registrations: false,
+              can_manage_registrations: false,
+              can_view_teams: false,
+              can_manage_teams: false,
+              can_view_submissions: false,
+              can_manage_submissions: false,
+              can_view_judges: false,
+              can_manage_judges: false,
+              can_view_announcements: false,
+              can_manage_announcements: false,
+              can_view_analytics: true,
+              can_view_insights: true,
+              can_view_feedback: false,
+              can_view_winners: false,
+              can_manage_winners: false,
+              can_view_certificates: false,
+              can_manage_certificates: false,
+              can_view_settings: false,
+              can_manage_settings: false
+            };
+            break;
+          default:
+            // Use stored permissions if available, otherwise no access
+            if (access.permissions) {
+              permissions = { ...permissions, ...access.permissions };
+            }
+        }
+      }
+
+      return res.json({ 
+        success: true, 
+        data: {
+          isOwner: access.isOwner,
+          role: access.role || 'owner',
+          permissions
+        }
+      });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
 
   // Get all registrations for hackathon
   app.get("/api/organizer/hackathons/:hackathonId/registrations", async (req, res) => {
@@ -680,14 +897,11 @@ export function registerHackathonRegistrationRoutes(app: Express) {
 
       const { hackathonId } = req.params;
 
-      // Verify ownership
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id')
-        .eq('id', hackathonId)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
+      // Verify access (owner or co-organizer)
+      const access = await checkHackathonAccess(hackathonId, userId);
+      console.log('Registrations access check:', { hackathonId, userId, access });
+      
+      if (!access.hasAccess) {
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
 
@@ -697,10 +911,13 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .eq('hackathon_id', hackathonId)
         .order('created_at', { ascending: false });
 
+      console.log('Registrations query result:', { count: data?.length, error });
+
       if (error) throw error;
 
-      return res.json({ success: true, data });
+      return res.json({ success: true, data: data || [] });
     } catch (error: any) {
+      console.error('Registrations error:', error);
       return res.status(500).json({ success: false, message: error.message });
     }
   });
@@ -721,14 +938,9 @@ export function registerHackathonRegistrationRoutes(app: Express) {
 
       const { hackathonId } = req.params;
 
-      // Verify ownership
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id')
-        .eq('id', hackathonId)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
+      // Verify access (owner or co-organizer)
+      const access = await checkHackathonAccess(hackathonId, userId);
+      if (!access.hasAccess) {
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
 
@@ -765,7 +977,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
 
       const { registrationId } = req.params;
 
-      // Get registration and verify ownership
+      // Get registration
       const { data: registration } = await supabaseAdmin
         .from('hackathon_registrations')
         .select('hackathon_id')
@@ -776,13 +988,9 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         return res.status(404).json({ success: false, message: 'Registration not found' });
       }
 
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id')
-        .eq('id', registration.hackathon_id)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
+      // Verify access (owner or co-organizer with can_manage_registrations)
+      const access = await checkHackathonAccess(registration.hackathon_id, userId, 'can_manage_registrations');
+      if (!access.hasAccess) {
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
 
@@ -819,7 +1027,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
 
       const { registrationId } = req.params;
 
-      // Get registration and verify ownership
+      // Get registration
       const { data: registration } = await supabaseAdmin
         .from('hackathon_registrations')
         .select('hackathon_id, team_id, user_id')
@@ -830,15 +1038,18 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         return res.status(404).json({ success: false, message: 'Registration not found' });
       }
 
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id, registrations_count')
-        .eq('id', registration.hackathon_id)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
+      // Verify access (owner or co-organizer with can_manage_registrations)
+      const access = await checkHackathonAccess(registration.hackathon_id, userId, 'can_manage_registrations');
+      if (!access.hasAccess) {
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
+
+      // Get hackathon for registration count
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('registrations_count')
+        .eq('id', registration.hackathon_id)
+        .single();
 
       // If user is in a team, remove them from the team first
       if (registration.team_id) {
@@ -906,16 +1117,18 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         return res.status(400).json({ success: false, message: 'User ID is required' });
       }
 
-      // Verify ownership
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('organizer_id, registrations_count')
-        .eq('id', hackathonId)
-        .single();
-
-      if (hackathon?.organizer_id !== userId) {
+      // Verify access (owner or co-organizer with can_manage_registrations)
+      const access = await checkHackathonAccess(hackathonId, userId, 'can_manage_registrations');
+      if (!access.hasAccess) {
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
+
+      // Get hackathon for registration count
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('registrations_count')
+        .eq('id', hackathonId)
+        .single();
 
       // Get registration if exists
       const { data: registration } = await supabaseAdmin

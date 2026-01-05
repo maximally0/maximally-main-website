@@ -174,6 +174,35 @@ const JudgeApplicationForm = () => {
     setTopEventsJudged(updated);
   };
 
+  // Handle form validation errors
+  const onFormError = (errors: any) => {
+    console.error('Form validation errors:', errors);
+    
+    // Get the first error message
+    const errorFields = Object.keys(errors);
+    if (errorFields.length > 0) {
+      const firstErrorField = errorFields[0];
+      const firstError = errors[firstErrorField];
+      
+      // Check if the error is in the public or private section
+      const publicFields = ['fullName', 'currentRole', 'company', 'location', 'shortBio', 'primaryExpertise', 'yearsOfExperience', 'linkedin', 'languagesSpoken', 'publicAchievements', 'mentorshipStatement'];
+      const isPublicField = publicFields.includes(firstErrorField);
+      
+      // Switch to the correct section if needed
+      if (isPublicField && formSection !== 'public') {
+        setFormSection('public');
+      } else if (!isPublicField && formSection !== 'private') {
+        setFormSection('private');
+      }
+      
+      toast({
+        title: 'Validation Error',
+        description: firstError?.message || `Please check the ${firstErrorField} field`,
+        variant: 'destructive',
+      });
+    }
+  };
+
   const onSubmit = async (data: JudgeFormData) => {
     try {
       setIsSubmitting(true);
@@ -315,7 +344,7 @@ const JudgeApplicationForm = () => {
             </section>
 
             <section className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8 mb-8">
-              <form onSubmit={form.handleSubmit(onSubmit)}>
+              <form onSubmit={form.handleSubmit(onSubmit, onFormError)}>
                 {formSection === 'public' && (
                   <div className="space-y-6">
                     <h2 className="font-press-start text-2xl mb-6 text-pink-400">PUBLIC PROFILE</h2>

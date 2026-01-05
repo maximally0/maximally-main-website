@@ -174,8 +174,8 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
       {/* Invite Members (Leader Only) */}
       {isLeader && (
         <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6">
-          <h4 className="font-press-start text-sm text-pink-400 mb-4 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-pink-400"></span>
+          <h4 className="font-press-start text-sm text-cyan-400 mb-4 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-cyan-400"></span>
             INVITE MEMBERS
           </h4>
           <div className="flex gap-2">
@@ -184,12 +184,12 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
               placeholder="Enter email address"
-              className="flex-1 bg-black/50 border border-pink-500/30 text-white px-4 py-3 font-jetbrains focus:border-pink-400 outline-none placeholder:text-gray-600"
+              className="flex-1 bg-black/50 border border-cyan-500/30 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none placeholder:text-gray-600"
             />
             <button
               onClick={handleInvite}
               disabled={sending || !inviteEmail.trim()}
-              className="bg-gradient-to-r from-pink-600/40 to-rose-500/30 border border-pink-500/50 hover:border-pink-400 text-pink-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+              className="bg-gradient-to-r from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400 border border-cyan-500/50 text-white px-6 py-3 font-press-start text-xs transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
             >
               <Mail className="h-4 w-4" />
               SEND

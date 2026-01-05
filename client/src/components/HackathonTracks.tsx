@@ -1,4 +1,4 @@
-import { Trophy, Target, Users, Zap } from 'lucide-react';
+import { Trophy, Target, Users, Zap, Coins } from 'lucide-react';
 
 interface Track {
   name: string;
@@ -8,9 +8,17 @@ interface Track {
 
 interface HackathonTracksProps {
   tracks: Track[] | string | null;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
 }
 
-export default function HackathonTracks({ tracks: tracksData }: HackathonTracksProps) {
+export default function HackathonTracks({ 
+  tracks: tracksData,
+  primaryColor = '#8B5CF6',
+  secondaryColor = '#EC4899',
+  accentColor = '#06B6D4'
+}: HackathonTracksProps) {
   // Parse tracks if it's a JSON string
   let tracks: Track[] = [];
   
@@ -43,15 +51,26 @@ export default function HackathonTracks({ tracks: tracksData }: HackathonTracksP
       {tracks.map((track, index) => (
         <div
           key={index}
-          className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 p-6 hover:border-purple-400/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]"
+          className="border p-6 transition-all duration-300 hover:scale-[1.02]"
+          style={{
+            background: `linear-gradient(to bottom right, ${primaryColor}15, ${secondaryColor}10)`,
+            borderColor: `${primaryColor}40`,
+            boxShadow: `0 0 20px ${primaryColor}10`
+          }}
         >
           {/* Icon */}
-          <div className="p-3 bg-purple-500/20 border border-purple-500/40 inline-block mb-4">
-            <Zap className="h-8 w-8 text-purple-400" />
+          <div 
+            className="p-3 border inline-block mb-4"
+            style={{
+              backgroundColor: `${primaryColor}20`,
+              borderColor: `${primaryColor}40`
+            }}
+          >
+            <Zap className="h-8 w-8" style={{ color: primaryColor }} />
           </div>
 
           {/* Track Name */}
-          <h3 className="font-press-start text-lg text-purple-300 mb-3">
+          <h3 className="font-press-start text-lg mb-3" style={{ color: primaryColor }}>
             {track.name}
           </h3>
 
@@ -62,9 +81,16 @@ export default function HackathonTracks({ tracks: tracksData }: HackathonTracksP
 
           {/* Prize */}
           {track.prize && (
-            <div className="bg-amber-500/20 border border-amber-500/40 px-3 py-2 inline-block">
-              <span className="font-press-start text-xs text-amber-300">
-                💰 {track.prize}
+            <div 
+              className="border px-3 py-2 inline-flex items-center gap-2"
+              style={{
+                backgroundColor: `${accentColor}20`,
+                borderColor: `${accentColor}40`
+              }}
+            >
+              <Coins className="h-4 w-4" style={{ color: accentColor }} />
+              <span className="font-press-start text-xs" style={{ color: accentColor }}>
+                {track.prize}
               </span>
             </div>
           )}

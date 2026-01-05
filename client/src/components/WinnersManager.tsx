@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Trophy, Award, ExternalLink, Check, RefreshCw } from 'lucide-react';
+import { Trophy, Award, ExternalLink, Check, RefreshCw, AlertTriangle, Scale } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 
@@ -12,6 +12,8 @@ interface Submission {
   github_repo?: string;
   user_name: string;
   team?: { team_name: string };
+  criteria_scores?: string;
+  submitted_at?: string;
 }
 
 interface Prize {
@@ -28,10 +30,91 @@ interface Winner {
   submission?: Submission;
 }
 
+interface TieGroup {
+  score: number;
+  submissions: Submission[];
+}
+
 interface WinnersManagerProps {
   hackathonId: number;
   prizes: Prize[] | string | null | undefined;
   onWinnersAnnounced?: () => void;
+}
+
+// Tie-break criteria weights (higher = more important)
+const TIE_BREAK_CRITERIA = [
+  { key: 'innovation', label: 'Innovation', weight: 5 },
+  { key: 'technical', label: 'Technical', weight: 4 },
+  { key: 'impact', label: 'Impact', weight: 3 },
+  { key: 'design', label: 'Design', weight: 2 },
+  { key: 'presentation', label: 'Presentation', weight: 1 },
+];
+
+// Function to resolve ties using criteria scores
+function resolveTies(submissions: Submission[]): Submission[] {
+  // Group by score
+  const scoreGroups = new Map<number, Submission[]>();
+  submissions.forEach(sub => {
+    const score = sub.score || 0;
+    if (!scoreGroups.has(score)) {
+      scoreGroups.set(score, []);
+    }
+    scoreGroups.get(score)!.push(sub);
+  });
+
+  // Sort each group with ties using criteria
+  const sortedGroups: Submission[] = [];
+  const sortedScores = Array.from(scoreGroups.keys()).sort((a, b) => b - a);
+
+  for (const score of sortedScores) {
+    const group = scoreGroups.get(score)!;
+    
+    if (group.length === 1) {
+      sortedGroups.push(group[0]);
+    } else {
+      // Sort tied submissions by criteria
+      const sortedGroup = group.sort((a, b) => {
+        const aScores = a.criteria_scores ? JSON.parse(a.criteria_scores) : {};
+        const bScores = b.criteria_scores ? JSON.parse(b.criteria_scores) : {};
+
+        // Compare by each criterion in order of weight
+        for (const criterion of TIE_BREAK_CRITERIA) {
+          const aVal = aScores[criterion.key] || 0;
+          const bVal = bScores[criterion.key] || 0;
+          if (aVal !== bVal) {
+            return bVal - aVal; // Higher is better
+          }
+        }
+
+        // If still tied, use submission time (earlier is better)
+        if (a.submitted_at && b.submitted_at) {
+          return new Date(a.submitted_at).getTime() - new Date(b.submitted_at).getTime();
+        }
+
+        return 0;
+      });
+      sortedGroups.push(...sortedGroup);
+    }
+  }
+
+  return sortedGroups;
+}
+
+// Function to detect ties
+function detectTies(submissions: Submission[]): TieGroup[] {
+  const scoreGroups = new Map<number, Submission[]>();
+  submissions.forEach(sub => {
+    const score = sub.score || 0;
+    if (!scoreGroups.has(score)) {
+      scoreGroups.set(score, []);
+    }
+    scoreGroups.get(score)!.push(sub);
+  });
+
+  return Array.from(scoreGroups.entries())
+    .filter(([_, subs]) => subs.length > 1)
+    .map(([score, subs]) => ({ score, submissions: subs }))
+    .sort((a, b) => b.score - a.score);
 }
 
 export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinnersAnnounced }: WinnersManagerProps) {
@@ -41,6 +124,8 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [canAnnounce, setCanAnnounce] = useState(false);
+  const [showTieBreaker, setShowTieBreaker] = useState(false);
+  const [ties, setTies] = useState<TieGroup[]>([]);
 
   const prizes: Prize[] = (() => {
     if (!prizesProp) return [];
@@ -84,10 +169,13 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
       const hackData = await hackResponse.json();
       
       if (subData.success) {
-        const sorted = (subData.data || []).sort((a: Submission, b: Submission) => 
-          (b.score || 0) - (a.score || 0)
-        );
+        // Apply tie-break logic to sort submissions
+        const sorted = resolveTies(subData.data || []);
         setSubmissions(sorted);
+        
+        // Detect ties for display
+        const detectedTies = detectTies(subData.data || []);
+        setTies(detectedTies);
       }
       
       if (winData.success) {
@@ -272,6 +360,66 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
           ))}
         </div>
       </div>
+
+      {/* Tie-Breaker Section */}
+      {ties.length > 0 && (
+        <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/10 border border-amber-500/30 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-press-start text-sm text-amber-400 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" />
+              TIES DETECTED
+            </h3>
+            <button
+              onClick={() => setShowTieBreaker(!showTieBreaker)}
+              className="text-xs text-amber-400 hover:text-amber-300 font-jetbrains"
+            >
+              {showTieBreaker ? 'Hide Details' : 'Show Details'}
+            </button>
+          </div>
+          
+          <p className="text-sm text-gray-400 font-jetbrains mb-3">
+            {ties.length} tie(s) found. Ties are resolved using criteria scores in order: 
+            Innovation → Technical → Impact → Design → Presentation → Submission Time
+          </p>
+
+          {showTieBreaker && (
+            <div className="space-y-4 mt-4">
+              {ties.map((tie, tieIndex) => (
+                <div key={tieIndex} className="bg-black/30 border border-amber-500/20 p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Scale className="h-4 w-4 text-amber-400" />
+                    <span className="font-press-start text-xs text-amber-400">
+                      SCORE: {tie.score.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-gray-500 font-jetbrains">
+                      ({tie.submissions.length} submissions tied)
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {tie.submissions.map((sub, subIndex) => {
+                      const criteria = sub.criteria_scores ? JSON.parse(sub.criteria_scores) : {};
+                      return (
+                        <div key={sub.id} className="flex items-center justify-between text-xs">
+                          <span className="text-gray-300 font-jetbrains">
+                            {sub.project_name}
+                          </span>
+                          <div className="flex gap-2">
+                            {TIE_BREAK_CRITERIA.map(c => (
+                              <span key={c.key} className="text-gray-500" title={c.label}>
+                                {c.label.charAt(0)}: {criteria[c.key] || 0}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Announce Button */}
       <button

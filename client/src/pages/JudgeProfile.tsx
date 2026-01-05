@@ -1,5 +1,6 @@
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { MapPin, Building2, Globe, Linkedin, Github, Twitter, Award, Users, Clock, Star, ArrowLeft, Calendar, ExternalLink, Languages, Mail, Shield } from 'lucide-react';
+import { MapPin, Building2, Globe, Linkedin, Github, Twitter, Award, Users, Clock, Star, ArrowLeft, Calendar, ExternalLink, Languages, Mail, Shield, X } from 'lucide-react';
 import SEO from '@/components/SEO';
 import Footer from '@/components/Footer';
 import TierBadge from '@/components/judges/TierBadge';
@@ -8,17 +9,86 @@ import { getTierLabel } from '@/lib/judgesData';
 import { useQuery } from '@tanstack/react-query';
 import type { Judge, JudgeEvent } from '@shared/schema';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { getAuthHeaders } from '@/lib/auth';
 
 const JudgeProfile = () => {
   const { username } = useParams<{ username: string }>();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
+  const { toast } = useToast();
+  
+  // State for invite modal
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [selectedHackathon, setSelectedHackathon] = useState<number | null>(null);
+  const [inviteMessage, setInviteMessage] = useState('');
+  const [sendingInvite, setSendingInvite] = useState(false);
+  const [organizerHackathons, setOrganizerHackathons] = useState<any[]>([]);
   
   // Check if user is admin or viewing their own profile
   const isAdmin = profile?.role === 'admin';
+  const isOrganizer = profile?.role === 'organizer';
   const isOwnProfile = profile?.username === username;
   
-  // Debug logging
+  // Fetch organizer's hackathons when modal opens
+  useEffect(() => {
+    if (showInviteModal && isOrganizer) {
+      fetchOrganizerHackathons();
+    }
+  }, [showInviteModal, isOrganizer]);
+  
+  const fetchOrganizerHackathons = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch('/api/organizer/hackathons', { headers });
+      const data = await response.json();
+      if (data.success) {
+        // Filter to only show published hackathons
+        setOrganizerHackathons(data.data.filter((h: any) => h.status === 'published'));
+      }
+    } catch (error) {
+      console.error('Error fetching hackathons:', error);
+    }
+  };
+  
+  const handleSendInvite = async () => {
+    if (!selectedHackathon || !judge?.email) return;
+    
+    setSendingInvite(true);
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${selectedHackathon}/invite-judge`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          judge_email: judge.email,
+          message: inviteMessage
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast({
+          title: "Invitation Sent!",
+          description: `${judge.fullName} has been invited to judge your hackathon`,
+        });
+        setShowInviteModal(false);
+        setSelectedHackathon(null);
+        setInviteMessage('');
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send invitation",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingInvite(false);
+    }
+  };
   
   
   
@@ -396,26 +466,94 @@ const JudgeProfile = () => {
                   </div>
                 </section>
 
-                {/* CTA: Invite to Judge */}
-                {judge.availabilityStatus !== 'not-available' && (
+                {/* CTA: Invite to Judge - Only visible to organizers */}
+                {isOrganizer && judge.availabilityStatus !== 'not-available' && (
                   <section className="pixel-card bg-gradient-to-br from-maximally-red to-maximally-yellow border-2 border-maximally-red p-6">
                     <h2 className="font-press-start text-sm mb-3 text-black">INVITE TO JUDGE</h2>
                     <p className="font-jetbrains text-sm mb-4 text-black">
                       Want {judge.fullName.split(' ')[0]} to judge your hackathon?
                     </p>
-                    <a
-                      href={`mailto:judges@maximally.org?subject=Judge Invitation for ${judge.fullName}&body=Hi ${judge.fullName.split(' ')[0]},%0D%0A%0D%0AWe would love to have you judge our upcoming hackathon!`}
+                    <button
+                      onClick={() => setShowInviteModal(true)}
                       className="minecraft-block bg-black text-white px-4 py-3 hover:bg-gray-800 transition-colors w-full text-center block"
                     >
                       <Mail className="inline h-4 w-4 mr-2" />
                       <span className="font-press-start text-xs">SEND INVITE</span>
-                    </a>
+                    </button>
                   </section>
                 )}
               </div>
             </div>
           </div>
         </main>
+        
+        {/* Invite Modal */}
+        {showInviteModal && (
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-purple-500/50 max-w-2xl w-full">
+              <div className="p-6 border-b border-purple-500/30 bg-gradient-to-r from-purple-900/30 to-pink-900/20">
+                <div className="flex items-center justify-between">
+                  <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">INVITE {judge.fullName.split(' ')[0].toUpperCase()}</h2>
+                  <button onClick={() => setShowInviteModal(false)} className="text-gray-400 hover:text-pink-400 transition-colors">
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {organizerHackathons.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-gray-400 font-jetbrains mb-4">You don't have any published hackathons yet.</p>
+                    <Link
+                      to="/organizer/dashboard"
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all inline-block"
+                    >
+                      CREATE HACKATHON
+                    </Link>
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Select Hackathon</label>
+                      <select
+                        value={selectedHackathon || ''}
+                        onChange={(e) => setSelectedHackathon(Number(e.target.value))}
+                        className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                      >
+                        <option value="">-- Select a hackathon --</option>
+                        {organizerHackathons.map((h) => (
+                          <option key={h.id} value={h.id}>
+                            {h.hackathon_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Message (Optional)</label>
+                      <textarea
+                        value={inviteMessage}
+                        onChange={(e) => setInviteMessage(e.target.value)}
+                        rows={4}
+                        className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none resize-none"
+                        placeholder={`Hi ${judge.fullName.split(' ')[0]}, we'd love to have you judge our hackathon...`}
+                      />
+                    </div>
+
+                    <button
+                      onClick={handleSendInvite}
+                      disabled={!selectedHackathon || sendingInvite}
+                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 font-press-start text-sm transition-all flex items-center justify-center gap-2 border border-pink-500/50"
+                    >
+                      <Mail className="h-4 w-4" />
+                      {sendingInvite ? 'SENDING...' : 'SEND_INVITATION'}
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
         
         <Footer />
       </div>

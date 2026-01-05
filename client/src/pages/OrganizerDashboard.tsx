@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 import Footer from '@/components/Footer';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import OrganizerInvitations from '@/components/OrganizerInvitations';
 
 type OrganizerTier = 'starter' | 'verified' | 'senior' | 'chief' | 'legacy';
 
@@ -268,6 +269,11 @@ export default function OrganizerDashboard() {
             <Plus className="h-5 w-5" />
             CREATE_NEW_HACKATHON
           </Link>
+
+          {/* Organizer Invitations */}
+          <div className="mb-8">
+            <OrganizerInvitations />
+          </div>
 
           {/* Unpublished Hackathons */}
           {unpublishedHackathons.length > 0 && (
