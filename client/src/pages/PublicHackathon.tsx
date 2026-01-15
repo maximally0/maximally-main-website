@@ -107,6 +107,10 @@ export default function PublicHackathon() {
   const [userRegistration, setUserRegistration] = useState<any>(null);
   const [winners, setWinners] = useState<any[]>([]);
   const [isOrganizer, setIsOrganizer] = useState(false);
+  
+  // Scroll behavior for hackathon navbar
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   // Handle tab from URL query parameter
   useEffect(() => {
@@ -122,6 +126,29 @@ export default function PublicHackathon() {
       setActiveTab('winners');
     }
   }, [hackathon?.winners_announced]);
+
+  // Scroll behavior for hackathon navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Only hide/show the hackathon navbar when scrolling past the hero section
+      if (currentScrollY > 200) {
+        if (currentScrollY > lastScrollY && currentScrollY > 300) {
+          setIsNavbarVisible(false);
+        } else {
+          setIsNavbarVisible(true);
+        }
+      } else {
+        setIsNavbarVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   useEffect(() => {
     if (slug) {
@@ -729,10 +756,11 @@ export default function PublicHackathon() {
 
         {/* Tabs Navigation - Use branding colors */}
         <section 
-          className="border-b sticky top-16 z-40 backdrop-blur-md"
+          className="border-b sticky top-16 z-40 backdrop-blur-md transition-transform duration-300 ease-in-out"
           style={{
             backgroundColor: 'rgba(17, 17, 17, 0.9)',
-            borderColor: `${primaryColor}30`
+            borderColor: `${primaryColor}30`,
+            transform: isNavbarVisible ? 'translateY(0)' : 'translateY(-100%)'
           }}
         >
           <div className="container mx-auto px-4">
@@ -1972,10 +2000,11 @@ export default function PublicHackathon() {
                 <div className="lg:col-span-1 space-y-6">
                   {/* Event Details Card - Use branding colors */}
                   <div 
-                    className="border p-6 sticky top-32"
+                    className="border p-6 sticky transition-all duration-300 ease-in-out"
                     style={{
                       background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
-                      borderColor: `${primaryColor}40`
+                      borderColor: `${primaryColor}40`,
+                      top: isNavbarVisible ? '8rem' : '4rem' // 32 -> 16 when navbar is hidden
                     }}
                   >
                     <h3 
