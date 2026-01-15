@@ -20,15 +20,6 @@ const organizerCards = [
     bgColor: "bg-orange-500/10",
     borderColor: "border-orange-500/20"
   },
-  {
-    icon: Users,
-    title: "Judges & Mentors",
-    description: "Access our network of industry experts to judge and mentor at your events.",
-    url: "/judges",
-    color: "text-yellow-400",
-    bgColor: "bg-yellow-500/10",
-    borderColor: "border-yellow-500/20"
-  },
 ];
 
 export function ForOrganizersSection() {
@@ -60,7 +51,7 @@ export function ForOrganizersSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 max-w-4xl mx-auto">
           {organizerCards.map((card, index) => (
             <Link
               key={index}
