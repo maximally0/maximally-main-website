@@ -688,6 +688,203 @@ app.post("/api/hackathons/:hackathonId/submit", async (req, res) => {
 });
 
 // ============================================
+// PROJECT ROUTES (handles both gallery and hackathon submissions)
+// ============================================
+// Get individual project details (public) - checks both gallery_projects and hackathon_submissions
+app.get("/api/projects/:projectId", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const { projectId } = req.params;
+
+    // Get current user if authenticated
+    let currentUserId: string | null = null;
+    const authHeader = req.headers['authorization'];
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      currentUserId = userId;
+    }
+
+    // First try gallery_projects table
+    const { data: galleryProject, error: galleryError } = await (supabaseAdmin as any)
+      .from('gallery_projects')
+      .select(`
+        *,
+        profiles:user_id(username, full_name, avatar_url),
+        hackathon:hackathon_id(hackathon_name, slug)
+      `)
+      .eq('id', projectId)
+      .single();
+
+    if (galleryProject && !galleryError) {
+      const gp = galleryProject;
+      
+      // Check if project is viewable (approved/featured OR owner viewing their own)
+      const isOwner = currentUserId && gp.user_id === currentUserId;
+      const isPublic = gp.status === 'approved' || gp.status === 'featured';
+      
+      if (isPublic || isOwner) {
+        // Found in gallery_projects - format response
+        const enrichedData = {
+          id: gp.id,
+          project_name: gp.name,
+          tagline: gp.tagline,
+          description: gp.description,
+          github_repo: gp.github_url,
+          demo_url: gp.demo_url,
+          video_url: gp.video_url,
+          cover_image: gp.cover_image_url,
+          project_logo: gp.logo_url,
+          technologies_used: gp.technologies || [],
+          submitted_at: gp.created_at,
+          prize_won: gp.hackathon_position,
+          score: null,
+          feedback: null,
+          source: 'gallery',
+          status: gp.status,
+          user_name: gp.profiles?.full_name || gp.profiles?.username || 'Anonymous',
+          hackathon: gp.hackathon ? {
+            hackathon_name: gp.hackathon.hackathon_name,
+            slug: gp.hackathon.slug
+          } : null,
+          team: null
+        };
+        return res.json({ success: true, data: enrichedData });
+      }
+    }
+
+    // Not in gallery, try hackathon_submissions
+    const { data: submission, error: submissionError } = await (supabaseAdmin as any)
+      .from('hackathon_submissions')
+      .select(`
+        *,
+        team:hackathon_teams(team_name, team_code),
+        hackathon:organizer_hackathons(hackathon_name, slug)
+      `)
+      .eq('id', projectId)
+      .eq('status', 'submitted')
+      .single();
+
+    if (submissionError || !submission) {
+      return res.status(404).json({ success: false, message: 'Project not found' });
+    }
+
+    // Get user name for hackathon submission
+    const { data: profile } = await (supabaseAdmin as any).from('profiles').select('username, full_name').eq('id', submission.user_id).single();
+
+    const enrichedData = {
+      ...submission,
+      source: 'hackathon',
+      user_name: profile?.full_name || profile?.username || 'Anonymous'
+    };
+
+    return res.json({ success: true, data: enrichedData });
+  } catch (e: any) {
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// Get project by source and ID (gallery or hackathon)
+app.get("/api/projects/:source/:projectId", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const { source, projectId } = req.params;
+
+    // Get current user if authenticated
+    let currentUserId: string | null = null;
+    const authHeader = req.headers['authorization'];
+    if (authHeader?.startsWith('Bearer ')) {
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      currentUserId = userId;
+    }
+
+    if (source === 'gallery') {
+      const { data: galleryProject, error } = await (supabaseAdmin as any)
+        .from('gallery_projects')
+        .select(`
+          *,
+          profiles:user_id(username, full_name, avatar_url),
+          hackathon:hackathon_id(hackathon_name, slug)
+        `)
+        .eq('id', projectId)
+        .single();
+
+      if (error || !galleryProject) {
+        return res.status(404).json({ success: false, message: 'Project not found' });
+      }
+
+      const gp = galleryProject;
+      
+      // Check if project is viewable (approved/featured OR owner viewing their own)
+      const isOwner = currentUserId && gp.user_id === currentUserId;
+      const isPublic = gp.status === 'approved' || gp.status === 'featured';
+      
+      if (!isPublic && !isOwner) {
+        return res.status(404).json({ success: false, message: 'Project not found or not public' });
+      }
+
+      const enrichedData = {
+        id: gp.id,
+        project_name: gp.name,
+        tagline: gp.tagline,
+        description: gp.description,
+        github_repo: gp.github_url,
+        demo_url: gp.demo_url,
+        video_url: gp.video_url,
+        cover_image: gp.cover_image_url,
+        project_logo: gp.logo_url,
+        technologies_used: gp.technologies || [],
+        submitted_at: gp.created_at,
+        prize_won: gp.hackathon_position,
+        score: null,
+        feedback: null,
+        source: 'gallery',
+        status: gp.status,
+        user_name: gp.profiles?.full_name || gp.profiles?.username || 'Anonymous',
+        hackathon: gp.hackathon ? {
+          hackathon_name: gp.hackathon.hackathon_name,
+          slug: gp.hackathon.slug
+        } : null,
+        team: null
+      };
+      return res.json({ success: true, data: enrichedData });
+    } 
+    
+    if (source === 'hackathon') {
+      const { data: submission, error } = await (supabaseAdmin as any)
+        .from('hackathon_submissions')
+        .select(`
+          *,
+          team:hackathon_teams(team_name, team_code),
+          hackathon:organizer_hackathons(hackathon_name, slug)
+        `)
+        .eq('id', projectId)
+        .eq('status', 'submitted')
+        .single();
+
+      if (error || !submission) {
+        return res.status(404).json({ success: false, message: 'Project not found' });
+      }
+
+      const { data: profile } = await (supabaseAdmin as any).from('profiles').select('username, full_name').eq('id', submission.user_id).single();
+
+      const enrichedData = {
+        ...submission,
+        source: 'hackathon',
+        user_name: profile?.full_name || profile?.username || 'Anonymous'
+      };
+
+      return res.json({ success: true, data: enrichedData });
+    }
+
+    return res.status(400).json({ success: false, message: 'Invalid source. Must be "gallery" or "hackathon"' });
+  } catch (e: any) {
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// ============================================
 // REGISTER ROUTE MODULES
 // ============================================
 // All API routes are handled by these route modules
