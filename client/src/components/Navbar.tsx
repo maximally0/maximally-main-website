@@ -66,7 +66,6 @@ const Navbar = () => {
   const isProfileLoaded = !!profile;
   const isLoggedIn = !!user && !loading && isProfileLoaded;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : '/profile';
-  const isJudge = profile?.role === 'judge';
   const isOrganizer = (profile?.role as string) === 'organizer';
 
   useEffect(() => {
@@ -152,30 +151,7 @@ const Navbar = () => {
               </div>
             ) : isLoggedIn ? (
               <>
-                {isJudge && (
-                  <>
-                    <Link
-                      to="/judge-dashboard"
-                      className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent hover:from-purple-300 hover:via-pink-400 hover:to-pink-300 transition-all duration-200"
-                      data-testid="button-judge-dashboard"
-                    >
-                      JUDGE DASHBOARD
-                    </Link>
-                    <Link
-                      to="/judge-inbox"
-                      className="relative p-2 transition-colors duration-200"
-                      data-testid="button-judge-inbox"
-                      aria-label={`Judge inbox${unreadCount > 0 ? ` - ${unreadCount} unread` : ''}`}
-                    >
-                      <Mail className="h-5 w-5 text-pink-500" style={{ filter: 'drop-shadow(0 0 4px rgba(236, 72, 153, 0.5))' }} />
-                      {unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-press-start px-1.5 py-0.5 min-w-[18px] text-center leading-none">
-                          {unreadCount > 99 ? '99+' : unreadCount}
-                        </span>
-                      )}
-                    </Link>
-                  </>
-                )}
+                {/* Judges don't have accounts - removed judge dashboard/inbox */}
                 {isOrganizer && (
                   <>
                     <Link
@@ -250,7 +226,7 @@ const Navbar = () => {
                           <User className="h-4 w-4 text-pink-400 group-hover:text-white group-hover:scale-110 transition-all" />
                           <span>MY PROFILE</span>
                         </Link>
-                        {!isJudge && !isOrganizer && (
+                        {!isOrganizer && (
                           <Link
                             to="/my-hackathons"
                             className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-[10px] text-gray-300 hover:bg-gradient-to-r hover:from-purple-600/50 hover:to-pink-600/50 hover:text-white transition-all duration-200 group"
@@ -327,31 +303,7 @@ const Navbar = () => {
                     </div>
                   ) : isLoggedIn ? (
                     <div className="space-y-3">
-                      {isJudge && (
-                        <>
-                          <Link
-                            to="/judge-dashboard"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300"
-                            data-testid="button-judge-dashboard-mobile"
-                          >
-                            JUDGE DASHBOARD
-                          </Link>
-                          <Link
-                            to="/judge-inbox"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300 relative"
-                            data-testid="button-judge-inbox-mobile"
-                          >
-                            JUDGE INBOX
-                            {unreadCount > 0 && (
-                              <span className="ml-2 bg-red-500 text-white text-xs font-press-start px-2 py-0.5">
-                                {unreadCount > 99 ? '99+' : unreadCount}
-                              </span>
-                            )}
-                          </Link>
-                        </>
-                      )}
+                      {/* Judges don't have accounts - removed judge dashboard/inbox */}
                       {isOrganizer && (
                         <>
                           <Link
@@ -385,7 +337,7 @@ const Navbar = () => {
                       >
                         MY PROFILE
                       </Link>
-                      {!isJudge && !isOrganizer && (
+                      {!isOrganizer && (
                         <Link
                           to="/my-hackathons"
                           onClick={() => setIsMenuOpen(false)}

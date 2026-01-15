@@ -832,23 +832,8 @@ export default function Profile() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Fetch judge information if user is a judge
-  const { data: judgeData } = useQuery({
-    queryKey: ['judge-info', username],
-    queryFn: async () => {
-      if (!username || dbProfile?.role !== 'judge') return null;
-      
-      try {
-        const response = await fetch(`/api/judges/${username}`);
-        if (!response.ok) return null;
-        
-        return response.json();
-      } catch {
-        return null;
-      }
-    },
-    enabled: !!username && dbProfile?.role === 'judge'
-  });
+  // Judges don't have accounts - removed judge data fetching
+  const judgeData = null;
 
   // Fetch user projects (gallery projects + hackathon submissions)
   const { data: userProjects, isLoading: projectsLoading } = useQuery({

@@ -7,7 +7,6 @@ import {
   BlogFeedSection,
   UpcomingHackathonsSection,
   ExploreMaximallySection,
-  WhyMaximallySection,
   ForOrganizersSection,
   DotNavigation,
 } from "@/components/landing";
@@ -39,18 +38,16 @@ const Index = () => {
         
         <CredibilitySection />
         
-        <UpcomingHackathonsSection />
-        
         <div id="section-2">
-          <BlogFeedSection />
+          <UpcomingHackathonsSection />
         </div>
         
         <div id="section-3">
-          <ExploreMaximallySection />
+          <BlogFeedSection />
         </div>
         
         <div id="section-4">
-          <WhyMaximallySection />
+          <ExploreMaximallySection />
         </div>
         
         <div id="section-5">

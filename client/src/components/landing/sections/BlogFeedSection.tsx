@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
+import { ArrowRight, BookOpen, Clock, Tag, Loader2 } from "lucide-react";
 import blogData from "@/data/blogPosts.json";
 
 const categoryColors: Record<string, string> = {
@@ -27,15 +28,15 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
   return (
     <Link
       to={`/blog/${post.slug}`}
-      className="group relative bg-gradient-to-br from-gray-900/80 via-black to-gray-900/80 border border-gray-800 hover:border-purple-500/50 transition-all duration-300 overflow-hidden"
+      className="group block relative bg-gradient-to-br from-gray-900/80 via-black to-gray-900/80 border border-gray-800 hover:border-purple-500/50 transition-all duration-300 overflow-hidden animate-fade-in"
       data-testid={`card-blog-${post.id}`}
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{ animationDelay: `${index * 100}ms`, isolation: 'isolate' }}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       
-      <div className="relative p-6 space-y-4">
+      <div className="relative p-6 space-y-4 z-10">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-press-start bg-gradient-to-r ${colorClass} border`}>
             <Tag className="w-3 h-3" />
@@ -67,10 +68,129 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
 }
 
 export function BlogFeedSection() {
-  const { featuredPosts } = blogData;
-  const displayPosts = featuredPosts.slice(0, 3);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!displayPosts || displayPosts.length === 0) {
+  useEffect(() => {
+    fetchFeaturedBlogs();
+  }, []);
+
+  const fetchFeaturedBlogs = async () => {
+    try {
+      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+      const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      // Fetch featured blogs config
+      const featuredRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/featured_blogs?id=eq.1&select=*`,
+        {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          }
+        }
+      );
+      
+      const featuredData = await featuredRes.json();
+      const config = featuredData?.[0];
+      
+      if (!config) {
+        // Fallback to static data
+        setPosts(blogData.featuredPosts.slice(0, 3));
+        setLoading(false);
+        return;
+      }
+
+      // Collect blog IDs
+      const blogIds: number[] = [];
+      for (let i = 1; i <= 3; i++) {
+        const id = config[`slot_${i}_id`];
+        if (id) blogIds.push(id);
+      }
+
+      if (blogIds.length === 0) {
+        setPosts(blogData.featuredPosts.slice(0, 3));
+        setLoading(false);
+        return;
+      }
+
+      // Fetch blogs from database
+      const blogsRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/blogs?id=in.(${blogIds.join(',')})&status=eq.published&select=id,title,slug,excerpt,content,tags,reading_time_minutes`,
+        {
+          headers: {
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          }
+        }
+      );
+      
+      const blogsData = await blogsRes.json();
+
+      // Helper to extract excerpt from content
+      const getExcerpt = (content: string, maxLength: number = 120) => {
+        // Remove markdown/HTML tags
+        const plainText = content
+          .replace(/#{1,6}\s/g, '')
+          .replace(/\*\*|__/g, '')
+          .replace(/\*|_/g, '')
+          .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+          .replace(/<[^>]+>/g, '')
+          .replace(/\n+/g, ' ')
+          .trim();
+        
+        if (plainText.length <= maxLength) return plainText;
+        return plainText.substring(0, maxLength).trim() + '...';
+      };
+
+      // Map and order by slot
+      const orderedPosts: BlogPost[] = [];
+      for (let i = 1; i <= 3; i++) {
+        const id = config[`slot_${i}_id`];
+        if (id) {
+          const blog = blogsData.find((b: any) => b.id === id);
+          if (blog) {
+            // Extract category from tags
+            const tags = Array.isArray(blog.tags) ? blog.tags : [];
+            const category = tags[0] || 'Guides';
+            
+            // Get excerpt - use excerpt field if available, otherwise extract from content
+            const excerpt = blog.excerpt || (blog.content ? getExcerpt(blog.content) : '');
+            
+            orderedPosts.push({
+              id: blog.id.toString(),
+              title: blog.title,
+              excerpt: excerpt,
+              category: category,
+              readTime: `${blog.reading_time_minutes || 5} min`,
+              date: '',
+              slug: blog.slug,
+              featured: true
+            });
+          }
+        }
+      }
+
+      setPosts(orderedPosts.length > 0 ? orderedPosts : blogData.featuredPosts.slice(0, 3));
+    } catch (error) {
+      console.error('Error fetching featured blogs:', error);
+      setPosts(blogData.featuredPosts.slice(0, 3));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-16 sm:py-24 relative bg-black overflow-hidden">
+        <div className="container mx-auto px-4 sm:px-6 flex justify-center">
+          <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
+        </div>
+      </section>
+    );
+  }
+
+  if (!posts || posts.length === 0) {
     return null;
   }
 
@@ -105,13 +225,8 @@ export function BlogFeedSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
-          {displayPosts.map((post, index) => (
-            <div 
-              key={post.id}
-              className="animate-fade-in"
-            >
-              <BlogCard post={post} index={index} />
-            </div>
+          {posts.map((post, index) => (
+            <BlogCard key={post.id} post={post} index={index} />
           ))}
         </div>
 

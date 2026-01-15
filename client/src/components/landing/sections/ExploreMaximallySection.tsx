@@ -52,7 +52,7 @@ export function ExploreMaximallySection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-5xl mx-auto mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-6xl mx-auto mb-10">
           {activeCards.map((card, index) => (
             <div 
               key={card.id}
@@ -84,7 +84,7 @@ export function ExploreMaximallySection() {
               </div>
               <div className="h-px flex-1 max-w-[100px] bg-gradient-to-l from-transparent to-gray-700" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-6xl mx-auto">
               {comingSoonCards.map((card, index) => (
                 <div 
                   key={card.id}

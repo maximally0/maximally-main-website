@@ -135,8 +135,8 @@ export default function PublicHackathon() {
       Promise.all([
         fetchUserSubmission(),
         fetchUserRegistration(),
-        fetchIsOrganizer(),
-        ...(profile?.role === 'judge' ? [fetchJudgeStatus()] : [])
+        fetchIsOrganizer()
+        // Judges don't have accounts - removed judge status check
       ]);
     }
   }, [user, hackathon, profile]);
@@ -623,8 +623,7 @@ export default function PublicHackathon() {
 
               {/* CTA Buttons */}
               <div className="flex flex-wrap gap-4 mb-10 animate-fade-in">
-                {/* Hide registration for judges assigned to this hackathon */}
-                {!(user && profile?.role === 'judge' && judgeStatus?.isAssigned) && (
+                {/* Judges don't have accounts - always show registration */}
                   <div className="flex-1 min-w-[250px]">
                     <HackathonRegistration
                       hackathonId={hackathon.id}
@@ -648,17 +647,7 @@ export default function PublicHackathon() {
                       accentColor={accentColor}
                     />
                   </div>
-                )}
-                {/* Judge Submissions Button - Show only if user is assigned as judge */}
-                {user && profile?.role === 'judge' && judgeStatus?.isAssigned && (
-                  <Link
-                    to={`/judge/hackathons/${hackathon.id}/submissions`}
-                    className="bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 text-white px-6 py-3 font-press-start text-xs transition-all inline-flex items-center gap-2 border border-red-500/50 hover:scale-105"
-                  >
-                    <Trophy className="h-4 w-4" />
-                    JUDGE_SUBMISSIONS
-                  </Link>
-                )}
+                {/* Judges don't have accounts - removed judge submissions button */}
                 <RequestToJudge hackathonId={hackathon.id} />
                 <SocialShare
                   title={hackathon.hackathon_name}
@@ -1557,8 +1546,8 @@ export default function PublicHackathon() {
               {/* Projects Tab */}
               {activeTab === 'projects' && (
                 <div className="space-y-8">
-                  {/* Submit Project Section (for registered users) - Hidden for judges and organizers */}
-                  {!(user && profile?.role === 'judge' && judgeStatus?.isAssigned) && !isOrganizer && (() => {
+                  {/* Submit Project Section (for registered users) - Hidden for organizers */}
+                  {!isOrganizer && (() => {
                     const now = new Date();
                     const subControl = hackathon.submission_control || 'auto';
                     
@@ -2155,8 +2144,8 @@ export default function PublicHackathon() {
           </div>
         </section>
 
-        {/* Bottom CTA - Hide when hackathon has ended or user is assigned judge */}
-        {!hackathon.winners_announced && !(user && profile?.role === 'judge' && judgeStatus?.isAssigned) && (
+        {/* Bottom CTA - Hide when hackathon has ended */}
+        {!hackathon.winners_announced && (
           <section 
             className="py-16 border-t-4"
             style={{

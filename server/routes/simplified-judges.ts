@@ -168,7 +168,7 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
           company: company?.trim() || null,
           bio: bio?.trim() || null,
           profile_photo: profile_photo?.trim() || null
-        })
+        } as any)
         .select()
         .single();
 
@@ -225,8 +225,8 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
       if (bio !== undefined) updateData.bio = bio?.trim() || null;
       if (profile_photo !== undefined) updateData.profile_photo = profile_photo?.trim() || null;
 
-      const { data, error } = await supabaseAdmin
-        .from('hackathon_judges')
+      const { data, error } = await (supabaseAdmin
+        .from('hackathon_judges') as any)
         .update(updateData)
         .eq('id', judgeId)
         .eq('hackathon_id', hackathonId)
@@ -340,7 +340,7 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
       }
 
       // Check if user is owner or co-organizer
-      const isOwner = hackathon.organizer_id === userId;
+      const isOwner = (hackathon as any).organizer_id === userId;
       let isCoOrganizer = false;
       
       if (!isOwner) {
@@ -385,48 +385,48 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
           const { data: existingToken } = await supabaseAdmin
             .from('judge_scoring_tokens')
             .select('id')
-            .eq('judge_id', judge.id)
+            .eq('judge_id', (judge as any).id)
             .single();
 
           if (existingToken) {
-            await supabaseAdmin
-              .from('judge_scoring_tokens')
+            await (supabaseAdmin
+              .from('judge_scoring_tokens') as any)
               .update({
                 token: tokenValue,
                 expires_at: expiresAt.toISOString(),
                 created_at: new Date().toISOString()
               })
-              .eq('id', existingToken.id);
+              .eq('id', (existingToken as any).id);
           } else {
             await supabaseAdmin
               .from('judge_scoring_tokens')
               .insert({
                 hackathon_id: parseInt(hackathonId),
-                judge_id: judge.id,
+                judge_id: (judge as any).id,
                 token: tokenValue,
                 expires_at: expiresAt.toISOString()
-              });
+              } as any);
           }
 
           // Send email
           const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/judge/${tokenValue}`;
           
           const emailResult = await sendJudgeScoringLinkEmail({
-            email: judge.email,
-            judgeName: judge.name,
-            hackathonName: hackathon.hackathon_name,
+            email: (judge as any).email,
+            judgeName: (judge as any).name,
+            hackathonName: (hackathon as any).hackathon_name,
             scoringUrl,
             expiresAt: expiresAt.toISOString()
           });
 
           if (emailResult.success) {
             emailsSent++;
-            console.log(`✅ Scoring link resent to ${judge.name} (${judge.email})`);
+            console.log(`✅ Scoring link resent to ${(judge as any).name} (${(judge as any).email})`);
           } else {
-            errors.push(`Failed to send to ${judge.email}`);
+            errors.push(`Failed to send to ${(judge as any).email}`);
           }
         } catch (err: any) {
-          errors.push(`Error for ${judge.email}: ${err.message}`);
+          errors.push(`Error for ${(judge as any).email}: ${err.message}`);
         }
       }
 
@@ -486,7 +486,7 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
         return res.status(404).json({ success: false, message: 'Hackathon not found' });
       }
 
-      if (hackathon.gallery_public) {
+      if ((hackathon as any).gallery_public) {
         return res.status(400).json({ success: false, message: 'Gallery is already public' });
       }
 
@@ -502,8 +502,8 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
       }
 
       // Update hackathon to mark gallery as public
-      const { error: updateError } = await supabaseAdmin
-        .from('organizer_hackathons')
+      const { error: updateError } = await (supabaseAdmin
+        .from('organizer_hackathons') as any)
         .update({
           gallery_public: true,
           gallery_published_at: new Date().toISOString()
@@ -529,55 +529,55 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
         const { data: existingToken } = await supabaseAdmin
           .from('judge_scoring_tokens')
           .select('id')
-          .eq('judge_id', judge.id)
+          .eq('judge_id', (judge as any).id)
           .single();
 
         if (existingToken) {
           // Update existing token
-          await supabaseAdmin
-            .from('judge_scoring_tokens')
+          await (supabaseAdmin
+            .from('judge_scoring_tokens') as any)
             .update({
               token: tokenValue,
               expires_at: expiresAt.toISOString(),
               created_at: new Date().toISOString()
             })
-            .eq('id', existingToken.id);
+            .eq('id', (existingToken as any).id);
         } else {
           // Create new token
           await supabaseAdmin
             .from('judge_scoring_tokens')
             .insert({
               hackathon_id: parseInt(hackathonId),
-              judge_id: judge.id,
+              judge_id: (judge as any).id,
               token: tokenValue,
               expires_at: expiresAt.toISOString()
-            });
+            } as any);
         }
 
-        tokenResults.push({ judgeId: judge.id, token: tokenValue });
+        tokenResults.push({ judgeId: (judge as any).id, token: tokenValue });
 
         // Send email with scoring link
         const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/judge/${tokenValue}`;
         
         try {
           const emailResult = await sendJudgeScoringLinkEmail({
-            email: judge.email,
-            judgeName: judge.name,
-            hackathonName: hackathon.hackathon_name,
+            email: (judge as any).email,
+            judgeName: (judge as any).name,
+            hackathonName: (hackathon as any).hackathon_name,
             scoringUrl,
             expiresAt: expiresAt.toISOString()
           });
           
           if (emailResult.success) {
-            emailResults.push({ judgeId: judge.id, email: judge.email, sent: true });
-            console.log(`✅ Scoring link sent to ${judge.name} (${judge.email})`);
+            emailResults.push({ judgeId: (judge as any).id, email: (judge as any).email, sent: true });
+            console.log(`✅ Scoring link sent to ${(judge as any).name} (${(judge as any).email})`);
           } else {
-            emailResults.push({ judgeId: judge.id, email: judge.email, sent: false, error: emailResult.error });
-            console.error(`❌ Failed to send scoring link to ${judge.email}:`, emailResult.error);
+            emailResults.push({ judgeId: (judge as any).id, email: (judge as any).email, sent: false, error: emailResult.error });
+            console.error(`❌ Failed to send scoring link to ${(judge as any).email}:`, emailResult.error);
           }
         } catch (emailError) {
-          emailResults.push({ judgeId: judge.id, email: judge.email, sent: false, error: emailError });
-          console.error(`❌ Error sending email to ${judge.email}:`, emailError);
+          emailResults.push({ judgeId: (judge as any).id, email: (judge as any).email, sent: false, error: emailError });
+          console.error(`❌ Error sending email to ${(judge as any).email}:`, emailError);
         }
       }
 

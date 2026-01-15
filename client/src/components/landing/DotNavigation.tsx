@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 
 const sections = [
-  { id: "section-1", label: "Join The Next Wave" },
-  { id: "section-2", label: "Latest Stories" },
-  { id: "section-3", label: "Explore Maximally" },
-  { id: "section-4", label: "Why Maximally?" },
+  { id: "section-1", label: "Hero" },
+  { id: "section-2", label: "Join The Next Wave" },
+  { id: "section-3", label: "Latest Stories" },
+  { id: "section-4", label: "Explore Maximally" },
   { id: "section-5", label: "Run Better Events" },
 ];
 
