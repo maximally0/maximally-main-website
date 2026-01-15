@@ -160,6 +160,24 @@ async function bearerUserId(supabase: any, token: string): Promise<string | null
 // ============================================
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
+app.get("/api/debug/routes", (_req, res) => {
+  const routes = [
+    'GET /api/organizer/hackathons',
+    'GET /api/organizer/hackathons/:id',
+    'GET /api/organizer/hackathons/:hackathonId/my-role',
+    'GET /api/organizer/hackathons/:hackathonId/registrations',
+    'GET /api/organizer/hackathons/:hackathonId/submissions',
+    'GET /api/projects/:projectId'
+  ];
+  return res.json({ 
+    success: true, 
+    message: 'Netlify function is running with all routes',
+    timestamp: new Date().toISOString(),
+    routes,
+    totalRoutes: routes.length
+  });
+});
+
 app.get("/api/notifications/unread-count", (_req, res) => res.json({ success: true, count: 0 }));
 
 app.post("/api/verify-captcha", async (req, res) => {
