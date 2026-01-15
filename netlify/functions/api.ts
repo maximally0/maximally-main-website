@@ -1148,6 +1148,167 @@ app.post("/api/gallery/projects/:id/like", async (req, res) => {
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
 
+app.put("/api/gallery/projects/:id", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { id } = req.params;
+    const { data: existing } = await (supabaseAdmin as any).from('gallery_projects').select('user_id').eq('id', id).single();
+    if (!existing || existing.user_id !== userId) return res.status(403).json({ success: false, message: 'Not authorized' });
+    const { data, error } = await (supabaseAdmin as any).from('gallery_projects').update({ ...req.body, updated_at: new Date().toISOString() }).eq('id', id).select().single();
+    if (error) throw error;
+    return res.json({ success: true, data });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.delete("/api/gallery/projects/:id", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { id } = req.params;
+    await (supabaseAdmin as any).from('gallery_projects').delete().eq('id', id).eq('user_id', userId);
+    return res.json({ success: true, message: 'Project deleted' });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.get("/api/gallery/my-projects", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { data, error } = await (supabaseAdmin as any).from('gallery_projects').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+    if (error) throw error;
+    return res.json({ success: true, data: data || [] });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.get("/api/gallery/categories", async (_req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const { data, error } = await (supabaseAdmin as any).from('gallery_projects').select('category').in('status', ['approved', 'featured']).not('category', 'is', null);
+    if (error) throw error;
+    const categories = [...new Set((data || []).map((p: any) => p.category).filter(Boolean))];
+    return res.json({ success: true, data: categories });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.get("/api/gallery/admin/projects", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { data: profile } = await (supabaseAdmin as any).from('profiles').select('role').eq('id', userId).single();
+    if (!profile || profile.role !== 'admin') return res.status(403).json({ success: false, message: 'Admin access required' });
+    const { status } = req.query;
+    let query = (supabaseAdmin as any).from('gallery_projects').select('*');
+    if (status) query = query.eq('status', status);
+    const { data, error } = await query.order('created_at', { ascending: false });
+    if (error) throw error;
+    return res.json({ success: true, data: data || [] });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.post("/api/gallery/admin/projects/:id/moderate", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { data: profile } = await (supabaseAdmin as any).from('profiles').select('role').eq('id', userId).single();
+    if (!profile || profile.role !== 'admin') return res.status(403).json({ success: false, message: 'Admin access required' });
+    const { id } = req.params;
+    const { status, moderation_notes } = req.body;
+    if (!['pending', 'approved', 'rejected', 'featured'].includes(status)) return res.status(400).json({ success: false, message: 'Invalid status' });
+    const { data, error } = await (supabaseAdmin as any).from('gallery_projects').update({ status, moderation_notes, moderated_by: userId, moderated_at: new Date().toISOString() }).eq('id', id).select().single();
+    if (error) throw error;
+    return res.json({ success: true, data });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.get("/api/gallery/admin/stats", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { data: profile } = await (supabaseAdmin as any).from('profiles').select('role').eq('id', userId).single();
+    if (!profile || profile.role !== 'admin') return res.status(403).json({ success: false, message: 'Admin access required' });
+    const [pending, approved, rejected, featured, total] = await Promise.all([
+      (supabaseAdmin as any).from('gallery_projects').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+      (supabaseAdmin as any).from('gallery_projects').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
+      (supabaseAdmin as any).from('gallery_projects').select('id', { count: 'exact', head: true }).eq('status', 'rejected'),
+      (supabaseAdmin as any).from('gallery_projects').select('id', { count: 'exact', head: true }).eq('status', 'featured'),
+      (supabaseAdmin as any).from('gallery_projects').select('id', { count: 'exact', head: true })
+    ]);
+    return res.json({ success: true, data: { pending: pending.count || 0, approved: approved.count || 0, rejected: rejected.count || 0, featured: featured.count || 0, total: total.count || 0 } });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.post("/api/gallery/admin/sync-hackathon-submissions", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { data: profile } = await (supabaseAdmin as any).from('profiles').select('role').eq('id', userId).single();
+    if (!profile || profile.role !== 'admin') return res.status(403).json({ success: false, message: 'Admin access required' });
+    const { data: submissions } = await (supabaseAdmin as any).from('hackathon_submissions').select('*').in('status', ['submitted', 'judged']);
+    const { data: existingProjects } = await (supabaseAdmin as any).from('gallery_projects').select('hackathon_submission_id').not('hackathon_submission_id', 'is', null);
+    const existingIds = new Set((existingProjects || []).map((p: any) => p.hackathon_submission_id));
+    const newSubmissions = (submissions || []).filter((s: any) => !existingIds.has(s.id));
+    if (newSubmissions.length === 0) return res.json({ success: true, message: 'No new submissions to import', imported: 0 });
+    const projectsToInsert = newSubmissions.map((s: any) => ({ user_id: s.user_id, name: s.project_name || 'Untitled Project', tagline: s.tagline, description: s.description || '', logo_url: s.project_logo, cover_image_url: s.cover_image, github_url: s.github_repo, demo_url: s.demo_url, video_url: s.video_url, technologies: s.technologies_used || [], hackathon_id: s.hackathon_id, hackathon_submission_id: s.id, hackathon_position: s.prize_won, status: 'approved', created_at: s.submitted_at || new Date().toISOString() }));
+    const { data: inserted } = await (supabaseAdmin as any).from('gallery_projects').insert(projectsToInsert).select();
+    return res.json({ success: true, message: `Imported ${inserted?.length || 0} hackathon submissions to gallery`, imported: inserted?.length || 0 });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.post("/api/gallery/sync-my-submissions", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+    const { data: submissions } = await (supabaseAdmin as any).from('hackathon_submissions').select('*').eq('user_id', userId).eq('status', 'submitted');
+    if (!submissions || submissions.length === 0) return res.json({ success: true, message: 'No submissions to sync', synced: 0 });
+    const { data: existingProjects } = await (supabaseAdmin as any).from('gallery_projects').select('hackathon_submission_id').eq('user_id', userId).not('hackathon_submission_id', 'is', null);
+    const existingIds = new Set((existingProjects || []).map((p: any) => p.hackathon_submission_id));
+    let synced = 0;
+    for (const submission of submissions) {
+      const galleryData = { user_id: userId, name: submission.project_name || 'Untitled Project', tagline: submission.tagline, description: submission.description || '', logo_url: submission.project_logo, github_url: submission.github_repo, demo_url: submission.demo_url, video_url: submission.video_url, technologies: submission.technologies_used || [], hackathon_id: submission.hackathon_id, hackathon_submission_id: submission.id, status: 'approved' };
+      if (existingIds.has(submission.id)) {
+        await (supabaseAdmin as any).from('gallery_projects').update({ ...galleryData, updated_at: new Date().toISOString() }).eq('hackathon_submission_id', submission.id);
+      } else {
+        await (supabaseAdmin as any).from('gallery_projects').insert({ ...galleryData, created_at: submission.submitted_at || new Date().toISOString() });
+      }
+      synced++;
+    }
+    return res.json({ success: true, message: `Synced ${synced} submissions to gallery`, synced });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
 // ============================================
 // ANNOUNCEMENT ROUTES
 // ============================================
@@ -2535,7 +2696,7 @@ app.post("/api/cron/auto-publish-galleries", async (req, res) => {
     if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
     // Auto-publish galleries for ended hackathons
     const now = new Date().toISOString();
-    const { data: endedHackathons } = await (supabaseAdmin as any).from('organizer_hackathons').select('id').lt('end_date', now).eq('auto_publish_gallery', true).eq('gallery_published', false);
+    const { data: endedHackathons } = await (supabaseAdmin as any).from('organizer_hackathons').select('id').lt('end_date', now).eq('auto_publish_gallery', true).eq('gallery_public', false);
     
     let published = 0;
     for (const hackathon of endedHackathons || []) {
@@ -2560,7 +2721,7 @@ app.post("/api/cron/auto-publish-galleries", async (req, res) => {
         }, { onConflict: 'hackathon_id,user_id' });
       }
       
-      await (supabaseAdmin as any).from('organizer_hackathons').update({ gallery_published: true }).eq('id', hackathon.id);
+      await (supabaseAdmin as any).from('organizer_hackathons').update({ gallery_public: true }).eq('id', hackathon.id);
       published++;
     }
     
@@ -3836,7 +3997,7 @@ app.post("/api/organizer/hackathons/:hackathonId/publish-gallery", async (req, r
     const userId = await bearerUserId(supabaseAdmin, token);
     if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
     const { hackathonId } = req.params;
-    const { data, error } = await (supabaseAdmin as any).from('organizer_hackathons').update({ gallery_published: true }).eq('id', hackathonId).eq('organizer_id', userId).select().single();
+    const { data, error } = await (supabaseAdmin as any).from('organizer_hackathons').update({ gallery_public: true }).eq('id', hackathonId).eq('organizer_id', userId).select().single();
     if (error) throw error;
     return res.json({ success: true, data });
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
