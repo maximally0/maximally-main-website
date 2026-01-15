@@ -152,7 +152,26 @@ async function sendWelcomeEmail(data: { email: string; userName: string }) {
 }
 
 async function bearerUserId(supabase: any, token: string): Promise<string | null> {
-  try { const { data: { user }, error } = await supabase.auth.getUser(token); return error || !user ? null : user.id; } catch { return null; }
+  try { 
+    // Create a temporary client with the user's JWT token to validate it
+    const tempClient = createClient(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_ANON_KEY!, // Use anon key, not service role
+      {
+        global: {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      }
+    );
+    
+    // Try to get the user with their own token
+    const { data: { user }, error } = await tempClient.auth.getUser();
+    return error || !user ? null : user.id; 
+  } catch { 
+    return null; 
+  }
 }
 
 // ============================================
