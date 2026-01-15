@@ -3,6 +3,28 @@ import express, { type Request, Response, NextFunction } from "express";
 import serverless from "serverless-http";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from 'resend';
+import { registerOrganizerRoutes } from "../../server/routes/organizer";
+import { registerAdminHackathonRoutes } from "../../server/routes/admin-hackathons";
+import { registerHackathonRegistrationRoutes } from "../../server/routes/hackathon-registration";
+import { registerOrganizerAdvancedRoutes } from "../../server/routes/organizer-advanced";
+import { registerPublicHackathonRoutes } from "../../server/routes/public-hackathons";
+import { registerJudgeInvitationRoutes } from "../../server/routes/judge-invitations";
+import { registerJudgeProfileRoutes } from "../../server/routes/judge-profile";
+import { registerSimpleJudgeRoutes } from "../../server/routes/judge-profile-simple";
+import { registerJudgingRoutes } from "../../server/routes/judging";
+import { registerFileUploadRoutes } from "../../server/routes/file-uploads";
+import { registerHackathonFeatureRoutes } from "../../server/routes/hackathon-features";
+import { registerOrganizerMessageRoutes } from "../../server/routes/organizer-messages";
+import { registerModerationRoutes } from "../../server/routes/moderation";
+import { registerGalleryRoutes } from "../../server/routes/gallery";
+import { registerCustomQuestionsRoutes } from "../../server/routes/custom-questions";
+import { registerJudgeReminderRoutes } from "../../server/routes/judge-reminders";
+import { registerJudgeScoringRoutes } from "../../server/routes/judge-scoring";
+import { registerSimplifiedJudgesRoutes } from "../../server/routes/simplified-judges";
+import { registerAutoPublishGalleryRoutes } from "../../server/routes/auto-publish-gallery";
+import { registerCertificateRoutes } from "../../server/routes/certificates";
+import { registerSubmissionModerationRoutes } from "../../server/routes/submission-moderation";
+import { registerFeaturedContentRoutes } from "../../server/routes/featured-content";
 
 const app = express();
 app.use(express.json());
@@ -4709,6 +4731,33 @@ app.patch("/api/teams/tasks/:taskId", async (req, res) => {
     return res.json({ success: true, data });
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
+
+// ============================================
+// REGISTER ROUTE MODULES
+// ============================================
+// Register all route modules from server/routes/
+registerOrganizerRoutes(app);
+registerAdminHackathonRoutes(app);
+registerHackathonRegistrationRoutes(app);
+registerOrganizerAdvancedRoutes(app);
+registerPublicHackathonRoutes(app);
+registerJudgeInvitationRoutes(app);
+registerJudgeProfileRoutes(app);
+registerSimpleJudgeRoutes(app);
+registerJudgingRoutes(app);
+registerFileUploadRoutes(app);
+registerHackathonFeatureRoutes(app);
+registerOrganizerMessageRoutes(app);
+registerModerationRoutes(app);
+registerGalleryRoutes(app);
+registerCustomQuestionsRoutes(app);
+registerJudgeReminderRoutes(app);
+registerJudgeScoringRoutes(app);
+registerSimplifiedJudgesRoutes(app);
+registerAutoPublishGalleryRoutes(app);
+registerCertificateRoutes(app);
+registerSubmissionModerationRoutes(app);
+registerFeaturedContentRoutes(app);
 
 // ============================================
 // CATCH-ALL ROUTE (MUST BE LAST)
