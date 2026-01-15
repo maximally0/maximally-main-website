@@ -24,6 +24,7 @@ import { registerSimplifiedJudgesRoutes } from "./routes/simplified-judges";
 import { registerAutoPublishGalleryRoutes } from "./routes/auto-publish-gallery";
 import { registerCertificateRoutes } from "./routes/certificates";
 import { registerSubmissionModerationRoutes } from "./routes/submission-moderation";
+import { registerFeaturedContentRoutes } from "./routes/featured-content";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
 import { 
   sendSubmissionConfirmation, 
@@ -3976,6 +3977,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerAutoPublishGalleryRoutes(app); // Auto-publish gallery when hackathon ends
   registerSubmissionModerationRoutes(app); // Submission moderation (disqualify) for organizers
   registerCertificateRoutes(app); // Certificate generation for organizers
+  registerFeaturedContentRoutes(app); // Featured blogs and hackathons management
 
   // Auto-publish is handled by the cron endpoint /api/cron/auto-publish-galleries
   // In production, this should be triggered by an external cron service (e.g., Netlify scheduled functions)
