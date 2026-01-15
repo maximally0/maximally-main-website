@@ -1340,6 +1340,131 @@ app.get("/api/hackathons/:hackathonId/analytics", async (req, res) => {
 });
 
 // ============================================
+// MISSING PUBLIC HACKATHON ROUTES
+// ============================================
+app.get("/api/hackathons/:hackathonId/is-organizer", async (req, res) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.json({ success: true, isOrganizer: false });
+    }
+    const token = authHeader.slice('Bearer '.length);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) {
+      return res.json({ success: true, isOrganizer: false });
+    }
+    const { hackathonId } = req.params;
+    const { data: hackathon } = await (supabaseAdmin as any).from('organizer_hackathons').select('organizer_id').eq('id', hackathonId).single();
+    if (hackathon?.organizer_id === userId) {
+      return res.json({ success: true, isOrganizer: true });
+    }
+    const { data: coOrg } = await (supabaseAdmin as any).from('hackathon_organizers').select('role, status').eq('hackathon_id', hackathonId).eq('user_id', userId).eq('status', 'accepted').single();
+    return res.json({ success: true, isOrganizer: !!coOrg });
+  } catch (e: any) {
+    return res.json({ success: true, isOrganizer: false });
+  }
+});
+
+app.get("/api/hackathons/:hackathonId/winners", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const { hackathonId } = req.params;
+    const hackathonIdNum = parseInt(hackathonId);
+    if (isNaN(hackathonIdNum)) {
+      return res.status(400).json({ success: false, message: 'Invalid hackathon ID' });
+    }
+    const { data, error } = await (supabaseAdmin as any).from('hackathon_winners').select(`
+      *,
+      submission:hackathon_submissions(
+        id,
+        project_name,
+        description,
+        tagline,
+        github_repo,
+        demo_url,
+        video_url,
+        cover_image,
+        project_logo,
+        user_id,
+        team_id
+      )
+    `).eq('hackathon_id', hackathonIdNum).order('position', { ascending: true });
+    if (error) throw error;
+    const enrichedData = await Promise.all((data || []).map(async (winner: any) => {
+      let userName = 'Anonymous';
+      let teamName = null;
+      if (winner.submission?.user_id) {
+        const { data: profile } = await (supabaseAdmin as any).from('profiles').select('username, full_name').eq('id', winner.submission.user_id).single();
+        userName = profile?.full_name || profile?.username || 'Anonymous';
+      }
+      if (winner.submission?.team_id) {
+        const { data: team } = await (supabaseAdmin as any).from('hackathon_teams').select('team_name').eq('id', winner.submission.team_id).single();
+        teamName = team?.team_name;
+      }
+      return {
+        ...winner,
+        submission: winner.submission ? {
+          ...winner.submission,
+          user_name: userName,
+          team: teamName ? { team_name: teamName } : null
+        } : null,
+        team_name: teamName
+      };
+    }));
+    return res.json({ success: true, data: enrichedData });
+  } catch (e: any) {
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+app.get("/api/hackathons/:hackathonId/projects", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const { hackathonId } = req.params;
+    const { data, error } = await (supabaseAdmin as any).from('hackathon_submissions').select(`
+      id,
+      project_name,
+      tagline,
+      description,
+      track,
+      github_repo,
+      demo_url,
+      video_url,
+      cover_image,
+      project_logo,
+      technologies_used,
+      status,
+      score,
+      prize_won,
+      submitted_at,
+      user_id,
+      team_id
+    `).eq('hackathon_id', hackathonId).eq('status', 'submitted').order('submitted_at', { ascending: false });
+    if (error) throw error;
+    const enrichedData = await Promise.all((data || []).map(async (project: any) => {
+      let userName = 'Anonymous';
+      let team = null;
+      if (project.user_id) {
+        const { data: profile } = await (supabaseAdmin as any).from('profiles').select('username, full_name').eq('id', project.user_id).single();
+        userName = profile?.full_name || profile?.username || 'Anonymous';
+      }
+      if (project.team_id) {
+        const { data: teamData } = await (supabaseAdmin as any).from('hackathon_teams').select('team_name, team_code').eq('id', project.team_id).single();
+        team = teamData;
+      }
+      return {
+        ...project,
+        user_name: userName,
+        team
+      };
+    }));
+    return res.json({ success: true, data: enrichedData });
+  } catch (e: any) {
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
+// ============================================
 // CATCH-ALL ROUTE
 // ============================================
 app.use('/api/*', (_req: Request, res: Response) => {
