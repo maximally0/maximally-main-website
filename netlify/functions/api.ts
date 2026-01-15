@@ -3751,10 +3751,49 @@ app.get("/api/organizer/hackathons/:hackathonId/my-role", async (req, res) => {
     if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
     const { hackathonId } = req.params;
     const { data: hackathon } = await (supabaseAdmin as any).from('organizer_hackathons').select('organizer_id').eq('id', hackathonId).single();
-    if (hackathon && hackathon.organizer_id === userId) {
-      return res.json({ success: true, role: 'organizer' });
+    
+    // Check if user is the owner
+    const isOwner = hackathon && hackathon.organizer_id === userId;
+    
+    // Check if user is a co-organizer
+    let coOrganizerRole = null;
+    if (!isOwner) {
+      const { data: coOrg } = await (supabaseAdmin as any).from('hackathon_co_organizers')
+        .select('role, permissions')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .single();
+      coOrganizerRole = coOrg;
     }
-    return res.json({ success: true, role: 'participant' });
+    
+    // Build full permissions object
+    const fullPermissions = {
+      can_view_judges: isOwner || coOrganizerRole?.permissions?.can_view_judges || false,
+      can_manage_judges: isOwner || coOrganizerRole?.permissions?.can_manage_judges || false,
+      can_view_registrations: isOwner || coOrganizerRole?.permissions?.can_view_registrations || false,
+      can_manage_registrations: isOwner || coOrganizerRole?.permissions?.can_manage_registrations || false,
+      can_view_submissions: isOwner || coOrganizerRole?.permissions?.can_view_submissions || false,
+      can_manage_submissions: isOwner || coOrganizerRole?.permissions?.can_manage_submissions || false,
+      can_view_announcements: isOwner || coOrganizerRole?.permissions?.can_view_announcements || false,
+      can_manage_announcements: isOwner || coOrganizerRole?.permissions?.can_manage_announcements || false,
+      can_view_analytics: isOwner || coOrganizerRole?.permissions?.can_view_analytics || false,
+      can_view_winners: isOwner || coOrganizerRole?.permissions?.can_view_winners || false,
+      can_manage_winners: isOwner || coOrganizerRole?.permissions?.can_manage_winners || false,
+      can_view_certificates: isOwner || coOrganizerRole?.permissions?.can_view_certificates || false,
+      can_manage_certificates: isOwner || coOrganizerRole?.permissions?.can_manage_certificates || false,
+      can_view_feedback: isOwner || coOrganizerRole?.permissions?.can_view_feedback || false,
+      can_view_settings: isOwner || coOrganizerRole?.permissions?.can_view_settings || false,
+      can_manage_settings: isOwner || coOrganizerRole?.permissions?.can_manage_settings || false,
+    };
+    
+    return res.json({ 
+      success: true, 
+      data: {
+        isOwner,
+        role: isOwner ? 'owner' : (coOrganizerRole?.role || 'viewer'),
+        permissions: fullPermissions
+      }
+    });
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
 
