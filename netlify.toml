@@ -11,7 +11,7 @@
 
 [functions]
   node_bundler = "esbuild"
-  included_files = ["netlify/functions/**"]
+  included_files = ["netlify/functions/**", "server/**", "shared/**"]
 
 [[redirects]]
   from = "/bootcamps"
