@@ -107,7 +107,7 @@ const OrganizerInbox = () => {
   if (authLoading || (user && !profile)) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <PixelLoader text="LOADING INBOX" size="lg" />
+        <PixelLoader size="lg" />
       </div>
     );
   }
@@ -116,7 +116,7 @@ const OrganizerInbox = () => {
   if (profile && profile.role !== 'organizer') {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <PixelLoader text="REDIRECTING" size="lg" />
+        <PixelLoader size="lg" />
       </div>
     );
   }

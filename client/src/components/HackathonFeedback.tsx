@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { MessageCircle, Send, Star, ThumbsUp, User, Quote, BarChart3, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthHeaders } from '@/lib/auth';
@@ -242,9 +243,9 @@ export default function HackathonFeedback({
 
 
       {/* Feedback Form Modal */}
-      {showForm && (
-        <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-[9999]">
-          <div className="bg-gradient-to-br from-gray-900/95 to-gray-900/80 border-2 border-purple-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto backdrop-blur-sm">
+      {showForm && createPortal(
+        <div className="fixed inset-0 bg-black flex items-center justify-center p-4" style={{ zIndex: 99999 }}>
+          <div className="bg-gray-900 border-2 border-purple-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl shadow-purple-500/20">
             <div className="p-6 border-b border-purple-500/30">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -340,7 +341,8 @@ export default function HackathonFeedback({
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
 

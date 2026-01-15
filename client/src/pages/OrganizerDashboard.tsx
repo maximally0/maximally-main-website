@@ -85,8 +85,11 @@ export default function OrganizerDashboard() {
 
   useEffect(() => {
     if (user) {
-      fetchHackathons();
-      fetchOrganizerProfile();
+      // Fetch both in parallel for faster loading
+      Promise.all([
+        fetchHackathons(),
+        fetchOrganizerProfile()
+      ]);
     }
   }, [user]);
 
@@ -404,41 +407,33 @@ export default function OrganizerDashboard() {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="flex gap-2">
-                        <Link
-                          to={`/hackathon/${hackathon.slug}`}
-                          className="flex-1 bg-green-600 hover:bg-green-500 text-white text-center py-2 font-press-start text-xs border border-green-500/50 transition-all"
-                        >
-                          VIEW_PAGE
-                        </Link>
-                        <Link
-                          to={`/organizer/hackathons/${hackathon.id}`}
-                          className="bg-purple-600 hover:bg-purple-500 text-white px-3 py-2 border border-purple-500/50 transition-all"
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Link>
-                        <button
-                          onClick={() => handleClone(hackathon.id)}
-                          className="bg-pink-600 hover:bg-pink-500 text-white px-3 py-2 border border-pink-500/50 transition-all"
-                          title="Clone hackathon"
-                        >
-                          <Copy className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteClick(hackathon.id)}
-                          className="bg-red-600 hover:bg-red-500 text-white px-3 py-2 border border-red-500/50 transition-all"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
+                    <div className="flex gap-2 flex-wrap">
                       <Link
-                        to={`/organizer/hackathons/${hackathon.id}/manage`}
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-center py-2 font-press-start text-xs border border-pink-500/50 transition-all flex items-center justify-center gap-2"
+                        to={`/hackathon/${hackathon.slug}`}
+                        className="flex-1 bg-green-600 hover:bg-green-500 text-white text-center py-2 font-press-start text-xs border border-green-500/50 transition-all"
                       >
-                        <Users className="h-4 w-4" />
-                        MANAGE_HACKATHON
+                        VIEW_PAGE
                       </Link>
+                      <Link
+                        to={`/organizer/hackathons/${hackathon.id}`}
+                        className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white text-center py-2 font-press-start text-xs border border-pink-500/50 transition-all flex items-center justify-center gap-2"
+                      >
+                        <Edit className="h-4 w-4" />
+                        MANAGE
+                      </Link>
+                      <button
+                        onClick={() => handleClone(hackathon.id)}
+                        className="bg-pink-600 hover:bg-pink-500 text-white px-3 py-2 border border-pink-500/50 transition-all"
+                        title="Clone hackathon"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(hackathon.id)}
+                        className="bg-red-600 hover:bg-red-500 text-white px-3 py-2 border border-red-500/50 transition-all"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
                 ))}

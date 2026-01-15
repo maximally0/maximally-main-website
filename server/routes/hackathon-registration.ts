@@ -1,12 +1,27 @@
 // @ts-nocheck
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
+import crypto from 'crypto';
 import { 
   sendRegistrationConfirmation, 
   sendTeamCreatedEmail, 
   sendTeamJoinedEmail,
-  sendTeamInvitationEmail 
+  sendTeamInvitationEmail,
+  sendRegistrationMilestoneEmail
 } from "../services/email";
+
+// Milestone thresholds for registration notifications
+const REGISTRATION_MILESTONES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
+
+// Helper to check if a milestone was just reached
+function checkMilestone(previousCount: number, newCount: number): number | null {
+  for (const milestone of REGISTRATION_MILESTONES) {
+    if (previousCount < milestone && newCount >= milestone) {
+      return milestone;
+    }
+  }
+  return null;
+}
 
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   const { data, error } = await supabaseAdmin.auth.getUser(token);
@@ -53,10 +68,12 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         return res.status(400).json({ success: false, message: 'Cannot unregister after check-in' });
       }
 
-      // Enforce: can only unregister while registration phase is open
+      // Enforce: can only unregister while hackathon is live (before end_date)
+      // Simplified: Registration is available when hackathon is published and end_date hasn't passed
+      // Requirements: 3.1, 3.2, 3.3, 4.1
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
-        .select('registration_opens_at, registration_closes_at, start_date, status')
+        .select('end_date, status')
         .eq('id', hackathonId)
         .single();
 
@@ -65,18 +82,13 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       }
 
       const now = new Date();
-      const registrationClosesAt = hackathon.registration_closes_at ? new Date(hackathon.registration_closes_at) : null;
-      const startDate = hackathon.start_date ? new Date(hackathon.start_date) : null;
+      const endDate = hackathon.end_date ? new Date(hackathon.end_date) : null;
 
-      // If registration_closes_at is set, use it; otherwise fall back to start_date
-      const registrationEnded = registrationClosesAt
-        ? now >= registrationClosesAt
-        : (startDate ? now >= startDate : false);
-
-      if (registrationEnded) {
+      // Cannot unregister after hackathon has ended
+      if (endDate && now >= endDate) {
         return res.status(400).json({
           success: false,
-          message: 'Registration phase has ended. You cannot unregister after the hackathon has started.'
+          message: 'Cannot unregister after the hackathon has ended.'
         });
       }
 
@@ -144,9 +156,11 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       const registrationData = req.body;
 
       // Check if hackathon exists and registrations are open
+      // Simplified: Registration is available when hackathon is published and end_date hasn't passed
+      // Requirements: 3.1, 3.2, 3.3, 4.1
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
-        .select('registration_opens_at, registration_closes_at, status, registration_control, building_control')
+        .select('status, end_date')
         .eq('id', hackathonId)
         .single();
 
@@ -159,29 +173,11 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       }
 
       const now = new Date();
-      const regControl = hackathon.registration_control || 'auto';
-      const buildControl = hackathon.building_control || 'auto';
+      const endDate = hackathon.end_date ? new Date(hackathon.end_date) : null;
       
-      // Check period controls first
-      if (regControl === 'closed') {
-        return res.status(403).json({ success: false, message: 'Registrations are closed for this hackathon' });
-      }
-      
-      if (buildControl === 'open') {
-        return res.status(403).json({ success: false, message: 'Registrations are closed during the building phase' });
-      }
-      
-      // If registration is force open, skip timeline checks
-      if (regControl !== 'open') {
-        // Check if registrations are closed by timeline
-        if (hackathon.registration_closes_at && new Date(hackathon.registration_closes_at) < now) {
-          return res.status(403).json({ success: false, message: 'Registrations are closed for this hackathon' });
-        }
-
-        // Check if registrations haven't opened yet
-        if (hackathon.registration_opens_at && new Date(hackathon.registration_opens_at) > now) {
-          return res.status(403).json({ success: false, message: 'Registrations have not opened yet' });
-        }
+      // Registration closes when hackathon ends (end_date passes)
+      if (endDate && now > endDate) {
+        return res.status(403).json({ success: false, message: 'Registrations are closed - hackathon has ended' });
       }
 
       // Get user profile
@@ -228,12 +224,44 @@ export function registerHackathonRegistrationRoutes(app: Express) {
 
       if (error) throw error;
 
-      // Update registration count
+      // Update registration count and check for milestones
+      const { data: hackathonData } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('registrations_count, hackathon_name, slug, organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      const previousCount = hackathonData?.registrations_count || 0;
+
       await supabaseAdmin.rpc('increment', {
         table_name: 'organizer_hackathons',
         row_id: hackathonId,
         column_name: 'registrations_count'
       });
+
+      const newCount = previousCount + 1;
+
+      // Check if a milestone was reached
+      const milestone = checkMilestone(previousCount, newCount);
+      if (milestone && hackathonData) {
+        // Get organizer details
+        const { data: organizerProfile } = await supabaseAdmin
+          .from('profiles')
+          .select('full_name, username, email')
+          .eq('id', hackathonData.organizer_id)
+          .single();
+
+        if (organizerProfile?.email) {
+          sendRegistrationMilestoneEmail({
+            email: organizerProfile.email,
+            organizerName: organizerProfile.full_name || organizerProfile.username || 'Organizer',
+            hackathonName: hackathonData.hackathon_name,
+            hackathonSlug: hackathonData.slug,
+            milestone: milestone,
+            totalRegistrations: newCount,
+          }).catch(err => console.error('Milestone email failed:', err));
+        }
+      }
 
       // Send confirmation email
       if (hackathon) {
@@ -850,7 +878,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
               can_view_announcements: false,
               can_manage_announcements: false,
               can_view_analytics: true,
-              can_view_insights: true,
+              can_view_insights: false,
               can_view_feedback: false,
               can_view_winners: false,
               can_manage_winners: false,
@@ -1249,7 +1277,10 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         return res.status(403).json({ success: false, message: 'Not authorized' });
       }
 
-      // Create invitation
+      // Use team code as the invite token (it's already unique)
+      const inviteToken = team.team_code;
+
+      // Create invitation record (for tracking purposes)
       const { data, error } = await supabaseAdmin
         .from('hackathon_team_invitations')
         .insert({
@@ -1257,6 +1288,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
           hackathon_id: team.hackathon_id,
           invited_by_user_id: userId,
           invited_email: email,
+          invite_token: inviteToken,
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
         })
         .select()
@@ -1278,6 +1310,8 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .single();
 
       if (hackathonDetails) {
+        // Use team code in the invite URL
+        const inviteUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/team/join/${team.team_code}`;
         sendTeamInvitationEmail({
           email: email,
           inviteeName: email.split('@')[0], // Use email prefix as name
@@ -1285,11 +1319,158 @@ export function registerHackathonRegistrationRoutes(app: Express) {
           teamName: team.team_name,
           hackathonName: hackathonDetails.hackathon_name,
           hackathonSlug: hackathonDetails.slug,
-          teamCode: team.team_code,
+          inviteUrl: inviteUrl,
         }).catch(err => console.error('Team invitation email failed:', err));
       }
 
       return res.json({ success: true, data });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Accept team invitation via team code (public endpoint - user must be logged in)
+  app.post("/api/teams/join/:token", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Please log in to join the team' });
+      }
+
+      const authToken = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, authToken);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid session' });
+      }
+
+      const { token: teamCode } = req.params;
+
+      // Find the team by team code
+      const { data: team, error: teamError } = await supabaseAdmin
+        .from('hackathon_teams')
+        .select('*, hackathon:organizer_hackathons(slug, hackathon_name)')
+        .eq('team_code', teamCode.toUpperCase())
+        .single();
+
+      if (teamError || !team) {
+        return res.status(404).json({ success: false, message: 'Invalid team code' });
+      }
+
+      // Check if user is already registered for this hackathon
+      const { data: existingReg } = await supabaseAdmin
+        .from('hackathon_registrations')
+        .select('*')
+        .eq('hackathon_id', team.hackathon_id)
+        .eq('user_id', userId)
+        .single();
+
+      if (!existingReg) {
+        // User is NOT registered - they must register first
+        return res.status(400).json({ 
+          success: false, 
+          message: 'You must register for this hackathon before joining a team',
+          requiresRegistration: true,
+          hackathonSlug: team.hackathon?.slug || null,
+          hackathonId: team.hackathon_id
+        });
+      }
+
+      if (existingReg.team_id) {
+        // Get the current team name to show in the error message
+        const { data: currentTeam } = await supabaseAdmin
+          .from('hackathon_teams')
+          .select('team_name')
+          .eq('id', existingReg.team_id)
+          .single();
+        
+        return res.status(400).json({ 
+          success: false, 
+          message: `You're already in team "${currentTeam?.team_name || 'Unknown'}". Leave your current team first to join a new one.`,
+          alreadyInTeam: true,
+          currentTeamName: currentTeam?.team_name
+        });
+      }
+
+      // Update registration to join team
+      const { error: updateError } = await supabaseAdmin
+        .from('hackathon_registrations')
+        .update({
+          team_id: team.id,
+          registration_type: 'team'
+        })
+        .eq('id', existingReg.id);
+
+      if (updateError) throw updateError;
+
+      // Mark any pending invitations for this user as accepted
+      await supabaseAdmin
+        .from('hackathon_team_invitations')
+        .update({
+          status: 'accepted',
+          invited_user_id: userId,
+          responded_at: new Date().toISOString()
+        })
+        .eq('team_id', team.id)
+        .eq('status', 'pending');
+
+      return res.json({
+        success: true,
+        message: `You've joined team ${team.team_name}!`,
+        data: {
+          teamId: team.id,
+          teamName: team.team_name,
+          hackathonSlug: team.hackathon?.slug
+        }
+      });
+    } catch (error: any) {
+      console.error('Error joining team via code:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get team details by code (public - for showing team info before joining)
+  app.get("/api/teams/invite/:token", async (req, res) => {
+    try {
+      const { token: teamCode } = req.params;
+
+      // Find the team by team code
+      const { data: team, error } = await supabaseAdmin
+        .from('hackathon_teams')
+        .select(`
+          id,
+          team_name,
+          team_code,
+          hackathon:organizer_hackathons(
+            id,
+            hackathon_name,
+            slug,
+            hackathon_logo,
+            start_date,
+            end_date
+          )
+        `)
+        .eq('team_code', teamCode.toUpperCase())
+        .single();
+
+      if (error || !team) {
+        return res.status(404).json({ success: false, message: 'Team not found' });
+      }
+
+      // Return team info in a format compatible with the JoinTeam page
+      return res.json({ 
+        success: true, 
+        data: {
+          id: team.id,
+          status: 'pending',
+          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          invited_email: '',
+          team: {
+            id: team.id,
+            team_name: team.team_name,
+            hackathon: team.hackathon
+          }
+        }
+      });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
@@ -1362,7 +1543,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
             id,
             hackathon_name,
             slug,
-            cover_image,
+            hackathon_logo,
             start_date,
             end_date,
             format,
@@ -1425,9 +1606,10 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       const desiredStatus = submissionData.status === 'submitted' ? 'submitted' : 'draft';
 
       // Check if hackathon exists and submissions are open
+      // Platform Simplification: Removed manual control columns, using dates only
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
-        .select('submission_opens_at, submission_closes_at, status, submission_control, building_control')
+        .select('start_date, end_date, status')
         .eq('id', hackathonId)
         .single();
 
@@ -1439,31 +1621,20 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         return res.status(403).json({ success: false, message: 'Hackathon is not published' });
       }
 
+      // Platform Simplification: Use dates only for submission availability
+      // See: .kiro/specs/platform-simplification/requirements.md - Requirement 4, 5
       const now = new Date();
-      const subControl = hackathon.submission_control || 'auto';
-      const buildControl = hackathon.building_control || 'auto';
+      const startDate = hackathon.start_date ? new Date(hackathon.start_date) : null;
+      const endDate = hackathon.end_date ? new Date(hackathon.end_date) : null;
       
-      // Check period controls first
-      if (subControl === 'closed') {
+      // Check if submissions are closed by timeline (hackathon ended)
+      if (endDate && now > endDate) {
         return res.status(403).json({ success: false, message: 'Submissions are closed for this hackathon' });
       }
-      
-      // If building phase is force active and submission is not force open, block submissions
-      if (buildControl === 'open' && subControl !== 'open') {
-        return res.status(403).json({ success: false, message: 'Submissions are not allowed during the building phase' });
-      }
-      
-      // If submission is force open, skip timeline checks
-      if (subControl !== 'open') {
-        // Check if submissions are closed by timeline
-        if (hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now) {
-          return res.status(403).json({ success: false, message: 'Submissions are closed for this hackathon' });
-        }
 
-        // Check if submissions haven't opened yet
-        if (hackathon.submission_opens_at && new Date(hackathon.submission_opens_at) > now) {
-          return res.status(403).json({ success: false, message: 'Submissions have not opened yet' });
-        }
+      // Check if submissions haven't opened yet (hackathon hasn't started)
+      if (startDate && now < startDate) {
+        return res.status(403).json({ success: false, message: 'Submissions have not opened yet' });
       }
 
       // Check if user is registered
@@ -1477,6 +1648,48 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       if (!registration) {
         return res.status(403).json({ success: false, message: 'You must be registered to submit' });
       }
+
+      // Helper function to sync submission to gallery
+      const syncToGallery = async (submission: any, submitterId: string) => {
+        if (submission.status !== 'submitted') return;
+        
+        try {
+          const { data: existingGallery } = await supabaseAdmin
+            .from('gallery_projects')
+            .select('id')
+            .eq('hackathon_submission_id', submission.id)
+            .single();
+
+          const galleryData = {
+            user_id: submitterId,
+            name: submission.project_name || 'Untitled Project',
+            tagline: submission.tagline,
+            description: submission.description || '',
+            logo_url: submission.project_logo,
+            github_url: submission.github_repo,
+            demo_url: submission.demo_url,
+            video_url: submission.video_url,
+            technologies: submission.technologies_used || [],
+            hackathon_id: parseInt(hackathonId),
+            hackathon_submission_id: submission.id,
+            status: 'approved',
+          };
+
+          if (existingGallery) {
+            await supabaseAdmin
+              .from('gallery_projects')
+              .update({ ...galleryData, updated_at: new Date().toISOString() })
+              .eq('id', existingGallery.id);
+          } else {
+            await supabaseAdmin
+              .from('gallery_projects')
+              .insert({ ...galleryData, created_at: submission.submitted_at || new Date().toISOString() });
+          }
+          console.log('Synced submission to gallery:', submission.id);
+        } catch (galleryError) {
+          console.error('Error syncing to gallery:', galleryError);
+        }
+      };
 
       // If team submission, enforce only team leader can submit and one submission per team
       if (registration.team_id) {
@@ -1514,6 +1727,10 @@ export function registerHackathonRegistrationRoutes(app: Express) {
             .single();
 
           if (error) throw error;
+          
+          // Sync to gallery
+          await syncToGallery(data, userId);
+          
           return res.json({ success: true, data });
         }
 
@@ -1531,6 +1748,10 @@ export function registerHackathonRegistrationRoutes(app: Express) {
           .single();
 
         if (error) throw error;
+        
+        // Sync to gallery
+        await syncToGallery(data, userId);
+        
         return res.json({ success: true, data });
       }
 
@@ -1556,6 +1777,10 @@ export function registerHackathonRegistrationRoutes(app: Express) {
           .single();
 
         if (error) throw error;
+        
+        // Sync to gallery
+        await syncToGallery(data, userId);
+        
         return res.json({ success: true, data });
       }
 
@@ -1573,6 +1798,9 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         .single();
 
       if (error) throw error;
+      
+      // Sync to gallery
+      await syncToGallery(data, userId);
 
       return res.json({ success: true, data });
     } catch (error: any) {

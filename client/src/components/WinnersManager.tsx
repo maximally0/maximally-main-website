@@ -3,17 +3,28 @@ import { Trophy, Award, ExternalLink, Check, RefreshCw, AlertTriangle, Scale } f
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 
+interface JudgeScore {
+  judge_id: string;
+  judge_name: string;
+  score: number;
+  notes?: string;
+  scored_at?: string;
+}
+
 interface Submission {
   id: number;
   project_name: string;
   tagline?: string;
   score?: number;
+  average_score?: number;
   demo_url?: string;
   github_repo?: string;
   user_name: string;
   team?: { team_name: string };
   criteria_scores?: string;
   submitted_at?: string;
+  judge_scores?: JudgeScore[];
+  judges_count?: number;
 }
 
 interface Prize {
@@ -27,6 +38,7 @@ interface Winner {
   submission_id: number;
   prize_position: string;
   prize_amount?: string;
+  score?: number;
   submission?: Submission;
 }
 
@@ -184,12 +196,19 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
       
       if (hackData.success) {
         const h = hackData.data;
-        const judgingControl = h.judging_control || 'auto';
         const now = new Date();
         
-        const judgingEnded = judgingControl === 'closed' || 
-          (judgingControl === 'auto' && h.judging_ends_at && new Date(h.judging_ends_at) < now);
-        setCanAnnounce(judgingEnded);
+        // All dates are stored and compared in UTC
+        const parseAsUTC = (dateStr: string) => {
+          return new Date(dateStr);
+        };
+        
+        // Hackathon has ended if end_date has passed (UTC)
+        const endDate = h.end_date ? parseAsUTC(h.end_date) : null;
+        const hackathonEnded = endDate ? now > endDate : false;
+        
+        // Can announce winners if hackathon has ended
+        setCanAnnounce(hackathonEnded);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -203,10 +222,12 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
       const filtered = prev.filter(w => w.prize_position !== prizePosition);
       if (submissionId) {
         const prize = prizes.find(p => p.position === prizePosition);
+        const submission = submissions.find(s => s.id === submissionId);
         return [...filtered, { 
           submission_id: submissionId, 
           prize_position: prizePosition,
-          prize_amount: prize?.amount
+          prize_amount: prize?.amount,
+          score: submission?.average_score || submission?.score || 0
         }];
       }
       return filtered;
@@ -354,7 +375,7 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
                 {i + 1}. {sub.project_name}
               </span>
               <span className="text-amber-400 font-press-start text-xs">
-                {sub.score?.toFixed(1) || 'N/A'}
+                {(sub.average_score || sub.score)?.toFixed(1) || 'N/A'}
               </span>
             </div>
           ))}

@@ -90,6 +90,8 @@ interface Hackathon {
   // Winners
   winners_announced?: boolean;
   winners_announced_at?: string;
+  // Gallery
+  gallery_public?: boolean;
 }
 
 export default function PublicHackathon() {
@@ -104,6 +106,7 @@ export default function PublicHackathon() {
   const [userSubmission, setUserSubmission] = useState<any>(null);
   const [userRegistration, setUserRegistration] = useState<any>(null);
   const [winners, setWinners] = useState<any[]>([]);
+  const [isOrganizer, setIsOrganizer] = useState(false);
 
   // Handle tab from URL query parameter
   useEffect(() => {
@@ -127,17 +130,16 @@ export default function PublicHackathon() {
   }, [slug]);
 
   useEffect(() => {
-    if (user && profile?.role === 'judge' && hackathon) {
-      fetchJudgeStatus();
-    }
-  }, [user, profile, hackathon]);
-
-  useEffect(() => {
     if (user && hackathon) {
-      fetchUserSubmission();
-      fetchUserRegistration();
+      // Fetch user-specific data in parallel
+      Promise.all([
+        fetchUserSubmission(),
+        fetchUserRegistration(),
+        fetchIsOrganizer(),
+        ...(profile?.role === 'judge' ? [fetchJudgeStatus()] : [])
+      ]);
     }
-  }, [user, hackathon]);
+  }, [user, hackathon, profile]);
 
   useEffect(() => {
     if (hackathon?.winners_announced) {
@@ -207,6 +209,18 @@ export default function PublicHackathon() {
       }
     } catch (error) {
       console.error('Error fetching user registration:', error);
+    }
+  };
+
+  const fetchIsOrganizer = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/hackathons/${hackathon?.id}/is-organizer`, { headers });
+      const data = await response.json();
+      setIsOrganizer(data.isOrganizer || false);
+    } catch (error) {
+      console.error('Error checking organizer status:', error);
+      setIsOrganizer(false);
     }
   };
 
@@ -292,24 +306,40 @@ export default function PublicHackathon() {
 
   const startDate = new Date(hackathon.start_date);
   const endDate = new Date(hackathon.end_date);
-  const prizes = hackathon.prize_breakdown ? JSON.parse(hackathon.prize_breakdown) : [];
+  const prizes = (() => {
+    try {
+      return hackathon.prize_breakdown ? JSON.parse(hackathon.prize_breakdown) : [];
+    } catch {
+      return [];
+    }
+  })();
+
+  // All dates are stored and compared in UTC
+  // No timezone conversion needed
+  const parseAsUTC = (dateStr: string) => {
+    return new Date(dateStr);
+  };
 
   // Calculate detailed hackathon status
   const getHackathonStatus = () => {
     const now = new Date();
-    const start = new Date(hackathon.start_date);
-    const end = new Date(hackathon.end_date);
+    const start = parseAsUTC(hackathon.start_date);
+    const end = parseAsUTC(hackathon.end_date);
+    
+    // PRIORITY 0: Check if hackathon has ended FIRST (before any other checks)
+    if (now > end) {
+      // Check if winners have been announced
+      if (hackathon.winners_announced) {
+        return { label: '🏆 WINNERS ANNOUNCED', color: 'text-amber-300', bgColor: 'bg-gradient-to-r from-amber-500/20 to-yellow-500/10', borderColor: 'border-amber-500/50' };
+      }
+      return { label: 'COMPLETED', color: 'text-gray-300', bgColor: 'bg-gradient-to-r from-gray-500/20 to-gray-600/10', borderColor: 'border-gray-500/50' };
+    }
     
     // Get period controls (default to 'auto' if not set)
     const regControl: 'auto' | 'open' | 'closed' = hackathon.registration_control || 'auto';
     const buildControl: 'auto' | 'open' | 'closed' = hackathon.building_control || 'auto';
     const subControl: 'auto' | 'open' | 'closed' = hackathon.submission_control || 'auto';
     const judgControl: 'auto' | 'open' | 'closed' = hackathon.judging_control || 'auto';
-
-    // PRIORITY 0: Check if winners have been announced
-    if (hackathon.winners_announced) {
-      return { label: '🏆 WINNERS ANNOUNCED', color: 'text-amber-300', bgColor: 'bg-gradient-to-r from-amber-500/20 to-yellow-500/10', borderColor: 'border-amber-500/50' };
-    }
 
     // PRIORITY 1: Check forced period controls first
     // If building is force-active, show building status
@@ -337,16 +367,16 @@ export default function PublicHackathon() {
       return { label: 'REGISTRATIONS OPEN', color: 'text-blue-300', bgColor: 'bg-gradient-to-r from-blue-500/20 to-cyan-500/10', borderColor: 'border-blue-500/50' };
     }
     
-    // Parse timeline dates if they exist
-    const regOpens = hackathon.registration_opens_at ? new Date(hackathon.registration_opens_at) : null;
-    const regCloses = hackathon.registration_closes_at ? new Date(hackathon.registration_closes_at) : null;
-    const buildingStarts = hackathon.building_starts_at ? new Date(hackathon.building_starts_at) : null;
-    const buildingEnds = hackathon.building_ends_at ? new Date(hackathon.building_ends_at) : null;
-    const subOpens = hackathon.submission_opens_at ? new Date(hackathon.submission_opens_at) : null;
-    const subCloses = hackathon.submission_closes_at ? new Date(hackathon.submission_closes_at) : null;
-    const judgingStarts = hackathon.judging_starts_at ? new Date(hackathon.judging_starts_at) : null;
-    const judgingEnds = hackathon.judging_ends_at ? new Date(hackathon.judging_ends_at) : null;
-    const resultsAt = hackathon.results_announced_at ? new Date(hackathon.results_announced_at) : null;
+    // Parse timeline dates if they exist (using IST interpretation)
+    const regOpens = hackathon.registration_opens_at ? parseAsUTC(hackathon.registration_opens_at) : null;
+    const regCloses = hackathon.registration_closes_at ? parseAsUTC(hackathon.registration_closes_at) : null;
+    const buildingStarts = hackathon.building_starts_at ? parseAsUTC(hackathon.building_starts_at) : null;
+    const buildingEnds = hackathon.building_ends_at ? parseAsUTC(hackathon.building_ends_at) : null;
+    const subOpens = hackathon.submission_opens_at ? parseAsUTC(hackathon.submission_opens_at) : null;
+    const subCloses = hackathon.submission_closes_at ? parseAsUTC(hackathon.submission_closes_at) : null;
+    const judgingStarts = hackathon.judging_starts_at ? parseAsUTC(hackathon.judging_starts_at) : null;
+    const judgingEnds = hackathon.judging_ends_at ? parseAsUTC(hackathon.judging_ends_at) : null;
+    const resultsAt = hackathon.results_announced_at ? parseAsUTC(hackathon.results_announced_at) : null;
 
     // Check if we have detailed timeline data
     const hasDetailedTimeline = regOpens || regCloses || buildingStarts || buildingEnds || subOpens || subCloses || judgingStarts || judgingEnds || resultsAt;
@@ -606,6 +636,9 @@ export default function PublicHackathon() {
                       registrationClosesAt={hackathon.registration_closes_at}
                       registrationControl={hackathon.registration_control}
                       buildingControl={hackathon.building_control}
+                      status={hackathon.status}
+                      hackathon_status={hackathon.hackathon_status}
+                      end_date={hackathon.end_date}
                       winnersAnnounced={hackathon.winners_announced}
                       winnersAnnouncedAt={hackathon.winners_announced_at}
                       onRegistrationChange={fetchHackathon}
@@ -722,11 +755,11 @@ export default function PublicHackathon() {
                   { id: 'timeline', label: 'timeline' },
                   { id: 'prizes', label: 'prizes' },
                   { id: 'rules', label: 'rules' },
-                  ...(hackathon.tracks && JSON.parse(hackathon.tracks || '[]').length > 0 ? [{ id: 'tracks', label: 'tracks' }] : []),
+                  ...(hackathon.tracks ? [{ id: 'tracks', label: 'tracks' }] : []),
                   { id: 'projects', label: 'projects' },
                   ...(hackathon.winners_announced ? [{ id: 'winners', label: '🏆 winners' }] : []),
                   ...(hackathon.sponsors && hackathon.sponsors.length > 0 ? [{ id: 'sponsors', label: 'sponsors' }] : []),
-                  ...(hackathon.faqs && JSON.parse(hackathon.faqs || '[]').length > 0 ? [{ id: 'faqs', label: 'faqs' }] : []),
+                  ...((() => { try { return hackathon.faqs && JSON.parse(hackathon.faqs || '[]').length > 0; } catch { return false; } })() ? [{ id: 'faqs', label: 'faqs' }] : []),
                   { id: 'feedback', label: 'feedback' },
                 ].map((tab) => (
                   <button
@@ -1500,7 +1533,7 @@ export default function PublicHackathon() {
                     }}
                   >FREQUENTLY_ASKED_QUESTIONS</h2>
                   <div className="space-y-4">
-                    {JSON.parse(hackathon.faqs || '[]').map((faq: any, i: number) => (
+                    {(() => { try { return JSON.parse(hackathon.faqs || '[]'); } catch { return []; } })().map((faq: any, i: number) => (
                       <div 
                         key={i} 
                         className="border p-6 transition-colors"
@@ -1524,23 +1557,28 @@ export default function PublicHackathon() {
               {/* Projects Tab */}
               {activeTab === 'projects' && (
                 <div className="space-y-8">
-                  {/* Submit Project Section (for registered users) */}
-                  {(() => {
+                  {/* Submit Project Section (for registered users) - Hidden for judges and organizers */}
+                  {!(user && profile?.role === 'judge' && judgeStatus?.isAssigned) && !isOrganizer && (() => {
                     const now = new Date();
                     const subControl = hackathon.submission_control || 'auto';
+                    
+                    // Check if hackathon has ended - no edits allowed after end date
+                    // Use parseAsUTC for consistent date handling
+                    const hackathonEndDate = parseAsUTC(hackathon.end_date);
+                    const hackathonEnded = now > hackathonEndDate;
                     
                     // Check period control first
                     const isSubmissionForceOpen = subControl === 'open';
                     const isSubmissionForceClosed = subControl === 'closed';
                     
                     // Timeline-based checks (only used if control is 'auto')
-                    const submissionClosedByTimeline = hackathon.submission_closes_at && new Date(hackathon.submission_closes_at) < now;
-                    const submissionNotOpenByTimeline = hackathon.submission_opens_at && new Date(hackathon.submission_opens_at) > now;
+                    const submissionClosedByTimeline = hackathon.submission_closes_at && parseAsUTC(hackathon.submission_closes_at) < now;
+                    const submissionNotOpenByTimeline = hackathon.submission_opens_at && parseAsUTC(hackathon.submission_opens_at) > now;
                     
-                    // Final status
-                    const submissionClosed = isSubmissionForceClosed || (subControl === 'auto' && submissionClosedByTimeline);
+                    // Final status - also check if hackathon has ended
+                    const submissionClosed = hackathonEnded || isSubmissionForceClosed || (subControl === 'auto' && submissionClosedByTimeline);
                     const submissionNotOpen = !isSubmissionForceOpen && subControl === 'auto' && submissionNotOpenByTimeline;
-                    const submissionOpen = isSubmissionForceOpen || (subControl === 'auto' && !submissionClosedByTimeline && !submissionNotOpenByTimeline);
+                    const submissionOpen = !hackathonEnded && (isSubmissionForceOpen || (subControl === 'auto' && !submissionClosedByTimeline && !submissionNotOpenByTimeline));
 
                     if (submissionClosed) {
                       return (
@@ -1758,19 +1796,35 @@ export default function PublicHackathon() {
                     );
                   })()}
 
-                  {/* Projects Gallery */}
-                  <div>
-                    <h2 
-                      className="font-press-start text-2xl mb-6"
+                  {/* Projects Gallery - Only visible if gallery is public OR user is organizer OR hackathon ended */}
+                  {(hackathon.gallery_public || isOrganizer || new Date() > new Date(hackathon.end_date)) ? (
+                    <div>
+                      <h2 
+                        className="font-press-start text-2xl mb-6"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >SUBMITTED_PROJECTS</h2>
+                      <ProjectsGallery hackathonId={hackathon.id} />
+                    </div>
+                  ) : (
+                    <div 
+                      className="border p-8 text-center"
                       style={{
-                        background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text'
+                        background: `linear-gradient(to bottom right, ${primaryColor}10, ${secondaryColor}05)`,
+                        borderColor: `${primaryColor}30`
                       }}
-                    >SUBMITTED_PROJECTS</h2>
-                    <ProjectsGallery hackathonId={hackathon.id} />
-                  </div>
+                    >
+                      <div className="text-4xl mb-4">🔒</div>
+                      <h2 className="font-press-start text-xl mb-4" style={{ color: primaryColor }}>GALLERY_NOT_PUBLIC_YET</h2>
+                      <p className="text-gray-400 font-jetbrains">
+                        Other participants' projects will be visible once the hackathon ends or the organizer makes the gallery public.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -2129,6 +2183,9 @@ export default function PublicHackathon() {
                     registrationClosesAt={hackathon.registration_closes_at}
                     registrationControl={hackathon.registration_control}
                     buildingControl={hackathon.building_control}
+                    status={hackathon.status}
+                    hackathon_status={hackathon.hackathon_status}
+                    end_date={hackathon.end_date}
                     winnersAnnounced={hackathon.winners_announced}
                     winnersAnnouncedAt={hackathon.winners_announced_at}
                     onRegistrationChange={fetchHackathon}

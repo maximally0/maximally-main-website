@@ -127,7 +127,7 @@ export function registerFileUploadRoutes(app: Express) {
         return res.status(400).json({ success: false, message: 'File data and name are required' });
       }
 
-      // Verify user owns this hackathon
+      // Verify user owns this hackathon or is a co-organizer
       const { data: hackathon, error: hackathonError } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('organizer_id')
@@ -138,7 +138,20 @@ export function registerFileUploadRoutes(app: Express) {
         return res.status(404).json({ success: false, message: 'Hackathon not found' });
       }
 
-      if (hackathon.organizer_id !== userId) {
+      // Check if user is owner or co-organizer
+      let isAuthorized = hackathon.organizer_id === userId;
+      if (!isAuthorized) {
+        const { data: coOrg } = await supabaseAdmin
+          .from('hackathon_organizers')
+          .select('id')
+          .eq('hackathon_id', hackathonId)
+          .eq('user_id', userId)
+          .eq('status', 'accepted')
+          .single();
+        isAuthorized = !!coOrg;
+      }
+
+      if (!isAuthorized) {
         return res.status(403).json({ success: false, message: 'Not authorized to upload logo for this hackathon' });
       }
 
@@ -199,6 +212,127 @@ export function registerFileUploadRoutes(app: Express) {
     } catch (error: any) {
       console.error('Hackathon logo upload error:', error);
       return res.status(500).json({ success: false, message: error.message || 'Failed to upload logo' });
+    }
+  });
+
+  // Upload hackathon image (cover, banner, or logo)
+  app.post("/api/organizer/hackathons/:hackathonId/upload-image", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+      const { fileData, fileName, fileType, imageType } = req.body;
+
+      if (!fileData || !fileName) {
+        return res.status(400).json({ success: false, message: 'File data and name are required' });
+      }
+
+      if (!imageType || !['logo', 'cover', 'banner'].includes(imageType)) {
+        return res.status(400).json({ success: false, message: 'Invalid image type. Must be logo, cover, or banner' });
+      }
+
+      // Verify user owns this hackathon or is a co-organizer
+      const { data: hackathon, error: hackathonError } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      if (hackathonError || !hackathon) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Check if user is owner or co-organizer
+      let isAuthorized = hackathon.organizer_id === userId;
+      if (!isAuthorized) {
+        const { data: coOrg } = await supabaseAdmin
+          .from('hackathon_organizers')
+          .select('id')
+          .eq('hackathon_id', hackathonId)
+          .eq('user_id', userId)
+          .eq('status', 'accepted')
+          .single();
+        isAuthorized = !!coOrg;
+      }
+
+      if (!isAuthorized) {
+        return res.status(403).json({ success: false, message: 'Not authorized to upload images for this hackathon' });
+      }
+
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+      if (!allowedTypes.includes(fileType)) {
+        return res.status(400).json({ success: false, message: 'Invalid file type. Only JPEG, PNG, WebP, and SVG are allowed' });
+      }
+
+      // Convert base64 to buffer
+      const base64Data = fileData.replace(/^data:image\/\w+;base64,/, '');
+      const buffer = Buffer.from(base64Data, 'base64');
+
+      // Check file size (max 5MB)
+      if (buffer.length > 5 * 1024 * 1024) {
+        return res.status(400).json({ success: false, message: 'File size exceeds 5MB limit' });
+      }
+
+      // Generate unique file path
+      const fileExt = fileName.split('.').pop();
+      const filePath = `${hackathonId}/${imageType}-${Date.now()}.${fileExt}`;
+
+      // Upload to Supabase storage
+      const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
+        .from('hackathon-logos')
+        .upload(filePath, buffer, {
+          contentType: fileType,
+          upsert: true
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        return res.status(500).json({ success: false, message: 'Failed to upload file: ' + uploadError.message });
+      }
+
+      // Get public URL
+      const { data: urlData } = supabaseAdmin.storage
+        .from('hackathon-logos')
+        .getPublicUrl(filePath);
+
+      const publicUrl = urlData.publicUrl;
+
+      // Map imageType to database column
+      const columnMap: Record<string, string> = {
+        logo: 'hackathon_logo',
+        cover: 'cover_image',
+        banner: 'banner_image'
+      };
+      const column = columnMap[imageType];
+
+      // Update hackathon with image URL
+      const { error: updateError } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .update({ [column]: publicUrl })
+        .eq('id', hackathonId);
+
+      if (updateError) {
+        return res.status(500).json({ success: false, message: 'Failed to update hackathon: ' + updateError.message });
+      }
+
+      return res.json({ 
+        success: true, 
+        message: `${imageType} uploaded successfully`,
+        url: publicUrl 
+      });
+    } catch (error: any) {
+      console.error('Hackathon image upload error:', error);
+      return res.status(500).json({ success: false, message: error.message || 'Failed to upload image' });
     }
   });
 

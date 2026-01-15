@@ -248,19 +248,61 @@ export function registerOrganizerRoutes(app: Express) {
       }
 
       const { id } = req.params;
+      console.log(`[GET hackathon] User ${userId} requesting hackathon ${id}`);
 
+      // First, get the hackathon without ownership check
       const { data, error } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('*')
         .eq('id', id)
-        .eq('organizer_id', userId)
         .single();
 
       if (error || !data) {
+        console.log(`[GET hackathon] Hackathon ${id} not found in database`);
         return res.status(404).json({ success: false, message: 'Hackathon not found' });
       }
 
-      return res.json({ success: true, data });
+      // Check if user is owner
+      const isOwner = data.organizer_id === userId;
+      console.log(`[GET hackathon] Is owner: ${isOwner} (organizer_id: ${data.organizer_id}, userId: ${userId})`);
+
+      // Check if user is a co-organizer
+      let isCoOrganizer = false;
+      let coOrgRole = null;
+      if (!isOwner) {
+        console.log(`[GET hackathon] Checking co-organizer status for user ${userId} on hackathon ${id}`);
+        const { data: coOrg, error: coOrgError } = await supabaseAdmin
+          .from('hackathon_organizers')
+          .select('role, status')
+          .eq('hackathon_id', id)
+          .eq('user_id', userId)
+          .eq('status', 'accepted')
+          .single();
+        
+        console.log(`[GET hackathon] Co-org query result:`, coOrg, 'Error:', coOrgError);
+        
+        if (coOrg) {
+          isCoOrganizer = true;
+          coOrgRole = coOrg.role;
+        }
+      }
+
+      // If user is neither owner nor co-organizer, deny access
+      if (!isOwner && !isCoOrganizer) {
+        console.log(`[GET hackathon] Access denied - user is neither owner nor co-organizer`);
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Add role info to response
+      return res.json({ 
+        success: true, 
+        data: {
+          ...data,
+          _isOwner: isOwner,
+          _isCoOrganizer: isCoOrganizer,
+          _coOrganizerRole: coOrgRole
+        }
+      });
     } catch (error: any) {
       console.error('Error in get hackathon:', error);
       return res.status(500).json({ success: false, message: error.message });
@@ -283,47 +325,40 @@ export function registerOrganizerRoutes(app: Express) {
 
       const { id } = req.params;
 
-      // Check ownership first
+      // Get the hackathon first
       const { data: existing } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('*')
         .eq('id', id)
-        .eq('organizer_id', userId)
         .single();
 
       if (!existing) {
         return res.status(404).json({ success: false, message: 'Hackathon not found' });
       }
 
-      // Allow certain fields to be updated even when published (timeline, announcements, etc.)
-      const allowedPublishedFields = [
-        'registration_opens_at',
-        'registration_closes_at',
-        'submission_opens_at',
-        'submission_closes_at',
-        'judging_starts_at',
-        'judging_ends_at',
-        'results_announced_at',
-        'discord_link',
-        'whatsapp_link',
-        'communication_link',
-        'promo_video_link',
-        'updated_at'
-      ];
-
-      // If published, only allow updates to specific fields
-      if (existing.status === 'published') {
-        const updateKeys = Object.keys(req.body);
-        const hasRestrictedFields = updateKeys.some(key => !allowedPublishedFields.includes(key));
+      // Check if user is owner or co-organizer
+      const isOwner = existing.organizer_id === userId;
+      let isCoOrganizer = false;
+      
+      if (!isOwner) {
+        const { data: coOrg } = await supabaseAdmin
+          .from('hackathon_organizers')
+          .select('role, status')
+          .eq('hackathon_id', id)
+          .eq('user_id', userId)
+          .eq('status', 'accepted')
+          .single();
         
-        if (hasRestrictedFields) {
-          return res.status(403).json({ 
-            success: false, 
-            message: 'Cannot edit core details of published hackathon. Please submit an edit request for major changes.',
-            requiresEditRequest: true
-          });
-        }
+        isCoOrganizer = !!coOrg;
       }
+
+      if (!isOwner && !isCoOrganizer) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Platform Simplification: Allow all edits for published hackathons
+      // Organizers can edit directly without approval (Requirements 8.1, 8.2, 18.1)
+      // No edit request workflow needed anymore
 
       // Accept any updates without strict validation for flexibility
       let updates = { ...req.body };
@@ -335,6 +370,11 @@ export function registerOrganizerRoutes(app: Express) {
       delete updates.created_at;
       delete updates.views_count;
       delete updates.registrations_count;
+      
+      // Remove internal fields added by the API (not in database)
+      delete updates._coOrganizerRole;
+      delete updates._isCoOrganizer;
+      delete updates._isOwner;
 
       // Recalculate duration if dates changed
       if (updates.start_date || updates.end_date) {
@@ -352,7 +392,6 @@ export function registerOrganizerRoutes(app: Express) {
         .from('organizer_hackathons')
         .update(updates)
         .eq('id', id)
-        .eq('organizer_id', userId)
         .select()
         .single();
 
@@ -594,120 +633,27 @@ export function registerOrganizerRoutes(app: Express) {
     }
   });
 
-  // Submit edit request for published hackathon
+  // DEPRECATED: Edit request endpoint - Platform Simplification
+  // Organizers can now edit published hackathons directly without approval (Requirements 8.1, 8.2, 18.1)
+  // This endpoint is kept for backwards compatibility but returns a deprecation notice
   app.post("/api/organizer/hackathons/:id/request-edit", async (req, res) => {
-    try {
-      const authHeader = req.headers['authorization'];
-      if (!authHeader?.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-      }
-
-      const token = authHeader.slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin, token);
-      if (!userId) {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
-      }
-
-      const { id } = req.params;
-      const { changes, reason } = req.body;
-
-      // Get user email
-      const { data: userData } = await supabaseAdmin.auth.getUser(token);
-      const userEmail = userData?.user?.email;
-
-      // Check ownership
-      const { data: hackathon } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('*')
-        .eq('id', id)
-        .eq('organizer_id', userId)
-        .single();
-
-      if (!hackathon) {
-        return res.status(404).json({ success: false, message: 'Hackathon not found' });
-      }
-
-      if (hackathon.status !== 'published') {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Only published hackathons require edit requests' 
-        });
-      }
-
-      // Check if there's already a pending request
-      const { data: existingRequest } = await supabaseAdmin
-        .from('hackathon_edit_requests')
-        .select('id')
-        .eq('hackathon_id', id)
-        .eq('status', 'pending')
-        .single();
-
-      if (existingRequest) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'You already have a pending edit request for this hackathon' 
-        });
-      }
-
-      // Create edit request
-      const { data, error } = await supabaseAdmin
-        .from('hackathon_edit_requests')
-        .insert({
-          hackathon_id: id,
-          organizer_id: userId,
-          organizer_email: userEmail,
-          requested_changes: changes,
-          edit_reason: reason,
-          status: 'pending'
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating edit request:', error);
-        return res.status(500).json({ success: false, message: 'Failed to create edit request' });
-      }
-
-      return res.json({ success: true, data });
-    } catch (error: any) {
-      console.error('Error in request edit:', error);
-      return res.status(500).json({ success: false, message: error.message });
-    }
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Edit requests are no longer required. You can now edit your hackathon directly using the PATCH endpoint.',
+      deprecated: true,
+      useInstead: 'PATCH /api/organizer/hackathons/:id'
+    });
   });
 
-  // Get edit requests for organizer's hackathons
+  // DEPRECATED: Get edit requests - Platform Simplification
+  // Edit requests are no longer used - organizers can edit directly
   app.get("/api/organizer/edit-requests", async (req, res) => {
-    try {
-      const authHeader = req.headers['authorization'];
-      if (!authHeader?.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-      }
-
-      const token = authHeader.slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin, token);
-      if (!userId) {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
-      }
-
-      const { data, error } = await supabaseAdmin
-        .from('hackathon_edit_requests')
-        .select(`
-          *,
-          hackathon:organizer_hackathons(hackathon_name, slug)
-        `)
-        .eq('organizer_id', userId)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching edit requests:', error);
-        return res.status(500).json({ success: false, message: 'Failed to fetch edit requests' });
-      }
-
-      return res.json({ success: true, data });
-    } catch (error: any) {
-      console.error('Error in get edit requests:', error);
-      return res.status(500).json({ success: false, message: error.message });
-    }
+    return res.json({ 
+      success: true, 
+      data: [],
+      deprecated: true,
+      message: 'Edit requests are no longer required. Organizers can now edit hackathons directly.'
+    });
   });
 
   // Get user profile by username (public endpoint)
@@ -934,68 +880,16 @@ export function registerOrganizerRoutes(app: Express) {
     }
   });
 
-  // Update period controls for a hackathon
+  // DEPRECATED: Update period controls for a hackathon
+  // Period controls have been removed in Platform Simplification.
+  // All phases are now automatically determined by dates.
+  // See: .kiro/specs/platform-simplification/requirements.md - Requirement 4
   app.put("/api/organizer/hackathons/:id/period-control", async (req, res) => {
-    try {
-      const authHeader = req.headers['authorization'];
-      if (!authHeader?.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-      }
-
-      const token = authHeader.slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin, token);
-      if (!userId) {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
-      }
-
-      const { id } = req.params;
-
-      // Check ownership
-      const { data: existing } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .select('id, organizer_id')
-        .eq('id', id)
-        .eq('organizer_id', userId)
-        .single();
-
-      if (!existing) {
-        return res.status(404).json({ success: false, message: 'Hackathon not found' });
-      }
-
-      // Validate the control values
-      const validControls = ['auto', 'open', 'closed'];
-      const allowedFields = ['registration_control', 'building_control', 'submission_control', 'judging_control'];
-      
-      const updates: Record<string, string> = {};
-      for (const [key, value] of Object.entries(req.body)) {
-        if (allowedFields.includes(key) && validControls.includes(value as string)) {
-          updates[key] = value as string;
-        }
-      }
-
-      if (Object.keys(updates).length === 0) {
-        return res.status(400).json({ success: false, message: 'No valid period control updates provided' });
-      }
-
-      updates.updated_at = new Date().toISOString();
-
-      const { data, error } = await supabaseAdmin
-        .from('organizer_hackathons')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error updating period controls:', error);
-        return res.status(500).json({ success: false, message: 'Failed to update period controls' });
-      }
-
-      return res.json({ success: true, data });
-    } catch (error: any) {
-      console.error('Error in update period controls:', error);
-      return res.status(500).json({ success: false, message: error.message });
-    }
+    // Return 410 Gone - feature removed
+    return res.status(410).json({ 
+      success: false, 
+      message: 'Period controls have been removed. All phases are now automatically determined by hackathon dates.' 
+    });
   });
 
   // Get winners for a hackathon
@@ -1132,7 +1026,7 @@ export function registerOrganizerRoutes(app: Express) {
       const submissionIds = winners.map((w: any) => w.submission_id);
       const { data: submissions } = await supabaseAdmin
         .from('hackathon_submissions')
-        .select('id, user_id, team_id')
+        .select('id, user_id, team_id, project_name')
         .in('id', submissionIds);
 
       const submissionMap = new Map((submissions || []).map((s: any) => [s.id, s]));

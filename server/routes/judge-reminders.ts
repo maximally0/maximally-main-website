@@ -1,3 +1,17 @@
+/**
+ * DEPRECATED: Judge Reminder Routes
+ * 
+ * This file contains the old judge reminder system that used the
+ * judge_hackathon_assignments and hackathon_submission_ratings tables.
+ * 
+ * These routes are deprecated as part of the Platform Simplification.
+ * The new system uses token-based judge access without accounts.
+ * 
+ * See: .kiro/specs/platform-simplification/requirements.md
+ * 
+ * TODO: Remove this file once migration is complete
+ */
+
 // @ts-nocheck
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
@@ -10,6 +24,9 @@ async function bearerUserId(supabaseAdmin: any, token: string): Promise<string |
 }
 
 export function registerJudgeReminderRoutes(app: Express) {
+  // DEPRECATED: All routes in this file use the old judge account system
+  console.warn('⚠️ DEPRECATED: Old judge reminder routes loaded. These will be removed in a future update.');
+  
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
   // Send judge reminders for a hackathon

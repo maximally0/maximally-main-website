@@ -18,7 +18,7 @@ interface RecommendedHackathon {
   match_score: number;
   match_reasons: string[];
   tagline?: string;
-  cover_image?: string;
+  hackathon_logo?: string;
   total_prize_pool?: string;
   registrations_count?: number;
 }
@@ -45,7 +45,7 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
         const hackathonIds = (funcData as any[]).map((h: any) => h.hackathon_id);
         const { data: hackathons } = await supabase
           .from('organizer_hackathons')
-          .select('id, tagline, cover_image, total_prize_pool, registrations_count')
+          .select('id, tagline, hackathon_logo, total_prize_pool, registrations_count')
           .in('id', hackathonIds);
 
         const hackathonMap = new Map((hackathons || []).map((h: any) => [h.id, h]));
@@ -59,7 +59,7 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
       // Fallback: Simple recommendation based on upcoming hackathons
       const { data: upcoming, error } = await supabase
         .from('organizer_hackathons')
-        .select('id, hackathon_name, slug, format, start_date, end_date, tagline, cover_image, total_prize_pool, registrations_count, themes')
+        .select('id, hackathon_name, slug, format, start_date, end_date, tagline, hackathon_logo, total_prize_pool, registrations_count, themes')
         .eq('status', 'published')
         .gt('start_date', new Date().toISOString())
         .order('start_date', { ascending: true })
@@ -85,7 +85,7 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
           start_date: h.start_date,
           end_date: h.end_date,
           tagline: h.tagline,
-          cover_image: h.cover_image,
+          hackathon_logo: h.hackathon_logo,
           total_prize_pool: h.total_prize_pool,
           registrations_count: h.registrations_count,
           match_score: 50,
@@ -152,11 +152,11 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
           <Link key={hackathon.hackathon_id} href={`/hackathon/${hackathon.slug}`}>
             <div className="group p-4 bg-white/5 rounded-lg border border-white/10 hover:border-purple-500/30 hover:bg-white/10 transition-all cursor-pointer">
               <div className="flex gap-4">
-                {/* Cover Image */}
-                {hackathon.cover_image && (
+                {/* Hackathon Logo */}
+                {hackathon.hackathon_logo && (
                   <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
                     <img
-                      src={hackathon.cover_image}
+                      src={hackathon.hackathon_logo}
                       alt={hackathon.hackathon_name}
                       className="w-full h-full object-cover"
                     />

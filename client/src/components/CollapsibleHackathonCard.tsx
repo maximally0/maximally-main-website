@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import { PixelCard } from '@/components/ui/pixel-card';
 import type { SelectHackathon } from '@shared/schema';
 import { cn } from '@/lib/utils';
+import { getHackathonDisplayState, type HackathonDisplayState } from '@shared/hackathonState';
 
 // Extended type to include Maximally official flag
 type ExtendedHackathon = SelectHackathon & { isMaximallyOfficial?: boolean };
@@ -34,36 +35,43 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
 
   const isMaximallyHackathon = hackathon.isMaximallyOfficial === true;
 
+  // Use simplified state logic - only 'draft', 'live', or 'ended'
+  const displayState: HackathonDisplayState = getHackathonDisplayState({
+    status: hackathon.status,
+    hackathon_status: hackathon.hackathon_status,
+    end_date: hackathon.endDate?.toString() || new Date().toISOString(),
+  });
+
   const getStatusBadge = () => {
     const baseClasses = "minecraft-block px-3 py-1 font-press-start text-xs";
     const animationClass = shouldReduceMotion ? "" : "animate-pulse";
     
-    switch (hackathon.status) {
-      case 'upcoming':
+    switch (displayState) {
+      case 'draft':
         return (
           <div 
-            className={cn(baseClasses, "bg-green-500 text-white")}
-            data-testid={`status-upcoming-${hackathon.id}`}
+            className={cn(baseClasses, "bg-gray-400 text-white")}
+            data-testid={`status-draft-${hackathon.id}`}
           >
-            UPCOMING
+            DRAFT
           </div>
         );
-      case 'completed':
-        return (
-          <div 
-            className={cn(baseClasses, "bg-gray-500 text-white")}
-            data-testid={`status-completed-${hackathon.id}`}
-          >
-            COMPLETED
-          </div>
-        );
-      case 'ongoing':
+      case 'live':
         return (
           <div 
             className={cn(baseClasses, "bg-maximally-yellow text-black", animationClass)}
-            data-testid={`status-ongoing-${hackathon.id}`}
+            data-testid={`status-live-${hackathon.id}`}
           >
             LIVE NOW
+          </div>
+        );
+      case 'ended':
+        return (
+          <div 
+            className={cn(baseClasses, "bg-gray-500 text-white")}
+            data-testid={`status-ended-${hackathon.id}`}
+          >
+            ENDED
           </div>
         );
       default:

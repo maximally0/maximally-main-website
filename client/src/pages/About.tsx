@@ -5,7 +5,6 @@ import {
   Globe, 
   Code, 
   Users, 
-  Trophy, 
   Calendar, 
   ExternalLink,
   Target,
@@ -31,12 +30,8 @@ interface CoreTeamMember {
   description?: string;
 }
 
-interface FeaturedJudge {
-  id: number;
-  full_name: string;
-  role_title: string;
-  company: string;
-}
+// REMOVED - Judge account system deprecated (Platform Simplification)
+// FeaturedJudge interface removed - judges are now managed per-hackathon without accounts
 
 const HeroSection = () => {
   return (
@@ -220,7 +215,8 @@ const WhatWereBuilding = () => {
 
 const PeoplePreview = () => {
   const [coreTeam, setCoreTeam] = useState<CoreTeamMember[]>([]);
-  const [featuredJudges, setFeaturedJudges] = useState<FeaturedJudge[]>([]);
+  // REMOVED - Judge account system deprecated (Platform Simplification)
+  // Featured judges state removed - judges are now managed per-hackathon without accounts
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -236,15 +232,14 @@ const PeoplePreview = () => {
           featured_core_id_1?: number | null;
           featured_core_id_2?: number | null;
           featured_core_id_3?: number | null;
-          featured_judge_id_1?: number | null;
-          featured_judge_id_2?: number | null;
-          featured_judge_id_3?: number | null;
+          // REMOVED - Judge account system deprecated (Platform Simplification)
+          // featured_judge_id columns removed from dashboard table
         };
 
         const db = supabase as any;
         const { data: dashboardData, error: dashboardError } = await db
           .from('dashboard')
-          .select('featured_core_id_1, featured_core_id_2, featured_core_id_3, featured_judge_id_1, featured_judge_id_2, featured_judge_id_3')
+          .select('featured_core_id_1, featured_core_id_2, featured_core_id_3')
           .eq('id', 1)
           .single() as { data?: DashboardRow; error?: any };
 
@@ -258,11 +253,8 @@ const PeoplePreview = () => {
           dashboardData?.featured_core_id_3
         ].filter(id => id !== null);
 
-        const judgeIds = [
-          dashboardData?.featured_judge_id_1,
-          dashboardData?.featured_judge_id_2,
-          dashboardData?.featured_judge_id_3
-        ].filter(id => id !== null);
+        // REMOVED - Judge account system deprecated (Platform Simplification)
+        // Featured judges fetching removed - judges are now managed per-hackathon without accounts
 
         if (coreIds.length > 0) {
           const { data: coreData, error: coreError } = await db
@@ -282,23 +274,8 @@ const PeoplePreview = () => {
           setCoreTeam(sortedCoreTeam);
         }
 
-        if (judgeIds.length > 0) {
-          const { data: judgeData, error: judgeError } = await db
-            .from('judges')
-            .select('id, full_name, role_title, company')
-            .in('id', judgeIds) as { data?: any[]; error?: any };
-
-          if (judgeError) {
-            throw new Error(`Judges fetch failed: ${judgeError.message}`);
-          }
-
-          const judgeDataArr: any[] = judgeData || [];
-          const sortedJudges = judgeIds.map(id => 
-            judgeDataArr.find(judge => judge.id === id)
-          ).filter(judge => judge !== undefined) as FeaturedJudge[];
-
-          setFeaturedJudges(sortedJudges);
-        }
+        // REMOVED - Judge account system deprecated (Platform Simplification)
+        // Featured judges fetching removed - judges are now managed per-hackathon without accounts
 
       } catch (err: any) {
         setError(err.message || 'Failed to load people data');
@@ -418,75 +395,10 @@ const PeoplePreview = () => {
           )}
         </div>
 
-        <div>
-          <div className="text-center mb-8">
-            <div className="bg-amber-500/20 border border-amber-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
-              <Trophy className="h-6 w-6 text-amber-400" />
-            </div>
-            <h3 className="font-press-start text-sm sm:text-base text-amber-300 mb-2">
-              FEATURED JUDGES
-            </h3>
-          </div>
-          
-          {loading && (
-            <div className="text-center py-12">
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500/10 border border-amber-500/30">
-                <Loader2 className="h-4 w-4 animate-spin text-amber-400" />
-                <span className="font-press-start text-xs text-amber-300">LOADING JUDGES</span>
-              </div>
-            </div>
-          )}
-
-          {error && !loading && (
-            <div className="text-center py-12">
-              <div className="bg-red-500/10 border border-red-500/30 px-6 py-4 inline-block mb-4">
-                <span className="font-press-start text-xs text-red-300">ERROR LOADING JUDGES</span>
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-                {featuredJudges.map((judge) => (
-                  <div 
-                    key={judge.id} 
-                    className="group bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 p-6 transition-all duration-300 hover:scale-[1.02] hover:border-amber-400/50"
-                    data-testid={`judge-${judge.id}`}
-                  >
-                    <div className="text-center">
-                      <div className="bg-amber-500/20 border border-amber-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
-                        <Trophy className="h-5 w-5 text-amber-400" />
-                      </div>
-                      
-                      <h4 className="font-press-start text-xs text-white mb-2">
-                        {judge.full_name}
-                      </h4>
-                      
-                      <p className="font-press-start text-[10px] text-amber-400 mb-1">
-                        {judge.role_title}
-                      </p>
-                      
-                      <p className="font-jetbrains text-xs text-gray-400">
-                        {judge.company}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="text-center">
-                <Link 
-                  to="/people/judges" 
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 hover:text-amber-200 font-press-start text-[10px] transition-all duration-300"
-                  data-testid="link-all-judges"
-                >
-                  ALL JUDGES & MENTORS <ArrowRight className="h-3 w-3" />
-                </Link>
-              </div>
-            </>
-          )}
-        </div>
+        {/* REMOVED - Judge account system deprecated (Platform Simplification)
+        Featured Judges section has been removed as part of platform simplification.
+        Judges are now managed per-hackathon without accounts.
+        */}
       </div>
     </section>
   );

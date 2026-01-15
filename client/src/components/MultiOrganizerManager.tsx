@@ -85,69 +85,37 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
   // Invite new organizer mutation
   const inviteMutation = useMutation({
     mutationFn: async ({ email, role }: { email: string; role: string }) => {
-      // First find user by email
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, full_name')
-        .eq('email', email)
-        .single();
-
-      if (profileError || !profile) {
-        throw new Error('User not found. They must have a Maximally account first.');
+      // Use the API to create invite and send email (handles token generation server-side)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error('Not authenticated');
       }
 
-      // Check if already invited and active
-      const { data: existing } = await supabase
-        .from('hackathon_organizers' as any)
-        .select('id, status')
-        .eq('hackathon_id', hackathonId)
-        .eq('user_id', (profile as any).id)
-        .single();
-
-      if (existing && (existing as any).status === 'accepted') {
-        throw new Error('This user is already an active organizer.');
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/send-team-invite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          inviteeEmail: email,
+          inviteeName: email.split('@')[0], // Will be replaced with actual name from profile
+          role,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send invitation');
       }
       
-      if (existing && (existing as any).status === 'pending') {
-        throw new Error('This user already has a pending invitation.');
-      }
-
-      const { data: { user } } = await supabase.auth.getUser();
-
-      // If existing record (declined/removed), update it. Otherwise insert new.
-      if (existing) {
-        const { error } = await (supabase as any)
-          .from('hackathon_organizers')
-          .update({
-            role,
-            invited_by: user?.id,
-            status: 'pending',
-            invited_at: new Date().toISOString(),
-            accepted_at: null,
-          })
-          .eq('id', (existing as any).id);
-        
-        if (error) throw error;
-      } else {
-        const { error } = await (supabase as any)
-          .from('hackathon_organizers')
-          .insert({
-            hackathon_id: hackathonId,
-            user_id: (profile as any).id,
-            role,
-            invited_by: user?.id,
-            status: 'pending',
-          });
-
-        if (error) throw error;
-      }
-      
-      return profile as { id: string; full_name: string };
+      return { email };
     },
-    onSuccess: (profile) => {
+    onSuccess: (result) => {
       toast({
         title: 'Invitation sent!',
-        description: `${(profile as any).full_name} has been invited as a ${inviteRole}.`,
+        description: `An invitation email has been sent to ${result.email}.`,
       });
       setInviteEmail('');
       queryClient.invalidateQueries({ queryKey: ['hackathon-organizers', hackathonId] });
@@ -268,7 +236,7 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
               </Button>
             </div>
             <p className="text-xs text-gray-500">
-              The user must have a Maximally account to be invited.
+              The user must have a Maximally account and be an approved organizer to accept the invite.
             </p>
           </div>
         )}

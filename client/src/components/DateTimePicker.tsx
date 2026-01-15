@@ -15,42 +15,40 @@ export default function DateTimePicker({
   minDate,
   className 
 }: DateTimePickerProps) {
-  // Convert ISO string to IST datetime format (YYYY-MM-DDTHH:mm)
-  const getISTDateTimeString = (isoString: string | null) => {
+  // Convert ISO string to UTC datetime format (YYYY-MM-DDTHH:mm)
+  // All times are stored and displayed in UTC
+  const getUTCDateTimeString = (isoString: string | null) => {
     if (!isoString) return '';
     
-    // Parse the ISO string and convert to IST
+    // Parse the ISO string
     const date = new Date(isoString);
     
-    // Convert to IST (UTC+5:30)
-    const istDate = new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
-    
-    const year = istDate.getFullYear();
-    const month = String(istDate.getMonth() + 1).padStart(2, '0');
-    const day = String(istDate.getDate()).padStart(2, '0');
-    const hours = String(istDate.getHours()).padStart(2, '0');
-    const minutes = String(istDate.getMinutes()).padStart(2, '0');
+    // Get UTC components
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours()).padStart(2, '0');
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
     
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
   
-  const localValue = getISTDateTimeString(value);
+  const localValue = getUTCDateTimeString(value);
   
-  // Convert minDate to IST datetime format
-  const minDateStr = minDate ? getISTDateTimeString(minDate.toISOString()) : undefined;
+  // Convert minDate to UTC datetime format
+  const minDateStr = minDate ? getUTCDateTimeString(minDate.toISOString()) : undefined;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     if (newValue) {
-      // User selected time in IST, we need to convert to UTC for storage
-      // Parse as IST time
+      // User selected time - treat as UTC
       const [datePart, timePart] = newValue.split('T');
       const [year, month, day] = datePart.split('-');
       const [hours, minutes] = timePart.split(':');
       
-      // Create date string in IST
-      const istDateString = `${year}-${month}-${day}T${hours}:${minutes}:00+05:30`;
-      const date = new Date(istDateString);
+      // Create date string in UTC
+      const utcDateString = `${year}-${month}-${day}T${hours}:${minutes}:00Z`;
+      const date = new Date(utcDateString);
       
       onChange(date.toISOString());
     } else {
@@ -72,6 +70,7 @@ export default function DateTimePicker({
         }}
       />
       <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+      <span className="absolute right-10 top-1/2 -translate-y-1/2 text-xs text-gray-500 font-jetbrains">UTC</span>
     </div>
   );
 }

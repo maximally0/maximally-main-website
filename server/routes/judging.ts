@@ -1,3 +1,18 @@
+/**
+ * DEPRECATED: Old Judging Routes
+ * 
+ * This file contains the old judge account-based judging system.
+ * These routes are deprecated as part of the Platform Simplification.
+ * 
+ * The new system uses:
+ * - simplified-judges.ts for judge management (no accounts)
+ * - judge-scoring.ts for token-based scoring
+ * 
+ * See: .kiro/specs/platform-simplification/requirements.md
+ * 
+ * TODO: Remove this file once migration is complete
+ */
+
 // @ts-nocheck
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
@@ -8,6 +23,16 @@ async function bearerUserId(supabaseAdmin: any, token: string): Promise<string |
 }
 
 export function registerJudgingRoutes(app: Express) {
+  // DEPRECATED: All routes in this file use the old judge account system
+  // which has been replaced by the token-based system.
+  // 
+  // New routes are in:
+  // - /api/judge/:token/submissions (judge-scoring.ts)
+  // - /api/judge/:token/score (judge-scoring.ts)
+  // - /api/organizer/hackathons/:id/judges (simplified-judges.ts)
+  
+  console.warn('⚠️ DEPRECATED: Old judging routes loaded. These will be removed in a future update.');
+  
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
   // Get judge's assigned hackathons
@@ -37,7 +62,7 @@ export function registerJudgingRoutes(app: Express) {
             format,
             status,
             hackathon_status,
-            cover_image
+            hackathon_logo
           )
         `)
         .eq('judge_id', userId)

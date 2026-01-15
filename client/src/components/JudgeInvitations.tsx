@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { Mail, Check, X, Calendar, MapPin, ExternalLink, LogOut } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
+import { useConfirm } from '@/components/ui/confirm-modal';
 
 export default function JudgeInvitations() {
   const { toast } = useToast();
+  const confirm = useConfirm();
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -85,7 +87,14 @@ export default function JudgeInvitations() {
   };
 
   const handleWithdraw = async (hackathonId: number) => {
-    if (!confirm('Are you sure you want to withdraw from judging this hackathon? This action cannot be undone.')) return;
+    const confirmed = await confirm({
+      title: 'WITHDRAW',
+      message: 'Are you sure you want to withdraw from judging this hackathon? This action cannot be undone.',
+      confirmText: 'WITHDRAW',
+      cancelText: 'CANCEL',
+      variant: 'danger'
+    });
+    if (!confirmed) return;
     
     try {
       const headers = await getAuthHeaders();

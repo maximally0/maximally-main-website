@@ -31,26 +31,6 @@
       "color": "cyan"
     },
     {
-      "id": "judge-network",
-      "title": "Judge Network",
-      "description": "Connect with experienced judges, mentors, and industry experts who evaluate hackathon projects.",
-      "icon": "award",
-      "url": "/judges",
-      "status": "active",
-      "badge": "New",
-      "color": "amber"
-    },
-    {
-      "id": "organizer-network",
-      "title": "Organizer Network",
-      "description": "Connect with hackathon organizers, learn best practices, and collaborate on events.",
-      "icon": "briefcase",
-      "url": "/people/organizers",
-      "status": "active",
-      "badge": "New",
-      "color": "orange"
-    },
-    {
       "id": "mfhop",
       "title": "MFHOP",
       "description": "Maximally For Hackathon Organizer Program - resources for event organizers.",
@@ -59,26 +39,6 @@
       "status": "active",
       "badge": null,
       "color": "red"
-    },
-    {
-      "id": "gallery",
-      "title": "Project Gallery",
-      "description": "Explore projects built at Maximally hackathons. Get inspired and showcase your work.",
-      "icon": "layers",
-      "url": "/gallery",
-      "status": "active",
-      "badge": "New",
-      "color": "pink"
-    },
-    {
-      "id": "people",
-      "title": "People",
-      "description": "Meet the judges, organizers, and core team behind Maximally hackathons.",
-      "icon": "users",
-      "url": "/people",
-      "status": "active",
-      "badge": null,
-      "color": "blue"
     }
   ]
 }

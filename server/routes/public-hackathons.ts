@@ -171,7 +171,7 @@ export function registerPublicHackathonRoutes(app: Express) {
     }
   });
 
-  // Check if user is organizer of hackathon
+  // Check if user is organizer of hackathon (owner or co-organizer)
   app.get("/api/hackathons/:hackathonId/is-organizer", async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
@@ -187,15 +187,29 @@ export function registerPublicHackathonRoutes(app: Express) {
 
       const { hackathonId } = req.params;
 
-      const { data } = await supabaseAdmin
+      // Check if user is the owner
+      const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('organizer_id')
         .eq('id', hackathonId)
         .single();
 
+      if (hackathon?.organizer_id === userId) {
+        return res.json({ success: true, isOrganizer: true });
+      }
+
+      // Check if user is a co-organizer (any role: co-organizer, admin, viewer)
+      const { data: coOrg } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .select('role, status')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', userId)
+        .eq('status', 'accepted')
+        .single();
+
       return res.json({ 
         success: true, 
-        isOrganizer: data?.organizer_id === userId 
+        isOrganizer: !!coOrg
       });
     } catch (error: any) {
       return res.json({ success: true, isOrganizer: false });
@@ -243,7 +257,7 @@ export function registerPublicHackathonRoutes(app: Express) {
         .from('hackathon_submissions')
         .select(`
           *,
-          hackathon:organizer_hackathons(id, hackathon_name, slug, cover_image),
+          hackathon:organizer_hackathons(id, hackathon_name, slug, hackathon_logo),
           team:hackathon_teams(team_name, team_code, project_name),
           user:profiles(username, full_name, avatar_url)
         `)

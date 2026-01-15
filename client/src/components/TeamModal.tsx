@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { X, Users, UserPlus, Sparkles } from 'lucide-react';
+import { X, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useModeration } from '@/hooks/useModeration';
 import { getAuthHeaders } from '@/lib/auth';
-import SuggestedTeammates from '@/components/SuggestedTeammates';
 
 interface TeamModalProps {
   isOpen: boolean;
@@ -185,19 +184,6 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
               >
                 JOIN TEAM
               </button>
-
-              {/* Suggested Teammates Section */}
-              <div className="pt-4 border-t border-gray-700">
-                <div className="flex items-center gap-2 mb-3">
-                  <Sparkles className="w-4 h-4 text-green-400" />
-                  <span className="font-press-start text-[10px] text-green-300">FIND TEAMMATES</span>
-                </div>
-                <SuggestedTeammates 
-                  hackathonId={hackathonId} 
-                  limit={3} 
-                  showTitle={false}
-                />
-              </div>
             </div>
           )}
         </div>

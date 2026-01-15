@@ -16,6 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
+import { getHackathonDisplayState, type HackathonDisplayState } from '@shared/hackathonState';
 
 interface HackathonEvent {
   id: string;
@@ -30,7 +31,8 @@ interface HackathonEvent {
   tags: string[];
   registerUrl: string;
   featured?: boolean;
-  status: "upcoming" | "ongoing" | "completed";
+  status?: string | null;
+  hackathon_status?: string | null;
   organizer?: string;
   isMaximallyOfficial?: boolean;
 }
@@ -80,10 +82,23 @@ const getDurationDays = (start: string, end: string) => {
 export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDetailSheetProps) {
   if (!hackathon) return null;
 
-  const statusColors: Record<string, string> = {
-    upcoming: "bg-green-500/20 text-green-300 border-green-500/40",
-    ongoing: "bg-yellow-500/20 text-yellow-300 border-yellow-500/40",
-    completed: "bg-gray-500/20 text-gray-400 border-gray-500/40"
+  // Use simplified state logic - only 'draft', 'live', or 'ended'
+  const displayState: HackathonDisplayState = getHackathonDisplayState({
+    status: hackathon.status || null,
+    hackathon_status: hackathon.hackathon_status,
+    end_date: hackathon.endDate,
+  });
+
+  const statusColors: Record<HackathonDisplayState, string> = {
+    draft: "bg-gray-500/20 text-gray-400 border-gray-500/40",
+    live: "bg-yellow-500/20 text-yellow-300 border-yellow-500/40",
+    ended: "bg-gray-500/20 text-gray-400 border-gray-500/40"
+  };
+
+  const statusLabels: Record<HackathonDisplayState, string> = {
+    draft: "DRAFT",
+    live: "LIVE",
+    ended: "ENDED"
   };
 
   const formatColors: Record<string, string> = {
@@ -107,8 +122,8 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
           <div className="p-6">
             <SheetHeader className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <span className={`px-2 py-1 border text-[10px] font-press-start uppercase ${statusColors[hackathon.status]}`}>
-                  {hackathon.status}
+                <span className={`px-2 py-1 border text-[10px] font-press-start uppercase ${statusColors[displayState]}`}>
+                  {statusLabels[displayState]}
                 </span>
                 <span className={`px-2 py-1 border text-[10px] font-jetbrains capitalize ${formatColors[hackathon.format]}`}>
                   {hackathon.format}

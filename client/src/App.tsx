@@ -1,6 +1,7 @@
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { ConfirmProvider } from '@/components/ui/confirm-modal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -140,6 +141,9 @@ import PublicHackathon from './pages/PublicHackathon';
 import OrganizerProfile from './pages/OrganizerProfile';
 import HackathonRegistrations from './pages/HackathonRegistrations';
 import HackathonSubmit from './pages/HackathonSubmit';
+import UnifiedHackathonDashboard from './pages/UnifiedHackathonDashboard';
+import OrganizerInvite from './pages/OrganizerInvite';
+import JoinTeam from './pages/JoinTeam';
 
 // People pages
 import People from './pages/People';
@@ -155,6 +159,7 @@ import OrganizerInbox from './pages/OrganizerInbox';
 import JudgeHackathons from './pages/JudgeHackathons';
 import PeopleOrganizers from './pages/PeopleOrganizers';
 import JudgeSubmissions from './pages/JudgeSubmissions';
+import JudgeScoring from './pages/JudgeScoring';
 import ProjectDetail from './pages/ProjectDetail';
 import SubmissionDetail from './pages/SubmissionDetail';
 import ParticipantDashboard from './pages/ParticipantDashboard';
@@ -337,44 +342,48 @@ const AppContent = () => {
         {/* Community redirect to Discord */}
         <Route path="/community" element={<CommunityRedirect />} />
 
-        <Route path="/people" element={<People />} />
-        <Route path="/people/core" element={<PeopleCore />} />
-        <Route path="/people/judges" element={<PeopleJudges />} />
-        <Route path="/people/organizers" element={<PeopleOrganizers />} />
-        <Route path="/judges" element={<Judges />} />
-        <Route path="/judge/:username" element={<JudgeProfile />} />
-        <Route path="/judges/apply" element={<JudgeApplicationForm />} />
+        {/* People and Judges pages removed - redirect to 404 */}
+        <Route path="/people" element={<NotFound />} />
+        <Route path="/people/core" element={<NotFound />} />
+        <Route path="/people/judges" element={<NotFound />} />
+        <Route path="/people/organizers" element={<NotFound />} />
+        <Route path="/judges" element={<NotFound />} />
+        <Route path="/judges/apply" element={<NotFound />} />
         <Route path="/organizer/apply" element={<OrganizerApplicationForm />} />
         <Route path="/judge-dashboard" element={<JudgeDashboard />} />
         <Route path="/judge-inbox" element={<JudgeInbox />} />
         <Route path="/organizer-inbox" element={<OrganizerInbox />} />
         <Route path="/judge/hackathons" element={<JudgeHackathons />} />
         <Route path="/judge/hackathons/:hackathonId/submissions" element={<JudgeSubmissions />} />
+        <Route path="/judge/:token" element={<JudgeScoring />} />
         <Route path="/project/:projectId" element={<ProjectDetail />} />
+        <Route path="/project/:source/:projectId" element={<ProjectDetail />} />
         <Route path="/submissions/:slug" element={<SubmissionDetail />} />
         <Route path="/my-hackathons" element={<ParticipantDashboard />} />
         
-        {/* Project Gallery */}
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/gallery/submit" element={<GallerySubmit />} />
-        <Route path="/gallery/edit/:id" element={<GalleryEdit />} />
-        <Route path="/gallery/:id" element={<GalleryProjectDetail />} />
+        {/* Project Gallery - removed, redirect to 404 */}
+        <Route path="/gallery" element={<NotFound />} />
+        <Route path="/gallery/submit" element={<NotFound />} />
+        <Route path="/gallery/edit/:id" element={<NotFound />} />
+        <Route path="/gallery/:id" element={<NotFound />} />
         
         {/* Platform Analytics */}
         <Route path="/analytics" element={<PlatformAnalytics />} />
         
-        {/* Legacy redirect */}
-        <Route path="/featured" element={<Navigate to="/people" replace />} />
+        {/* Legacy redirect - now shows 404 */}
+        <Route path="/featured" element={<NotFound />} />
         <Route path="/mfhop" element={<MFHOP />} />
         <Route path="/partner" element={<PartnerNetwork />} />
         <Route path="/host-hackathon" element={<HostHackathon />} />
         <Route path="/create-hackathon" element={<CreateHackathon />} />
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
-        <Route path="/organizer/hackathons/:id" element={<EditHackathon />} />
-        <Route path="/organizer/hackathons/:hackathonId/manage" element={<HackathonRegistrations />} />
+        <Route path="/organizer/hackathons/:id" element={<UnifiedHackathonDashboard />} />
+        <Route path="/organizer/hackathons/:hackathonId/manage" element={<UnifiedHackathonDashboard />} />
+        <Route path="/organizer/invite/:token" element={<OrganizerInvite />} />
         <Route path="/organizer/:username" element={<OrganizerProfile />} />
         <Route path="/hackathon/:slug" element={<PublicHackathon />} />
         <Route path="/hackathon/:slug/submit" element={<HackathonSubmit />} />
+        <Route path="/team/join/:token" element={<JoinTeam />} />
 
         <Route path="/events" element={<Events />} />
         <Route path="/explore" element={<Explore />} />
@@ -569,11 +578,13 @@ const App = () => {
           <Toaster />
           <Sonner />
           <AuthProvider>
-            <Router>
-              <ModerationGuard>
-                <AppContent />
-              </ModerationGuard>
-            </Router>
+            <ConfirmProvider>
+              <Router>
+                <ModerationGuard>
+                  <AppContent />
+                </ModerationGuard>
+              </Router>
+            </ConfirmProvider>
           </AuthProvider>
         </TooltipProvider>
       </ThemeProvider>

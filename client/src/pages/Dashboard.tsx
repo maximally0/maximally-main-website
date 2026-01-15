@@ -3,18 +3,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getCurrentUserWithProfile } from '@/lib/supabaseClient';
-import { Settings, User, Mail, Shield, ArrowLeft, Loader2 } from 'lucide-react';
+import { Settings, User, Mail, Shield, ArrowLeft } from 'lucide-react';
+import PixelLoader from '@/components/PixelLoader';
 import RecommendedHackathons from '@/components/RecommendedHackathons';
 import RecommendedProjects from '@/components/RecommendedProjects';
 import RecommendedTools from '@/components/RecommendedTools';
-import SuggestedTeammates from '@/components/SuggestedTeammates';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
-  const [role, setRole] = useState<'user' | 'admin' | 'judge' | 'organizer'>('user');
+  const [role, setRole] = useState<'user' | 'admin' | 'organizer'>('user');
 
   useEffect(() => {
     (async () => {
@@ -33,10 +33,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="flex items-center gap-3 text-purple-400">
-          <Loader2 className="w-5 h-5 animate-spin" />
-          <span className="font-jetbrains">Loading...</span>
-        </div>
+        <PixelLoader size="lg" />
       </div>
     );
   }
@@ -120,11 +117,6 @@ export default function Dashboard() {
           {/* Recommended Projects */}
           <div className="mt-8">
             <RecommendedProjects limit={4} />
-          </div>
-
-          {/* Suggested Teammates */}
-          <div className="mt-8">
-            <SuggestedTeammates limit={4} />
           </div>
 
           {/* Recommended Tools */}

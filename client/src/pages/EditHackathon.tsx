@@ -110,9 +110,18 @@ function BrandingTab({
 
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      toast({ title: "Error", description: "No file selected", variant: "destructive" });
+      return;
+    }
 
-    // Validate file
+    // Validate file has content
+    if (!file.size) {
+      toast({ title: "Error", description: "Selected file is empty", variant: "destructive" });
+      return;
+    }
+
+    // Validate file type
     if (!file.type.startsWith('image/')) {
       toast({ title: "Error", description: "Please select an image file", variant: "destructive" });
       return;
@@ -128,6 +137,7 @@ function BrandingTab({
       updateField('banner_image', url);
       toast({ title: "Success", description: "Banner uploaded successfully!" });
     } catch (err: any) {
+      console.error('Banner upload error:', err);
       toast({ title: "Upload Failed", description: err.message || "Failed to upload banner", variant: "destructive" });
     } finally {
       setUploading(false);

@@ -80,7 +80,8 @@ export const hackathons = pgTable('hackathons', {
   endDate: timestamp('end_date').notNull(),
   location: text('location').notNull(),
   length: text('length').notNull(),
-  status: text('status', { enum: ['upcoming', 'ongoing', 'completed'] }).notNull(),
+  status: text('status', { enum: ['draft', 'live', 'ended'] }).notNull(),
+  hackathon_status: text('hackathon_status', { enum: ['draft', 'live', 'ended'] }),
   participants: integer('participants').notNull().default(0),
   prizes: text('prizes').notNull(),
   tags: text('tags').array().notNull().default([]),
@@ -97,7 +98,7 @@ export const insertHackathonSchema = createInsertSchema(hackathons, {
   description: z.string().min(10, "Description must be at least 10 characters"),
   location: z.string().min(1, "Location is required"),
   length: z.string().min(1, "Length is required"),
-  status: z.enum(['upcoming', 'ongoing', 'completed']),
+  status: z.enum(['draft', 'live', 'ended']),
   participants: z.number().min(0, "Participants must be non-negative"),
   prizes: z.string().min(1, "Prize information is required"),
   tags: z.array(z.string()).min(1, "At least one tag is required"),
@@ -111,24 +112,23 @@ export const insertHackathonSchema = createInsertSchema(hackathons, {
 export type InsertHackathon = z.infer<typeof insertHackathonSchema>;
 export type SelectHackathon = typeof hackathons.$inferSelect;
 
-// Helper function to calculate hackathon status based on dates
-export function calculateHackathonStatus(startDate: Date, endDate: Date): 'upcoming' | 'ongoing' | 'completed' {
-  const now = new Date();
-  
-  if (now < startDate) {
-    return 'upcoming';
-  } else if (now >= startDate && now <= endDate) {
-    return 'ongoing';
-  } else {
-    return 'completed';
-  }
+// Helper function to calculate hackathon display state based on dates
+// Uses the simplified 3-state model: draft, live, ended
+import { getHackathonDisplayState, type HackathonDisplayState } from './hackathonState';
+
+export function calculateHackathonStatus(startDate: Date, endDate: Date, status?: string | null): HackathonDisplayState {
+  return getHackathonDisplayState({
+    status: status || 'published',
+    end_date: endDate.toISOString(),
+  });
 }
 
 // Grand Indian Hackathon Season - Real hackathon data from individual pages
 // Note: Status is calculated dynamically based on dates to prevent drift
-const createHackathonEntry = (data: Omit<SelectHackathon, 'status'>) => ({
+const createHackathonEntry = (data: Omit<SelectHackathon, 'status' | 'hackathon_status'>) => ({
   ...data,
-  status: calculateHackathonStatus(data.startDate, data.endDate)
+  status: calculateHackathonStatus(data.startDate, data.endDate, 'published'),
+  hackathon_status: calculateHackathonStatus(data.startDate, data.endDate, 'published'),
 });
 
 export const grandIndianHackathonSeason: SelectHackathon[] = [

@@ -19,6 +19,11 @@ import { registerModerationRoutes } from "./routes/moderation";
 import { registerGalleryRoutes } from "./routes/gallery";
 import { registerCustomQuestionsRoutes } from "./routes/custom-questions";
 import { registerJudgeReminderRoutes } from "./routes/judge-reminders";
+import { registerJudgeScoringRoutes } from "./routes/judge-scoring";
+import { registerSimplifiedJudgesRoutes } from "./routes/simplified-judges";
+import { registerAutoPublishGalleryRoutes } from "./routes/auto-publish-gallery";
+import { registerCertificateRoutes } from "./routes/certificates";
+import { registerSubmissionModerationRoutes } from "./routes/submission-moderation";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
 import { 
   sendSubmissionConfirmation, 
@@ -27,7 +32,8 @@ import {
   sendWelcomeEmail,
   sendDeadlineReminder,
   sendHackathonStartingSoonEmail,
-  sendOtpEmail
+  sendOtpEmail,
+  sendOrganizerPromotionEmail
 } from "./services/email";
 
 // Simple per-user rate limiter (token bucket) in memory
@@ -2027,6 +2033,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
             return res.status(500).json({ message: `Failed to create organizer profile: ${profileCreateError.message}`, error: profileCreateError });
           }
         }
+
+        // Send organizer promotion email
+        const { data: userProfile } = await supabaseAdmin
+          .from('profiles')
+          .select('full_name, username, email')
+          .eq('id', appData.user_id)
+          .single();
+
+        if (userProfile?.email) {
+          sendOrganizerPromotionEmail({
+            email: userProfile.email,
+            userName: userProfile.full_name || userProfile.username || appData.full_name || 'there',
+          }).catch(err => console.error('Organizer promotion email failed:', err));
+        }
       }
       return res.json({ message: 'Application approved successfully' });
     } catch (err: any) {
@@ -2349,12 +2369,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (profileData.role !== 'judge') {
         return res.status(403).json({
           success: false,
-          message: 'Access denied. Judge role required.',
-          debug: {
-            currentRole: profileData.role,
-            requiredRole: 'judge',
-            username: profileData.username
-          }
+          message: 'Access denied. Judge role required.'
         });
       }
 
@@ -2812,298 +2827,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Judge Messages API Endpoints
-  app.get("/api/judge/messages", async (req: Request, res: Response) => {
-    try {
-      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
-      if (!supabaseAdmin) {
-        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
-      }
-
-      const authHeader = req.headers['authorization'];
-      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Missing bearer token' });
-      }
-      const token = authHeader.toString().slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin as any, token);
-      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
-
-      // Get user profile
-      const { data: profile, error: profileError } = await supabaseAdmin
-        .from('profiles')
-        .select('username, role')
-        .eq('id', userId)
-        .single();
-
-      if (profileError || !profile) {
-        return res.status(404).json({ success: false, message: 'Profile not found' });
-      }
-
-      const profileData = profile as any;
-
-      if (profileData.role !== 'judge') {
-        return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
-      }
-
-      // Get message recipients with joined message data in a single query
-      const { data: recipientsWithMessages, error: joinError } = await supabaseAdmin
-        .from('judge_message_recipients')
-        .select(`
-          message_id,
-          is_read,
-          read_at,
-          judge_messages!inner (
-            id,
-            subject,
-            content,
-            priority,
-            created_at,
-            sent_at,
-            sent_by_name,
-            sent_by_email,
-            status
-          )
-        `)
-        .eq('judge_username', profileData.username)
-        .eq('judge_messages.status', 'sent');
-
-      if (joinError) {
-        console.error('Error fetching messages with join:', joinError);
-        // Fallback to original sequential queries if join fails
-        const { data: recipients, error: recipientsError } = await supabaseAdmin
-          .from('judge_message_recipients')
-          .select('message_id, is_read, read_at')
-          .eq('judge_username', profileData.username);
-
-        if (recipientsError) {
-          return res.status(500).json({ success: false, message: 'Failed to fetch message recipients' });
-        }
-
-        const messageIds = (recipients || []).map((r: any) => r.message_id);
-        
-        if (messageIds.length === 0) {
-          return res.json({ items: [], total: 0 });
-        }
-
-        let query = supabaseAdmin
-          .from('judge_messages')
-          .select('*')
-          .in('id', messageIds)
-          .eq('status', 'sent');
-
-        if (req.query.subject) {
-          query = query.ilike('subject', `%${req.query.subject}%`);
-        }
-        if (req.query.priority) {
-          query = query.eq('priority', req.query.priority);
-        }
-
-        const limit = parseInt(req.query.limit as string) || 50;
-        const offset = parseInt(req.query.offset as string) || 0;
-        query = query.range(offset, offset + limit - 1);
-        query = query.order('created_at', { ascending: false });
-
-        const { data: messages, error: messagesError } = await query;
-
-        if (messagesError) {
-          return res.status(500).json({ success: false, message: 'Failed to fetch messages' });
-        }
-
-        const readStatusMap = new Map();
-        (recipients || []).forEach((r: any) => {
-          readStatusMap.set(r.message_id, { is_read: r.is_read, read_at: r.read_at });
-        });
-
-        const transformedMessages = (messages || []).map((msg: any) => {
-          const readStatus = readStatusMap.get(msg.id) || { is_read: false, read_at: null };
-          return {
-            id: msg.id,
-            subject: msg.subject,
-            content: msg.content,
-            priority: msg.priority,
-            created_at: msg.created_at,
-            sent_at: msg.sent_at,
-            sent_by_name: msg.sent_by_name,
-            sent_by_email: msg.sent_by_email,
-            recipient: { is_read: readStatus.is_read, read_at: readStatus.read_at }
-          };
-        });
-
-        return res.json({ items: transformedMessages, total: transformedMessages.length });
-      }
-
-      // Process joined data
-      let transformedMessages = (recipientsWithMessages || []).map((r: any) => {
-        const msg = r.judge_messages;
-        return {
-          id: msg.id,
-          subject: msg.subject,
-          content: msg.content,
-          priority: msg.priority,
-          created_at: msg.created_at,
-          sent_at: msg.sent_at,
-          sent_by_name: msg.sent_by_name,
-          sent_by_email: msg.sent_by_email,
-          recipient: { is_read: r.is_read, read_at: r.read_at }
-        };
-      });
-
-      // Apply client-side filters (for joined query)
-      if (req.query.subject) {
-        const searchTerm = (req.query.subject as string).toLowerCase();
-        transformedMessages = transformedMessages.filter((m: any) => 
-          m.subject.toLowerCase().includes(searchTerm)
-        );
-      }
-      if (req.query.priority) {
-        transformedMessages = transformedMessages.filter((m: any) => 
-          m.priority === req.query.priority
-        );
-      }
-
-      // Sort by created_at descending
-      transformedMessages.sort((a: any, b: any) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-
-      // Apply pagination
-      const limit = parseInt(req.query.limit as string) || 50;
-      const offset = parseInt(req.query.offset as string) || 0;
-      const paginatedMessages = transformedMessages.slice(offset, offset + limit);
-
-      return res.json({
-        items: paginatedMessages,
-        total: transformedMessages.length
-      });
-    } catch (err: any) {
-      console.error('Judge messages fetch error:', err);
-      return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch messages' });
-    }
-  });
-
-  app.get("/api/judge/messages/unread-count", async (req: Request, res: Response) => {
-    try {
-      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
-      if (!supabaseAdmin) {
-        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
-      }
-
-      const authHeader = req.headers['authorization'];
-      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Missing bearer token' });
-      }
-      const token = authHeader.toString().slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin as any, token);
-      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
-
-      // Get user profile
-      const { data: profile, error: profileError } = await supabaseAdmin
-        .from('profiles')
-        .select('username, role')
-        .eq('id', userId)
-        .single();
-
-      if (profileError || !profile) {
-        return res.status(404).json({ success: false, message: 'Profile not found' });
-      }
-
-      const profileData = profile as any;
-
-      if (profileData.role !== 'judge') {
-        return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
-      }
-
-      // Count unread messages for this judge
-      const { count, error: countError } = await supabaseAdmin
-        .from('judge_message_recipients')
-        .select('*', { count: 'exact', head: true })
-        .eq('judge_username', profileData.username)
-        .eq('is_read', false);
-
-      if (countError) {
-        console.error('Error counting unread messages:', countError);
-        return res.status(500).json({ success: false, message: 'Failed to count unread messages' });
-      }
-
-      return res.json({
-        unread: count || 0
-      });
-    } catch (err: any) {
-      console.error('Unread count fetch error:', err);
-      return res.status(500).json({ success: false, message: err?.message || 'Failed to fetch unread count' });
-    }
-  });
-
-  app.post("/api/judge/messages/:id/read", async (req: Request, res: Response) => {
-    try {
-      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
-      if (!supabaseAdmin) {
-        return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
-      }
-
-      const authHeader = req.headers['authorization'];
-      if (!authHeader || !authHeader.toString().startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Missing bearer token' });
-      }
-      const token = authHeader.toString().slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin as any, token);
-      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
-
-      // Get user profile
-      const { data: profile, error: profileError } = await supabaseAdmin
-        .from('profiles')
-        .select('username, role')
-        .eq('id', userId)
-        .single();
-
-      if (profileError || !profile) {
-        return res.status(404).json({ success: false, message: 'Profile not found' });
-      }
-
-      const profileData = profile as any;
-
-      if (profileData.role !== 'judge') {
-        return res.status(403).json({ success: false, message: 'Access denied. Judge role required.' });
-      }
-
-      const messageId = parseInt(req.params.id);
-
-      // Verify the recipient record exists for this judge
-      const { data: recipient, error: recipientError } = await supabaseAdmin
-        .from('judge_message_recipients')
-        .select('id')
-        .eq('message_id', messageId)
-        .eq('judge_username', profileData.username)
-        .single();
-
-      if (recipientError || !recipient) {
-        return res.status(404).json({ success: false, message: 'Message not found for this judge' });
-      }
-
-      // Mark as read
-      const { error: updateError } = await supabaseAdmin
-        .from('judge_message_recipients')
-        .update({
-          is_read: true,
-          read_at: new Date().toISOString()
-        } as any)
-        .eq('message_id', messageId)
-        .eq('judge_username', profileData.username);
-
-      if (updateError) {
-        console.error('Error marking message as read:', updateError);
-        return res.status(500).json({ success: false, message: 'Failed to mark message as read' });
-      }
-
-      return res.json({
-        success: true,
-        message: 'Message marked as read'
-      });
-    } catch (err: any) {
-      console.error('Mark message read error:', err);
-      return res.status(500).json({ success: false, message: err?.message || 'Failed to mark message as read' });
-    }
-  });
+  // REMOVED: Judge Messages API Endpoints (Platform Simplification)
+  // The judge account system has been deprecated. Judges now use tokenized links.
+  // See: .kiro/specs/platform-simplification/requirements.md - Requirement 1, 17
 
   // Organizer Messages API Endpoints
   app.get("/api/organizer/messages", async (req: Request, res: Response) => {
@@ -3422,6 +3148,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .eq('user_id', userId)
         .single();
 
+      // Helper function to sync submission to gallery
+      const syncToGallery = async (submission: any) => {
+        if (submission.status !== 'submitted') return; // Only sync submitted projects
+        
+        try {
+          // Check if gallery project already exists for this submission
+          const { data: existingGallery } = await supabaseAdmin
+            .from('gallery_projects')
+            .select('id')
+            .eq('hackathon_submission_id', submission.id)
+            .single();
+
+          const galleryData = {
+            user_id: userId,
+            name: submission.project_name || 'Untitled Project',
+            tagline: submission.tagline,
+            description: submission.description || '',
+            logo_url: submission.project_logo,
+            github_url: submission.github_repo,
+            demo_url: submission.demo_url,
+            video_url: submission.video_url,
+            technologies: submission.technologies_used || [],
+            hackathon_id: parseInt(hackathonId),
+            hackathon_submission_id: submission.id,
+            status: 'approved', // Auto-approve hackathon submissions
+          };
+
+          if (existingGallery) {
+            // Update existing gallery project
+            await supabaseAdmin
+              .from('gallery_projects')
+              .update({
+                ...galleryData,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', existingGallery.id);
+          } else {
+            // Create new gallery project
+            await supabaseAdmin
+              .from('gallery_projects')
+              .insert({
+                ...galleryData,
+                created_at: submission.submitted_at || new Date().toISOString()
+              });
+          }
+        } catch (galleryError) {
+          console.error('Error syncing to gallery:', galleryError);
+          // Don't fail the submission if gallery sync fails
+        }
+      };
+
       if (existing) {
         // Update existing submission (only one submission allowed per user)
         const { data, error } = await supabaseAdmin
@@ -3435,6 +3212,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .single();
 
         if (error) throw error;
+
+        // Sync to gallery
+        await syncToGallery(data);
 
         // Send email only if status changed to submitted
         if (submissionData.status === 'submitted' && data.status === 'submitted') {
@@ -3479,6 +3259,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .single();
 
         if (error) throw error;
+
+        // Sync to gallery
+        await syncToGallery(data);
 
         // Send email only if submitted (not draft)
         if (submissionData.status === 'submitted') {
@@ -3656,13 +3439,176 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get individual project details (public)
+  // Get project by source and ID (gallery or hackathon) - MUST be before the generic route
+  app.get("/api/projects/:source/:projectId", async (req: Request, res: Response) => {
+    try {
+      const { source, projectId } = req.params;
+      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+
+      // Get current user if authenticated
+      let currentUserId: string | null = null;
+      const authHeader = req.headers['authorization'];
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.slice('Bearer '.length);
+        const { data: userData } = await supabaseAdmin.auth.getUser(token);
+        currentUserId = userData?.user?.id || null;
+      }
+
+      if (source === 'gallery') {
+        const { data: galleryProject, error } = await supabaseAdmin
+          .from('gallery_projects')
+          .select(`
+            *,
+            profiles:user_id(username, full_name, avatar_url),
+            hackathon:hackathon_id(hackathon_name, slug)
+          `)
+          .eq('id', projectId)
+          .single();
+
+        if (error || !galleryProject) {
+          return res.status(404).json({ success: false, message: 'Project not found' });
+        }
+
+        const gp = galleryProject as any;
+        
+        // Check if project is viewable (approved/featured OR owner viewing their own)
+        const isOwner = currentUserId && gp.user_id === currentUserId;
+        const isPublic = gp.status === 'approved' || gp.status === 'featured';
+        
+        if (!isPublic && !isOwner) {
+          return res.status(404).json({ success: false, message: 'Project not found or not public' });
+        }
+
+        const enrichedData = {
+          id: gp.id,
+          project_name: gp.name,
+          tagline: gp.tagline,
+          description: gp.description,
+          github_repo: gp.github_url,
+          demo_url: gp.demo_url,
+          video_url: gp.video_url,
+          cover_image: gp.cover_image_url,
+          project_logo: gp.logo_url,
+          technologies_used: gp.technologies || [],
+          submitted_at: gp.created_at,
+          prize_won: gp.hackathon_position,
+          score: null,
+          feedback: null,
+          source: 'gallery',
+          status: gp.status,
+          user_name: gp.profiles?.full_name || gp.profiles?.username || 'Anonymous',
+          hackathon: gp.hackathon ? {
+            hackathon_name: gp.hackathon.hackathon_name,
+            slug: gp.hackathon.slug
+          } : null,
+          team: null
+        };
+        return res.json({ success: true, data: enrichedData });
+      } 
+      
+      if (source === 'hackathon') {
+        const { data: submission, error } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .select(`
+            *,
+            team:hackathon_teams(team_name, team_code),
+            hackathon:organizer_hackathons(hackathon_name, slug)
+          `)
+          .eq('id', projectId)
+          .single();
+
+        if (error || !submission) {
+          return res.status(404).json({ success: false, message: 'Project not found' });
+        }
+
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('username, full_name')
+          .eq('id', (submission as any).user_id)
+          .single();
+
+        const enrichedData = {
+          ...(submission as any),
+          source: 'hackathon',
+          user_name: (profile as any)?.full_name || (profile as any)?.username || 'Anonymous'
+        };
+
+        return res.json({ success: true, data: enrichedData });
+      }
+
+      return res.status(400).json({ success: false, message: 'Invalid source. Use "gallery" or "hackathon"' });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get individual project details (public) - checks both gallery_projects and hackathon_submissions
   app.get("/api/projects/:projectId", async (req: Request, res: Response) => {
     try {
       const { projectId } = req.params;
       const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
-      const { data, error } = await supabaseAdmin
+      // Get current user if authenticated
+      let currentUserId: string | null = null;
+      const authHeader = req.headers['authorization'];
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.slice('Bearer '.length);
+        const { data: userData } = await supabaseAdmin.auth.getUser(token);
+        currentUserId = userData?.user?.id || null;
+      }
+
+      // First try gallery_projects table
+      const { data: galleryProject, error: galleryError } = await supabaseAdmin
+        .from('gallery_projects')
+        .select(`
+          *,
+          profiles:user_id(username, full_name, avatar_url),
+          hackathon:hackathon_id(hackathon_name, slug)
+        `)
+        .eq('id', projectId)
+        .single();
+
+      if (galleryProject && !galleryError) {
+        const gp = galleryProject as any;
+        
+        // Check if project is viewable (approved/featured OR owner viewing their own)
+        const isOwner = currentUserId && gp.user_id === currentUserId;
+        const isPublic = gp.status === 'approved' || gp.status === 'featured';
+        
+        if (!isPublic && !isOwner) {
+          // Not viewable - fall through to check hackathon_submissions
+        } else {
+          // Found in gallery_projects - format response
+          const enrichedData = {
+            id: gp.id,
+            project_name: gp.name,
+            tagline: gp.tagline,
+            description: gp.description,
+            github_repo: gp.github_url,
+            demo_url: gp.demo_url,
+            video_url: gp.video_url,
+            cover_image: gp.cover_image_url,
+            project_logo: gp.logo_url,
+            technologies_used: gp.technologies || [],
+            submitted_at: gp.created_at,
+            prize_won: gp.hackathon_position,
+            score: null,
+            feedback: null,
+            source: 'gallery',
+            status: gp.status,
+            user_name: gp.profiles?.full_name || gp.profiles?.username || 'Anonymous',
+            hackathon: gp.hackathon ? {
+              hackathon_name: gp.hackathon.hackathon_name,
+              slug: gp.hackathon.slug
+            } : null,
+            team: null
+          };
+          return res.json({ success: true, data: enrichedData });
+        }
+      }
+
+      // Not in gallery, try hackathon_submissions
+      const { data: submission, error: submissionError } = await supabaseAdmin
         .from('hackathon_submissions')
         .select(`
           *,
@@ -3673,20 +3619,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .eq('status', 'submitted')
         .single();
 
-      if (error || !data) {
+      if (submissionError || !submission) {
         return res.status(404).json({ success: false, message: 'Project not found' });
       }
 
-      // Get user name
+      // Get user name for hackathon submission
       const { data: profile } = await supabaseAdmin
         .from('profiles')
         .select('username, full_name')
-        .eq('id', data.user_id)
+        .eq('id', (submission as any).user_id)
         .single();
 
       const enrichedData = {
-        ...data,
-        user_name: profile?.full_name || profile?.username || 'Anonymous'
+        ...(submission as any),
+        source: 'hackathon',
+        user_name: (profile as any)?.full_name || (profile as any)?.username || 'Anonymous'
       };
 
       return res.json({ success: true, data: enrichedData });
@@ -4024,6 +3971,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerGalleryRoutes(app); // Project gallery system
   registerCustomQuestionsRoutes(app); // Custom registration questions
   registerJudgeReminderRoutes(app); // Judge reminder emails and progress tracking
+  registerJudgeScoringRoutes(app); // Token-based judge scoring (no login required)
+  registerSimplifiedJudgesRoutes(app); // Simplified judges management for organizers
+  registerAutoPublishGalleryRoutes(app); // Auto-publish gallery when hackathon ends
+  registerSubmissionModerationRoutes(app); // Submission moderation (disqualify) for organizers
+  registerCertificateRoutes(app); // Certificate generation for organizers
+
+  // Auto-publish is handled by the cron endpoint /api/cron/auto-publish-galleries
+  // In production, this should be triggered by an external cron service (e.g., Netlify scheduled functions)
+  // For local development, you can manually call the endpoint or set up a local cron
 
   const httpServer = createServer(app);
   return httpServer;

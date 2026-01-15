@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import dotenv from 'dotenv';
+import { sendEmailQueued } from './emailQueue';
 
 // Ensure env vars are loaded (in case this module is imported before index.ts runs dotenv)
 dotenv.config();
@@ -59,6 +60,11 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>${PLATFORM_NAME}</title>
+  <!--[if mso]>
+  <style type="text/css">
+    body, table, td {font-family: 'Courier New', Courier, monospace !important;}
+  </style>
+  <![endif]-->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Press+Start+2P&display=swap');
     
@@ -69,7 +75,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     }
     
     body {
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', 'Droid Sans Mono', 'Source Code Pro', 'Courier New', Courier, monospace;
       background: ${BRAND_COLORS.black};
       color: ${BRAND_COLORS.white};
       line-height: 1.6;
@@ -98,7 +104,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     }
     
     .logo {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 20px;
       background: linear-gradient(90deg, ${BRAND_COLORS.white} 0%, ${BRAND_COLORS.red} 50%, ${BRAND_COLORS.purple} 100%);
       -webkit-background-clip: text;
@@ -108,7 +114,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     
     /* Fallback for email clients that don't support gradient text */
     .logo-fallback {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 20px;
       color: ${BRAND_COLORS.white};
     }
@@ -125,7 +131,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     }
     
     .title {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 18px;
       text-align: center;
       margin-bottom: 30px;
@@ -246,7 +252,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
       color: ${BRAND_COLORS.white} !important;
       padding: 16px 36px;
       text-decoration: none;
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -316,7 +322,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     }
     
     .team-code {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 28px;
       color: ${BRAND_COLORS.purple};
       letter-spacing: 6px;
@@ -334,7 +340,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     }
     
     .prize-amount {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 28px;
       color: #FBBF24;
       text-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
@@ -350,7 +356,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     }
     
     .countdown-time {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 32px;
       color: ${BRAND_COLORS.red};
       text-shadow: 0 0 30px ${BRAND_COLORS.redGlow};
@@ -421,7 +427,7 @@ const getBaseTemplate = (content: string, preheader: string = '') => `
     }
     
     .stat-value {
-      font-family: 'Press Start 2P', cursive;
+      font-family: 'Press Start 2P', 'VT323', 'Courier New', Courier, monospace;
       font-size: 20px;
       margin-bottom: 8px;
     }
@@ -1121,46 +1127,121 @@ const emailTemplates = {
     `, `Update on your hackathon "${data.hackathonName}" submission.`),
   }),
 
-  // Organizer: New Registration
-  newRegistrationNotification: (data: {
+  // Organizer: Registration Milestone
+  registrationMilestone: (data: {
     organizerName: string;
     hackathonName: string;
     hackathonSlug: string;
-    participantName: string;
-    registrationType: string;
+    milestone: number;
     totalRegistrations: number;
   }) => ({
-    subject: `👤 New Registration - ${data.hackathonName}`,
+    subject: `🎉 ${data.milestone} Registrations! - ${data.hackathonName}`,
     html: getBaseTemplate(`
-      <div class="emoji-header">👤</div>
-      <h1 class="title title-fallback">NEW REGISTRATION!</h1>
+      <div class="emoji-header">🎉</div>
+      <h1 class="title title-fallback">MILESTONE REACHED!</h1>
       
-      <p class="greeting">Hey <span class="highlight-name">${data.organizerName}</span>! 📊</p>
+      <p class="greeting">Congratulations <span class="highlight-name">${data.organizerName}</span>! 🚀</p>
       
       <p class="message">
-        Someone just registered for <strong>${data.hackathonName}</strong>!
+        Your hackathon <strong>${data.hackathonName}</strong> just hit a major milestone!
       </p>
       
-      <div class="info-box">
-        <div class="info-label">📋 Registration Details</div>
+      <div class="prize-box">
+        <div class="info-label">🎯 Registration Milestone</div>
+        <div class="prize-amount">${data.milestone}+</div>
+        <p style="color: ${BRAND_COLORS.gray}; font-size: 14px; margin-top: 12px;">
+          Total Registrations: <span class="highlight-orange">${data.totalRegistrations}</span>
+        </p>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="message"><strong>Keep the momentum going:</strong></p>
+      
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-number">📢</span>
+          <span class="step-text">Share this milestone on social media</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">📧</span>
+          <span class="step-text">Send an announcement to your participants</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">🎯</span>
+          <span class="step-text">Keep promoting to reach the next milestone!</span>
+        </li>
+      </ul>
+      
+      <div class="button-container">
+        <a href="${PLATFORM_URL}/organizer/hackathons/${data.hackathonSlug}" class="button">VIEW DASHBOARD →</a>
+      </div>
+      
+      <p class="message" style="text-align: center;">
+        Amazing work! Your hackathon is growing! 💪
+      </p>
+    `, `${data.hackathonName} just hit ${data.milestone} registrations!`),
+  }),
+
+  // User: Promoted to Organizer
+  organizerPromotion: (data: {
+    userName: string;
+  }) => ({
+    subject: `🎊 You're Now an Organizer on Maximally!`,
+    html: getBaseTemplate(`
+      <div class="emoji-header">🎊</div>
+      <h1 class="title title-fallback">YOU'RE AN ORGANIZER!</h1>
+      
+      <p class="greeting">Congratulations <span class="highlight-name">${data.userName}</span>! 🚀</p>
+      
+      <p class="message">
+        Your organizer application has been approved! You now have the power to 
+        create and manage hackathons on Maximally.
+      </p>
+      
+      <div class="info-box success">
+        <div class="info-label">🎖️ Your New Role</div>
         <div class="info-row">
-          <span class="info-row-label">Participant</span>
-          <span class="info-row-value">${data.participantName}</span>
+          <span class="info-row-label">Status</span>
+          <span class="info-row-value">ORGANIZER <span class="badge badge-success">✓</span></span>
         </div>
         <div class="info-row">
-          <span class="info-row-label">Type</span>
-          <span class="info-row-value">${data.registrationType.toUpperCase()}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-row-label">Total Registrations</span>
-          <span class="info-row-value highlight-orange">${data.totalRegistrations}</span>
+          <span class="info-row-label">Access</span>
+          <span class="info-row-value">Create & Manage Hackathons</span>
         </div>
       </div>
       
+      <div class="divider"></div>
+      
+      <p class="message"><strong>What You Can Do Now:</strong></p>
+      
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-number">1</span>
+          <span class="step-text">Create your first hackathon</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">2</span>
+          <span class="step-text">Set up registration, prizes, and judging criteria</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">3</span>
+          <span class="step-text">Invite judges and manage submissions</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">4</span>
+          <span class="step-text">Engage with participants through announcements</span>
+        </li>
+      </ul>
+      
       <div class="button-container">
-        <a href="${PLATFORM_URL}/organizer/hackathons/${data.hackathonSlug}/registrations" class="button">VIEW REGISTRATIONS →</a>
+        <a href="${PLATFORM_URL}/create-hackathon" class="button">CREATE HACKATHON →</a>
       </div>
-    `, `New registration for ${data.hackathonName}! Total: ${data.totalRegistrations}`),
+      
+      <p class="message" style="text-align: center;">
+        Welcome to the organizer community! Let's build something amazing! 💜
+      </p>
+    `, `You're now an organizer on Maximally!`),
   }),
 
   // Judge: Invitation
@@ -1310,7 +1391,7 @@ const emailTemplates = {
     teamName: string;
     hackathonName: string;
     hackathonSlug: string;
-    teamCode: string;
+    inviteUrl: string;
   }) => ({
     subject: `🤝 ${data.inviterName} Invited You to Join ${data.teamName}!`,
     html: getBaseTemplate(`
@@ -1324,12 +1405,20 @@ const emailTemplates = {
         <strong>${data.teamName}</strong> for <strong>${data.hackathonName}</strong>!
       </p>
       
-      <div class="team-code-box">
-        <div class="info-label">🔗 Team Code</div>
-        <div class="team-code">${data.teamCode}</div>
-        <p style="color: ${BRAND_COLORS.gray}; font-size: 12px; margin-top: 12px;">
-          Use this code to join the team
-        </p>
+      <div class="info-box purple">
+        <div class="info-label">📋 Invitation Details</div>
+        <div class="info-row">
+          <span class="info-row-label">Team</span>
+          <span class="info-row-value">${data.teamName}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Hackathon</span>
+          <span class="info-row-value">${data.hackathonName}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Invited By</span>
+          <span class="info-row-value">${data.inviterName}</span>
+        </div>
       </div>
       
       <div class="divider"></div>
@@ -1339,20 +1428,29 @@ const emailTemplates = {
       <ul class="steps-list">
         <li class="step-item">
           <span class="step-number">1</span>
-          <span class="step-text">Register for the hackathon (if you haven't)</span>
+          <span class="step-text">Click the button below</span>
         </li>
         <li class="step-item">
           <span class="step-number">2</span>
-          <span class="step-text">Go to the hackathon page</span>
+          <span class="step-text">Log in or create an account (if you haven't)</span>
         </li>
         <li class="step-item">
           <span class="step-number">3</span>
-          <span class="step-text">Click "Join Team" and enter the code above</span>
+          <span class="step-text">You'll automatically join the team!</span>
         </li>
       </ul>
       
       <div class="button-container">
-        <a href="${PLATFORM_URL}/hackathon/${data.hackathonSlug}" class="button">JOIN TEAM →</a>
+        <a href="${data.inviteUrl}" class="button">JOIN TEAM →</a>
+      </div>
+      
+      <div class="info-box warning">
+        <p style="color: ${BRAND_COLORS.lightGray}; font-size: 13px; margin: 0;">
+          <strong>⚠️ Note:</strong> This invitation link is unique to you. It expires in 7 days.
+          <br/><br/>
+          <strong>Important:</strong> You must register for the hackathon first before you can join the team. 
+          Click the button above, and if you're not registered yet, you'll be guided to register first.
+        </p>
       </div>
     `, `${data.inviterName} invited you to join team ${data.teamName}!`),
   }),
@@ -1401,6 +1499,299 @@ const emailTemplates = {
         <a href="${PLATFORM_URL}/project/${data.projectId}" class="button">VIEW PROJECT →</a>
       </div>
     `, `New feedback on your project "${data.projectName}"!`),
+  }),
+
+  // Hackathon Ended - Notify participants
+  hackathonEnded: (data: {
+    userName: string;
+    hackathonName: string;
+    hackathonSlug: string;
+    hasSubmission: boolean;
+    submissionCount: number;
+  }) => ({
+    subject: `🏁 ${data.hackathonName} Has Ended!`,
+    html: getBaseTemplate(`
+      <div class="emoji-header">🏁</div>
+      <h1 class="title title-fallback">HACKATHON ENDED!</h1>
+      
+      <p class="greeting">Hey <span class="highlight-name">${data.userName}</span>! 👋</p>
+      
+      <p class="message">
+        <strong>${data.hackathonName}</strong> has officially ended! 
+        ${data.hasSubmission 
+          ? "Thank you for participating and submitting your project!" 
+          : "We hope you had a great experience!"}
+      </p>
+      
+      <div class="info-box ${data.hasSubmission ? 'success' : ''}">
+        <div class="info-label">📊 Final Stats</div>
+        <div class="info-row">
+          <span class="info-row-label">Total Submissions</span>
+          <span class="info-row-value">${data.submissionCount}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Your Status</span>
+          <span class="info-row-value">${data.hasSubmission ? 'SUBMITTED ✓' : 'PARTICIPATED'}</span>
+        </div>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="message"><strong>What's Next?</strong></p>
+      
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-number">⚖️</span>
+          <span class="step-text">Judges will review all submissions</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">🏆</span>
+          <span class="step-text">Winners will be announced soon</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">🎓</span>
+          <span class="step-text">Certificates will be available after results</span>
+        </li>
+      </ul>
+      
+      <div class="button-container">
+        <a href="${PLATFORM_URL}/hackathon/${data.hackathonSlug}" class="button">VIEW HACKATHON →</a>
+      </div>
+      
+      <p class="message" style="text-align: center;">
+        Thanks for being part of this hackathon! 🙏
+      </p>
+    `, `${data.hackathonName} has ended! ${data.hasSubmission ? 'Your submission is in!' : 'Thanks for participating!'}`),
+  }),
+
+  // Co-organizer Invitation
+  coOrganizerInvitation: (data: {
+    inviteeName: string;
+    inviterName: string;
+    hackathonName: string;
+    hackathonSlug: string;
+    role: string;
+  }) => ({
+    subject: `👥 You're Invited to Co-Organize ${data.hackathonName}!`,
+    html: getBaseTemplate(`
+      <div class="emoji-header">👥</div>
+      <h1 class="title title-fallback">CO-ORGANIZER INVITE!</h1>
+      
+      <p class="greeting">Hey <span class="highlight-name">${data.inviteeName}</span>! 👋</p>
+      
+      <p class="message">
+        <strong>${data.inviterName}</strong> has invited you to help organize 
+        <strong>${data.hackathonName}</strong> on Maximally!
+      </p>
+      
+      <div class="info-box purple">
+        <div class="info-label">📋 Invitation Details</div>
+        <div class="info-row">
+          <span class="info-row-label">Hackathon</span>
+          <span class="info-row-value">${data.hackathonName}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Your Role</span>
+          <span class="info-row-value">${data.role} <span class="badge badge-purple">👥</span></span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Invited By</span>
+          <span class="info-row-value">${data.inviterName}</span>
+        </div>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="message"><strong>As a Co-Organizer, You Can:</strong></p>
+      
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-number">📝</span>
+          <span class="step-text">Edit hackathon details and settings</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">👥</span>
+          <span class="step-text">Manage registrations and participants</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">📢</span>
+          <span class="step-text">Send announcements to participants</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">📊</span>
+          <span class="step-text">View analytics and submissions</span>
+        </li>
+      </ul>
+      
+      <div class="button-container">
+        <a href="${PLATFORM_URL}/organizer/hackathons/${data.hackathonSlug}" class="button">VIEW HACKATHON →</a>
+      </div>
+    `, `You're invited to co-organize ${data.hackathonName}!`),
+  }),
+
+  // Submission Milestone - For organizers
+  submissionMilestone: (data: {
+    organizerName: string;
+    hackathonName: string;
+    hackathonSlug: string;
+    milestone: number;
+    totalSubmissions: number;
+  }) => ({
+    subject: `🚀 ${data.milestone} Submissions! - ${data.hackathonName}`,
+    html: getBaseTemplate(`
+      <div class="emoji-header">🚀</div>
+      <h1 class="title title-fallback">SUBMISSION MILESTONE!</h1>
+      
+      <p class="greeting">Amazing news <span class="highlight-name">${data.organizerName}</span>! 🎉</p>
+      
+      <p class="message">
+        Your hackathon <strong>${data.hackathonName}</strong> just hit a submission milestone!
+      </p>
+      
+      <div class="prize-box">
+        <div class="info-label">📦 Submissions Milestone</div>
+        <div class="prize-amount">${data.milestone}+</div>
+        <p style="color: ${BRAND_COLORS.gray}; font-size: 14px; margin-top: 12px;">
+          Total Submissions: <span class="highlight-orange">${data.totalSubmissions}</span>
+        </p>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="message">
+        Projects are coming in! Make sure your judges are ready to review them.
+      </p>
+      
+      <div class="button-container">
+        <a href="${PLATFORM_URL}/organizer/hackathons/${data.hackathonSlug}" class="button">VIEW SUBMISSIONS →</a>
+      </div>
+    `, `${data.hackathonName} hit ${data.milestone} submissions!`),
+  }),
+
+  // Results Published - Notify all participants
+  resultsPublished: (data: {
+    userName: string;
+    hackathonName: string;
+    hackathonSlug: string;
+    isWinner: boolean;
+    position?: string;
+  }) => ({
+    subject: data.isWinner 
+      ? `🏆 You Won! Results for ${data.hackathonName}` 
+      : `📊 Results Are Out - ${data.hackathonName}`,
+    html: getBaseTemplate(`
+      <div class="emoji-header">${data.isWinner ? '🏆' : '📊'}</div>
+      <h1 class="title title-fallback">${data.isWinner ? 'CONGRATULATIONS!' : 'RESULTS ARE OUT!'}</h1>
+      
+      <p class="greeting">Hey <span class="highlight-name">${data.userName}</span>! 👋</p>
+      
+      ${data.isWinner ? `
+      <p class="message">
+        Amazing news! Your project won <strong>${data.position}</strong> at 
+        <strong>${data.hackathonName}</strong>! 🎉
+      </p>
+      
+      <div class="prize-box">
+        <div class="info-label">🎖️ Your Achievement</div>
+        <div class="prize-amount">${data.position}</div>
+      </div>
+      ` : `
+      <p class="message">
+        The results for <strong>${data.hackathonName}</strong> have been announced! 
+        Check out the winners and see how your project performed.
+      </p>
+      `}
+      
+      <div class="divider"></div>
+      
+      <p class="message"><strong>What's Next?</strong></p>
+      
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-number">👀</span>
+          <span class="step-text">View the full results and winners</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">🎓</span>
+          <span class="step-text">Download your participation certificate</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">🔗</span>
+          <span class="step-text">Share your achievement on social media</span>
+        </li>
+      </ul>
+      
+      <div class="button-container">
+        <a href="${PLATFORM_URL}/hackathon/${data.hackathonSlug}" class="button">VIEW RESULTS →</a>
+      </div>
+      
+      <p class="message" style="text-align: center;">
+        ${data.isWinner ? 'Keep building amazing things! 💪' : 'Thanks for participating! Keep building! 💪'}
+      </p>
+    `, data.isWinner 
+      ? `Congratulations! You won ${data.position} at ${data.hackathonName}!` 
+      : `Results are out for ${data.hackathonName}!`),
+  }),
+
+  // Judging Complete - Notify organizer
+  judgingComplete: (data: {
+    organizerName: string;
+    hackathonName: string;
+    hackathonSlug: string;
+    totalSubmissions: number;
+    totalJudges: number;
+  }) => ({
+    subject: `✅ All Judging Complete - ${data.hackathonName}`,
+    html: getBaseTemplate(`
+      <div class="emoji-header">✅</div>
+      <h1 class="title title-fallback">JUDGING COMPLETE!</h1>
+      
+      <p class="greeting">Great news <span class="highlight-name">${data.organizerName}</span>! 🎉</p>
+      
+      <p class="message">
+        All judges have finished scoring submissions for <strong>${data.hackathonName}</strong>!
+        You can now review the scores and announce winners.
+      </p>
+      
+      <div class="info-box success">
+        <div class="info-label">📊 Judging Summary</div>
+        <div class="info-row">
+          <span class="info-row-label">Submissions Scored</span>
+          <span class="info-row-value">${data.totalSubmissions}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Judges Participated</span>
+          <span class="info-row-value">${data.totalJudges}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row-label">Status</span>
+          <span class="info-row-value">COMPLETE <span class="badge badge-success">✓</span></span>
+        </div>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <p class="message"><strong>Next Steps:</strong></p>
+      
+      <ul class="steps-list">
+        <li class="step-item">
+          <span class="step-number">1</span>
+          <span class="step-text">Review the scores and rankings</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">2</span>
+          <span class="step-text">Select and announce winners</span>
+        </li>
+        <li class="step-item">
+          <span class="step-number">3</span>
+          <span class="step-text">Generate certificates for participants</span>
+        </li>
+      </ul>
+      
+      <div class="button-container">
+        <a href="${PLATFORM_URL}/organizer/hackathons/${data.hackathonSlug}" class="button">ANNOUNCE WINNERS →</a>
+      </div>
+    `, `All judging is complete for ${data.hackathonName}!`),
   }),
 
   // OTP Verification Email
@@ -1679,24 +2070,46 @@ export async function sendHackathonRejectedEmail(data: Parameters<typeof emailTe
   }
 }
 
-export async function sendNewRegistrationNotification(data: Parameters<typeof emailTemplates.newRegistrationNotification>[0] & { email: string }) {
+export async function sendRegistrationMilestoneEmail(data: Parameters<typeof emailTemplates.registrationMilestone>[0] & { email: string }) {
   if (!resend) {
-    console.log('⚠️ Email service not configured. Skipping new registration notification.');
+    console.log('⚠️ Email service not configured. Skipping registration milestone email.');
     return { success: false, error: 'Email service not configured' };
   }
-  
+
   try {
-    const template = emailTemplates.newRegistrationNotification(data);
+    const template = emailTemplates.registrationMilestone(data);
     await resend.emails.send({
       from: FROM_EMAIL,
       to: data.email,
       subject: template.subject,
       html: template.html,
     });
-    console.log(`✅ New registration notification sent to ${data.email}`);
+    console.log(`✅ Registration milestone email sent to ${data.email}`);
     return { success: true };
   } catch (error) {
-    console.error('❌ Failed to send new registration notification:', error);
+    console.error('❌ Failed to send registration milestone email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendOrganizerPromotionEmail(data: Parameters<typeof emailTemplates.organizerPromotion>[0] & { email: string }) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping organizer promotion email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  try {
+    const template = emailTemplates.organizerPromotion(data);
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: template.subject,
+      html: template.html,
+    });
+    console.log(`✅ Organizer promotion email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send organizer promotion email:', error);
     return { success: false, error };
   }
 }
@@ -1789,6 +2202,116 @@ export async function sendProjectFeedbackEmail(data: Parameters<typeof emailTemp
   }
 }
 
+export async function sendHackathonEndedEmail(data: Parameters<typeof emailTemplates.hackathonEnded>[0] & { email: string }) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping hackathon ended email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  try {
+    const template = emailTemplates.hackathonEnded(data);
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: template.subject,
+      html: template.html,
+    });
+    console.log(`✅ Hackathon ended email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send hackathon ended email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendCoOrganizerInvitationEmail(data: Parameters<typeof emailTemplates.coOrganizerInvitation>[0] & { email: string }) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping co-organizer invitation email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  try {
+    const template = emailTemplates.coOrganizerInvitation(data);
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: template.subject,
+      html: template.html,
+    });
+    console.log(`✅ Co-organizer invitation email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send co-organizer invitation email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendSubmissionMilestoneEmail(data: Parameters<typeof emailTemplates.submissionMilestone>[0] & { email: string }) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping submission milestone email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  try {
+    const template = emailTemplates.submissionMilestone(data);
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: template.subject,
+      html: template.html,
+    });
+    console.log(`✅ Submission milestone email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send submission milestone email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendResultsPublishedEmail(data: Parameters<typeof emailTemplates.resultsPublished>[0] & { email: string }) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping results published email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  try {
+    const template = emailTemplates.resultsPublished(data);
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: template.subject,
+      html: template.html,
+    });
+    console.log(`✅ Results published email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send results published email:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendJudgingCompleteEmail(data: Parameters<typeof emailTemplates.judgingComplete>[0] & { email: string }) {
+  if (!resend) {
+    console.log('⚠️ Email service not configured. Skipping judging complete email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  try {
+    const template = emailTemplates.judgingComplete(data);
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: template.subject,
+      html: template.html,
+    });
+    console.log(`✅ Judging complete email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send judging complete email:', error);
+    return { success: false, error };
+  }
+}
+
 export async function sendOtpEmail(data: { email: string; otp: string; expiresInMinutes?: number }) {
   if (!resend) {
     console.log('⚠️ Email service not configured. Skipping OTP email.');
@@ -1868,11 +2391,6 @@ export async function sendCertificateEmail(data: {
   certificateType: 'participant' | 'winner' | 'judge';
   position?: string;
 }) {
-  if (!resend) {
-    console.log('⚠️ Email service not configured. Skipping certificate email.');
-    return { success: false, error: 'Email service not configured' };
-  }
-  
   const typeLabels = {
     participant: 'Participation',
     winner: 'Winner',
@@ -1936,19 +2454,17 @@ export async function sendCertificateEmail(data: {
     </p>
   `, `Your ${typeLabels[data.certificateType]} Certificate for ${data.hackathonName} is ready!`);
   
-  try {
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: data.email,
-      subject: `${typeEmoji[data.certificateType]} Your ${typeLabels[data.certificateType]} Certificate - ${data.hackathonName}`,
-      html,
-    });
-    console.log(`✅ Certificate email sent to ${data.email}`);
-    return { success: true };
-  } catch (error) {
-    console.error('❌ Failed to send certificate email:', error);
-    return { success: false, error };
-  }
+  // Use global email queue for rate limiting across all organizers
+  const subject = `${typeEmoji[data.certificateType]} Your ${typeLabels[data.certificateType]} Certificate - ${data.hackathonName}`;
+  
+  console.log(`📧 Queueing certificate email to ${data.email}`);
+  return sendEmailQueued({
+    from: FROM_EMAIL,
+    to: data.email,
+    subject,
+    html,
+    priority: 'normal', // Certificate emails are normal priority
+  });
 }
 
 // Judge Reminder Email
@@ -2106,3 +2622,310 @@ export async function sendMentorCertificateEmail(data: {
 
 // Export email templates for external use (e.g., preview)
 export { emailTemplates, getBaseTemplate, BRAND_COLORS };
+
+// Judge Scoring Link Email (for simplified judge system)
+export async function sendJudgeScoringLinkEmail(data: {
+  email: string;
+  judgeName: string;
+  hackathonName: string;
+  scoringUrl: string;
+  expiresAt: string;
+}) {
+  const resendClient = getResend();
+  if (!resendClient) {
+    console.log('⚠️ Email service not configured. Skipping judge scoring link email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+  
+  const expiryDate = new Date(data.expiresAt).toLocaleDateString('en-US', { 
+    dateStyle: 'long' 
+  });
+  
+  const html = getBaseTemplate(`
+    <div class="emoji-header">⚖️</div>
+    <h1 class="title title-fallback">YOU'RE INVITED TO JUDGE!</h1>
+    
+    <p class="greeting">Hello <span class="highlight-name">${data.judgeName}</span>! 👋</p>
+    
+    <p class="message">
+      You've been invited to judge projects for <strong>${data.hackathonName}</strong>!
+      Click the button below to access your personalized scoring dashboard.
+    </p>
+    
+    <div class="info-box purple">
+      <div class="info-label">📋 Judging Details</div>
+      <div class="info-row">
+        <span class="info-row-label">Hackathon</span>
+        <span class="info-row-value">${data.hackathonName}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Link Expires</span>
+        <span class="info-row-value">${expiryDate}</span>
+      </div>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <p class="message"><strong>How It Works:</strong></p>
+    
+    <ul class="steps-list">
+      <li class="step-item">
+        <span class="step-number">1</span>
+        <span class="step-text">Click the button below to access your scoring dashboard</span>
+      </li>
+      <li class="step-item">
+        <span class="step-number">2</span>
+        <span class="step-text">Review each project submission</span>
+      </li>
+      <li class="step-item">
+        <span class="step-number">3</span>
+        <span class="step-text">Score projects from 1-10 and add optional notes</span>
+      </li>
+      <li class="step-item">
+        <span class="step-number">4</span>
+        <span class="step-text">Your scores are saved automatically</span>
+      </li>
+    </ul>
+    
+    <div class="button-container">
+      <a href="${data.scoringUrl}" class="button">START JUDGING →</a>
+    </div>
+    
+    <div class="info-box warning">
+      <p style="color: ${BRAND_COLORS.lightGray}; font-size: 13px; margin: 0;">
+        <strong>⚠️ Important:</strong> This is your personal scoring link. Please do not share it with others.
+        No login is required - just click the button above to start judging!
+      </p>
+    </div>
+    
+    <p class="message" style="text-align: center;">
+      Thank you for helping evaluate these amazing projects! 🙏
+    </p>
+  `, `You're invited to judge ${data.hackathonName}! Click to access your scoring dashboard.`);
+  
+  try {
+    await resendClient.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: `⚖️ You're Invited to Judge - ${data.hackathonName}`,
+      html,
+    });
+    console.log(`✅ Judge scoring link email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send judge scoring link email:', error);
+    return { success: false, error };
+  }
+}
+
+
+// Co-Organizer Invite Email
+export async function sendCoOrganizerInviteEmail(data: {
+  email: string;
+  inviteeName: string;
+  inviterName: string;
+  hackathonName: string;
+  hackathonId: number;
+  role: string;
+}) {
+  const resendClient = getResend();
+  if (!resendClient) {
+    console.log('⚠️ Email service not configured. Skipping co-organizer invite email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+  
+  const dashboardUrl = `${PLATFORM_URL}/organizer/hackathons/${data.hackathonId}`;
+  const roleDisplay = data.role === 'co-organizer' ? 'Co-Organizer' : 
+                      data.role === 'admin' ? 'Admin' : 'Viewer';
+  
+  const html = getBaseTemplate(`
+    <div class="emoji-header">🤝</div>
+    <h1 class="title title-fallback">YOU'RE INVITED!</h1>
+    
+    <p class="greeting">Hey <span class="highlight-name">${data.inviteeName}</span>! 👋</p>
+    
+    <p class="message">
+      <strong>${data.inviterName}</strong> has invited you to join the organizing team for 
+      <strong>${data.hackathonName}</strong>!
+    </p>
+    
+    <div class="info-box purple">
+      <div class="info-label">📋 Invitation Details</div>
+      <div class="info-row">
+        <span class="info-row-label">Hackathon</span>
+        <span class="info-row-value">${data.hackathonName}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Your Role</span>
+        <span class="info-row-value">${roleDisplay} <span class="badge badge-purple">✨</span></span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Invited By</span>
+        <span class="info-row-value">${data.inviterName}</span>
+      </div>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <p class="message"><strong>What You Can Do as ${roleDisplay}:</strong></p>
+    
+    <ul class="steps-list">
+      ${data.role === 'co-organizer' ? `
+      <li class="step-item">
+        <span class="step-number">✓</span>
+        <span class="step-text">Full access to edit hackathon details</span>
+      </li>
+      <li class="step-item">
+        <span class="step-number">✓</span>
+        <span class="step-text">Manage registrations and submissions</span>
+      </li>
+      <li class="step-item">
+        <span class="step-number">✓</span>
+        <span class="step-text">Post announcements and view analytics</span>
+      </li>
+      ` : data.role === 'admin' ? `
+      <li class="step-item">
+        <span class="step-number">✓</span>
+        <span class="step-text">Manage registrations and submissions</span>
+      </li>
+      <li class="step-item">
+        <span class="step-number">✓</span>
+        <span class="step-text">View participant details and analytics</span>
+      </li>
+      ` : `
+      <li class="step-item">
+        <span class="step-number">✓</span>
+        <span class="step-text">View hackathon analytics and statistics</span>
+      </li>
+      <li class="step-item">
+        <span class="step-number">✓</span>
+        <span class="step-text">Monitor registrations and submissions</span>
+      </li>
+      `}
+    </ul>
+    
+    <div class="button-container">
+      <a href="${dashboardUrl}" class="button">VIEW HACKATHON DASHBOARD →</a>
+    </div>
+    
+    <p class="message" style="text-align: center;">
+      Log in to Maximally to accept this invitation and start collaborating! 🚀
+    </p>
+  `, `${data.inviterName} invited you to help organize ${data.hackathonName}!`);
+  
+  try {
+    await resendClient.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: `🤝 You're Invited to Organize ${data.hackathonName}!`,
+      html,
+    });
+    console.log(`✅ Co-organizer invite email sent to ${data.email}`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send co-organizer invite email:', error);
+    return { success: false, error };
+  }
+}
+
+
+// Organizer Team Invite Email (for co-organizer, admin, viewer roles)
+export async function sendOrganizerTeamInviteEmail(data: {
+  email: string;
+  inviteeName: string;
+  inviterName: string;
+  hackathonName: string;
+  hackathonSlug: string;
+  role: 'co-organizer' | 'admin' | 'viewer';
+  inviteUrl: string;
+}) {
+  const resendClient = getResend();
+  if (!resendClient) {
+    console.log('⚠️ Email service not configured. Skipping organizer team invite email.');
+    return { success: false, error: 'Email service not configured' };
+  }
+  
+  const roleDescriptions = {
+    'co-organizer': 'Full access to manage the hackathon except judge management',
+    'admin': 'Manage registrations and submissions',
+    'viewer': 'View-only access to analytics and data',
+  };
+  
+  const roleEmojis = {
+    'co-organizer': '👥',
+    'admin': '🛡️',
+    'viewer': '👁️',
+  };
+  
+  const roleDisplay = data.role === 'co-organizer' ? 'Co-Organizer' : data.role.charAt(0).toUpperCase() + data.role.slice(1);
+  
+  const html = getBaseTemplate(`
+    <div class="emoji-header">${roleEmojis[data.role]}</div>
+    <h1 class="title title-fallback">YOU'RE INVITED!</h1>
+    
+    <p class="greeting">Hey <span class="highlight-name">${data.inviteeName}</span>! 👋</p>
+    
+    <p class="message">
+      <strong>${data.inviterName}</strong> has invited you to join the organizing team for 
+      <strong>${data.hackathonName}</strong> as a <strong>${roleDisplay}</strong>!
+    </p>
+    
+    <div class="info-box purple">
+      <div class="info-label">📋 Invitation Details</div>
+      <div class="info-row">
+        <span class="info-row-label">Hackathon</span>
+        <span class="info-row-value">${data.hackathonName}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Your Role</span>
+        <span class="info-row-value">${roleDisplay}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-row-label">Invited By</span>
+        <span class="info-row-value">${data.inviterName}</span>
+      </div>
+    </div>
+    
+    <div class="info-box">
+      <div class="info-label">🔑 Role Permissions</div>
+      <p style="color: ${BRAND_COLORS.lightGray}; font-size: 14px; margin-top: 8px;">
+        ${roleDescriptions[data.role]}
+      </p>
+    </div>
+    
+    <div class="divider"></div>
+    
+    <p class="message" style="text-align: center;">
+      Click the button below to accept this invitation and join the team!
+    </p>
+    
+    <div class="button-container">
+      <a href="${data.inviteUrl}" class="button">ACCEPT INVITATION →</a>
+    </div>
+    
+    <div class="info-box warning">
+      <p style="color: ${BRAND_COLORS.lightGray}; font-size: 13px; margin: 0;">
+        <strong>⚠️ Note:</strong> This invitation link expires in 7 days. 
+        You'll need to be logged in to your Maximally account to accept.
+      </p>
+    </div>
+    
+    <p class="message" style="text-align: center;">
+      Let's make this hackathon amazing together! 🚀
+    </p>
+  `, `${data.inviterName} invited you to join ${data.hackathonName} as ${roleDisplay}!`);
+  
+  try {
+    await resendClient.emails.send({
+      from: FROM_EMAIL,
+      to: data.email,
+      subject: `${roleEmojis[data.role]} You're Invited to Join ${data.hackathonName} as ${roleDisplay}!`,
+      html,
+    });
+    console.log(`✅ Organizer team invite email sent to ${data.email} (role: ${data.role})`);
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Failed to send organizer team invite email:', error);
+    return { success: false, error };
+  }
+}

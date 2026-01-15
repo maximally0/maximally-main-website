@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Scale, UserPlus, Check, X, Mail, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
+import { useConfirm } from '@/components/ui/confirm-modal';
 
 interface JudgesManagerProps {
   hackathonId: number;
@@ -9,6 +10,7 @@ interface JudgesManagerProps {
 
 export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
   const { toast } = useToast();
+  const confirm = useConfirm();
   const [requests, setRequests] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -142,7 +144,14 @@ export default function JudgesManager({ hackathonId }: JudgesManagerProps) {
   };
 
   const handleRemoveJudge = async (assignmentId: string) => {
-    if (!confirm('Are you sure you want to remove this judge from the hackathon?')) return;
+    const confirmed = await confirm({
+      title: 'REMOVE_JUDGE',
+      message: 'Are you sure you want to remove this judge from the hackathon?',
+      confirmText: 'REMOVE',
+      cancelText: 'CANCEL',
+      variant: 'danger'
+    });
+    if (!confirmed) return;
     try {
       const headers = await getAuthHeaders();
       const response = await fetch(`/api/organizer/hackathons/${hackathonId}/judges/${assignmentId}`, {

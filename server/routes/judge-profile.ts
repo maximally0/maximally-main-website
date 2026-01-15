@@ -66,10 +66,10 @@ export function registerJudgeProfileRoutes(app: Express) {
         console.error('Error fetching assignments:', assignmentsError);
       }
 
-      // Get judge data from judges table for tier information
+      // Get judge data from judges table for tier and availability information
       const { data: judgeData } = await supabaseAdmin
         .from('judges')
-        .select('tier')
+        .select('tier, availability_status')
         .eq('user_id', userId)
         .single();
 
@@ -92,7 +92,7 @@ export function registerJudgeProfileRoutes(app: Express) {
           eventsJudgedVerified: true,
           teamsEvaluatedVerified: true,
           mentorshipHoursVerified: true,
-          availabilityStatus: 'available',
+          availabilityStatus: judgeData?.availability_status || 'available',
           primaryExpertise: profile.skills || [],
           secondaryExpertise: []
         },
@@ -117,6 +117,40 @@ export function registerJudgeProfileRoutes(app: Express) {
       return res.json(response);
     } catch (error: any) {
       console.error('Error in judge profile:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Update judge profile (availability status, etc.)
+  app.put("/api/judge/profile", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { availability_status } = req.body;
+
+      // Update the judges table
+      const { error } = await supabaseAdmin
+        .from('judges')
+        .update({ 
+          availability_status,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      return res.json({ success: true, message: 'Profile updated' });
+    } catch (error: any) {
+      console.error('Error updating judge profile:', error);
       return res.status(500).json({ success: false, message: error.message });
     }
   });

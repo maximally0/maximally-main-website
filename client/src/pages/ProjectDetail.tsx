@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Github, ExternalLink, Video, FileText, Trophy, Users, Calendar, Star, ArrowLeft } from 'lucide-react';
+import { Github, ExternalLink, Video, FileText, Trophy, Users, Calendar, Star, ArrowLeft, Layers } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import SocialShare from '@/components/SocialShare';
 
@@ -14,35 +14,42 @@ interface Project {
   demo_url?: string;
   video_url?: string;
   presentation_url?: string;
+  cover_image?: string;
+  project_logo?: string;
   technologies_used?: string[];
   score?: number;
   feedback?: string;
   prize_won?: string;
+  source?: 'gallery' | 'hackathon';
   team?: {
     team_name: string;
     team_code: string;
-  };
+  } | null;
   user_name: string;
   submitted_at: string;
-  hackathon: {
+  hackathon?: {
     hackathon_name: string;
     slug: string;
-  };
+  } | null;
 }
 
 export default function ProjectDetail() {
-  const { projectId } = useParams();
+  const { projectId, source } = useParams();
   const { toast } = useToast();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchProject();
-  }, [projectId]);
+  }, [projectId, source]);
 
   const fetchProject = async () => {
     try {
-      const response = await fetch(`/api/projects/${projectId}`);
+      // If source is provided, use the specific endpoint
+      const url = source 
+        ? `/api/projects/${source}/${projectId}`
+        : `/api/projects/${projectId}`;
+      const response = await fetch(url);
       const data = await response.json();
 
       if (data.success) {
@@ -98,29 +105,62 @@ export default function ProjectDetail() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Back Button */}
-            <Link 
-              to={`/hackathon/${project.hackathon.slug}`}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs mb-6 transition-all border border-pink-500/50"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              BACK TO HACKATHON
-            </Link>
+            {project.hackathon ? (
+              <Link 
+                to={`/hackathon/${project.hackathon.slug}`}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs mb-6 transition-all border border-pink-500/50"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                BACK TO HACKATHON
+              </Link>
+            ) : (
+              <Link 
+                to="/explore"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs mb-6 transition-all border border-pink-500/50"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                BACK TO EXPLORE
+              </Link>
+            )}
 
             {/* Project Header */}
             <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-orange-500/40 p-8 mb-8">
-              {/* Winner Badge */}
-              {project.prize_won && (
-                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/50 px-4 py-2 mb-4">
-                  <Trophy className="h-5 w-5 text-orange-400" />
-                  <span className="font-press-start text-sm text-orange-400">{project.prize_won}</span>
+              {/* Cover Image */}
+              {project.cover_image && (
+                <div className="mb-6 -mx-8 -mt-8">
+                  <img 
+                    src={project.cover_image} 
+                    alt={project.project_name}
+                    className="w-full h-48 sm:h-64 object-cover"
+                  />
                 </div>
               )}
 
-              <h1 className="font-press-start text-3xl text-white mb-4">{project.project_name}</h1>
-              
-              {project.tagline && (
-                <p className="text-xl text-gray-300 font-jetbrains italic mb-6">"{project.tagline}"</p>
-              )}
+              {/* Project Logo & Title */}
+              <div className="flex items-start gap-4 mb-4">
+                {project.project_logo && (
+                  <img 
+                    src={project.project_logo} 
+                    alt={project.project_name}
+                    className="w-16 h-16 border border-gray-700 object-contain bg-white flex-shrink-0"
+                  />
+                )}
+                <div>
+                  {/* Winner Badge */}
+                  {project.prize_won && (
+                    <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/50 px-4 py-2 mb-4">
+                      <Trophy className="h-5 w-5 text-orange-400" />
+                      <span className="font-press-start text-sm text-orange-400">{project.prize_won}</span>
+                    </div>
+                  )}
+
+                  <h1 className="font-press-start text-2xl sm:text-3xl text-white mb-4">{project.project_name}</h1>
+                  
+                  {project.tagline && (
+                    <p className="text-xl text-gray-300 font-jetbrains italic mb-6">"{project.tagline}"</p>
+                  )}
+                </div>
+              </div>
 
               {/* Project Meta */}
               <div className="flex flex-wrap gap-6 text-sm font-jetbrains text-gray-400 mb-6">
@@ -234,22 +274,35 @@ export default function ProjectDetail() {
               </div>
             )}
 
-            {/* Hackathon Info */}
-            <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
-              <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">HACKATHON INFO</h2>
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <div>
-                  <h3 className="font-press-start text-lg text-white mb-2">{project.hackathon.hackathon_name}</h3>
-                  <p className="text-gray-400 font-jetbrains">This project was submitted to the hackathon above</p>
+            {/* Hackathon Info - only show if project has hackathon */}
+            {project.hackathon && (
+              <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
+                <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">HACKATHON INFO</h2>
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div>
+                    <h3 className="font-press-start text-lg text-white mb-2">{project.hackathon.hackathon_name}</h3>
+                    <p className="text-gray-400 font-jetbrains">This project was submitted to the hackathon above</p>
+                  </div>
+                  <Link
+                    to={`/hackathon/${project.hackathon.slug}`}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all border border-pink-500/50"
+                  >
+                    VIEW HACKATHON
+                  </Link>
                 </div>
-                <Link
-                  to={`/hackathon/${project.hackathon.slug}`}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all border border-pink-500/50"
-                >
-                  VIEW HACKATHON
-                </Link>
               </div>
-            </div>
+            )}
+
+            {/* Gallery Project Info - show if no hackathon */}
+            {!project.hackathon && (
+              <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
+                <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6">PROJECT INFO</h2>
+                <div className="flex items-center gap-3">
+                  <Layers className="h-5 w-5 text-purple-400" />
+                  <p className="text-gray-400 font-jetbrains">This is a community project from the Maximally Gallery</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

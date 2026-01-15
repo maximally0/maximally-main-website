@@ -1,58 +1,145 @@
-import { useEffect, useState } from 'react';
-
 interface PixelLoaderProps {
-  text?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
-const PixelLoader = ({ text = 'LOADING', size = 'md' }: PixelLoaderProps) => {
-  const [dots, setDots] = useState('');
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDots(prev => prev.length >= 3 ? '' : prev + '.');
-    }, 500);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-12 h-12',
-    lg: 'w-16 h-16'
+const PixelLoader = ({ size = 'md' }: PixelLoaderProps) => {
+  const squareSizes = {
+    sm: 10,
+    md: 15,
+    lg: 20
   };
 
-  const textSizeClasses = {
-    sm: 'text-xs',
-    md: 'text-sm',
-    lg: 'text-base'
+  const gaps = {
+    sm: 5,
+    md: 7,
+    lg: 10
   };
+
+  const squareSize = squareSizes[size];
+  const gap = gaps[size];
+  const color = '#f9771b';
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      {/* Pixel spinner */}
-      <div className="relative">
-        {/* Rotating pixel blocks */}
-        <div className={`${sizeClasses[size]} relative animate-spin`}>
-          <div className="absolute top-0 left-0 w-1/3 h-1/3 minecraft-block bg-maximally-red"></div>
-          <div className="absolute top-0 right-0 w-1/3 h-1/3 minecraft-block bg-maximally-yellow"></div>
-          <div className="absolute bottom-0 left-0 w-1/3 h-1/3 minecraft-block bg-cyan-400"></div>
-          <div className="absolute bottom-0 right-0 w-1/3 h-1/3 minecraft-block bg-maximally-blue"></div>
-        </div>
+    <div className="flex items-center justify-center">
+      <style>{`
+        @keyframes loader_5191 {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+      `}</style>
+      
+      <div 
+        className="relative"
+        style={{ 
+          width: squareSize * 3 + gap * 2,
+          height: squareSize * 3 + gap * 2
+        }}
+      >
+        {/* Row 1 */}
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: 0,
+            left: 0,
+            animation: 'loader_5191 675ms ease-in-out 0s infinite alternate'
+          }}
+        />
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: 0,
+            left: squareSize + gap,
+            animation: 'loader_5191 675ms ease-in-out 75ms infinite alternate'
+          }}
+        />
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: 0,
+            left: (squareSize + gap) * 2,
+            animation: 'loader_5191 675ms ease-in-out 150ms infinite alternate'
+          }}
+        />
         
-        {/* Center pixel */}
-        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
-          size === 'sm' ? 'w-2 h-2' : size === 'md' ? 'w-3 h-3' : 'w-4 h-4'
-        } minecraft-block bg-white animate-pulse`}></div>
+        {/* Row 2 */}
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: squareSize + gap,
+            left: 0,
+            animation: 'loader_5191 675ms ease-in-out 225ms infinite alternate'
+          }}
+        />
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: squareSize + gap,
+            left: squareSize + gap,
+            animation: 'loader_5191 675ms ease-in-out 300ms infinite alternate'
+          }}
+        />
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: squareSize + gap,
+            left: (squareSize + gap) * 2,
+            animation: 'loader_5191 675ms ease-in-out 375ms infinite alternate'
+          }}
+        />
+        
+        {/* Row 3 */}
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: (squareSize + gap) * 2,
+            left: 0,
+            animation: 'loader_5191 675ms ease-in-out 450ms infinite alternate'
+          }}
+        />
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: (squareSize + gap) * 2,
+            left: squareSize + gap,
+            animation: 'loader_5191 675ms ease-in-out 525ms infinite alternate'
+          }}
+        />
+        <div 
+          className="absolute"
+          style={{ 
+            width: squareSize,
+            height: squareSize,
+            background: color,
+            top: (squareSize + gap) * 2,
+            left: (squareSize + gap) * 2,
+            animation: 'loader_5191 675ms ease-in-out 600ms infinite alternate'
+          }}
+        />
       </div>
-
-      {/* Loading text */}
-      {text && (
-        <div className={`font-press-start ${textSizeClasses[size]} text-cyan-400 flex items-center`}>
-          <span>{text}</span>
-          <span className="inline-block w-8 text-left">{dots}</span>
-        </div>
-      )}
     </div>
   );
 };

@@ -120,7 +120,7 @@ const JudgeInbox = () => {
   if (authLoading || (user && !profile) || (loading && messages.length === 0)) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <PixelLoader text="LOADING INBOX" size="lg" />
+        <PixelLoader size="lg" />
       </div>
     );
   }

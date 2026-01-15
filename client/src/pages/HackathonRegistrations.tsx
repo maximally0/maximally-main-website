@@ -29,6 +29,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
+import { useConfirm } from '@/components/ui/confirm-modal';
 import RegistrationAnalytics from '@/components/RegistrationAnalytics';
 import AnnouncementsManager from '@/components/AnnouncementsManager';
 import JudgesManager from '@/components/JudgesManager';
@@ -99,6 +100,7 @@ export default function HackathonRegistrations() {
   const { hackathonId } = useParams();
   const { user } = useAuth();
   const { toast } = useToast();
+  const confirm = useConfirm();
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
   const [submissions, setSubmissions] = useState<any[]>([]);
@@ -284,7 +286,14 @@ export default function HackathonRegistrations() {
   // Bulk unregister
   const handleBulkUnregister = async () => {
     if (selectedRegistrations.length === 0) return;
-    if (!confirm(`Are you sure you want to unregister ${selectedRegistrations.length} participants?`)) return;
+    const confirmed = await confirm({
+      title: 'BULK_UNREGISTER',
+      message: `Are you sure you want to unregister ${selectedRegistrations.length} participants?`,
+      confirmText: 'UNREGISTER',
+      cancelText: 'CANCEL',
+      variant: 'danger'
+    });
+    if (!confirmed) return;
     setBulkActionLoading(true);
     try {
       const headers = await getAuthHeaders();
@@ -312,7 +321,14 @@ export default function HackathonRegistrations() {
 
   // Single participant actions
   const handleUnregister = async (regId: number) => {
-    if (!confirm('Are you sure you want to unregister this participant?')) return;
+    const confirmed = await confirm({
+      title: 'UNREGISTER',
+      message: 'Are you sure you want to unregister this participant?',
+      confirmText: 'UNREGISTER',
+      cancelText: 'CANCEL',
+      variant: 'danger'
+    });
+    if (!confirmed) return;
     try {
       const headers = await getAuthHeaders();
       const response = await fetch(`/api/organizer/registrations/${regId}/unregister`, {
@@ -333,7 +349,14 @@ export default function HackathonRegistrations() {
   };
 
   const handleBlockUser = async (regId: number, userId: string) => {
-    if (!confirm('Are you sure you want to block this user from this hackathon? They will be unregistered and cannot re-register.')) return;
+    const confirmed = await confirm({
+      title: 'BLOCK_USER',
+      message: 'Are you sure you want to block this user from this hackathon? They will be unregistered and cannot re-register.',
+      confirmText: 'BLOCK',
+      cancelText: 'CANCEL',
+      variant: 'danger'
+    });
+    if (!confirmed) return;
     try {
       const headers = await getAuthHeaders();
       const response = await fetch(`/api/organizer/hackathons/${hackathonId}/block-user`, {

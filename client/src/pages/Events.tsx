@@ -112,6 +112,29 @@ const Events = () => {
     }
   };
 
+  // Calculate status based on start and end dates
+  const calcStatusFromDates = (start?: string, end?: string): EventStatus => {
+    if (!start) return 'upcoming';
+    try {
+      const now = new Date();
+      const startDate = new Date(start);
+      const endDate = end ? new Date(end) : startDate;
+      
+      if (isNaN(startDate.getTime())) return 'upcoming';
+      
+      // If start date is in the future, it's upcoming
+      if (startDate > now) return 'upcoming';
+      
+      // If end date has passed, it's completed
+      if (endDate < now) return 'completed';
+      
+      // Otherwise it's ongoing (between start and end)
+      return 'ongoing';
+    } catch {
+      return 'upcoming';
+    }
+  };
+
   const fetchEvents = async () => {
     const staticEvents: TechEvent[] = techEventsData.featuredEvents.map(e => ({
       ...e,
@@ -202,7 +225,7 @@ const Events = () => {
         tags: Array.isArray(h.themes) ? h.themes : [],
         registerUrl: `/hackathon/${h.slug}`,
         featured: false,
-        status: calcStatus('published', h.start_date),
+        status: calcStatusFromDates(h.start_date, h.end_date),
         organizer: 'Community Organizer',
         isMaximallyOfficial: false
       }));

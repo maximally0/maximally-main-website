@@ -10,8 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail, Loader2, Download, ExternalLink, Award, Eye, Shield, Star, AlertCircle, FolderOpen, Code } from 'lucide-react';
-import JudgeBadge from '@/components/judges/JudgeBadge';
+import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail, Download, ExternalLink, Award, Shield, Star, AlertCircle, FolderOpen, Code, Eye } from 'lucide-react';
+import PixelLoader from '@/components/PixelLoader';
 import { format } from 'date-fns';
 import type { Achievement, SelectHackathon } from '@shared/schema';
 import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut } from '@/lib/supabaseClient';
@@ -21,8 +21,7 @@ import PasswordSettings from '@/components/PasswordSettings';
 import ExportDataButton from '@/components/ExportDataButton';
 import ReportUserDialog from '@/components/ReportUserDialog';
 import { useToast } from '@/hooks/use-toast';
-import { Flag, Users } from 'lucide-react';
-import TeammatesHistory from '@/components/TeammatesHistory';
+import { Flag } from 'lucide-react';
 
 interface Certificate {
   id: string;
@@ -55,7 +54,7 @@ interface HackathonDetails {
   start_date: string;
   end_date: string;
   location?: string;
-  cover_image?: string;
+  hackathon_logo?: string;
   slug: string;
 }
 
@@ -219,9 +218,9 @@ function HackathonDetailsCard({ hackathon }: { hackathon: HackathonDetails }) {
   return (
     <Card className="p-6 bg-gradient-to-br from-pink-900/20 to-purple-900/30 border border-purple-500/30 hover:border-pink-400/60 transition-all duration-300">
       <div className="flex gap-4">
-        {hackathon.cover_image && (
+        {hackathon.hackathon_logo && (
           <img
-            src={hackathon.cover_image}
+            src={hackathon.hackathon_logo}
             alt={hackathon.title}
             className="w-20 h-20 object-cover border border-pink-500/30"
           />
@@ -292,9 +291,9 @@ function ProjectCard({ project }: { project: UserProject }) {
     });
   };
 
-  // Extract numeric ID from project.id (e.g., "gallery_3" -> "3" or "hackathon_5" -> "5")
-  const numericId = project.id.split('_')[1];
-  const projectUrl = `/project/${numericId}`;
+  // Extract numeric ID and source from project.id (e.g., "gallery_3" -> id: "3", source: "gallery")
+  const [source, numericId] = project.id.split('_');
+  const projectUrl = `/project/${source}/${numericId}`;
 
   return (
     <Link to={projectUrl} className="block">
@@ -769,7 +768,7 @@ export default function Profile() {
               slug,
               start_date,
               end_date,
-              cover_image
+              hackathon_logo
             )
           `)
           .eq('user_id', (profileData as any).id);
@@ -784,7 +783,7 @@ export default function Profile() {
                 start_date: h.start_date,
                 end_date: h.end_date,
                 slug: h.slug,
-                cover_image: h.cover_image
+                hackathon_logo: h.hackathon_logo
               });
             }
           }
@@ -936,7 +935,7 @@ export default function Profile() {
     staleTime: 5 * 60 * 1000,
   });
 
-  if (profileLoading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-pink-500" /></div>;
+  if (profileLoading) return <div className="min-h-screen bg-black flex items-center justify-center"><PixelLoader size="lg" /></div>;
   if (!dbProfile) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
@@ -1057,13 +1056,6 @@ export default function Profile() {
                       <span>ADMIN</span>
                     </div>
                   )}
-                  {dbProfile.role === 'judge' && judgeData && (
-                    <JudgeBadge 
-                      tier={judgeData.tier} 
-                      size="md" 
-                      showLabel={true}
-                    />
-                  )}
                   {(dbProfile.role as string) === 'organizer' && (
                     <div className="bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
                       <Trophy className="w-4 h-4" />
@@ -1087,15 +1079,6 @@ export default function Profile() {
               {isOwner && (
                 <div className="flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2 md:gap-3">
                   <EditProfileDialog profile={userProfile} onSave={handleSaveProfile} />
-                  {dbProfile.role === 'judge' && (
-                    <a
-                      href={`/judge/${userProfile.username}`}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-2 border border-pink-400/50"
-                    >
-                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                      VIEW_JUDGE_PROFILE
-                    </a>
-                  )}
                   {(dbProfile.role as string) === 'organizer' && (
                     <a
                       href={`/organizer/${userProfile.username}`}
@@ -1283,12 +1266,6 @@ export default function Profile() {
               >
                 PROJECTS
               </TabsTrigger>
-              <TabsTrigger 
-                value="teammates" 
-                className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
-              >
-                TEAMMATES
-              </TabsTrigger>
               {isOwner && (
                 <TabsTrigger 
                   value="settings" 
@@ -1373,7 +1350,7 @@ export default function Profile() {
           <TabsContent value="certificates" className="space-y-6">
             {certificatesLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+                <PixelLoader size="md" />
               </div>
             ) : userCertificatesData?.certificates && userCertificatesData.certificates.length > 0 ? (
               <div className="space-y-4">
@@ -1400,7 +1377,7 @@ export default function Profile() {
           <TabsContent value="hackathons" className="space-y-6">
             {certificatesLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+                <PixelLoader size="md" />
               </div>
             ) : userCertificatesData?.hackathons && userCertificatesData.hackathons.length > 0 ? (
               <div className="space-y-4">
@@ -1427,7 +1404,7 @@ export default function Profile() {
           <TabsContent value="achievements" className="space-y-6">
             {certificatesLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
+                <PixelLoader size="md" />
               </div>
             ) : userCertificatesData?.achievements && userCertificatesData.achievements.length > 0 ? (
               <div className="space-y-4">
@@ -1454,7 +1431,7 @@ export default function Profile() {
           <TabsContent value="projects" className="space-y-6">
             {projectsLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+                <PixelLoader size="md" />
               </div>
             ) : userProjects && userProjects.length > 0 ? (
               <div className="space-y-4">
@@ -1474,18 +1451,6 @@ export default function Profile() {
                 <FolderOpen className="w-16 h-16 text-purple-500/50 mx-auto mb-4" />
                 <h3 className="font-press-start text-sm text-gray-400 mb-2">NO PROJECTS YET</h3>
                 <p className="text-gray-500 font-jetbrains">This user hasn't submitted any projects yet.</p>
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="teammates" className="space-y-6">
-            {dbProfile?.id ? (
-              <TeammatesHistory userId={dbProfile.id} showTitle={false} />
-            ) : (
-              <div className="text-center py-12 bg-black/40 border border-purple-500/30 p-8">
-                <Users className="w-16 h-16 text-purple-500/50 mx-auto mb-4" />
-                <h3 className="font-press-start text-sm text-gray-400 mb-2">NO TEAMMATES YET</h3>
-                <p className="text-gray-500 font-jetbrains">Join a hackathon with a team to see your teammates here!</p>
               </div>
             )}
           </TabsContent>

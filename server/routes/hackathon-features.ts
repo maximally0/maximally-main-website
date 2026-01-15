@@ -266,63 +266,27 @@ export function registerHackathonFeatureRoutes(app: Express) {
   });
 
   // ============================================================================
-  // SUBMISSION COMMENTS (for judges/organizers)
+  // SUBMISSION COMMENTS - DEPRECATED
+  // The hackathon_submission_comments table has been removed as part of
+  // Platform Simplification. Judges now use simple scoring without comments.
+  // See: .kiro/specs/platform-simplification/requirements.md - Requirement 12.4
   // ============================================================================
   
-  // Get comments for a submission
+  // DEPRECATED: Get comments for a submission
+  // Returns empty array since table no longer exists
   app.get("/api/submissions/:submissionId/comments", async (req, res) => {
-    try {
-      const { submissionId } = req.params;
-      
-      const { data, error } = await supabaseAdmin
-        .from('hackathon_submission_comments')
-        .select('*')
-        .eq('submission_id', submissionId)
-        .order('created_at', { ascending: true });
-
-      if (error) throw error;
-
-      return res.json({ success: true, data: data || [] });
-    } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
-    }
+    // Return empty array - table removed in Platform Simplification
+    return res.json({ success: true, data: [] });
   });
 
-  // Add comment to submission
+  // DEPRECATED: Add comment to submission
+  // Returns error since table no longer exists
   app.post("/api/submissions/:submissionId/comments", async (req, res) => {
-    try {
-      const authHeader = req.headers['authorization'];
-      if (!authHeader?.startsWith('Bearer ')) {
-        return res.status(401).json({ success: false, message: 'Unauthorized' });
-      }
-
-      const token = authHeader.slice('Bearer '.length);
-      const userId = await bearerUserId(supabaseAdmin, token);
-      if (!userId) {
-        return res.status(401).json({ success: false, message: 'Invalid token' });
-      }
-
-      const { submissionId } = req.params;
-      const { comment_text, commenter_role, is_private } = req.body;
-
-      const { data, error } = await supabaseAdmin
-        .from('hackathon_submission_comments')
-        .insert({
-          submission_id: parseInt(submissionId),
-          commenter_id: userId,
-          commenter_role,
-          comment_text,
-          is_private: is_private || true,
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      return res.json({ success: true, data });
-    } catch (error: any) {
-      return res.status(500).json({ success: false, message: error.message });
-    }
+    // Table removed in Platform Simplification
+    return res.status(410).json({ 
+      success: false, 
+      message: 'Submission comments feature has been removed. Judges now use simple scoring.' 
+    });
   });
 
   // ============================================================================
@@ -903,7 +867,10 @@ export function registerHackathonFeatureRoutes(app: Express) {
     }
   });
 
-  // Get judges for a hackathon (organizer only - for certificates)
+  // DEPRECATED: Old judges route using judge_hackathon_assignments table
+  // This has been replaced by the simplified judges system in simplified-judges.ts
+  // which uses the hackathon_judges table instead
+  /*
   app.get("/api/organizer/hackathons/:hackathonId/judges", async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
@@ -967,4 +934,5 @@ export function registerHackathonFeatureRoutes(app: Express) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
+  */
 }

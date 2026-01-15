@@ -6,9 +6,6 @@ const sections = [
   { id: "section-3", label: "Explore Maximally" },
   { id: "section-4", label: "Why Maximally?" },
   { id: "section-5", label: "Run Better Events" },
-  { id: "section-6", label: "Shape the Future" },
-  { id: "section-7", label: "Lead the Movement" },
-  { id: "section-8", label: "Built by Builders" },
 ];
 
 export function DotNavigation() {

@@ -40,7 +40,7 @@ interface Submission {
     id: number;
     hackathon_name: string;
     slug: string;
-    cover_image: string;
+    hackathon_logo: string;
   };
   team: {
     team_name: string;
@@ -357,9 +357,9 @@ export default function SubmissionDetail() {
               <CardContent>
                 <Link href={`/hackathons/${submission.hackathon.slug}`}>
                   <div className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer">
-                    {submission.hackathon.cover_image && (
+                    {submission.hackathon.hackathon_logo && (
                       <img 
-                        src={submission.hackathon.cover_image} 
+                        src={submission.hackathon.hackathon_logo} 
                         alt={submission.hackathon.hackathon_name}
                         className="w-12 h-12 rounded object-cover"
                       />

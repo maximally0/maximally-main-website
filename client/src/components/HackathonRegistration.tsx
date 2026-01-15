@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Users, UserPlus, Check, X, Clock, Settings } from 'lucide-react';
+import { Users, UserPlus, Check, X, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
@@ -9,6 +9,7 @@ import { getAuthHeaders } from '@/lib/auth';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import TeamModal from '@/components/TeamModal';
 import TeamManagement from '@/components/TeamManagement';
+import { canRegister as checkCanRegister } from '../../../shared/hackathonState';
 
 interface RegistrationProps {
   hackathonId: number;
@@ -16,10 +17,20 @@ interface RegistrationProps {
   hackathonSlug?: string;
   teamSizeMin: number;
   teamSizeMax: number;
+  /** @deprecated Registration is now date-based only - use end_date */
   registrationOpensAt?: string;
+  /** @deprecated Registration is now date-based only - use end_date */
   registrationClosesAt?: string;
+  /** @deprecated Manual controls removed - registration is automatic */
   registrationControl?: 'auto' | 'open' | 'closed';
+  /** @deprecated Manual controls removed - registration is automatic */
   buildingControl?: 'auto' | 'open' | 'closed';
+  /** Hackathon status - used for simplified state logic */
+  status?: string;
+  /** Hackathon status field */
+  hackathon_status?: string;
+  /** End date of the hackathon - registration closes when this passes */
+  end_date: string;
   winnersAnnounced?: boolean;
   winnersAnnouncedAt?: string;
   onRegistrationChange?: () => void;
@@ -35,10 +46,15 @@ export default function HackathonRegistration({
   hackathonSlug,
   teamSizeMin,
   teamSizeMax,
+  // Deprecated props - kept for backward compatibility but ignored
   registrationOpensAt,
   registrationClosesAt,
   registrationControl = 'auto',
   buildingControl = 'auto',
+  // New simplified props
+  status = 'published',
+  hackathon_status,
+  end_date,
   winnersAnnounced = false,
   winnersAnnouncedAt,
   onRegistrationChange,
@@ -71,8 +87,13 @@ export default function HackathonRegistration({
 
   useEffect(() => {
     if (user) {
-      checkRegistration();
-      checkIfOrganizer();
+      // Fetch both in parallel for faster loading
+      Promise.all([
+        checkRegistration(),
+        checkIfOrganizer()
+      ]).finally(() => {
+        setLoading(false);
+      });
     } else {
       // If not logged in, stop loading immediately
       setLoading(false);
@@ -91,15 +112,6 @@ export default function HackathonRegistration({
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      checkRegistration();
-    } else {
-      // If not logged in, stop loading immediately
-      setLoading(false);
-    }
-  }, [user, hackathonId]);
-
   const checkRegistration = async () => {
     try {
       const headers = await getAuthHeaders();
@@ -111,8 +123,6 @@ export default function HackathonRegistration({
       }
     } catch (error) {
       console.error('Error checking registration:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -247,22 +257,42 @@ export default function HackathonRegistration({
   }
 
   const now = new Date();
-  const opensAt = registrationOpensAt ? new Date(registrationOpensAt) : null;
-  const closesAt = registrationClosesAt ? new Date(registrationClosesAt) : null;
   const teamsAllowed = teamSizeMax > 1 || teamSizeMin > 1;
 
-  // Determine if registration is open based on period control
-  const isRegistrationForceClosed = registrationControl === 'closed';
-  const isRegistrationForceOpen = registrationControl === 'open';
-  const isBuildingPhaseActive = buildingControl === 'open';
+  // All dates are stored and compared in UTC
+  const parseAsUTC = (dateStr: string) => {
+    return new Date(dateStr);
+  };
+
+  // Check if hackathon has ended (UTC)
+  const hackathonEndDate = end_date ? parseAsUTC(end_date) : null;
+  const hackathonEnded = hackathonEndDate ? now > hackathonEndDate : false;
+
+  // Debug logging - safely handle invalid dates
+  const parsedEndDate = end_date ? new Date(end_date) : null;
+  console.log('[HackathonRegistration] Registration check:', {
+    status,
+    hackathon_status,
+    end_date,
+    now: now.toISOString(),
+    endDateParsed: parsedEndDate && !isNaN(parsedEndDate.getTime()) ? parsedEndDate.toISOString() : 'Invalid date',
+    hackathonEndDateUTC: hackathonEndDate?.toISOString(),
+    hackathonEnded
+  });
+
+  // Simplified registration logic using date-based state
+  // Registration is available when hackathon is 'live' (published and before end_date)
+  // Requirements: 3.1, 3.2, 3.3, 4.1
+  // Also check hackathonEnded with proper UTC parsing
+  const isRegistrationAvailable = !hackathonEnded && checkCanRegister(
+    { status, hackathon_status, end_date },
+    now
+  );
   
-  // Registration is closed if: force closed, OR building phase is active, OR (auto mode and past deadline)
-  const isRegistrationClosed = isRegistrationForceClosed || isBuildingPhaseActive || 
-    (registrationControl === 'auto' && closesAt && now > closesAt);
+  console.log('[HackathonRegistration] isRegistrationAvailable:', isRegistrationAvailable);
   
-  // Registration hasn't opened if: auto mode and before open date (and not force open)
-  const isRegistrationNotOpen = !isRegistrationForceOpen && 
-    registrationControl === 'auto' && opensAt && now < opensAt;
+  // Registration is closed if not available (hackathon ended or not live)
+  const isRegistrationClosed = !isRegistrationAvailable;
 
   const hasTeam = !!registration?.team;
   const isTeamRegistration = registration?.registration_type === 'team';
@@ -387,8 +417,8 @@ export default function HackathonRegistration({
                       <p className="font-jetbrains text-white">{registration.team.team_name}</p>
                       <p className="font-jetbrains text-gray-400 text-sm">Code: {registration.team.team_code}</p>
                     </div>
-                    {/* Manage team only visible when hackathon is still active (not in building phase or closed) */}
-                    {isTeamRegistration && !isBuildingPhaseActive && !isRegistrationForceClosed && (
+                    {/* Manage team only visible when registration is still available */}
+                    {isTeamRegistration && isRegistrationAvailable && (
                       <button
                         onClick={() => setShowTeamManagementModal(true)}
                         className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300"
@@ -400,19 +430,19 @@ export default function HackathonRegistration({
                 </div>
               )}
 
-              {/* Create/join team only for team registrations and when hackathon is active */}
-              {!hasTeam && teamsAllowed && isTeamRegistration && !isBuildingPhaseActive && !isRegistrationForceClosed && (
+              {/* Create/join team only for team registrations and when registration is available */}
+              {!hasTeam && teamsAllowed && isTeamRegistration && isRegistrationAvailable && (
                 <button
                   onClick={() => setShowTeamModal(true)}
-                  className="w-full mt-4 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
+                  className="w-full mt-4 bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
                 >
                   <Users className="h-4 w-4 inline mr-2" />
                   CREATE_OR_JOIN_TEAM
                 </button>
               )}
 
-              {/* Unregister button - hidden when building phase is active */}
-              {!isBuildingPhaseActive && !isRegistrationForceClosed && (
+              {/* Unregister button - only visible when registration is available */}
+              {isRegistrationAvailable && (
                 <button
                   onClick={() => setShowUnregisterConfirm(true)}
                   className="w-full mt-2 bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-red-600/20 hover:border-red-500/50 hover:text-red-300 px-6 py-3 font-press-start text-sm transition-all duration-300"
@@ -439,21 +469,7 @@ export default function HackathonRegistration({
         </div>
       ) : (
         <>
-          {isRegistrationNotOpen ? (
-            <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700 p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-gray-700/50 border border-gray-600">
-                  <Clock className="h-5 w-5 text-gray-400" />
-                </div>
-                <div>
-                  <h3 className="font-press-start text-sm text-gray-400">REGISTRATION OPENS</h3>
-                  <p className="font-jetbrains text-gray-300 text-sm">
-                    {opensAt?.toLocaleDateString()} at {opensAt?.toLocaleTimeString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : winnersAnnounced ? (
+          {winnersAnnounced ? (
             <div 
               className="bg-gradient-to-br from-yellow-500/20 to-amber-500/10 border border-yellow-500/50 p-6 cursor-pointer hover:border-yellow-400 transition-all duration-300"
               onClick={onViewWinners}
@@ -473,29 +489,9 @@ export default function HackathonRegistration({
                 <span className="font-press-start text-xs text-yellow-400 hidden sm:block">VIEW_WINNERS →</span>
               </div>
             </div>
-          ) : isRegistrationClosed ? (
-            <div className="bg-gradient-to-br from-red-500/10 to-rose-500/10 border border-red-500/40 p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-500/20 border border-red-500/40">
-                  <X className="h-5 w-5 text-red-400" />
-                </div>
-                <div>
-                  <h3 className="font-press-start text-sm text-red-400">
-                    {isBuildingPhaseActive ? 'BUILDING PHASE ACTIVE' : 'REGISTRATION CLOSED'}
-                  </h3>
-                  <p className="font-jetbrains text-gray-300 text-sm">
-                    {isBuildingPhaseActive 
-                      ? 'Registrations are closed during the building phase'
-                      : closesAt 
-                        ? `Registration closed on ${closesAt.toLocaleDateString()}`
-                        : 'Registration is currently closed'}
-                  </p>
-                </div>
-              </div>
-            </div>
           ) : isOrganizer ? (
             <Link
-              to={`/organizer/hackathons/${hackathonId}/manage`}
+              to={`/organizer/hackathons/${hackathonId}`}
               className="w-full border px-6 py-3 font-press-start text-sm transition-all duration-300 flex items-center justify-center gap-2"
               style={{
                 background: `linear-gradient(to right, ${primaryColor}40, ${secondaryColor}30)`,
@@ -514,6 +510,20 @@ export default function HackathonRegistration({
               <Settings className="h-4 w-4" />
               MANAGE_HACKATHON
             </Link>
+          ) : isRegistrationClosed ? (
+            <div className="bg-gradient-to-br from-red-500/10 to-rose-500/10 border border-red-500/40 p-6">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-red-500/20 border border-red-500/40">
+                  <X className="h-5 w-5 text-red-400" />
+                </div>
+                <div>
+                  <h3 className="font-press-start text-sm text-red-400">REGISTRATION CLOSED</h3>
+                  <p className="font-jetbrains text-gray-300 text-sm">
+                    This hackathon has ended
+                  </p>
+                </div>
+              </div>
+            </div>
           ) : (
             <>
               <button

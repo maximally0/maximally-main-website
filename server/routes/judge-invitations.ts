@@ -228,7 +228,7 @@ export function registerJudgeInvitationRoutes(app: Express) {
 
       if (error) throw error;
 
-      // Enrich with hackathon and organizer details
+      // Enrich with hackathon and organizer details, and filter out removed assignments
       const enrichedData = await Promise.all((data || []).map(async (request: any) => {
         // Get hackathon details
         const { data: hackathon } = await supabaseAdmin
@@ -244,14 +244,32 @@ export function registerJudgeInvitationRoutes(app: Express) {
           .eq('id', request.organizer_id)
           .single();
 
+        // For accepted requests, check if the assignment is still active
+        let isRemoved = false;
+        if (request.status === 'accepted') {
+          const { data: assignment } = await supabaseAdmin
+            .from('judge_hackathon_assignments')
+            .select('status')
+            .eq('hackathon_id', request.hackathon_id)
+            .eq('judge_id', userId)
+            .single();
+          
+          // If assignment doesn't exist or is removed/inactive, mark as removed
+          isRemoved = !assignment || assignment.status === 'removed' || assignment.status === 'inactive';
+        }
+
         return {
           ...request,
           hackathon,
-          organizer
+          organizer,
+          isRemoved
         };
       }));
 
-      return res.json({ success: true, data: enrichedData });
+      // Filter out requests where the judge has been removed
+      const filteredData = enrichedData.filter(request => !request.isRemoved);
+
+      return res.json({ success: true, data: filteredData });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
@@ -444,6 +462,21 @@ export function registerJudgeInvitationRoutes(app: Express) {
         return res.status(403).json({ success: false, message: 'Only the judge can accept organizer invites' });
       }
 
+      // Check judge availability status before accepting (for both request types)
+      const { data: judgeData } = await supabaseAdmin
+        .from('judges')
+        .select('availability_status')
+        .eq('user_id', request.judge_id)
+        .single();
+
+      if (judgeData?.availability_status === 'not-available') {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'This judge is currently not available for judging. They have set their status to "Not Available".',
+          availability_status: 'not-available'
+        });
+      }
+
       // Update the request status
       const { error: updateError } = await supabaseAdmin
         .from('judge_hackathon_requests')
@@ -588,6 +621,14 @@ export function registerJudgeInvitationRoutes(app: Express) {
         return res.status(403).json({ success: false, message: 'Not authorized to manage judges' });
       }
 
+      // Get the assignment to find the judge_id
+      const { data: assignment } = await supabaseAdmin
+        .from('judge_hackathon_assignments')
+        .select('judge_id')
+        .eq('id', assignmentId)
+        .eq('hackathon_id', hackathonId)
+        .single();
+
       // Update assignment status to 'removed'
       const { error } = await supabaseAdmin
         .from('judge_hackathon_assignments')
@@ -596,6 +637,15 @@ export function registerJudgeInvitationRoutes(app: Express) {
         .eq('hackathon_id', hackathonId);
 
       if (error) throw error;
+
+      // Also delete the corresponding request record so the judge can be re-invited
+      if (assignment?.judge_id) {
+        await supabaseAdmin
+          .from('judge_hackathon_requests')
+          .delete()
+          .eq('hackathon_id', hackathonId)
+          .eq('judge_id', assignment.judge_id);
+      }
 
       return res.json({ success: true, message: 'Judge removed from hackathon' });
     } catch (error: any) {
@@ -643,6 +693,13 @@ export function registerJudgeInvitationRoutes(app: Express) {
         .eq('id', assignment.id);
 
       if (error) throw error;
+
+      // Also delete the corresponding request record so the judge can be re-invited later
+      await supabaseAdmin
+        .from('judge_hackathon_requests')
+        .delete()
+        .eq('hackathon_id', hackathonId)
+        .eq('judge_id', userId);
 
       return res.json({ success: true, message: 'Successfully withdrawn from hackathon' });
     } catch (error: any) {

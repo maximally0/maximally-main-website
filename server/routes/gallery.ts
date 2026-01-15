@@ -103,11 +103,16 @@ export function registerGalleryRoutes(app: any) {
           let hackathon = null;
           if (project.hackathon_id) {
             const { data: hackathonData } = await supabaseAdmin
-              .from('hackathons')
-              .select('title, slug')
+              .from('organizer_hackathons')
+              .select('hackathon_name, slug')
               .eq('id', project.hackathon_id)
               .single();
-            hackathon = hackathonData;
+            if (hackathonData) {
+              hackathon = {
+                title: hackathonData.hackathon_name,
+                slug: hackathonData.slug
+              };
+            }
           }
 
           return {
@@ -167,11 +172,18 @@ export function registerGalleryRoutes(app: any) {
       let hackathon = null;
       if (project.hackathon_id) {
         const { data: hackathonData } = await supabaseAdmin
-          .from('hackathons')
-          .select('title, slug, start_date, end_date')
+          .from('organizer_hackathons')
+          .select('hackathon_name, slug, start_date, end_date')
           .eq('id', project.hackathon_id)
           .single();
-        hackathon = hackathonData;
+        if (hackathonData) {
+          hackathon = {
+            title: hackathonData.hackathon_name,
+            slug: hackathonData.slug,
+            start_date: hackathonData.start_date,
+            end_date: hackathonData.end_date
+          };
+        }
       }
 
       // Increment view count
@@ -682,6 +694,79 @@ export function registerGalleryRoutes(app: any) {
       });
     } catch (err: any) {
       console.error('Error syncing hackathon submissions:', err);
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  // Sync user's own hackathon submissions to gallery (authenticated)
+  router.post('/sync-my-submissions', async (req: Request, res: Response) => {
+    try {
+      const userId = await getUserFromToken(supabaseAdmin, req.headers.authorization);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      // Get user's hackathon submissions that are submitted
+      const { data: submissions, error: fetchError } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('status', 'submitted');
+
+      if (fetchError) throw fetchError;
+
+      if (!submissions || submissions.length === 0) {
+        return res.json({ success: true, message: 'No submissions to sync', synced: 0 });
+      }
+
+      // Get existing gallery projects for this user's submissions
+      const { data: existingProjects } = await supabaseAdmin
+        .from('gallery_projects')
+        .select('hackathon_submission_id')
+        .eq('user_id', userId)
+        .not('hackathon_submission_id', 'is', null);
+
+      const existingIds = new Set((existingProjects || []).map(p => p.hackathon_submission_id));
+
+      let synced = 0;
+      for (const submission of submissions) {
+        try {
+          const galleryData = {
+            user_id: userId,
+            name: submission.project_name || 'Untitled Project',
+            tagline: submission.tagline,
+            description: submission.description || '',
+            logo_url: submission.project_logo,
+            github_url: submission.github_repo,
+            demo_url: submission.demo_url,
+            video_url: submission.video_url,
+            technologies: submission.technologies_used || [],
+            hackathon_id: submission.hackathon_id,
+            hackathon_submission_id: submission.id,
+            status: 'approved',
+          };
+
+          if (existingIds.has(submission.id)) {
+            // Update existing
+            await supabaseAdmin
+              .from('gallery_projects')
+              .update({ ...galleryData, updated_at: new Date().toISOString() })
+              .eq('hackathon_submission_id', submission.id);
+          } else {
+            // Insert new
+            await supabaseAdmin
+              .from('gallery_projects')
+              .insert({ ...galleryData, created_at: submission.submitted_at || new Date().toISOString() });
+          }
+          synced++;
+        } catch (err) {
+          console.error('Error syncing submission:', submission.id, err);
+        }
+      }
+
+      return res.json({ success: true, message: `Synced ${synced} submissions to gallery`, synced });
+    } catch (err: any) {
+      console.error('Error syncing user submissions:', err);
       return res.status(500).json({ success: false, message: err.message });
     }
   });

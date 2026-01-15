@@ -9,10 +9,6 @@ import {
   ExploreMaximallySection,
   WhyMaximallySection,
   ForOrganizersSection,
-  BecomeJudgeSection,
-  BecomeOrganizerSection,
-  GlobalGallerySection,
-  PartnersSection,
   DotNavigation,
 } from "@/components/landing";
 
@@ -60,20 +56,6 @@ const Index = () => {
         <div id="section-5">
           <ForOrganizersSection />
         </div>
-        
-        <div id="section-6">
-          <BecomeJudgeSection />
-        </div>
-        
-        <div id="section-7">
-          <BecomeOrganizerSection />
-        </div>
-        
-        <div id="section-8">
-          <GlobalGallerySection />
-        </div>
-        
-        <PartnersSection />
         
         <Footer />
       </div>

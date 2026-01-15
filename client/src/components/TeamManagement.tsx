@@ -59,15 +59,21 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
   };
 
   const handleInvite = async () => {
-    if (!inviteEmail.trim()) return;
+    console.log('[TeamManagement] handleInvite called, email:', inviteEmail);
+    if (!inviteEmail.trim()) {
+      console.log('[TeamManagement] Empty email, returning');
+      return;
+    }
 
     if (!canJoinTeam()) {
+      console.log('[TeamManagement] canJoinTeam returned false');
       return;
     }
 
     setSending(true);
     try {
       const headers = await getAuthHeaders();
+      console.log('[TeamManagement] Sending invite to:', `/api/teams/${teamId}/invite`);
       const response = await fetch(`/api/teams/${teamId}/invite`, {
         method: 'POST',
         headers,
@@ -75,6 +81,7 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
       });
 
       const data = await response.json();
+      console.log('[TeamManagement] Invite response:', data);
 
       if (data.success) {
         toast({
@@ -87,6 +94,7 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
         throw new Error(data.message);
       }
     } catch (error: any) {
+      console.error('[TeamManagement] Invite error:', error);
       toast({
         title: "Error",
         description: error.message,

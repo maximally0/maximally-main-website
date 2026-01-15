@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
-import { sendAnnouncement, sendBulkEmails } from "../services/email";
+import { sendAnnouncement, sendBulkEmails, sendOrganizerTeamInviteEmail } from "../services/email";
 
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   const { data, error } = await supabaseAdmin.auth.getUser(token);
@@ -246,31 +246,30 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
       const enrichedData = await Promise.all((data || []).map(async (submission: any) => {
         const { data: profile } = await supabaseAdmin
           .from('profiles')
-          .select('username, full_name')
+          .select('username, full_name, email')
           .eq('id', submission.user_id)
           .single();
 
         // Get all judge scores for this submission from judge_scores table
         const { data: scores, error: scoresError } = await supabaseAdmin
           .from('judge_scores')
-          .select('judge_id, score, feedback, criteria_scores, created_at, updated_at')
+          .select('judge_id, score, notes, scored_at')
           .eq('submission_id', submission.id);
 
-        // Get judge names for each score
+        // Get judge names for each score from hackathon_judges table
         const judgeScores = await Promise.all((scores || []).map(async (scoreEntry: any) => {
-          const { data: judgeProfile } = await supabaseAdmin
-            .from('profiles')
-            .select('username, full_name')
+          const { data: judge } = await supabaseAdmin
+            .from('hackathon_judges')
+            .select('name, email')
             .eq('id', scoreEntry.judge_id)
             .single();
           
           return {
             judge_id: scoreEntry.judge_id,
-            judge_name: judgeProfile?.full_name || judgeProfile?.username || 'Judge',
+            judge_name: judge?.name || 'Judge',
             score: scoreEntry.score,
-            notes: scoreEntry.feedback,
-            scored_at: scoreEntry.updated_at || scoreEntry.created_at,
-            criteria_scores: scoreEntry.criteria_scores
+            notes: scoreEntry.notes,
+            scored_at: scoreEntry.scored_at
           };
         }));
 
@@ -282,9 +281,11 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
         return {
           ...submission,
           user_name: profile?.full_name || profile?.username || 'Anonymous',
+          submitter_email: profile?.email || null,
           judge_scores: judgeScores,
           judges_count: judgeScores.length,
-          average_score: avgScore ? parseFloat(avgScore.toFixed(1)) : null
+          average_score: avgScore ? parseFloat(avgScore.toFixed(1)) : null,
+          score: avgScore ? parseFloat(avgScore.toFixed(1)) : null // For backwards compatibility
         };
       }));
 
@@ -955,4 +956,307 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
+
+  // ============================================
+  // TEAM INVITE EMAIL
+  // ============================================
+
+  // Send organizer team invite email (creates invite with token and sends email)
+  app.post("/api/organizer/hackathons/:hackathonId/send-team-invite", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+      const { inviteeEmail, inviteeName, role } = req.body;
+
+      if (!inviteeEmail || !inviteeName || !role) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Missing required fields: inviteeEmail, inviteeName, role' 
+        });
+      }
+
+      // Validate role
+      if (!['co-organizer', 'admin', 'viewer'].includes(role)) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Invalid role. Must be co-organizer, admin, or viewer' 
+        });
+      }
+
+      // Verify ownership (only owner can invite team members)
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id, hackathon_name, slug')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      if (hackathon.organizer_id !== userId) {
+        return res.status(403).json({ success: false, message: 'Only the hackathon owner can invite team members' });
+      }
+
+      // Find the invitee by email
+      const { data: inviteeProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('id, full_name, email')
+        .eq('email', inviteeEmail)
+        .single();
+
+      if (!inviteeProfile) {
+        return res.status(404).json({ success: false, message: 'User not found. They must have a Maximally account first.' });
+      }
+
+      // Check if already invited
+      const { data: existing } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .select('id, status')
+        .eq('hackathon_id', hackathonId)
+        .eq('user_id', inviteeProfile.id)
+        .single();
+
+      if (existing?.status === 'accepted') {
+        return res.status(400).json({ success: false, message: 'This user is already an active organizer.' });
+      }
+
+      // Generate secure invite token
+      const crypto = await import('crypto');
+      const inviteToken = crypto.randomBytes(32).toString('hex');
+      const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(); // 7 days
+
+      // Create or update the invite
+      if (existing) {
+        const { error } = await supabaseAdmin
+          .from('hackathon_organizers')
+          .update({
+            role,
+            invited_by: userId,
+            status: 'pending',
+            invited_at: new Date().toISOString(),
+            accepted_at: null,
+            invite_token: inviteToken,
+            invite_expires_at: expiresAt,
+          })
+          .eq('id', existing.id);
+        
+        if (error) throw error;
+      } else {
+        const { error } = await supabaseAdmin
+          .from('hackathon_organizers')
+          .insert({
+            hackathon_id: parseInt(hackathonId),
+            user_id: inviteeProfile.id,
+            role,
+            invited_by: userId,
+            status: 'pending',
+            invite_token: inviteToken,
+            invite_expires_at: expiresAt,
+          });
+
+        if (error) throw error;
+      }
+
+      // Get inviter's name
+      const { data: inviterProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('full_name, username')
+        .eq('id', userId)
+        .single();
+
+      const inviterName = inviterProfile?.full_name || inviterProfile?.username || 'A hackathon organizer';
+
+      // Generate the invite URL with token
+      const frontendUrl = process.env.FRONTEND_URL || 'https://maximally.in';
+      const inviteUrl = `${frontendUrl}/organizer/invite/${inviteToken}`;
+
+      // Send the invite email
+      const emailResult = await sendOrganizerTeamInviteEmail({
+        email: inviteeEmail,
+        inviteeName,
+        inviterName,
+        hackathonName: hackathon.hackathon_name,
+        hackathonSlug: hackathon.slug,
+        role: role as 'co-organizer' | 'admin' | 'viewer',
+        inviteUrl,
+      });
+
+      if (!emailResult.success) {
+        console.error('Failed to send team invite email:', emailResult.error);
+        return res.status(500).json({ 
+          success: false, 
+          message: 'Failed to send invite email',
+          error: emailResult.error 
+        });
+      }
+
+      return res.json({ 
+        success: true, 
+        message: `Invite email sent to ${inviteeEmail}` 
+      });
+    } catch (error: any) {
+      console.error('Error sending team invite email:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Accept organizer invite via token
+  app.post("/api/organizer/invite/:token/accept", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized - please log in first' });
+      }
+
+      const authToken = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, authToken);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      // Check if user has organizer role
+      const { data: userProfile } = await supabaseAdmin
+        .from('profiles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (userProfile?.role !== 'organizer' && userProfile?.role !== 'admin') {
+        return res.status(403).json({ 
+          success: false, 
+          message: 'You must be an approved organizer to accept this invitation. Please apply to become an organizer first.' 
+        });
+      }
+
+      const { token: inviteToken } = req.params;
+
+      // Find the invitation
+      const { data: invitation, error: inviteError } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .select('id, hackathon_id, user_id, role, status, invite_expires_at')
+        .eq('invite_token', inviteToken)
+        .eq('status', 'pending')
+        .single();
+
+      if (inviteError || !invitation) {
+        return res.status(404).json({ success: false, message: 'Invitation not found or already used' });
+      }
+
+      // Check if token is expired
+      if (invitation.invite_expires_at && new Date(invitation.invite_expires_at) < new Date()) {
+        return res.status(400).json({ success: false, message: 'This invitation has expired' });
+      }
+
+      // Verify the logged-in user matches the invited user
+      if (invitation.user_id !== userId) {
+        return res.status(403).json({ 
+          success: false, 
+          message: 'This invitation was sent to a different account. Please log in with the correct account.' 
+        });
+      }
+
+      // Accept the invitation
+      const { error: updateError } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .update({
+          status: 'accepted',
+          accepted_at: new Date().toISOString(),
+          invite_token: null, // Clear the token after use
+          invite_expires_at: null,
+        })
+        .eq('id', invitation.id);
+
+      if (updateError) throw updateError;
+
+      // Get hackathon details for the response
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, hackathon_name, slug')
+        .eq('id', invitation.hackathon_id)
+        .single();
+
+      return res.json({ 
+        success: true, 
+        message: 'Invitation accepted!',
+        hackathon
+      });
+    } catch (error: any) {
+      console.error('Error accepting invite:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get invite details by token (public - for showing invite info before accepting)
+  app.get("/api/organizer/invite/:token", async (req, res) => {
+    try {
+      const { token: inviteToken } = req.params;
+
+      // First get the invitation
+      const { data: invitation, error } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .select('id, role, status, invited_at, invite_expires_at, hackathon_id, user_id, invited_by')
+        .eq('invite_token', inviteToken)
+        .single();
+
+      if (error || !invitation) {
+        console.error('Invite lookup error:', error);
+        return res.status(404).json({ success: false, message: 'Invitation not found' });
+      }
+
+      if (invitation.status !== 'pending') {
+        return res.status(400).json({ success: false, message: 'This invitation has already been used' });
+      }
+
+      if (invitation.invite_expires_at && new Date(invitation.invite_expires_at) < new Date()) {
+        return res.status(400).json({ success: false, message: 'This invitation has expired' });
+      }
+
+      // Get hackathon details
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, hackathon_name, slug')
+        .eq('id', invitation.hackathon_id)
+        .single();
+
+      // Get inviter details
+      const { data: inviter } = await supabaseAdmin
+        .from('profiles')
+        .select('full_name, username')
+        .eq('id', invitation.invited_by)
+        .single();
+
+      // Get invitee details
+      const { data: invitee } = await supabaseAdmin
+        .from('profiles')
+        .select('id, email, full_name')
+        .eq('id', invitation.user_id)
+        .single();
+
+      return res.json({ 
+        success: true, 
+        data: {
+          role: invitation.role,
+          hackathon,
+          inviter,
+          inviteeEmail: invitee?.email,
+          expiresAt: invitation.invite_expires_at,
+        }
+      });
+    } catch (error: any) {
+      console.error('Error fetching invite:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
 }
