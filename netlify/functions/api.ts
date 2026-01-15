@@ -35,9 +35,10 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Initialize Supabase
-const supabaseUrl = process.env.SUPABASE_URL;
+// Initialize Supabase - support both VITE_ prefixed and non-prefixed env vars
+const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
 
 let supabaseAdmin: ReturnType<typeof createClient> | undefined;
 
@@ -153,10 +154,16 @@ async function sendWelcomeEmail(data: { email: string; userName: string }) {
 
 async function bearerUserId(supabase: any, token: string): Promise<string | null> {
   try { 
+    // Validate inputs
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Missing Supabase configuration for auth');
+      return null;
+    }
+    
     // Create a temporary client with the user's JWT token to validate it
     const tempClient = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_ANON_KEY!, // Use anon key, not service role
+      supabaseUrl,
+      supabaseAnonKey, // Use anon key, not service role
       {
         global: {
           headers: {
@@ -177,7 +184,28 @@ async function bearerUserId(supabase: any, token: string): Promise<string | null
 // ============================================
 // HEALTH & UTILITY ROUTES
 // ============================================
-app.get("/api/health", (_req, res) => res.json({ ok: true }));
+app.get("/api/health", (_req, res) => res.json({ 
+  ok: true,
+  timestamp: new Date().toISOString(),
+  config: {
+    supabaseUrl: !!supabaseUrl,
+    supabaseAnonKey: !!supabaseAnonKey,
+    supabaseServiceKey: !!supabaseServiceKey,
+    supabaseAdmin: !!supabaseAdmin
+  }
+}));
+
+// Debug endpoint to check incoming request path
+app.get("/api/debug/path", (req, res) => {
+  return res.json({
+    success: true,
+    path: req.path,
+    url: req.url,
+    originalUrl: req.originalUrl,
+    baseUrl: req.baseUrl,
+    method: req.method
+  });
+});
 
 app.get("/api/debug/routes", (_req, res) => {
   const routes = [
@@ -4489,4 +4517,24 @@ app.use('/api/*', (_req: Request, res: Response) => {
   return res.status(404).json({ success: false, message: 'API endpoint not found' });
 });
 
-export const handler = serverless(app);
+// Use request transformation to ensure path starts with /api for Netlify
+export const handler = serverless(app, {
+  request: (req: any, event: any, context: any) => {
+    // Log incoming path for debugging
+    const originalUrl = req.url;
+    
+    // Handle various Netlify path formats
+    if (req.url) {
+      // Remove /.netlify/functions/api prefix if present
+      if (req.url.startsWith('/.netlify/functions/api')) {
+        req.url = '/api' + req.url.replace('/.netlify/functions/api', '');
+      }
+      // Ensure /api prefix is present
+      else if (!req.url.startsWith('/api')) {
+        req.url = '/api' + req.url;
+      }
+    }
+    
+    return req;
+  }
+});
