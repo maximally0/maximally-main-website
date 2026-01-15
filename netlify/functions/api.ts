@@ -3132,13 +3132,6 @@ app.post("/api/auth/signup-validate", async (req, res) => {
 });
 
 
-// ============================================
-// CATCH-ALL ROUTE
-// ============================================
-app.use('/api/*', (_req: Request, res: Response) => {
-  return res.status(404).json({ success: false, message: 'API endpoint not found' });
-});
-
 
 // ============================================
 // ORGANIZER CERTIFICATE ROUTES
@@ -4470,5 +4463,11 @@ app.patch("/api/teams/tasks/:taskId", async (req, res) => {
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
 
+// ============================================
+// CATCH-ALL ROUTE (MUST BE LAST)
+// ============================================
+app.use('/api/*', (_req: Request, res: Response) => {
+  return res.status(404).json({ success: false, message: 'API endpoint not found' });
+});
 
 export const handler = serverless(app);
