@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import serverless from "serverless-http";
 import { createClient } from "@supabase/supabase-js";
+import { Resend } from 'resend';
 
 const app = express();
 app.use(express.json());
@@ -45,6 +46,139 @@ if (supabaseUrl && supabaseServiceKey) {
   app.locals.supabaseAdmin = supabaseAdmin;
 }
 
+// Initialize Resend for emails
+let resend: Resend | null = null;
+const resendApiKey = process.env.RESEND_API_KEY;
+if (resendApiKey) {
+  resend = new Resend(resendApiKey);
+}
+
+// OTP Storage (in-memory for serverless - will reset between invocations)
+// For production, consider using a database or Redis
+interface OtpEntry {
+  otp: string;
+  email: string;
+  password: string;
+  name?: string;
+  username?: string;
+  expiresAt: number;
+  attempts: number;
+}
+const otpStore = new Map<string, OtpEntry>();
+
+// Generate 6-digit OTP
+function generateOtp(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Simple rate limiter
+const rateBuckets = new Map<string, { tokens: number; last: number }>();
+function rateLimit(userId: string, key: string, capacity = 10, refillMs = 60_000): boolean {
+  const bucketKey = `${key}:${userId}`;
+  const now = Date.now();
+  const b = rateBuckets.get(bucketKey) || { tokens: capacity, last: now };
+  const elapsed = now - b.last;
+  if (elapsed > 0) {
+    const refill = Math.floor(elapsed / refillMs) * capacity;
+    b.tokens = Math.min(capacity, b.tokens + refill);
+    b.last = now;
+  }
+  if (b.tokens <= 0) {
+    rateBuckets.set(bucketKey, b);
+    return false;
+  }
+  b.tokens -= 1;
+  rateBuckets.set(bucketKey, b);
+  return true;
+}
+
+// Disposable email domains list
+const DISPOSABLE_DOMAINS = new Set([
+  'tempmail.com', 'throwaway.email', 'guerrillamail.com', 'mailinator.com',
+  '10minutemail.com', 'temp-mail.org', 'fakeinbox.com', 'trashmail.com',
+  'yopmail.com', 'getnada.com', 'maildrop.cc', 'dispostable.com'
+]);
+
+// Quick email validation
+function validateEmailQuick(email: string): { isValid: boolean; domain: string; issues: string[]; isSafe: boolean; isDisposable: boolean } {
+  const issues: string[] = [];
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  if (!emailRegex.test(email)) {
+    issues.push('Invalid email format');
+    return { isValid: false, domain: '', issues, isSafe: false, isDisposable: false };
+  }
+  
+  const domain = email.split('@')[1]?.toLowerCase() || '';
+  const isDisposable = DISPOSABLE_DOMAINS.has(domain);
+  
+  if (isDisposable) {
+    issues.push('Disposable email addresses are not allowed');
+  }
+  
+  return {
+    isValid: issues.length === 0,
+    domain,
+    issues,
+    isSafe: !isDisposable,
+    isDisposable
+  };
+}
+
+// Send OTP email
+async function sendOtpEmail(data: { email: string; otp: string; expiresInMinutes: number }): Promise<{ success: boolean; error?: string }> {
+  if (!resend) {
+    console.log('Email service not configured, skipping OTP email');
+    return { success: true }; // Allow signup to proceed without email in dev
+  }
+  
+  try {
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || 'noreply@maximally.in',
+      to: data.email,
+      subject: 'Your Maximally Verification Code',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Verify Your Email</h2>
+          <p>Your verification code is:</p>
+          <div style="background: #f5f5f5; padding: 20px; text-align: center; font-size: 32px; font-weight: bold; letter-spacing: 8px; margin: 20px 0;">
+            ${data.otp}
+          </div>
+          <p>This code expires in ${data.expiresInMinutes} minutes.</p>
+          <p style="color: #666; font-size: 12px;">If you didn't request this code, please ignore this email.</p>
+        </div>
+      `
+    });
+    return { success: true };
+  } catch (error: any) {
+    console.error('Failed to send OTP email:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Send welcome email
+async function sendWelcomeEmail(data: { email: string; userName: string }): Promise<void> {
+  if (!resend) return;
+  
+  try {
+    await resend.emails.send({
+      from: process.env.FROM_EMAIL || 'noreply@maximally.in',
+      to: data.email,
+      subject: 'Welcome to Maximally!',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Welcome to Maximally, ${data.userName}!</h2>
+          <p>Your account has been created successfully.</p>
+          <p>Start exploring hackathons and building amazing projects!</p>
+          <a href="https://maximally.in" style="display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-top: 20px;">Get Started</a>
+        </div>
+      `
+    });
+  } catch (error) {
+    console.error('Failed to send welcome email:', error);
+  }
+}
+
 // Helper function to get user ID from bearer token
 async function bearerUserId(supabase: any, token: string): Promise<string | null> {
   try {
@@ -56,8 +190,287 @@ async function bearerUserId(supabase: any, token: string): Promise<string | null
   }
 }
 
-// Import and register all routes from the main server
-// For now, we'll add the critical judge routes here
+// ============================================
+// AUTH ROUTES
+// ============================================
+
+// Step 1: Request OTP for signup
+app.post("/api/auth/signup-request-otp", async (req: Request, res: Response) => {
+  try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+    }
+
+    const { email, password, name, username } = req.body as {
+      email?: string;
+      password?: string;
+      name?: string;
+      username?: string;
+    };
+
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ success: false, message: 'Email is required' });
+    }
+    if (!password || typeof password !== 'string' || password.length < 8) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 8 characters long' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Rate limiting
+    const clientIP = req.ip || (req.headers['x-forwarded-for'] as string)?.split(',')[0] || 'unknown';
+    if (!rateLimit(clientIP, 'otp:request', 5, 3600_000)) {
+      return res.status(429).json({ success: false, message: 'Too many OTP requests. Please try again later.' });
+    }
+
+    // Validate email
+    const emailValidation = validateEmailQuick(normalizedEmail);
+    if (!emailValidation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: emailValidation.issues[0] || 'Invalid email address'
+      });
+    }
+
+    // Check if user already exists
+    const { data: existingUsers } = await (supabaseAdmin as any).auth.admin.listUsers();
+    const userExists = existingUsers?.users?.some((u: any) => u.email?.toLowerCase() === normalizedEmail);
+    
+    if (userExists) {
+      return res.status(409).json({ success: false, message: 'An account with this email already exists' });
+    }
+
+    // Generate OTP
+    const skipOtp = process.env.SKIP_EMAIL_OTP === 'true';
+    const otp = skipOtp ? '123456' : generateOtp();
+    const expiresAt = Date.now() + 10 * 60 * 1000;
+
+    // Store OTP
+    otpStore.set(normalizedEmail, {
+      otp,
+      email: normalizedEmail,
+      password,
+      name: name?.trim(),
+      username: username?.trim(),
+      expiresAt,
+      attempts: 0,
+    });
+
+    if (skipOtp) {
+      return res.json({
+        success: true,
+        message: 'Verification code sent to your email',
+        email: normalizedEmail,
+        dev_otp: otp,
+      });
+    }
+
+    // Send OTP email
+    const emailResult = await sendOtpEmail({
+      email: normalizedEmail,
+      otp,
+      expiresInMinutes: 10,
+    });
+
+    if (!emailResult.success) {
+      otpStore.delete(normalizedEmail);
+      return res.status(500).json({ success: false, message: 'Failed to send verification email. Please try again.' });
+    }
+
+    return res.json({
+      success: true,
+      message: 'Verification code sent to your email',
+      email: normalizedEmail,
+    });
+
+  } catch (err: any) {
+    console.error('OTP request error:', err);
+    return res.status(500).json({ success: false, message: err?.message || 'Failed to send verification code' });
+  }
+});
+
+// Step 2: Verify OTP and create account
+app.post("/api/auth/signup-verify-otp", async (req: Request, res: Response) => {
+  try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ success: false, message: "Server is not configured for Supabase" });
+    }
+
+    const { email, otp } = req.body as { email?: string; otp?: string };
+
+    if (!email || !otp) {
+      return res.status(400).json({ success: false, message: 'Email and verification code are required' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // Rate limiting
+    const clientIP = req.ip || (req.headers['x-forwarded-for'] as string)?.split(',')[0] || 'unknown';
+    if (!rateLimit(clientIP, 'otp:verify', 10, 3600_000)) {
+      return res.status(429).json({ success: false, message: 'Too many verification attempts. Please try again later.' });
+    }
+
+    // Get stored OTP entry
+    const otpEntry = otpStore.get(normalizedEmail);
+
+    if (!otpEntry) {
+      return res.status(400).json({ success: false, message: 'No pending verification found. Please request a new code.' });
+    }
+
+    if (otpEntry.expiresAt < Date.now()) {
+      otpStore.delete(normalizedEmail);
+      return res.status(400).json({ success: false, message: 'Verification code has expired. Please request a new one.' });
+    }
+
+    if (otpEntry.attempts >= 5) {
+      otpStore.delete(normalizedEmail);
+      return res.status(400).json({ success: false, message: 'Too many failed attempts. Please request a new code.' });
+    }
+
+    if (otpEntry.otp !== otp.trim()) {
+      otpEntry.attempts += 1;
+      otpStore.set(normalizedEmail, otpEntry);
+      const remainingAttempts = 5 - otpEntry.attempts;
+      return res.status(400).json({ 
+        success: false, 
+        message: `Invalid verification code. ${remainingAttempts} attempt${remainingAttempts !== 1 ? 's' : ''} remaining.` 
+      });
+    }
+
+    // Create user
+    const { data: userData, error: createError } = await (supabaseAdmin as any).auth.admin.createUser({
+      email: otpEntry.email,
+      password: otpEntry.password,
+      email_confirm: true,
+      user_metadata: {
+        full_name: otpEntry.name || null,
+        username: otpEntry.username || null,
+        signup_method: 'otp_verified',
+        otp_verified: true,
+      },
+    });
+
+    otpStore.delete(normalizedEmail);
+
+    if (createError) {
+      if (createError.message?.includes('already registered') || createError.message?.includes('already exists')) {
+        return res.status(409).json({ success: false, message: 'An account with this email already exists' });
+      }
+      return res.status(400).json({ success: false, message: createError.message });
+    }
+
+    const user = userData?.user;
+    if (!user?.id) {
+      return res.status(500).json({ success: false, message: 'User created but no user data returned' });
+    }
+
+    // Send welcome email
+    sendWelcomeEmail({
+      email: user.email!,
+      userName: otpEntry.name || otpEntry.username || user.email!.split('@')[0],
+    }).catch(err => console.error('Welcome email failed:', err));
+
+    return res.json({
+      success: true,
+      message: 'Account created successfully! You can now sign in.',
+      user: {
+        id: user.id,
+        email: user.email,
+        email_confirmed_at: user.email_confirmed_at,
+        username: user.user_metadata?.username || null
+      }
+    });
+
+  } catch (err: any) {
+    console.error('OTP verification error:', err);
+    return res.status(500).json({ success: false, message: err?.message || 'Failed to verify code' });
+  }
+});
+
+// Resend OTP
+app.post("/api/auth/resend-otp", async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body as { email?: string };
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!rateLimit(normalizedEmail, 'otp:resend', 3, 600_000)) {
+      return res.status(429).json({ success: false, message: 'Please wait before requesting another code.' });
+    }
+
+    const existingEntry = otpStore.get(normalizedEmail);
+
+    if (!existingEntry) {
+      return res.status(400).json({ success: false, message: 'No pending signup found. Please start the signup process again.' });
+    }
+
+    const newOtp = generateOtp();
+    existingEntry.otp = newOtp;
+    existingEntry.expiresAt = Date.now() + 10 * 60 * 1000;
+    existingEntry.attempts = 0;
+    otpStore.set(normalizedEmail, existingEntry);
+
+    const emailResult = await sendOtpEmail({
+      email: normalizedEmail,
+      otp: newOtp,
+      expiresInMinutes: 10,
+    });
+
+    if (!emailResult.success) {
+      return res.status(500).json({ success: false, message: 'Failed to send verification email. Please try again.' });
+    }
+
+    return res.json({
+      success: true,
+      message: 'New verification code sent to your email',
+    });
+
+  } catch (err: any) {
+    console.error('Resend OTP error:', err);
+    return res.status(500).json({ success: false, message: err?.message || 'Failed to resend code' });
+  }
+});
+
+// Email validation endpoint
+app.post("/api/auth/validate-email", async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body as { email?: string };
+
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ success: false, message: 'Email is required' });
+    }
+
+    const clientIP = req.ip || (req.headers['x-forwarded-for'] as string)?.split(',')[0] || 'unknown';
+    if (!rateLimit(clientIP, 'email:validate', 20, 60_000)) {
+      return res.status(429).json({ success: false, message: 'Too many validation requests' });
+    }
+
+    const validation = validateEmailQuick(email);
+
+    return res.json({
+      success: true,
+      validation: {
+        isValid: validation.isValid,
+        domain: validation.domain,
+        issues: validation.issues,
+        isSafe: validation.isSafe,
+        isDisposable: validation.isDisposable
+      }
+    });
+
+  } catch (err: any) {
+    console.error('Email validation error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to validate email' });
+  }
+});
+
+// ============================================
+// JUDGE ROUTES (existing)
+// ============================================
 
 // Judge profile endpoint
 app.get("/api/judge/profile", async (req: Request, res: Response) => {
