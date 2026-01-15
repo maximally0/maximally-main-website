@@ -2452,7 +2452,8 @@ app.get("/api/hackathons/:hackathonId/participant-feedback", async (req, res) =>
   try {
     if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
     const { hackathonId } = req.params;
-    const { data, error } = await (supabaseAdmin as any).from('hackathon_participant_feedback').select('*').eq('hackathon_id', hackathonId).order('created_at', { ascending: false });
+    // Only return public feedback for public endpoint
+    const { data, error } = await (supabaseAdmin as any).from('hackathon_participant_feedback').select('*').eq('hackathon_id', hackathonId).eq('is_public', true).order('created_at', { ascending: false });
     if (error) throw error;
     return res.json({ success: true, data: data || [] });
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }

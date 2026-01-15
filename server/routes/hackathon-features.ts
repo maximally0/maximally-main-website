@@ -758,7 +758,8 @@ export function registerHackathonFeatureRoutes(app: Express) {
       const { data, error } = await supabaseAdmin
         .from('hackathon_participant_feedback')
         .select('overall_rating, organization_rating, mentorship_rating, would_recommend')
-        .eq('hackathon_id', hackathonId);
+        .eq('hackathon_id', hackathonId)
+        .eq('is_public', true);
 
       if (error) throw error;
 
