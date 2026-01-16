@@ -13,6 +13,7 @@
     "check": "tsc",
     "check:env": "node check-env.js",
     "validate:routes": "tsx scripts/validate-routes.ts",
+    "validate:admin-routes": "tsx scripts/validate-admin-routes.ts",
     "check:orphaned-routes": "tsx scripts/check-orphaned-routes.ts",
     "prebuild": "npm run validate:routes",
     "db:push": "drizzle-kit push",
