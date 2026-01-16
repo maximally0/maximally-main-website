@@ -24,6 +24,7 @@ import { Resend } from 'resend';
 import { registerCoreRoutes } from "../../server/routes/core-routes";
 import { registerOrganizerRoutes } from "../../server/routes/organizer";
 import { registerOrganizerApplicationRoutes } from "../../server/routes/organizer-applications";
+import { registerAdminOrganizerApplicationRoutes } from "../../server/routes/admin-organizer-applications";
 import { registerAdminHackathonRoutes } from "../../server/routes/admin-hackathons";
 import { registerHackathonRegistrationRoutes } from "../../server/routes/hackathon-registration";
 import { registerOrganizerAdvancedRoutes } from "../../server/routes/organizer-advanced";
@@ -912,6 +913,7 @@ app.get("/api/projects/:source/:projectId", async (req, res) => {
 registerCoreRoutes(app);
 registerOrganizerRoutes(app);
 registerOrganizerApplicationRoutes(app);
+registerAdminOrganizerApplicationRoutes(app);
 registerAdminHackathonRoutes(app);
 registerHackathonRegistrationRoutes(app);
 registerOrganizerAdvancedRoutes(app);
