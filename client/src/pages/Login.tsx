@@ -10,7 +10,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '@/lib/supabaseClient';
 import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
 import { isCaptchaRequired, isValidCaptchaToken } from '@/lib/captcha';
-import { Sparkles, Zap, Mail, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Sparkles, Zap, Mail, ArrowLeft, RefreshCw, Eye, EyeOff } from 'lucide-react';
 
 type SignupStep = 'form' | 'otp';
 
@@ -29,6 +29,8 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaError, setCaptchaError] = useState<string | null>(null);
@@ -540,16 +542,30 @@ export default function Login() {
                       <span className="w-1.5 h-1.5 bg-green-400"></span>
                       PASSWORD
                     </Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => { setPassword(e.target.value); setError(null); }}
-                      className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
-                      required
-                      data-testid="input-password"
-                    />
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => { setPassword(e.target.value); setError(null); }}
+                        className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600 pr-10"
+                        required
+                        data-testid="input-password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-green-400 transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? (
+                          <Eye className="h-4 w-4" />
+                        ) : (
+                          <EyeOff className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                     {!isSignUp && (
                       <div className="text-right mt-1">
                         <button
@@ -569,16 +585,30 @@ export default function Login() {
                         <span className="w-1.5 h-1.5 bg-green-400"></span>
                         CONFIRM PASSWORD
                       </Label>
-                      <Input
-                        id="confirmPassword"
-                        type="password"
-                        placeholder="••••••••"
-                        value={confirmPassword}
-                        onChange={(e) => { setConfirmPassword(e.target.value); setError(null); }}
-                        className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600"
-                        required
-                        data-testid="input-confirm-password"
-                      />
+                      <div className="relative">
+                        <Input
+                          id="confirmPassword"
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          value={confirmPassword}
+                          onChange={(e) => { setConfirmPassword(e.target.value); setError(null); }}
+                          className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400 placeholder:text-gray-600 pr-10"
+                          required
+                          data-testid="input-confirm-password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-green-400 transition-colors"
+                          tabIndex={-1}
+                        >
+                          {showConfirmPassword ? (
+                            <Eye className="h-4 w-4" />
+                          ) : (
+                            <EyeOff className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   )}
 

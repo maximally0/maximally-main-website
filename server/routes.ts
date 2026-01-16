@@ -1,4 +1,21 @@
 // @ts-nocheck
+
+/**
+ * ⚠️ WARNING: DO NOT ADD API ROUTES DIRECTLY TO THIS FILE! ⚠️
+ * 
+ * This file is used for LOCAL DEVELOPMENT ONLY.
+ * Routes added here will NOT work in production (Netlify).
+ * 
+ * ✅ CORRECT WAY TO ADD ROUTES:
+ * 1. Create a new file in server/routes/ (e.g., server/routes/my-feature.ts)
+ * 2. Export a function like: export function registerMyFeatureRoutes(app: Express)
+ * 3. Import it in netlify/functions/api.ts
+ * 4. Call it in the "REGISTER ROUTE MODULES" section
+ * 
+ * 📖 See ROUTE_GUIDELINES.md for detailed instructions
+ * 🔍 Run `npm run validate:routes` to check your routes
+ */
+
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";

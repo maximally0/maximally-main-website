@@ -1,9 +1,29 @@
 // @ts-nocheck
+
+/**
+ * 🚀 NETLIFY SERVERLESS FUNCTION - PRODUCTION API ENTRY POINT
+ * 
+ * This file handles ALL API requests in production.
+ * 
+ * ✅ ADDING NEW ROUTES:
+ * 1. Create route module in server/routes/my-feature.ts
+ * 2. Import it here: import { registerMyFeatureRoutes } from "../../server/routes/my-feature";
+ * 3. Call it in the "REGISTER ROUTE MODULES" section below
+ * 4. Run `npm run validate:routes` to verify
+ * 
+ * ⚠️ IMPORTANT: All route modules MUST be imported and called here!
+ * Routes not registered here will return 404 in production.
+ * 
+ * 📖 See ROUTE_GUIDELINES.md for detailed instructions
+ */
+
 import express, { type Request, Response, NextFunction } from "express";
 import serverless from "serverless-http";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from 'resend';
+import { registerCoreRoutes } from "../../server/routes/core-routes";
 import { registerOrganizerRoutes } from "../../server/routes/organizer";
+import { registerOrganizerApplicationRoutes } from "../../server/routes/organizer-applications";
 import { registerAdminHackathonRoutes } from "../../server/routes/admin-hackathons";
 import { registerHackathonRegistrationRoutes } from "../../server/routes/hackathon-registration";
 import { registerOrganizerAdvancedRoutes } from "../../server/routes/organizer-advanced";
@@ -888,7 +908,10 @@ app.get("/api/projects/:source/:projectId", async (req, res) => {
 // REGISTER ROUTE MODULES
 // ============================================
 // All API routes are handled by these route modules
+// IMPORTANT: Core routes must be registered FIRST (contains auth, health, etc.)
+registerCoreRoutes(app);
 registerOrganizerRoutes(app);
+registerOrganizerApplicationRoutes(app);
 registerAdminHackathonRoutes(app);
 registerHackathonRegistrationRoutes(app);
 registerOrganizerAdvancedRoutes(app);

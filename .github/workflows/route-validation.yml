@@ -1,0 +1,35 @@
+name: Route Validation
+
+on:
+  pull_request:
+    paths:
+      - 'server/routes.ts'
+      - 'server/routes/**'
+      - 'netlify/functions/api.ts'
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/routes.ts'
+      - 'server/routes/**'
+      - 'netlify/functions/api.ts'
+
+jobs:
+  validate-routes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run route validation
+        run: npm run validate:routes
+        
+      - name: Check for orphaned routes
+        run: npm run check:orphaned-routes
