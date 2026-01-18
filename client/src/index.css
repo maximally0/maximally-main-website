@@ -1071,16 +1071,33 @@
   html {
     margin: 0 !important;
     padding: 0 !important;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   body {
     @apply bg-background text-foreground font-jetbrains;
     margin: 0 !important;
     padding: 0 !important;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   * {
     @apply border-border;
+  }
+  
+  /* Prevent horizontal overflow on all elements */
+  #root {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  /* Word breaking utilities for mobile */
+  .overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    hyphens: auto;
   }
 
   /* Pixel border utility */
