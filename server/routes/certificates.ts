@@ -9,6 +9,48 @@ async function bearerUserId(supabaseAdmin: any, token: string): Promise<string |
   return data?.user?.id || null;
 }
 
+// Helper function to check if user has access to hackathon (owner or co-organizer)
+async function checkHackathonAccess(
+  supabaseAdmin: any,
+  hackathonId: string | number, 
+  userId: string,
+  requiredPermission?: string
+): Promise<{ hasAccess: boolean; isOwner: boolean; role?: string; permissions?: any }> {
+  // Check if user is the owner
+  const { data: hackathon } = await supabaseAdmin
+    .from('organizer_hackathons')
+    .select('organizer_id')
+    .eq('id', hackathonId)
+    .single();
+
+  if (hackathon?.organizer_id === userId) {
+    return { hasAccess: true, isOwner: true, role: 'owner' };
+  }
+
+  // Check if user is a co-organizer
+  const { data: coOrg } = await supabaseAdmin
+    .from('hackathon_organizers')
+    .select('role, permissions, status')
+    .eq('hackathon_id', hackathonId)
+    .eq('user_id', userId)
+    .eq('status', 'accepted')
+    .single();
+
+  if (!coOrg) {
+    return { hasAccess: false, isOwner: false };
+  }
+
+  // Check specific permission if required
+  if (requiredPermission && coOrg.permissions) {
+    const hasPermission = coOrg.permissions[requiredPermission] === true;
+    if (!hasPermission) {
+      return { hasAccess: false, isOwner: false, role: coOrg.role, permissions: coOrg.permissions };
+    }
+  }
+
+  return { hasAccess: true, isOwner: false, role: coOrg.role, permissions: coOrg.permissions };
+}
+
 // Generate a unique certificate ID
 function generateCertificateId(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -85,16 +127,18 @@ export function registerCertificateRoutes(app: Express) {
       const { hackathonId } = req.params;
       const { recipients, hackathon_name, send_email } = req.body;
 
-      // Verify ownership
+      // Verify access (owner or co-organizer)
+      const access = await checkHackathonAccess(supabaseAdmin, hackathonId, userId);
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Get hackathon details
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('organizer_id, hackathon_name')
         .eq('id', hackathonId)
         .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
-      }
 
       // Get organizer's email
       const { data: organizerProfile } = await supabaseAdmin
@@ -241,16 +285,18 @@ export function registerCertificateRoutes(app: Express) {
       const { hackathonId } = req.params;
       const { recipients, hackathon_name } = req.body;
 
-      // Verify ownership
+      // Verify access (owner or co-organizer)
+      const access = await checkHackathonAccess(supabaseAdmin, hackathonId, userId);
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Get hackathon details
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('organizer_id, hackathon_name')
         .eq('id', hackathonId)
         .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
-      }
 
       const eventName = hackathon_name || hackathon.hackathon_name;
       
@@ -293,16 +339,18 @@ export function registerCertificateRoutes(app: Express) {
 
       const { hackathonId } = req.params;
 
-      // Verify ownership
+      // Verify access (owner or co-organizer)
+      const access = await checkHackathonAccess(supabaseAdmin, hackathonId, userId);
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Get hackathon details
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('organizer_id, hackathon_name')
         .eq('id', hackathonId)
         .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
-      }
 
       // Get certificates for this hackathon
       const { data: certificates, error } = await supabaseAdmin
@@ -452,16 +500,18 @@ export function registerCertificateRoutes(app: Express) {
       const { hackathonId } = req.params;
       const { recipients, hackathon_name } = req.body;
 
-      // Verify ownership
+      // Verify access (owner or co-organizer)
+      const access = await checkHackathonAccess(supabaseAdmin, hackathonId, userId);
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      // Get hackathon details
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
         .select('organizer_id, hackathon_name')
         .eq('id', hackathonId)
         .single();
-
-      if (hackathon?.organizer_id !== userId) {
-        return res.status(403).json({ success: false, message: 'Not authorized' });
-      }
 
       const eventName = hackathon_name || hackathon.hackathon_name;
       
