@@ -780,7 +780,7 @@ export default function PublicHackathon() {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-3 sm:px-6 py-3 sm:py-4 font-press-start text-[10px] sm:text-xs whitespace-nowrap transition-all relative ${
+                    className={`px-2 sm:px-4 py-3 sm:py-4 font-press-start text-[8px] sm:text-[10px] whitespace-nowrap transition-all relative ${
                       activeTab === tab.id
                         ? 'text-white bg-black/50'
                         : 'text-gray-500 hover:text-gray-300 hover:bg-black/30'
