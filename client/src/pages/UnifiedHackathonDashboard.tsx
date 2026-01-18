@@ -1368,10 +1368,38 @@ function TracksTab({
     updateField('themes', themes);
   };
 
+  // Parse tracks from JSON string
+  const parseTracks = () => {
+    try {
+      const parsed = JSON.parse(hackathon.tracks || '[]');
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const tracks = parseTracks();
+
+  const addTrack = () => {
+    const newTracks = [...tracks, { name: '', description: '', prize: '' }];
+    updateField('tracks', JSON.stringify(newTracks));
+  };
+
+  const removeTrack = (index: number) => {
+    const newTracks = tracks.filter((_: any, i: number) => i !== index);
+    updateField('tracks', JSON.stringify(newTracks));
+  };
+
+  const updateTrack = (index: number, field: string, value: string) => {
+    const newTracks = [...tracks];
+    newTracks[index] = { ...newTracks[index], [field]: value };
+    updateField('tracks', JSON.stringify(newTracks));
+  };
+
   return (
     <div className="space-y-8">
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">THEMES / TRACKS</label>
+        <label className="font-press-start text-sm text-purple-400 mb-3 block">THEMES / TAGS</label>
         <input
           type="text"
           value={themesInput}
@@ -1380,7 +1408,7 @@ function TracksTab({
           placeholder="AI, Web3, Healthcare, Education (comma separated)"
           className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
         />
-        <p className="text-xs text-gray-500 mt-2 font-jetbrains">Separate themes with commas</p>
+        <p className="text-xs text-gray-500 mt-2 font-jetbrains">Separate themes with commas - these are tags for discovery</p>
       </div>
 
       <div>
@@ -1396,15 +1424,88 @@ function TracksTab({
         <p className="text-xs text-gray-500 font-jetbrains">Allow participants to build anything, not just within specified themes</p>
       </div>
 
+      {/* Tracks Builder */}
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">TRACKS DESCRIPTION</label>
-        <textarea
-          value={hackathon.tracks || ''}
-          onChange={(e) => updateField('tracks', e.target.value)}
-          placeholder="Describe each track in detail..."
-          rows={10}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
-        />
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <label className="font-press-start text-sm text-purple-400 flex items-center gap-2">
+              <Zap className="h-4 w-4" />
+              HACKATHON TRACKS
+            </label>
+            <p className="text-xs text-gray-500 mt-1 font-jetbrains">Define specific competition tracks with prizes</p>
+          </div>
+          <button
+            type="button"
+            onClick={addTrack}
+            className="bg-pink-500 hover:bg-pink-600 text-black px-4 py-2 font-press-start text-xs transition-colors flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            ADD_TRACK
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {tracks.map((track: any, index: number) => (
+            <div key={index} className="bg-gray-900 border-2 border-gray-700 p-6 relative">
+              <button
+                type="button"
+                onClick={() => removeTrack(index)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-pink-400 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                    Track Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={track.name || ''}
+                    onChange={(e) => updateTrack(index, 'name', e.target.value)}
+                    placeholder="e.g., AI & Machine Learning"
+                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500 outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                    Description *
+                  </label>
+                  <textarea
+                    value={track.description || ''}
+                    onChange={(e) => updateTrack(index, 'description', e.target.value)}
+                    rows={3}
+                    placeholder="Build intelligent solutions using AI/ML technologies"
+                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500 outline-none resize-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                    Prize (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={track.prize || ''}
+                    onChange={(e) => updateTrack(index, 'prize', e.target.value)}
+                    placeholder="₹20,000"
+                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500 outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {tracks.length === 0 && (
+            <div className="text-center py-12 bg-gray-900 border-2 border-gray-700">
+              <p className="text-gray-500 font-jetbrains text-sm">
+                No tracks added yet. Click "ADD_TRACK" to create your first track.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

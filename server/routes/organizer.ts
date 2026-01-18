@@ -389,8 +389,11 @@ export function registerOrganizerRoutes(app: Express) {
       delete updates._isCoOrganizer;
       delete updates._isOwner;
 
-      // Validate date changes if provided
-      if (updates.start_date || updates.end_date) {
+      // Validate date changes ONLY if dates are actually being changed
+      const isDateChange = (updates.start_date && updates.start_date !== existing.start_date) || 
+                          (updates.end_date && updates.end_date !== existing.end_date);
+      
+      if (isDateChange) {
         const newStartDate = updates.start_date || existing.start_date;
         const newEndDate = updates.end_date || existing.end_date;
         

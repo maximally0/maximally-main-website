@@ -767,7 +767,6 @@ export default function PublicHackathon() {
               <div className="flex gap-0 min-w-max justify-center">{[
                   { id: 'overview', label: 'OVERVIEW' },
                   { id: 'announcements', label: 'ANNOUNCEMENTS' },
-                  { id: 'timeline', label: 'TIMELINE' },
                   { id: 'prizes', label: 'PRIZES' },
                   { id: 'rules', label: 'RULES' },
                   ...(hackathon.tracks ? [{ id: 'tracks', label: 'TRACKS' }] : []),
