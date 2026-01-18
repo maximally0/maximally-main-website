@@ -53,18 +53,28 @@ const Sidebar: React.FC<SidebarProps> = ({
     <div className="h-full flex flex-col">
       {/* Header with Home Navigation */}
       <div className="p-4 border-b border-gray-800">
-        {/* Home Link */}
-        <Link 
-          to="/" 
-          className="flex items-center space-x-2 mb-4 p-2 rounded hover:bg-gray-800 transition-colors group"
-        >
-          <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1.5 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
-            <Terminal className="h-4 w-4 text-black" />
-          </div>
-          <span className="font-press-start text-xs text-white group-hover:text-orange-400 transition-colors">
-            MAXIMALLY
-          </span>
-        </Link>
+        <div className="flex items-center justify-between mb-4">
+          {/* Home Link */}
+          <Link 
+            to="/" 
+            className="flex items-center space-x-2 p-2 rounded hover:bg-gray-800 transition-colors group"
+          >
+            <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1.5 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
+              <Terminal className="h-4 w-4 text-black" />
+            </div>
+            <span className="font-press-start text-xs text-white group-hover:text-orange-400 transition-colors">
+              MAXIMALLY
+            </span>
+          </Link>
+          
+          {/* Close button for mobile */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-2 text-gray-400 hover:text-white transition-colors"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
 
         {/* Search - Fixed width and proper container */}
         <div className="relative mb-4">
@@ -2338,12 +2348,12 @@ This documentation is being developed. Please check back soon for comprehensive 
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen bg-black text-white flex dark">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black bg-opacity-75" onClick={() => setSidebarOpen(false)} />
-          <div className="relative w-80 h-full bg-gray-900 border-r border-gray-800">
+          <div className="absolute left-0 top-0 w-full sm:w-80 h-full bg-gray-900 border-r border-gray-800 overflow-hidden">
             <Sidebar 
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -2361,7 +2371,7 @@ This documentation is being developed. Please check back soon for comprehensive 
       )}
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:block w-80 bg-gray-900 border-r border-gray-800 flex-shrink-0 fixed top-0 left 0 h-screen overflow-hidden z-40">
+      <div className="hidden lg:flex lg:flex-col w-80 bg-gray-900 border-r border-gray-800 flex-shrink-0 fixed top-0 left-0 h-screen overflow-hidden z-40">
         <Sidebar 
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -2377,9 +2387,9 @@ This documentation is being developed. Please check back soon for comprehensive 
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 ml-80 lg:ml-80">
-        {/* Mobile header */}
-        <div className="lg:hidden flex items-center justify-between p-4 bg-gray-900 border-b border-gray-800">
+      <div className="flex-1 flex flex-col min-w-0 lg:ml-80 w-full">
+        {/* Mobile header - Always visible at top */}
+        <div className="lg:hidden fixed top-0 left-0 right-0 flex items-center justify-between p-4 bg-gray-900 border-b border-gray-800 z-30">
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-2 text-gray-400 hover:text-white transition-colors"
@@ -2400,8 +2410,8 @@ This documentation is being developed. Please check back soon for comprehensive 
           <div className="w-9" />
         </div>
 
-        {/* Content area */}
-        <div className="flex-1 overflow-auto">
+        {/* Content area with top padding for fixed header on mobile */}
+        <div className="flex-1 overflow-auto bg-black lg:pt-0 pt-[73px]">
           {currentDoc ? (
             <DocumentContent doc={currentDoc} />
           ) : (
@@ -2414,9 +2424,9 @@ This documentation is being developed. Please check back soon for comprehensive 
 
   function DocumentContent({ doc }: { doc: DocFile }) {
     return (
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8 bg-black text-white">
         {/* Breadcrumb */}
-        <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
+        <nav className="flex items-center space-x-2 text-xs sm:text-sm text-gray-500 mb-6 md:mb-8 overflow-x-auto whitespace-nowrap pb-2">
           <Link to="/docs" className="hover:text-orange-500 transition-colors">
             Docs
           </Link>
@@ -2429,10 +2439,10 @@ This documentation is being developed. Please check back soon for comprehensive 
         </nav>
 
         {/* Content */}
-        <article className="prose prose-invert prose-orange max-w-none">
+        <article className="prose prose-sm sm:prose-base prose-invert prose-orange max-w-none text-gray-100">
           
           {/* Proper Markdown Rendering */}
-          <div className="prose prose-invert prose-orange max-w-none">
+          <div className="prose prose-sm sm:prose-base prose-invert prose-orange max-w-none text-gray-100">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
@@ -2444,7 +2454,12 @@ This documentation is being developed. Please check back soon for comprehensive 
                       style={oneDark as any}
                       language={match[1]}
                       PreTag="div"
-                      className="rounded-lg"
+                      className="rounded-lg !text-xs sm:!text-sm overflow-x-auto"
+                      customStyle={{
+                        margin: 0,
+                        padding: '1rem',
+                        fontSize: 'inherit'
+                      }}
                       {...props}
                     >
                       {String(children).replace(/\n$/, '')}
@@ -2456,22 +2471,22 @@ This documentation is being developed. Please check back soon for comprehensive 
                   );
                 },
                 h1: ({ children }) => (
-                  <h1 className="text-3xl font-bold text-white mb-6 font-press-start">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 font-press-start">
                     {children}
                   </h1>
                 ),
                 h2: ({ children }) => (
-                  <h2 className="text-2xl font-bold text-white mb-4 mt-8 font-press-start">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 mt-6 md:mt-8 font-press-start">
                     {children}
                   </h2>
                 ),
                 h3: ({ children }) => (
-                  <h3 className="text-xl font-bold text-white mb-3 mt-6">
+                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-2 md:mb-3 mt-4 md:mt-6">
                     {children}
                   </h3>
                 ),
                 p: ({ children }) => (
-                  <p className="text-gray-300 mb-4 leading-relaxed">
+                  <p className="text-sm sm:text-base text-gray-300 mb-3 md:mb-4 leading-relaxed">
                     {children}
                   </p>
                 ),
@@ -2513,22 +2528,22 @@ This documentation is being developed. Please check back soon for comprehensive 
 
   function WelcomeScreen() {
     return (
-      <div className="max-w-6xl mx-auto p-8">
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-6">
-            <div className="bg-gradient-to-br from-orange-500 to-red-600 p-3">
-              <Terminal className="h-8 w-8 text-black" />
+      <div className="max-w-6xl mx-auto p-4 sm:p-6 md:p-8">
+        <div className="text-center mb-8 md:mb-12">
+          <div className="flex items-center justify-center mb-4 md:mb-6">
+            <div className="bg-gradient-to-br from-orange-500 to-red-600 p-2 md:p-3">
+              <Terminal className="h-6 w-6 md:h-8 md:w-8 text-black" />
             </div>
           </div>
-          <h1 className="text-5xl font-bold text-white mb-4 font-press-start">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 font-press-start px-4">
             MAXIMALLY DOCUMENTATION
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto px-4">
             Comprehensive resources for participating in and organizing India's premier hackathon platform.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {docs.map((category) => (
             <div
               key={category.name}
@@ -2544,7 +2559,7 @@ This documentation is being developed. Please check back soon for comprehensive 
                 <div className="text-orange-500 group-hover:text-orange-400 transition-colors">
                   {category.icon}
                 </div>
-                <h3 className="ml-3 text-lg font-semibold text-white font-press-start text-xs">
+                <h3 className="ml-3 text-sm sm:text-base font-semibold text-white font-press-start">
                   {category.displayName.toUpperCase()}
                 </h3>
               </div>
@@ -2568,23 +2583,23 @@ This documentation is being developed. Please check back soon for comprehensive 
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-r from-orange-500/10 to-red-600/10 border border-orange-500/20 rounded-lg p-8 text-center">
-          <h2 className="text-2xl font-bold text-white mb-4 font-press-start">
+        <div className="mt-12 md:mt-16 bg-gradient-to-r from-orange-500/10 to-red-600/10 border border-orange-500/20 rounded-lg p-6 md:p-8 text-center">
+          <h2 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 font-press-start">
             NEED HELP?
           </h2>
-          <p className="text-gray-400 mb-6">
+          <p className="text-sm md:text-base text-gray-400 mb-4 md:mb-6 px-4">
             Can't find what you're looking for? Our community is here to help!
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 md:gap-4">
             <a 
               href="https://discord.gg/maximally" 
-              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded font-press-start text-xs transition-colors"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded font-press-start text-[10px] sm:text-xs transition-colors w-full sm:w-auto"
             >
               JOIN DISCORD
             </a>
             <a 
               href="/contact" 
-              className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded font-press-start text-xs border border-gray-700 transition-colors"
+              className="bg-gray-800 hover:bg-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded font-press-start text-[10px] sm:text-xs border border-gray-700 transition-colors w-full sm:w-auto"
             >
               CONTACT SUPPORT
             </a>

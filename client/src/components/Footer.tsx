@@ -215,14 +215,6 @@ const Footer = () => {
                   Terms
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/thank-you"
-                  className="hover:text-purple-300 transition-colors block"
-                >
-                  Thank You
-                </Link>
-              </li>
             </ul>
           </div>
         </div>

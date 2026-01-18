@@ -246,7 +246,7 @@ Continue reading the documentation to learn more about ${doc.title}.`;
   })).filter(category => category.files.length > 0);
 
   const Sidebar = () => (
-    <div className="w-80 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
+    <div className="w-full md:w-80 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700">
         {/* Home Link */}
         <Link 
@@ -317,7 +317,7 @@ Continue reading the documentation to learn more about ${doc.title}.`;
   );
 
   const TableOfContents = () => (
-    <div className="w-64 p-6">
+    <div className="w-full lg:w-64 p-6">
       <h3 className="font-semibold text-gray-900 dark:text-white mb-4">On this page</h3>
       <div className="space-y-2">
         {tableOfContents.map((item) => (
@@ -350,22 +350,22 @@ Continue reading the documentation to learn more about ${doc.title}.`;
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
           <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
-          <div className="relative">
+          <div className="absolute left-0 top-0 w-full sm:w-80 h-full overflow-hidden">
             <Sidebar />
           </div>
         </div>
       )}
 
       {/* Desktop sidebar */}
-      <div className="hidden md:block fixed top-0 left-0 h-screen overflow-hidden z-40">
+      <div className="hidden md:flex md:flex-col fixed top-0 left-0 h-screen overflow-hidden z-40">
         <Sidebar />
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex ml-80 md:ml-80">
-        <div className="flex-1 max-w-4xl">
-          {/* Mobile header */}
-          <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex-1 flex md:ml-80 w-full">
+        <div className="flex-1 w-full md:max-w-4xl flex flex-col">
+          {/* Mobile header - Fixed at top */}
+          <div className="md:hidden fixed top-0 left-0 right-0 flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 z-30">
             <Button
               variant="ghost"
               size="sm"
@@ -387,10 +387,12 @@ Continue reading the documentation to learn more about ${doc.title}.`;
             <div className="w-8" />
           </div>
 
+          {/* Content wrapper with padding for fixed header */}
+          <div className="md:pt-0 pt-[73px] flex-1">
           {/* Breadcrumb */}
           {currentDoc && (
-            <div className="p-6 pb-0">
-              <nav className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+            <div className="p-4 md:p-6 pb-0">
+              <nav className="flex items-center space-x-2 text-xs md:text-sm text-gray-500 dark:text-gray-400 overflow-x-auto">
                 <Link to="/docs" className="hover:text-gray-700 dark:hover:text-gray-300">
                   Docs
                 </Link>
@@ -403,18 +405,18 @@ Continue reading the documentation to learn more about ${doc.title}.`;
           )}
 
           {/* Document content */}
-          <div className="p-6">
+          <div className="p-4 md:p-6 bg-white dark:bg-gray-950">
             {currentDoc ? (
-              <div className="prose prose-lg dark:prose-invert max-w-none">
-                <div className="mb-8">
-                  <Badge variant="secondary" className="mb-4">
+              <div className="prose prose-sm md:prose-lg dark:prose-invert max-w-none text-gray-900 dark:text-gray-100">
+                <div className="mb-6 md:mb-8">
+                  <Badge variant="secondary" className="mb-3 md:mb-4 text-xs md:text-sm">
                     {currentDoc.category.replace('-', ' ')}
                   </Badge>
-                  <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                  <h1 className="text-2xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                     {currentDoc.title}
                   </h1>
                   {currentDoc.description && (
-                    <p className="text-xl text-gray-600 dark:text-gray-400">
+                    <p className="text-base md:text-xl text-gray-600 dark:text-gray-400">
                       {currentDoc.description}
                     </p>
                   )}
@@ -472,6 +474,7 @@ Continue reading the documentation to learn more about ${doc.title}.`;
                 </p>
               </div>
             )}
+          </div>
           </div>
         </div>
 

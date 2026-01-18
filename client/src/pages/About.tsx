@@ -1,34 +1,19 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { 
   ArrowRight, 
   Globe, 
   Code, 
-  Users, 
   Calendar, 
   ExternalLink,
-  Target,
   Zap,
   Heart,
-  MapPin,
   Mail,
-  Loader2,
   Sparkles,
-  Star,
   Rocket,
   MessageSquare
 } from 'lucide-react';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
-import { supabase } from '@/lib/supabaseClient';
-
-interface CoreTeamMember {
-  id: number;
-  name: string;
-  role_in_company: string;
-  company?: string;
-  description?: string;
-}
 
 // REMOVED - Judge account system deprecated (Platform Simplification)
 // FeaturedJudge interface removed - judges are now managed per-hackathon without accounts
@@ -213,196 +198,7 @@ const WhatWereBuilding = () => {
   );
 };
 
-const PeoplePreview = () => {
-  const [coreTeam, setCoreTeam] = useState<CoreTeamMember[]>([]);
-  // REMOVED - Judge account system deprecated (Platform Simplification)
-  // Featured judges state removed - judges are now managed per-hackathon without accounts
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPeopleData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        if (!supabase) throw new Error('Supabase client not available');
-        
-        type DashboardRow = {
-          featured_core_id_1?: number | null;
-          featured_core_id_2?: number | null;
-          featured_core_id_3?: number | null;
-          // REMOVED - Judge account system deprecated (Platform Simplification)
-          // featured_judge_id columns removed from dashboard table
-        };
-
-        const db = supabase as any;
-        const { data: dashboardData, error: dashboardError } = await db
-          .from('dashboard')
-          .select('featured_core_id_1, featured_core_id_2, featured_core_id_3')
-          .eq('id', 1)
-          .single() as { data?: DashboardRow; error?: any };
-
-        if (dashboardError) {
-          throw new Error(`Dashboard fetch failed: ${dashboardError.message}`);
-        }
-
-        const coreIds = [
-          dashboardData?.featured_core_id_1,
-          dashboardData?.featured_core_id_2,
-          dashboardData?.featured_core_id_3
-        ].filter(id => id !== null);
-
-        // REMOVED - Judge account system deprecated (Platform Simplification)
-        // Featured judges fetching removed - judges are now managed per-hackathon without accounts
-
-        if (coreIds.length > 0) {
-          const { data: coreData, error: coreError } = await db
-            .from('people')
-            .select('id, name, role_in_company, company, description')
-            .in('id', coreIds) as { data?: any[]; error?: any };
-
-          if (coreError) {
-            throw new Error(`Core team fetch failed: ${coreError.message}`);
-          }
-
-          const coreDataArr: any[] = coreData || [];
-          const sortedCoreTeam = coreIds.map(id => 
-            coreDataArr.find(member => member.id === id)
-          ).filter(member => member !== undefined) as CoreTeamMember[];
-
-          setCoreTeam(sortedCoreTeam);
-        }
-
-        // REMOVED - Judge account system deprecated (Platform Simplification)
-        // Featured judges fetching removed - judges are now managed per-hackathon without accounts
-
-      } catch (err: any) {
-        setError(err.message || 'Failed to load people data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPeopleData();
-  }, []);
-
-  return (
-    <section className="py-16 sm:py-24 bg-black relative">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.08)_0%,transparent_60%)]" />
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 border border-pink-500/30 mb-6">
-            <Users className="w-4 h-4 text-pink-400" />
-            <span className="font-press-start text-[10px] sm:text-xs text-pink-300">THE TEAM</span>
-          </div>
-          <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
-            OUR{" "}
-            <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-              PEOPLE
-            </span>
-          </h2>
-          <p className="font-jetbrains text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">
-            Meet the students and builders behind Maximally
-          </p>
-        </div>
-        
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <div className="bg-rose-500/20 border border-rose-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
-              <Users className="h-6 w-6 text-rose-400" />
-            </div>
-            <h3 className="font-press-start text-sm sm:text-base text-rose-300 mb-2">
-              CORE TEAM
-            </h3>
-          </div>
-          
-          {loading && (
-            <div className="text-center py-12">
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-purple-500/10 border border-purple-500/30">
-                <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
-                <span className="font-press-start text-xs text-purple-300">LOADING TEAM</span>
-              </div>
-            </div>
-          )}
-
-          {error && !loading && (
-            <div className="text-center py-12">
-              <div className="bg-red-500/10 border border-red-500/30 px-6 py-4 inline-block mb-4">
-                <span className="font-press-start text-xs text-red-300">ERROR LOADING TEAM</span>
-              </div>
-              <p className="text-red-400 font-jetbrains text-sm mb-4">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="bg-purple-500/20 border border-purple-500/40 px-4 py-2 hover:bg-purple-500/30 transition-colors"
-              >
-                <span className="font-press-start text-xs text-purple-300">RETRY</span>
-              </button>
-            </div>
-          )}
-
-          {!loading && !error && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-              {coreTeam.map((member) => (
-                <div 
-                  key={member.id} 
-                  className="group bg-gradient-to-br from-rose-500/10 to-pink-500/10 border border-rose-500/30 p-6 transition-all duration-300 hover:scale-[1.02] hover:border-rose-400/50"
-                  data-testid={`team-member-${member.id}`}
-                >
-                  <div className="text-center">
-                    <div className="bg-rose-500/20 border border-rose-500/40 w-12 h-12 flex items-center justify-center mx-auto mb-4">
-                      <span className="font-press-start text-xs text-rose-300">
-                        {member.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    
-                    <h4 className="font-press-start text-xs text-white mb-2">
-                      {member.name}
-                    </h4>
-                    
-                    <p className="font-press-start text-[10px] text-rose-400 mb-3">
-                      {member.role_in_company}
-                    </p>
-                    
-                    {member.company && (
-                      <p className="font-jetbrains text-xs text-gray-500 mb-2">
-                        {member.company}
-                      </p>
-                    )}
-                    
-                    {member.description && (
-                      <p className="font-jetbrains text-xs text-gray-400 leading-relaxed">
-                        {member.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          
-          {!loading && !error && (
-            <div className="text-center">
-              <Link 
-                to="/people/core" 
-                className="inline-flex items-center gap-2 px-6 py-3 bg-rose-500/20 border border-rose-500/40 hover:border-rose-400 text-rose-300 hover:text-rose-200 font-press-start text-[10px] transition-all duration-300"
-                data-testid="link-see-full-team"
-              >
-                SEE FULL TEAM <ArrowRight className="h-3 w-3" />
-              </Link>
-            </div>
-          )}
-        </div>
-
-        {/* REMOVED - Judge account system deprecated (Platform Simplification)
-        Featured Judges section has been removed as part of platform simplification.
-        Judges are now managed per-hackathon without accounts.
-        */}
-      </div>
-    </section>
-  );
-};
 
 const Partners = () => {
   const partners = [
@@ -586,7 +382,6 @@ const About = () => {
       <div className="min-h-screen bg-black text-white">
         <HeroSection />
         <WhatWereBuilding />
-        <PeoplePreview />
         <Partners />
         <ContactSection />
         <Footer />

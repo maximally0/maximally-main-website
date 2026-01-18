@@ -11,7 +11,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #E50914 0%, #E50914 50%, transparent 50%);
+  background: linear-gradient(90deg, #a855f7 0%, #a855f7 50%, transparent 50%);
   background-size: 8px 2px;
 }
 
@@ -19,7 +19,7 @@
   border: 1px solid #000;
   box-shadow: 
     1px 1px 0 #000,
-    2px 2px 0 #E50914;
+    2px 2px 0 #a855f7;
 }
 
 .pixel-underline {
@@ -57,7 +57,7 @@
 .blog-dark-theme h4,
 .blog-dark-theme h5,
 .blog-dark-theme h6 {
-  color: #E50914;
+  color: #e0e0e0;
 }
 
 .blog-dark-theme p,
@@ -116,7 +116,7 @@
 }
 
 .blog-dark-theme blockquote {
-  border-left: 4px solid #E50914;
+  border-left: 4px solid #a855f7;
   background: rgba(31, 41, 55, 0.5);
   color: #f3f4f6;
   padding: 1rem;
@@ -143,25 +143,25 @@
 }
 
 .blog-dark-theme ul li::marker {
-  color: #E50914;
+  color: #a855f7;
 }
 
 .blog-dark-theme ol li::marker {
-  color: #E50914;
+  color: #a855f7;
 }
 
 /* Ensure all text elements have proper contrast */
 .prose-invert {
   --tw-prose-body: #f3f4f6;
-  --tw-prose-headings: #E50914;
+  --tw-prose-headings: #e0e0e0;
   --tw-prose-lead: #fbbf24;
   --tw-prose-links: #0066cc;
   --tw-prose-bold: #ffffff;
-  --tw-prose-counters: #E50914;
-  --tw-prose-bullets: #E50914;
+  --tw-prose-counters: #a855f7;
+  --tw-prose-bullets: #a855f7;
   --tw-prose-hr: #374151;
   --tw-prose-quotes: #f3f4f6;
-  --tw-prose-quote-borders: #E50914;
+  --tw-prose-quote-borders: #a855f7;
   --tw-prose-captions: #f3f4f6;
   --tw-prose-code: #10b981;
   --tw-prose-pre-code: #10b981;
@@ -183,7 +183,7 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, #E50914 0%, transparent 100%);
+  background: linear-gradient(90deg, #a855f7 0%, transparent 100%);
 }
 
 /* Table enhancements */
@@ -199,7 +199,7 @@
 }
 
 .pixel-table th {
-  background: #E50914;
+  background: #a855f7;
   color: white;
 }
 
@@ -213,7 +213,7 @@
   content: '▸';
   position: absolute;
   left: 0;
-  color: #E50914;
+  color: #a855f7;
   font-family: 'Press Start 2P', monospace;
   font-size: 0.8rem;
   top: 0.1rem;
@@ -243,7 +243,7 @@
   left: 0;
   width: 0%;
   height: 3px;
-  background: linear-gradient(90deg, #E50914, #0066cc);
+  background: linear-gradient(90deg, #a855f7, #0066cc);
   z-index: 1000;
   transition: width 0.25s ease;
 }
@@ -274,12 +274,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #E50914;
+  background: #a855f7;
   border-radius: 0;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #cc0812;
+  background: #9333ea;
 }
 
 /* Responsive typography adjustments */

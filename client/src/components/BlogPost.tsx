@@ -68,9 +68,9 @@ const BlogPost = ({ title, date, readTime, content }: BlogPostProps) => {
         <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-purple-500/30 p-6 md:p-10">
           <div className="prose prose-lg prose-invert max-w-none font-jetbrains
             [&_p]:text-gray-300 [&_p]:leading-relaxed [&_p]:mb-6
-            [&_h1]:font-press-start [&_h1]:text-xl [&_h1]:bg-gradient-to-r [&_h1]:from-purple-400 [&_h1]:to-pink-400 [&_h1]:bg-clip-text [&_h1]:text-transparent [&_h1]:mt-10 [&_h1]:mb-6
-            [&_h2]:font-press-start [&_h2]:text-lg [&_h2]:bg-gradient-to-r [&_h2]:from-purple-400 [&_h2]:to-pink-400 [&_h2]:bg-clip-text [&_h2]:text-transparent [&_h2]:mt-10 [&_h2]:mb-6
-            [&_h3]:font-press-start [&_h3]:text-sm [&_h3]:text-blue-400 [&_h3]:mt-8 [&_h3]:mb-4
+            [&_h1]:font-press-start [&_h1]:text-xl [&_h1]:text-white [&_h1]:mt-10 [&_h1]:mb-6
+            [&_h2]:font-press-start [&_h2]:text-lg [&_h2]:text-white [&_h2]:mt-10 [&_h2]:mb-6
+            [&_h3]:font-press-start [&_h3]:text-sm [&_h3]:text-white [&_h3]:mt-8 [&_h3]:mb-4
             [&_h4]:font-press-start [&_h4]:text-xs [&_h4]:text-cyan-400 [&_h4]:mt-6 [&_h4]:mb-3
             [&_strong]:text-white [&_strong]:font-bold
             [&_em]:text-purple-300

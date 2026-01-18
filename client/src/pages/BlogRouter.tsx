@@ -220,22 +220,22 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
   // Custom markdown components with enhanced styling
   const markdownComponents = {
     h1: ({ children }: any) => (
-      <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl mb-6 mt-12 first:mt-0 leading-tight text-maximally-red relative">
-        <span className="absolute -left-4 text-maximally-red/20 select-none">#</span>
+      <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl mb-6 mt-12 first:mt-0 leading-tight text-white relative">
+        <span className="absolute -left-4 text-purple-400/40 select-none">#</span>
         {children}
       </h1>
     ),
     h2: ({ children }: any) => (
-      <h2 className="font-press-start text-lg sm:text-xl md:text-2xl mb-5 mt-10 leading-tight text-maximally-red relative group">
-        <span className="absolute -left-3 text-maximally-red/20 select-none group-hover:text-maximally-red/40 transition-colors">##</span>
-        <div className="inline-block pixel-border-bottom pb-2">
+      <h2 className="font-press-start text-lg sm:text-xl md:text-2xl mb-5 mt-10 leading-tight relative group">
+        <span className="absolute -left-3 text-purple-400/40 select-none group-hover:text-purple-400/60 transition-colors">##</span>
+        <div className="inline-block pixel-border-bottom pb-2 text-white">
           {children}
         </div>
       </h2>
     ),
     h3: ({ children }: any) => (
-      <h3 className="font-press-start text-base sm:text-lg md:text-xl mb-4 mt-8 leading-tight text-maximally-red relative group">
-        <span className="absolute -left-3 text-maximally-red/20 select-none group-hover:text-maximally-red/40 transition-colors">###</span>
+      <h3 className="font-press-start text-base sm:text-lg md:text-xl mb-4 mt-8 leading-tight text-white relative group">
+        <span className="absolute -left-3 text-purple-400/40 select-none group-hover:text-purple-400/60 transition-colors">###</span>
         {children}
       </h3>
     ),
@@ -366,33 +366,33 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
     ),
     table: ({ children }: any) => (
       <div className="my-8 overflow-x-auto">
-        <table className="w-full pixel-border bg-white">
+        <table className="w-full pixel-border bg-gray-900">
           {children}
         </table>
       </div>
     ),
     thead: ({ children }: any) => (
-      <thead className="bg-maximally-red text-white">
+      <thead className="bg-purple-600 text-white">
         {children}
       </thead>
     ),
     tbody: ({ children }: any) => (
-      <tbody className="divide-y divide-maximally-black/10">
+      <tbody className="divide-y divide-gray-700">
         {children}
       </tbody>
     ),
     tr: ({ children }: any) => (
-      <tr className="hover:bg-maximally-blue/5 transition-colors">
+      <tr className="hover:bg-purple-500/10 transition-colors">
         {children}
       </tr>
     ),
     th: ({ children }: any) => (
-      <th className="px-4 py-3 text-left font-press-start text-xs">
+      <th className="px-4 py-3 text-left font-press-start text-xs text-white">
         {children}
       </th>
     ),
     td: ({ children }: any) => (
-      <td className="px-4 py-3 font-jetbrains text-sm">
+      <td className="px-4 py-3 font-jetbrains text-sm text-white">
         {children}
       </td>
     ),
@@ -548,11 +548,11 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
       </div>
       
       {/* Join Discord */}
-      <div className="pixel-border bg-gradient-to-br from-maximally-red/10 to-maximally-blue/10 p-6 sm:p-8 my-12 text-center">
-        <h3 className="font-press-start text-maximally-black mb-4 text-sm">
+      <div className="pixel-border bg-gradient-to-br from-purple-900/30 to-blue-900/30 p-6 sm:p-8 my-12 text-center">
+        <h3 className="font-press-start text-white mb-4 text-sm">
           💬 Join Our Discord
         </h3>
-        <p className="font-jetbrains text-maximally-black/70 mb-6 text-sm">
+        <p className="font-jetbrains text-gray-300 mb-6 text-sm">
           Connect with fellow young entrepreneurs, get real-time updates, and join the conversation in our vibrant community.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
@@ -567,7 +567,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
             </svg>
             Join Discord
           </a>
-          <div className="font-jetbrains text-maximally-black/60 text-xs">
+          <div className="font-jetbrains text-gray-400 text-xs">
             🔥 5000+ young builders already connected
           </div>
         </div>
