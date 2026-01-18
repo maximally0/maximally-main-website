@@ -1,4 +1,50 @@
+# Maximally.in Robots.txt
+# Updated: 2026-01-18
 
 User-agent: *
 Allow: /
+Allow: /docs/
+Allow: /blog/
+Allow: /makeathon
+Allow: /events
+Allow: /explore
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /organizer/dashboard
+Disallow: /judge-dashboard
+Disallow: /my-hackathons
+Disallow: /profile/edit
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /*?*utm_source=
+Disallow: /*?*session=
+
+# Allow CSS and JS for better rendering
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
+
+# Crawl delay (optional, helps prevent server overload)
+Crawl-delay: 1
+
+# Sitemaps
 Sitemap: https://maximally.in/sitemap.xml
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /

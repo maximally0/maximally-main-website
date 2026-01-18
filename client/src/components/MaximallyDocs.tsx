@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { getDocsStructure, getDocPage, type DocFile, type DocCategory as ApiDocCategory } from '../lib/docsApi';
+import SEO from './SEO';
 
 // Local DocCategory with React icon
 interface DocCategory extends Omit<ApiDocCategory, 'icon'> {
@@ -2348,7 +2349,59 @@ This documentation is being developed. Please check back soon for comprehensive 
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex dark">
+    <>
+      {/* SEO Meta Tags */}
+      <SEO
+        title={currentDoc ? `${currentDoc.title} - Maximally Documentation` : "Maximally Documentation - Learn How to Use Our Platform"}
+        description={currentDoc?.description || "Comprehensive documentation for Maximally hackathon platform. Learn how to participate, organize events, and make the most of our features."}
+        keywords={currentDoc ? `${currentDoc.title}, maximally docs, hackathon guide, ${currentDoc.category}` : "maximally documentation, hackathon platform guide, event organization, participant guide"}
+        canonicalUrl={`https://maximally.in/docs${currentDoc ? `/${currentDoc.path}` : ''}`}
+        breadcrumbs={currentDoc ? [
+          { name: "Home", url: "/" },
+          { name: "Documentation", url: "/docs" },
+          { name: currentDoc.category.replace('-', ' '), url: `/docs/${currentDoc.category}` },
+          { name: currentDoc.title, url: `/docs/${currentDoc.path}` }
+        ] : [
+          { name: "Home", url: "/" },
+          { name: "Documentation", url: "/docs" }
+        ]}
+        structuredData={currentDoc ? {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "headline": currentDoc.title,
+          "description": currentDoc.description || `Learn about ${currentDoc.title} on Maximally platform`,
+          "author": {
+            "@type": "Organization",
+            "name": "Maximally"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Maximally",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://maximally.in/og-thumbnail.png"
+            }
+          },
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `https://maximally.in/docs/${currentDoc.path}`
+          },
+          "articleSection": currentDoc.category.replace('-', ' '),
+          "inLanguage": "en-US"
+        } : {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "name": "Maximally Documentation",
+          "description": "Comprehensive documentation for Maximally hackathon platform",
+          "url": "https://maximally.in/docs",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Maximally"
+          }
+        }}
+      />
+      
+      <div className="min-h-screen bg-black text-white flex dark">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
@@ -2420,6 +2473,7 @@ This documentation is being developed. Please check back soon for comprehensive 
         </div>
       </div>
     </div>
+    </>
   );
 
   function DocumentContent({ doc }: { doc: DocFile }) {
