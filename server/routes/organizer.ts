@@ -3,6 +3,8 @@ import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { sendWinnerNotification } from "../services/email";
+import { validateHackathonDates, validateDateUpdate } from "../../shared/dateValidation";
+import { rateLimiters } from "../middleware/rateLimiter";
 
 // Helper to get user ID from bearer token
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
@@ -35,7 +37,7 @@ export function registerOrganizerRoutes(app: Express) {
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
   // Create a new hackathon (draft)
-  app.post("/api/organizer/hackathons", async (req, res) => {
+  app.post("/api/organizer/hackathons", rateLimiters.general, async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
@@ -81,6 +83,17 @@ export function registerOrganizerRoutes(app: Express) {
       }
 
       const { hackathonName, slug, startDate, endDate } = validation.data;
+
+      // Validate dates
+      const dateValidation = validateHackathonDates({ startDate, endDate });
+      if (!dateValidation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid dates',
+          errors: dateValidation.errors,
+          warnings: dateValidation.warnings
+        });
+      }
 
       // Check if slug is already taken
       const { data: existing } = await supabaseAdmin
@@ -310,7 +323,7 @@ export function registerOrganizerRoutes(app: Express) {
   });
 
   // Update hackathon
-  app.patch("/api/organizer/hackathons/:id", async (req, res) => {
+  app.patch("/api/organizer/hackathons/:id", rateLimiters.general, async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
@@ -376,10 +389,36 @@ export function registerOrganizerRoutes(app: Express) {
       delete updates._isCoOrganizer;
       delete updates._isOwner;
 
-      // Recalculate duration if dates changed
+      // Validate date changes if provided
       if (updates.start_date || updates.end_date) {
-        const start = new Date(updates.start_date || existing.start_date);
-        const end = new Date(updates.end_date || existing.end_date);
+        const newStartDate = updates.start_date || existing.start_date;
+        const newEndDate = updates.end_date || existing.end_date;
+        
+        // Validate the new dates
+        const dateValidation = validateDateUpdate(
+          { startDate: existing.start_date, endDate: existing.end_date },
+          { startDate: newStartDate, endDate: newEndDate },
+          existing.status
+        );
+        
+        if (!dateValidation.isValid) {
+          return res.status(400).json({
+            success: false,
+            message: 'Invalid date update',
+            errors: dateValidation.errors,
+            warnings: dateValidation.warnings
+          });
+        }
+        
+        // Include warnings in response if any
+        if (dateValidation.warnings.length > 0) {
+          // Store warnings to include in success response
+          updates._warnings = dateValidation.warnings;
+        }
+        
+        // Recalculate duration if dates changed
+        const start = new Date(newStartDate);
+        const end = new Date(newEndDate);
         const diffMs = end.getTime() - start.getTime();
         const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
         updates.duration = diffDays === 1 ? '1 day' : `${diffDays} days`;
@@ -485,7 +524,7 @@ export function registerOrganizerRoutes(app: Express) {
   });
 
   // Delete hackathon (organizer can delete their own hackathons)
-  app.delete("/api/organizer/hackathons/:id", async (req, res) => {
+  app.delete("/api/organizer/hackathons/:id", rateLimiters.general, async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
@@ -510,6 +549,48 @@ export function registerOrganizerRoutes(app: Express) {
 
       if (!existing) {
         return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Check if hackathon has registrations
+      const { count: registrationCount } = await supabaseAdmin
+        .from('hackathon_registrations')
+        .select('id', { count: 'exact' })
+        .eq('hackathon_id', id);
+
+      if (registrationCount && registrationCount > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot delete hackathon with ${registrationCount} active registration${registrationCount !== 1 ? 's' : ''}. Consider archiving instead.`,
+          registrationCount
+        });
+      }
+
+      // Check if hackathon has submissions
+      const { count: submissionCount } = await supabaseAdmin
+        .from('hackathon_submissions')
+        .select('id', { count: 'exact' })
+        .eq('hackathon_id', id);
+
+      if (submissionCount && submissionCount > 0) {
+        return res.status(400).json({
+          success: false,
+          message: `Cannot delete hackathon with ${submissionCount} submission${submissionCount !== 1 ? 's' : ''}. Consider archiving instead.`,
+          submissionCount
+        });
+      }
+
+      // Check if hackathon is published and has ended (safer to archive)
+      if (existing.status === 'published') {
+        const now = new Date();
+        const endDate = new Date(existing.end_date);
+        
+        if (now > endDate) {
+          return res.status(400).json({
+            success: false,
+            message: 'Cannot delete a hackathon that has already ended. Consider archiving instead.',
+            suggestion: 'Use PATCH to set status to "archived"'
+          });
+        }
       }
 
       // Delete the hackathon (this will cascade delete related data if configured)

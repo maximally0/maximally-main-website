@@ -171,6 +171,7 @@ import GalleryProjectDetail from './pages/GalleryProjectDetail';
 import GallerySubmit from './pages/GallerySubmit';
 import GalleryEdit from './pages/GalleryEdit';
 import PlatformAnalytics from './pages/PlatformAnalytics';
+import MaximallyDocs from './components/MaximallyDocs';
 
 const queryClient = new QueryClient();
 
@@ -184,12 +185,16 @@ const ScrollToTop = () => {
 
 const AppContent = () => {
   const { loading } = useAuth();
+  const location = useLocation();
+  
+  // Hide navbar on docs pages
+  const hideNavbar = location.pathname.startsWith('/docs');
   
   return (
     <>
       <LoadingBar isLoading={loading} />
       <ScrollToTop />
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
@@ -338,6 +343,10 @@ const AppContent = () => {
         <Route path="/become-a-supporter" element={<BecomeASupporter />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
+        
+        {/* Documentation */}
+        <Route path="/docs" element={<MaximallyDocs />} />
+        <Route path="/docs/*" element={<MaximallyDocs />} />
 
         {/* Community redirect to Discord */}
         <Route path="/community" element={<CommunityRedirect />} />

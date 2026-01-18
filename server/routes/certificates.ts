@@ -22,6 +22,48 @@ function generateCertificateId(): string {
 export function registerCertificateRoutes(app: Express) {
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
+  // Test endpoint to verify service role permissions
+  app.get("/api/test/service-role", async (req, res) => {
+    try {
+      // Test if service role can read certificates table
+      const { data, error } = await supabaseAdmin
+        .from('certificates')
+        .select('id')
+        .limit(1);
+      
+      if (error) {
+        return res.json({ 
+          success: false, 
+          message: 'Service role cannot read certificates', 
+          error: error.message 
+        });
+      }
+      
+      // Test if service role can read organizer_hackathons
+      const { data: hackathons, error: hackathonError } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id, hackathon_name')
+        .limit(1);
+      
+      if (hackathonError) {
+        return res.json({ 
+          success: false, 
+          message: 'Service role cannot read organizer_hackathons', 
+          error: hackathonError.message 
+        });
+      }
+      
+      res.json({ 
+        success: true, 
+        message: 'Service role is working correctly',
+        certificatesCount: data?.length || 0,
+        hackathonsCount: hackathons?.length || 0
+      });
+    } catch (error: any) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
   // ============================================
   // CERTIFICATE GENERATION
   // ============================================
@@ -106,23 +148,39 @@ export function registerCertificateRoutes(app: Express) {
             }
           }
           
-          // Insert certificate record
+          // Insert certificate record with enhanced error logging
+          console.log('Attempting to insert certificate for:', recipient.name, 'hackathon:', eventName);
+          
+          const certificateData = {
+            certificate_id: certificateId,
+            participant_name: recipient.name,
+            participant_email: recipient.email,
+            hackathon_name: eventName,
+            type: recipient.type,
+            position: recipient.position || null,
+            status: 'active',
+            generated_by: userId,
+            admin_email: organizerEmail,
+            maximally_username: actualUsername,
+          };
+          
+          console.log('Certificate data:', certificateData);
+          
           const { data: cert, error: certError } = await supabaseAdmin
             .from('certificates')
-            .insert({
-              certificate_id: certificateId,
-              participant_name: recipient.name,
-              participant_email: recipient.email,
-              hackathon_name: eventName,
-              type: recipient.type,
-              position: recipient.position || null,
-              status: 'active',
-              generated_by: userId,
-              admin_email: organizerEmail,
-              maximally_username: actualUsername,
-            })
+            .insert(certificateData)
             .select()
             .single();
+
+          if (certError) {
+            console.error('Certificate insertion error details:', {
+              error: certError,
+              code: certError.code,
+              message: certError.message,
+              details: certError.details,
+              hint: certError.hint
+            });
+          }
 
           if (certError) {
             errors.push(`Failed to create certificate for ${recipient.name}: ${certError.message}`);

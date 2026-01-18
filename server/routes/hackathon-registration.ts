@@ -9,6 +9,20 @@ import {
   sendTeamInvitationEmail,
   sendRegistrationMilestoneEmail
 } from "../services/email";
+import { rateLimiters } from "../middleware/rateLimiter";
+import { 
+  validateTeamCreation, 
+  validateTeamJoin, 
+  validateTeamLeave, 
+  validateTeamDisband,
+  validateLeadershipTransfer,
+  validateTeamInvitation,
+  generateTeamCode,
+  validateTeamCode,
+  validateTeamNameUniqueness,
+  validateTeamSizeLimit,
+  validateTeamMemberPermissions
+} from "../../shared/teamValidation";
 
 // Milestone thresholds for registration notifications
 const REGISTRATION_MILESTONES = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
@@ -139,7 +153,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
   });
 
   // Register for hackathon (individual)
-  app.post("/api/hackathons/:hackathonId/register", async (req, res) => {
+  app.post("/api/hackathons/:hackathonId/register", rateLimiters.registration, async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
@@ -329,7 +343,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
   // ============================================
 
   // Create team
-  app.post("/api/hackathons/:hackathonId/teams", async (req, res) => {
+  app.post("/api/hackathons/:hackathonId/teams", rateLimiters.general, async (req, res) => {
     try {
       const authHeader = req.headers['authorization'];
       if (!authHeader?.startsWith('Bearer ')) {
@@ -345,8 +359,39 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       const { hackathonId } = req.params;
       const { team_name } = req.body;
 
-      if (!team_name || !String(team_name).trim()) {
-        return res.status(400).json({ success: false, message: 'Team name is required' });
+      // Get hackathon details for validation
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('max_team_size, status, end_date')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon) {
+        return res.status(404).json({ success: false, message: 'Hackathon not found' });
+      }
+
+      // Check if hackathon is still active
+      if (hackathon.status !== 'published') {
+        return res.status(403).json({ success: false, message: 'Hackathon is not published' });
+      }
+
+      const now = new Date();
+      const endDate = hackathon.end_date ? new Date(hackathon.end_date) : null;
+      if (endDate && now > endDate) {
+        return res.status(403).json({ success: false, message: 'Cannot create team after hackathon has ended' });
+      }
+
+      // Validate team creation
+      const maxTeamSize = hackathon.max_team_size || 5;
+      const teamValidation = validateTeamCreation(team_name, maxTeamSize, userId);
+      
+      if (!teamValidation.isValid) {
+        return res.status(400).json({
+          success: false,
+          message: 'Team validation failed',
+          errors: teamValidation.errors,
+          warnings: teamValidation.warnings
+        });
       }
 
       // Must be registered to create a team
@@ -369,14 +414,60 @@ export function registerHackathonRegistrationRoutes(app: Express) {
         return res.status(400).json({ success: false, message: 'You are already in a team' });
       }
 
-      // Create team with generated code
+      // Check team name uniqueness within hackathon
+      const { data: existingTeams } = await supabaseAdmin
+        .from('hackathon_teams')
+        .select('team_name')
+        .eq('hackathon_id', hackathonId)
+        .eq('status', 'active');
+
+      const existingTeamNames = existingTeams?.map(t => t.team_name) || [];
+      const uniquenessValidation = validateTeamNameUniqueness(team_name, hackathonId, existingTeamNames);
+      
+      if (!uniquenessValidation.isValid) {
+        return res.status(409).json({
+          success: false,
+          message: 'Team name validation failed',
+          errors: uniquenessValidation.errors,
+          warnings: uniquenessValidation.warnings
+        });
+      }
+
+      // Generate unique team code
+      let teamCode = generateTeamCode();
+      let codeExists = true;
+      let attempts = 0;
+      
+      while (codeExists && attempts < 10) {
+        const { data: existingCode } = await supabaseAdmin
+          .from('hackathon_teams')
+          .select('id')
+          .eq('team_code', teamCode)
+          .single();
+        
+        if (!existingCode) {
+          codeExists = false;
+        } else {
+          teamCode = generateTeamCode();
+          attempts++;
+        }
+      }
+
+      if (attempts >= 10) {
+        return res.status(500).json({ success: false, message: 'Failed to generate unique team code' });
+      }
+
+      // Create team
       const { data: team, error: teamError } = await supabaseAdmin
         .from('hackathon_teams')
         .insert({
           hackathon_id: parseInt(hackathonId),
           team_name: String(team_name).trim(),
           team_leader_id: userId,
-          team_code: Math.random().toString(36).substring(2, 8).toUpperCase()
+          team_code: teamCode,
+          max_size: maxTeamSize,
+          current_size: 1,
+          status: 'active'
         });
 
       if (teamError) {
@@ -386,7 +477,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       // Get the created team data
       const { data: createdTeam, error: fetchError } = await supabaseAdmin
         .from('hackathon_teams')
-        .select('id, team_name, hackathon_id, team_leader_id, team_code, created_at')
+        .select('id, team_name, hackathon_id, team_leader_id, team_code, max_size, current_size, created_at')
         .eq('team_leader_id', userId)
         .eq('hackathon_id', parseInt(hackathonId))
         .order('created_at', { ascending: false })

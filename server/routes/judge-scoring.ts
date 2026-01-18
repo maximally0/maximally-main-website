@@ -10,6 +10,14 @@
 import type { Express, Response } from 'express';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createJudgeAuthMiddleware, type JudgeAuthenticatedRequest } from '../middleware/judgeAuth';
+import { 
+  validateJudgeScore, 
+  validateCriterionScore, 
+  validateJudgeSubmissionAccess,
+  validateScoreUpdate,
+  roundScore
+} from '../../shared/judgeScoreValidation';
+import { rateLimiters } from '../middleware/rateLimiter';
 
 /**
  * Score submission request body
@@ -168,11 +176,14 @@ export function registerJudgeScoringRoutes(app: Express): void {
    */
   app.post(
     '/api/judge/:token/score',
+    rateLimiters.general,
     judgeAuth,
     async (req: JudgeAuthenticatedRequest, res: Response) => {
       try {
         const { hackathonId, judgeId } = req.judgeAuth!;
-        const { submission_id, score, notes } = req.body as ScoreSubmissionBody;
+        const { submission_id, score, notes, criteria_scores } = req.body as ScoreSubmissionBody & {
+          criteria_scores?: Record<string, number>;
+        };
 
         // Validate required fields
         if (typeof submission_id !== 'number' || submission_id <= 0) {
@@ -182,17 +193,29 @@ export function registerJudgeScoringRoutes(app: Express): void {
           });
         }
 
-        if (typeof score !== 'number' || score < 0 || score > 10) {
+        // Enhanced score validation
+        if (typeof score !== 'number') {
           return res.status(400).json({
             success: false,
-            message: 'Score must be a number between 0 and 10',
+            message: 'Score must be a number',
           });
         }
+
+        // Validate score range (0-10 scale)
+        if (score < 0 || score > 10) {
+          return res.status(400).json({
+            success: false,
+            message: 'Score must be between 0 and 10',
+          });
+        }
+
+        // Round score to 2 decimal places
+        const roundedScore = roundScore(score, 2);
 
         // Verify submission belongs to this hackathon (Property 8: Judge Access Scope)
         const { data: submission, error: submissionError } = await supabaseAdmin
           .from('hackathon_submissions')
-          .select('id, hackathon_id')
+          .select('id, hackathon_id, status')
           .eq('id', submission_id)
           .single();
 
@@ -210,13 +233,47 @@ export function registerJudgeScoringRoutes(app: Express): void {
           });
         }
 
-        // Check if score already exists (upsert)
+        // Check if submission is disqualified
+        if (submission.status === 'disqualified') {
+          return res.status(400).json({
+            success: false,
+            message: 'Cannot score disqualified submissions',
+          });
+        }
+
+        // Validate notes length
+        if (notes && notes.length > 2000) {
+          return res.status(400).json({
+            success: false,
+            message: 'Notes cannot exceed 2000 characters',
+          });
+        }
+
+        // Check if score already exists (for update validation)
         const { data: existingScore } = await supabaseAdmin
           .from('judge_scores')
-          .select('id')
+          .select('*')
           .eq('judge_id', judgeId)
           .eq('submission_id', submission_id)
           .single();
+
+        // Validate score update if updating existing score
+        if (existingScore) {
+          const updateValidation = validateScoreUpdate(
+            existingScore as any,
+            { score: roundedScore, notes } as any,
+            true // Allow updates
+          );
+          
+          if (!updateValidation.isValid) {
+            return res.status(400).json({
+              success: false,
+              message: 'Score update validation failed',
+              errors: updateValidation.errors,
+              warnings: updateValidation.warnings
+            });
+          }
+        }
 
         let result;
         if (existingScore) {
@@ -224,7 +281,7 @@ export function registerJudgeScoringRoutes(app: Express): void {
           result = await supabaseAdmin
             .from('judge_scores')
             .update({
-              score,
+              score: roundedScore,
               notes: notes || null,
               scored_at: new Date().toISOString(),
             })
@@ -239,7 +296,7 @@ export function registerJudgeScoringRoutes(app: Express): void {
               hackathon_id: hackathonId,
               judge_id: judgeId,
               submission_id,
-              score,
+              score: roundedScore,
               notes: notes || null,
               scored_at: new Date().toISOString(),
             })
@@ -257,8 +314,9 @@ export function registerJudgeScoringRoutes(app: Express): void {
 
         return res.json({
           success: true,
-          message: existingScore ? 'Score updated' : 'Score submitted',
+          message: existingScore ? 'Score updated successfully' : 'Score submitted successfully',
           score: result.data,
+          warnings: existingScore ? ['Score has been updated'] : []
         });
       } catch (error) {
         console.error('Error in POST /api/judge/:token/score:', error);

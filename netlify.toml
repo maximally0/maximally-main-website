@@ -13,6 +13,11 @@
   node_bundler = "esbuild"
   included_files = ["netlify/functions/**", "server/**", "shared/**"]
 
+# Note: Netlify scheduled functions are configured in the Netlify UI, not in netlify.toml
+# The scheduled-tasks function should be configured in the Netlify dashboard with:
+# - Function: scheduled-tasks
+# - Schedule: 0 */5 * * * * (every 5 minutes)
+
 [[redirects]]
   from = "/bootcamps"
   to = "/makeathon"

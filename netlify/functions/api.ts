@@ -46,6 +46,8 @@ import { registerAutoPublishGalleryRoutes } from "../../server/routes/auto-publi
 import { registerCertificateRoutes } from "../../server/routes/certificates";
 import { registerSubmissionModerationRoutes } from "../../server/routes/submission-moderation";
 import { registerFeaturedContentRoutes } from "../../server/routes/featured-content";
+import { registerEdgeCaseTestRoutes } from "../../server/routes/edge-case-tests";
+import { registerDocsRoutes } from "../../server/routes/docs";
 
 const app = express();
 app.use(express.json());
@@ -935,6 +937,8 @@ registerAutoPublishGalleryRoutes(app);
 registerCertificateRoutes(app);
 registerSubmissionModerationRoutes(app);
 registerFeaturedContentRoutes(app);
+registerEdgeCaseTestRoutes(app);
+registerDocsRoutes(app);
 
 // ============================================
 // CATCH-ALL ROUTE (MUST BE LAST)
