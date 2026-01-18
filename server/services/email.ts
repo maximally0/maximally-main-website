@@ -2390,6 +2390,7 @@ export async function sendCertificateEmail(data: {
   certificateId: string;
   certificateType: 'participant' | 'winner' | 'judge';
   position?: string;
+  batchId?: string;
 }) {
   const typeLabels = {
     participant: 'Participation',
@@ -2457,13 +2458,14 @@ export async function sendCertificateEmail(data: {
   // Use global email queue for rate limiting across all organizers
   const subject = `${typeEmoji[data.certificateType]} Your ${typeLabels[data.certificateType]} Certificate - ${data.hackathonName}`;
   
-  console.log(`📧 Queueing certificate email to ${data.email}`);
+  console.log(`📧 Queueing certificate email to ${data.email}${data.batchId ? ` (batch: ${data.batchId})` : ''}`);
   return sendEmailQueued({
     from: FROM_EMAIL,
     to: data.email,
     subject,
     html,
     priority: 'normal', // Certificate emails are normal priority
+    batchId: data.batchId,
   });
 }
 

@@ -346,6 +346,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
 @layer utilities {
   .hover\:shadow-glow-red:hover {
     box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);

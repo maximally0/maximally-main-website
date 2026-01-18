@@ -2,7 +2,7 @@
 import type { Express } from "express";
 import { createClient } from "@supabase/supabase-js";
 import { sendCertificateEmail } from "../services/email";
-import { queueEmail, getQueueStats } from "../services/emailQueue";
+import { queueEmail, getQueueStats, createBatch, getBatchProgress } from "../services/emailQueue";
 
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   const { data, error } = await supabaseAdmin.auth.getUser(token);
@@ -233,24 +233,40 @@ export function registerCertificateRoutes(app: Express) {
 
           generatedCertificates.push(cert);
 
-          // Send email if requested
+          // Queue email if requested (don't wait for it)
           if (send_email && recipient.email) {
-            try {
-              await sendCertificateEmail({
-                email: recipient.email,
-                userName: recipient.name,
-                hackathonName: eventName,
-                certificateId: certificateId,
-                certificateType: recipient.type,
-                position: recipient.position,
-              });
-            } catch (emailError: any) {
-              console.error(`Failed to send email to ${recipient.email}:`, emailError);
-              // Don't fail the whole operation for email errors
-            }
+            // Emails will be queued and sent by the email service
+            // We don't await here to avoid blocking certificate generation
           }
         } catch (err: any) {
           errors.push(`Error processing ${recipient.name}: ${err.message}`);
+        }
+      }
+
+      // If send_email is true, queue all emails with batch tracking
+      let batchId: string | undefined;
+      if (send_email && generatedCertificates.length > 0) {
+        batchId = `cert-${hackathonId}-${Date.now()}`;
+        const emailRecipients = generatedCertificates.filter(cert => cert.participant_email);
+        
+        // Create batch for tracking
+        createBatch(batchId, emailRecipients.length);
+        
+        // Queue all emails (non-blocking)
+        for (const cert of emailRecipients) {
+          try {
+            await sendCertificateEmail({
+              email: cert.participant_email,
+              userName: cert.participant_name,
+              hackathonName: eventName,
+              certificateId: cert.certificate_id,
+              certificateType: cert.type,
+              position: cert.position,
+              batchId: batchId,
+            });
+          } catch (emailError: any) {
+            console.error(`Failed to queue email for ${cert.participant_email}:`, emailError);
+          }
         }
       }
 
@@ -260,7 +276,8 @@ export function registerCertificateRoutes(app: Express) {
         replaced: deletedCount,
         total: recipients.length,
         errors: errors.length > 0 ? errors : undefined,
-        certificates: generatedCertificates
+        certificates: generatedCertificates,
+        batchId: batchId, // Return batch ID for progress tracking
       });
     } catch (error: any) {
       console.error('Certificate generation error:', error);
@@ -425,6 +442,7 @@ export function registerCertificateRoutes(app: Express) {
       }
 
       const { certificateId } = req.params;
+      const { batchId } = req.body || {};
 
       // Get certificate
       const { data: cert } = await supabaseAdmin
@@ -449,12 +467,13 @@ export function registerCertificateRoutes(app: Express) {
         certificateId: cert.certificate_id,
         certificateType: cert.type,
         position: cert.position,
+        batchId: batchId,
       });
 
       if (result.success) {
-        return res.json({ success: true, message: 'Email sent successfully' });
+        return res.json({ success: true, message: 'Email queued successfully' });
       } else {
-        return res.status(500).json({ success: false, message: result.error || 'Failed to send email' });
+        return res.status(500).json({ success: false, message: result.error || 'Failed to queue email' });
       }
     } catch (error: any) {
       console.error('Certificate email error:', error);
@@ -478,6 +497,33 @@ export function registerCertificateRoutes(app: Express) {
 
       const stats = getQueueStats();
       return res.json({ success: true, ...stats });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Get batch progress
+  app.get("/api/organizer/email-queue/batch/:batchId", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { batchId } = req.params;
+      const progress = getBatchProgress(batchId);
+      
+      if (!progress) {
+        return res.status(404).json({ success: false, message: 'Batch not found' });
+      }
+
+      return res.json({ success: true, progress });
     } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }

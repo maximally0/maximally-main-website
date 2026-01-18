@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
+import EmailProgressTracker from './EmailProgressTracker';
 
 interface CertificateGeneratorProps {
   hackathonId: number;
@@ -48,6 +49,7 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
   const [generating, setGenerating] = useState(false);
   const [checking, setChecking] = useState(false);
   const [sendingEmails, setSendingEmails] = useState(false);
+  const [emailBatchId, setEmailBatchId] = useState<string | null>(null);
   const [confirmDialog, setConfirmDialog] = useState<ConfirmDialogState>({
     isOpen: false,
     existingCount: 0,
@@ -210,6 +212,11 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
   const sendCertificateEmails = async (certificates: { certificateId: string; email: string }[]) => {
     setSendingEmails(true);
     const headers = await getAuthHeaders();
+    
+    // Create a batch ID for tracking
+    const batchId = `cert-manual-${hackathonId}-${Date.now()}`;
+    setEmailBatchId(batchId);
+    
     let success = 0;
     let failed = 0;
 
@@ -218,7 +225,8 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
       certificates.map(cert =>
         fetch(`/api/organizer/certificates/${cert.certificateId}/send-email`, {
           method: 'POST',
-          headers
+          headers: { ...headers, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ batchId })
         }).then(res => res.json())
       )
     );
@@ -234,11 +242,18 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
 
     setSendingEmails(false);
     
-    toast({
-      title: "Emails Queued!",
-      description: `${success} emails queued for sending${failed > 0 ? `, ${failed} failed` : ''}. Server will send them at a safe rate.`,
-      variant: failed > 0 && success === 0 ? "destructive" : "default"
-    });
+    if (failed === 0) {
+      toast({
+        title: "Emails Queued!",
+        description: `${success} emails queued for sending. Track progress below.`,
+      });
+    } else {
+      toast({
+        title: "Partially Queued",
+        description: `${success} emails queued, ${failed} failed to queue.`,
+        variant: "destructive"
+      });
+    }
   };
 
   const emailExistingCertificates = async () => {
@@ -310,10 +325,16 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
 
       if (data.success) {
         const replacedMsg = data.replaced > 0 ? ` (${data.replaced} replaced)` : '';
+        
+        // Set batch ID for tracking if emails are being sent
+        if (sendEmail && data.batchId) {
+          setEmailBatchId(data.batchId);
+        }
+        
         toast({
           title: "Certificates Generated!",
           description: sendEmail 
-            ? `${data.generated} certificates generated${replacedMsg}. Emails queued for sending.`
+            ? `${data.generated} certificates generated${replacedMsg}. Track email progress below.`
             : `${data.generated} certificates generated${replacedMsg}`,
         });
         
@@ -529,6 +550,21 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
             </span>
           </div>
         </div>
+      )}
+
+      {/* Email Progress Tracker */}
+      {emailBatchId && (
+        <EmailProgressTracker 
+          batchId={emailBatchId} 
+          onComplete={() => {
+            toast({
+              title: "All Emails Sent!",
+              description: "Certificate emails have been delivered successfully.",
+            });
+            // Clear batch ID after a delay to show completion state
+            setTimeout(() => setEmailBatchId(null), 5000);
+          }}
+        />
       )}
     </div>
   );

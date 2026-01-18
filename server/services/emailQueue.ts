@@ -35,6 +35,7 @@ interface QueuedEmail {
   priority: 'high' | 'normal' | 'low';
   retries: number;
   maxRetries: number;
+  batchId?: string; // Track which batch this email belongs to
   callback?: (success: boolean, error?: any) => void;
 }
 
@@ -46,12 +47,26 @@ interface QueueStats {
   lastProcessedAt: number | null;
 }
 
+interface BatchProgress {
+  batchId: string;
+  total: number;
+  sent: number;
+  failed: number;
+  pending: number;
+  startedAt: number;
+  completedAt: number | null;
+  status: 'queued' | 'processing' | 'completed' | 'failed';
+}
+
 // Global queue state
 const emailQueue: QueuedEmail[] = [];
 let isProcessing = false;
 let totalSent = 0;
 let totalFailed = 0;
 let lastProcessedAt: number | null = null;
+
+// Batch tracking
+const batches = new Map<string, BatchProgress>();
 
 // Rate limit: 600ms between emails = ~1.67 emails/sec (safe margin under 2/sec)
 const EMAIL_INTERVAL_MS = 600;
@@ -70,6 +85,7 @@ export function queueEmail(options: {
   subject: string;
   html: string;
   priority?: 'high' | 'normal' | 'low';
+  batchId?: string;
   callback?: (success: boolean, error?: any) => void;
 }): string {
   const id = generateId();
@@ -84,6 +100,7 @@ export function queueEmail(options: {
     priority: options.priority || 'normal',
     retries: 0,
     maxRetries: 2,
+    batchId: options.batchId,
     callback: options.callback,
   };
   
@@ -152,6 +169,19 @@ async function processQueue(): Promise<void> {
       totalSent++;
       lastProcessedAt = Date.now();
       console.log(`✅ Email sent: ${email.id} to ${email.to}`);
+      
+      // Update batch progress
+      if (email.batchId && batches.has(email.batchId)) {
+        const batch = batches.get(email.batchId)!;
+        batch.sent++;
+        batch.pending--;
+        batch.status = 'processing';
+        if (batch.sent + batch.failed >= batch.total) {
+          batch.completedAt = Date.now();
+          batch.status = batch.failed === batch.total ? 'failed' : 'completed';
+        }
+      }
+      
       email.callback?.(true);
       
     } catch (error: any) {
@@ -166,6 +196,18 @@ async function processQueue(): Promise<void> {
         console.log(`🔄 Retrying email ${email.id} (attempt ${email.retries}/${email.maxRetries})`);
       } else {
         totalFailed++;
+        
+        // Update batch progress
+        if (email.batchId && batches.has(email.batchId)) {
+          const batch = batches.get(email.batchId)!;
+          batch.failed++;
+          batch.pending--;
+          if (batch.sent + batch.failed >= batch.total) {
+            batch.completedAt = Date.now();
+            batch.status = batch.failed === batch.total ? 'failed' : 'completed';
+          }
+        }
+        
         email.callback?.(false, error);
       }
     }
@@ -229,6 +271,7 @@ export function sendEmailQueued(options: {
   subject: string;
   html: string;
   priority?: 'high' | 'normal' | 'low';
+  batchId?: string;
 }): Promise<{ success: boolean; error?: any }> {
   return new Promise((resolve) => {
     queueEmail({
@@ -238,4 +281,39 @@ export function sendEmailQueued(options: {
       },
     });
   });
+}
+
+/**
+ * Create a new batch for tracking multiple emails
+ */
+export function createBatch(batchId: string, total: number): void {
+  batches.set(batchId, {
+    batchId,
+    total,
+    sent: 0,
+    failed: 0,
+    pending: total,
+    startedAt: Date.now(),
+    completedAt: null,
+    status: 'queued'
+  });
+}
+
+/**
+ * Get batch progress
+ */
+export function getBatchProgress(batchId: string): BatchProgress | null {
+  return batches.get(batchId) || null;
+}
+
+/**
+ * Clean up old completed batches (older than 1 hour)
+ */
+export function cleanupOldBatches(): void {
+  const oneHourAgo = Date.now() - (60 * 60 * 1000);
+  for (const [batchId, batch] of batches.entries()) {
+    if (batch.completedAt && batch.completedAt < oneHourAgo) {
+      batches.delete(batchId);
+    }
+  }
 }
