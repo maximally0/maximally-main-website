@@ -1,6 +1,7 @@
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import MyHackathonsQuickAccess from "@/components/MyHackathonsQuickAccess";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import {
   HeroSection,
   CredibilitySection,
@@ -53,6 +54,8 @@ const Index = () => {
         <div id="section-5">
           <ForOrganizersSection />
         </div>
+        
+        <NewsletterSignup />
         
         <Footer />
       </div>

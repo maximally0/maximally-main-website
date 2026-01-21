@@ -44,6 +44,8 @@ import { registerSubmissionModerationRoutes } from "./routes/submission-moderati
 import { registerFeaturedContentRoutes } from "./routes/featured-content";
 import { registerEdgeCaseTestRoutes } from "./routes/edge-case-tests";
 import { registerDocsRoutes } from "./routes/docs";
+import { registerNewsletterRoutes } from "./routes/newsletter";
+import { registerAdminNewsletterRoutes } from "./routes/admin-newsletter";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
 import { 
   sendSubmissionConfirmation, 
@@ -3999,6 +4001,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerFeaturedContentRoutes(app); // Featured blogs and hackathons management
   registerEdgeCaseTestRoutes(app); // Edge case testing endpoints for production verification
   registerDocsRoutes(app); // Documentation API endpoints
+  registerNewsletterRoutes(app); // Newsletter subscription endpoints
+  registerAdminNewsletterRoutes(app); // Admin newsletter management endpoints
 
   // Auto-publish is handled by the cron endpoint /api/cron/auto-publish-galleries
   // In production, this should be triggered by an external cron service (e.g., Netlify scheduled functions)

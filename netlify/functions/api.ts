@@ -48,6 +48,8 @@ import { registerSubmissionModerationRoutes } from "../../server/routes/submissi
 import { registerFeaturedContentRoutes } from "../../server/routes/featured-content";
 import { registerEdgeCaseTestRoutes } from "../../server/routes/edge-case-tests";
 import { registerDocsRoutes } from "../../server/routes/docs";
+import { registerNewsletterRoutes } from "../../server/routes/newsletter";
+import { registerAdminNewsletterRoutes } from "../../server/routes/admin-newsletter";
 
 const app = express();
 app.use(express.json());
@@ -939,6 +941,8 @@ registerSubmissionModerationRoutes(app);
 registerFeaturedContentRoutes(app);
 registerEdgeCaseTestRoutes(app);
 registerDocsRoutes(app);
+registerNewsletterRoutes(app);
+registerAdminNewsletterRoutes(app);
 
 // ============================================
 // CATCH-ALL ROUTE (MUST BE LAST)

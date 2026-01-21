@@ -87,6 +87,7 @@ import ParentsSupport from './pages/BlogPost/ParentsSupport';
 import MakeathonFAQ from './pages/BlogPost/MakeathonFAQ';
 import BuildingTeamworkLeadership from './pages/BlogPost/BuildingTeamworkLeadership';
 import BlogRouter from './pages/BlogRouter';
+import NewsletterUnsubscribe from './components/NewsletterUnsubscribe';
 
 // Removed Shipathon import
 
@@ -210,6 +211,9 @@ const AppContent = () => {
         {/* Team route removed */}
 
         <Route path="/blog" element={<Blog />} />
+        
+        {/* Newsletter */}
+        <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
 
         {/* Partnership Blog Posts */}
         <Route
