@@ -276,6 +276,37 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
+  // Change newsletter status
+  app.post('/api/admin/newsletter/change-status', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { id, status } = req.body;
+
+      if (!id || !status) {
+        return res.status(400).json({ error: 'Newsletter ID and status are required' });
+      }
+
+      if (!['draft', 'ready_to_send', 'pending', 'sent'].includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+      }
+
+      const { data, error } = await supabase
+        .from('newsletter_emails')
+        .update({
+          status,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      res.json(data);
+    } catch (error) {
+      console.error('Error changing newsletter status:', error);
+      res.status(500).json({ error: 'Failed to change newsletter status' });
+    }
+  });
+
   // Save newsletter (create or update) with rate limiting
   app.post('/api/admin/newsletter/save', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
@@ -655,7 +686,128 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
-  // Manual trigger to send pending newsletters (for development/testing) with rate limiting
+  // Manual trigger to send pending newsletters NOW (for IST timezone)
+  app.post('/api/admin/newsletter/send-pending-now', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+    console.log('=== Manual Send Pending Newsletters (IST) ===');
+    
+    try {
+      // Use IST timezone for comparison
+      const now = new Date();
+      const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+      const istNow = new Date(now.getTime() + istOffset);
+      
+      console.log('Current UTC time:', now.toISOString());
+      console.log('Current IST time:', istNow.toISOString());
+      
+      // Get ALL pending newsletters (ignore scheduled time for manual trigger)
+      const { data: pendingNewsletters, error: fetchError } = await supabase
+        .from('newsletter_emails')
+        .select('*')
+        .eq('status', 'pending');
+
+      if (fetchError) {
+        console.error('Error fetching pending newsletters:', fetchError);
+        throw fetchError;
+      }
+
+      console.log(`Found ${pendingNewsletters?.length || 0} pending newsletters`);
+
+      if (!pendingNewsletters || pendingNewsletters.length === 0) {
+        return res.json({ 
+          message: 'No pending newsletters to send', 
+          sent: 0,
+          timestamp: istNow.toISOString(),
+          timezone: 'IST (UTC+5:30)'
+        });
+      }
+
+      let totalSent = 0;
+
+      for (const newsletter of pendingNewsletters) {
+        console.log(`Processing newsletter: ${newsletter.subject} (scheduled for ${newsletter.scheduled_for})`);
+        
+        // Get active subscribers
+        const { data: subscribers, error: subError } = await supabase
+          .from('newsletter_subscriptions')
+          .select('email')
+          .eq('status', 'active');
+
+        if (subError || !subscribers || subscribers.length === 0) {
+          console.log(`No subscribers for newsletter ${newsletter.id}`);
+          continue;
+        }
+
+        console.log(`Sending to ${subscribers.length} subscribers`);
+
+        let sentCount = 0;
+        let failedCount = 0;
+
+        for (const subscriber of subscribers) {
+          try {
+            const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email, PLATFORM_URL);
+            const emailHtml = generateNewsletterEmail({
+              subject: newsletter.subject,
+              htmlContent: newsletter.html_content,
+              unsubscribeUrl,
+            });
+
+            if (resend) {
+              await resend.emails.send({
+                from: `Maximally Newsletter <${FROM_EMAIL}>`,
+                to: subscriber.email,
+                subject: newsletter.subject,
+                html: emailHtml,
+              });
+            }
+
+            await supabase.from('newsletter_send_logs').insert({
+              newsletter_id: newsletter.id,
+              recipient_email: subscriber.email,
+              status: 'sent',
+            });
+
+            sentCount++;
+          } catch (error) {
+            console.error(`Failed to send to ${subscriber.email}:`, error);
+
+            await supabase.from('newsletter_send_logs').insert({
+              newsletter_id: newsletter.id,
+              recipient_email: subscriber.email,
+              status: 'failed',
+              error_message: error instanceof Error ? error.message : 'Unknown error',
+            });
+
+            failedCount++;
+          }
+        }
+
+        // Update newsletter status
+        await supabase
+          .from('newsletter_emails')
+          .update({
+            status: 'sent',
+            sent_at: now.toISOString(),
+            total_sent: sentCount,
+            total_failed: failedCount,
+          })
+          .eq('id', newsletter.id);
+
+        console.log(`Newsletter ${newsletter.subject} sent to ${sentCount} subscribers, ${failedCount} failed`);
+        totalSent++;
+      }
+
+      res.json({
+        message: `Sent ${totalSent} pending newsletter(s) immediately`,
+        sent: totalSent,
+        timestamp: istNow.toISOString(),
+        timezone: 'IST (UTC+5:30)',
+        details: `Processed ${pendingNewsletters.length} newsletters`
+      });
+    } catch (error) {
+      console.error('Error sending pending newsletters:', error);
+      res.status(500).json({ error: 'Failed to send pending newsletters' });
+    }
+  });
   app.post('/api/admin/newsletter/send-pending', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const now = new Date();
