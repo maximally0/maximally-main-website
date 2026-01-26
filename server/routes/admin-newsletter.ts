@@ -14,13 +14,35 @@ interface AuthenticatedRequest extends Request {
 
 export function registerAdminNewsletterRoutes(app: Express) {
   const supabase = createClient(
-    process.env.VITE_SUPABASE_URL!,
+    process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
   const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
   const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@maximally.in';
   const PLATFORM_URL = process.env.PLATFORM_URL || 'https://maximally.in';
+
+  // Test endpoint to verify connection
+  app.get('/api/admin/newsletter/test', async (req: Request, res: Response) => {
+    try {
+      console.log('Newsletter test endpoint hit');
+      res.json({ 
+        success: true, 
+        message: 'Newsletter API is working',
+        timestamp: new Date().toISOString(),
+        env: {
+          supabaseUrl: process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'NOT_SET',
+          hasSupabaseUrl: !!(process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL),
+          hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+          hasResendKey: !!process.env.RESEND_API_KEY,
+          nodeEnv: process.env.NODE_ENV
+        }
+      });
+    } catch (error) {
+      console.error('Newsletter test error:', error);
+      res.status(500).json({ error: 'Test failed' });
+    }
+  });
 
   // Middleware to check admin role
   const requireAdmin = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
