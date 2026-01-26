@@ -2,6 +2,14 @@ import type { Express, Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { generateNewsletterEmail, generateUnsubscribeUrl } from '../utils/email-templates';
+import { 
+  queueEmail, 
+  createBatch, 
+  getBatchProgress, 
+  getQueueStats,
+  cleanupOldBatches 
+} from '../services/emailQueue';
+import { rateLimiters } from '../middleware/rateLimiter';
 
 // Extend Express Request type to include user
 interface AuthenticatedRequest extends Request {
@@ -13,10 +21,20 @@ interface AuthenticatedRequest extends Request {
 }
 
 export function registerAdminNewsletterRoutes(app: Express) {
-  const supabase = createClient(
-    process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseServiceKey) {
+    console.error('Missing Supabase configuration for admin newsletter routes');
+    return;
+  }
+  
+  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
 
   const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
   const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@maximally.in';
@@ -258,8 +276,8 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
-  // Save newsletter (create or update)
-  app.post('/api/admin/newsletter/save', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  // Save newsletter (create or update) with rate limiting
+  app.post('/api/admin/newsletter/save', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id, subject, content, html_content, status } = req.body;
       const userId = req.user?.id;
@@ -302,8 +320,8 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
-  // Schedule newsletter
-  app.post('/api/admin/newsletter/schedule', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  // Schedule newsletter with rate limiting
+  app.post('/api/admin/newsletter/schedule', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id, subject, content, html_content, scheduled_for } = req.body;
       const userId = req.user?.id;
@@ -352,8 +370,8 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
-  // Send newsletter immediately
-  app.post('/api/admin/newsletter/send', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  // Send newsletter immediately with rate limiting
+  app.post('/api/admin/newsletter/send', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { id, subject, content, html_content } = req.body;
       const userId = req.user?.id;
@@ -377,7 +395,7 @@ export function registerAdminNewsletterRoutes(app: Express) {
             subject,
             content,
             html_content,
-            status: 'sent',
+            status: 'sending',
             created_by: userId,
             sent_at: new Date().toISOString(),
             total_recipients: subscribers.length,
@@ -391,7 +409,7 @@ export function registerAdminNewsletterRoutes(app: Express) {
         const { error: updateError } = await supabase
           .from('newsletter_emails')
           .update({
-            status: 'sent',
+            status: 'sending',
             sent_at: new Date().toISOString(),
             total_recipients: subscribers.length,
           })
@@ -400,60 +418,90 @@ export function registerAdminNewsletterRoutes(app: Express) {
         if (updateError) throw updateError;
       }
 
+      // Create a batch for tracking email progress
+      const batchId = `newsletter-${newsletterId}-${Date.now()}`;
+      createBatch(batchId, subscribers.length);
+
       let sentCount = 0;
       let failedCount = 0;
 
-      for (const subscriber of subscribers) {
-        try {
-          const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email, PLATFORM_URL);
-          const emailHtml = generateNewsletterEmail({
-            subject,
-            htmlContent: html_content,
-            unsubscribeUrl,
-          });
+      // Queue all emails with rate limiting through the global email queue
+      const emailPromises = subscribers.map((subscriber) => {
+        return new Promise<void>((resolve) => {
+          try {
+            const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email, PLATFORM_URL);
+            const emailHtml = generateNewsletterEmail({
+              subject,
+              htmlContent: html_content,
+              unsubscribeUrl,
+            });
 
-          if (resend) {
-            await resend.emails.send({
+            // Queue the email with normal priority
+            queueEmail({
               from: `Maximally Newsletter <${FROM_EMAIL}>`,
               to: subscriber.email,
               subject: subject,
               html: emailHtml,
+              priority: 'normal',
+              batchId: batchId,
+              callback: async (success, error) => {
+                try {
+                  if (success) {
+                    await supabase.from('newsletter_send_logs').insert({
+                      newsletter_id: newsletterId,
+                      recipient_email: subscriber.email,
+                      status: 'sent',
+                    });
+                    sentCount++;
+                  } else {
+                    console.error(`Failed to send to ${subscriber.email}:`, error);
+                    
+                    await supabase.from('newsletter_send_logs').insert({
+                      newsletter_id: newsletterId,
+                      recipient_email: subscriber.email,
+                      status: 'failed',
+                      error_message: error instanceof Error ? error.message : 'Unknown error',
+                    });
+                    failedCount++;
+                  }
+                } catch (dbError) {
+                  console.error('Database error logging email result:', dbError);
+                  failedCount++;
+                }
+                resolve();
+              },
             });
+          } catch (error) {
+            console.error(`Error queuing email for ${subscriber.email}:`, error);
+            failedCount++;
+            resolve();
           }
+        });
+      });
 
-          await supabase.from('newsletter_send_logs').insert({
-            newsletter_id: newsletterId,
-            recipient_email: subscriber.email,
+      // Don't wait for all emails to be sent, just queue them
+      // The email queue will handle rate limiting and sending
+      Promise.all(emailPromises).then(async () => {
+        // Update final counts after all emails are processed
+        await supabase
+          .from('newsletter_emails')
+          .update({
             status: 'sent',
-          });
-          
-          sentCount++;
-        } catch (error) {
-          console.error(`Failed to send to ${subscriber.email}:`, error);
-          
-          await supabase.from('newsletter_send_logs').insert({
-            newsletter_id: newsletterId,
-            recipient_email: subscriber.email,
-            status: 'failed',
-            error_message: error instanceof Error ? error.message : 'Unknown error',
-          });
-          
-          failedCount++;
-        }
-      }
+            total_sent: sentCount,
+            total_failed: failedCount,
+          })
+          .eq('id', newsletterId);
+      });
 
-      await supabase
-        .from('newsletter_emails')
-        .update({
-          total_sent: sentCount,
-          total_failed: failedCount,
-        })
-        .eq('id', newsletterId);
+      // Clean up old batches periodically
+      cleanupOldBatches();
 
       res.json({
-        message: 'Newsletter sent',
-        total_sent: sentCount,
-        total_failed: failedCount,
+        message: 'Newsletter queued for sending',
+        newsletter_id: newsletterId,
+        batch_id: batchId,
+        total_recipients: subscribers.length,
+        queue_stats: getQueueStats(),
       });
     } catch (error) {
       console.error('Error sending newsletter:', error);
@@ -496,8 +544,8 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
-  // Bulk import subscribers from CSV
-  app.post('/api/admin/newsletter/subscribers/import', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  // Bulk import subscribers from CSV with rate limiting
+  app.post('/api/admin/newsletter/subscribers/import', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { emails } = req.body;
 
@@ -607,8 +655,8 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
-  // Manual trigger to send pending newsletters (for development/testing)
-  app.post('/api/admin/newsletter/send-pending', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+  // Manual trigger to send pending newsletters (for development/testing) with rate limiting
+  app.post('/api/admin/newsletter/send-pending', rateLimiters.general, requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
       const now = new Date();
       
@@ -626,6 +674,7 @@ export function registerAdminNewsletterRoutes(app: Express) {
       }
 
       let totalSent = 0;
+      const batchIds: string[] = [];
 
       for (const newsletter of pendingNewsletters) {
         // Get active subscribers
@@ -639,69 +688,133 @@ export function registerAdminNewsletterRoutes(app: Express) {
           continue;
         }
 
+        // Update newsletter status to sending
+        await supabase
+          .from('newsletter_emails')
+          .update({
+            status: 'sending',
+            sent_at: now.toISOString(),
+            total_recipients: subscribers.length,
+          })
+          .eq('id', newsletter.id);
+
+        // Create a batch for tracking email progress
+        const batchId = `newsletter-${newsletter.id}-${Date.now()}`;
+        createBatch(batchId, subscribers.length);
+        batchIds.push(batchId);
+
         let sentCount = 0;
         let failedCount = 0;
 
-        for (const subscriber of subscribers) {
-          try {
-            const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email, PLATFORM_URL);
-            const emailHtml = generateNewsletterEmail({
-              subject: newsletter.subject,
-              htmlContent: newsletter.html_content,
-              unsubscribeUrl,
-            });
+        // Queue all emails with rate limiting through the global email queue
+        const emailPromises = subscribers.map((subscriber) => {
+          return new Promise<void>((resolve) => {
+            try {
+              const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email, PLATFORM_URL);
+              const emailHtml = generateNewsletterEmail({
+                subject: newsletter.subject,
+                htmlContent: newsletter.html_content,
+                unsubscribeUrl,
+              });
 
-            if (resend) {
-              await resend.emails.send({
+              // Queue the email with normal priority
+              queueEmail({
                 from: `Maximally Newsletter <${FROM_EMAIL}>`,
                 to: subscriber.email,
                 subject: newsletter.subject,
                 html: emailHtml,
+                priority: 'normal',
+                batchId: batchId,
+                callback: async (success, error) => {
+                  try {
+                    if (success) {
+                      await supabase.from('newsletter_send_logs').insert({
+                        newsletter_id: newsletter.id,
+                        recipient_email: subscriber.email,
+                        status: 'sent',
+                      });
+                      sentCount++;
+                    } else {
+                      console.error(`Failed to send to ${subscriber.email}:`, error);
+
+                      await supabase.from('newsletter_send_logs').insert({
+                        newsletter_id: newsletter.id,
+                        recipient_email: subscriber.email,
+                        status: 'failed',
+                        error_message: error instanceof Error ? error.message : 'Unknown error',
+                      });
+                      failedCount++;
+                    }
+                  } catch (dbError) {
+                    console.error('Database error logging email result:', dbError);
+                    failedCount++;
+                  }
+                  resolve();
+                },
               });
+            } catch (error) {
+              console.error(`Error queuing email for ${subscriber.email}:`, error);
+              failedCount++;
+              resolve();
             }
+          });
+        });
 
-            await supabase.from('newsletter_send_logs').insert({
-              newsletter_id: newsletter.id,
-              recipient_email: subscriber.email,
+        // Update final counts after all emails are processed
+        Promise.all(emailPromises).then(async () => {
+          await supabase
+            .from('newsletter_emails')
+            .update({
               status: 'sent',
-            });
-
-            sentCount++;
-          } catch (error) {
-            console.error(`Failed to send to ${subscriber.email}:`, error);
-
-            await supabase.from('newsletter_send_logs').insert({
-              newsletter_id: newsletter.id,
-              recipient_email: subscriber.email,
-              status: 'failed',
-              error_message: error instanceof Error ? error.message : 'Unknown error',
-            });
-
-            failedCount++;
-          }
-        }
-
-        // Update newsletter status
-        await supabase
-          .from('newsletter_emails')
-          .update({
-            status: 'sent',
-            sent_at: now.toISOString(),
-            total_sent: sentCount,
-            total_failed: failedCount,
-          })
-          .eq('id', newsletter.id);
+              total_sent: sentCount,
+              total_failed: failedCount,
+            })
+            .eq('id', newsletter.id);
+        });
 
         totalSent++;
       }
 
+      // Clean up old batches periodically
+      cleanupOldBatches();
+
       res.json({
-        message: `Sent ${totalSent} pending newsletter(s)`,
+        message: `Queued ${totalSent} pending newsletter(s) for sending`,
         sent: totalSent,
+        batch_ids: batchIds,
+        queue_stats: getQueueStats(),
       });
     } catch (error) {
       console.error('Error sending pending newsletters:', error);
       res.status(500).json({ error: 'Failed to send pending newsletters' });
+    }
+  });
+
+  // Get email queue statistics
+  app.get('/api/admin/newsletter/queue/stats', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const stats = getQueueStats();
+      res.json(stats);
+    } catch (error) {
+      console.error('Error fetching queue stats:', error);
+      res.status(500).json({ error: 'Failed to fetch queue statistics' });
+    }
+  });
+
+  // Get batch progress
+  app.get('/api/admin/newsletter/batch/:batchId', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { batchId } = req.params;
+      const progress = getBatchProgress(batchId);
+      
+      if (!progress) {
+        return res.status(404).json({ error: 'Batch not found' });
+      }
+      
+      res.json(progress);
+    } catch (error) {
+      console.error('Error fetching batch progress:', error);
+      res.status(500).json({ error: 'Failed to fetch batch progress' });
     }
   });
 
