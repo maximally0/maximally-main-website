@@ -23,12 +23,15 @@ export const handler = schedule('0 * * * *', async () => {
       return { statusCode: 200, body: 'No active schedule' };
     }
 
-    // Check if it's time to send
+    // Check if it's time to send using IST timezone
     const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+    const istNow = new Date(now.getTime() + istOffset);
     const nextScheduled = new Date(settings.next_scheduled_at);
 
-    console.log('Current time:', now.toISOString());
-    console.log('Next scheduled:', nextScheduled.toISOString());
+    console.log('Current UTC time:', now.toISOString());
+    console.log('Current IST time:', istNow.toISOString());
+    console.log('Next scheduled (UTC):', nextScheduled.toISOString());
 
     if (now < nextScheduled) {
       console.log('Not time to send yet');
@@ -159,14 +162,18 @@ export const handler = schedule('0 * * * *', async () => {
 });
 
 function calculateNextScheduledTime(settings: any): string {
+  // Use IST timezone (UTC+5:30)
   const now = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+  const istNow = new Date(now.getTime() + istOffset);
+  
   const [hours, minutes] = settings.time_of_day.split(':').map(Number);
 
-  let next = new Date(now);
+  let next = new Date(istNow);
   next.setHours(hours, minutes, 0, 0);
 
   // If the time has already passed today, start from tomorrow
-  if (next <= now) {
+  if (next <= istNow) {
     next.setDate(next.getDate() + 1);
   }
 
@@ -176,7 +183,7 @@ function calculateNextScheduledTime(settings: any): string {
     const currentDay = next.getDay();
     const daysUntilTarget = (targetDay - currentDay + 7) % 7;
     
-    if (daysUntilTarget === 0 && next <= now) {
+    if (daysUntilTarget === 0 && next <= istNow) {
       // If it's the same day but time has passed, schedule for next week
       next.setDate(next.getDate() + 7);
     } else {
@@ -188,7 +195,7 @@ function calculateNextScheduledTime(settings: any): string {
     const currentDay = next.getDay();
     const daysUntilTarget = (targetDay - currentDay + 7) % 7;
     
-    if (daysUntilTarget === 0 && next <= now) {
+    if (daysUntilTarget === 0 && next <= istNow) {
       next.setDate(next.getDate() + 14);
     } else {
       next.setDate(next.getDate() + daysUntilTarget);
@@ -206,11 +213,12 @@ function calculateNextScheduledTime(settings: any): string {
     next.setDate(settings.day_of_month);
     
     // If that day has passed this month, move to next month
-    if (next <= now) {
+    if (next <= istNow) {
       next.setMonth(next.getMonth() + 1);
       next.setDate(settings.day_of_month);
     }
   }
 
-  return next.toISOString();
+  // Convert back to UTC for storage
+  return new Date(next.getTime() - istOffset).toISOString();
 }

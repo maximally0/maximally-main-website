@@ -819,25 +819,30 @@ export function registerAdminNewsletterRoutes(app: Express) {
   });
 
   function calculateNextScheduledTime(settings: any): string {
+    // Use IST timezone (UTC+5:30)
     const now = new Date();
+    const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+    const istNow = new Date(now.getTime() + istOffset);
+    
     const [hours, minutes] = settings.time_of_day.split(':').map(Number);
 
-    let next = new Date(now);
+    let next = new Date(istNow);
     next.setHours(hours, minutes, 0, 0);
 
     if (settings.frequency === 'weekly') {
-      const daysUntilNext = (settings.day_of_week - now.getDay() + 7) % 7;
-      next.setDate(now.getDate() + (daysUntilNext || 7));
+      const daysUntilNext = (settings.day_of_week - istNow.getDay() + 7) % 7;
+      next.setDate(istNow.getDate() + (daysUntilNext || 7));
     } else if (settings.frequency === 'biweekly') {
-      const daysUntilNext = (settings.day_of_week - now.getDay() + 7) % 7;
-      next.setDate(now.getDate() + (daysUntilNext || 14));
+      const daysUntilNext = (settings.day_of_week - istNow.getDay() + 7) % 7;
+      next.setDate(istNow.getDate() + (daysUntilNext || 14));
     } else if (settings.frequency === 'monthly') {
       next.setDate(settings.day_of_month);
-      if (next <= now) {
+      if (next <= istNow) {
         next.setMonth(next.getMonth() + 1);
       }
     }
 
-    return next.toISOString();
+    // Convert back to UTC for storage
+    return new Date(next.getTime() - istOffset).toISOString();
   }
 }
