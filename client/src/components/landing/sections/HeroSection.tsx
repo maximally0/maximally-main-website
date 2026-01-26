@@ -106,39 +106,6 @@ export function HeroSection() {
               <span>EXPLORE EVERYTHING</span>
             </Link>
           </div>
-          
-          <div className="mt-16 sm:mt-20 flex flex-wrap justify-center gap-8 sm:gap-12 text-center">
-            <div className="group">
-              <div className="font-press-start text-2xl sm:text-3xl text-red-400 mb-2 group-hover:scale-110 transition-transform">
-                50+
-              </div>
-              <div className="font-jetbrains text-xs sm:text-sm text-gray-500 uppercase tracking-wider">
-                Hackathons
-              </div>
-            </div>
-            <div className="group">
-              <div className="font-press-start text-2xl sm:text-3xl text-purple-400 mb-2 group-hover:scale-110 transition-transform">
-                10K+
-              </div>
-              <div className="font-jetbrains text-xs sm:text-sm text-gray-500 uppercase tracking-wider">
-                Builders
-              </div>
-            </div>
-            <div className="group">
-              <div className="font-press-start text-2xl sm:text-3xl text-cyan-400 mb-2 group-hover:scale-110 transition-transform">
-                $500K+
-              </div>
-              <div className="font-jetbrains text-xs sm:text-sm text-gray-500 uppercase tracking-wider">
-                In Prizes
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-gray-600 rounded-full flex items-start justify-center p-2">
-          <div className="w-1.5 h-3 bg-gradient-to-b from-red-500 to-purple-500 rounded-full animate-pulse" />
         </div>
       </div>
     </section>
