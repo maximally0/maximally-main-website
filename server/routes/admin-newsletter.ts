@@ -474,6 +474,70 @@ export function registerAdminNewsletterRoutes(app: Express) {
     }
   });
 
+  // Bulk import subscribers from CSV
+  app.post('/api/admin/newsletter/subscribers/import', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { emails } = req.body;
+
+      if (!emails || !Array.isArray(emails) || emails.length === 0) {
+        return res.status(400).json({ error: 'No emails provided' });
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const validEmails = emails.filter((email: string) => emailRegex.test(email.trim()));
+      const invalidEmails = emails.filter((email: string) => !emailRegex.test(email.trim()));
+
+      if (validEmails.length === 0) {
+        return res.status(400).json({ error: 'No valid emails provided' });
+      }
+
+      // Check for existing subscriptions
+      const { data: existingSubscriptions, error: checkError } = await supabase
+        .from('newsletter_subscriptions')
+        .select('email')
+        .in('email', validEmails);
+
+      if (checkError) throw checkError;
+
+      const existingEmails = new Set(existingSubscriptions?.map((sub) => sub.email) || []);
+      const newEmails = validEmails.filter((email: string) => !existingEmails.has(email));
+      const duplicateEmails = validEmails.filter((email: string) => existingEmails.has(email));
+
+      // Insert new subscriptions
+      let insertedCount = 0;
+      if (newEmails.length > 0) {
+        const subscriptionsToInsert = newEmails.map((email: string) => ({
+          email: email.trim(),
+          status: 'active',
+          source: 'csv_import',
+          subscribed_at: new Date().toISOString(),
+        }));
+
+        const { data, error: insertError } = await supabase
+          .from('newsletter_subscriptions')
+          .insert(subscriptionsToInsert)
+          .select();
+
+        if (insertError) throw insertError;
+        insertedCount = data?.length || 0;
+      }
+
+      res.json({
+        success: true,
+        total_processed: emails.length,
+        added: insertedCount,
+        duplicates: duplicateEmails.length,
+        invalid: invalidEmails.length,
+        duplicate_emails: duplicateEmails,
+        invalid_emails: invalidEmails,
+      });
+    } catch (error) {
+      console.error('Error importing subscribers:', error);
+      res.status(500).json({ error: 'Failed to import subscribers' });
+    }
+  });
+
   // Update schedule settings
   app.post('/api/admin/newsletter/schedule/settings', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
     try {
