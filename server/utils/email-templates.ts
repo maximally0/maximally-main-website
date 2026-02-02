@@ -170,7 +170,7 @@ export function generateNewsletterEmail(options: NewsletterEmailOptions): string
       </p>
       
       <div class="social-links">
-        <a href="https://www.instagram.com/maximally.in/" target="_blank">Instagram</a>
+        <a href="https://www.instagram.com/maximallyhq/" target="_blank">Instagram</a>
         <a href="https://www.linkedin.com/company/maximallyedu" target="_blank">LinkedIn</a>
         <a href="https://twitter.com/maximally_in" target="_blank">X</a>
         <a href="https://discord.gg/WmSXVzDYuq" target="_blank">Discord</a>

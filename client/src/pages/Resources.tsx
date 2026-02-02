@@ -7,22 +7,14 @@ import { useBlogs } from '@/hooks/useBlog';
 const Resources = () => {
   const { data: blogData, isLoading: isBlogsLoading } = useBlogs(1, 5);
   
-  const staticBlogPosts = [
-    { title: "Maximally AI Shipathon Guide", slug: "/blog/maximally-ai-shipathon-guide" },
-    { title: "Top AI Hackathons for Students 2025", slug: "/blog/top-ai-hackathons-students-2025" },
-    { title: "No-Code AI Shipathon", slug: "/blog/no-code-ai-shipathon" },
-    { title: "First AI Project in 48 Hours", slug: "/blog/first-ai-project-48-hours" },
-    { title: "Why Hackathons Got Boring", slug: "/blog/why-hackathons-got-boring-code-hypothesis" }
-  ];
+  // Static blog posts removed - now using only Supabase blogs
+  const staticBlogPosts: any[] = [];
   
   const allBlogPosts = [
     ...(blogData?.data || []).map(post => ({
       title: post.title,
       slug: `/blog/${post.slug}`
-    })),
-    ...staticBlogPosts.filter(staticPost => 
-      !(blogData?.data || []).some(dynamicPost => dynamicPost.slug === staticPost.slug.replace('/blog/', ''))
-    )
+    }))
   ].slice(0, 5);
 
   const initiatives = [
@@ -32,7 +24,7 @@ const Resources = () => {
   ];
 
   const socialLinks = [
-    { name: "Instagram", url: "https://www.instagram.com/maximally.in/", icon: "📸" },
+    { name: "Instagram", url: "https://www.instagram.com/maximallyhq/", icon: "📸" },
     { name: "LinkedIn", url: "https://www.linkedin.com/company/maximallyedu", icon: "💼" },
     { name: "X (Twitter)", url: "https://twitter.com/maximally_in", icon: "🐦" }
   ];

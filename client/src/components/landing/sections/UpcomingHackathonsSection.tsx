@@ -196,7 +196,7 @@ export function UpcomingHackathonsSection() {
             </span>
           </h2>
           <p className="font-jetbrains text-sm sm:text-base text-gray-400 max-w-xl mx-auto">
-            High-stakes hackathons designed for ambitious builders.
+            High-stakes tech events designed for ambitious builders.
           </p>
         </div>
 

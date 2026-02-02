@@ -19,7 +19,7 @@ export function CredibilitySection() {
           <div className="inline-flex items-center gap-2">
             <Sparkles className="w-3 h-3 text-gray-500" />
             <p className="font-press-start text-[10px] sm:text-xs text-gray-500 tracking-wider">
-              JUDGES FROM LEADING COMPANIES
+              TRUSTED BY LEADING COMPANIES
             </p>
             <Sparkles className="w-3 h-3 text-gray-500" />
           </div>
@@ -27,11 +27,7 @@ export function CredibilitySection() {
         
         <CompanyMarquee companies={companies} />
         
-        <div className="mt-10 text-center">
-          <p className="font-jetbrains text-xs sm:text-sm text-gray-500 max-w-xl mx-auto">
-            Partnering with schools, colleges, communities, and startups worldwide
-          </p>
-        </div>
+        
       </div>
     </section>
   );

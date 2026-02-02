@@ -147,7 +147,7 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     detailsUrl: '/codehypothesis',
     imageUrl: null,
     organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
+    organizerUrl: 'https://maximally.in',
   }),
   createHackathonEntry({
     id: 'protocol-404-2025',
@@ -164,7 +164,7 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     detailsUrl: '/protocol-404',
     imageUrl: null,
     organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
+    organizerUrl: 'https://maximally.in',
   }),
   createHackathonEntry({
     id: 'project-codegen-2025',
@@ -181,7 +181,7 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     detailsUrl: '/project-codegen',
     imageUrl: null,
     organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
+    organizerUrl: 'https://maximally.in',
   }),
   createHackathonEntry({
     id: 'promptstorm-2025',
@@ -198,7 +198,7 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     detailsUrl: '/promptstorm',
     imageUrl: null,
     organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
+    organizerUrl: 'https://maximally.in',
   }),
   createHackathonEntry({
     id: 'hacktober-2025',
@@ -215,7 +215,7 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     detailsUrl: '/hacktober',
     imageUrl: null,
     organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
+    organizerUrl: 'https://maximally.in',
   }),
   createHackathonEntry({
     id: 'steal-a-thon-2025',
@@ -232,7 +232,7 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     detailsUrl: '/steal-a-thon',
     imageUrl: null,
     organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
+    organizerUrl: 'https://maximally.in',
   }),
   createHackathonEntry({
     id: 'grand-tech-assembly-2025',
@@ -249,7 +249,7 @@ export const grandIndianHackathonSeason: SelectHackathon[] = [
     detailsUrl: '/grand-tech-assembly',
     imageUrl: null,
     organizerName: 'Maximally',
-    organizerUrl: 'https://maximally.org',
+    organizerUrl: 'https://maximally.in',
   })
 ];
 

@@ -77,8 +77,7 @@ const Contact = () => {
             
             <div className="grid md:grid-cols-2 gap-5 sm:gap-6">
               {[
-                { name: "Rishul Chanana", phone: "+91 90412 60790", email: "rishul@maximally.in" },
-                { name: "Drishti Arora", phone: "-", email: "drishti@maximally.in" },
+                { name: "Rishul Chanana", phone: "+91 90412 60790", email: "rishul@maximally.org" }
               ].map((contact, index) => (
                 <div
                   key={index}
@@ -127,11 +126,11 @@ const Contact = () => {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
               {[
-                { type: "General Inquiries", email: "hello@maximally.in", icon: Mail, color: "purple" },
-                { type: "Partnerships", email: "partners@maximally.in", icon: Briefcase, color: "green" },
-                { type: "Judging & Mentorship", email: "judges@maximally.in", icon: Users, color: "cyan" },
-                { type: "Press & Media", email: "press@maximally.in", icon: Newspaper, color: "pink" },
-                { type: "Support", email: "support@maximally.in", icon: HelpCircle, color: "amber" },
+                { type: "General Inquiries", email: "hello@maximally.org", icon: Mail, color: "purple" },
+                { type: "Partnerships", email: "partners@maximally.org", icon: Briefcase, color: "green" },
+                { type: "Judging & Mentorship", email: "judges@maximally.org", icon: Users, color: "cyan" },
+                { type: "Press & Media", email: "press@maximally.org", icon: Newspaper, color: "pink" },
+                { type: "Support", email: "support@maximally.org", icon: HelpCircle, color: "amber" },
               ].map((contact, index) => {
                 const colorClasses: Record<string, { border: string; bg: string; text: string }> = {
                   purple: { border: "border-purple-500/30 hover:border-purple-400/60", bg: "bg-purple-500/20 border-purple-500/40", text: "text-purple-400" },
@@ -177,7 +176,7 @@ const Contact = () => {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
               {[
-                { name: "Instagram", url: "https://instagram.com/maximally.in", handle: "@maximally.in", icon: Instagram, color: "pink" },
+                { name: "Instagram", url: "https://instagram.com/maximallyhq", handle: "@maximallyhq", icon: Instagram, color: "pink" },
                 { name: "LinkedIn", url: "https://linkedin.com/company/maximallyedu", handle: "Maximally", icon: Linkedin, color: "blue" },
                 { name: "Discord", url: "https://discord.gg/MpBnYk8qMX", handle: "Join Community", icon: MessageCircle, color: "indigo" },
                 { name: "Website", url: "https://maximally.in", handle: "maximally.in", icon: Terminal, color: "purple" },

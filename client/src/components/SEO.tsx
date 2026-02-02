@@ -141,7 +141,7 @@ const SEO = ({
           "logo": "https://maximally.in/og-thumbnail.png",
           "foundingDate": "2023",
           "sameAs": [
-            "https://www.instagram.com/maximally.in/",
+            "https://www.instagram.com/maximallyhq/",
             "https://twitter.com/maximally_in",
             "https://www.linkedin.com/company/maximallyedu",
             "https://discord.gg/maximally"

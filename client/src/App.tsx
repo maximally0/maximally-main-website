@@ -37,65 +37,66 @@ import Bootcamps from '@/pages/Bootcamps';
 import Blog from './pages/Blog';
 // Removed Community and Collaborate imports
 import CommunityRedirect from '@/components/CommunityRedirect';
-import SummerPrograms2025 from './pages/BlogPost/SummerPrograms2025';
-import MaximallyLeangap2025 from './pages/BlogPost/MaximallyLeangap2025';
-import SummerBreak2025 from './pages/BlogPost/SummerBreak2025';
-import RealWorldSkills2025 from './pages/BlogPost/RealWorldSkills2025';
-import SchoolVsLife2025 from './pages/BlogPost/SchoolVsLife2025';
-import OnlineCourses2025 from './pages/BlogPost/OnlineCourses2025';
-import Internships2025 from './pages/BlogPost/Internships2025';
+// Static blog imports - temporarily disabled to use only Supabase blogs
+// import SummerPrograms2025 from './pages/BlogPost/SummerPrograms2025';
+// import MaximallyLeangap2025 from './pages/BlogPost/MaximallyLeangap2025';
+// import SummerBreak2025 from './pages/BlogPost/SummerBreak2025';
+// import RealWorldSkills2025 from './pages/BlogPost/RealWorldSkills2025';
+// import SchoolVsLife2025 from './pages/BlogPost/SchoolVsLife2025';
+// import OnlineCourses2025 from './pages/BlogPost/OnlineCourses2025';
+// import Internships2025 from './pages/BlogPost/Internships2025';
 
 import NotFound from '@/pages/NotFound';
-import TeenBusiness from './pages/BlogPost/TeenBusiness';
-import SummerBootcamps2025 from './pages/BlogPost/SummerBootcamps2025';
-import AIforTeens from './pages/BlogPost/AIforTeens';
-import TeenStartupJourney from './pages/BlogPost/TeenStartupJourney';
-import NoCodeTools from './pages/BlogPost/NoCodeTools';
-import DigitalMarketingGuide from './pages/BlogPost/DigitalMarketingGuide';
-import PublicSpeakingGuide from './pages/BlogPost/PublicSpeakingGuide';
-import RealWorldSkillsForTeens from './pages/BlogPost/RealWorldSkillsForTeens';
-import InstagramPersonalBranding from './pages/BlogPost/InstagramPersonalBranding';
-import PitchingTipsForTeens from './pages/BlogPost/PitchingTipsForTeens';
-import SideHustleToStartup from '@/pages/BlogPost/SideHustleToStartup';
-import GenZInfluencer from '@/pages/BlogPost/GenZInfluencer';
-import TeenEntrepreneurshipBootcamp from '@/pages/BlogPost/TeenEntrepreneurshipBootcamp';
-import PassionProjectToBusiness from '@/pages/BlogPost/PassionProjectToBusiness';
-import LearnAIInSevenDays from '@/pages/BlogPost/LearnAIInSevenDays';
-import OnlineBrandingTips from '@/pages/BlogPost/OnlineBrandingTips';
-import TeenEntrepreneursIndia from '@/pages/BlogPost/TeenEntrepreneursIndia';
-import YoutubeVsStartup from '@/pages/BlogPost/YoutubeVsStartup';
-import TopCareersForTeens from '@/pages/BlogPost/TopCareersForTeens';
+// import TeenBusiness from './pages/BlogPost/TeenBusiness';
+// import SummerBootcamps2025 from './pages/BlogPost/SummerBootcamps2025';
+// import AIforTeens from './pages/BlogPost/AIforTeens';
+// import TeenStartupJourney from './pages/BlogPost/TeenStartupJourney';
+// import NoCodeTools from './pages/BlogPost/NoCodeTools';
+// import DigitalMarketingGuide from './pages/BlogPost/DigitalMarketingGuide';
+// import PublicSpeakingGuide from './pages/BlogPost/PublicSpeakingGuide';
+// import RealWorldSkillsForTeens from './pages/BlogPost/RealWorldSkillsForTeens';
+// import InstagramPersonalBranding from './pages/BlogPost/InstagramPersonalBranding';
+// import PitchingTipsForTeens from './pages/BlogPost/PitchingTipsForTeens';
+// import SideHustleToStartup from '@/pages/BlogPost/SideHustleToStartup';
+// import GenZInfluencer from '@/pages/BlogPost/GenZInfluencer';
+// import TeenEntrepreneurshipBootcamp from '@/pages/BlogPost/TeenEntrepreneurshipBootcamp';
+// import PassionProjectToBusiness from '@/pages/BlogPost/PassionProjectToBusiness';
+// import LearnAIInSevenDays from '@/pages/BlogPost/LearnAIInSevenDays';
+// import OnlineBrandingTips from '@/pages/BlogPost/OnlineBrandingTips';
+// import TeenEntrepreneursIndia from '@/pages/BlogPost/TeenEntrepreneursIndia';
+// import YoutubeVsStartup from '@/pages/BlogPost/YoutubeVsStartup';
+// import TopCareersForTeens from '@/pages/BlogPost/TopCareersForTeens';
 // Removed WallOfProgressiveSchools import
 import Events from './pages/Events';
-import MakeathonForFuture from './pages/BlogPost/MakeathonForFuture';
-import StartupsThroughMaximally from './pages/BlogPost/StartupsThroughMaximally';
-import MaximallyMakeathonsForTeachers from './pages/BlogPost/MaximallyMakeathonsForTeachers';
-import LevelUpYourGameWithMaximally from './pages/BlogPost/LevelUpYourGameWithMaximally';
-import TransformingEducationWithMaximally from './pages/BlogPost/TransformingEducationWithMaximally';
-import CanTeensLaunchStartups from './pages/BlogPost/CanTeensLaunchStartups';
-import DormToStartup2025 from './pages/BlogPost/DormToStartup2025';
-import SchoolInnovationROI from './pages/BlogPost/SchoolInnovationROI';
-import TechMentoringBenefits from './pages/BlogPost/TechMentoringBenefits';
-import NoCodingNoProblem from './pages/BlogPost/NoCodingNoProblem';
-import CareerChangeThroughMakeathons from './pages/BlogPost/CareerChangeThroughMakeathons';
-import PowerOfMentorship from './pages/BlogPost/PowerOfMentorship';
-import MakeathonsFutureEducation from './pages/BlogPost/MakeathonsFutureEducation';
-import GirlsBreakingBarriersSTEM from './pages/BlogPost/GirlsBreakingBarriersSTEM';
-import TopLifeSkillsTeens from './pages/BlogPost/TopLifeSkillsTeens';
-import MaximallyTeachesTools from './pages/BlogPost/MaximallyTeachesTools';
-import ParentsSupport from './pages/BlogPost/ParentsSupport';
-import MakeathonFAQ from './pages/BlogPost/MakeathonFAQ';
-import BuildingTeamworkLeadership from './pages/BlogPost/BuildingTeamworkLeadership';
+// import MakeathonForFuture from './pages/BlogPost/MakeathonForFuture';
+// import StartupsThroughMaximally from './pages/BlogPost/StartupsThroughMaximally';
+// import MaximallyMakeathonsForTeachers from './pages/BlogPost/MaximallyMakeathonsForTeachers';
+// import LevelUpYourGameWithMaximally from './pages/BlogPost/LevelUpYourGameWithMaximally';
+// import TransformingEducationWithMaximally from './pages/BlogPost/TransformingEducationWithMaximally';
+// import CanTeensLaunchStartups from './pages/BlogPost/CanTeensLaunchStartups';
+// import DormToStartup2025 from './pages/BlogPost/DormToStartup2025';
+// import SchoolInnovationROI from './pages/BlogPost/SchoolInnovationROI';
+// import TechMentoringBenefits from './pages/BlogPost/TechMentoringBenefits';
+// import NoCodingNoProblem from './pages/BlogPost/NoCodingNoProblem';
+// import CareerChangeThroughMakeathons from './pages/BlogPost/CareerChangeThroughMakeathons';
+// import PowerOfMentorship from './pages/BlogPost/PowerOfMentorship';
+// import MakeathonsFutureEducation from './pages/BlogPost/MakeathonsFutureEducation';
+// import GirlsBreakingBarriersSTEM from './pages/BlogPost/GirlsBreakingBarriersSTEM';
+// import TopLifeSkillsTeens from './pages/BlogPost/TopLifeSkillsTeens';
+// import MaximallyTeachesTools from './pages/BlogPost/MaximallyTeachesTools';
+// import ParentsSupport from './pages/BlogPost/ParentsSupport';
+// import MakeathonFAQ from './pages/BlogPost/MakeathonFAQ';
+// import BuildingTeamworkLeadership from './pages/BlogPost/BuildingTeamworkLeadership';
 import BlogRouter from './pages/BlogRouter';
 import NewsletterUnsubscribe from './components/NewsletterUnsubscribe';
 
 // Removed Shipathon import
 
-// AI Shipathon Blog Posts
-import MaximallyAIShipathonGuide from './pages/blog/MaximallyAIShipathonGuide';
-import TopAIHackathonsStudents2025 from './pages/blog/TopAIHackathonsStudents2025';
-import NoCodeAIShipathon from './pages/blog/NoCodeAIShipathon';
-import FirstAIProject48Hours from './pages/blog/FirstAIProject48Hours';
+// AI Shipathon Blog Posts - temporarily disabled
+// import MaximallyAIShipathonGuide from './pages/blog/MaximallyAIShipathonGuide';
+// import TopAIHackathonsStudents2025 from './pages/blog/TopAIHackathonsStudents2025';
+// import NoCodeAIShipathon from './pages/blog/NoCodeAIShipathon';
+// import FirstAIProject48Hours from './pages/blog/FirstAIProject48Hours';
 import CodeHypothesis from './pages/CodeHypothesis';
 import Protocol404 from './pages/Protocol404';
 import ProjectCodeGen from './pages/ProjectCodeGen';
@@ -109,26 +110,26 @@ import GrandTechAssembly from './pages/GrandTechAssembly';
 import MakeathonReport from './pages/MakeathonReport';
 import ShipathonReport from './pages/ShipathonReport';
 
-// Code Hypothesis Blog Posts
-import WhyHackathonsGotBoring from './pages/blog/WhyHackathonsGotBoring';
-import ScienceWildIdeas from './pages/blog/ScienceWildIdeas';
-import NoPitchDecksGatekeepingChaos from './pages/blog/NoPitchDecksGatekeepingChaos';
-import SurviveCodeHypothesis24Hours from './pages/blog/SurviveCodeHypothesis24Hours';
+// Code Hypothesis Blog Posts - temporarily disabled
+// import WhyHackathonsGotBoring from './pages/blog/WhyHackathonsGotBoring';
+// import ScienceWildIdeas from './pages/blog/ScienceWildIdeas';
+// import NoPitchDecksGatekeepingChaos from './pages/blog/NoPitchDecksGatekeepingChaos';
+// import SurviveCodeHypothesis24Hours from './pages/blog/SurviveCodeHypothesis24Hours';
 
-// Protocol 404 Blog Posts
-import Protocol404WhenSystemBroken from './pages/blog/Protocol404WhenSystemBroken';
-import Protocol404FutureOfProblemSolving from './pages/blog/Protocol404FutureOfProblemSolving';
-import Protocol404HackerShortcut from './pages/blog/Protocol404HackerShortcut';
-import Protocol404FutureOfHackathons from './pages/blog/Protocol404FutureOfHackathons';
+// Protocol 404 Blog Posts - temporarily disabled
+// import Protocol404WhenSystemBroken from './pages/blog/Protocol404WhenSystemBroken';
+// import Protocol404FutureOfProblemSolving from './pages/blog/Protocol404FutureOfProblemSolving';
+// import Protocol404HackerShortcut from './pages/blog/Protocol404HackerShortcut';
+// import Protocol404FutureOfHackathons from './pages/blog/Protocol404FutureOfHackathons';
 
-// Project CodeGen Blog Posts
-import ProjectCodeGenPlayFuture from './pages/blog/ProjectCodeGenPlayFuture';
-import ProjectCodeGenRedefiningCollaboration from './pages/blog/ProjectCodeGenRedefiningCollaboration';
-import ProjectCodeGenIdeaToExecution from './pages/blog/ProjectCodeGenIdeaToExecution';
-import ProjectCodeGenBeyondHackathons from './pages/blog/ProjectCodeGenBeyondHackathons';
+// Project CodeGen Blog Posts - temporarily disabled
+// import ProjectCodeGenPlayFuture from './pages/blog/ProjectCodeGenPlayFuture';
+// import ProjectCodeGenRedefiningCollaboration from './pages/blog/ProjectCodeGenRedefiningCollaboration';
+// import ProjectCodeGenIdeaToExecution from './pages/blog/ProjectCodeGenIdeaToExecution';
+// import ProjectCodeGenBeyondHackathons from './pages/blog/ProjectCodeGenBeyondHackathons';
 
-// Partnership Blog Posts
-import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
+// Partnership Blog Posts - temporarily disabled
+// import MastersUnionPartnership from './pages/blog/MastersUnionPartnership';
 
 // MFHOP
 import MFHOP from './pages/MFHOP';
@@ -188,8 +189,9 @@ const AppContent = () => {
   const { loading } = useAuth();
   const location = useLocation();
   
-  // Hide navbar on docs pages
-  const hideNavbar = location.pathname.startsWith('/docs');
+  // Hide navbar on docs pages (docs currently disabled)
+  // const hideNavbar = location.pathname.startsWith('/docs');
+  const hideNavbar = false;
   
   return (
     <>
@@ -215,14 +217,14 @@ const AppContent = () => {
         {/* Newsletter */}
         <Route path="/newsletter/unsubscribe" element={<NewsletterUnsubscribe />} />
 
-        {/* Partnership Blog Posts */}
-        <Route
+        {/* Partnership Blog Posts - temporarily disabled */}
+        {/* <Route
           path="/blog/masters-union-partnership"
           element={<MastersUnionPartnership />}
-        />
+        /> */}
 
-        {/* AI Shipathon Blog Posts */}
-        <Route
+        {/* AI Shipathon Blog Posts - temporarily disabled */}
+        {/* <Route
           path="/blog/maximally-ai-shipathon-guide"
           element={<MaximallyAIShipathonGuide />}
         />
@@ -237,9 +239,10 @@ const AppContent = () => {
         <Route
           path="/blog/first-ai-project-48-hours"
           element={<FirstAIProject48Hours />}
-        />
+        /> */}
 
-        <Route
+        {/* Static blog routes - temporarily disabled to use only Supabase blogs */}
+        {/* <Route
           path="/blog/summer-programs-2025"
           element={<SummerPrograms2025 />}
         />
@@ -339,7 +342,7 @@ const AppContent = () => {
         <Route
           path="/blog/top-careers-for-teen-innovators"
           element={<TopCareersForTeens />}
-        />
+        /> */}
         {/* Removed wall-of-progressive-schools route */}
         <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/contact" element={<Contact />} />
@@ -348,9 +351,9 @@ const AppContent = () => {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         
-        {/* Documentation */}
-        <Route path="/docs" element={<MaximallyDocs />} />
-        <Route path="/docs/*" element={<MaximallyDocs />} />
+        {/* Documentation routes temporarily disabled */}
+        {/* <Route path="/docs" element={<MaximallyDocs />} />
+        <Route path="/docs/*" element={<MaximallyDocs />} /> */}
 
         {/* Community redirect to Discord */}
         <Route path="/community" element={<CommunityRedirect />} />
@@ -400,7 +403,8 @@ const AppContent = () => {
 
         <Route path="/events" element={<Events />} />
         <Route path="/explore" element={<Explore />} />
-        <Route
+        {/* More static blog routes - temporarily disabled */}
+        {/* <Route
           path="/blog/makeathon-for-future"
           element={<MakeathonForFuture />}
         />
@@ -475,7 +479,7 @@ const AppContent = () => {
         <Route
           path="/blog/teamwork-leadership-maximally"
           element={<BuildingTeamworkLeadership />}
-        />
+        /> */}
         {/* Removed shipathon route */}
         <Route path="/codehypothesis" element={<CodeHypothesis />} />
         <Route path="/protocol-404" element={<Protocol404 />} />
@@ -493,8 +497,8 @@ const AppContent = () => {
         <Route path="/makeathon-report" element={<MakeathonReport />} />
         <Route path="/shipathon-report" element={<ShipathonReport />} />
 
-        {/* Code Hypothesis Blog Posts */}
-        <Route
+        {/* Code Hypothesis Blog Posts - temporarily disabled */}
+        {/* <Route
           path="/blog/why-hackathons-got-boring-code-hypothesis"
           element={<WhyHackathonsGotBoring />}
         />
@@ -509,10 +513,10 @@ const AppContent = () => {
         <Route
           path="/blog/survive-code-hypothesis-24-hours"
           element={<SurviveCodeHypothesis24Hours />}
-        />
+        /> */}
 
-        {/* Protocol 404 Blog Posts */}
-        <Route
+        {/* Protocol 404 Blog Posts - temporarily disabled */}
+        {/* <Route
           path="/blog/protocol-404-when-system-broken"
           element={<Protocol404WhenSystemBroken />}
         />
@@ -527,10 +531,10 @@ const AppContent = () => {
         <Route
           path="/blog/protocol-404-future-of-hackathons"
           element={<Protocol404FutureOfHackathons />}
-        />
+        /> */}
 
-        {/* Project CodeGen Blog Posts */}
-        <Route
+        {/* Project CodeGen Blog Posts - temporarily disabled */}
+        {/* <Route
           path="/blog/project-codegen-play-future"
           element={<ProjectCodeGenPlayFuture />}
         />
@@ -545,7 +549,7 @@ const AppContent = () => {
         <Route
           path="/blog/project-codegen-beyond-hackathons"
           element={<ProjectCodeGenBeyondHackathons />}
-        />
+        /> */}
 
         {/* Dynamic blog route - must be after all static routes */}
         <Route path="/blog/:slug" element={<BlogRouter />} />

@@ -163,12 +163,6 @@ const HostHackathon = () => {
     }
   ];
 
-  const stats = [
-    { number: '250+', label: 'HACKATHONS ADVISED', color: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/30' },
-    { number: '1000+', label: 'ORGANIZERS SUPPORTED', color: 'text-pink-400', bg: 'bg-pink-500/10', border: 'border-pink-500/30' },
-    { number: '50K+', label: 'PARTICIPANTS REACHED', color: 'text-green-400', bg: 'bg-green-500/10', border: 'border-green-500/30' }
-  ];
-
   const steps = [
     { step: '1', title: 'SHARE YOUR VISION', description: 'Tell us about your hackathon idea, goals, and timeline.', icon: Lightbulb },
     { step: '2', title: 'GET MATCHED', description: 'We connect you with the right resources, mentors, and support.', icon: Network },
@@ -257,23 +251,6 @@ const HostHackathon = () => {
                   <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span>JOIN DISCORD</span>
                 </a>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-                {stats.map((stat, i) => (
-                  <div
-                    key={i}
-                    className={`${stat.bg} border ${stat.border} p-5 transition-all duration-300 hover:scale-105`}
-                    data-testid={`stat-${i}`}
-                  >
-                    <div className={`font-press-start text-2xl sm:text-3xl ${stat.color} mb-2`}>
-                      {stat.number}
-                    </div>
-                    <div className="font-press-start text-[9px] sm:text-[10px] text-gray-400">
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
           </div>

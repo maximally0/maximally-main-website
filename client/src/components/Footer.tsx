@@ -113,7 +113,7 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="https://www.instagram.com/maximally.in/"
+                  href="https://www.instagram.com/maximallyhq/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-green-300 transition-colors block"
@@ -169,28 +169,21 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/people"
-                  className="hover:text-amber-300 transition-colors block"
-                >
-                  People
-                </Link>
-              </li>
-              <li>
-                <Link
                   to="/contact"
                   className="hover:text-amber-300 transition-colors block"
                 >
                   Contact
                 </Link>
               </li>
-              <li>
+              {/* Documentation link temporarily hidden */}
+              {/* <li>
                 <Link
                   to="/docs"
                   className="hover:text-amber-300 transition-colors block"
                 >
                   Documentation
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -227,7 +220,7 @@ const Footer = () => {
             {[
               {
                 name: 'Instagram',
-                url: 'https://www.instagram.com/maximally.in/',
+                url: 'https://www.instagram.com/maximallyhq/',
                 gradient: 'from-pink-500/30 to-purple-500/30',
                 border: 'border-pink-500/40',
                 icon: Instagram,
