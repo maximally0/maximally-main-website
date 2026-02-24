@@ -1,47 +1,48 @@
 [build]
-  command = "npm run build && cd netlify/functions && npm install"
   publish = "dist/public"
+  command = "npm run build"
   functions = "netlify/functions"
 
 [build.environment]
-  # Allow VITE_ prefixed environment variables to be in build output
-  # These are meant to be public client-side variables
-  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY,VITE_RECAPTCHA_SITE_KEY"
-  NODE_VERSION = "20"
+  NODE_VERSION = "18"
 
+[dev]
+  command = "npm run dev"
+  port = 5002
+  targetPort = 5002
+  publish = "dist/public"
+  functions = "netlify/functions"
+
+# Function configuration
 [functions]
   node_bundler = "esbuild"
-  included_files = ["netlify/functions/**", "server/**", "shared/**"]
+  external_node_modules = ["@supabase/supabase-js"]
 
-# Note: Netlify scheduled functions are configured in the Netlify UI, not in netlify.toml
-# The scheduled-tasks function should be configured in the Netlify dashboard with:
-# - Function: scheduled-tasks
-# - Schedule: 0 */5 * * * * (every 5 minutes)
+# Headers for CORS
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
 
-[[redirects]]
-  from = "/bootcamps"
-  to = "/makeathon"
-  status = 301
-
-# Route judge API calls to judges function
-[[redirects]]
-  from = "/api/judges/*"
-  to = "/.netlify/functions/judges/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/api/judges"
-  to = "/.netlify/functions/judges"
-  status = 200
-
-# Route all other API calls to the serverless function
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-
-# Catch-all for SPA routing (must be last)
+# Redirects for SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  conditions = {Role = ["admin"], Country = ["US"]}
+
+# API redirects (for production)
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Environment variables (these will be set in Netlify dashboard)
+# SUPABASE_URL
+# SUPABASE_SERVICE_ROLE_KEY
+# RESEND_API_KEY
+# RECAPTCHA_SECRET_KEY
+# SESSION_SECRET
+# SCHEDULER_SECRET
