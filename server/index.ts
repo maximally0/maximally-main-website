@@ -17,19 +17,25 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// CORS middleware - allow admin panel to make requests
+// CORS middleware - allow admin panel and Replit proxy to make requests
 app.use((_req: Request, res: Response, next: NextFunction) => {
-  // Allow requests from admin panel (localhost:5173) and main app
   const allowedOrigins = [
-    'http://localhost:5173', // Admin panel
-    'http://localhost:5002', // Main website
-    'http://localhost:5001', // Main website alternate port
+    'http://localhost:5173',
+    'http://localhost:5002',
+    'http://localhost:5001',
     'https://maximally.in',
     'https://maximally-admin-panel.vercel.app'
   ];
 
   const origin = _req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
+  const isAllowed = origin && (
+    allowedOrigins.includes(origin) ||
+    /\.replit\.dev$/.test(origin) ||
+    /\.repl\.co$/.test(origin) ||
+    /\.replit\.app$/.test(origin)
+  );
+
+  if (isAllowed) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
 
@@ -48,7 +54,6 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 // Basic security headers without adding deps
 app.use((_req: Request, res: Response, next: NextFunction) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('Referrer-Policy', 'no-referrer');
   res.setHeader('X-XSS-Protection', '0');
   // Avoid a strict CSP here to not break Vite/SPA; can be added later when fully audited
