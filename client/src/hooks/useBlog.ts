@@ -1,10 +1,35 @@
 import { useQuery } from '@tanstack/react-query';
 import { BlogPost } from '@/lib/supabaseClient';
+import { apiClient } from '@/lib/apiClient';
+import { FEATURE_FLAGS } from '@/lib/featureFlags';
 
 export const useBlogs = (page = 1, pageSize = 10, search = '') => {
   return useQuery({
     queryKey: ['blogs', page, pageSize, search],
     queryFn: async (): Promise<{ data: BlogPost[]; total: number }> => {
+      // Use new API client if feature flag is enabled
+      if (FEATURE_FLAGS.USE_API_BLOGS) {
+        try {
+          const offset = (page - 1) * pageSize;
+          const result = await apiClient.getBlogs({
+            limit: pageSize,
+            offset: offset
+          });
+          
+          if (result.success) {
+            return {
+              data: result.data.blogs || [],
+              total: result.data.total || 0,
+            };
+          } else {
+            throw new Error(result.error || 'Failed to fetch blogs');
+          }
+        } catch (error) {
+          throw new Error(error instanceof Error ? error.message : 'Failed to fetch blogs');
+        }
+      }
+
+      // Fallback to old API
       const params = new URLSearchParams({
         page: String(page),
         pageSize: String(pageSize),
@@ -35,6 +60,28 @@ export const useBlog = (slug: string) => {
   return useQuery({
     queryKey: ['blog', slug],
     queryFn: async (): Promise<BlogPost | null> => {
+      // Use new API client if feature flag is enabled
+      if (FEATURE_FLAGS.USE_API_BLOGS) {
+        try {
+          const result = await apiClient.getBlogBySlug(slug);
+          
+          if (result.success) {
+            return result.data.blog || null;
+          } else {
+            if (result.error === 'Blog not found') {
+              return null;
+            }
+            throw new Error(result.error || 'Failed to fetch blog');
+          }
+        } catch (error) {
+          if (error instanceof Error && error.message === 'Blog not found') {
+            return null;
+          }
+          throw new Error(error instanceof Error ? error.message : 'Failed to fetch blog');
+        }
+      }
+
+      // Fallback to old API
       const res = await fetch(`/api/blogs/${encodeURIComponent(slug)}`);
       if (res.status === 404) {
         return null;

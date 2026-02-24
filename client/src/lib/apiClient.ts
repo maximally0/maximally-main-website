@@ -5,7 +5,7 @@
 
 const API_BASE_URL = import.meta.env.PROD 
   ? 'https://maximally.in/.netlify/functions'
-  : 'http://localhost:8888/.netlify/functions';
+  : 'http://localhost:5002/api'; // Use local server API in development
 
 interface ApiResponse<T = any> {
   success: boolean;
