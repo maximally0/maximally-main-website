@@ -40,16 +40,16 @@ const iconMap: Record<string, LucideIcon> = {
 
 const colorStyles: Record<string, { icon: string; border: string; glow: string; badge: string; text: string }> = {
   purple: {
-    icon: "bg-purple-500/20 border-purple-500/30 group-hover:border-purple-400",
-    border: "hover:border-purple-500/50",
-    glow: "from-purple-500/10 to-pink-500/10",
-    badge: "bg-purple-500/20 text-purple-300 border-purple-500/50",
-    text: "text-purple-400",
+    icon: "bg-orange-500/10 border-gray-800 group-hover:border-orange-500",
+    border: "hover:border-orange-500/50",
+    glow: "from-gray-900/80 to-gray-900/40",
+    badge: "bg-orange-500/10 text-orange-400 border-orange-500/50",
+    text: "text-orange-400",
   },
   blue: {
     icon: "bg-blue-500/20 border-blue-500/30 group-hover:border-blue-400",
     border: "hover:border-blue-500/50",
-    glow: "from-blue-500/10 to-cyan-500/10",
+    glow: "from-blue-500/10 to-gray-800/10",
     badge: "bg-blue-500/20 text-blue-300 border-blue-500/50",
     text: "text-blue-400",
   },
@@ -61,11 +61,11 @@ const colorStyles: Record<string, { icon: string; border: string; glow: string; 
     text: "text-green-400",
   },
   cyan: {
-    icon: "bg-cyan-500/20 border-cyan-500/30 group-hover:border-cyan-400",
-    border: "hover:border-cyan-500/50",
-    glow: "from-cyan-500/10 to-blue-500/10",
-    badge: "bg-cyan-500/20 text-cyan-300 border-cyan-500/50",
-    text: "text-cyan-400",
+    icon: "bg-gray-800 border-gray-700 group-hover:border-gray-700",
+    border: "hover:border-gray-800",
+    glow: "from-gray-800/10 to-blue-500/10",
+    badge: "bg-gray-800 text-gray-300 border-gray-800",
+    text: "text-gray-300",
   },
   orange: {
     icon: "bg-orange-500/20 border-orange-500/30 group-hover:border-orange-400",
@@ -82,16 +82,16 @@ const colorStyles: Record<string, { icon: string; border: string; glow: string; 
     text: "text-red-400",
   },
   pink: {
-    icon: "bg-pink-500/20 border-pink-500/30 group-hover:border-pink-400",
-    border: "hover:border-pink-500/50",
-    glow: "from-pink-500/10 to-purple-500/10",
-    badge: "bg-pink-500/20 text-pink-300 border-pink-500/50",
-    text: "text-pink-400",
+    icon: "bg-orange-500/10 border-gray-800 group-hover:border-orange-500",
+    border: "hover:border-orange-500/30",
+    glow: "from-orange-500/10 to-gray-900/10",
+    badge: "bg-orange-500/10 text-orange-400 border-orange-500/30",
+    text: "text-orange-400",
   },
   indigo: {
     icon: "bg-indigo-500/20 border-indigo-500/30 group-hover:border-indigo-400",
     border: "hover:border-indigo-500/50",
-    glow: "from-indigo-500/10 to-purple-500/10",
+    glow: "from-indigo-500/10 to-gray-900/10",
     badge: "bg-indigo-500/20 text-indigo-300 border-indigo-500/50",
     text: "text-indigo-400",
   },
@@ -139,7 +139,7 @@ export function ExploreCard({
           </div>
           
           {badge && (
-            <span className={`px-2 py-1 text-[10px] sm:text-[11px] font-press-start border whitespace-nowrap ${
+            <span className={`px-2 py-1 text-[10px] sm:text-[11px] font-space font-semibold border whitespace-nowrap ${
               badge === "Hiring" 
                 ? "bg-green-500/20 text-green-400 border-green-500/50" 
                 : badge === "New Posts" || badge === "New"
@@ -152,16 +152,16 @@ export function ExploreCard({
         </div>
         
         <div className="flex-1">
-          <h3 className={`font-press-start text-[11px] sm:text-xs md:text-sm mb-2 ${isComingSoon ? 'text-gray-500' : `text-white group-hover:${styles.text}`} transition-colors leading-relaxed`}>
+          <h3 className={`font-space font-semibold text-[11px] sm:text-xs md:text-sm mb-2 ${isComingSoon ? 'text-gray-500' : `text-white group-hover:${styles.text}`} transition-colors leading-relaxed`}>
             {title}
           </h3>
-          <p className={`text-xs sm:text-sm font-jetbrains ${isComingSoon ? 'text-gray-600' : 'text-gray-400'} line-clamp-2 leading-relaxed`}>
+          <p className={`text-xs sm:text-sm font-space ${isComingSoon ? 'text-gray-600' : 'text-gray-400'} line-clamp-2 leading-relaxed`}>
             {description}
           </p>
         </div>
         
         {!isComingSoon && (
-          <div className={`flex items-center gap-2 ${styles.text} font-press-start text-[10px] sm:text-[11px] opacity-0 group-hover:opacity-100 sm:transition-opacity mt-auto`}>
+          <div className={`flex items-center gap-2 ${styles.text} font-space font-semibold text-[10px] sm:text-[11px] opacity-0 group-hover:opacity-100 sm:transition-opacity mt-auto`}>
             <span>EXPLORE</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </div>

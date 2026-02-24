@@ -19,15 +19,15 @@ const TeenStartupJourney = () => {
       </p>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">From School Project to Startup Idea</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">From School Project to Startup Idea</h2>
         <p className="mb-4">It began in class 10, during exam season.</p>
         <p className="mb-4">I noticed how every student in my school was stressed, confused about what to revise, and wasting time scrolling Instagram while pretending to study.</p>
         <p className="mb-4">So, I thought: What if there was a simple AI-powered revision assistant that made custom timetables and gave quick recap notes?</p>
-        <p className="font-press-start">I didn't call it a startup. I called it a "small project."</p>
+        <p className="font-space font-bold">I didn't call it a startup. I called it a "small project."</p>
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Step 1: Solving a Problem You Understand</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Step 1: Solving a Problem You Understand</h2>
         <p className="mb-4">The best teen startups don't begin with a business plan. They start with frustration—something annoying you want to fix.</p>
         <div className="pixel-border p-6 bg-maximally-blue/5">
           <p className="mb-4">Here are a few real-world examples from teen founders:</p>
@@ -40,28 +40,28 @@ const TeenStartupJourney = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">No-Code Tools That Made It Possible</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">No-Code Tools That Made It Possible</h2>
         <div className="grid gap-4">
           <div className="pixel-border p-4">
-            <h3 className="font-press-start text-lg mb-2">🔧 Glide</h3>
+            <h3 className="font-space font-bold text-lg mb-2">🔧 Glide</h3>
             <p>Turn Google Sheets into apps. I built my first prototype in 1 weekend.</p>
           </div>
           <div className="pixel-border p-4">
-            <h3 className="font-press-start text-lg mb-2">💬 ChatGPT</h3>
+            <h3 className="font-space font-bold text-lg mb-2">💬 ChatGPT</h3>
             <p>Used it to draft revision messages, build quiz bots, and test user flows.</p>
           </div>
           <div className="pixel-border p-4">
-            <h3 className="font-press-start text-lg mb-2">🧠 Tally + Notion</h3>
+            <h3 className="font-space font-bold text-lg mb-2">🧠 Tally + Notion</h3>
             <p>Created sign-up forms and user onboarding without spending a rupee.</p>
           </div>
         </div>
       </section>
 
       <section className="pixel-border p-6 bg-maximally-green/5 my-8">
-        <h2 className="font-press-start text-2xl mb-4">Ready to Build Your Startup? 🚀</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Ready to Build Your Startup? 🚀</h2>
         <p className="mb-4">Join Maximally's Startup Bootcamp - India's #1 program for teen founders.</p>
         <div className="mb-6">
-          <h4 className="font-press-start text-lg mb-2">What You'll Learn:</h4>
+          <h4 className="font-space font-bold text-lg mb-2">What You'll Learn:</h4>
           <ul className="list-disc pl-6 space-y-2">
             <li>Build your startup using no-code tools</li>
             <li>Learn from successful teen founders</li>
@@ -77,10 +77,10 @@ const TeenStartupJourney = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Final Thought</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Final Thought</h2>
         <p className="mb-4">I didn't have a degree. I just had a drive to solve a problem.</p>
         <p className="mb-4">And that was enough.</p>
-        <p className="font-press-start">You don't have to wait to grow up. Start building your startup today.</p>
+        <p className="font-space font-bold">You don't have to wait to grow up. Start building your startup today.</p>
       </section>
     </>
   );

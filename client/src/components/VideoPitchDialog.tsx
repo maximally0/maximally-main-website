@@ -77,12 +77,12 @@ const VideoPitchDialog = ({ open, onOpenChange, onSubmitSuccess }: VideoPitchDia
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="font-press-start text-xl text-center mb-4">Submit Your 1-Minute Pitch</DialogTitle>
+          <DialogTitle className="font-space font-bold text-xl text-center mb-4">Submit Your 1-Minute Pitch</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-6">
           <div className="text-center">
-            <p className="font-jetbrains text-maximally-black/80 mb-6">
+            <p className="font-space text-maximally-black/80 mb-6">
               Record a 1-minute video telling us why you want to join the Maximally Summer Bootcamp and what you hope to achieve.
             </p>
           </div>
@@ -97,7 +97,7 @@ const VideoPitchDialog = ({ open, onOpenChange, onSubmitSuccess }: VideoPitchDia
                 <div className="flex justify-center">
                   <Video className="h-12 w-12 text-maximally-green" />
                 </div>
-                <p className="font-jetbrains font-medium">
+                <p className="font-space font-medium">
                   {videoFile.name} ({(videoFile.size / (1024 * 1024)).toFixed(2)} MB)
                 </p>
                 <Button 
@@ -113,7 +113,7 @@ const VideoPitchDialog = ({ open, onOpenChange, onSubmitSuccess }: VideoPitchDia
                 <div className="flex justify-center">
                   <Upload className="h-12 w-12 text-maximally-blue" />
                 </div>
-                <p className="font-jetbrains">Drag and drop your video here or click to browse</p>
+                <p className="font-space">Drag and drop your video here or click to browse</p>
                 <Button 
                   variant="outline" 
                   className="border-maximally-blue text-maximally-blue hover:bg-maximally-blue hover:text-white"
@@ -134,12 +134,12 @@ const VideoPitchDialog = ({ open, onOpenChange, onSubmitSuccess }: VideoPitchDia
           </div>
 
           {error && (
-            <div className="text-maximally-red font-jetbrains text-sm">
+            <div className="text-maximally-red font-space text-sm">
               {error}
             </div>
           )}
 
-          <div className="pt-4 text-sm font-jetbrains text-maximally-black/60">
+          <div className="pt-4 text-sm font-space text-maximally-black/60">
             <p>Requirements:</p>
             <ul className="list-disc pl-5 mt-2">
               <li>Maximum 1 minute in length</li>
@@ -152,7 +152,7 @@ const VideoPitchDialog = ({ open, onOpenChange, onSubmitSuccess }: VideoPitchDia
             <Button 
               onClick={handleUpload}
               disabled={!videoFile || isUploading || isSuccess}
-              className="bg-maximally-blue text-white hover:bg-maximally-blue/90 font-jetbrains"
+              className="bg-maximally-blue text-white hover:bg-maximally-blue/90 font-space"
             >
               {isUploading && "Uploading..."}
               {isSuccess && (

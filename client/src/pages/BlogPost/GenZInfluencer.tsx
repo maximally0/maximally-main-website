@@ -14,14 +14,14 @@ const GenZInfluencer = () => {
         It's no longer a dream; it's a reality. Teen influencers are everywhere, from dancing to fashion, gaming to lifestyle, and even educational content. The best part? You don't need to wait until you're older or have a huge following to start building your personal brand.
       </p>
 
-      <h2 className="font-press-start text-2xl mb-4">💡 What Does it Mean to Be a Gen Z Influencer?</h2>
+      <h2 className="font-space font-bold text-2xl mb-4">💡 What Does it Mean to Be a Gen Z Influencer?</h2>
       <p className="mb-8">
         A Gen Z influencer is someone from the Gen Z generation who uses platforms like TikTok, Instagram, YouTube, or even Twitch to share content, promote products, and connect with their audience. Unlike traditional celebrities, influencers are usually relatable, accessible, and skilled at building a genuine connection with their followers.
       </p>
 
-      <h2 className="font-press-start text-2xl mb-4">🚀 How to Become a Gen Z Influencer:</h2>
+      <h2 className="font-space font-bold text-2xl mb-4">🚀 How to Become a Gen Z Influencer:</h2>
       
-      <h3 className="font-press-start text-xl mb-4">1. Identify Your Niche</h3>
+      <h3 className="font-space font-bold text-xl mb-4">1. Identify Your Niche</h3>
       <p className="mb-4">Ask yourself:</p>
       <ul className="list-disc pl-6 mb-8">
         <li>What am I genuinely passionate about?</li>
@@ -29,7 +29,7 @@ const GenZInfluencer = () => {
         <li>Can I create content that people will love and want to share?</li>
       </ul>
 
-      <h3 className="font-press-start text-xl mb-4">2. Choose Your Platform</h3>
+      <h3 className="font-space font-bold text-xl mb-4">2. Choose Your Platform</h3>
       <ul className="list-disc pl-6 mb-8">
         <li>TikTok: Great for short, engaging videos</li>
         <li>Instagram: Ideal for curated content and stories</li>
@@ -37,21 +37,21 @@ const GenZInfluencer = () => {
         <li>Twitch: Perfect for gaming and live streaming</li>
       </ul>
 
-      <h3 className="font-press-start text-xl mb-4">3. Create Authentic Content</h3>
+      <h3 className="font-space font-bold text-xl mb-4">3. Create Authentic Content</h3>
       <ul className="list-disc pl-6 mb-8">
         <li>Be yourself and show your personality</li>
         <li>Share behind-the-scenes content</li>
         <li>Use trends creatively</li>
       </ul>
 
-      <h3 className="font-press-start text-xl mb-4">4. Engage With Your Audience</h3>
+      <h3 className="font-space font-bold text-xl mb-4">4. Engage With Your Audience</h3>
       <ul className="list-disc pl-6 mb-8">
         <li>Host Q&A sessions</li>
         <li>Respond to comments</li>
         <li>Create interactive content</li>
       </ul>
 
-      <h3 className="font-press-start text-xl mb-4">5. Collaborate and Grow</h3>
+      <h3 className="font-space font-bold text-xl mb-4">5. Collaborate and Grow</h3>
       <ul className="list-disc pl-6 mb-8">
         <li>Partner with other creators</li>
         <li>Work with brands that align with your values</li>
@@ -59,7 +59,7 @@ const GenZInfluencer = () => {
       </ul>
 
       <div className="pixel-border p-6 bg-maximally-blue/5 my-8">
-        <h2 className="font-press-start text-2xl mb-4">🎓 Ready to Start Your Influencer Journey?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🎓 Ready to Start Your Influencer Journey?</h2>
         <p className="mb-4">
           At Maximally's Summer Bootcamp, you'll learn:
         </p>
@@ -76,7 +76,7 @@ const GenZInfluencer = () => {
         </div>
       </div>
 
-      <h2 className="font-press-start text-2xl mb-4">📈 Start Small, Think Big</h2>
+      <h2 className="font-space font-bold text-2xl mb-4">📈 Start Small, Think Big</h2>
       <p className="mb-4">
         Remember, every successful influencer started with zero followers. The key is to start creating, stay consistent, and keep learning. Your unique voice and perspective matter!
       </p>

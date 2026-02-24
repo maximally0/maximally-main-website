@@ -41,7 +41,7 @@ export default function JudgeHackathons() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="font-press-start text-purple-400 animate-pulse">LOADING...</div>
+        <div className="font-space font-bold text-orange-400 animate-pulse">LOADING...</div>
       </div>
     );
   }
@@ -49,27 +49,27 @@ export default function JudgeHackathons() {
   return (
     <div className="min-h-screen bg-black text-white pt-24 pb-16 relative">
       {/* Background Effects */}
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-7xl mx-auto">
           <Link 
             to="/judge-dashboard" 
-            className="inline-flex items-center gap-2 text-purple-400 hover:text-pink-400 font-press-start text-sm mb-6 transition-colors"
+            className="inline-flex items-center gap-2 text-orange-400 hover:text-orange-400 font-space font-bold text-sm mb-6 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             BACK
           </Link>
 
-          <h1 className="font-press-start text-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-8">
+          <h1 className="font-space font-bold text-3xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-8">
             HACKATHONS_TO_JUDGE
           </h1>
 
           {hackathons.length === 0 ? (
-            <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-12 text-center">
+            <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 p-12 text-center">
               <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-              <p className="font-press-start text-gray-400">NO_HACKATHONS_AVAILABLE</p>
+              <p className="font-space font-bold text-gray-400">NO_HACKATHONS_AVAILABLE</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -77,28 +77,28 @@ export default function JudgeHackathons() {
                 <Link
                   key={hackathon.id}
                   to={`/judge/hackathons/${hackathon.id}/submissions`}
-                  className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/30 p-6 hover:border-pink-400/50 hover:scale-[1.02] transition-all group"
+                  className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 p-6 hover:border-orange-500/50 hover:scale-[1.02] transition-all group"
                 >
-                  <h3 className="font-press-start text-lg text-white mb-4 group-hover:text-purple-300 transition-colors">
+                  <h3 className="font-space font-bold text-lg text-white mb-4 group-hover:text-orange-400 transition-colors">
                     {hackathon.hackathon_name}
                   </h3>
 
                   <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm font-jetbrains text-gray-400">
-                      <Calendar className="h-4 w-4 text-purple-400" />
+                    <div className="flex items-center gap-2 text-sm font-space text-gray-400">
+                      <Calendar className="h-4 w-4 text-orange-400" />
                       {new Date(hackathon.start_date).toLocaleDateString()}
                     </div>
-                    <div className="flex items-center gap-2 text-sm font-jetbrains text-gray-400">
-                      <Users className="h-4 w-4 text-pink-400" />
+                    <div className="flex items-center gap-2 text-sm font-space text-gray-400">
+                      <Users className="h-4 w-4 text-orange-400" />
                       {hackathon.registrations_count} participants
                     </div>
-                    <div className="flex items-center gap-2 text-sm font-jetbrains text-gray-400">
+                    <div className="flex items-center gap-2 text-sm font-space text-gray-400">
                       <Trophy className="h-4 w-4 text-amber-400" />
                       {hackathon.submissions_count || 0} submissions
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-4 py-2 font-press-start text-xs text-center border border-pink-500/50 transition-all">
+                  <div className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-4 py-2 font-space font-bold text-xs text-center border border-orange-500/40 transition-all">
                     JUDGE_SUBMISSIONS
                   </div>
                 </Link>

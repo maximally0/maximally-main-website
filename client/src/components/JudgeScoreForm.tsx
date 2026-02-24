@@ -38,7 +38,7 @@ export default function JudgeScoreForm({
   const getScoreColor = (value: number) => {
     if (value <= 3) return 'text-red-400';
     if (value <= 5) return 'text-amber-400';
-    if (value <= 7) return 'text-cyan-400';
+    if (value <= 7) return 'text-gray-300';
     return 'text-green-400';
   };
 
@@ -55,14 +55,14 @@ export default function JudgeScoreForm({
       {/* Score Slider */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <label className="font-jetbrains text-sm text-gray-400">
+          <label className="font-space text-sm text-gray-400">
             Score
           </label>
           <div className="flex items-center gap-2">
-            <span className={`font-press-start text-2xl ${getScoreColor(score)}`}>
+            <span className={`font-space font-bold text-2xl ${getScoreColor(score)}`}>
               {score}
             </span>
-            <span className="font-jetbrains text-sm text-gray-500">/10</span>
+            <span className="font-space text-sm text-gray-500">/10</span>
           </div>
         </div>
         
@@ -73,9 +73,9 @@ export default function JudgeScoreForm({
               key={value}
               type="button"
               onClick={() => setScore(value)}
-              className={`w-9 h-9 rounded font-press-start text-xs transition-all ${
+              className={`w-9 h-9 rounded font-space font-bold text-xs transition-all ${
                 score === value
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white scale-110'
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-500 text-white scale-110'
                   : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
               }`}
             >
@@ -97,24 +97,24 @@ export default function JudgeScoreForm({
         </div>
 
         {/* Score Label */}
-        <p className={`font-jetbrains text-sm ${getScoreColor(score)}`}>
+        <p className={`font-space text-sm ${getScoreColor(score)}`}>
           {getScoreLabel(score)}
         </p>
       </div>
 
       {/* Notes */}
       <div className="space-y-2">
-        <label className="font-jetbrains text-sm text-gray-400">
+        <label className="font-space text-sm text-gray-400">
           Notes (optional)
         </label>
         <Textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Add any feedback or notes about this submission..."
-          className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 font-jetbrains text-sm min-h-[80px] resize-none focus:border-purple-500"
+          className="bg-gray-800/50 border-gray-700 text-white placeholder:text-gray-500 font-space text-sm min-h-[80px] resize-none focus:border-orange-500"
           maxLength={500}
         />
-        <p className="font-jetbrains text-xs text-gray-500 text-right">
+        <p className="font-space text-xs text-gray-500 text-right">
           {notes.length}/500
         </p>
       </div>
@@ -123,7 +123,7 @@ export default function JudgeScoreForm({
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs py-3 h-auto"
+        className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white font-space font-bold text-xs py-3 h-auto"
       >
         {isSubmitting ? (
           <>

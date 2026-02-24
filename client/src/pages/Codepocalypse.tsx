@@ -159,7 +159,7 @@ export default function Codepocalypse() {
             }`}
           >
             <div className="bg-red-600 text-yellow-400 px-6 py-2 border-4 border-yellow-400 shadow-2xl relative">
-              <span className="font-press-start text-xs">
+              <span className="font-space font-bold text-xs">
                 ☢ GRAND INDIAN HACKATHON SEASON ☢
               </span>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400"></div>
@@ -175,7 +175,7 @@ export default function Codepocalypse() {
                 : 'translate-y-4 opacity-0'
             }`}
           >
-            <h1 className="font-press-start text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
+            <h1 className="font-space font-bold text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
               <span className="text-red-500 drop-shadow-2xl filter brightness-110">
                 MAXIMALLY
               </span>
@@ -187,11 +187,11 @@ export default function Codepocalypse() {
                 </div>
               </span>
             </h1>
-            <h2 className="font-jetbrains text-xl md:text-2xl text-gray-300 mb-4 font-bold">
+            <h2 className="font-space text-xl md:text-2xl text-gray-300 mb-4 font-bold">
               48 hour online hackathon
             </h2>
             <div className="bg-black border-4 border-red-500 p-4 inline-block max-w-2xl">
-              <p className="font-press-start text-base md:text-lg text-yellow-400 leading-relaxed">
+              <p className="font-space font-bold text-base md:text-lg text-yellow-400 leading-relaxed">
                 "what would you build if the internet had 48 hours left?"
               </p>
             </div>
@@ -207,7 +207,7 @@ export default function Codepocalypse() {
           >
             <Button
               onClick={() => window.open('https://codepocalypse.devpost.com/', '_self')}
-              className="bg-red-600 text-white font-press-start py-4 px-8 text-lg hover:scale-105 transition-all duration-300 border-4 border-yellow-400 shadow-2xl relative overflow-hidden"
+              className="bg-red-600 text-white font-space font-bold py-4 px-8 text-lg hover:scale-105 transition-all duration-300 border-4 border-yellow-400 shadow-2xl relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-red-700 transform skew-x-12 -translate-x-full hover:translate-x-0 transition-transform duration-300"></div>
               <span className="relative z-10 flex items-center">
@@ -237,10 +237,10 @@ export default function Codepocalypse() {
                   <div className="flex items-center justify-center mb-2 text-yellow-400 group-hover:text-white transition-colors">
                     {fact.icon}
                   </div>
-                  <div className="font-press-start text-xs text-white mb-1">
+                  <div className="font-space font-bold text-xs text-white mb-1">
                     {fact.label}
                   </div>
-                  <div className="font-jetbrains text-sm text-yellow-400 font-bold">
+                  <div className="font-space text-sm text-yellow-400 font-bold">
                     {fact.value}
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export default function Codepocalypse() {
         {/* What It Is */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl text-center">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-red-500 flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-8 text-red-500 flex items-center justify-center gap-3">
               <AlertTriangle className="h-8 w-8 text-yellow-400" />
               WHAT IT IS
               <AlertTriangle className="h-8 w-8 text-yellow-400" />
@@ -260,7 +260,7 @@ export default function Codepocalypse() {
             <div className="bg-black border-4 border-red-500 p-8 relative">
               <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-400"></div>
               <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-red-500"></div>
-              <p className="font-jetbrains text-lg md:text-xl text-gray-300 leading-relaxed">
+              <p className="font-space text-lg md:text-xl text-gray-300 leading-relaxed">
                 A chaotic 48-hour hackathon where the only rule is to ship
                 something wild. Broken prototypes, cursed ideas, internet-core
                 genius — all collide here. No themes, no prep. Just code, crash,
@@ -273,14 +273,14 @@ export default function Codepocalypse() {
         {/* The Idea */}
         <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-black to-gray-900">
           <div className="container mx-auto max-w-4xl text-center">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-yellow-400 flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-8 text-yellow-400 flex items-center justify-center gap-3">
               <Skull className="h-8 w-8 text-red-500" />
               THE IDEA
               <Skull className="h-8 w-8 text-red-500" />
             </h2>
             <div className="bg-red-900 border-4 border-yellow-400 p-8 relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-red-500 to-yellow-400"></div>
-              <p className="font-jetbrains text-lg md:text-xl text-gray-200 leading-relaxed">
+              <p className="font-space text-lg md:text-xl text-gray-200 leading-relaxed">
                 This event asks one question — what would you build if you had
                 48 hours before the internet exploded? Codepocalypse is a love
                 letter to bizarre, ambitious, half-baked builds. No neat slides.
@@ -293,7 +293,7 @@ export default function Codepocalypse() {
         {/* Who Joins */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-red-500 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-red-500 text-center flex items-center justify-center gap-3">
               <Users className="h-8 w-8 text-yellow-400" />
               WHO JOINS
               <Users className="h-8 w-8 text-yellow-400" />
@@ -307,7 +307,7 @@ export default function Codepocalypse() {
                   <div className="absolute top-0 right-0 w-3 h-3 bg-yellow-400"></div>
                   <div className="flex items-center gap-3">
                     <div className="w-2 h-2 bg-red-500"></div>
-                    <span className="font-jetbrains text-gray-300 font-medium">
+                    <span className="font-space text-gray-300 font-medium">
                       {person}
                     </span>
                   </div>
@@ -320,7 +320,7 @@ export default function Codepocalypse() {
         {/* Tech Rules */}
         <section className="py-20 px-4 bg-gradient-to-b from-black via-red-900 to-black">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
               <Code className="h-8 w-8 text-red-500" />
               TECH RULES
               <Code className="h-8 w-8 text-red-500" />
@@ -333,7 +333,7 @@ export default function Codepocalypse() {
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-4 h-4 bg-red-500 rotate-45"></div>
-                    <span className="font-jetbrains text-gray-300">{rule}</span>
+                    <span className="font-space text-gray-300">{rule}</span>
                   </div>
                 </div>
               ))}
@@ -344,7 +344,7 @@ export default function Codepocalypse() {
         {/* Judging */}
         <section className="py-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-yellow-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-8 text-yellow-400 text-center flex items-center justify-center gap-3">
               <Shield className="h-8 w-8 text-red-500" />
               JUDGING
               <Shield className="h-8 w-8 text-red-500" />
@@ -352,19 +352,19 @@ export default function Codepocalypse() {
             <div className="bg-black border-4 border-red-500 p-8 relative">
               <div className="absolute -top-1 left-4 right-4 h-2 bg-yellow-400"></div>
               <div className="mb-6">
-                <h3 className="font-press-start text-lg text-yellow-400 mb-4">
+                <h3 className="font-space font-bold text-lg text-yellow-400 mb-4">
                   REVIEWERS
                 </h3>
-                <p className="font-jetbrains text-gray-300">
+                <p className="font-space text-gray-300">
                   Async judging by external reviewers from top companies
                   (OpenAI, Meta, etc.)
                 </p>
               </div>
               <div>
-                <h3 className="font-press-start text-lg text-yellow-400 mb-4">
+                <h3 className="font-space font-bold text-lg text-yellow-400 mb-4">
                   CRITERIA
                 </h3>
-                <p className="font-jetbrains text-gray-300">
+                <p className="font-space text-gray-300">
                   Scored on originality, execution, technical complexity (or
                   no-code creativity), and gut reaction —{' '}
                   <span className="text-yellow-400 font-bold">
@@ -379,7 +379,7 @@ export default function Codepocalypse() {
         {/* Submission */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-red-500 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-red-500 text-center flex items-center justify-center gap-3">
               <FileText className="h-8 w-8 text-yellow-400" />
               SUBMISSION
               <FileText className="h-8 w-8 text-yellow-400" />
@@ -388,22 +388,22 @@ export default function Codepocalypse() {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-red-900 border-4 border-yellow-400 p-6 relative">
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 flex items-center justify-center">
-                  <span className="font-press-start text-xs text-black">!</span>
+                  <span className="font-space font-bold text-xs text-black">!</span>
                 </div>
-                <h3 className="font-press-start text-xl text-yellow-400 mb-6 flex items-center gap-2">
+                <h3 className="font-space font-bold text-xl text-yellow-400 mb-6 flex items-center gap-2">
                   <FileText className="h-5 w-5" />
                   REQUIRED
                 </h3>
                 <ul className="space-y-3">
-                  <li className="font-jetbrains text-gray-200 flex items-start gap-2">
+                  <li className="font-space text-gray-200 flex items-start gap-2">
                     <span className="text-yellow-400">▸</span>
                     Code/files
                   </li>
-                  <li className="font-jetbrains text-gray-200 flex items-start gap-2">
+                  <li className="font-space text-gray-200 flex items-start gap-2">
                     <span className="text-yellow-400">▸</span>
                     Short readme
                   </li>
-                  <li className="font-jetbrains text-gray-200 flex items-start gap-2">
+                  <li className="font-space text-gray-200 flex items-start gap-2">
                     <span className="text-yellow-400">▸</span>
                     Link to output
                   </li>
@@ -412,14 +412,14 @@ export default function Codepocalypse() {
 
               <div className="bg-black border-4 border-red-500 p-6 relative">
                 <div className="absolute -top-2 -left-2 w-8 h-8 bg-red-500 flex items-center justify-center">
-                  <span className="font-press-start text-xs text-white">?</span>
+                  <span className="font-space font-bold text-xs text-white">?</span>
                 </div>
-                <h3 className="font-press-start text-xl text-red-500 mb-6 flex items-center gap-2">
+                <h3 className="font-space font-bold text-xl text-red-500 mb-6 flex items-center gap-2">
                   <Video className="h-5 w-5" />
                   OPTIONAL
                 </h3>
                 <ul className="space-y-3">
-                  <li className="font-jetbrains text-gray-300 flex items-start gap-2">
+                  <li className="font-space text-gray-300 flex items-start gap-2">
                     <span className="text-red-500">▸</span>
                     60s demo video
                   </li>
@@ -435,10 +435,10 @@ export default function Codepocalypse() {
             <div className="bg-gradient-to-r from-red-900 via-black to-red-900 p-12 border-4 border-yellow-400 relative">
               <div className="absolute inset-0 bg-black opacity-40"></div>
               <div className="relative z-10">
-                <h2 className="font-press-start text-2xl md:text-3xl mb-6 text-white">
+                <h2 className="font-space font-bold text-2xl md:text-3xl mb-6 text-white">
                   READY FOR THE CODEPOCALYPSE?
                 </h2>
-                <p className="font-jetbrains text-gray-300 mb-8">
+                <p className="font-space text-gray-300 mb-8">
                   Join the chaos. Build something wild. Ship before the world
                   ends.
                 </p>

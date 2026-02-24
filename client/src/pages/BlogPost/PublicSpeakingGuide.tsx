@@ -23,10 +23,10 @@ const PublicSpeakingGuide = () => {
       </p>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">What Is Public Speaking (and Why Should Teens Care)?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">What Is Public Speaking (and Why Should Teens Care)?</h2>
         <p className="mb-4">Public speaking is more than giving speeches. It's about expressing your ideas clearly—on stage, in class, in interviews, and even online.</p>
         <div className="pixel-border p-6 bg-maximally-blue/5">
-          <h3 className="font-press-start text-xl mb-4">🔥 Why It Matters:</h3>
+          <h3 className="font-space font-bold text-xl mb-4">🔥 Why It Matters:</h3>
           <ul className="list-disc pl-6">
             <li>Helps you speak up in class discussions</li>
             <li>Prepares you for debates, interviews, and college admissions</li>
@@ -37,7 +37,7 @@ const PublicSpeakingGuide = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Real Talk: Why Most Teens Avoid Public Speaking</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Real Talk: Why Most Teens Avoid Public Speaking</h2>
         <p className="mb-4">Let's be honest: Public speaking feels scary because it's public. We fear:</p>
         <ul className="list-disc pl-6 mb-4">
           <li>Being judged</li>
@@ -49,42 +49,42 @@ const PublicSpeakingGuide = () => {
       </section>
 
       <section className="pixel-border p-6 bg-maximally-green/5 my-8">
-        <h3 className="font-press-start text-xl mb-4">Real Teen Example: Ananya's Story</h3>
+        <h3 className="font-space font-bold text-xl mb-4">Real Teen Example: Ananya's Story</h3>
         <p className="mb-4">
           Ananya (15) used to avoid class presentations. One day, she joined her school's MUN (Model United Nations) after a friend convinced her. At first, she barely spoke. But week after week, she practiced short speeches at home—and at her next conference, she won Best Delegate.
         </p>
         <p className="mb-4">Now, she's preparing for college interviews and leads her school's public speaking club.</p>
-        <p className="font-press-start text-sm">Moral? Public speaking didn't change who she was—it revealed who she could become.</p>
+        <p className="font-space font-bold text-sm">Moral? Public speaking didn't change who she was—it revealed who she could become.</p>
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-6">Benefits of Public Speaking for Teens</h2>
+        <h2 className="font-space font-bold text-2xl mb-6">Benefits of Public Speaking for Teens</h2>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">🎯 Boosts Confidence</h4>
+            <h4 className="font-space font-bold text-lg mb-2">🎯 Boosts Confidence</h4>
             <p>Nothing changes you like hearing an audience listen—and respect—what you have to say.</p>
           </div>
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">🧠 Improves Thinking</h4>
+            <h4 className="font-space font-bold text-lg mb-2">🧠 Improves Thinking</h4>
             <p>Learn to structure thoughts, use persuasive language, and stay focused.</p>
           </div>
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">🗣 Builds Leadership</h4>
+            <h4 className="font-space font-bold text-lg mb-2">🗣 Builds Leadership</h4>
             <p>Speaking clearly and confidently sets you apart in any group.</p>
           </div>
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">🎓 Prepares for Future</h4>
+            <h4 className="font-space font-bold text-lg mb-2">🎓 Prepares for Future</h4>
             <p>Essential for college interviews and future careers.</p>
           </div>
         </div>
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">How to Get Started (Even If You're Shy)</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">How to Get Started (Even If You're Shy)</h2>
         
         <div className="space-y-6">
           <div className="pixel-border p-6">
-            <h3 className="font-press-start text-xl mb-2">Step 1: Start Small (and Safe)</h3>
+            <h3 className="font-space font-bold text-xl mb-2">Step 1: Start Small (and Safe)</h3>
             <ul className="list-disc pl-6">
               <li>Record yourself explaining a topic you like</li>
               <li>Practice in front of a mirror</li>
@@ -93,7 +93,7 @@ const PublicSpeakingGuide = () => {
           </div>
 
           <div className="pixel-border p-6">
-            <h3 className="font-press-start text-xl mb-2">Step 2: Join Low-Pressure Speaking Spaces</h3>
+            <h3 className="font-space font-bold text-xl mb-2">Step 2: Join Low-Pressure Speaking Spaces</h3>
             <ul className="list-disc pl-6">
               <li>School debate clubs</li>
               <li>Toastmasters Youth (Gavel Club)</li>
@@ -105,7 +105,7 @@ const PublicSpeakingGuide = () => {
       </section>
 
       <section className="pixel-border p-6 bg-maximally-purple/5 my-8">
-        <h2 className="font-press-start text-2xl mb-4">🚀 Ready to Master Public Speaking?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🚀 Ready to Master Public Speaking?</h2>
         <p className="mb-4">Join Maximally's Public Speaking Bootcamp and transform your communication skills through hands-on practice and expert guidance.</p>
         <div className="text-center">
           <Button asChild size="lg" className="bg-black hover:bg-black/80">
@@ -115,10 +115,10 @@ const PublicSpeakingGuide = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Final Thought: You Deserve to Be Heard</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Final Thought: You Deserve to Be Heard</h2>
         <p className="mb-4">Public speaking isn't about being the loudest. It's about being real, clear, and heard.</p>
         <p className="mb-4">You don't need to wait to be "older" or "confident enough." Speaking builds confidence—the more you speak, the stronger you grow.</p>
-        <p className="font-press-start">So take the mic. Raise your hand. Record that video. Your voice could be the one that changes the room.</p>
+        <p className="font-space font-bold">So take the mic. Raise your hand. Record that video. Your voice could be the one that changes the room.</p>
       </section>
     </>
   );

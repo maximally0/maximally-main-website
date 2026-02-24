@@ -124,15 +124,15 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
   };
 
   return (
-    <Card className="p-3 sm:p-4 md:p-6 bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-pink-500/30 hover:border-pink-400/60 transition-all duration-300">
+    <Card className="p-3 sm:p-4 md:p-6 bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 hover:border-orange-500/60 transition-all duration-300">
       <div className="flex flex-col gap-3 sm:gap-4">
         <div className="flex-1">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
             <div className="flex-1 min-w-0">
-              <h3 className="font-press-start text-[10px] sm:text-xs md:text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1 sm:mb-2 break-words">
+              <h3 className="font-space font-bold text-[10px] sm:text-xs md:text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-1 sm:mb-2 break-words">
                 {certificate.hackathon_name}
               </h3>
-              <p className="text-gray-300 font-jetbrains text-[10px] sm:text-xs md:text-sm">
+              <p className="text-gray-300 font-space text-[10px] sm:text-xs md:text-sm">
                 {certificate.type === 'judge' ? 'Judge Certificate' : 
                  certificate.position ? `${certificate.position} Certificate` : 'Participation Certificate'}
               </p>
@@ -153,11 +153,11 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
 
           <div className="space-y-1 sm:space-y-2 mb-3 sm:mb-4">
             <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs md:text-sm text-gray-400">
-              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 text-purple-400" />
+              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 text-orange-400" />
               <span className="truncate">Issued: {formatDate(certificate.created_at)}</span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs md:text-sm text-gray-400">
-              <Award className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 text-pink-400" />
+              <Award className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 text-orange-400" />
               <span className="truncate">ID: {certificate.certificate_id}</span>
             </div>
           </div>
@@ -167,7 +167,7 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
               href={verificationUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-purple-500/20 border border-purple-500/40 text-purple-300 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-purple-500/30 transition-colors"
+              className="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-orange-500/20 transition-colors"
             >
               <Shield className="w-2 h-2 sm:w-3 sm:h-3" />
               <span>VERIFY</span>
@@ -179,7 +179,7 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
                 href={certificate.pdf_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-pink-500/20 border border-pink-500/40 text-pink-300 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-pink-500/30 transition-colors"
+                className="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-orange-500/20 transition-colors"
               >
                 <Download className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span>PDF</span>
@@ -192,7 +192,7 @@ function CertificateCard({ certificate }: { certificate: Certificate }) {
                 href={certificate.jpg_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-purple-500/20 border border-purple-500/40 text-purple-300 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-purple-500/30 transition-colors"
+                className="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[8px] sm:text-[10px] md:text-xs px-2 sm:px-3 py-1 sm:py-2 flex items-center gap-1 sm:gap-2 hover:bg-orange-500/20 transition-colors"
               >
                 <Eye className="w-2 h-2 sm:w-3 sm:h-3" />
                 <span>VIEW</span>
@@ -216,30 +216,30 @@ function HackathonDetailsCard({ hackathon }: { hackathon: HackathonDetails }) {
   };
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-pink-900/20 to-purple-900/30 border border-purple-500/30 hover:border-pink-400/60 transition-all duration-300">
+    <Card className="p-6 bg-gradient-to-br from-gray-900/20 to-gray-900/30 border border-gray-800 hover:border-orange-500/60 transition-all duration-300">
       <div className="flex gap-4">
         {hackathon.hackathon_logo && (
           <img
             src={hackathon.hackathon_logo}
             alt={hackathon.title}
-            className="w-20 h-20 object-cover border border-pink-500/30"
+            className="w-20 h-20 object-cover border border-gray-800"
           />
         )}
         <div className="flex-1">
-          <h3 className="font-press-start text-sm bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">{hackathon.title}</h3>
+          <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-2">{hackathon.title}</h3>
           {hackathon.subtitle && (
-            <p className="text-gray-300 font-jetbrains text-sm mb-3 line-clamp-2">
+            <p className="text-gray-300 font-space text-sm mb-3 line-clamp-2">
               {hackathon.subtitle}
             </p>
           )}
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-sm text-gray-400">
-              <Calendar className="w-4 h-4 text-purple-400" />
+              <Calendar className="w-4 h-4 text-orange-400" />
               <span>{formatDate(hackathon.start_date)} - {formatDate(hackathon.end_date)}</span>
             </div>
             {hackathon.location && (
               <div className="flex items-center gap-2 text-sm text-gray-400">
-                <MapPin className="w-4 h-4 text-pink-400" />
+                <MapPin className="w-4 h-4 text-orange-400" />
                 <span>{hackathon.location}</span>
               </div>
             )}
@@ -260,20 +260,20 @@ function AchievementCard({ achievement }: { achievement: UserAchievement }) {
   };
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-pink-500/30 hover:border-pink-400/60 transition-all duration-300">
+    <Card className="p-6 bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 hover:border-orange-500/60 transition-all duration-300">
       <div className="flex items-center gap-4">
         <div className="text-4xl flex-shrink-0">
           {achievement.icon}
         </div>
         <div className="flex-1">
-          <h3 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+          <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-2">
             {achievement.title}
           </h3>
-          <p className="text-gray-300 font-jetbrains text-sm mb-2">
+          <p className="text-gray-300 font-space text-sm mb-2">
             {achievement.description}
           </p>
           <div className="flex items-center gap-2 text-xs text-gray-400">
-            <Calendar className="w-3 h-3 text-pink-400" />
+            <Calendar className="w-3 h-3 text-orange-400" />
             <span>Earned: {formatDate(achievement.earnedAt)}</span>
           </div>
         </div>
@@ -297,50 +297,50 @@ function ProjectCard({ project }: { project: UserProject }) {
 
   return (
     <Link to={projectUrl} className="block">
-      <Card className="p-6 bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/30 hover:border-pink-400/60 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
+      <Card className="p-6 bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 hover:border-orange-500/60 hover:scale-[1.02] transition-all duration-300 cursor-pointer">
         <div className="flex gap-4">
           {project.logo_url && (
             <img
               src={project.logo_url}
               alt={project.name}
-              className="w-16 h-16 object-cover border border-pink-500/30 flex-shrink-0"
+              className="w-16 h-16 object-cover border border-gray-800 flex-shrink-0"
             />
           )}
           {!project.logo_url && (
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center flex-shrink-0">
+            <div className="w-16 h-16 bg-gradient-to-br from-orange-600 to-orange-500 flex items-center justify-center flex-shrink-0">
               <Code className="w-8 h-8 text-white" />
             </div>
           )}
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="font-press-start text-xs sm:text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent break-words">
+              <h3 className="font-space font-bold text-xs sm:text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent break-words">
                 {project.name}
               </h3>
               <Badge className={`text-[8px] sm:text-xs flex-shrink-0 ${
                 project.source === 'hackathon' 
-                  ? 'bg-pink-500/20 text-pink-300 border-pink-500/30' 
-                  : 'bg-purple-500/20 text-purple-300 border-purple-500/30'
+                  ? 'bg-orange-500/10 text-orange-400 border-gray-800' 
+                  : 'bg-orange-500/10 text-orange-400 border-gray-800'
               }`}>
                 {project.source === 'hackathon' ? 'HACKATHON' : 'GALLERY'}
               </Badge>
             </div>
             {project.description && (
-              <p className="text-gray-300 font-jetbrains text-xs sm:text-sm mb-3 line-clamp-2">
+              <p className="text-gray-300 font-space text-xs sm:text-sm mb-3 line-clamp-2">
                 {project.description}
               </p>
             )}
             {project.hackathon_name && (
-              <p className="text-pink-400 font-jetbrains text-xs mb-2">
+              <p className="text-orange-400 font-space text-xs mb-2">
                 📍 {project.hackathon_name}
               </p>
             )}
             <div className="flex flex-wrap items-center gap-2 mb-3">
               {project.category && (
-                <span className="bg-gray-800/50 border border-pink-500/30 text-gray-300 px-2 py-0.5 text-[10px] font-jetbrains">
+                <span className="bg-gray-800/50 border border-gray-800 text-gray-300 px-2 py-0.5 text-[10px] font-space">
                   {project.category}
                 </span>
               )}
-              <span className="text-gray-500 text-[10px] font-jetbrains flex items-center gap-1">
+              <span className="text-gray-500 text-[10px] font-space flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
                 {formatDate(project.created_at)}
               </span>
@@ -351,7 +351,7 @@ function ProjectCard({ project }: { project: UserProject }) {
                   href={project.demo_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-pink-500/20 border border-pink-500/40 text-pink-300 text-[10px] px-2 py-1 flex items-center gap-1 hover:bg-pink-500/30 transition-colors"
+                  className="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] px-2 py-1 flex items-center gap-1 hover:bg-orange-500/20 transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Eye className="w-3 h-3" />
@@ -363,7 +363,7 @@ function ProjectCard({ project }: { project: UserProject }) {
                   href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-purple-500/20 border border-purple-500/40 text-purple-300 text-[10px] px-2 py-1 flex items-center gap-1 hover:bg-purple-500/30 transition-colors"
+                  className="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] px-2 py-1 flex items-center gap-1 hover:bg-orange-500/20 transition-colors"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Github className="w-3 h-3" />
@@ -443,109 +443,109 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="bg-purple-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-300 hover:text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-1 sm:gap-2">
+        <button className="bg-orange-500/10 border border-orange-500/50 hover:border-orange-500 text-orange-400 hover:text-white font-space font-bold text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-1 sm:gap-2">
           <Edit className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
           <span className="hidden sm:inline">EDIT PROFILE</span>
           <span className="sm:hidden">EDIT</span>
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl bg-gray-900 border border-purple-500/50 max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="border-b border-purple-500/30 pb-4 mb-6">
-          <DialogTitle className="text-purple-400 font-press-start text-lg flex items-center gap-2">
+      <DialogContent className="max-w-3xl bg-gray-900 border border-orange-500/50 max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="border-b border-gray-800 pb-4 mb-6">
+          <DialogTitle className="text-orange-400 font-space font-bold text-lg flex items-center gap-2">
             <Edit className="w-5 h-5" />
             EDIT PROFILE
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-6">
           {/* Personal Info Section */}
-          <div className="bg-black/30 border border-purple-500/30 p-4">
-            <h3 className="font-press-start text-sm text-purple-400 mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-purple-400"></span>
+          <div className="bg-black/30 border border-gray-800 p-4">
+            <h3 className="font-space font-bold text-sm text-orange-400 mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-400"></span>
               PERSONAL INFO
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="name" className="text-pink-300 font-press-start text-xs mb-2 block">FULL NAME</Label>
-                <Input id="name" value={formData.name || ''} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-black/50 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400" placeholder="Enter your full name" />
+                <Label htmlFor="name" className="text-orange-400 font-space font-bold text-xs mb-2 block">FULL NAME</Label>
+                <Input id="name" value={formData.name || ''} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="bg-black/50 border border-gray-800 text-white font-space focus:border-orange-500" placeholder="Enter your full name" />
               </div>
               <div>
-                <Label htmlFor="location" className="text-cyan-300 font-press-start text-xs mb-2 block">LOCATION</Label>
-                <Input id="location" value={formData.location || ''} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="Your location" />
+                <Label htmlFor="location" className="text-gray-300 font-space font-bold text-xs mb-2 block">LOCATION</Label>
+                <Input id="location" value={formData.location || ''} onChange={(e) => setFormData({ ...formData, location: e.target.value })} className="bg-black/50 border border-gray-700 text-white font-space focus:border-gray-600" placeholder="Your location" />
               </div>
             </div>
             <div className="mt-4">
-              <Label htmlFor="bio" className="text-green-300 font-press-start text-xs mb-2 block">BIO</Label>
-              <Textarea id="bio" value={formData.bio || ''} onChange={(e) => setFormData({ ...formData, bio: e.target.value })} className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400" rows={3} placeholder="Tell us about yourself..." />
+              <Label htmlFor="bio" className="text-green-300 font-space font-bold text-xs mb-2 block">BIO</Label>
+              <Textarea id="bio" value={formData.bio || ''} onChange={(e) => setFormData({ ...formData, bio: e.target.value })} className="bg-black/50 border border-green-500/30 text-white font-space focus:border-green-400" rows={3} placeholder="Tell us about yourself..." />
             </div>
             <div className="mt-4">
-              <Label htmlFor="email" className="text-amber-300 font-press-start text-xs mb-2 block">EMAIL</Label>
-              <Input id="email" type="email" value={formData.email || ''} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-black/50 border border-amber-500/30 text-white font-jetbrains focus:border-amber-400" placeholder="your@email.com" />
+              <Label htmlFor="email" className="text-amber-300 font-space font-bold text-xs mb-2 block">EMAIL</Label>
+              <Input id="email" type="email" value={formData.email || ''} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="bg-black/50 border border-amber-500/30 text-white font-space focus:border-amber-400" placeholder="your@email.com" />
             </div>
           </div>
 
           {/* Avatar Section */}
           <div className="bg-black/30 border border-amber-500/30 p-4">
-            <h3 className="font-press-start text-sm text-amber-400 mb-4 flex items-center gap-2">
+            <h3 className="font-space font-bold text-sm text-amber-400 mb-4 flex items-center gap-2">
               <span className="w-2 h-2 bg-amber-400"></span>
               AVATAR CONFIG
             </h3>
             <div>
-              <Label htmlFor="avatar" className="text-amber-300 font-press-start text-xs mb-2 block">UPLOAD AVATAR</Label>
-              <Input id="avatar" type="file" accept="image/*" onChange={(e) => setAvatarFile(e.target.files?.[0] || null)} className="bg-black/50 border border-amber-500/30 text-white font-jetbrains focus:border-amber-400" />
+              <Label htmlFor="avatar" className="text-amber-300 font-space font-bold text-xs mb-2 block">UPLOAD AVATAR</Label>
+              <Input id="avatar" type="file" accept="image/*" onChange={(e) => setAvatarFile(e.target.files?.[0] || null)} className="bg-black/50 border border-amber-500/30 text-white font-space focus:border-amber-400" />
               {profile.avatarUrl && (
                 <div className="mt-3">
                   <Button type="button" onClick={async () => {
                     const { clearAvatar } = await import('@/lib/supabaseClient');
                     await clearAvatar();
                     setFormData({ ...formData, avatarUrl: null });
-                  }} className="bg-red-500/20 border border-red-500/40 hover:bg-red-500/30 text-red-300 font-press-start text-xs px-3 py-2 transition-colors">REMOVE AVATAR</Button>
+                  }} className="bg-red-500/20 border border-red-500/40 hover:bg-red-500/30 text-red-300 font-space font-bold text-xs px-3 py-2 transition-colors">REMOVE AVATAR</Button>
                 </div>
               )}
             </div>
           </div>
 
           {/* Social Links Section */}
-          <div className="bg-black/30 border border-cyan-500/30 p-4">
-            <h3 className="font-press-start text-sm text-cyan-400 mb-4 flex items-center gap-2">
-              <span className="w-2 h-2 bg-cyan-400"></span>
+          <div className="bg-black/30 border border-gray-700 p-4">
+            <h3 className="font-space font-bold text-sm text-gray-300 mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 bg-orange-400"></span>
               SOCIAL LINKS
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="github" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
+                <Label htmlFor="github" className="text-gray-300 font-space font-bold text-xs mb-2 block flex items-center gap-2">
                   <Github className="w-3 h-3" /> GITHUB
                 </Label>
-                <Input id="github" value={formData.github || ''} onChange={(e) => setFormData({ ...formData, github: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="username" />
+                <Input id="github" value={formData.github || ''} onChange={(e) => setFormData({ ...formData, github: e.target.value })} className="bg-black/50 border border-gray-700 text-white font-space focus:border-gray-600" placeholder="username" />
               </div>
               <div>
-                <Label htmlFor="linkedin" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
+                <Label htmlFor="linkedin" className="text-gray-300 font-space font-bold text-xs mb-2 block flex items-center gap-2">
                   <Linkedin className="w-3 h-3" /> LINKEDIN
                 </Label>
-                <Input id="linkedin" value={formData.linkedin || ''} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="username" />
+                <Input id="linkedin" value={formData.linkedin || ''} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} className="bg-black/50 border border-gray-700 text-white font-space focus:border-gray-600" placeholder="username" />
               </div>
               <div>
-                <Label htmlFor="twitter" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
+                <Label htmlFor="twitter" className="text-gray-300 font-space font-bold text-xs mb-2 block flex items-center gap-2">
                   <Twitter className="w-3 h-3" /> TWITTER
                 </Label>
-                <Input id="twitter" value={formData.twitter || ''} onChange={(e) => setFormData({ ...formData, twitter: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="username" />
+                <Input id="twitter" value={formData.twitter || ''} onChange={(e) => setFormData({ ...formData, twitter: e.target.value })} className="bg-black/50 border border-gray-700 text-white font-space focus:border-gray-600" placeholder="username" />
               </div>
               <div>
-                <Label htmlFor="website" className="text-gray-300 font-press-start text-xs mb-2 block flex items-center gap-2">
+                <Label htmlFor="website" className="text-gray-300 font-space font-bold text-xs mb-2 block flex items-center gap-2">
                   <Globe className="w-3 h-3" /> WEBSITE
                 </Label>
-                <Input id="website" value={formData.website || ''} onChange={(e) => setFormData({ ...formData, website: e.target.value })} className="bg-black/50 border border-cyan-500/30 text-white font-jetbrains focus:border-cyan-400" placeholder="https://yoursite.com" />
+                <Input id="website" value={formData.website || ''} onChange={(e) => setFormData({ ...formData, website: e.target.value })} className="bg-black/50 border border-gray-700 text-white font-space focus:border-gray-600" placeholder="https://yoursite.com" />
               </div>
             </div>
           </div>
 
           {/* Skills Section */}
           <div className="bg-black/30 border border-green-500/30 p-4">
-            <h3 className="font-press-start text-sm text-green-400 mb-4 flex items-center gap-2">
+            <h3 className="font-space font-bold text-sm text-green-400 mb-4 flex items-center gap-2">
               <span className="w-2 h-2 bg-green-400"></span>
               SKILLS CONFIG
             </h3>
             <div>
-              <Label htmlFor="skills" className="text-green-300 font-press-start text-xs mb-2 block">SKILLS (COMMA SEPARATED)</Label>
+              <Label htmlFor="skills" className="text-green-300 font-space font-bold text-xs mb-2 block">SKILLS (COMMA SEPARATED)</Label>
               <Input 
                 id="skills" 
                 value={(formData.skills || []).join(', ')} 
@@ -554,18 +554,18 @@ function EditProfileDialog({ profile, onSave }: { profile: ProfileUI; onSave: (p
                   const skills = value.split(',').map(s => s.trim());
                   setFormData({ ...formData, skills });
                 }} 
-                className="bg-black/50 border border-green-500/30 text-white font-jetbrains focus:border-green-400" 
+                className="bg-black/50 border border-green-500/30 text-white font-space focus:border-green-400" 
                 placeholder="React, TypeScript, Python, Machine Learning, etc." 
               />
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-purple-500/30">
-            <Button onClick={() => setOpen(false)} className="bg-gray-800 hover:bg-gray-700 text-white font-press-start text-xs px-6 py-3 transition-colors border border-gray-700 hover:border-gray-600">
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-800">
+            <Button onClick={() => setOpen(false)} className="bg-gray-800 hover:bg-gray-700 text-white font-space font-bold text-xs px-6 py-3 transition-colors border border-gray-700 hover:border-gray-600">
               CANCEL
             </Button>
-            <Button onClick={handleSave} className="bg-purple-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-300 hover:text-white font-press-start text-xs px-6 py-3 transition-all">
+            <Button onClick={handleSave} className="bg-orange-500/10 border border-orange-500/50 hover:border-orange-500 text-orange-400 hover:text-white font-space font-bold text-xs px-6 py-3 transition-all">
               SAVE CHANGES
             </Button>
           </div>
@@ -622,24 +622,24 @@ function DeleteAccountButton() {
     <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
       <DialogTrigger asChild>
         <Button 
-          className="bg-red-600 hover:bg-red-700 text-white font-press-start text-xs px-4 py-3 border-2 border-red-500 hover:border-red-400 transition-colors"
+          className="bg-red-600 hover:bg-red-700 text-white font-space font-bold text-xs px-4 py-3 border-2 border-red-500 hover:border-red-400 transition-colors"
         >
           DELETE_ACCOUNT
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-black border-4 border-red-600">
         <DialogHeader>
-          <DialogTitle className="text-red-500 font-press-start text-lg flex items-center gap-2">
+          <DialogTitle className="text-red-500 font-space font-bold text-lg flex items-center gap-2">
             <AlertCircle className="w-5 h-5" />
             CONFIRM ACCOUNT DELETION
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div className="bg-red-900/20 border-2 border-red-500/50 p-4 rounded">
-            <p className="text-red-400 font-jetbrains text-sm mb-3">
+            <p className="text-red-400 font-space text-sm mb-3">
               ⚠️ This action cannot be undone. This will permanently delete:
             </p>
-            <ul className="text-gray-300 font-jetbrains text-sm space-y-1 ml-4">
+            <ul className="text-gray-300 font-space text-sm space-y-1 ml-4">
               <li>• Your profile information</li>
               <li>• Your certificates and achievements</li>
               <li>• Your avatar and files</li>
@@ -648,14 +648,14 @@ function DeleteAccountButton() {
           </div>
           
           <div>
-            <Label htmlFor="confirm" className="text-gray-300 font-press-start text-xs mb-2 block">
+            <Label htmlFor="confirm" className="text-gray-300 font-space font-bold text-xs mb-2 block">
               Type "DELETE" to confirm:
             </Label>
             <Input
               id="confirm"
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
-              className="bg-black border-2 border-gray-700 text-white font-jetbrains focus:border-red-500"
+              className="bg-black border-2 border-gray-700 text-white font-space focus:border-red-500"
               placeholder="DELETE"
             />
           </div>
@@ -664,7 +664,7 @@ function DeleteAccountButton() {
             <Button
               onClick={handleDelete}
               disabled={loading || confirmText !== 'DELETE'}
-              className="bg-red-600 hover:bg-red-700 text-white font-press-start text-xs flex-1"
+              className="bg-red-600 hover:bg-red-700 text-white font-space font-bold text-xs flex-1"
             >
               {loading ? 'DELETING...' : 'CONFIRM DELETE'}
             </Button>
@@ -674,7 +674,7 @@ function DeleteAccountButton() {
                 setConfirmText('');
               }}
               variant="outline"
-              className="font-press-start text-xs"
+              className="font-space font-bold text-xs"
               disabled={loading}
             >
               CANCEL
@@ -1004,23 +1004,23 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       {/* Background Effects */}
-      <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+      <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
+      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(249,115,22,0.04)_0%,transparent_50%)]" />
       
-      <div className="fixed top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
-      <div className="fixed top-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+      <div className="fixed top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
+      <div className="fixed top-40 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
       
       {/* Header */}
-      <div className="relative z-10 bg-gradient-to-br from-black via-purple-950/20 to-black border-b border-pink-500/30 pt-16 sm:pt-20 lg:pt-24">
+      <div className="relative z-10 bg-gradient-to-br from-black via-gray-900/20 to-black border-b border-gray-800 pt-16 sm:pt-20 lg:pt-24">
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12">
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-6 sm:gap-8 lg:gap-12">
             {/* Avatar */}
             <div className="flex-shrink-0 relative">
-              <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/40 border-2 border-pink-500/50 p-2 hover:scale-105 transition-transform duration-300 hover:shadow-lg hover:shadow-pink-500/20">
-                <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 border-2 sm:border-3 lg:border-4 border-pink-400/60">
+              <div className="bg-gradient-to-br from-gray-900/50 to-gray-900/40 border-2 border-orange-500/40 p-2 hover:scale-105 transition-transform duration-300 hover:shadow-lg hover:shadow-orange-500/20">
+                <Avatar className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 border-2 sm:border-3 lg:border-4 border-orange-500/60">
                   <AvatarImage src={userProfile.avatarUrl || ''} alt={userProfile.name || userProfile.username} />
-                  <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-600 text-white text-sm sm:text-lg md:text-2xl lg:text-4xl font-press-start">
+                  <AvatarFallback className="bg-gradient-to-br from-orange-600 to-orange-500 text-white text-sm sm:text-lg md:text-2xl lg:text-4xl font-space font-bold">
                     {(userProfile.name || userProfile.username || 'U').charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -1032,29 +1032,29 @@ export default function Profile() {
               {/* Name and Status */}
               <div>
                 <div className="flex flex-col lg:flex-row lg:items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                  <h1 className="font-press-start text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent transition-all duration-300 break-words leading-tight">
+                  <h1 className="font-space font-bold text-sm sm:text-lg md:text-xl lg:text-2xl xl:text-3xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent transition-all duration-300 break-words leading-tight">
                     {userProfile.name || userProfile.username}
                   </h1>
                   {dbProfile.role === 'admin' && (
-                    <div className="bg-amber-500/20 border border-amber-500/50 text-amber-300 px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
+                    <div className="bg-amber-500/20 border border-amber-500/50 text-amber-300 px-3 py-2 text-xs font-space font-bold inline-flex items-center gap-2">
                       <Shield className="w-4 h-4" />
                       <span>ADMIN</span>
                     </div>
                   )}
                   {(dbProfile.role as string) === 'organizer' && (
-                    <div className="bg-cyan-500/20 border border-cyan-500/50 text-cyan-300 px-3 py-2 text-xs font-press-start inline-flex items-center gap-2">
+                    <div className="bg-gray-800 border border-gray-700 text-gray-300 px-3 py-2 text-xs font-space font-bold inline-flex items-center gap-2">
                       <Trophy className="w-4 h-4" />
                       <span>ORGANIZER</span>
                     </div>
                   )}
                 </div>
-                <p className="text-pink-400 font-press-start text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 break-all">@{userProfile.username}</p>
+                <p className="text-orange-400 font-space font-bold text-[10px] sm:text-xs md:text-sm mb-3 sm:mb-4 break-all">@{userProfile.username}</p>
               </div>
 
               {/* Bio */}
               {userProfile.bio && (
                 <div className="bg-gray-900/50 border border-gray-700/50 sm:border-2 rounded-lg p-2 sm:p-3 md:p-4">
-                  <p className="text-gray-300 font-jetbrains text-[11px] sm:text-xs md:text-sm leading-relaxed break-words">
+                  <p className="text-gray-300 font-space text-[11px] sm:text-xs md:text-sm leading-relaxed break-words">
                     {userProfile.bio}
                   </p>
                 </div>
@@ -1067,7 +1067,7 @@ export default function Profile() {
                   {(dbProfile.role as string) === 'organizer' && (
                     <a
                       href={`/organizer/${userProfile.username}`}
-                      className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-2 border border-purple-400/50"
+                      className="bg-gradient-to-r from-orange-600 to-orange-600 hover:from-orange-500 hover:to-orange-500 text-white font-space font-bold text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-2 border border-orange-500/50"
                     >
                       <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
                       VIEW_ORGANIZER_PROFILE
@@ -1090,7 +1090,7 @@ export default function Profile() {
                         });
                       }
                     }}
-                    className="bg-gray-800 hover:bg-pink-600/30 text-pink-300 hover:text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 border border-pink-500/40 hover:border-pink-400"
+                    className="bg-gray-800 hover:bg-orange-500/30 text-orange-400 hover:text-white font-space font-bold text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 border border-orange-500/30 hover:border-orange-500"
                   >
                     LOGOUT
                   </button>
@@ -1104,7 +1104,7 @@ export default function Profile() {
                     reportedUserId={dbProfile.id} 
                     reportedUsername={userProfile.username}
                     trigger={
-                      <button className="bg-gray-800 hover:bg-red-600/50 text-gray-400 hover:text-white font-press-start text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-2 border border-gray-700 hover:border-red-500/50">
+                      <button className="bg-gray-800 hover:bg-red-600/50 text-gray-400 hover:text-white font-space font-bold text-[10px] sm:text-xs px-2 sm:px-3 md:px-4 py-2 sm:py-2 md:py-3 transition-all duration-300 flex items-center gap-2 border border-gray-700 hover:border-red-500/50">
                         <Flag className="w-3 h-3 sm:w-4 sm:h-4" />
                         <span>REPORT</span>
                       </button>
@@ -1117,23 +1117,23 @@ export default function Profile() {
               <div className="space-y-2 sm:space-y-3 md:space-y-4">
                 {userProfile.location && (
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-purple-500/20 border border-purple-500/50 p-1 sm:p-1.5 md:p-2 flex-shrink-0">
-                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-purple-400" />
+                    <div className="bg-orange-500/10 border border-orange-500/50 p-1 sm:p-1.5 md:p-2 flex-shrink-0">
+                      <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-orange-400" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-purple-400 mb-0.5 sm:mb-1">LOCATION</p>
-                      <p className="font-jetbrains text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.location}</p>
+                      <p className="font-space font-bold text-[8px] sm:text-[10px] md:text-xs text-orange-400 mb-0.5 sm:mb-1">LOCATION</p>
+                      <p className="font-space text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.location}</p>
                     </div>
                   </div>
                 )}
                 {userProfile.email && (
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-pink-500/20 border border-pink-500/50 p-1 sm:p-1.5 md:p-2 flex-shrink-0">
-                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-pink-400" />
+                    <div className="bg-orange-500/10 border border-orange-500/40 p-1 sm:p-1.5 md:p-2 flex-shrink-0">
+                      <Mail className="h-3 w-3 sm:h-4 sm:w-4 text-orange-400" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-pink-400 mb-0.5 sm:mb-1">EMAIL</p>
-                      <p className="font-jetbrains text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.email}</p>
+                      <p className="font-space font-bold text-[8px] sm:text-[10px] md:text-xs text-orange-400 mb-0.5 sm:mb-1">EMAIL</p>
+                      <p className="font-space text-[10px] sm:text-xs md:text-sm text-gray-300 truncate">{userProfile.email}</p>
                     </div>
                   </div>
                 )}
@@ -1147,7 +1147,7 @@ export default function Profile() {
                       href={`https://github.com/${userProfile.github}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gray-800 hover:bg-purple-600/50 text-gray-300 hover:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-purple-500/50"
+                      className="bg-gray-800 hover:bg-orange-600/50 text-gray-300 hover:text-white font-space font-bold text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-orange-500/50"
                     >
                       <Github className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">GITHUB</span>
@@ -1158,7 +1158,7 @@ export default function Profile() {
                       href={`https://linkedin.com/in/${userProfile.linkedin}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gray-800 hover:bg-pink-600/50 text-gray-300 hover:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-pink-500/50"
+                      className="bg-gray-800 hover:bg-orange-500/50 text-gray-300 hover:text-white font-space font-bold text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-orange-500/40"
                     >
                       <Linkedin className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">LINKEDIN</span>
@@ -1169,7 +1169,7 @@ export default function Profile() {
                       href={`https://twitter.com/${userProfile.twitter}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gray-800 hover:bg-purple-600/50 text-gray-300 hover:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-purple-500/50"
+                      className="bg-gray-800 hover:bg-orange-600/50 text-gray-300 hover:text-white font-space font-bold text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-orange-500/50"
                     >
                       <Twitter className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">TWITTER</span>
@@ -1180,7 +1180,7 @@ export default function Profile() {
                       href={userProfile.website.startsWith('http') ? userProfile.website : `https://${userProfile.website}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="bg-gray-800 hover:bg-pink-600/50 text-gray-300 hover:text-white font-press-start text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-pink-500/50"
+                      className="bg-gray-800 hover:bg-orange-500/50 text-gray-300 hover:text-white font-space font-bold text-[8px] sm:text-[10px] md:text-xs px-1 sm:px-1.5 md:px-2 py-1 flex items-center gap-0.5 sm:gap-1 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-orange-500/40"
                     >
                       <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       <span className="hidden sm:inline">WEBSITE</span>
@@ -1193,8 +1193,8 @@ export default function Profile() {
               {userProfile.skills && userProfile.skills.length > 0 && (
                 <div className="mt-3 sm:mt-4 md:mt-6">
                   <div className="mb-2 sm:mb-3 md:mb-4">
-                    <h3 className="font-press-start text-[8px] sm:text-[10px] md:text-xs text-pink-400 mb-1.5 sm:mb-2 md:mb-3 flex items-center gap-1 sm:gap-2">
-                      <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 bg-pink-400 animate-pulse"></span>
+                    <h3 className="font-space font-bold text-[8px] sm:text-[10px] md:text-xs text-orange-400 mb-1.5 sm:mb-2 md:mb-3 flex items-center gap-1 sm:gap-2">
+                      <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 md:w-2 md:h-2 bg-orange-400 animate-pulse"></span>
                       SKILLS
                     </h3>
                   </div>
@@ -1202,7 +1202,7 @@ export default function Profile() {
                     {userProfile.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className="bg-purple-900/30 border border-pink-500/30 text-gray-300 px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 text-[8px] sm:text-[10px] md:text-xs font-jetbrains break-words hover:border-pink-400/50 transition-colors"
+                        className="bg-gray-900/30 border border-gray-800 text-gray-300 px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 text-[8px] sm:text-[10px] md:text-xs font-space break-words hover:border-orange-500/50 transition-colors"
                       >
                         {skill}
                       </span>
@@ -1223,38 +1223,38 @@ export default function Profile() {
             <TabsList className={`flex w-full ${isOwner ? 'flex-wrap lg:flex-nowrap' : ''} bg-transparent p-0 gap-0`}>
               <TabsTrigger 
                 value="overview" 
-                className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
+                className="relative bg-transparent text-gray-500 hover:text-orange-400 data-[state=active]:text-orange-400 data-[state=active]:bg-transparent font-space font-bold text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500"
               >
                 OVERVIEW
               </TabsTrigger>
               <TabsTrigger 
                 value="certificates" 
-                className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
+                className="relative bg-transparent text-gray-500 hover:text-orange-400 data-[state=active]:text-orange-400 data-[state=active]:bg-transparent font-space font-bold text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500"
               >
                 CERTIFICATES
               </TabsTrigger>
               <TabsTrigger 
                 value="hackathons" 
-                className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
+                className="relative bg-transparent text-gray-500 hover:text-orange-400 data-[state=active]:text-orange-400 data-[state=active]:bg-transparent font-space font-bold text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500"
               >
                 HACKATHONS
               </TabsTrigger>
               <TabsTrigger 
                 value="achievements" 
-                className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
+                className="relative bg-transparent text-gray-500 hover:text-orange-400 data-[state=active]:text-orange-400 data-[state=active]:bg-transparent font-space font-bold text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500"
               >
                 ACHIEVEMENTS
               </TabsTrigger>
               <TabsTrigger 
                 value="projects" 
-                className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
+                className="relative bg-transparent text-gray-500 hover:text-orange-400 data-[state=active]:text-orange-400 data-[state=active]:bg-transparent font-space font-bold text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500"
               >
                 PROJECTS
               </TabsTrigger>
               {isOwner && (
                 <TabsTrigger 
                   value="settings" 
-                  className="relative bg-transparent text-gray-500 hover:text-pink-400 data-[state=active]:text-pink-400 data-[state=active]:bg-transparent font-press-start text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-pink-500"
+                  className="relative bg-transparent text-gray-500 hover:text-orange-400 data-[state=active]:text-orange-400 data-[state=active]:bg-transparent font-space font-bold text-[10px] sm:text-xs px-4 sm:px-6 py-3 sm:py-4 transition-all duration-300 rounded-none border-b-2 border-transparent data-[state=active]:border-orange-500"
                 >
                   SETTINGS
                 </TabsTrigger>
@@ -1264,60 +1264,60 @@ export default function Profile() {
 
           <TabsContent value="overview" className="space-y-8">
             {/* Stats Dashboard */}
-            <div className="bg-black/60 border border-pink-500/40 p-6">
-              <h3 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6 flex items-center gap-2">
-                <Trophy className="w-4 h-4 text-pink-400" />
+            <div className="bg-black/60 border border-orange-500/30 p-6">
+              <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-6 flex items-center gap-2">
+                <Trophy className="w-4 h-4 text-orange-400" />
                 STATS_OVERVIEW
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 text-center hover:border-pink-400 hover:scale-105 transition-all duration-300 group">
-                  <div className="bg-gradient-to-br from-purple-600 to-pink-600 w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-pink-500/30">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-6 text-center hover:border-orange-500 hover:scale-105 transition-all duration-300 group">
+                  <div className="bg-gradient-to-br from-orange-600 to-orange-500 w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-orange-500/20">
                     <Award className="w-8 h-8 text-white" />
                   </div>
-                  <div className="font-press-start text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                  <div className="font-space font-bold text-3xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.certificates?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-pink-400 mb-1">CERTIFICATES</div>
-                  <div className="font-jetbrains text-xs text-gray-400">Total earned</div>
+                  <div className="font-space font-bold text-xs text-orange-400 mb-1">CERTIFICATES</div>
+                  <div className="font-space text-xs text-gray-400">Total earned</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/20 border border-pink-500/40 p-6 text-center hover:border-purple-400 hover:scale-105 transition-all duration-300 group">
-                  <div className="bg-gradient-to-br from-pink-600 to-purple-600 w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-purple-500/30">
+                <div className="bg-gradient-to-br from-gray-900/30 to-gray-900/20 border border-orange-500/30 p-6 text-center hover:border-orange-500 hover:scale-105 transition-all duration-300 group">
+                  <div className="bg-gradient-to-br from-orange-600 to-orange-600 w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-orange-500/30">
                     <Trophy className="w-8 h-8 text-white" />
                   </div>
-                  <div className="font-press-start text-3xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                  <div className="font-space font-bold text-3xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.hackathons?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-purple-400 mb-1">HACKATHONS</div>
-                  <div className="font-jetbrains text-xs text-gray-400">Participated</div>
+                  <div className="font-space font-bold text-xs text-orange-400 mb-1">HACKATHONS</div>
+                  <div className="font-space text-xs text-gray-400">Participated</div>
                 </div>
                 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 text-center hover:border-pink-400 hover:scale-105 transition-all duration-300 group">
-                  <div className="bg-gradient-to-br from-purple-600 to-pink-600 w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-pink-500/30">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-6 text-center hover:border-orange-500 hover:scale-105 transition-all duration-300 group">
+                  <div className="bg-gradient-to-br from-orange-600 to-orange-500 w-16 h-16 mx-auto mb-4 flex items-center justify-center group-hover:shadow-lg group-hover:shadow-orange-500/20">
                     <Star className="w-8 h-8 text-white" />
                   </div>
-                  <div className="font-press-start text-3xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2">
+                  <div className="font-space font-bold text-3xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-2">
                     {certificatesLoading ? '...' : (userCertificatesData?.achievements?.length || 0)}
                   </div>
-                  <div className="font-press-start text-xs text-pink-400 mb-1">ACHIEVEMENTS</div>
-                  <div className="font-jetbrains text-xs text-gray-400">Unlocked</div>
+                  <div className="font-space font-bold text-xs text-orange-400 mb-1">ACHIEVEMENTS</div>
+                  <div className="font-space text-xs text-gray-400">Unlocked</div>
                 </div>
               </div>
             </div>
 
             {/* Recent Activity */}
             {!certificatesLoading && userCertificatesData?.certificates && userCertificatesData.certificates.length > 0 && (
-              <div className="bg-black/60 border border-pink-500/40 p-6">
+              <div className="bg-black/60 border border-orange-500/30 p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-pink-400" />
+                  <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-orange-400" />
                     RECENT_CERTIFICATES
                   </h3>
                   {userCertificatesData.certificates.length > 3 && (
                     <button 
                       onClick={() => (document.querySelector('[value="certificates"]') as HTMLElement)?.click()}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-press-start text-xs px-3 py-2 transition-all border border-pink-400/50"
+                      className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white font-space font-bold text-xs px-3 py-2 transition-all border border-orange-500/50"
                     >
                       VIEW_ALL
                     </button>
@@ -1340,7 +1340,7 @@ export default function Profile() {
             ) : userCertificatesData?.certificates && userCertificatesData.certificates.length > 0 ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-press-start text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  <h3 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                     CERTIFICATES ({userCertificatesData.certificates.length})
                   </h3>
                 </div>
@@ -1351,10 +1351,10 @@ export default function Profile() {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 bg-black/40 border border-pink-500/30 p-8">
-                <Award className="w-16 h-16 text-pink-500/50 mx-auto mb-4" />
-                <h3 className="font-press-start text-sm text-gray-400 mb-2">NO CERTIFICATES YET</h3>
-                <p className="text-gray-500 font-jetbrains">This user hasn't earned any certificates yet.</p>
+              <div className="text-center py-12 bg-black/40 border border-gray-800 p-8">
+                <Award className="w-16 h-16 text-orange-400 mx-auto mb-4" />
+                <h3 className="font-space font-bold text-sm text-gray-400 mb-2">NO CERTIFICATES YET</h3>
+                <p className="text-gray-500 font-space">This user hasn't earned any certificates yet.</p>
               </div>
             )}
           </TabsContent>
@@ -1367,7 +1367,7 @@ export default function Profile() {
             ) : userCertificatesData?.hackathons && userCertificatesData.hackathons.length > 0 ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-press-start text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                  <h3 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                     HACKATHONS ({userCertificatesData.hackathons.length})
                   </h3>
                 </div>
@@ -1378,10 +1378,10 @@ export default function Profile() {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 bg-black/40 border border-purple-500/30 p-8">
-                <Trophy className="w-16 h-16 text-purple-500/50 mx-auto mb-4" />
-                <h3 className="font-press-start text-sm text-gray-400 mb-2">NO HACKATHONS YET</h3>
-                <p className="text-gray-500 font-jetbrains">This user hasn't participated in any hackathons yet.</p>
+              <div className="text-center py-12 bg-black/40 border border-gray-800 p-8">
+                <Trophy className="w-16 h-16 text-orange-400 mx-auto mb-4" />
+                <h3 className="font-space font-bold text-sm text-gray-400 mb-2">NO HACKATHONS YET</h3>
+                <p className="text-gray-500 font-space">This user hasn't participated in any hackathons yet.</p>
               </div>
             )}
           </TabsContent>
@@ -1394,7 +1394,7 @@ export default function Profile() {
             ) : userCertificatesData?.achievements && userCertificatesData.achievements.length > 0 ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-press-start text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  <h3 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                     ACHIEVEMENTS ({userCertificatesData.achievements.length})
                   </h3>
                 </div>
@@ -1405,10 +1405,10 @@ export default function Profile() {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 bg-black/40 border border-pink-500/30 p-8">
-                <Star className="w-16 h-16 text-pink-500/50 mx-auto mb-4" />
-                <h3 className="font-press-start text-sm text-gray-400 mb-2">NO ACHIEVEMENTS YET</h3>
-                <p className="text-gray-500 font-jetbrains">This user hasn't earned any achievements yet.</p>
+              <div className="text-center py-12 bg-black/40 border border-gray-800 p-8">
+                <Star className="w-16 h-16 text-orange-400 mx-auto mb-4" />
+                <h3 className="font-space font-bold text-sm text-gray-400 mb-2">NO ACHIEVEMENTS YET</h3>
+                <p className="text-gray-500 font-space">This user hasn't earned any achievements yet.</p>
               </div>
             )}
           </TabsContent>
@@ -1421,7 +1421,7 @@ export default function Profile() {
             ) : userProjects && userProjects.length > 0 ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-press-start text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                  <h3 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                     PROJECTS ({userProjects.length})
                   </h3>
                 </div>
@@ -1432,10 +1432,10 @@ export default function Profile() {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 bg-black/40 border border-purple-500/30 p-8">
-                <FolderOpen className="w-16 h-16 text-purple-500/50 mx-auto mb-4" />
-                <h3 className="font-press-start text-sm text-gray-400 mb-2">NO PROJECTS YET</h3>
-                <p className="text-gray-500 font-jetbrains">This user hasn't submitted any projects yet.</p>
+              <div className="text-center py-12 bg-black/40 border border-gray-800 p-8">
+                <FolderOpen className="w-16 h-16 text-orange-400 mx-auto mb-4" />
+                <h3 className="font-space font-bold text-sm text-gray-400 mb-2">NO PROJECTS YET</h3>
+                <p className="text-gray-500 font-space">This user hasn't submitted any projects yet.</p>
               </div>
             )}
           </TabsContent>
@@ -1443,18 +1443,18 @@ export default function Profile() {
           {isOwner && (
             <TabsContent value="settings" className="space-y-6">
               {/* Player Settings Menu */}
-              <div className="bg-black/60 border border-pink-500/40 p-6 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5" />
+              <div className="bg-black/60 border border-orange-500/30 p-6 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-orange-500/5" />
                 <div className="relative z-10">
-                  <h3 className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6 flex items-center gap-2">
-                    <div className="w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 animate-pulse"></div>
+                  <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-6 flex items-center gap-2">
+                    <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-orange-500 animate-pulse"></div>
                     USER_SETTINGS
                   </h3>
                   
                   <div className="space-y-6">
                     {/* Username Section */}
-                    <div className="bg-black/40 border border-purple-500/30 p-4">
-                      <h4 className="font-press-start text-xs text-purple-400 mb-3 flex items-center gap-2">
+                    <div className="bg-black/40 border border-gray-800 p-4">
+                      <h4 className="font-space font-bold text-xs text-orange-400 mb-3 flex items-center gap-2">
                         <Edit className="w-3 h-3" />
                         USERNAME_CONFIG
                       </h4>
@@ -1462,8 +1462,8 @@ export default function Profile() {
                     </div>
                     
                     {/* Password Section */}
-                    <div className="bg-black/40 border border-pink-500/30 p-4">
-                      <h4 className="font-press-start text-xs text-pink-400 mb-3 flex items-center gap-2">
+                    <div className="bg-black/40 border border-gray-800 p-4">
+                      <h4 className="font-space font-bold text-xs text-orange-400 mb-3 flex items-center gap-2">
                         <Shield className="w-3 h-3" />
                         SECURITY_SETTINGS
                       </h4>
@@ -1474,37 +1474,37 @@ export default function Profile() {
               </div>
               
               {/* Account Management */}
-              <div className="bg-black/60 border border-purple-500/40 p-6 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-500/5 to-purple-500/5" />
+              <div className="bg-black/60 border border-orange-500/30 p-6 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 to-orange-500/5" />
                 <div className="relative z-10">
-                  <h3 className="font-press-start text-sm bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-6 flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-pink-400" />
+                  <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-6 flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-orange-400" />
                     ACCOUNT_MANAGEMENT
                   </h3>
                   
                   <div className="space-y-6">
-                    <div className="bg-black/40 border border-purple-500/30 p-4">
-                      <h4 className="font-press-start text-xs text-purple-400 mb-3 flex items-center gap-2">
+                    <div className="bg-black/40 border border-gray-800 p-4">
+                      <h4 className="font-space font-bold text-xs text-orange-400 mb-3 flex items-center gap-2">
                         <Eye className="w-3 h-3" />
                         PROFILE_VISIBILITY
                       </h4>
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="font-jetbrains text-gray-300 text-sm mb-1">Your profile is currently public</p>
-                          <p className="font-jetbrains text-gray-500 text-xs">Visible to all users on the platform</p>
+                          <p className="font-space text-gray-300 text-sm mb-1">Your profile is currently public</p>
+                          <p className="font-space text-gray-500 text-xs">Visible to all users on the platform</p>
                         </div>
                         <div className="bg-green-500/20 border border-green-500/50 px-3 py-1">
-                          <span className="font-press-start text-xs text-green-400">PUBLIC</span>
+                          <span className="font-space font-bold text-xs text-green-400">PUBLIC</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="bg-black/40 border border-pink-500/30 p-4">
-                      <h4 className="font-press-start text-xs text-pink-400 mb-3 flex items-center gap-2">
+                    <div className="bg-black/40 border border-gray-800 p-4">
+                      <h4 className="font-space font-bold text-xs text-orange-400 mb-3 flex items-center gap-2">
                         <Download className="w-3 h-3" />
                         DATA_EXPORT
                       </h4>
-                      <p className="font-jetbrains text-gray-300 text-sm mb-4">Download a complete backup of your Maximally data</p>
+                      <p className="font-space text-gray-300 text-sm mb-4">Download a complete backup of your Maximally data</p>
                       <ExportDataButton />
                     </div>
                   </div>
@@ -1515,13 +1515,13 @@ export default function Profile() {
               <div className="bg-red-900/20 border border-red-500/50 p-6 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent" />
                 <div className="relative z-10">
-                  <h3 className="font-press-start text-sm text-red-400 mb-4 flex items-center gap-2">
+                  <h3 className="font-space font-bold text-sm text-red-400 mb-4 flex items-center gap-2">
                     <AlertCircle className="w-4 h-4 animate-pulse" />
                     DANGER_ZONE
                   </h3>
                   <div className="bg-black/50 border border-red-500/40 p-4">
-                    <h4 className="font-press-start text-xs text-red-300 mb-3">ACCOUNT_DELETION</h4>
-                    <p className="font-jetbrains text-gray-400 text-sm mb-4">
+                    <h4 className="font-space font-bold text-xs text-red-300 mb-3">ACCOUNT_DELETION</h4>
+                    <p className="font-space text-gray-400 text-sm mb-4">
                       ⚠️ WARNING: This action cannot be undone. All your data, certificates, and achievements will be permanently deleted.
                     </p>
                     <DeleteAccountButton />

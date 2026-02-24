@@ -12,7 +12,7 @@ const TeenBusiness = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Why Start a Business Before 18?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Why Start a Business Before 18?</h2>
         <p className="mb-4">Starting early gives teens a massive advantage. They develop real-world skills, build confidence, and often discover passions that shape their futures. But the biggest shift in 2025? You don't need money, an MBA, or tech skills to get started. All you need is:</p>
         <ul className="list-disc pl-6 mb-6">
           <li>A problem worth solving</li>
@@ -22,11 +22,11 @@ const TeenBusiness = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">What is No-Code, and Why Should Teen Entrepreneurs Use It?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">What is No-Code, and Why Should Teen Entrepreneurs Use It?</h2>
         <p className="mb-4">No-code tools let you build apps, websites, and automations without writing traditional code. Think of it like Lego for the internet—drag, drop, and launch!</p>
 
         <div className="pixel-border bg-maximally-blue/5 p-6 my-6">
-          <h3 className="font-press-start text-xl mb-4">Popular No-Code Tools for Teens:</h3>
+          <h3 className="font-space font-bold text-xl mb-4">Popular No-Code Tools for Teens:</h3>
           <ul className="space-y-2">
             <li>✨ Glide: Turn Google Sheets into apps in minutes</li>
             <li>🎨 Canva: Design logos, pitch decks, and content</li>
@@ -39,11 +39,11 @@ const TeenBusiness = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Step-by-Step: How to Launch a Business Before 18</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Step-by-Step: How to Launch a Business Before 18</h2>
 
         <div className="space-y-8">
           <div>
-            <h3 className="font-press-start text-xl mb-4">Step 1: Spot a Problem You Care About</h3>
+            <h3 className="font-space font-bold text-xl mb-4">Step 1: Spot a Problem You Care About</h3>
             <p className="mb-4">Every business begins with a problem. The best teen entrepreneurs solve something close to their world.</p>
             <div className="bg-maximally-red/5 p-4 rounded-lg">
               <p className="font-bold mb-2">Real Examples:</p>
@@ -55,7 +55,7 @@ const TeenBusiness = () => {
           </div>
 
           <div>
-            <h3 className="font-press-start text-xl mb-4">Step 2: Brainstorm a Simple Solution</h3>
+            <h3 className="font-space font-bold text-xl mb-4">Step 2: Brainstorm a Simple Solution</h3>
             <p className="mb-4">Start small. Use the "One Sentence Startup Test":</p>
             <blockquote className="pixel-border bg-maximally-blue/5 p-4 my-4">
               "I'm building a tool that helps [people] do [something] faster/easier/cheaper."
@@ -65,9 +65,9 @@ const TeenBusiness = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Want to Start but Need Help?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Want to Start but Need Help?</h2>
         <div className="pixel-border bg-maximally-blue/5 p-6">
-          <h3 className="font-press-start text-xl mb-4">🚀 Join Maximally's Teen Startup Program</h3>
+          <h3 className="font-space font-bold text-xl mb-4">🚀 Join Maximally's Teen Startup Program</h3>
           <p className="mb-4">Go from idea to product in just 4 weeks with:</p>
           <ul className="list-disc pl-6 mb-6">
             <li>No-code tools mastery</li>
@@ -77,7 +77,7 @@ const TeenBusiness = () => {
           </ul>
           <div className="flex justify-center">
             <Link to="/entrepreneurship">
-              <Button className="font-press-start">
+              <Button className="font-space font-bold">
                 Join the Bootcamp
               </Button>
             </Link>
@@ -86,7 +86,7 @@ const TeenBusiness = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Final Thoughts</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Final Thoughts</h2>
         <p className="mb-4">The world doesn't wait until you're 18.</p>
         <p className="mb-4">Why should your dreams?</p>
         <p>With no-code tools, AI, and the right mentors, you can become an entrepreneur right now—no matter your age, tech skills, or background.</p>

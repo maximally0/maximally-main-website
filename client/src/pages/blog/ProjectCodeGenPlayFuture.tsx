@@ -13,11 +13,11 @@ const ProjectCodeGenPlayFuture = () => {
       
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <div className="bg-white shadow-lg rounded-lg p-8">
-          <h1 className="font-press-start text-3xl text-maximally-black mb-8">
+          <h1 className="font-space font-bold text-3xl text-maximally-black mb-8">
             Project CodeGen: Why Play Might Be the Future of Building
           </h1>
           
-          <div className="font-jetbrains text-maximally-black space-y-6 leading-relaxed">
+          <div className="font-space text-maximally-black space-y-6 leading-relaxed">
             <p className="text-lg">
               When was the last time you played with technology—not for work, not for profit, but just because it was fun?
             </p>
@@ -28,7 +28,7 @@ const ProjectCodeGenPlayFuture = () => {
             
             <p className="font-bold">This one's about joy.</p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">A Hackathon That Feels Like a Playground</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">A Hackathon That Feels Like a Playground</h2>
             
             <p>
               Most hackathons are pressure cookers. Build fast, pitch sharp, hope for a prize. But what if you stripped away the seriousness and treated it like a giant science fair?
@@ -48,7 +48,7 @@ const ProjectCodeGenPlayFuture = () => {
               It's the first hackathon where making someone laugh is as valid as making something "scalable."
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Why Play Matters in Tech</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Why Play Matters in Tech</h2>
             
             <p>
               Play isn't a distraction. It's one of the most underrated engines of creativity.
@@ -64,7 +64,7 @@ const ProjectCodeGenPlayFuture = () => {
               By lowering the stakes, play frees people to build things they otherwise wouldn't. That's exactly the kind of mindset innovation actually needs.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">What You Can Build at Project CodeGen</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">What You Can Build at Project CodeGen</h2>
             
             <p>
               The rules are simple: if it's playful, it works. Some examples floating around:
@@ -81,7 +81,7 @@ const ProjectCodeGenPlayFuture = () => {
               You don't have to impress a VC. You just have to make something delightfully weird.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Judging Without the Stress</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Judging Without the Stress</h2>
             
             <p>
               Instead of high-pressure pitches, Project CodeGen has asynchronous judging. You submit your prototype + short write-up, maybe throw in a one-minute demo video if you want.
@@ -103,7 +103,7 @@ const ProjectCodeGenPlayFuture = () => {
               Notice how "joy" actually counts. That alone makes it different.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Why You Should Join</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Why You Should Join</h2>
             
             <p>
               This hackathon isn't just for pros. It's open to:
@@ -121,7 +121,7 @@ const ProjectCodeGenPlayFuture = () => {
               Whether you're 14 or 40, if you've ever wanted to just make something silly, colorful, and alive, this is for you.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Final Thought</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Final Thought</h2>
             
             <p>
               We take tech too seriously. Every product has to "scale," every app has to "disrupt."

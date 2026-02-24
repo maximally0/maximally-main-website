@@ -31,8 +31,8 @@ const roleIcons = {
 };
 
 const roleColors = {
-  'co-organizer': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-  'admin': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+  'co-organizer': 'bg-orange-500/10 text-orange-400 border-gray-800',
+  'admin': 'bg-gray-800 text-blue-400 border-gray-700',
   'viewer': 'bg-gray-500/20 text-gray-400 border-gray-500/30',
 };
 
@@ -128,7 +128,7 @@ export default function OrganizerInvite() {
   if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="font-press-start text-purple-400 animate-pulse">LOADING...</div>
+        <div className="font-space font-bold text-orange-400 animate-pulse">LOADING...</div>
       </div>
     );
   }
@@ -142,7 +142,7 @@ export default function OrganizerInvite() {
             <Card className="bg-red-900/20 border-red-500/30">
               <CardContent className="p-8 text-center">
                 <XCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-                <h1 className="font-press-start text-xl text-red-400 mb-4">INVALID INVITATION</h1>
+                <h1 className="font-space font-bold text-xl text-red-400 mb-4">INVALID INVITATION</h1>
                 <p className="text-gray-400 mb-6">{error}</p>
                 <Button onClick={() => navigate('/organizer/dashboard')} variant="outline">
                   Go to Dashboard
@@ -171,16 +171,16 @@ export default function OrganizerInvite() {
       
       <div className="min-h-screen bg-black text-white pt-24 pb-12 relative overflow-hidden">
         {/* Background effects */}
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
         
         <div className="container mx-auto px-4 max-w-lg relative z-10">
-          <Card className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-purple-500/50">
+          <Card className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-orange-500/50">
             <CardHeader className="text-center pb-2">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-orange-500 to-orange-500 flex items-center justify-center">
                 <RoleIcon className="w-10 h-10 text-white" />
               </div>
-              <CardTitle className="font-press-start text-xl text-purple-400">
+              <CardTitle className="font-space font-bold text-xl text-orange-400">
                 YOU'RE INVITED!
               </CardTitle>
               <CardDescription className="text-gray-400 mt-2">
@@ -191,7 +191,7 @@ export default function OrganizerInvite() {
             <CardContent className="space-y-6">
               {/* Hackathon Info */}
               <div className="p-4 bg-white/5 rounded-lg border border-white/10">
-                <h3 className="font-press-start text-sm text-pink-400 mb-3">
+                <h3 className="font-space font-bold text-sm text-orange-400 mb-3">
                   {invite.hackathon.hackathon_name}
                 </h3>
                 <div className="flex items-center gap-2">
@@ -203,9 +203,9 @@ export default function OrganizerInvite() {
               </div>
               
               {/* Role Description */}
-              <div className="p-4 bg-purple-500/10 rounded-lg border border-purple-500/30">
+              <div className="p-4 bg-orange-500/10 rounded-lg border border-gray-800">
                 <div className="flex items-start gap-3">
-                  <Shield className="w-5 h-5 text-purple-400 mt-0.5" />
+                  <Shield className="w-5 h-5 text-orange-400 mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-white mb-1">Role Permissions</p>
                     <p className="text-xs text-gray-400">
@@ -269,7 +269,7 @@ export default function OrganizerInvite() {
                 <Button
                   onClick={handleAccept}
                   disabled={accepting || (user && user.email !== invite.inviteeEmail) || (user && profile?.role !== 'organizer' && profile?.role !== 'admin')}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500"
+                  className="flex-1 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500"
                 >
                   {accepting ? (
                     'Accepting...'

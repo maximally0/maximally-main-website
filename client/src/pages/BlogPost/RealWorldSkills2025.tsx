@@ -4,12 +4,12 @@ import BlogPost from '@/components/BlogPost';
 const RealWorldSkills2025 = () => {
   const content = (
     <>
-      <p className="lead font-jetbrains text-lg mb-6">
+      <p className="lead font-space text-lg mb-6">
         It's 2025. You can memorize entire textbooks, score a 98%, and still be <em>clueless in a job interview.</em> Why? Because <strong>the world has changed</strong>, and the rules of success have flipped.
       </p>
 
       <blockquote className="pixel-border p-6 bg-maximally-blue/5 my-8">
-        <p className="font-press-start">
+        <p className="font-space font-bold">
           📉 Marks matter less.<br />
           🚀 Real-world skills matter more than ever.
         </p>
@@ -20,10 +20,10 @@ const RealWorldSkills2025 = () => {
       </p>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">🎯 The Reality Check: Marks Don't Guarantee Success Anymore</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🎯 The Reality Check: Marks Don't Guarantee Success Anymore</h2>
         <p className="mb-4">You know the drill:<br />Study hard ➝ Top marks ➝ Top college ➝ Top job<br />Except… that ladder's broken.</p>
         
-        <h3 className="font-press-start text-xl mb-4">Here's why:</h3>
+        <h3 className="font-space font-bold text-xl mb-4">Here's why:</h3>
         <ul className="list-disc pl-6 mb-4 space-y-2">
           <li><strong>Most hiring is now skill-based</strong>, especially in startups and modern companies</li>
           <li><strong>AI and automation</strong> are replacing knowledge-based jobs</li>
@@ -38,7 +38,7 @@ const RealWorldSkills2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">💡 What Do Employers Actually Look For?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">💡 What Do Employers Actually Look For?</h2>
         <p className="mb-4">Whether it's a global startup or an Ivy League college, here's what stands out on an application:</p>
         <ul className="list-disc pl-6 mb-4 space-y-2">
           <li><strong>Problem-solving ability</strong></li>
@@ -50,10 +50,10 @@ const RealWorldSkills2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">🚀 Enter Maximally: India's Most Practical Bootcamps for Teens</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🚀 Enter Maximally: India's Most Practical Bootcamps for Teens</h2>
         <p className="mb-4">At Maximally, we don't just <em>teach</em> real-world skills. We get teens to <strong>use</strong> them—live, in real projects, alongside equally driven peers.</p>
         
-        <h3 className="font-press-start text-xl mb-4">Here's what our bootcamps unlock:</h3>
+        <h3 className="font-space font-bold text-xl mb-4">Here's what our bootcamps unlock:</h3>
         <ul className="list-none pl-6 mb-4 space-y-4">
           <li>✅ <strong>Founder Mindset</strong> — Learn how to build startups, pitch ideas, and solve problems</li>
           <li>✅ <strong>Public Speaking & Influence</strong> — Speak like a TEDx pro, debate like a diplomat</li>
@@ -65,11 +65,11 @@ const RealWorldSkills2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">🔥 TL;DR: Marks Can't Keep Up. Skills Will Take You Further.</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🔥 TL;DR: Marks Can't Keep Up. Skills Will Take You Further.</h2>
         <p className="mb-4">If you're still focusing <em>only</em> on marks in 2025, you're prepping for a race that no longer exists.</p>
         
         <blockquote className="pixel-border p-6 bg-maximally-red/5 my-8">
-          <p className="font-press-start">
+          <p className="font-space font-bold">
             📣 The new formula is:<br />
             <strong>Skills + Projects + Community + Mentorship = Actual Opportunities</strong>
           </p>

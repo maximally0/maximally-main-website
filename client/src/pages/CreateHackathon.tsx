@@ -104,14 +104,14 @@ export default function CreateHackathon() {
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         {/* Pixel Grid Background */}
         <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
 
         {/* Animated Background Elements */}
         <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-purple-500/20 blur-3xl rounded-full animate-pulse" />
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-pink-500/20 blur-3xl rounded-full animate-pulse delay-700" />
-          <div className="absolute top-1/2 left-1/3 w-36 h-36 bg-purple-600/20 blur-3xl rounded-full animate-pulse delay-500" />
+          <div className="absolute top-20 left-20 w-32 h-32 bg-orange-500/10 blur-3xl rounded-full animate-pulse" />
+          <div className="absolute bottom-20 right-20 w-40 h-40 bg-orange-500/10 blur-3xl rounded-full animate-pulse delay-700" />
+          <div className="absolute top-1/2 left-1/3 w-36 h-36 bg-orange-600/20 blur-3xl rounded-full animate-pulse delay-500" />
         </div>
 
         {/* Main Content */}
@@ -120,41 +120,41 @@ export default function CreateHackathon() {
             <div className="max-w-4xl mx-auto">
               {/* Header */}
               <div className="text-center mb-12">
-                <div className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 px-8 py-4 inline-block mb-8 shadow-lg shadow-purple-500/20">
-                  <span className="font-press-start text-sm sm:text-base flex items-center gap-3">
+                <div className="bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 text-white px-8 py-4 inline-block mb-8 shadow-lg shadow-orange-500/20">
+                  <span className="font-space font-bold text-sm sm:text-base flex items-center gap-3">
                     <Rocket className="h-5 w-5 animate-bounce" />
                     CREATE YOUR HACKATHON
                     <Sparkles className="h-5 w-5 animate-spin-slow" />
                   </span>
                 </div>
 
-                <h1 className="font-press-start text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-                  <span className="bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="font-space font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                  <span className="bg-gradient-to-r from-orange-400 via-orange-400 to-orange-400 bg-clip-text text-transparent">
                     LET'S GET STARTED
                   </span>
                 </h1>
 
-                <p className="text-gray-300 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-jetbrains leading-relaxed">
+                <p className="text-gray-300 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-space leading-relaxed">
                   Fill in the basic details to create your hackathon. You can add more information and customize everything later.
                 </p>
               </div>
 
               {/* Form Card */}
-              <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 hover:border-pink-400 transition-all duration-500 p-8 sm:p-12 relative overflow-hidden group">
+              <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 hover:border-orange-500 transition-all duration-500 p-8 sm:p-12 relative overflow-hidden group">
                 {/* Animated Border Glow */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500 opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500" />
 
                 {/* Corner Decorations */}
-                <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-pink-400 animate-pulse" />
-                <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-pink-400 animate-pulse delay-200" />
-                <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-pink-400 animate-pulse delay-400" />
-                <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-pink-400 animate-pulse delay-600" />
+                <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-orange-500 animate-pulse" />
+                <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-orange-500 animate-pulse delay-200" />
+                <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-orange-500 animate-pulse delay-400" />
+                <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-orange-500 animate-pulse delay-600" />
 
                 <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
                   {/* Hackathon Name */}
                   <div>
-                    <label className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
-                      <Zap className="h-5 w-5 text-purple-400" />
+                    <label className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
+                      <Zap className="h-5 w-5 text-orange-400" />
                       HACKATHON NAME *
                     </label>
                     <input
@@ -163,22 +163,22 @@ export default function CreateHackathon() {
                       value={formData.hackathonName}
                       onChange={handleChange}
                       required
-                      className="w-full bg-black/50 border border-purple-500/50 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-400 outline-none transition-colors"
+                      className="w-full bg-black/50 border border-orange-500/50 text-white px-6 py-4 font-space text-lg focus:border-orange-500 outline-none transition-colors"
                       placeholder="e.g., AI Innovation Hackathon 2025"
                     />
-                    <p className="font-jetbrains text-xs text-gray-500 mt-2">
+                    <p className="font-space text-xs text-gray-500 mt-2">
                       Choose a catchy name that describes your hackathon
                     </p>
                   </div>
 
                   {/* Slug */}
                   <div>
-                    <label className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
-                      <LinkIcon className="h-5 w-5 text-purple-400" />
+                    <label className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
+                      <LinkIcon className="h-5 w-5 text-orange-400" />
                       URL SLUG *
                     </label>
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="font-jetbrains text-sm text-gray-400 whitespace-nowrap">
+                      <span className="font-space text-sm text-gray-400 whitespace-nowrap">
                         maximally.in/hackathon/
                       </span>
                       <input
@@ -188,11 +188,11 @@ export default function CreateHackathon() {
                         onChange={handleChange}
                         required
                         pattern="[a-z0-9\-]+"
-                        className="flex-1 bg-black/50 border border-purple-500/50 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-400 outline-none transition-colors"
+                        className="flex-1 bg-black/50 border border-orange-500/50 text-white px-6 py-4 font-space text-lg focus:border-orange-500 outline-none transition-colors"
                         placeholder="ai-innovation-2025"
                       />
                     </div>
-                    <p className="font-jetbrains text-xs text-gray-500">
+                    <p className="font-space text-xs text-gray-500">
                       Only lowercase letters, numbers, and hyphens. This will be your hackathon's unique URL.
                     </p>
                   </div>
@@ -200,8 +200,8 @@ export default function CreateHackathon() {
                   {/* Dates */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
-                        <Calendar className="h-5 w-5 text-purple-400" />
+                      <label className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-orange-400" />
                         START DATE & TIME *
                       </label>
                       <input
@@ -210,13 +210,13 @@ export default function CreateHackathon() {
                         value={formData.startDate}
                         onChange={handleChange}
                         required
-                        className="w-full bg-black/50 border border-purple-500/50 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-400 outline-none transition-colors"
+                        className="w-full bg-black/50 border border-orange-500/50 text-white px-6 py-4 font-space text-lg focus:border-orange-500 outline-none transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="font-press-start text-sm bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
-                        <Calendar className="h-5 w-5 text-pink-400" />
+                      <label className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-3 block flex items-center gap-2">
+                        <Calendar className="h-5 w-5 text-orange-400" />
                         END DATE & TIME *
                       </label>
                       <input
@@ -225,15 +225,15 @@ export default function CreateHackathon() {
                         value={formData.endDate}
                         onChange={handleChange}
                         required
-                        className="w-full bg-black/50 border border-purple-500/50 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-400 outline-none transition-colors"
+                        className="w-full bg-black/50 border border-orange-500/50 text-white px-6 py-4 font-space text-lg focus:border-orange-500 outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   {/* Info Box */}
-                  <div className="bg-purple-500/10 border border-purple-500/50 p-6">
-                    <p className="font-jetbrains text-sm text-gray-300 leading-relaxed">
-                      <span className="text-pink-400 font-bold">💡 What's next?</span> After creating your hackathon, 
+                  <div className="bg-orange-500/10 border border-orange-500/50 p-6">
+                    <p className="font-space text-sm text-gray-300 leading-relaxed">
+                      <span className="text-orange-400 font-bold">💡 What's next?</span> After creating your hackathon, 
                       you'll be able to add detailed information including description, prizes, tracks, judging criteria, 
                       and much more. Don't worry, you can save as draft and come back anytime!
                     </p>
@@ -244,14 +244,14 @@ export default function CreateHackathon() {
                     <button
                       type="button"
                       onClick={() => navigate('/host-hackathon')}
-                      className="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-5 font-press-start text-sm border border-gray-700 transition-all"
+                      className="flex-1 bg-gray-800 hover:bg-gray-700 text-white py-5 font-space font-bold text-sm border border-gray-700 transition-all"
                     >
                       CANCEL
                     </button>
                     <button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white py-5 font-press-start text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group relative overflow-hidden"
+                      className="flex-1 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white py-5 font-space font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group relative overflow-hidden"
                     >
                       <Rocket className="h-5 w-5 group-hover:animate-bounce" />
                       <span>{loading ? 'CREATING...' : 'CREATE HACKATHON'}</span>
@@ -263,13 +263,13 @@ export default function CreateHackathon() {
 
               {/* Help Text */}
               <div className="text-center mt-8">
-                <p className="font-jetbrains text-sm text-gray-400">
+                <p className="font-space text-sm text-gray-400">
                   Need help? Check out our{' '}
-                  <a href="/partner" className="text-pink-400 hover:text-purple-400 transition-colors underline">
+                  <a href="/partner" className="text-orange-400 hover:text-orange-400 transition-colors underline">
                     organizer guide
                   </a>
                   {' '}or{' '}
-                  <a href="/contact" className="text-pink-400 hover:text-purple-400 transition-colors underline">
+                  <a href="/contact" className="text-orange-400 hover:text-orange-400 transition-colors underline">
                     contact us
                   </a>
                 </p>

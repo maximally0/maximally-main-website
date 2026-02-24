@@ -165,9 +165,9 @@ const NoPitchDecksGatekeepingChaos = () => {
               ))}
             </div>
 
-            <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500 p-8 text-center mb-12">
+            <div className="bg-gradient-to-r from-orange-500/20 to-orange-400/20 border border-orange-500 p-8 text-center mb-12">
               <p className="text-lg text-white/90 leading-relaxed">
-                If you've ever thought, <em className="text-purple-400">"what if this dumb idea actually works?"</em> — congratulations, you belong.
+                If you've ever thought, <em className="text-orange-400">"what if this dumb idea actually works?"</em> — congratulations, you belong.
               </p>
             </div>
 

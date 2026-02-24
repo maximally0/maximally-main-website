@@ -95,7 +95,7 @@ const CodeHypothesis = () => {
             <div className="absolute top-32 left-20 w-12 h-12 rounded-full bg-green-400 opacity-15 animate-pulse blur-sm"></div>
             <div className="absolute top-80 right-32 w-8 h-8 rounded-full bg-red-500 opacity-25 animate-ping blur-md"></div>
             <div className="absolute bottom-40 left-16 w-6 h-6 rounded-full bg-yellow-400 opacity-20 animate-bounce blur-sm"></div>
-            <div className="absolute top-60 right-16 w-10 h-10 rounded-full bg-purple-500 opacity-15 animate-pulse blur-md"></div>
+            <div className="absolute top-60 right-16 w-10 h-10 rounded-full bg-orange-500 opacity-15 animate-pulse blur-md"></div>
             
             {/* Random paint streaks */}
             <div className="absolute top-1/4 left-8 w-1 h-20 bg-gradient-to-b from-green-400 to-transparent opacity-40 animate-pulse rotate-12"></div>
@@ -328,8 +328,8 @@ const CodeHypothesis = () => {
                 { title: "ABSOLUTE BEGINNERS", icon: <Users className="text-yellow-400" size={24} /> },
                 { title: "NO-CODE REBELS", icon: <Zap className="text-green-400" size={24} /> },
                 { title: "STUDENTS & DROPOUTS", icon: <Terminal className="text-blue-400" size={24} /> },
-                { title: "INDIE HACKERS", icon: <Code className="text-purple-400" size={24} /> },
-                { title: "THEORY BREAKERS", icon: <Target className="text-pink-400" size={24} /> }
+                { title: "INDIE HACKERS", icon: <Code className="text-orange-400" size={24} /> },
+                { title: "THEORY BREAKERS", icon: <Target className="text-orange-400" size={24} /> }
               ].map((type, index) => (
                 <div key={index} className="bg-black/60 border border-gray-600 p-6 text-center hover:border-green-400 transition-all duration-300 group relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

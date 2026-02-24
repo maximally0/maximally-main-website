@@ -12,7 +12,7 @@ const SummerBootcamps2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Why Summer Bootcamps Matter (Especially in 2025)</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Why Summer Bootcamps Matter (Especially in 2025)</h2>
         <p className="mb-4">We're living in a time where tech is evolving faster than ever. With AI automating tasks and no code platforms allowing anyone to build apps, it's no longer about knowing how to code—it's about knowing how to think creatively and work smart.</p>
         <p className="mb-4">Summer bootcamps are short, intense programs designed to teach you exactly that. In just a few weeks, you'll:</p>
         <ul className="list-disc pl-6 mb-6">
@@ -24,16 +24,16 @@ const SummerBootcamps2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Top 5 Summer Bootcamps for Teenagers in India (2025 Edition)</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Top 5 Summer Bootcamps for Teenagers in India (2025 Edition)</h2>
         
         <div className="space-y-8">
           <div className="pixel-border p-6 bg-maximally-blue/5">
-            <h3 className="font-press-start text-xl mb-4">1. Maximally Bootcamp – AI & No Code Startup Lab 🧠🚀</h3>
+            <h3 className="font-space font-bold text-xl mb-4">1. Maximally Bootcamp – AI & No Code Startup Lab 🧠🚀</h3>
             <p className="mb-2"><strong>Mode:</strong> Online | <strong>Age Group:</strong> 13–18 | <strong>Duration:</strong> 1 Week</p>
             <p className="mb-4">If you're looking for the most future-forward summer bootcamp, Maximally should top your list.</p>
             <p className="mb-4">This 1-week immersive bootcamp lets you launch your own AI-powered product—without writing a single line of code. How? By teaching you how to use no code tools like Bubble, Thunkable, and Zapier, alongside powerful AI tools like ChatGPT, Runway ML, and Notion AI.</p>
             <div className="bg-white/50 p-4 rounded">
-              <h4 className="font-press-start text-lg mb-2">What You'll Learn:</h4>
+              <h4 className="font-space font-bold text-lg mb-2">What You'll Learn:</h4>
               <ul className="list-disc pl-6">
                 <li>How to brainstorm and validate startup ideas</li>
                 <li>Build websites and mobile apps using no code</li>
@@ -45,7 +45,7 @@ const SummerBootcamps2025 = () => {
 
           {[2, 3, 4, 5].map((num, index) => (
             <div key={index} className="pixel-border p-6 bg-maximally-blue/5">
-              <h3 className="font-press-start text-xl mb-4">
+              <h3 className="font-space font-bold text-xl mb-4">
                 {num}. {
                   num === 2 ? "Coding Ninjas – Tech Bootcamp for High Schoolers 💻" :
                   num === 3 ? "Camp K12 – AI Creators Bootcamp 🎨🤖" :
@@ -71,7 +71,7 @@ const SummerBootcamps2025 = () => {
                 }
               </p>
               <div className="bg-white/50 p-4 rounded mt-4">
-                <h4 className="font-press-start text-lg mb-2">What You'll Learn:</h4>
+                <h4 className="font-space font-bold text-lg mb-2">What You'll Learn:</h4>
                 <ul className="list-disc pl-6">
                   {num === 2 && (
                     <>
@@ -109,7 +109,7 @@ const SummerBootcamps2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">What Makes These Bootcamps Special?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">What Makes These Bootcamps Special?</h2>
         <p className="mb-4">In 2025, the best bootcamps go beyond just coding. They:</p>
         <ul className="list-disc pl-6 mb-6">
           <li>Encourage real-world problem-solving</li>
@@ -121,11 +121,11 @@ const SummerBootcamps2025 = () => {
 
       <section className="my-8">
         <div className="pixel-border bg-maximally-blue/5 p-6">
-          <h2 className="font-press-start text-2xl mb-4">Ready to Launch Your Future?</h2>
+          <h2 className="font-space font-bold text-2xl mb-4">Ready to Launch Your Future?</h2>
           <p className="mb-4">There's no better way to spend your summer than learning how to build cool tech, meet awesome people, and maybe even kick off a future career.</p>
           <div className="flex justify-center">
             <Link to="/bootcamps">
-              <Button className="font-press-start">
+              <Button className="font-space font-bold">
                 Join Maximally Bootcamp
               </Button>
             </Link>
@@ -134,7 +134,7 @@ const SummerBootcamps2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">TL;DR – Quick Recap</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">TL;DR – Quick Recap</h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

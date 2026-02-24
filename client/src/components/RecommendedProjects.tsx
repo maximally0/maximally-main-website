@@ -113,7 +113,7 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
         {showTitle && (
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <Sparkles className="w-5 h-5 text-pink-400" />
+              <Sparkles className="w-5 h-5 text-orange-400" />
               Recommended Projects
             </CardTitle>
           </CardHeader>
@@ -132,7 +132,7 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
       {showTitle && (
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
-            <Sparkles className="w-5 h-5 text-pink-400" />
+            <Sparkles className="w-5 h-5 text-orange-400" />
             Projects You Might Like
           </CardTitle>
           <CardDescription className="text-gray-400">
@@ -144,7 +144,7 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {projects.map((project) => (
             <Link key={project.project_id} href={`/project/${project.project_id}`}>
-              <div className="group p-4 bg-white/5 rounded-lg border border-white/10 hover:border-pink-500/30 hover:bg-white/10 transition-all cursor-pointer h-full">
+              <div className="group p-4 bg-white/5 rounded-lg border border-white/10 hover:border-gray-800 hover:bg-white/10 transition-all cursor-pointer h-full">
                 <div className="flex gap-3">
                   {project.logo_url ? (
                     <img
@@ -153,12 +153,12 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
                       className="w-12 h-12 rounded-lg object-cover flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500 to-orange-500 flex items-center justify-center flex-shrink-0">
                       <Code className="w-6 h-6 text-white" />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-white font-medium group-hover:text-pink-400 transition-colors line-clamp-1">
+                    <h4 className="text-white font-medium group-hover:text-orange-400 transition-colors line-clamp-1">
                       {project.project_name}
                     </h4>
                     {project.tagline && (
@@ -176,7 +176,7 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
                 {project.technologies && project.technologies.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-3">
                     {project.technologies.slice(0, 3).map((tech, idx) => (
-                      <Badge key={idx} className="bg-purple-500/20 text-purple-400 text-xs py-0">
+                      <Badge key={idx} className="bg-orange-500/10 text-orange-400 text-xs py-0">
                         {tech}
                       </Badge>
                     ))}
@@ -191,8 +191,8 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
                 {/* Match reasons */}
                 {project.match_reasons && project.match_reasons.length > 0 && (
                   <div className="flex items-center gap-1 mt-2">
-                    <Sparkles className="w-3 h-3 text-pink-400" />
-                    <span className="text-xs text-pink-400/80">
+                    <Sparkles className="w-3 h-3 text-orange-400" />
+                    <span className="text-xs text-orange-400/80">
                       {project.match_reasons[0]}
                     </span>
                   </div>
@@ -205,7 +205,7 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
                       href={project.demo_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-gray-400 hover:text-pink-400 flex items-center gap-1"
+                      className="text-xs text-gray-400 hover:text-orange-400 flex items-center gap-1"
                     >
                       <Eye className="w-3 h-3" />
                       Demo
@@ -216,7 +216,7 @@ export function RecommendedProjects({ limit = 6, showTitle = true }: Recommended
                       href={project.github_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-gray-400 hover:text-purple-400 flex items-center gap-1"
+                      className="text-xs text-gray-400 hover:text-orange-400 flex items-center gap-1"
                     >
                       <Github className="w-3 h-3" />
                       Code

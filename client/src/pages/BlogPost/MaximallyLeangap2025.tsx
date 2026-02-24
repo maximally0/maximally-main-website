@@ -13,18 +13,18 @@ const MaximallyLeangap2025 = () => {
         </p>
 
         <div className="pixel-border p-6 bg-maximally-blue/5 my-8">
-          <h2 className="font-press-start text-2xl mb-4">What is Leangap — and Why Does India Need One?</h2>
+          <h2 className="font-space font-bold text-2xl mb-4">What is Leangap — and Why Does India Need One?</h2>
           <p className="mb-4">
             Leangap is a prestigious U.S.-based summer program where high schoolers build real startups with mentorship, resources, and community. Alumni have gone on to raise millions, build YC-backed companies, and become teen CEOs.
           </p>
-          <p className="font-press-start text-lg mt-4">
+          <p className="font-space font-bold text-lg mt-4">
             🚀 Leangap, reimagined for India's top 1% of teenagers who dare to think big.
           </p>
         </div>
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-6">Introducing Maximally Bootcamp — India's Teen Startup Playground</h2>
+        <h2 className="font-space font-bold text-2xl mb-6">Introducing Maximally Bootcamp — India's Teen Startup Playground</h2>
         <p className="mb-4">
           Maximally Bootcamp is a 7-day immersive program for students aged 13–18, designed to help them:
         </p>
@@ -37,22 +37,22 @@ const MaximallyLeangap2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-6">What Makes Maximally India's Answer to Leangap?</h2>
+        <h2 className="font-space font-bold text-2xl mb-6">What Makes Maximally India's Answer to Leangap?</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="pixel-border p-4">
-            <h3 className="font-press-start text-lg mb-3">✅ Real-World Outcomes</h3>
+            <h3 className="font-space font-bold text-lg mb-3">✅ Real-World Outcomes</h3>
             <p>Teens don't just learn theory. They build real startups, publish landing pages, run ads, prototype apps with AI and no-code.</p>
           </div>
           <div className="pixel-border p-4">
-            <h3 className="font-press-start text-lg mb-3">✅ Curated Mentors</h3>
+            <h3 className="font-space font-bold text-lg mb-3">✅ Curated Mentors</h3>
             <p>From Shark Tank founders to top YouTubers, learn from India's coolest creators and tech minds.</p>
           </div>
           <div className="pixel-border p-4">
-            <h3 className="font-press-start text-lg mb-3">✅ Built for Indian Students</h3>
+            <h3 className="font-space font-bold text-lg mb-3">✅ Built for Indian Students</h3>
             <p>100% designed for the Indian student mindset — while keeping global ambition at its core.</p>
           </div>
           <div className="pixel-border p-4">
-            <h3 className="font-press-start text-lg mb-3">✅ Guild System</h3>
+            <h3 className="font-space font-bold text-lg mb-3">✅ Guild System</h3>
             <p>Join dynamic guilds that mimic startup teams. Find your role as a founder, designer, speaker, or coder.</p>
           </div>
         </div>
@@ -60,7 +60,7 @@ const MaximallyLeangap2025 = () => {
 
       <section className="my-8">
         <div className="pixel-border p-6 bg-maximally-green/5">
-          <h2 className="font-press-start text-2xl mb-4">Join the Movement: Applications for Summer 2025 Are Open</h2>
+          <h2 className="font-space font-bold text-2xl mb-4">Join the Movement: Applications for Summer 2025 Are Open</h2>
           <p className="mb-4">If you're a teenager who dreams of:</p>
           <ul className="list-disc pl-6 space-y-2 mb-6">
             <li>Starting a company</li>
@@ -68,7 +68,7 @@ const MaximallyLeangap2025 = () => {
             <li>Pitching ideas with confidence</li>
             <li>Learning the skills schools don't teach</li>
           </ul>
-          <p className="font-press-start text-lg mb-4">📍 Only 1,000 spots. Curated. Competitive. Game-changing.</p>
+          <p className="font-space font-bold text-lg mb-4">📍 Only 1,000 spots. Curated. Competitive. Game-changing.</p>
           <div className="text-center">
             <Button asChild size="lg" className="bg-black hover:bg-black/80">
               <Link to="/bootcamps">Apply Now for Summer 2025</Link>
@@ -78,16 +78,16 @@ const MaximallyLeangap2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Final Thoughts: This Is Just the Beginning</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Final Thoughts: This Is Just the Beginning</h2>
         <p className="mb-4">Leangap created a movement in the U.S.</p>
-        <p className="font-press-start text-lg">Maximally is creating a revolution in India.</p>
+        <p className="font-space font-bold text-lg">Maximally is creating a revolution in India.</p>
         <p className="mt-4">
           If you believe that teenagers can be founders, innovators, and leaders — not someday, but today — then Maximally is your tribe.
         </p>
       </section>
 
       <div className="mt-8 space-y-4">
-        <h3 className="font-press-start text-xl mb-4">Related Posts</h3>
+        <h3 className="font-space font-bold text-xl mb-4">Related Posts</h3>
         <ul className="space-y-2">
           <li>
             <Link to="/blog/school-vs-life-2025" className="text-maximally-blue hover:underline">👉 Why School Doesn't Teach You Real Life</Link>

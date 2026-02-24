@@ -92,11 +92,11 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
             <div className="minecraft-block bg-maximally-yellow w-12 h-12 flex items-center justify-center">
               <Rocket className="h-6 w-6 text-black" />
             </div>
-            <h2 className="font-press-start text-lg sm:text-xl text-white">
+            <h2 className="font-space font-bold text-lg sm:text-xl text-white">
               CREATE HACKATHON
             </h2>
           </div>
-          <p className="font-jetbrains text-sm text-gray-200 ml-15">
+          <p className="font-space text-sm text-gray-200 ml-15">
             Start by filling in the basic details. You can add more information later.
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Hackathon Name */}
           <div>
-            <label className="font-press-start text-xs text-maximally-red mb-2 block">
+            <label className="font-space font-bold text-xs text-maximally-red mb-2 block">
               HACKATHON NAME *
             </label>
             <input
@@ -114,19 +114,19 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
               value={formData.hackathonName}
               onChange={handleChange}
               required
-              className="w-full pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none transition-colors"
+              className="w-full pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-space focus:border-maximally-yellow outline-none transition-colors"
               placeholder="e.g., AI Innovation Hackathon 2025"
             />
           </div>
 
           {/* Slug */}
           <div>
-            <label className="font-press-start text-xs text-maximally-red mb-2 block flex items-center gap-2">
+            <label className="font-space font-bold text-xs text-maximally-red mb-2 block flex items-center gap-2">
               <LinkIcon className="h-4 w-4" />
               URL SLUG *
             </label>
             <div className="flex items-center gap-2">
-              <span className="font-jetbrains text-sm text-gray-400">maximally.in/hackathon/</span>
+              <span className="font-space text-sm text-gray-400">maximally.in/hackathon/</span>
               <input
                 type="text"
                 name="slug"
@@ -134,11 +134,11 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
                 onChange={handleChange}
                 required
                 pattern="[a-z0-9-]+"
-                className="flex-1 pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none transition-colors"
+                className="flex-1 pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-space focus:border-maximally-yellow outline-none transition-colors"
                 placeholder="ai-innovation-2025"
               />
             </div>
-            <p className="font-jetbrains text-xs text-gray-500 mt-1">
+            <p className="font-space text-xs text-gray-500 mt-1">
               Only lowercase letters, numbers, and hyphens allowed
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
           {/* Dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="font-press-start text-xs text-maximally-red mb-2 block flex items-center gap-2">
+              <label className="font-space font-bold text-xs text-maximally-red mb-2 block flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 START DATE *
               </label>
@@ -156,12 +156,12 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
                 value={formData.startDate}
                 onChange={handleChange}
                 required
-                className="w-full pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none transition-colors"
+                className="w-full pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-space focus:border-maximally-yellow outline-none transition-colors"
               />
             </div>
 
             <div>
-              <label className="font-press-start text-xs text-maximally-red mb-2 block flex items-center gap-2">
+              <label className="font-space font-bold text-xs text-maximally-red mb-2 block flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
                 END DATE *
               </label>
@@ -171,7 +171,7 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
                 value={formData.endDate}
                 onChange={handleChange}
                 required
-                className="w-full pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none transition-colors"
+                className="w-full pixel-card bg-gray-900 border-2 border-maximally-red text-white px-4 py-3 font-space focus:border-maximally-yellow outline-none transition-colors"
               />
             </div>
           </div>
@@ -181,14 +181,14 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 pixel-button bg-gray-700 text-white py-4 font-press-start text-sm hover:bg-gray-600 transition-colors"
+              className="flex-1 pixel-button bg-gray-700 text-white py-4 font-space font-bold text-sm hover:bg-gray-600 transition-colors"
             >
               CANCEL
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 pixel-button bg-maximally-red text-white py-4 font-press-start text-sm hover:bg-maximally-yellow hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 pixel-button bg-maximally-red text-white py-4 font-space font-bold text-sm hover:bg-maximally-yellow hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'CREATING...' : 'CREATE_HACKATHON'}
             </button>

@@ -91,7 +91,7 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
   };
 
   if (loading) {
-    return <div className="text-center py-8 font-press-start text-gray-400">LOADING...</div>;
+    return <div className="text-center py-8 font-space font-bold text-gray-400">LOADING...</div>;
   }
 
   return (
@@ -102,12 +102,12 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
           <div className="p-2 bg-amber-500/20 border border-amber-500/40">
             <Clock className="h-5 w-5 text-amber-400" />
           </div>
-          <h2 className="font-press-start text-lg text-amber-400">HACKATHON TIMELINE</h2>
+          <h2 className="font-space font-bold text-lg text-amber-400">HACKATHON TIMELINE</h2>
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
+          className="bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white px-6 py-3 font-space font-bold text-xs transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
         >
           <Save className="h-4 w-4" />
           {saving ? 'SAVING...' : 'SAVE TIMELINE'}
@@ -115,10 +115,10 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
       </div>
 
       {/* Info Box */}
-      <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 p-4">
+      <div className="bg-gradient-to-br from-blue-500/10 to-gray-800/50 border border-blue-500/30 p-4">
         <div className="flex items-start gap-3">
           <AlertCircle className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-gray-300 font-jetbrains">
+          <div className="text-sm text-gray-300 font-space">
             <p className="mb-2">Set the timeline for your hackathon. These dates control:</p>
             <ul className="list-disc list-inside space-y-1 text-gray-400">
               <li>When participants can register</li>
@@ -135,28 +135,28 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
       {/* Timeline Form */}
       <div className="space-y-6">
         {/* Registration Period */}
-        <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 p-6">
-          <h3 className="font-press-start text-sm text-blue-400 mb-4 flex items-center gap-2">
+        <div className="bg-gradient-to-br from-blue-500/10 to-gray-800/50 border border-blue-500/30 p-6">
+          <h3 className="font-space font-bold text-sm text-blue-400 mb-4 flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             REGISTRATION PERIOD
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Opens At</label>
+              <label className="font-space text-sm text-gray-300 mb-2 block">Opens At</label>
               <input
                 type="datetime-local"
                 value={timeline.registration_opens_at}
                 onChange={(e) => setTimeline({ ...timeline, registration_opens_at: e.target.value })}
-                className="w-full bg-black/50 border border-blue-500/30 text-white px-4 py-3 font-jetbrains focus:border-blue-400 outline-none"
+                className="w-full bg-black/50 border border-blue-500/30 text-white px-4 py-3 font-space focus:border-blue-400 outline-none"
               />
             </div>
             <div>
-              <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Closes At</label>
+              <label className="font-space text-sm text-gray-300 mb-2 block">Closes At</label>
               <input
                 type="datetime-local"
                 value={timeline.registration_closes_at}
                 onChange={(e) => setTimeline({ ...timeline, registration_closes_at: e.target.value })}
-                className="w-full bg-black/50 border border-blue-500/30 text-white px-4 py-3 font-jetbrains focus:border-blue-400 outline-none"
+                className="w-full bg-black/50 border border-blue-500/30 text-white px-4 py-3 font-space focus:border-blue-400 outline-none"
               />
             </div>
           </div>
@@ -164,55 +164,55 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
 
         {/* Submission Period */}
         <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 p-6">
-          <h3 className="font-press-start text-sm text-green-400 mb-4 flex items-center gap-2">
+          <h3 className="font-space font-bold text-sm text-green-400 mb-4 flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             SUBMISSION PERIOD
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Opens At</label>
+              <label className="font-space text-sm text-gray-300 mb-2 block">Opens At</label>
               <input
                 type="datetime-local"
                 value={timeline.submission_opens_at}
                 onChange={(e) => setTimeline({ ...timeline, submission_opens_at: e.target.value })}
-                className="w-full bg-black/50 border border-green-500/30 text-white px-4 py-3 font-jetbrains focus:border-green-400 outline-none"
+                className="w-full bg-black/50 border border-green-500/30 text-white px-4 py-3 font-space focus:border-green-400 outline-none"
               />
             </div>
             <div>
-              <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Closes At</label>
+              <label className="font-space text-sm text-gray-300 mb-2 block">Closes At</label>
               <input
                 type="datetime-local"
                 value={timeline.submission_closes_at}
                 onChange={(e) => setTimeline({ ...timeline, submission_closes_at: e.target.value })}
-                className="w-full bg-black/50 border border-green-500/30 text-white px-4 py-3 font-jetbrains focus:border-green-400 outline-none"
+                className="w-full bg-black/50 border border-green-500/30 text-white px-4 py-3 font-space focus:border-green-400 outline-none"
               />
             </div>
           </div>
         </div>
 
         {/* Judging Period */}
-        <div className="bg-gradient-to-br from-purple-500/10 to-violet-500/10 border border-purple-500/30 p-6">
-          <h3 className="font-press-start text-sm text-purple-400 mb-4 flex items-center gap-2">
+        <div className="bg-gradient-to-br from-orange-500/10 to-violet-500/10 border border-gray-800 p-6">
+          <h3 className="font-space font-bold text-sm text-orange-400 mb-4 flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             JUDGING PERIOD
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Starts At</label>
+              <label className="font-space text-sm text-gray-300 mb-2 block">Starts At</label>
               <input
                 type="datetime-local"
                 value={timeline.judging_starts_at}
                 onChange={(e) => setTimeline({ ...timeline, judging_starts_at: e.target.value })}
-                className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
               />
             </div>
             <div>
-              <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Ends At</label>
+              <label className="font-space text-sm text-gray-300 mb-2 block">Ends At</label>
               <input
                 type="datetime-local"
                 value={timeline.judging_ends_at}
                 onChange={(e) => setTimeline({ ...timeline, judging_ends_at: e.target.value })}
-                className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
               />
             </div>
           </div>
@@ -220,17 +220,17 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
 
         {/* Results Announcement */}
         <div className="bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 p-6">
-          <h3 className="font-press-start text-sm text-amber-400 mb-4 flex items-center gap-2">
+          <h3 className="font-space font-bold text-sm text-amber-400 mb-4 flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             RESULTS ANNOUNCEMENT
           </h3>
           <div>
-            <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Announced At</label>
+            <label className="font-space text-sm text-gray-300 mb-2 block">Announced At</label>
             <input
               type="datetime-local"
               value={timeline.results_announced_at}
               onChange={(e) => setTimeline({ ...timeline, results_announced_at: e.target.value })}
-              className="w-full bg-black/50 border border-amber-500/30 text-white px-4 py-3 font-jetbrains focus:border-amber-400 outline-none"
+              className="w-full bg-black/50 border border-amber-500/30 text-white px-4 py-3 font-space focus:border-amber-400 outline-none"
             />
           </div>
         </div>
@@ -241,7 +241,7 @@ export default function TimelineManager({ hackathonId }: TimelineManagerProps) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-8 py-4 font-press-start text-xs transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
+          className="bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white px-8 py-4 font-space font-bold text-xs transition-all duration-300 flex items-center gap-2 disabled:opacity-50"
         >
           <Save className="h-5 w-5" />
           {saving ? 'SAVING...' : 'SAVE TIMELINE'}

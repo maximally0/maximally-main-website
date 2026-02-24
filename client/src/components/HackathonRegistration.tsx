@@ -329,7 +329,7 @@ export default function HackathonRegistration({
                 <div className="p-2 bg-red-500/20 border border-red-500/40">
                   <Users className="h-5 w-5 text-red-400" />
                 </div>
-                <h2 className="font-press-start text-xl text-white">TEAM</h2>
+                <h2 className="font-space font-bold text-xl text-white">TEAM</h2>
               </div>
               <button onClick={() => setShowTeamManagementModal(false)} className="p-2 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
                 <X className="h-5 w-5" />
@@ -351,14 +351,14 @@ export default function HackathonRegistration({
                 {isLeader ? (
                   <button
                     onClick={handleDisbandTeam}
-                    className="bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 hover:border-red-400 text-red-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300"
+                    className="bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 hover:border-red-400 text-red-200 hover:text-white px-6 py-3 font-space font-bold text-xs transition-all duration-300"
                   >
                     DISBAND_TEAM
                   </button>
                 ) : (
                   <button
                     onClick={handleLeaveTeam}
-                    className="bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 hover:border-red-400 text-red-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300"
+                    className="bg-gradient-to-r from-red-600/40 to-rose-500/30 border border-red-500/50 hover:border-red-400 text-red-200 hover:text-white px-6 py-3 font-space font-bold text-xs transition-all duration-300"
                   >
                     LEAVE_TEAM
                   </button>
@@ -385,15 +385,15 @@ export default function HackathonRegistration({
                 <div className="flex items-center gap-3">
                   <div className="text-3xl">🏆</div>
                   <div>
-                    <h3 className="font-press-start text-sm text-yellow-400">HACKATHON_ENDED</h3>
-                    <p className="font-jetbrains text-gray-300 text-sm">
+                    <h3 className="font-space font-bold text-sm text-yellow-400">HACKATHON_ENDED</h3>
+                    <p className="font-space text-gray-300 text-sm">
                       {winnersAnnouncedAt 
                         ? `Winners announced on ${new Date(winnersAnnouncedAt).toLocaleDateString()}`
                         : 'Click to see the winning projects'}
                     </p>
                   </div>
                 </div>
-                <span className="font-press-start text-xs text-yellow-400 hidden sm:block">VIEW_WINNERS →</span>
+                <span className="font-space font-bold text-xs text-yellow-400 hidden sm:block">VIEW_WINNERS →</span>
               </div>
             </div>
           ) : (
@@ -403,8 +403,8 @@ export default function HackathonRegistration({
                   <Check className="h-5 w-5 text-green-400" />
                 </div>
                 <div>
-                  <h3 className="font-press-start text-sm text-green-400">REGISTERED</h3>
-                  <p className="font-jetbrains text-gray-300 text-sm">Registration #{registration.registration_number}</p>
+                  <h3 className="font-space font-bold text-sm text-green-400">REGISTERED</h3>
+                  <p className="font-space text-gray-300 text-sm">Registration #{registration.registration_number}</p>
                 </div>
               </div>
 
@@ -413,15 +413,15 @@ export default function HackathonRegistration({
                 <div className="bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 p-4 mb-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
-                      <h4 className="font-press-start text-xs text-amber-400">TEAM</h4>
-                      <p className="font-jetbrains text-white">{registration.team.team_name}</p>
-                      <p className="font-jetbrains text-gray-400 text-sm">Code: {registration.team.team_code}</p>
+                      <h4 className="font-space font-bold text-xs text-amber-400">TEAM</h4>
+                      <p className="font-space text-white">{registration.team.team_name}</p>
+                      <p className="font-space text-gray-400 text-sm">Code: {registration.team.team_code}</p>
                     </div>
                     {/* Manage team only visible when registration is still available */}
                     {isTeamRegistration && isRegistrationAvailable && (
                       <button
                         onClick={() => setShowTeamManagementModal(true)}
-                        className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300"
+                        className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-4 py-2 font-space font-bold text-xs transition-all duration-300"
                       >
                         MANAGE_TEAM
                       </button>
@@ -434,7 +434,7 @@ export default function HackathonRegistration({
               {!hasTeam && teamsAllowed && isTeamRegistration && isRegistrationAvailable && (
                 <button
                   onClick={() => setShowTeamModal(true)}
-                  className="w-full mt-4 bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
+                  className="w-full mt-4 bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white px-6 py-3 font-space font-bold text-sm transition-all duration-300"
                 >
                   <Users className="h-4 w-4 inline mr-2" />
                   CREATE_OR_JOIN_TEAM
@@ -445,7 +445,7 @@ export default function HackathonRegistration({
               {isRegistrationAvailable && (
                 <button
                   onClick={() => setShowUnregisterConfirm(true)}
-                  className="w-full mt-2 bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-red-600/20 hover:border-red-500/50 hover:text-red-300 px-6 py-3 font-press-start text-sm transition-all duration-300"
+                  className="w-full mt-2 bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-red-600/20 hover:border-red-500/50 hover:text-red-300 px-6 py-3 font-space font-bold text-sm transition-all duration-300"
                 >
                   <X className="h-4 w-4 inline mr-2" />
                   UNREGISTER
@@ -478,21 +478,21 @@ export default function HackathonRegistration({
                 <div className="flex items-center gap-3">
                   <div className="text-3xl">🏆</div>
                   <div>
-                    <h3 className="font-press-start text-sm text-yellow-400">WINNERS_ANNOUNCED!</h3>
-                    <p className="font-jetbrains text-gray-300 text-sm">
+                    <h3 className="font-space font-bold text-sm text-yellow-400">WINNERS_ANNOUNCED!</h3>
+                    <p className="font-space text-gray-300 text-sm">
                       {winnersAnnouncedAt 
                         ? `Announced on ${new Date(winnersAnnouncedAt).toLocaleDateString()}`
                         : 'Click to see the winning projects'}
                     </p>
                   </div>
                 </div>
-                <span className="font-press-start text-xs text-yellow-400 hidden sm:block">VIEW_WINNERS →</span>
+                <span className="font-space font-bold text-xs text-yellow-400 hidden sm:block">VIEW_WINNERS →</span>
               </div>
             </div>
           ) : isOrganizer ? (
             <Link
               to={`/organizer/hackathons/${hackathonId}`}
-              className="w-full border px-6 py-3 font-press-start text-sm transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full border px-6 py-3 font-space font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2"
               style={{
                 background: `linear-gradient(to right, ${primaryColor}40, ${secondaryColor}30)`,
                 borderColor: `${primaryColor}50`,
@@ -517,8 +517,8 @@ export default function HackathonRegistration({
                   <X className="h-5 w-5 text-red-400" />
                 </div>
                 <div>
-                  <h3 className="font-press-start text-sm text-red-400">REGISTRATION CLOSED</h3>
-                  <p className="font-jetbrains text-gray-300 text-sm">
+                  <h3 className="font-space font-bold text-sm text-red-400">REGISTRATION CLOSED</h3>
+                  <p className="font-space text-gray-300 text-sm">
                     This hackathon has ended
                   </p>
                 </div>
@@ -528,7 +528,7 @@ export default function HackathonRegistration({
             <>
               <button
                 onClick={() => setShowRegisterModal(true)}
-                className="w-full border px-6 py-3 font-press-start text-sm transition-all duration-300"
+                className="w-full border px-6 py-3 font-space font-bold text-sm transition-all duration-300"
                 style={{
                   background: `linear-gradient(to right, ${primaryColor}40, ${secondaryColor}30)`,
                   borderColor: `${primaryColor}50`,
@@ -558,7 +558,7 @@ export default function HackathonRegistration({
                             <div className="p-2 bg-red-500/20 border border-red-500/40">
                               <UserPlus className="h-5 w-5 text-red-400" />
                             </div>
-                            <h2 className="font-press-start text-xl text-white">REGISTER</h2>
+                            <h2 className="font-space font-bold text-xl text-white">REGISTER</h2>
                           </div>
                           <button onClick={() => setShowRegisterModal(false)} className="p-2 text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
                             <X className="h-5 w-5" />
@@ -570,14 +570,14 @@ export default function HackathonRegistration({
                         {/* Registration Type */}
                         {teamsAllowed && (
                           <div>
-                            <label className="font-press-start text-[10px] text-red-300 mb-3 block flex items-center gap-2">
+                            <label className="font-space font-bold text-[10px] text-red-300 mb-3 block flex items-center gap-2">
                               <span className="w-1.5 h-1.5 bg-red-400"></span>
                               REGISTRATION_TYPE
                             </label>
                             <div className="grid grid-cols-2 gap-4">
                               <button
                                 onClick={() => setRegistrationType('individual')}
-                                className={`py-4 font-press-start text-sm transition-all duration-300 ${
+                                className={`py-4 font-space font-bold text-sm transition-all duration-300 ${
                                   registrationType === 'individual' 
                                     ? 'bg-gradient-to-r from-red-600/40 to-orange-500/30 border border-red-500/50 text-red-200' 
                                     : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
@@ -587,9 +587,9 @@ export default function HackathonRegistration({
                               </button>
                               <button
                                 onClick={() => setRegistrationType('team')}
-                                className={`py-4 font-press-start text-sm transition-all duration-300 ${
+                                className={`py-4 font-space font-bold text-sm transition-all duration-300 ${
                                   registrationType === 'team' 
-                                    ? 'bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 text-cyan-200' 
+                                    ? 'bg-gradient-to-r from-orange-600 to-orange-500 border border-gray-700 text-gray-300' 
                                     : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
                                 }`}
                               >
@@ -601,54 +601,54 @@ export default function HackathonRegistration({
 
                         {/* Form Fields */}
                         <div>
-                          <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Phone Number</label>
+                          <label className="font-space text-sm text-gray-300 mb-2 block">Phone Number</label>
                           <input
                             type="tel"
                             value={formData.phone_number}
                             onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
-                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-space focus:border-red-400 outline-none placeholder:text-gray-600"
                             placeholder="+91 1234567890"
                           />
                         </div>
 
                         <div>
-                          <label className="font-jetbrains text-sm text-gray-300 mb-2 block">College/University</label>
+                          <label className="font-space text-sm text-gray-300 mb-2 block">College/University</label>
                           <input
                             type="text"
                             value={formData.college_university}
                             onChange={(e) => setFormData({ ...formData, college_university: e.target.value })}
-                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-space focus:border-red-400 outline-none placeholder:text-gray-600"
                           />
                         </div>
 
                         <div>
-                          <label className="font-jetbrains text-sm text-gray-300 mb-2 block">GitHub URL (Optional)</label>
+                          <label className="font-space text-sm text-gray-300 mb-2 block">GitHub URL (Optional)</label>
                           <input
                             type="url"
                             value={formData.github_url}
                             onChange={(e) => setFormData({ ...formData, github_url: e.target.value })}
-                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-space focus:border-red-400 outline-none placeholder:text-gray-600"
                             placeholder="https://github.com/username"
                           />
                         </div>
 
                         <div>
-                          <label className="font-jetbrains text-sm text-gray-300 mb-2 block">LinkedIn URL (Optional)</label>
+                          <label className="font-space text-sm text-gray-300 mb-2 block">LinkedIn URL (Optional)</label>
                           <input
                             type="url"
                             value={formData.linkedin_url}
                             onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
-                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-space focus:border-red-400 outline-none placeholder:text-gray-600"
                             placeholder="https://linkedin.com/in/username"
                           />
                         </div>
 
                         <div>
-                          <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Experience Level</label>
+                          <label className="font-space text-sm text-gray-300 mb-2 block">Experience Level</label>
                           <select
                             value={formData.experience_level}
                             onChange={(e) => setFormData({ ...formData, experience_level: e.target.value })}
-                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none"
+                            className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-space focus:border-red-400 outline-none"
                           >
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
@@ -658,7 +658,7 @@ export default function HackathonRegistration({
 
                         <button
                           onClick={handleRegister}
-                          className="w-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 border border-red-500/50 hover:border-red-400 text-white px-6 py-3 font-press-start text-sm transition-all duration-300"
+                          className="w-full bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 border border-red-500/50 hover:border-red-400 text-white px-6 py-3 font-space font-bold text-sm transition-all duration-300"
                         >
                           REGISTER
                         </button>

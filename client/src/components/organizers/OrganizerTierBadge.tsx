@@ -12,10 +12,10 @@ const tierConfig = {
   legacy: {
     label: 'Legacy',
     icon: Crown,
-    bgColor: 'bg-purple-500/20',
-    borderColor: 'border-purple-500',
-    textColor: 'text-purple-400',
-    iconColor: 'text-purple-400',
+    bgColor: 'bg-orange-500/10',
+    borderColor: 'border-orange-500',
+    textColor: 'text-orange-400',
+    iconColor: 'text-orange-400',
     description: 'Legendary organizer with exceptional track record'
   },
   chief: {
@@ -87,7 +87,7 @@ const OrganizerTierBadge = ({ tier, size = 'md', showLabel = true }: OrganizerTi
         ${config.bgColor}
         border ${config.borderColor}
         rounded
-        font-press-start
+        font-space font-bold
         ${sizeStyles.text}
         ${config.textColor}
         uppercase

@@ -149,9 +149,9 @@ export default function HackathonAnnouncements({
       case 'reminder':
         return 'border-orange-500/50 bg-gradient-to-br from-orange-500/15 to-amber-500/10';
       case 'update':
-        return 'border-blue-500/50 bg-gradient-to-br from-blue-500/15 to-cyan-500/10';
+        return 'border-blue-500/50 bg-gradient-to-br from-blue-500/15 to-gray-800/50';
       default:
-        return 'border-purple-500/50 bg-gradient-to-br from-purple-500/15 to-pink-500/10';
+        return 'border-orange-500/50 bg-gradient-to-br from-orange-500/15 to-orange-500/10';
     }
   };
 
@@ -164,14 +164,14 @@ export default function HackathonAnnouncements({
       case 'update':
         return 'text-blue-400';
       default:
-        return 'text-purple-400';
+        return 'text-orange-400';
     }
   };
 
   if (loading) {
     return (
       <div className="text-center py-4">
-        <div className="font-press-start text-sm text-gray-400">LOADING...</div>
+        <div className="font-space font-bold text-sm text-gray-400">LOADING...</div>
       </div>
     );
   }
@@ -193,7 +193,7 @@ export default function HackathonAnnouncements({
           <Megaphone className="h-5 w-5" style={{ color: primaryColor }} />
         </div>
         <h2 
-          className="font-press-start text-2xl bg-clip-text text-transparent"
+          className="font-space font-bold text-2xl bg-clip-text text-transparent"
           style={{
             backgroundImage: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`
           }}
@@ -210,29 +210,29 @@ export default function HackathonAnnouncements({
               // Edit Mode
               <div className="space-y-4">
                 <div>
-                  <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Title</label>
+                  <label className="font-space text-sm text-gray-300 mb-2 block">Title</label>
                   <input
                     type="text"
                     value={editForm.title}
                     onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-2 font-jetbrains focus:border-purple-400 outline-none"
+                    className="w-full bg-black/50 border border-gray-800 text-white px-4 py-2 font-space focus:border-orange-500 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Content</label>
+                  <label className="font-space text-sm text-gray-300 mb-2 block">Content</label>
                   <textarea
                     value={editForm.content}
                     onChange={(e) => setEditForm({ ...editForm, content: e.target.value })}
                     rows={4}
-                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-2 font-jetbrains focus:border-purple-400 outline-none"
+                    className="w-full bg-black/50 border border-gray-800 text-white px-4 py-2 font-space focus:border-orange-500 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Type</label>
+                  <label className="font-space text-sm text-gray-300 mb-2 block">Type</label>
                   <select
                     value={editForm.announcement_type}
                     onChange={(e) => setEditForm({ ...editForm, announcement_type: e.target.value as any })}
-                    className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-2 font-jetbrains focus:border-purple-400 outline-none"
+                    className="w-full bg-black/50 border border-gray-800 text-white px-4 py-2 font-space focus:border-orange-500 outline-none"
                   >
                     <option value="general">General</option>
                     <option value="important">Important</option>
@@ -243,13 +243,13 @@ export default function HackathonAnnouncements({
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleUpdate(announcement.id)}
-                    className="bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300"
+                    className="bg-gradient-to-r from-green-600/40 to-emerald-500/30 border border-green-500/50 hover:border-green-400 text-green-200 hover:text-white px-4 py-2 font-space font-bold text-xs transition-all duration-300"
                   >
                     SAVE
                   </button>
                   <button
                     onClick={() => setEditingId(null)}
-                    className="bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50 hover:text-white px-4 py-2 font-press-start text-xs transition-all duration-300"
+                    className="bg-gray-800/50 border border-gray-700 text-gray-300 hover:bg-gray-700/50 hover:text-white px-4 py-2 font-space font-bold text-xs transition-all duration-300"
                   >
                     CANCEL
                   </button>
@@ -263,26 +263,26 @@ export default function HackathonAnnouncements({
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3 flex-wrap">
-                    <h3 className="font-press-start text-lg text-white">
+                    <h3 className="font-space font-bold text-lg text-white">
                       {announcement.title}
                     </h3>
-                    <span className={`px-3 py-1 text-xs font-press-start uppercase border ${
+                    <span className={`px-3 py-1 text-xs font-space font-bold uppercase border ${
                       announcement.announcement_type === 'important' 
                         ? 'bg-red-500/20 text-red-400 border-red-500/40'
                         : announcement.announcement_type === 'reminder'
                         ? 'bg-orange-500/20 text-orange-400 border-orange-500/40'
                         : announcement.announcement_type === 'update'
                         ? 'bg-blue-500/20 text-blue-400 border-blue-500/40'
-                        : 'bg-purple-500/20 text-purple-400 border-purple-500/40'
+                        : 'bg-orange-500/10 text-orange-400 border-orange-500/30'
                     }`}>
                       {announcement.announcement_type}
                     </span>
                   </div>
-                  <p className="text-gray-300 font-jetbrains leading-relaxed whitespace-pre-wrap mb-3">
+                  <p className="text-gray-300 font-space leading-relaxed whitespace-pre-wrap mb-3">
                     {announcement.content}
                   </p>
                   <div className="flex items-center justify-between">
-                    <div className="text-xs text-gray-500 font-jetbrains">
+                    <div className="text-xs text-gray-500 font-space">
                       {new Date(announcement.published_at || announcement.created_at).toLocaleString('en-US', {
                         month: 'short',
                         day: 'numeric',
@@ -295,7 +295,7 @@ export default function HackathonAnnouncements({
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(announcement)}
-                          className="text-gray-400 hover:text-purple-400 transition-colors p-2"
+                          className="text-gray-400 hover:text-orange-400 transition-colors p-2"
                           title="Edit"
                         >
                           <Edit2 className="h-4 w-4" />

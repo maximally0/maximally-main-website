@@ -73,7 +73,7 @@ export default function SocialShare({ title, description, url, hashtags = [], va
       <div className="relative">
         <button
           onClick={handleNativeShare}
-          className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-6 py-3 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
+          className="bg-gradient-to-r from-amber-600/40 to-yellow-500/30 border border-amber-500/50 hover:border-amber-400 text-amber-200 hover:text-white px-6 py-3 font-space font-bold text-xs transition-all duration-300 flex items-center gap-2"
         >
           <Share2 className="h-4 w-4" />
           SHARE
@@ -89,28 +89,28 @@ export default function SocialShare({ title, description, url, hashtags = [], va
               <div className="space-y-2">
                 <button
                   onClick={() => handleSocialClick('twitter')}
-                  className="w-full bg-[#1DA1F2]/80 hover:bg-[#1DA1F2] text-white px-4 py-2 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
+                  className="w-full bg-[#1DA1F2]/80 hover:bg-[#1DA1F2] text-white px-4 py-2 font-space font-bold text-xs transition-all duration-300 flex items-center gap-2"
                 >
                   <Twitter className="h-4 w-4" />
                   TWITTER
                 </button>
                 <button
                   onClick={() => handleSocialClick('facebook')}
-                  className="w-full bg-[#4267B2]/80 hover:bg-[#4267B2] text-white px-4 py-2 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
+                  className="w-full bg-[#4267B2]/80 hover:bg-[#4267B2] text-white px-4 py-2 font-space font-bold text-xs transition-all duration-300 flex items-center gap-2"
                 >
                   <Facebook className="h-4 w-4" />
                   FACEBOOK
                 </button>
                 <button
                   onClick={() => handleSocialClick('linkedin')}
-                  className="w-full bg-[#0077B5]/80 hover:bg-[#0077B5] text-white px-4 py-2 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
+                  className="w-full bg-[#0077B5]/80 hover:bg-[#0077B5] text-white px-4 py-2 font-space font-bold text-xs transition-all duration-300 flex items-center gap-2"
                 >
                   <Linkedin className="h-4 w-4" />
                   LINKEDIN
                 </button>
                 <button
                   onClick={handleCopyLink}
-                  className="w-full bg-gray-800/80 hover:bg-gray-700 text-white px-4 py-2 font-press-start text-xs transition-all duration-300 flex items-center gap-2"
+                  className="w-full bg-gray-800/80 hover:bg-gray-700 text-white px-4 py-2 font-space font-bold text-xs transition-all duration-300 flex items-center gap-2"
                 >
                   {copied ? <Check className="h-4 w-4" /> : <LinkIcon className="h-4 w-4" />}
                   {copied ? 'COPIED!' : 'COPY LINK'}

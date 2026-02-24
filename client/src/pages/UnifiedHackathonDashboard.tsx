@@ -451,7 +451,7 @@ export default function UnifiedHackathonDashboard() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="font-press-start text-purple-400">LOADING...</div>
+        <div className="font-space font-bold text-orange-400">LOADING...</div>
       </div>
     );
   }
@@ -557,28 +557,28 @@ export default function UnifiedHackathonDashboard() {
       />
 
       <div className="min-h-screen bg-black text-white pt-24 pb-12 relative overflow-hidden">
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
 
         <div className="container mx-auto px-4 relative z-10">
           {/* Header */}
           <div className="mb-8">
             <button
               onClick={() => navigate('/organizer/dashboard')}
-              className="flex items-center gap-2 text-gray-400 hover:text-purple-400 font-press-start text-xs transition-all duration-300 group mb-6"
+              className="flex items-center gap-2 text-gray-400 hover:text-orange-400 font-space font-bold text-xs transition-all duration-300 group mb-6"
             >
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-all" />
               <span>BACK_TO_DASHBOARD</span>
             </button>
 
-            <div className="bg-gradient-to-r from-gray-900 to-black border-2 border-purple-500/50 p-6 mb-6">
+            <div className="bg-gradient-to-r from-gray-900 to-black border-2 border-orange-500/50 p-6 mb-6">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div className="flex-1">
-                  <h1 className="font-press-start text-xl sm:text-2xl text-purple-400 mb-3">
+                  <h1 className="font-space font-bold text-xl sm:text-2xl text-orange-400 mb-3">
                     {hackathon.hackathon_name}
                   </h1>
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className={`px-3 py-1 font-press-start text-xs border ${
+                    <span className={`px-3 py-1 font-space font-bold text-xs border ${
                       hasEnded ? 'bg-red-600/20 text-red-400 border-red-500/50' :
                       isLive ? 'bg-green-600/20 text-green-400 border-green-500/50' :
                       hackathon.status === 'pending_review' ? 'bg-yellow-600/20 text-yellow-400 border-yellow-500/50' :
@@ -590,7 +590,7 @@ export default function UnifiedHackathonDashboard() {
                       <Link 
                         to={`/hackathon/${hackathon.slug}`}
                         target="_blank"
-                        className="text-purple-400 hover:text-pink-400 font-jetbrains text-sm flex items-center gap-1"
+                        className="text-orange-400 hover:text-orange-400 font-space text-sm flex items-center gap-1"
                       >
                         <Globe className="h-4 w-4" />
                         View Public Page
@@ -603,7 +603,7 @@ export default function UnifiedHackathonDashboard() {
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="bg-pink-500 hover:bg-pink-400 text-black flex items-center gap-2 px-6 py-3 font-press-start text-sm transition-colors disabled:opacity-50"
+                    className="bg-orange-500 hover:bg-orange-400 text-black flex items-center gap-2 px-6 py-3 font-space font-bold text-sm transition-colors disabled:opacity-50"
                   >
                     <Save className="h-4 w-4" />
                     {saving ? 'SAVING...' : 'SAVE'}
@@ -613,7 +613,7 @@ export default function UnifiedHackathonDashboard() {
                     <button
                       onClick={() => setShowPublishConfirm(true)}
                       disabled={!requiredFieldsFilled}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center gap-2 px-6 py-3 font-press-start text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-gradient-to-r from-orange-600 to-orange-500 text-white flex items-center gap-2 px-6 py-3 font-space font-bold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       title={!requiredFieldsFilled ? 'Please fill required fields' : 'Request publication'}
                     >
                       <Send className="h-4 w-4" />
@@ -627,21 +627,21 @@ export default function UnifiedHackathonDashboard() {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/20 border border-purple-500/30 p-4">
-              <div className="text-2xl font-bold text-purple-300 mb-1 font-press-start">{stats.registrations}</div>
-              <div className="text-xs text-gray-500 font-press-start">REGISTRATIONS</div>
+            <div className="bg-gradient-to-br from-gray-900/50 to-gray-900/20 border border-gray-800 p-4">
+              <div className="text-2xl font-bold text-orange-400 mb-1 font-space font-bold">{stats.registrations}</div>
+              <div className="text-xs text-gray-500 font-space font-bold">REGISTRATIONS</div>
             </div>
             <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/20 border border-green-500/30 p-4">
-              <div className="text-2xl font-bold text-green-300 mb-1 font-press-start">{stats.confirmed}</div>
-              <div className="text-xs text-gray-500 font-press-start">CONFIRMED</div>
+              <div className="text-2xl font-bold text-green-300 mb-1 font-space font-bold">{stats.confirmed}</div>
+              <div className="text-xs text-gray-500 font-space font-bold">CONFIRMED</div>
             </div>
-            <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/20 border border-cyan-500/30 p-4">
-              <div className="text-2xl font-bold text-cyan-300 mb-1 font-press-start">{stats.submissions}</div>
-              <div className="text-xs text-gray-500 font-press-start">SUBMISSIONS</div>
+            <div className="bg-gradient-to-br from-gray-900/40 to-blue-900/20 border border-gray-700 p-4">
+              <div className="text-2xl font-bold text-gray-300 mb-1 font-space font-bold">{stats.submissions}</div>
+              <div className="text-xs text-gray-500 font-space font-bold">SUBMISSIONS</div>
             </div>
             <div className="bg-gradient-to-br from-amber-900/40 to-orange-900/20 border border-amber-500/30 p-4">
-              <div className="text-2xl font-bold text-amber-300 mb-1 font-press-start">{stats.checkedIn}</div>
-              <div className="text-xs text-gray-500 font-press-start">CHECKED_IN</div>
+              <div className="text-2xl font-bold text-amber-300 mb-1 font-space font-bold">{stats.checkedIn}</div>
+              <div className="text-xs text-gray-500 font-space font-bold">CHECKED_IN</div>
             </div>
           </div>
 
@@ -650,9 +650,9 @@ export default function UnifiedHackathonDashboard() {
             {/* EDIT Section */}
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <div className="h-px flex-1 bg-gradient-to-r from-purple-500/50 to-transparent"></div>
-                <span className="font-press-start text-xs text-purple-400 px-2">EDIT</span>
-                <div className="h-px flex-1 bg-gradient-to-l from-purple-500/50 to-transparent"></div>
+                <div className="h-px flex-1 bg-gradient-to-r from-orange-500/50 to-transparent"></div>
+                <span className="font-space font-bold text-xs text-orange-400 px-2">EDIT</span>
+                <div className="h-px flex-1 bg-gradient-to-l from-orange-500/50 to-transparent"></div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {editTabs.map((tab) => {
@@ -662,10 +662,10 @@ export default function UnifiedHackathonDashboard() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-4 py-2.5 font-press-start text-[10px] whitespace-nowrap transition-all duration-200 rounded-sm ${
+                      className={`flex items-center gap-2 px-4 py-2.5 font-space font-bold text-[10px] whitespace-nowrap transition-all duration-200 rounded-sm ${
                         isActive
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25 scale-105'
-                          : 'bg-gray-900/80 text-gray-400 border border-gray-700/50 hover:border-purple-500/50 hover:text-purple-300 hover:bg-gray-800/80'
+                          ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-lg shadow-orange-500/25 scale-105'
+                          : 'bg-gray-900/80 text-gray-400 border border-gray-700/50 hover:border-orange-500/50 hover:text-orange-400 hover:bg-gray-800/80'
                       }`}
                     >
                       <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-white' : ''}`} />
@@ -679,9 +679,9 @@ export default function UnifiedHackathonDashboard() {
             {/* MANAGE Section */}
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <div className="h-px flex-1 bg-gradient-to-r from-pink-500/50 to-transparent"></div>
-                <span className="font-press-start text-xs text-pink-400 px-2">MANAGE</span>
-                <div className="h-px flex-1 bg-gradient-to-l from-pink-500/50 to-transparent"></div>
+                <div className="h-px flex-1 bg-gradient-to-r from-orange-500/30 to-transparent"></div>
+                <span className="font-space font-bold text-xs text-orange-400 px-2">MANAGE</span>
+                <div className="h-px flex-1 bg-gradient-to-l from-orange-500/30 to-transparent"></div>
               </div>
               <div className="flex flex-wrap gap-2">
                 {manageTabs.map((tab) => {
@@ -691,10 +691,10 @@ export default function UnifiedHackathonDashboard() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-2 px-4 py-2.5 font-press-start text-[10px] whitespace-nowrap transition-all duration-200 rounded-sm ${
+                      className={`flex items-center gap-2 px-4 py-2.5 font-space font-bold text-[10px] whitespace-nowrap transition-all duration-200 rounded-sm ${
                         isActive
-                          ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/25 scale-105'
-                          : 'bg-gray-900/80 text-gray-400 border border-gray-700/50 hover:border-pink-500/50 hover:text-pink-300 hover:bg-gray-800/80'
+                          ? 'bg-gradient-to-r from-orange-600 to-orange-600 text-white shadow-lg shadow-orange-500/25 scale-105'
+                          : 'bg-gray-900/80 text-gray-400 border border-gray-700/50 hover:border-orange-500/40 hover:text-orange-400 hover:bg-gray-800/80'
                       }`}
                     >
                       <Icon className={`h-3.5 w-3.5 ${isActive ? 'text-white' : ''}`} />
@@ -707,7 +707,7 @@ export default function UnifiedHackathonDashboard() {
           </div>
 
           {/* Content Area */}
-          <div className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-purple-500/50 p-6 sm:p-8">
+          <div className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-orange-500/50 p-6 sm:p-8">
             {activeTab === 'overview' && (
               <OverviewTab 
                 hackathon={hackathon} 
@@ -771,9 +771,9 @@ export default function UnifiedHackathonDashboard() {
 
             {activeTab === 'team' && (
               <div className="space-y-8">
-                <div className="bg-black/50 border-2 border-pink-500/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300">
-                    👥 <span className="text-pink-400 font-bold">Team Management:</span> Invite co-organizers to help manage your hackathon.
+                <div className="bg-black/50 border-2 border-gray-800 p-4 mb-6">
+                  <p className="font-space text-sm text-gray-300">
+                    👥 <span className="text-orange-400 font-bold">Team Management:</span> Invite co-organizers to help manage your hackathon.
                   </p>
                 </div>
                 <MultiOrganizerManager hackathonId={hackathon.id} isOwner={true} />
@@ -871,16 +871,16 @@ function OverviewTab({
 }) {
   return (
     <div className="space-y-6">
-      <div className="bg-black/50 border-2 border-pink-500/30 p-4 mb-6">
-        <p className="font-jetbrains text-sm text-gray-300">
-          📊 <span className="text-pink-400 font-bold">Overview:</span> Quick summary of your hackathon status and key metrics.
+      <div className="bg-black/50 border-2 border-gray-800 p-4 mb-6">
+        <p className="font-space text-sm text-gray-300">
+          📊 <span className="text-orange-400 font-bold">Overview:</span> Quick summary of your hackathon status and key metrics.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-gray-900/50 border border-purple-500/30 p-6">
-          <h3 className="font-press-start text-sm text-purple-400 mb-4">HACKATHON INFO</h3>
-          <div className="space-y-3 font-jetbrains text-sm">
+        <div className="bg-gray-900/50 border border-gray-800 p-6">
+          <h3 className="font-space font-bold text-sm text-orange-400 mb-4">HACKATHON INFO</h3>
+          <div className="space-y-3 font-space text-sm">
             <div className="flex justify-between">
               <span className="text-gray-400">Status:</span>
               <span className="text-white">{hackathon.hackathon_status || hackathon.status}</span>
@@ -903,13 +903,13 @@ function OverviewTab({
           </div>
         </div>
 
-        <div className="bg-gray-900/50 border border-purple-500/30 p-6">
-          <h3 className="font-press-start text-sm text-purple-400 mb-4">GALLERY SETTINGS</h3>
+        <div className="bg-gray-900/50 border border-gray-800 p-6">
+          <h3 className="font-space font-bold text-sm text-orange-400 mb-4">GALLERY SETTINGS</h3>
           <div className="space-y-4">
             {/* Auto-Publish Toggle */}
             <div className="bg-black/50 border border-gray-700 p-4">
               <div className="flex items-center justify-between mb-2">
-                <label className="font-press-start text-xs text-gray-300">AUTO-PUBLISH GALLERY</label>
+                <label className="font-space font-bold text-xs text-gray-300">AUTO-PUBLISH GALLERY</label>
                 <button
                   onClick={() => onToggleAutoPublish(!hackathon.auto_publish_gallery)}
                   disabled={hackathon.gallery_public}
@@ -924,7 +924,7 @@ function OverviewTab({
                   }`} />
                 </button>
               </div>
-              <p className="text-xs text-gray-500 font-jetbrains">
+              <p className="text-xs text-gray-500 font-space">
                 {hackathon.auto_publish_gallery 
                   ? '✓ Gallery will automatically go public when hackathon ends (UTC). Judges will be notified immediately.'
                   : '○ You will need to manually click "Make Gallery Public" after the hackathon ends. This gives you time to moderate submissions first.'}
@@ -934,32 +934,32 @@ function OverviewTab({
             {/* Gallery Status & Actions */}
             {hackathon.gallery_public ? (
               <div className="bg-green-900/30 border border-green-500/50 p-3 text-center">
-                <span className="font-press-start text-xs text-green-400">✓ GALLERY IS PUBLIC</span>
-                <p className="text-xs text-gray-400 font-jetbrains mt-1">Judges have been notified</p>
+                <span className="font-space font-bold text-xs text-green-400">✓ GALLERY IS PUBLIC</span>
+                <p className="text-xs text-gray-400 font-space mt-1">Judges have been notified</p>
               </div>
             ) : hasEnded && !hackathon.auto_publish_gallery ? (
               <div className="space-y-3">
                 <div className="bg-amber-900/30 border border-amber-500/50 p-3">
-                  <p className="text-xs text-amber-400 font-jetbrains">
+                  <p className="text-xs text-amber-400 font-space">
                     ⚠️ Hackathon has ended. Review and moderate submissions, then make the gallery public.
                   </p>
                 </div>
                 <button
                   onClick={onMakeGalleryPublic}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-3 font-press-start text-xs hover:from-green-500 hover:to-emerald-500 transition-all"
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-3 font-space font-bold text-xs hover:from-green-500 hover:to-emerald-500 transition-all"
                 >
                   🚀 MAKE GALLERY PUBLIC
                 </button>
               </div>
             ) : hasEnded && hackathon.auto_publish_gallery ? (
               <div className="bg-blue-900/30 border border-blue-500/50 p-3 text-center">
-                <span className="font-press-start text-xs text-blue-400">⏳ AUTO-PUBLISHING...</span>
-                <p className="text-xs text-gray-400 font-jetbrains mt-1">Gallery will be published automatically</p>
+                <span className="font-space font-bold text-xs text-blue-400">⏳ AUTO-PUBLISHING...</span>
+                <p className="text-xs text-gray-400 font-space mt-1">Gallery will be published automatically</p>
               </div>
             ) : isLive ? (
-              <div className="bg-purple-900/30 border border-purple-500/50 p-3 text-center">
-                <span className="font-press-start text-xs text-purple-400">🔴 HACKATHON IN PROGRESS</span>
-                <p className="text-xs text-gray-400 font-jetbrains mt-1">
+              <div className="bg-gray-900/30 border border-orange-500/50 p-3 text-center">
+                <span className="font-space font-bold text-xs text-orange-400">🔴 HACKATHON IN PROGRESS</span>
+                <p className="text-xs text-gray-400 font-space mt-1">
                   {hackathon.auto_publish_gallery 
                     ? 'Gallery will auto-publish when hackathon ends'
                     : 'You can publish gallery after hackathon ends'}
@@ -967,7 +967,7 @@ function OverviewTab({
               </div>
             ) : (
               <div className="bg-gray-900/30 border border-gray-500/50 p-3 text-center">
-                <span className="font-press-start text-xs text-gray-400">HACKATHON NOT STARTED</span>
+                <span className="font-space font-bold text-xs text-gray-400">HACKATHON NOT STARTED</span>
               </div>
             )}
           </div>
@@ -980,14 +980,14 @@ function OverviewTab({
 function DetailsTab({ hackathon, updateField }: { hackathon: HackathonData; updateField: (field: string, value: any) => void }) {
   return (
     <div className="space-y-8">
-      <div className="bg-black/50 border-2 border-pink-500/30 p-4 mb-6">
-        <p className="font-jetbrains text-sm text-gray-300">
-          💡 <span className="text-pink-400 font-bold">Tip:</span> Make your hackathon stand out with a compelling name and description.
+      <div className="bg-black/50 border-2 border-gray-800 p-4 mb-6">
+        <p className="font-space text-sm text-gray-300">
+          💡 <span className="text-orange-400 font-bold">Tip:</span> Make your hackathon stand out with a compelling name and description.
         </p>
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
           <Zap className="h-4 w-4" />
           HACKATHON NAME *
         </label>
@@ -996,12 +996,12 @@ function DetailsTab({ hackathon, updateField }: { hackathon: HackathonData; upda
           value={hackathon.hackathon_name}
           onChange={(e) => updateField('hackathon_name', e.target.value)}
           placeholder="e.g., AI Innovation Hackathon 2025"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
           <Sparkles className="h-4 w-4" />
           TAGLINE
         </label>
@@ -1010,12 +1010,12 @@ function DetailsTab({ hackathon, updateField }: { hackathon: HackathonData; upda
           value={hackathon.tagline || ''}
           onChange={(e) => updateField('tagline', e.target.value)}
           placeholder="A catchy one-liner"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
           <FileText className="h-4 w-4" />
           DESCRIPTION *
         </label>
@@ -1024,9 +1024,9 @@ function DetailsTab({ hackathon, updateField }: { hackathon: HackathonData; upda
           onChange={(e) => updateField('description', e.target.value)}
           placeholder="Tell participants what makes your hackathon special..."
           rows={10}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
-        <p className="text-xs text-gray-500 mt-2 font-jetbrains">{hackathon.description?.length || 0} characters</p>
+        <p className="text-xs text-gray-500 mt-2 font-space">{hackathon.description?.length || 0} characters</p>
       </div>
     </div>
   );
@@ -1035,9 +1035,9 @@ function DetailsTab({ hackathon, updateField }: { hackathon: HackathonData; upda
 function ScheduleTab({ hackathon, updateField }: { hackathon: HackathonData; updateField: (field: string, value: any) => void }) {
   return (
     <div className="space-y-8">
-      <div className="bg-black/50 border-2 border-pink-500/30 p-4 mb-6">
-        <p className="font-jetbrains text-sm text-gray-300">
-          📅 <span className="text-pink-400 font-bold">Tip:</span> Registration and submissions are automatically managed based on these dates.
+      <div className="bg-black/50 border-2 border-gray-800 p-4 mb-6">
+        <p className="font-space text-sm text-gray-300">
+          📅 <span className="text-orange-400 font-bold">Tip:</span> Registration and submissions are automatically managed based on these dates.
           <br />
           <span className="text-xs text-gray-500 mt-1 block">⏰ All times follow UTC timezone. Make sure to convert your local time to UTC.</span>
         </p>
@@ -1045,7 +1045,7 @@ function ScheduleTab({ hackathon, updateField }: { hackathon: HackathonData; upd
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             START DATE & TIME (UTC) *
           </label>
@@ -1053,12 +1053,12 @@ function ScheduleTab({ hackathon, updateField }: { hackathon: HackathonData; upd
             type="datetime-local"
             value={hackathon.start_date?.slice(0, 16)}
             onChange={(e) => updateField('start_date', e.target.value ? new Date(e.target.value + 'Z').toISOString() : null)}
-            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
           />
         </div>
 
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
             <Calendar className="h-4 w-4" />
             END DATE & TIME (UTC) *
           </label>
@@ -1066,13 +1066,13 @@ function ScheduleTab({ hackathon, updateField }: { hackathon: HackathonData; upd
             type="datetime-local"
             value={hackathon.end_date?.slice(0, 16)}
             onChange={(e) => updateField('end_date', e.target.value ? new Date(e.target.value + 'Z').toISOString() : null)}
-            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
           />
         </div>
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
           <MapPin className="h-4 w-4" />
           FORMAT *
         </label>
@@ -1081,9 +1081,9 @@ function ScheduleTab({ hackathon, updateField }: { hackathon: HackathonData; upd
             <button
               key={format}
               onClick={() => updateField('format', format)}
-              className={`py-4 font-press-start text-sm transition-colors ${
+              className={`py-4 font-space font-bold text-sm transition-colors ${
                 hackathon.format === format
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
+                  ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white'
                   : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
@@ -1095,13 +1095,13 @@ function ScheduleTab({ hackathon, updateField }: { hackathon: HackathonData; upd
 
       {(hackathon.format === 'offline' || hackathon.format === 'hybrid') && (
         <div>
-          <label className="font-press-start text-sm text-pink-400 mb-3 block">VENUE ADDRESS</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">VENUE ADDRESS</label>
           <input
             type="text"
             value={hackathon.venue || ''}
             onChange={(e) => updateField('venue', e.target.value)}
             placeholder="Full venue address"
-            className="w-full bg-black border-2 border-pink-500/50 text-white px-6 py-4 font-jetbrains focus:border-purple-500 outline-none"
+            className="w-full bg-black border-2 border-orange-500/40 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
           />
         </div>
       )}
@@ -1115,73 +1115,73 @@ function ParticipationTab({ hackathon, updateField }: { hackathon: HackathonData
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block">MIN TEAM SIZE</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">MIN TEAM SIZE</label>
           <input
             type="number"
             min="1"
             value={hackathon.team_size_min || 1}
             onChange={(e) => updateField('team_size_min', parseInt(e.target.value))}
-            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
           />
         </div>
 
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block">MAX TEAM SIZE</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">MAX TEAM SIZE</label>
           <input
             type="number"
             min="1"
             value={hackathon.team_size_max || 4}
             onChange={(e) => updateField('team_size_max', parseInt(e.target.value))}
-            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block">REGISTRATION FEE (₹)</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">REGISTRATION FEE (₹)</label>
           <input
             type="number"
             min="0"
             value={hackathon.registration_fee || 0}
             onChange={(e) => updateField('registration_fee', parseInt(e.target.value))}
-            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
           />
-          <p className="text-xs text-gray-500 mt-1 font-jetbrains">0 = Free</p>
+          <p className="text-xs text-gray-500 mt-1 font-space">0 = Free</p>
         </div>
 
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block">MAX PARTICIPANTS</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">MAX PARTICIPANTS</label>
           <input
             type="number"
             min="0"
             value={hackathon.max_participants || ''}
             onChange={(e) => updateField('max_participants', e.target.value ? parseInt(e.target.value) : null)}
             placeholder="Leave empty for unlimited"
-            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+            className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
           />
         </div>
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">COMMUNICATION CHANNEL</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">COMMUNICATION CHANNEL</label>
         <input
           type="text"
           value={hackathon.communication_channel || ''}
           onChange={(e) => updateField('communication_channel', e.target.value)}
           placeholder="e.g., Discord, WhatsApp, Slack"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">COMMUNICATION LINK</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">COMMUNICATION LINK</label>
         <input
           type="url"
           value={hackathon.communication_link || ''}
           onChange={(e) => updateField('communication_link', e.target.value)}
           placeholder="https://discord.gg/..."
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
     </div>
@@ -1210,23 +1210,23 @@ function PrizesTab({ hackathon, updateField }: { hackathon: HackathonData; updat
   return (
     <div className="space-y-8">
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">TOTAL PRIZE POOL</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">TOTAL PRIZE POOL</label>
         <input
           type="text"
           value={hackathon.total_prize_pool || ''}
           onChange={(e) => updateField('total_prize_pool', e.target.value)}
           placeholder="e.g., ₹50,000 or $5,000"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-4 flex items-center justify-between">
+        <label className="font-space font-bold text-sm text-orange-400 mb-4 flex items-center justify-between">
           <span>PRIZE BREAKDOWN</span>
           <button
             type="button"
             onClick={addPrize}
-            className="bg-pink-500 text-black px-4 py-2 font-press-start text-xs hover:bg-pink-400 flex items-center gap-2"
+            className="bg-orange-500 text-black px-4 py-2 font-space font-bold text-xs hover:bg-orange-400 flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
             ADD_PRIZE
@@ -1246,33 +1246,33 @@ function PrizesTab({ hackathon, updateField }: { hackathon: HackathonData; updat
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">Position</label>
+                  <label className="font-space text-xs text-gray-400 mb-2 block">Position</label>
                   <input
                     type="text"
                     value={prize.position}
                     onChange={(e) => updatePrize(index, 'position', e.target.value)}
                     placeholder="1st Place"
-                    className="w-full bg-black border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500 outline-none"
+                    className="w-full bg-black border-2 border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">Amount</label>
+                  <label className="font-space text-xs text-gray-400 mb-2 block">Amount</label>
                   <input
                     type="text"
                     value={prize.amount}
                     onChange={(e) => updatePrize(index, 'amount', e.target.value)}
                     placeholder="₹20,000"
-                    className="w-full bg-black border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500 outline-none"
+                    className="w-full bg-black border-2 border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">Description</label>
+                  <label className="font-space text-xs text-gray-400 mb-2 block">Description</label>
                   <input
                     type="text"
                     value={prize.description}
                     onChange={(e) => updatePrize(index, 'description', e.target.value)}
                     placeholder="Winner"
-                    className="w-full bg-black border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500 outline-none"
+                    className="w-full bg-black border-2 border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500 outline-none"
                   />
                 </div>
               </div>
@@ -1280,7 +1280,7 @@ function PrizesTab({ hackathon, updateField }: { hackathon: HackathonData; updat
           ))}
 
           {prizes.length === 0 && (
-            <div className="text-center py-8 text-gray-500 font-jetbrains">
+            <div className="text-center py-8 text-gray-500 font-space">
               No prizes added yet. Click "ADD_PRIZE" to add your first prize.
             </div>
           )}
@@ -1294,57 +1294,57 @@ function RulesTab({ hackathon, updateField }: { hackathon: HackathonData; update
   return (
     <div className="space-y-8">
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">ELIGIBILITY CRITERIA</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">ELIGIBILITY CRITERIA</label>
         <textarea
           value={hackathon.eligibility_criteria || ''}
           onChange={(e) => updateField('eligibility_criteria', e.target.value)}
           placeholder="Who can participate?"
           rows={6}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">SUBMISSION GUIDELINES</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">SUBMISSION GUIDELINES</label>
         <textarea
           value={hackathon.submission_guidelines || ''}
           onChange={(e) => updateField('submission_guidelines', e.target.value)}
           placeholder="What participants need to submit..."
           rows={8}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">JUDGING PROCESS</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">JUDGING PROCESS</label>
         <textarea
           value={hackathon.judging_process || ''}
           onChange={(e) => updateField('judging_process', e.target.value)}
           placeholder="How projects will be evaluated..."
           rows={8}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">CODE OF CONDUCT</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">CODE OF CONDUCT</label>
         <textarea
           value={hackathon.code_of_conduct || ''}
           onChange={(e) => updateField('code_of_conduct', e.target.value)}
           placeholder="Expected behavior and community guidelines..."
           rows={6}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">RULES & REGULATIONS</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">RULES & REGULATIONS</label>
         <textarea
           value={hackathon.rules_content || ''}
           onChange={(e) => updateField('rules_content', e.target.value)}
           placeholder="Detailed rules and regulations..."
           rows={10}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
     </div>
@@ -1399,45 +1399,45 @@ function TracksTab({
   return (
     <div className="space-y-8">
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">THEMES / TAGS</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">THEMES / TAGS</label>
         <input
           type="text"
           value={themesInput}
           onChange={(e) => setThemesInput(e.target.value)}
           onBlur={handleThemesBlur}
           placeholder="AI, Web3, Healthcare, Education (comma separated)"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
-        <p className="text-xs text-gray-500 mt-2 font-jetbrains">Separate themes with commas - these are tags for discovery</p>
+        <p className="text-xs text-gray-500 mt-2 font-space">Separate themes with commas - these are tags for discovery</p>
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-3">
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-3">
           <span>OPEN INNOVATION</span>
           <input
             type="checkbox"
             checked={hackathon.open_innovation || false}
             onChange={(e) => updateField('open_innovation', e.target.checked)}
-            className="w-5 h-5 accent-pink-500"
+            className="w-5 h-5 accent-orange-500"
           />
         </label>
-        <p className="text-xs text-gray-500 font-jetbrains">Allow participants to build anything, not just within specified themes</p>
+        <p className="text-xs text-gray-500 font-space">Allow participants to build anything, not just within specified themes</p>
       </div>
 
       {/* Tracks Builder */}
       <div>
         <div className="flex items-center justify-between mb-4">
           <div>
-            <label className="font-press-start text-sm text-purple-400 flex items-center gap-2">
+            <label className="font-space font-bold text-sm text-orange-400 flex items-center gap-2">
               <Zap className="h-4 w-4" />
               HACKATHON TRACKS
             </label>
-            <p className="text-xs text-gray-500 mt-1 font-jetbrains">Define specific competition tracks with prizes</p>
+            <p className="text-xs text-gray-500 mt-1 font-space">Define specific competition tracks with prizes</p>
           </div>
           <button
             type="button"
             onClick={addTrack}
-            className="bg-pink-500 hover:bg-pink-600 text-black px-4 py-2 font-press-start text-xs transition-colors flex items-center gap-2"
+            className="bg-orange-500 hover:bg-orange-500 text-black px-4 py-2 font-space font-bold text-xs transition-colors flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
             ADD_TRACK
@@ -1450,14 +1450,14 @@ function TracksTab({
               <button
                 type="button"
                 onClick={() => removeTrack(index)}
-                className="absolute top-4 right-4 text-gray-500 hover:text-pink-400 transition-colors"
+                className="absolute top-4 right-4 text-gray-500 hover:text-orange-400 transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
 
               <div className="space-y-4">
                 <div>
-                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                  <label className="font-space text-xs text-gray-400 mb-2 block">
                     Track Name *
                   </label>
                   <input
@@ -1465,12 +1465,12 @@ function TracksTab({
                     value={track.name || ''}
                     onChange={(e) => updateTrack(index, 'name', e.target.value)}
                     placeholder="e.g., AI & Machine Learning"
-                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500 outline-none"
+                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                  <label className="font-space text-xs text-gray-400 mb-2 block">
                     Description *
                   </label>
                   <textarea
@@ -1478,12 +1478,12 @@ function TracksTab({
                     onChange={(e) => updateTrack(index, 'description', e.target.value)}
                     rows={3}
                     placeholder="Build intelligent solutions using AI/ML technologies"
-                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500 outline-none resize-none"
+                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500 outline-none resize-none"
                   />
                 </div>
 
                 <div>
-                  <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                  <label className="font-space text-xs text-gray-400 mb-2 block">
                     Prize (Optional)
                   </label>
                   <input
@@ -1491,7 +1491,7 @@ function TracksTab({
                     value={track.prize || ''}
                     onChange={(e) => updateTrack(index, 'prize', e.target.value)}
                     placeholder="₹20,000"
-                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500 outline-none"
+                    className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
                   />
                 </div>
               </div>
@@ -1500,7 +1500,7 @@ function TracksTab({
 
           {tracks.length === 0 && (
             <div className="text-center py-12 bg-gray-900 border-2 border-gray-700">
-              <p className="text-gray-500 font-jetbrains text-sm">
+              <p className="text-gray-500 font-space text-sm">
                 No tracks added yet. Click "ADD_TRACK" to create your first track.
               </p>
             </div>
@@ -1548,38 +1548,38 @@ function SponsorsTab({
   return (
     <div className="space-y-8">
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">SPONSORS</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">SPONSORS</label>
         <textarea
           value={sponsorsInput}
           onChange={(e) => setSponsorsInput(e.target.value)}
           onBlur={handleSponsorsBlur}
           placeholder="One sponsor per line"
           rows={6}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">PARTNERS</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">PARTNERS</label>
         <textarea
           value={partnersInput}
           onChange={(e) => setPartnersInput(e.target.value)}
           onBlur={handlePartnersBlur}
           placeholder="One partner per line"
           rows={6}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">PERKS</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">PERKS</label>
         <textarea
           value={perksInput}
           onChange={(e) => setPerksInput(e.target.value)}
           onBlur={handlePerksBlur}
           placeholder="One perk per line (e.g., Free domain, Cloud credits)"
           rows={6}
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none resize-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none resize-none"
         />
       </div>
     </div>
@@ -1590,79 +1590,79 @@ function LinksTab({ hackathon, updateField }: { hackathon: HackathonData; update
   return (
     <div className="space-y-8">
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">WEBSITE URL</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">WEBSITE URL</label>
         <input
           type="url"
           value={hackathon.website_url || ''}
           onChange={(e) => updateField('website_url', e.target.value)}
           placeholder="https://yourhackathon.com"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">DISCORD LINK</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">DISCORD LINK</label>
         <input
           type="url"
           value={hackathon.discord_link || ''}
           onChange={(e) => updateField('discord_link', e.target.value)}
           placeholder="https://discord.gg/..."
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">WHATSAPP LINK</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">WHATSAPP LINK</label>
         <input
           type="url"
           value={hackathon.whatsapp_link || ''}
           onChange={(e) => updateField('whatsapp_link', e.target.value)}
           placeholder="https://chat.whatsapp.com/..."
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">CONTACT EMAIL</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">CONTACT EMAIL</label>
         <input
           type="email"
           value={hackathon.contact_email || ''}
           onChange={(e) => updateField('contact_email', e.target.value)}
           placeholder="contact@yourhackathon.com"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">PROMO VIDEO LINK</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">PROMO VIDEO LINK</label>
         <input
           type="url"
           value={hackathon.promo_video_link || ''}
           onChange={(e) => updateField('promo_video_link', e.target.value)}
           placeholder="https://youtube.com/watch?v=..."
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">SUBMISSION PLATFORM</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">SUBMISSION PLATFORM</label>
         <input
           type="text"
           value={hackathon.submission_platform || ''}
           onChange={(e) => updateField('submission_platform', e.target.value)}
           placeholder="e.g., Devpost, Devfolio"
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">SUBMISSION PLATFORM LINK</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">SUBMISSION PLATFORM LINK</label>
         <input
           type="url"
           value={hackathon.submission_platform_link || ''}
           onChange={(e) => updateField('submission_platform_link', e.target.value)}
           placeholder="https://devpost.com/..."
-          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500 outline-none"
+          className="w-full bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500 outline-none"
         />
       </div>
     </div>
@@ -1734,15 +1734,15 @@ function BrandingTab({
 
   return (
     <div className="space-y-8">
-      <div className="bg-black/50 border-2 border-pink-500/30 p-4 mb-6">
-        <p className="font-jetbrains text-sm text-gray-300">
-          🎨 <span className="text-pink-400 font-bold">Branding:</span> Customize the look and feel of your hackathon page.
+      <div className="bg-black/50 border-2 border-gray-800 p-4 mb-6">
+        <p className="font-space text-sm text-gray-300">
+          🎨 <span className="text-orange-400 font-bold">Branding:</span> Customize the look and feel of your hackathon page.
         </p>
       </div>
 
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">BANNER IMAGE</label>
-        <p className="text-xs text-gray-500 font-jetbrains mb-3">This image appears at the top of your hackathon's public page. Recommended size: 1920x400px</p>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">BANNER IMAGE</label>
+        <p className="text-xs text-gray-500 font-space mb-3">This image appears at the top of your hackathon's public page. Recommended size: 1920x400px</p>
         <div className="border-2 border-dashed border-gray-700 p-6 text-center">
           {hackathon.banner_image ? (
             <div className="relative">
@@ -1756,7 +1756,7 @@ function BrandingTab({
             </div>
           ) : (
             <div className="py-8">
-              <p className="text-gray-500 font-jetbrains mb-4">No banner image</p>
+              <p className="text-gray-500 font-space mb-4">No banner image</p>
             </div>
           )}
           <input
@@ -1768,7 +1768,7 @@ function BrandingTab({
           />
           <label
             htmlFor="banner-upload"
-            className="bg-purple-600 text-white px-4 py-2 font-press-start text-xs cursor-pointer hover:bg-purple-500"
+            className="bg-orange-600 text-white px-4 py-2 font-space font-bold text-xs cursor-pointer hover:bg-orange-500"
           >
             UPLOAD
           </label>
@@ -1777,7 +1777,7 @@ function BrandingTab({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block">PRIMARY COLOR</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">PRIMARY COLOR</label>
           <input
             type="color"
             value={hackathon.primary_color || '#8B5CF6'}
@@ -1787,7 +1787,7 @@ function BrandingTab({
         </div>
 
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block">SECONDARY COLOR</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">SECONDARY COLOR</label>
           <input
             type="color"
             value={hackathon.secondary_color || '#EC4899'}
@@ -1797,7 +1797,7 @@ function BrandingTab({
         </div>
 
         <div>
-          <label className="font-press-start text-sm text-purple-400 mb-3 block">ACCENT COLOR</label>
+          <label className="font-space font-bold text-sm text-orange-400 mb-3 block">ACCENT COLOR</label>
           <input
             type="color"
             value={hackathon.accent_color || '#06B6D4'}
@@ -1839,19 +1839,19 @@ function RegistrationsTab({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search registrations..."
-            className="w-full bg-black border-2 border-gray-700 text-white pl-10 pr-4 py-2 font-jetbrains focus:border-pink-500 outline-none"
+            className="w-full bg-black border-2 border-gray-700 text-white pl-10 pr-4 py-2 font-space focus:border-orange-500 outline-none"
           />
         </div>
         <div className="flex gap-2">
           <button
             onClick={onRefresh}
-            className="bg-gray-800 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-700"
+            className="bg-gray-800 text-white px-4 py-2 font-space font-bold text-xs hover:bg-gray-700"
           >
             REFRESH
           </button>
           <button
             onClick={onExport}
-            className="bg-green-600 text-white px-4 py-2 font-press-start text-xs hover:bg-green-500 flex items-center gap-2"
+            className="bg-green-600 text-white px-4 py-2 font-space font-bold text-xs hover:bg-green-500 flex items-center gap-2"
           >
             <Download className="h-4 w-4" />
             EXPORT CSV
@@ -1863,23 +1863,23 @@ function RegistrationsTab({
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-700">
-              <th className="text-left py-3 px-4 font-press-start text-xs text-purple-400">REG #</th>
-              <th className="text-left py-3 px-4 font-press-start text-xs text-purple-400">NAME</th>
-              <th className="text-left py-3 px-4 font-press-start text-xs text-purple-400">EMAIL</th>
-              <th className="text-left py-3 px-4 font-press-start text-xs text-purple-400">TYPE</th>
-              <th className="text-left py-3 px-4 font-press-start text-xs text-purple-400">STATUS</th>
-              <th className="text-left py-3 px-4 font-press-start text-xs text-purple-400">DATE</th>
+              <th className="text-left py-3 px-4 font-space font-bold text-xs text-orange-400">REG #</th>
+              <th className="text-left py-3 px-4 font-space font-bold text-xs text-orange-400">NAME</th>
+              <th className="text-left py-3 px-4 font-space font-bold text-xs text-orange-400">EMAIL</th>
+              <th className="text-left py-3 px-4 font-space font-bold text-xs text-orange-400">TYPE</th>
+              <th className="text-left py-3 px-4 font-space font-bold text-xs text-orange-400">STATUS</th>
+              <th className="text-left py-3 px-4 font-space font-bold text-xs text-orange-400">DATE</th>
             </tr>
           </thead>
           <tbody>
             {filteredRegistrations.map((reg) => (
               <tr key={reg.id} className="border-b border-gray-800 hover:bg-gray-900/50">
-                <td className="py-3 px-4 font-jetbrains text-sm text-gray-300">{reg.registration_number}</td>
-                <td className="py-3 px-4 font-jetbrains text-sm text-white">{reg.full_name}</td>
-                <td className="py-3 px-4 font-jetbrains text-sm text-gray-300">{reg.email}</td>
-                <td className="py-3 px-4 font-jetbrains text-sm text-gray-300">{reg.registration_type}</td>
+                <td className="py-3 px-4 font-space text-sm text-gray-300">{reg.registration_number}</td>
+                <td className="py-3 px-4 font-space text-sm text-white">{reg.full_name}</td>
+                <td className="py-3 px-4 font-space text-sm text-gray-300">{reg.email}</td>
+                <td className="py-3 px-4 font-space text-sm text-gray-300">{reg.registration_type}</td>
                 <td className="py-3 px-4">
-                  <span className={`px-2 py-1 text-xs font-press-start ${
+                  <span className={`px-2 py-1 text-xs font-space font-bold ${
                     reg.status === 'confirmed' ? 'bg-green-900/50 text-green-400' :
                     reg.status === 'checked_in' ? 'bg-blue-900/50 text-blue-400' :
                     reg.status === 'cancelled' ? 'bg-red-900/50 text-red-400' :
@@ -1888,7 +1888,7 @@ function RegistrationsTab({
                     {reg.status.toUpperCase()}
                   </span>
                 </td>
-                <td className="py-3 px-4 font-jetbrains text-sm text-gray-300">
+                <td className="py-3 px-4 font-space text-sm text-gray-300">
                   {new Date(reg.created_at).toLocaleDateString()}
                 </td>
               </tr>
@@ -1897,7 +1897,7 @@ function RegistrationsTab({
         </table>
 
         {filteredRegistrations.length === 0 && (
-          <div className="text-center py-12 text-gray-500 font-jetbrains">
+          <div className="text-center py-12 text-gray-500 font-space">
             {searchQuery ? 'No registrations match your search' : 'No registrations yet'}
           </div>
         )}
@@ -2029,16 +2029,16 @@ function SubmissionsTab({
   const disqualifiedCount = submissions.filter(s => s.status === 'disqualified').length;
 
   if (loading) {
-    return <div className="text-center py-8 font-press-start text-gray-400">LOADING...</div>;
+    return <div className="text-center py-8 font-space font-bold text-gray-400">LOADING...</div>;
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="font-press-start text-sm text-purple-400">PROJECT SUBMISSIONS ({submissions.length})</h3>
+        <h3 className="font-space font-bold text-sm text-orange-400">PROJECT SUBMISSIONS ({submissions.length})</h3>
         <button
           onClick={handleRefresh}
-          className="bg-gray-800 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-700"
+          className="bg-gray-800 text-white px-4 py-2 font-space font-bold text-xs hover:bg-gray-700"
         >
           REFRESH
         </button>
@@ -2051,10 +2051,10 @@ function SubmissionsTab({
             onClick={() => setShowModerationSection(!showModerationSection)}
             className="w-full bg-gradient-to-r from-amber-900/40 to-orange-900/20 p-4 flex items-center justify-between hover:from-amber-900/50 hover:to-orange-900/30 transition-all"
           >
-            <h3 className="font-press-start text-sm text-amber-400 flex items-center gap-2">
+            <h3 className="font-space font-bold text-sm text-amber-400 flex items-center gap-2">
               ⚖️ PROJECT MODERATION ({eligibleCount} eligible, {disqualifiedCount} disqualified)
             </h3>
-            <span className="text-amber-400 font-press-start text-xs">
+            <span className="text-amber-400 font-space font-bold text-xs">
               {showModerationSection ? '▼ COLLAPSE' : '▶ EXPAND'}
             </span>
           </button>
@@ -2062,7 +2062,7 @@ function SubmissionsTab({
           {showModerationSection && (
             <div className="bg-gradient-to-br from-amber-900/10 to-orange-900/5 p-4">
               <div className="bg-black/50 border border-amber-500/30 p-3 mb-4">
-                <p className="text-xs text-amber-300 font-jetbrains">
+                <p className="text-xs text-amber-300 font-space">
                   ⚠️ <span className="font-bold">Moderation:</span> Review and disqualify projects before making the gallery public. 
                   Disqualified projects will not be visible to judges or in the public gallery.
                 </p>
@@ -2075,7 +2075,7 @@ function SubmissionsTab({
                   value={moderationSearch}
                   onChange={(e) => setModerationSearch(e.target.value)}
                   placeholder="Search projects to moderate..."
-                  className="w-full bg-black/50 border border-amber-500/30 text-white pl-10 pr-4 py-2 font-jetbrains text-sm focus:border-amber-400 outline-none"
+                  className="w-full bg-black/50 border border-amber-500/30 text-white pl-10 pr-4 py-2 font-space text-sm focus:border-amber-400 outline-none"
                 />
               </div>
               
@@ -2086,13 +2086,13 @@ function SubmissionsTab({
                   }`}>
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <span className="font-jetbrains text-white font-bold">{sub.project_name}</span>
+                        <span className="font-space text-white font-bold">{sub.project_name}</span>
                         <div className="text-xs text-gray-400">
                           {sub.team?.team_name || sub.user_name}
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className={`px-2 py-1 text-xs font-press-start ${
+                        <span className={`px-2 py-1 text-xs font-space font-bold ${
                           sub.status === 'disqualified' 
                             ? 'bg-red-900/50 text-red-400' 
                             : 'bg-green-900/50 text-green-400'
@@ -2103,7 +2103,7 @@ function SubmissionsTab({
                           <button
                             onClick={() => handleReinstate(sub.id)}
                             disabled={disqualifyingId === sub.id}
-                            className="bg-green-600 hover:bg-green-500 text-white px-3 py-1 font-press-start text-xs disabled:opacity-50"
+                            className="bg-green-600 hover:bg-green-500 text-white px-3 py-1 font-space font-bold text-xs disabled:opacity-50"
                           >
                             {disqualifyingId === sub.id ? '...' : 'REINSTATE'}
                           </button>
@@ -2114,7 +2114,7 @@ function SubmissionsTab({
                               setShowDisqualifyModal(true);
                             }}
                             disabled={disqualifyingId === sub.id}
-                            className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 font-press-start text-xs disabled:opacity-50"
+                            className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 font-space font-bold text-xs disabled:opacity-50"
                           >
                             DISQUALIFY
                           </button>
@@ -2122,7 +2122,7 @@ function SubmissionsTab({
                       </div>
                     </div>
                     {sub.status === 'disqualified' && sub.feedback && (
-                      <div className="mt-2 text-xs text-red-400 font-jetbrains italic">
+                      <div className="mt-2 text-xs text-red-400 font-space italic">
                         Reason: {sub.feedback}
                       </div>
                     )}
@@ -2130,7 +2130,7 @@ function SubmissionsTab({
                 ))}
                 
                 {moderationSubmissions.length === 0 && (
-                  <div className="text-center py-4 text-gray-500 font-jetbrains text-sm">
+                  <div className="text-center py-4 text-gray-500 font-space text-sm">
                     {moderationSearch ? 'No projects match your search' : 'No submitted projects to moderate'}
                   </div>
                 )}
@@ -2144,18 +2144,18 @@ function SubmissionsTab({
       {showDisqualifyModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
           <div className="bg-gray-900 border-2 border-red-500/50 p-6 max-w-md w-full mx-4">
-            <h3 className="font-press-start text-sm text-red-400 mb-4">DISQUALIFY SUBMISSION</h3>
-            <p className="text-sm text-gray-300 font-jetbrains mb-4">
+            <h3 className="font-space font-bold text-sm text-red-400 mb-4">DISQUALIFY SUBMISSION</h3>
+            <p className="text-sm text-gray-300 font-space mb-4">
               Are you sure you want to disqualify this submission? It will be hidden from judges and the public gallery.
             </p>
             <div className="mb-4">
-              <label className="font-press-start text-xs text-gray-400 mb-2 block">REASON (OPTIONAL)</label>
+              <label className="font-space font-bold text-xs text-gray-400 mb-2 block">REASON (OPTIONAL)</label>
               <textarea
                 value={disqualifyReason}
                 onChange={(e) => setDisqualifyReason(e.target.value)}
                 placeholder="Enter reason for disqualification..."
                 rows={3}
-                className="w-full bg-black border border-gray-700 text-white px-4 py-2 font-jetbrains text-sm focus:border-red-500 outline-none resize-none"
+                className="w-full bg-black border border-gray-700 text-white px-4 py-2 font-space text-sm focus:border-red-500 outline-none resize-none"
               />
             </div>
             <div className="flex gap-3">
@@ -2165,14 +2165,14 @@ function SubmissionsTab({
                   setDisqualifyReason('');
                   setSelectedSubmissionId(null);
                 }}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 font-press-start text-xs"
+                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 font-space font-bold text-xs"
               >
                 CANCEL
               </button>
               <button
                 onClick={() => selectedSubmissionId && handleDisqualify(selectedSubmissionId)}
                 disabled={disqualifyingId !== null}
-                className="flex-1 bg-red-600 hover:bg-red-500 text-white px-4 py-2 font-press-start text-xs disabled:opacity-50"
+                className="flex-1 bg-red-600 hover:bg-red-500 text-white px-4 py-2 font-space font-bold text-xs disabled:opacity-50"
               >
                 {disqualifyingId ? 'PROCESSING...' : 'DISQUALIFY'}
               </button>
@@ -2184,7 +2184,7 @@ function SubmissionsTab({
       {/* Gallery Public Notice */}
       {galleryPublic && (
         <div className="bg-green-900/30 border border-green-500/50 p-4">
-          <p className="text-sm text-green-400 font-jetbrains">
+          <p className="text-sm text-green-400 font-space">
             ✓ <span className="font-bold">Gallery is public.</span> Moderation is no longer available. 
             All eligible submissions are visible to judges and the public.
           </p>
@@ -2192,22 +2192,22 @@ function SubmissionsTab({
       )}
 
       {/* Judge Scores Breakdown - Collapsible */}
-      <div className="border border-purple-500/30 overflow-hidden">
+      <div className="border border-gray-800 overflow-hidden">
         <button
           onClick={() => setShowScoresSection(!showScoresSection)}
-          className="w-full bg-gradient-to-r from-purple-900/40 to-pink-900/20 p-4 flex items-center justify-between hover:from-purple-900/50 hover:to-pink-900/30 transition-all"
+          className="w-full bg-gradient-to-r from-gray-900/50 to-gray-900/20 p-4 flex items-center justify-between hover:from-gray-900/50 hover:to-gray-900/30 transition-all"
         >
-          <h3 className="font-press-start text-sm text-purple-400 flex items-center gap-2">
+          <h3 className="font-space font-bold text-sm text-orange-400 flex items-center gap-2">
             <Scale className="h-4 w-4" />
             JUDGE SCORES BREAKDOWN ({submissions.length})
           </h3>
-          <span className="text-purple-400 font-press-start text-xs">
+          <span className="text-orange-400 font-space font-bold text-xs">
             {showScoresSection ? '▼ COLLAPSE' : '▶ EXPAND'}
           </span>
         </button>
         
         {showScoresSection && (
-          <div className="bg-gradient-to-br from-purple-900/10 to-pink-900/5 p-4">
+          <div className="bg-gradient-to-br from-gray-900/10 to-gray-900/5 p-4">
             <div className="relative mb-4">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
               <input
@@ -2215,40 +2215,40 @@ function SubmissionsTab({
                 value={scoresSearch}
                 onChange={(e) => setScoresSearch(e.target.value)}
                 placeholder="Search projects..."
-                className="w-full bg-black/50 border border-purple-500/30 text-white pl-10 pr-4 py-2 font-jetbrains text-sm focus:border-purple-400 outline-none"
+                className="w-full bg-black/50 border border-gray-800 text-white pl-10 pr-4 py-2 font-space text-sm focus:border-orange-500 outline-none"
               />
             </div>
             
             <div className="space-y-3 max-h-[500px] overflow-y-auto">
               {filteredScores.map((sub) => (
-                <div key={sub.id} className="bg-black/30 border border-purple-500/20 p-3">
+                <div key={sub.id} className="bg-black/30 border border-gray-800 p-3">
                   <div 
                     className="flex items-center justify-between cursor-pointer"
                     onClick={() => setExpandedSubmission(expandedSubmission === sub.id ? null : sub.id)}
                   >
                     <div className="flex-1">
-                      <span className="font-jetbrains text-white font-bold">{sub.project_name}</span>
+                      <span className="font-space text-white font-bold">{sub.project_name}</span>
                       <div className="text-xs text-gray-400">
                         {sub.team?.team_name || sub.user_name} • {sub.judges_count || 0} judge(s)
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-press-start text-sm text-amber-400">
+                      <span className="font-space font-bold text-sm text-amber-400">
                         AVG: {(sub.average_score || sub.score)?.toFixed(1) || 'N/A'}
                       </span>
-                      <span className="text-purple-400 text-xs">
+                      <span className="text-orange-400 text-xs">
                         {expandedSubmission === sub.id ? '▲' : '▼'}
                       </span>
                     </div>
                   </div>
                   
                   {expandedSubmission === sub.id && sub.judge_scores && sub.judge_scores.length > 0 && (
-                    <div className="space-y-2 mt-3 border-t border-purple-500/20 pt-3">
+                    <div className="space-y-2 mt-3 border-t border-gray-800 pt-3">
                       {sub.judge_scores.map((js: any, idx: number) => (
                         <div key={idx} className="flex items-center justify-between text-sm bg-black/20 p-2 rounded">
-                          <span className="text-gray-300 font-jetbrains">{js.judge_name}</span>
+                          <span className="text-gray-300 font-space">{js.judge_name}</span>
                           <div className="flex items-center gap-3">
-                            <span className="text-purple-300 font-press-start text-xs">{js.score}/10</span>
+                            <span className="text-orange-400 font-space font-bold text-xs">{js.score}/10</span>
                             {js.notes && (
                               <span className="text-gray-500 text-xs italic max-w-[200px] truncate" title={js.notes}>
                                 "{js.notes}"
@@ -2261,7 +2261,7 @@ function SubmissionsTab({
                   )}
                   
                   {expandedSubmission === sub.id && (!sub.judge_scores || sub.judge_scores.length === 0) && (
-                    <div className="text-xs text-gray-500 italic mt-2 pt-2 border-t border-purple-500/20">
+                    <div className="text-xs text-gray-500 italic mt-2 pt-2 border-t border-gray-800">
                       No scores yet
                     </div>
                   )}
@@ -2269,7 +2269,7 @@ function SubmissionsTab({
               ))}
               
               {filteredScores.length === 0 && (
-                <div className="text-center py-4 text-gray-500 font-jetbrains text-sm">
+                <div className="text-center py-4 text-gray-500 font-space text-sm">
                   {scoresSearch ? 'No projects match your search' : 'No submissions yet'}
                 </div>
               )}
@@ -2284,11 +2284,11 @@ function SubmissionsTab({
           onClick={() => setShowSubmissionsSection(!showSubmissionsSection)}
           className="w-full bg-gradient-to-r from-gray-800 to-gray-900 p-4 flex items-center justify-between hover:from-gray-700 hover:to-gray-800 transition-all"
         >
-          <h3 className="font-press-start text-sm text-gray-300 flex items-center gap-2">
+          <h3 className="font-space font-bold text-sm text-gray-300 flex items-center gap-2">
             <FileText className="h-4 w-4" />
             ALL SUBMISSIONS ({submissions.length})
           </h3>
-          <span className="text-gray-400 font-press-start text-xs">
+          <span className="text-gray-400 font-space font-bold text-xs">
             {showSubmissionsSection ? '▼ COLLAPSE' : '▶ EXPAND'}
           </span>
         </button>
@@ -2302,31 +2302,31 @@ function SubmissionsTab({
                 value={submissionsSearch}
                 onChange={(e) => setSubmissionsSearch(e.target.value)}
                 placeholder="Search submissions..."
-                className="w-full bg-black/50 border border-gray-600 text-white pl-10 pr-4 py-2 font-jetbrains text-sm focus:border-gray-400 outline-none"
+                className="w-full bg-black/50 border border-gray-600 text-white pl-10 pr-4 py-2 font-space text-sm focus:border-gray-400 outline-none"
               />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto">
               {filteredSubmissions.map((submission) => (
                 <div key={submission.id} className="bg-gray-900 border border-gray-700 p-4">
-                  <h4 className="font-press-start text-sm text-white mb-2">{submission.project_name}</h4>
+                  <h4 className="font-space font-bold text-sm text-white mb-2">{submission.project_name}</h4>
                   {(submission.team?.team_name || submission.user_name) && (
-                    <p className="font-jetbrains text-xs text-gray-400 mb-2">
+                    <p className="font-space text-xs text-gray-400 mb-2">
                       {submission.team?.team_name ? `Team: ${submission.team.team_name}` : submission.user_name}
                     </p>
                   )}
                   <div className="flex justify-between items-center mb-2">
-                    <span className={`px-2 py-1 text-xs font-press-start ${
+                    <span className={`px-2 py-1 text-xs font-space font-bold ${
                       submission.status === 'submitted' ? 'bg-green-900/50 text-green-400' :
                       'bg-gray-900/50 text-gray-400'
                     }`}>
                       {submission.status?.toUpperCase() || 'DRAFT'}
                     </span>
-                    <span className="font-press-start text-xs text-amber-400">
+                    <span className="font-space font-bold text-xs text-amber-400">
                       {(submission.average_score || submission.score)?.toFixed(1) || 'N/A'}
                     </span>
                   </div>
-                  <span className="font-jetbrains text-xs text-gray-500">
+                  <span className="font-space text-xs text-gray-500">
                     {submission.created_at ? new Date(submission.created_at).toLocaleDateString() : ''}
                   </span>
                 </div>
@@ -2334,7 +2334,7 @@ function SubmissionsTab({
             </div>
             
             {filteredSubmissions.length === 0 && (
-              <div className="text-center py-4 text-gray-500 font-jetbrains text-sm">
+              <div className="text-center py-4 text-gray-500 font-space text-sm">
                 {submissionsSearch ? 'No submissions match your search' : 'No submissions yet'}
               </div>
             )}

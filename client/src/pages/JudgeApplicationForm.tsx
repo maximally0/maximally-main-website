@@ -263,12 +263,12 @@ const JudgeApplicationForm = () => {
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.1)_1px,transparent_1px)] bg-[size:50px_50px]" />
         
         {Array.from({ length: 8 }, (_, i) => (
           <div
             key={i}
-            className="fixed w-2 h-2 bg-gradient-to-r from-purple-600 to-pink-600 pixel-border animate-float pointer-events-none"
+            className="fixed w-2 h-2 bg-gradient-to-r from-orange-600 to-orange-500 pixel-border animate-float pointer-events-none"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -282,23 +282,23 @@ const JudgeApplicationForm = () => {
           <div className="max-w-5xl mx-auto">
             <Link
               to="/people/judges"
-              className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 hover:border-purple-400 px-4 py-2 transition-colors mb-8 flex items-center gap-2 inline-flex"
+              className="bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 text-white hover:border-orange-500 px-4 py-2 transition-colors mb-8 flex items-center gap-2 inline-flex"
               data-testid="link-back-to-judges"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="font-press-start text-xs">BACK TO JUDGES</span>
+              <span className="font-space font-bold text-xs">BACK TO JUDGES</span>
             </Link>
 
             <section className="text-center mb-12">
-              <div className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200 px-6 py-3 inline-block mb-8">
-                <span className="font-press-start text-sm">⚡ JOIN THE ELITE</span>
+              <div className="bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 text-white px-6 py-3 inline-block mb-8">
+                <span className="font-space font-bold text-sm">⚡ JOIN THE ELITE</span>
               </div>
-              <h1 className="font-press-start text-4xl md:text-6xl mb-8 minecraft-text">
-                <span className="text-pink-400 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+              <h1 className="font-space font-bold text-4xl md:text-6xl mb-8 minecraft-text">
+                <span className="text-orange-400 drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
                   JUDGE APPLICATION
                 </span>
               </h1>
-              <p className="text-gray-300 text-lg md:text-xl font-jetbrains max-w-3xl mx-auto leading-relaxed mb-8">
+              <p className="text-gray-300 text-lg md:text-xl font-space max-w-3xl mx-auto leading-relaxed mb-8">
                 Become part of the global network of industry experts who shape the future of student innovation.
               </p>
 
@@ -306,10 +306,10 @@ const JudgeApplicationForm = () => {
                 <div className="flex items-start gap-3">
                   <Info className="h-5 w-5 text-blue-400 flex-shrink-0 mt-1" />
                   <div className="text-left">
-                    <h3 className="font-press-start text-sm text-blue-400 mb-2">TIER PROGRESSION</h3>
-                    <p className="font-jetbrains text-gray-300 text-sm leading-relaxed">
+                    <h3 className="font-space font-bold text-sm text-blue-400 mb-2">TIER PROGRESSION</h3>
+                    <p className="font-space text-gray-300 text-sm leading-relaxed">
                       All judges start as <strong className="text-green-400">Starter Judges</strong>. As you judge more events and build your track record, you'll progress through 
-                      <strong className="text-blue-400"> Verified</strong> → <strong className="text-purple-400">Senior</strong> → <strong className="text-yellow-400">Chief</strong> → <strong className="text-red-400">Legacy</strong> tiers.
+                      <strong className="text-blue-400"> Verified</strong> → <strong className="text-orange-400">Senior</strong> → <strong className="text-yellow-400">Chief</strong> → <strong className="text-red-400">Legacy</strong> tiers.
                     </p>
                   </div>
                 </div>
@@ -321,111 +321,111 @@ const JudgeApplicationForm = () => {
                   onClick={() => setFormSection('public')}
                   className={`px-6 py-3 transition-colors ${
                     formSection === 'public'
-                      ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200'
+                      ? 'bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 text-white'
                       : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
                   }`}
                   data-testid="button-toggle-public"
                 >
-                  <span className="font-press-start text-xs">PUBLIC INFO</span>
+                  <span className="font-space font-bold text-xs">PUBLIC INFO</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormSection('private')}
                   className={`px-6 py-3 transition-colors ${
                     formSection === 'private'
-                      ? 'bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 text-purple-200'
+                      ? 'bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 text-white'
                       : 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
                   }`}
                   data-testid="button-toggle-private"
                 >
-                  <span className="font-press-start text-xs">PRIVATE INFO</span>
+                  <span className="font-space font-bold text-xs">PRIVATE INFO</span>
                 </button>
               </div>
             </section>
 
-            <section className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8 mb-8">
+            <section className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-8 mb-8">
               <form onSubmit={form.handleSubmit(onSubmit, onFormError)}>
                 {formSection === 'public' && (
                   <div className="space-y-6">
-                    <h2 className="font-press-start text-2xl mb-6 text-pink-400">PUBLIC PROFILE</h2>
-                    <p className="font-jetbrains text-gray-400 text-sm mb-6">This information will be visible on your public judge profile.</p>
+                    <h2 className="font-space font-bold text-2xl mb-6 text-orange-400">PUBLIC PROFILE</h2>
+                    <p className="font-space text-gray-400 text-sm mb-6">This information will be visible on your public judge profile.</p>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">FULL NAME *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">FULL NAME *</label>
                       <input
                         {...form.register('fullName')}
                         type="text"
                         placeholder="John Doe"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-full-name"
                       />
                       {form.formState.errors.fullName && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.fullName.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.fullName.message}</p>
                       )}
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <label className="font-press-start text-xs text-pink-400 mb-2 block">CURRENT ROLE *</label>
+                        <label className="font-space font-bold text-xs text-orange-400 mb-2 block">CURRENT ROLE *</label>
                         <input
                           {...form.register('currentRole')}
                           type="text"
                           placeholder="Senior Software Engineer"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                           data-testid="input-current-role"
                         />
                         {form.formState.errors.currentRole && (
-                          <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.currentRole.message}</p>
+                          <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.currentRole.message}</p>
                         )}
                       </div>
                       <div>
-                        <label className="font-press-start text-xs text-pink-400 mb-2 block">COMPANY *</label>
+                        <label className="font-space font-bold text-xs text-orange-400 mb-2 block">COMPANY *</label>
                         <input
                           {...form.register('company')}
                           type="text"
                           placeholder="Google"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                           data-testid="input-company"
                         />
                         {form.formState.errors.company && (
-                          <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.company.message}</p>
+                          <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.company.message}</p>
                         )}
                       </div>
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">LOCATION *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">LOCATION *</label>
                       <input
                         {...form.register('location')}
                         type="text"
                         placeholder="San Francisco, USA"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-location"
                       />
                       {form.formState.errors.location && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.location.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.location.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">SHORT BIO *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">SHORT BIO *</label>
                       <textarea
                         {...form.register('shortBio')}
                         rows={4}
                         placeholder="Tell us about yourself, your experience, and why you want to judge hackathons..."
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors resize-none"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors resize-none"
                         data-testid="textarea-short-bio"
                       />
                       {form.formState.errors.shortBio && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.shortBio.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.shortBio.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">PRIMARY EXPERTISE * (Select 1-3)</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">PRIMARY EXPERTISE * (Select 1-3)</label>
                       <div className="grid md:grid-cols-3 gap-2">
                         {expertiseAreas.slice(0, 9).map((area) => (
-                          <label key={area} className="flex items-center gap-2 cursor-pointer pixel-card bg-gray-800 border border-gray-600 p-3 hover:border-purple-500/40 transition-colors">
+                          <label key={area} className="flex items-center gap-2 cursor-pointer pixel-card bg-gray-800 border border-gray-600 p-3 hover:border-orange-500/30 transition-colors">
                             <input
                               type="checkbox"
                               value={area}
@@ -433,17 +433,17 @@ const JudgeApplicationForm = () => {
                               className="w-4 h-4"
                               data-testid={`checkbox-primary-${area.toLowerCase().replace(/\s+/g, '-')}`}
                             />
-                            <span className="font-jetbrains text-sm">{area}</span>
+                            <span className="font-space text-sm">{area}</span>
                           </label>
                         ))}
                       </div>
                       {form.formState.errors.primaryExpertise && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.primaryExpertise.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.primaryExpertise.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-gray-400 mb-2 block">SECONDARY EXPERTISE (Optional, select 1-3)</label>
+                      <label className="font-space font-bold text-xs text-gray-400 mb-2 block">SECONDARY EXPERTISE (Optional, select 1-3)</label>
                       <div className="grid md:grid-cols-3 gap-2">
                         {expertiseAreas.slice(9).map((area) => (
                           <label key={area} className="flex items-center gap-2 cursor-pointer pixel-card bg-gray-800 border border-gray-600 p-3 hover:border-gray-500 transition-colors">
@@ -454,78 +454,78 @@ const JudgeApplicationForm = () => {
                               className="w-4 h-4"
                               data-testid={`checkbox-secondary-${area.toLowerCase().replace(/\s+/g, '-')}`}
                             />
-                            <span className="font-jetbrains text-sm text-gray-300">{area}</span>
+                            <span className="font-space text-sm text-gray-300">{area}</span>
                           </label>
                         ))}
                       </div>
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">YEARS OF EXPERIENCE *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">YEARS OF EXPERIENCE *</label>
                       <input
                         {...form.register('yearsOfExperience', { valueAsNumber: true })}
                         type="number"
                         min="0"
                         max="50"
                         placeholder="5"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-years-of-experience"
                       />
                       {form.formState.errors.yearsOfExperience && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.yearsOfExperience.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.yearsOfExperience.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">LINKEDIN URL *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">LINKEDIN URL *</label>
                       <input
                         {...form.register('linkedin')}
                         type="url"
                         placeholder="https://linkedin.com/in/yourusername"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-linkedin"
                       />
                       {form.formState.errors.linkedin && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.linkedin.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.linkedin.message}</p>
                       )}
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <label className="font-press-start text-xs text-gray-400 mb-2 block">GITHUB (Optional)</label>
+                        <label className="font-space font-bold text-xs text-gray-400 mb-2 block">GITHUB (Optional)</label>
                         <input
                           {...form.register('github')}
                           type="url"
                           placeholder="https://github.com/yourusername"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-gray-500 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-gray-500 focus:outline-none transition-colors"
                           data-testid="input-github"
                         />
                       </div>
                       <div>
-                        <label className="font-press-start text-xs text-gray-400 mb-2 block">TWITTER (Optional)</label>
+                        <label className="font-space font-bold text-xs text-gray-400 mb-2 block">TWITTER (Optional)</label>
                         <input
                           {...form.register('twitter')}
                           type="url"
                           placeholder="https://twitter.com/yourusername"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-gray-500 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-gray-500 focus:outline-none transition-colors"
                           data-testid="input-twitter"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-gray-400 mb-2 block">WEBSITE (Optional)</label>
+                      <label className="font-space font-bold text-xs text-gray-400 mb-2 block">WEBSITE (Optional)</label>
                       <input
                         {...form.register('website')}
                         type="url"
                         placeholder="https://yourwebsite.com"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-gray-500 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-gray-500 focus:outline-none transition-colors"
                         data-testid="input-website"
                       />
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">LANGUAGES SPOKEN *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">LANGUAGES SPOKEN *</label>
                       <input
                         type="text"
                         value={languagesInput}
@@ -538,50 +538,50 @@ const JudgeApplicationForm = () => {
                           form.setValue('languagesSpoken', languagesArray, { shouldValidate: true });
                         }}
                         placeholder="English, Spanish, French"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-languages-spoken"
                       />
-                      <p className="font-jetbrains text-gray-500 text-xs mt-1">Separate multiple languages with commas</p>
+                      <p className="font-space text-gray-500 text-xs mt-1">Separate multiple languages with commas</p>
                       {form.formState.errors.languagesSpoken && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.languagesSpoken.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.languagesSpoken.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">PUBLIC ACHIEVEMENTS *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">PUBLIC ACHIEVEMENTS *</label>
                       <textarea
                         {...form.register('publicAchievements')}
                         rows={3}
                         placeholder="Notable awards, publications, talks, open-source contributions..."
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors resize-none"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors resize-none"
                         data-testid="textarea-public-achievements"
                       />
                       {form.formState.errors.publicAchievements && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.publicAchievements.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.publicAchievements.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">MENTORSHIP PHILOSOPHY *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">MENTORSHIP PHILOSOPHY *</label>
                       <textarea
                         {...form.register('mentorshipStatement')}
                         rows={3}
                         placeholder="Share your philosophy on mentoring and evaluating young builders..."
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors resize-none"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors resize-none"
                         data-testid="textarea-mentorship-statement"
                       />
                       {form.formState.errors.mentorshipStatement && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.mentorshipStatement.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.mentorshipStatement.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">TOP EVENTS JUDGED (Optional)</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">TOP EVENTS JUDGED (Optional)</label>
                       <div className="space-y-4">
                         {topEventsJudged.map((event, index) => (
                           <div key={index} className="pixel-card bg-gray-800 border border-gray-600 p-4">
                             <div className="flex justify-between items-center mb-3">
-                              <span className="font-press-start text-xs text-pink-400">EVENT {index + 1}</span>
+                              <span className="font-space font-bold text-xs text-orange-400">EVENT {index + 1}</span>
                               <button
                                 type="button"
                                 onClick={() => removeEvent(index)}
@@ -597,7 +597,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Event Name"
                                 value={event.eventName}
                                 onChange={(e) => updateEvent(index, 'eventName', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-space text-sm focus:border-orange-500/30 focus:outline-none"
                                 data-testid={`input-event-name-${index}`}
                               />
                               <input
@@ -605,7 +605,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Your Role"
                                 value={event.role}
                                 onChange={(e) => updateEvent(index, 'role', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-space text-sm focus:border-orange-500/30 focus:outline-none"
                                 data-testid={`input-event-role-${index}`}
                               />
                               <input
@@ -613,7 +613,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Date (e.g., March 2024)"
                                 value={event.date}
                                 onChange={(e) => updateEvent(index, 'date', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-space text-sm focus:border-orange-500/30 focus:outline-none"
                                 data-testid={`input-event-date-${index}`}
                               />
                               <input
@@ -621,7 +621,7 @@ const JudgeApplicationForm = () => {
                                 placeholder="Link (optional)"
                                 value={event.link || ''}
                                 onChange={(e) => updateEvent(index, 'link', e.target.value)}
-                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-jetbrains text-sm focus:border-purple-500/40 focus:outline-none"
+                                className="pixel-card bg-gray-900 border border-gray-600 text-white px-3 py-2 font-space text-sm focus:border-orange-500/30 focus:outline-none"
                                 data-testid={`input-event-link-${index}`}
                               />
                             </div>
@@ -634,7 +634,7 @@ const JudgeApplicationForm = () => {
                           data-testid="button-add-event"
                         >
                           <Plus className="h-4 w-4" />
-                          <span className="font-press-start text-xs">ADD EVENT</span>
+                          <span className="font-space font-bold text-xs">ADD EVENT</span>
                         </button>
                       </div>
                     </div>
@@ -643,50 +643,50 @@ const JudgeApplicationForm = () => {
 
                 {formSection === 'private' && (
                   <div className="space-y-6">
-                    <h2 className="font-press-start text-2xl mb-6 text-pink-400">PRIVATE INFORMATION</h2>
-                    <p className="font-jetbrains text-gray-400 text-sm mb-6">This information is kept confidential and used only for verification and communication.</p>
+                    <h2 className="font-space font-bold text-2xl mb-6 text-orange-400">PRIVATE INFORMATION</h2>
+                    <p className="font-space text-gray-400 text-sm mb-6">This information is kept confidential and used only for verification and communication.</p>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">EMAIL ADDRESS *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">EMAIL ADDRESS *</label>
                       <input
                         {...form.register('email')}
                         type="email"
                         placeholder="john@example.com"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-email"
                       />
                       {form.formState.errors.email && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.email.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.email.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">PHONE NUMBER</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">PHONE NUMBER</label>
                       <input
                         {...form.register('phone')}
                         type="tel"
                         placeholder="+1 234 567 8900"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-phone"
                       />
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">TIMEZONE</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">TIMEZONE</label>
                       <input
                         {...form.register('timezone')}
                         type="text"
                         placeholder="America/New_York or PST"
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="input-timezone"
                       />
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">AVAILABILITY STATUS *</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">AVAILABILITY STATUS *</label>
                       <select
                         {...form.register('availabilityStatus')}
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="select-availability-status"
                       >
                         <option value="available">Available - Ready to judge regularly</option>
@@ -694,15 +694,15 @@ const JudgeApplicationForm = () => {
                         <option value="not-available">Not Available - Profile only</option>
                       </select>
                       {form.formState.errors.availabilityStatus && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-1">{form.formState.errors.availabilityStatus.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-1">{form.formState.errors.availabilityStatus.message}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="font-press-start text-xs text-pink-400 mb-2 block">COMPENSATION PREFERENCE</label>
+                      <label className="font-space font-bold text-xs text-orange-400 mb-2 block">COMPENSATION PREFERENCE</label>
                       <select
                         {...form.register('compensationPreference')}
-                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-purple-500/40 focus:outline-none transition-colors"
+                        className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/30 focus:outline-none transition-colors"
                         data-testid="select-compensation-preference"
                       >
                         <option value="volunteer">Volunteer - I judge for free</option>
@@ -713,40 +713,40 @@ const JudgeApplicationForm = () => {
 
                     <div className="grid md:grid-cols-3 gap-4">
                       <div>
-                        <label className="font-press-start text-xs text-gray-400 mb-2 block">EVENTS JUDGED</label>
+                        <label className="font-space font-bold text-xs text-gray-400 mb-2 block">EVENTS JUDGED</label>
                         <input
                           {...form.register('totalEventsJudged', { valueAsNumber: true })}
                           type="number"
                           min="0"
                           placeholder="0"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-gray-500 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-gray-500 focus:outline-none transition-colors"
                           data-testid="input-total-events-judged"
                         />
                       </div>
                       <div>
-                        <label className="font-press-start text-xs text-gray-400 mb-2 block">TEAMS EVALUATED</label>
+                        <label className="font-space font-bold text-xs text-gray-400 mb-2 block">TEAMS EVALUATED</label>
                         <input
                           {...form.register('totalTeamsEvaluated', { valueAsNumber: true })}
                           type="number"
                           min="0"
                           placeholder="0"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-gray-500 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-gray-500 focus:outline-none transition-colors"
                           data-testid="input-total-teams-evaluated"
                         />
                       </div>
                       <div>
-                        <label className="font-press-start text-xs text-gray-400 mb-2 block">MENTORSHIP HOURS</label>
+                        <label className="font-space font-bold text-xs text-gray-400 mb-2 block">MENTORSHIP HOURS</label>
                         <input
                           {...form.register('totalMentorshipHours', { valueAsNumber: true })}
                           type="number"
                           min="0"
                           placeholder="0"
-                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-gray-500 focus:outline-none transition-colors"
+                          className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-3 font-space focus:border-gray-500 focus:outline-none transition-colors"
                           data-testid="input-total-mentorship-hours"
                         />
                       </div>
                     </div>
-                    <p className="font-jetbrains text-gray-500 text-xs">These stats will be marked as "self-declared" until verified by Maximally</p>
+                    <p className="font-space text-gray-500 text-xs">These stats will be marked as "self-declared" until verified by Maximally</p>
 
                     <div className="pixel-card bg-blue-900/20 border border-blue-400 p-4">
                       <label className="flex items-start gap-3 cursor-pointer">
@@ -757,14 +757,14 @@ const JudgeApplicationForm = () => {
                           data-testid="checkbox-agreed-to-nda"
                         />
                         <div className="flex-1">
-                          <span className="font-press-start text-xs text-blue-400 block mb-1">AGREEMENT *</span>
-                          <p className="font-jetbrains text-gray-300 text-sm">
+                          <span className="font-space font-bold text-xs text-blue-400 block mb-1">AGREEMENT *</span>
+                          <p className="font-space text-gray-300 text-sm">
                             I agree to maintain confidentiality and follow Maximally's judging guidelines and code of conduct.
                           </p>
                         </div>
                       </label>
                       {form.formState.errors.agreedToNDA && (
-                        <p className="font-jetbrains text-red-400 text-xs mt-2">{form.formState.errors.agreedToNDA.message}</p>
+                        <p className="font-space text-red-400 text-xs mt-2">{form.formState.errors.agreedToNDA.message}</p>
                       )}
                     </div>
                   </div>
@@ -778,7 +778,7 @@ const JudgeApplicationForm = () => {
                       className="minecraft-block bg-gray-700 text-white px-6 py-3 hover:bg-gray-600 transition-colors flex-1"
                       data-testid="button-next-to-private"
                     >
-                      <span className="font-press-start text-xs">NEXT: PRIVATE INFO →</span>
+                      <span className="font-space font-bold text-xs">NEXT: PRIVATE INFO →</span>
                     </button>
                   )}
                   {formSection === 'private' && (
@@ -789,21 +789,21 @@ const JudgeApplicationForm = () => {
                         className="minecraft-block bg-gray-700 text-white px-6 py-3 hover:bg-gray-600 transition-colors"
                         data-testid="button-back-to-public"
                       >
-                        <span className="font-press-start text-xs">← BACK</span>
+                        <span className="font-space font-bold text-xs">← BACK</span>
                       </button>
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-3 transition-colors flex-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white px-6 py-3 transition-colors flex-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         data-testid="button-submit-application"
                       >
                         {isSubmitting ? (
                           <>
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            <span className="font-press-start text-xs">SUBMITTING...</span>
+                            <span className="font-space font-bold text-xs">SUBMITTING...</span>
                           </>
                         ) : (
-                          <span className="font-press-start text-xs">SUBMIT APPLICATION</span>
+                          <span className="font-space font-bold text-xs">SUBMIT APPLICATION</span>
                         )}
                       </button>
                     </>

@@ -19,7 +19,7 @@ const DigitalMarketingGuide = () => {
       </p>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">What Is Digital Marketing?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">What Is Digital Marketing?</h2>
         <p className="mb-4">Digital marketing is how businesses promote their products and connect with customers online—through social media, search engines, websites, emails, and content.</p>
         <p className="mb-4">If you've ever:</p>
         <ul className="list-disc pl-6 mb-4">
@@ -31,7 +31,7 @@ const DigitalMarketingGuide = () => {
       </section>
 
       <section className="pixel-border p-6 bg-maximally-green/5 my-8">
-        <h3 className="font-press-start text-xl mb-4">✅ Why It's Perfect for Teens:</h3>
+        <h3 className="font-space font-bold text-xl mb-4">✅ Why It's Perfect for Teens:</h3>
         <ul className="list-disc pl-6">
           <li>You already know how platforms work (you're on them every day!)</li>
           <li>Businesses love Gen Z perspectives</li>
@@ -40,11 +40,11 @@ const DigitalMarketingGuide = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Core Areas of Digital Marketing for Teens</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Core Areas of Digital Marketing for Teens</h2>
         
         <div className="space-y-6">
           <div className="pixel-border p-6">
-            <h3 className="font-press-start text-xl mb-2">📱 Social Media Marketing</h3>
+            <h3 className="font-space font-bold text-xl mb-2">📱 Social Media Marketing</h3>
             <p className="mb-4">This is where most teens start—and thrive.</p>
             <p className="mb-2">Learn how to:</p>
             <ul className="list-disc pl-6">
@@ -55,10 +55,10 @@ const DigitalMarketingGuide = () => {
           </div>
 
           <div className="pixel-border p-6">
-            <h3 className="font-press-start text-xl mb-2">🧠 Content Marketing</h3>
+            <h3 className="font-space font-bold text-xl mb-2">🧠 Content Marketing</h3>
             <p className="mb-4">This involves blogs, videos, and newsletters. It helps build trust and drives traffic to websites or pages.</p>
             <div className="bg-maximally-blue/5 p-4 rounded">
-              <p className="font-press-start text-sm mb-2">Try starting:</p>
+              <p className="font-space font-bold text-sm mb-2">Try starting:</p>
               <ul className="list-disc pl-6">
                 <li>A blog on topics you love (gaming, study hacks, fashion)</li>
                 <li>A YouTube Shorts channel</li>
@@ -70,29 +70,29 @@ const DigitalMarketingGuide = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Tools to Get Started</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Tools to Get Started</h2>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">Canva</h4>
+            <h4 className="font-space font-bold text-lg mb-2">Canva</h4>
             <p>Design everything (posts, ads)</p>
           </div>
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">Notion</h4>
+            <h4 className="font-space font-bold text-lg mb-2">Notion</h4>
             <p>Plan content, strategy, ideas</p>
           </div>
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">Buffer/Later</h4>
+            <h4 className="font-space font-bold text-lg mb-2">Buffer/Later</h4>
             <p>Schedule social media posts</p>
           </div>
           <div className="pixel-border p-4">
-            <h4 className="font-press-start text-lg mb-2">Linktree</h4>
+            <h4 className="font-space font-bold text-lg mb-2">Linktree</h4>
             <p>Create a clean bio link page</p>
           </div>
         </div>
       </section>
 
       <section className="pixel-border p-6 bg-maximally-purple/5 my-8">
-        <h2 className="font-press-start text-2xl mb-4">🚀 Ready to Learn by Doing?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🚀 Ready to Learn by Doing?</h2>
         <p className="mb-4">Join Maximally's Digital Marketing Bootcamp and learn to build brands, startups, and digital projects using no-code and AI tools.</p>
         <div className="text-center">
           <Button asChild size="lg" className="bg-black hover:bg-black/80">
@@ -102,10 +102,10 @@ const DigitalMarketingGuide = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Final Thoughts: You Don't Need to Wait</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Final Thoughts: You Don't Need to Wait</h2>
         <p className="mb-4">If you're 13–18 and interested in content, tech, or business—digital marketing is the perfect starting point.</p>
         <p className="mb-4">It's where creativity meets business. Where likes turn into leads. Where your side project could be your first startup.</p>
-        <p className="font-press-start">Start today. Learn. Build. Grow.</p>
+        <p className="font-space font-bold">Start today. Learn. Build. Grow.</p>
       </section>
     </>
   );

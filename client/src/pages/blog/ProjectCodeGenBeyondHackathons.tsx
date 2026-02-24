@@ -13,11 +13,11 @@ const ProjectCodeGenBeyondHackathons = () => {
       
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <div className="bg-white shadow-lg rounded-lg p-8">
-          <h1 className="font-press-start text-3xl text-maximally-black mb-8">
+          <h1 className="font-space font-bold text-3xl text-maximally-black mb-8">
             Beyond Hackathons: The Future of Project Codegen in Everyday Development
           </h1>
           
-          <div className="font-jetbrains text-maximally-black space-y-6 leading-relaxed">
+          <div className="font-space text-maximally-black space-y-6 leading-relaxed">
             <p className="text-lg">
               When we first imagined Project Codegen, the focus was clear: give hackathon builders a serious speed boost. But as the tool evolved, something became obvious — Codegen isn't just for hackathons. It's for any developer who wants to move from zero to something real, faster.
             </p>
@@ -26,7 +26,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               Let's talk about what's next.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Hackathons Were Just the Beginning</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Hackathons Were Just the Beginning</h2>
             
             <p>
               Hackathons are high-pressure sprints. But what if the same time-saving magic could apply to:
@@ -42,7 +42,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               Codegen's core value — speed + structure without sacrificing control — translates beautifully into real-world development.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">The Everyday Use-Cases</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">The Everyday Use-Cases</h2>
             
             <p>
               Here's where Codegen shines outside hackathons:
@@ -55,7 +55,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               <li><strong>Rapid prototyping at work</strong> → From internal dashboards to quick client demos, Codegen accelerates delivery.</li>
             </ul>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">The MVP Revolution</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">The MVP Revolution</h2>
             
             <p>
               For startup founders, the ability to rapidly prototype and iterate is crucial. Traditional development cycles can take weeks just to set up the basic architecture. With Codegen:
@@ -72,7 +72,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               This isn't just about speed—it's about enabling more experimentation and reducing the cost of failure.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Why This Matters for the Future of Coding</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Why This Matters for the Future of Coding</h2>
             
             <p>
               Coding isn't just about writing every line by hand anymore. The future belongs to developers who know how to leverage tools to move faster, experiment more, and still maintain quality.
@@ -91,7 +91,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               Instead of worrying that tools like Codegen replace developers, we see it as amplifying developers — giving you more time for the high-value parts of building.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">The Learning Acceleration Effect</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">The Learning Acceleration Effect</h2>
             
             <p>
               One of the most exciting applications is in education. When students can generate working code structures instantly:
@@ -108,7 +108,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               This could revolutionize how we teach programming—focusing on logic and creativity rather than memorizing boilerplate patterns.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Enterprise and Team Development</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Enterprise and Team Development</h2>
             
             <p>
               In larger organizations, Codegen's impact multiplies across teams:
@@ -121,7 +121,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               <li><strong>Innovation:</strong> More time for creative problem-solving, less for repetitive setup</li>
             </ul>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">The Bigger Picture</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">The Bigger Picture</h2>
             
             <p>
               Project Codegen started as a hackathon companion, but it's already growing into something bigger:
@@ -141,7 +141,7 @@ const ProjectCodeGenBeyondHackathons = () => {
               And with Project Codegen, that speed is finally in your hands.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">What's Next?</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">What's Next?</h2>
             
             <p>
               We're just getting started. The future of Codegen includes:

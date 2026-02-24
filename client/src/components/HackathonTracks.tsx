@@ -40,7 +40,7 @@ export default function HackathonTracks({
     return (
       <div className="text-center py-12">
         <div className="bg-gray-800/50 border border-gray-700 text-gray-400 px-6 py-4 inline-block">
-          <span className="font-press-start text-sm">NO TRACKS DEFINED</span>
+          <span className="font-space font-bold text-sm">NO TRACKS DEFINED</span>
         </div>
       </div>
     );
@@ -70,12 +70,12 @@ export default function HackathonTracks({
           </div>
 
           {/* Track Name */}
-          <h3 className="font-press-start text-lg mb-3" style={{ color: primaryColor }}>
+          <h3 className="font-space font-bold text-lg mb-3" style={{ color: primaryColor }}>
             {track.name}
           </h3>
 
           {/* Description */}
-          <p className="font-jetbrains text-gray-300 text-sm mb-4 leading-relaxed">
+          <p className="font-space text-gray-300 text-sm mb-4 leading-relaxed">
             {track.description}
           </p>
 
@@ -89,7 +89,7 @@ export default function HackathonTracks({
               }}
             >
               <Coins className="h-4 w-4" style={{ color: accentColor }} />
-              <span className="font-press-start text-xs" style={{ color: accentColor }}>
+              <span className="font-space font-bold text-xs" style={{ color: accentColor }}>
                 {track.prize}
               </span>
             </div>

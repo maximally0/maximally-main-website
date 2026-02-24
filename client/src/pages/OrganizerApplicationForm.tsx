@@ -121,7 +121,7 @@ const OrganizerApplicationForm = () => {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-purple-400 font-press-start text-sm animate-pulse">LOADING...</div>
+        <div className="text-orange-400 font-space font-bold text-sm animate-pulse">LOADING...</div>
       </div>
     );
   }
@@ -136,40 +136,40 @@ const OrganizerApplicationForm = () => {
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         {/* Background Effects */}
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(249,115,22,0.04)_0%,transparent_50%)]" />
 
         {/* Glowing Orbs */}
-        <div className="absolute top-20 left-10 w-64 h-64 bg-purple-500/15 blur-[100px] rounded-full animate-pulse" />
-        <div className="absolute bottom-40 right-20 w-80 h-80 bg-pink-500/12 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-20 left-10 w-64 h-64 bg-orange-500/5 blur-[100px] rounded-full animate-pulse" />
+        <div className="absolute bottom-40 right-20 w-80 h-80 bg-orange-500/3 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
 
         <div className="container mx-auto px-4 sm:px-6 py-12 sm:py-20 relative z-10">
           <div className="max-w-4xl mx-auto">
             {/* Back Button */}
             <button
               onClick={() => navigate('/host-hackathon')}
-              className="bg-gradient-to-r from-gray-800 to-gray-900 border border-purple-500/40 hover:border-purple-400 text-gray-300 hover:text-white mb-8 flex items-center gap-2 transition-all px-4 py-2 text-sm"
+              className="bg-gradient-to-r from-gray-800 to-gray-900 border border-orange-500/30 hover:border-orange-500 text-gray-300 hover:text-white mb-8 flex items-center gap-2 transition-all px-4 py-2 text-sm"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span className="font-press-start">BACK</span>
+              <span className="font-space font-bold">BACK</span>
             </button>
 
             {/* Header */}
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/30 to-pink-600/20 border border-purple-500/40 mb-6">
-                <Rocket className="h-5 w-5 text-purple-400 animate-bounce" />
-                <span className="font-press-start text-sm text-purple-300">ORGANIZER APPLICATION</span>
-                <Sparkles className="h-5 w-5 text-pink-400" />
+              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/30 mb-6">
+                <Rocket className="h-5 w-5 text-orange-400 animate-bounce" />
+                <span className="font-space font-bold text-sm text-orange-400">ORGANIZER APPLICATION</span>
+                <Sparkles className="h-5 w-5 text-orange-400" />
               </div>
               
-              <h1 className="font-press-start text-3xl md:text-5xl mb-6">
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              <h1 className="font-space font-bold text-3xl md:text-5xl mb-6">
+                <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                   HOST WITH MAXIMALLY
                 </span>
               </h1>
 
-              <p className="text-gray-300 text-base max-w-2xl mx-auto font-jetbrains leading-relaxed">
+              <p className="text-gray-300 text-base max-w-2xl mx-auto font-space leading-relaxed">
                 Fill out this application to host your hackathon with full support from Maximally.
                 We'll review your application and get back to you within 3-5 business days.
               </p>
@@ -178,16 +178,16 @@ const OrganizerApplicationForm = () => {
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Organization Details */}
-              <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
+              <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <Building2 className="h-6 w-6 text-purple-400" />
-                  <h2 className="font-press-start text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">ORGANIZATION DETAILS</h2>
+                  <Building2 className="h-6 w-6 text-orange-400" />
+                  <h2 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">ORGANIZATION DETAILS</h2>
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">
-                      Organization Name <span className="text-pink-400">*</span>
+                    <label className="block text-sm font-space text-gray-300 mb-2">
+                      Organization Name <span className="text-orange-400">*</span>
                     </label>
                     <input
                       type="text"
@@ -195,21 +195,21 @@ const OrganizerApplicationForm = () => {
                       value={formData.organization_name}
                       onChange={handleChange}
                       required
-                      className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
+                      className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 focus:outline-none transition-colors"
                       placeholder="Your organization or club name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">
-                      Organization Type <span className="text-pink-400">*</span>
+                    <label className="block text-sm font-space text-gray-300 mb-2">
+                      Organization Type <span className="text-orange-400">*</span>
                     </label>
                     <select
                       name="organization_type"
                       value={formData.organization_type}
                       onChange={handleChange}
                       required
-                      className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
+                      className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 focus:outline-none transition-colors"
                     >
                       <option value="">Select type</option>
                       <option value="individual">Individual</option>
@@ -221,7 +221,7 @@ const OrganizerApplicationForm = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">Organization Website</label>
+                    <label className="block text-sm font-space text-gray-300 mb-2">Organization Website</label>
                     <div className="relative">
                       <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
                       <input
@@ -229,7 +229,7 @@ const OrganizerApplicationForm = () => {
                         name="organization_website"
                         value={formData.organization_website}
                         onChange={handleChange}
-                        className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 pl-12 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
+                        className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 pl-12 font-space focus:border-orange-500 focus:outline-none transition-colors"
                         placeholder="https://yourwebsite.com"
                       />
                     </div>
@@ -238,16 +238,16 @@ const OrganizerApplicationForm = () => {
               </div>
 
               {/* Contact Information */}
-              <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/20 border border-pink-500/40 p-8">
+              <div className="bg-gradient-to-br from-gray-900/30 to-gray-900/20 border border-orange-500/30 p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <Mail className="h-6 w-6 text-pink-400" />
-                  <h2 className="font-press-start text-lg bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">CONTACT INFORMATION</h2>
+                  <Mail className="h-6 w-6 text-orange-400" />
+                  <h2 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">CONTACT INFORMATION</h2>
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">
-                      Phone Number <span className="text-pink-400">*</span>
+                    <label className="block text-sm font-space text-gray-300 mb-2">
+                      Phone Number <span className="text-orange-400">*</span>
                     </label>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
@@ -257,15 +257,15 @@ const OrganizerApplicationForm = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                        className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 pl-12 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
+                        className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 pl-12 font-space focus:border-orange-500 focus:outline-none transition-colors"
                         placeholder="+1 234 567 8900"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">
-                      Location <span className="text-pink-400">*</span>
+                    <label className="block text-sm font-space text-gray-300 mb-2">
+                      Location <span className="text-orange-400">*</span>
                     </label>
                     <div className="relative">
                       <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
@@ -275,7 +275,7 @@ const OrganizerApplicationForm = () => {
                         value={formData.location}
                         onChange={handleChange}
                         required
-                        className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 pl-12 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors"
+                        className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 pl-12 font-space focus:border-orange-500 focus:outline-none transition-colors"
                         placeholder="City, Country"
                       />
                     </div>
@@ -284,16 +284,16 @@ const OrganizerApplicationForm = () => {
               </div>
 
               {/* Experience */}
-              <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8">
+              <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <FileText className="h-6 w-6 text-purple-400" />
-                  <h2 className="font-press-start text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">EXPERIENCE & MOTIVATION</h2>
+                  <FileText className="h-6 w-6 text-orange-400" />
+                  <h2 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">EXPERIENCE & MOTIVATION</h2>
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">
-                      Previous Organizing Experience <span className="text-pink-400">*</span>
+                    <label className="block text-sm font-space text-gray-300 mb-2">
+                      Previous Organizing Experience <span className="text-orange-400">*</span>
                     </label>
                     <textarea
                       name="previous_organizing_experience"
@@ -301,14 +301,14 @@ const OrganizerApplicationForm = () => {
                       onChange={handleChange}
                       required
                       rows={4}
-                      className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors resize-none"
+                      className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 focus:outline-none transition-colors resize-none"
                       placeholder="Tell us about any events you've organized before..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">
-                      Why Maximally? <span className="text-pink-400">*</span>
+                    <label className="block text-sm font-space text-gray-300 mb-2">
+                      Why Maximally? <span className="text-orange-400">*</span>
                     </label>
                     <textarea
                       name="why_maximally"
@@ -316,7 +316,7 @@ const OrganizerApplicationForm = () => {
                       onChange={handleChange}
                       required
                       rows={4}
-                      className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors resize-none"
+                      className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 focus:outline-none transition-colors resize-none"
                       placeholder="Why do you want to host your hackathon with Maximally?"
                     />
                   </div>
@@ -324,49 +324,49 @@ const OrganizerApplicationForm = () => {
               </div>
 
               {/* Social Links */}
-              <div className="bg-gradient-to-br from-cyan-900/30 to-purple-900/20 border border-cyan-500/40 p-8">
+              <div className="bg-gradient-to-br from-gray-900/30 to-gray-900/20 border border-gray-700 p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <Globe className="h-6 w-6 text-cyan-400" />
-                  <h2 className="font-press-start text-lg bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">SOCIAL LINKS</h2>
+                  <Globe className="h-6 w-6 text-gray-300" />
+                  <h2 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">SOCIAL LINKS</h2>
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">LinkedIn</label>
+                    <label className="block text-sm font-space text-gray-300 mb-2">LinkedIn</label>
                     <div className="relative">
                       <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
-                      <input type="url" name="linkedin" value={formData.linkedin} onChange={handleChange} className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 pl-12 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors" placeholder="https://linkedin.com/in/yourprofile" />
+                      <input type="url" name="linkedin" value={formData.linkedin} onChange={handleChange} className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 pl-12 font-space focus:border-orange-500 focus:outline-none transition-colors" placeholder="https://linkedin.com/in/yourprofile" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">Twitter</label>
+                    <label className="block text-sm font-space text-gray-300 mb-2">Twitter</label>
                     <div className="relative">
                       <Twitter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
-                      <input type="url" name="twitter" value={formData.twitter} onChange={handleChange} className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 pl-12 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors" placeholder="https://twitter.com/yourhandle" />
+                      <input type="url" name="twitter" value={formData.twitter} onChange={handleChange} className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 pl-12 font-space focus:border-orange-500 focus:outline-none transition-colors" placeholder="https://twitter.com/yourhandle" />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-jetbrains text-gray-300 mb-2">Instagram</label>
+                    <label className="block text-sm font-space text-gray-300 mb-2">Instagram</label>
                     <div className="relative">
                       <Instagram className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
-                      <input type="url" name="instagram" value={formData.instagram} onChange={handleChange} className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 pl-12 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors" placeholder="https://instagram.com/yourhandle" />
+                      <input type="url" name="instagram" value={formData.instagram} onChange={handleChange} className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 pl-12 font-space focus:border-orange-500 focus:outline-none transition-colors" placeholder="https://instagram.com/yourhandle" />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Additional Info */}
-              <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 p-8">
+              <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 p-8">
                 <div className="flex items-center gap-3 mb-6">
                   <FileText className="h-6 w-6 text-gray-400" />
-                  <h2 className="font-press-start text-lg text-gray-300">ADDITIONAL INFORMATION</h2>
+                  <h2 className="font-space font-bold text-lg text-gray-300">ADDITIONAL INFORMATION</h2>
                 </div>
                 <textarea
                   name="additional_info"
                   value={formData.additional_info}
                   onChange={handleChange}
                   rows={4}
-                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-pink-400 focus:outline-none transition-colors resize-none"
+                  className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 focus:outline-none transition-colors resize-none"
                   placeholder="Any additional information, special requirements, or questions..."
                 />
               </div>
@@ -380,9 +380,9 @@ const OrganizerApplicationForm = () => {
                     checked={formData.agreed_to_terms}
                     onChange={handleChange}
                     required
-                    className="mt-1 h-5 w-5 bg-black border-2 border-gray-700 checked:bg-purple-600 checked:border-purple-600 focus:ring-2 focus:ring-purple-500 transition-colors cursor-pointer"
+                    className="mt-1 h-5 w-5 bg-black border-2 border-gray-700 checked:bg-orange-600 checked:border-orange-500 focus:ring-2 focus:ring-orange-500 transition-colors cursor-pointer"
                   />
-                  <span className="text-sm font-jetbrains text-gray-300 group-hover:text-white transition-colors">
+                  <span className="text-sm font-space text-gray-300 group-hover:text-white transition-colors">
                     I agree to the terms and conditions. I understand that my application will be reviewed by the Maximally team,
                     and I may be contacted for additional information.
                   </span>
@@ -394,7 +394,7 @@ const OrganizerApplicationForm = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/host-hackathon')}
-                  className="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-600 text-gray-300 hover:text-white px-8 py-4 font-press-start text-sm transition-all"
+                  className="bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-600 text-gray-300 hover:text-white px-8 py-4 font-space font-bold text-sm transition-all"
                 >
                   CANCEL
                 </button>
@@ -402,7 +402,7 @@ const OrganizerApplicationForm = () => {
                 <button
                   type="submit"
                   disabled={submitting || !formData.agreed_to_terms}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-8 py-4 font-press-start text-sm border border-pink-500/50 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-8 py-4 font-space font-bold text-sm border border-orange-500/40 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
                 >
                   {submitting ? (
                     <>

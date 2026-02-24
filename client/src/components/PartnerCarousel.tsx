@@ -81,10 +81,10 @@ const PartnerCarousel: React.FC = () => {
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-4 text-white glitch-effect">
+          <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-4 text-white glitch-effect">
             Our Allies
           </h2>
-          <p className="font-jetbrains text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="font-space text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
             From IIT hack clubs to MUNs and small-town content collectives — these orgs are building with us.
           </p>
         </div>
@@ -113,14 +113,14 @@ const PartnerCarousel: React.FC = () => {
                   "group-hover:border-maximally-red/50",
                   "relative overflow-hidden"
                 )}>
-                  <span className="font-jetbrains text-white text-base sm:text-lg font-medium whitespace-nowrap block text-center">
+                  <span className="font-space text-white text-base sm:text-lg font-medium whitespace-nowrap block text-center">
                     {partnerLogos[currentIndex].name}
                   </span>
 
                   {/* Glitch effect overlay */}
                   <div className={cn(
                     "absolute inset-0 rounded-lg",
-                    "bg-gradient-to-r from-cyan-500/10 to-purple-500/10",
+                    "bg-gradient-to-r from-gray-700/10 to-orange-500/10",
                     "opacity-0 group-hover:opacity-100 transition-opacity duration-300",
                     "mix-blend-overlay"
                   )} />
@@ -168,7 +168,7 @@ const PartnerCarousel: React.FC = () => {
 
           {/* Swipe instruction for mobile */}
           {isMobile && (
-            <p className="text-center text-gray-400 text-sm mt-4 font-jetbrains">
+            <p className="text-center text-gray-400 text-sm mt-4 font-space">
               Swipe left or right to navigate
             </p>
           )}

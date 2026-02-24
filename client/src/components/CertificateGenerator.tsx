@@ -351,10 +351,10 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
   };
 
   const tabs = [
-    { id: 'participant', label: 'PARTICIPANTS', icon: Users, color: 'purple' },
+    { id: 'participant', label: 'PARTICIPANTS', icon: Users, color: 'orange' },
     { id: 'winner', label: 'WINNERS', icon: Trophy, color: 'amber' },
     { id: 'judge', label: 'JUDGES', icon: Gavel, color: 'green' },
-    { id: 'mentor', label: 'MENTORS', icon: GraduationCap, color: 'cyan' },
+    { id: 'mentor', label: 'MENTORS', icon: GraduationCap, color: 'orange' },
   ];
 
   return (
@@ -367,19 +367,19 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
               <div className="p-2 bg-amber-500/20 border border-amber-500/40">
                 <AlertTriangle className="h-6 w-6 text-amber-400" />
               </div>
-              <h3 className="font-press-start text-lg text-amber-400">CONFIRM_REGENERATION</h3>
+              <h3 className="font-space font-bold text-lg text-amber-400">CONFIRM_REGENERATION</h3>
             </div>
-            <p className="font-jetbrains text-gray-300 mb-6">
+            <p className="font-space text-gray-300 mb-6">
               <span className="text-amber-400 font-bold">{confirmDialog.existingCount}</span> certificate(s) already exist. 
               Regenerating will <span className="text-red-400">replace</span> them with new ones.
             </p>
             <div className="flex gap-3">
               <button onClick={() => setConfirmDialog({ isOpen: false, existingCount: 0, sendEmail: false })}
-                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 font-press-start text-xs transition-all border border-gray-600">
+                className="flex-1 bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 font-space font-bold text-xs transition-all border border-gray-600">
                 CANCEL
               </button>
               <button onClick={() => generateCertificates(confirmDialog.sendEmail)}
-                className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white px-4 py-3 font-press-start text-xs transition-all border border-amber-500/50">
+                className="flex-1 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white px-4 py-3 font-space font-bold text-xs transition-all border border-amber-500/50">
                 REGENERATE
               </button>
             </div>
@@ -391,7 +391,7 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Award className="h-6 w-6 text-amber-400" />
-          <h2 className="font-press-start text-xl bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+          <h2 className="font-space font-bold text-xl bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
             CERTIFICATES
           </h2>
         </div>
@@ -403,7 +403,7 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
           const Icon = tab.icon;
           return (
             <button key={tab.id} onClick={() => setActiveTab(tab.id as CertificateType)}
-              className={`px-6 py-3 font-press-start text-xs transition-all flex items-center gap-2 ${
+              className={`px-6 py-3 font-space font-bold text-xs transition-all flex items-center gap-2 ${
                 activeTab === tab.id
                   ? `bg-gradient-to-r from-${tab.color}-600/40 to-${tab.color}-500/30 border border-${tab.color}-500/50 text-${tab.color}-200`
                   : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
@@ -417,14 +417,14 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
 
       {/* Info Box with Stats */}
       <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/10 border border-amber-500/30 p-4">
-        <p className="font-jetbrains text-sm text-amber-200 mb-3">
+        <p className="font-space text-sm text-amber-200 mb-3">
           {activeTab === 'participant' && 'Generate participation certificates for confirmed/checked-in participants.'}
           {activeTab === 'winner' && 'Generate winner certificates for all team members of winning projects.'}
           {activeTab === 'judge' && 'Generate appreciation certificates for judges who evaluated submissions.'}
           {activeTab === 'mentor' && 'Generate appreciation certificates for mentors who guided participants.'}
         </p>
         {recipients.length > 0 && (
-          <div className="flex flex-wrap gap-4 text-xs font-jetbrains">
+          <div className="flex flex-wrap gap-4 text-xs font-space">
             <span className="text-green-400">✓ With certificates: {withCertCount}</span>
             <span className="text-red-400">✗ Without certificates: {withoutCertCount}</span>
           </div>
@@ -435,13 +435,13 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
       <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6">
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 text-purple-400 animate-spin" />
+            <Loader2 className="h-8 w-8 text-orange-400 animate-spin" />
           </div>
         ) : recipients.length === 0 ? (
           <div className="text-center py-12">
             <FileText className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <p className="font-press-start text-gray-400">NO_RECIPIENTS_FOUND</p>
-            <p className="font-jetbrains text-sm text-gray-500 mt-2">
+            <p className="font-space font-bold text-gray-400">NO_RECIPIENTS_FOUND</p>
+            <p className="font-space text-sm text-gray-500 mt-2">
               {activeTab === 'participant' && 'No confirmed participants yet'}
               {activeTab === 'winner' && 'No winners assigned yet'}
               {activeTab === 'judge' && 'No judges assigned yet'}
@@ -455,17 +455,17 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
               <div className="flex flex-wrap gap-2">
                 <button onClick={selectAll} className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm">
                   <CheckCircle className={`h-4 w-4 ${recipients.every(r => r.selected) ? 'text-green-400' : ''}`} />
-                  <span className="font-jetbrains">{recipients.every(r => r.selected) ? 'Deselect All' : 'Select All'}</span>
+                  <span className="font-space">{recipients.every(r => r.selected) ? 'Deselect All' : 'Select All'}</span>
                 </button>
                 <span className="text-gray-600">|</span>
-                <button onClick={selectWithCertificates} className="text-green-400 hover:text-green-300 transition-colors text-sm font-jetbrains">
+                <button onClick={selectWithCertificates} className="text-green-400 hover:text-green-300 transition-colors text-sm font-space">
                   Select with certs ({withCertCount})
                 </button>
-                <button onClick={selectWithoutCertificates} className="text-red-400 hover:text-red-300 transition-colors text-sm font-jetbrains">
+                <button onClick={selectWithoutCertificates} className="text-red-400 hover:text-red-300 transition-colors text-sm font-space">
                   Select without certs ({withoutCertCount})
                 </button>
               </div>
-              <span className="font-jetbrains text-sm text-gray-500">{selectedCount} selected</span>
+              <span className="font-space text-sm text-gray-500">{selectedCount} selected</span>
             </div>
 
             {/* Recipients */}
@@ -473,26 +473,26 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
               {recipients.map((recipient) => (
                 <div key={recipient.id} onClick={() => toggleSelection(recipient.id)}
                   className={`flex items-center justify-between p-4 cursor-pointer transition-all ${
-                    recipient.selected ? 'bg-purple-500/10 border border-purple-500/50' : 'bg-black/30 border border-gray-700 hover:border-gray-600'
+                    recipient.selected ? 'bg-orange-500/10 border border-orange-500/50' : 'bg-black/30 border border-gray-700 hover:border-gray-600'
                   }`}>
                   <div className="flex items-center gap-4">
                     <CheckCircle className={`h-5 w-5 ${recipient.selected ? 'text-green-400' : 'text-gray-600'}`} />
                     <div>
                       <div className="flex items-center gap-2">
-                        <p className="font-press-start text-sm text-white">{recipient.name}</p>
+                        <p className="font-space font-bold text-sm text-white">{recipient.name}</p>
                         {recipient.hasCertificate ? (
-                          <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-jetbrains border border-green-500/30">HAS CERT</span>
+                          <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-space border border-green-500/30">HAS CERT</span>
                         ) : (
-                          <span className="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs font-jetbrains border border-red-500/30">NO CERT</span>
+                          <span className="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs font-space border border-red-500/30">NO CERT</span>
                         )}
                       </div>
-                      <p className="font-jetbrains text-xs text-gray-400">
+                      <p className="font-space text-xs text-gray-400">
                         {recipient.email || <span className="text-red-400">No email</span>}
                       </p>
                     </div>
                   </div>
                   {recipient.position && (
-                    <span className="px-3 py-1 bg-amber-500/20 text-amber-400 font-press-start text-xs border border-amber-500/50">
+                    <span className="px-3 py-1 bg-amber-500/20 text-amber-400 font-space font-bold text-xs border border-amber-500/50">
                       {recipient.position}
                     </span>
                   )}
@@ -510,14 +510,14 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
           <div className="flex flex-wrap gap-3">
             <button onClick={() => checkExistingAndConfirm(false)}
               disabled={generating || checking || sendingEmails || selectedCount === 0}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-xs transition-all flex items-center gap-2 border border-pink-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+              className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-6 py-3 font-space font-bold text-xs transition-all flex items-center gap-2 border border-orange-500/40 disabled:opacity-50 disabled:cursor-not-allowed">
               {generating || checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
               GENERATE ({selectedCount})
             </button>
             
             <button onClick={() => checkExistingAndConfirm(true)}
               disabled={generating || checking || sendingEmails || selectedCount === 0}
-              className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-3 font-press-start text-xs transition-all flex items-center gap-2 border border-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+              className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-gray-700 hover:to-blue-500 text-white px-6 py-3 font-space font-bold text-xs transition-all flex items-center gap-2 border border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
               {generating || checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
               GENERATE_&_EMAIL ({selectedCount})
             </button>
@@ -526,12 +526,12 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
           {/* Email Existing Certificates Button */}
           {withCertCount > 0 && (
             <div className="pt-4 border-t border-gray-700">
-              <p className="font-jetbrains text-sm text-gray-400 mb-3">
+              <p className="font-space text-sm text-gray-400 mb-3">
                 Already have certificates? Send emails to recipients with existing certificates:
               </p>
               <button onClick={emailExistingCertificates}
                 disabled={generating || checking || sendingEmails || recipients.filter(r => r.selected && r.hasCertificate).length === 0}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-press-start text-xs transition-all flex items-center gap-2 border border-green-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-space font-bold text-xs transition-all flex items-center gap-2 border border-green-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
                 {sendingEmails ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 EMAIL_EXISTING ({recipients.filter(r => r.selected && r.hasCertificate).length})
               </button>
@@ -542,10 +542,10 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
 
       {/* Status Messages */}
       {(generating || sendingEmails) && (
-        <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/30 p-4">
+        <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 p-4">
           <div className="flex items-center gap-3">
-            <Loader2 className="h-5 w-5 text-purple-400 animate-spin" />
-            <span className="font-press-start text-sm text-purple-300">
+            <Loader2 className="h-5 w-5 text-orange-400 animate-spin" />
+            <span className="font-space font-bold text-sm text-orange-400">
               {generating ? 'GENERATING_CERTIFICATES...' : 'QUEUEING_EMAILS...'}
             </span>
           </div>

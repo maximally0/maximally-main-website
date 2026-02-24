@@ -43,7 +43,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
   });
 
   const getStatusBadge = () => {
-    const baseClasses = "minecraft-block px-3 py-1 font-press-start text-xs";
+    const baseClasses = "minecraft-block px-3 py-1 font-space font-bold text-xs";
     const animationClass = shouldReduceMotion ? "" : "animate-pulse";
     
     switch (displayState) {
@@ -97,14 +97,14 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
             <div className="flex items-center gap-2">
               <h3 
-                className="font-press-start text-base text-gray-900 dark:text-white"
+                className="font-space font-bold text-base text-gray-900 dark:text-white"
                 data-testid={`name-${hackathon.id}`}
               >
                 {hackathon.name}
               </h3>
               {isMaximallyHackathon && (
                 <div 
-                  className="minecraft-block bg-maximally-red text-white w-7 h-7 flex items-center justify-center font-press-start text-xs shadow-lg hover:scale-110 transition-transform cursor-help" 
+                  className="minecraft-block bg-maximally-red text-white w-7 h-7 flex items-center justify-center font-space font-bold text-xs shadow-lg hover:scale-110 transition-transform cursor-help" 
                   title="Maximally Official Hackathon"
                 >
                   M
@@ -115,7 +115,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
           </div>
           
           {/* Description */}
-          <p className="font-jetbrains text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+          <p className="font-space text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-2">
             {hackathon.description}
           </p>
 
@@ -123,21 +123,21 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs mb-4">
             <div className="flex items-center text-gray-600 dark:text-gray-400">
               <Calendar className="h-3 w-3 mr-1 text-maximally-red flex-shrink-0" aria-hidden="true" />
-              <span className="font-jetbrains truncate">
+              <span className="font-space truncate">
                 {formatDate(hackathon.startDate)}
               </span>
             </div>
             <div className="flex items-center text-gray-600 dark:text-gray-400">
               <Clock className="h-3 w-3 mr-1 text-maximally-red flex-shrink-0" aria-hidden="true" />
-              <span className="font-jetbrains">{hackathon.length}</span>
+              <span className="font-space">{hackathon.length}</span>
             </div>
             <div className="flex items-center text-gray-600 dark:text-gray-400">
               <MapPin className="h-3 w-3 mr-1 text-maximally-red flex-shrink-0" aria-hidden="true" />
-              <span className="font-jetbrains">{hackathon.location}</span>
+              <span className="font-space">{hackathon.location}</span>
             </div>
             <div className="flex items-center text-gray-600 dark:text-gray-400">
               <Users className="h-3 w-3 mr-1 text-maximally-red flex-shrink-0" aria-hidden="true" />
-              <span className="font-jetbrains">
+              <span className="font-space">
                 {hackathon.participants > 0 ? `${hackathon.participants}` : 'Open'}
               </span>
             </div>
@@ -149,14 +149,14 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
               {hackathon.tags.slice(0, 3).map(tag => (
                 <span 
                   key={tag} 
-                  className="minecraft-block bg-maximally-red text-white px-2 py-1 font-jetbrains text-xs"
+                  className="minecraft-block bg-maximally-red text-white px-2 py-1 font-space text-xs"
                   data-testid={`tag-${tag.toLowerCase().replace(/\s+/g, '-')}-${hackathon.id}`}
                 >
                   {tag}
                 </span>
               ))}
               {hackathon.tags.length > 3 && (
-                <span className="minecraft-block bg-gray-500 text-white px-2 py-1 font-jetbrains text-xs">
+                <span className="minecraft-block bg-gray-500 text-white px-2 py-1 font-space text-xs">
                   +{hackathon.tags.length - 3}
                 </span>
               )}
@@ -170,7 +170,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
                 href={hackathon.detailsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pixel-button bg-white text-maximally-black border-2 border-black hover:bg-gray-50 text-xs px-3 py-2 font-press-start flex-1 text-center"
+                className="pixel-button bg-white text-maximally-black border-2 border-black hover:bg-gray-50 text-xs px-3 py-2 font-space font-bold flex-1 text-center"
                 data-testid={`link-details-${hackathon.id}`}
               >
                 DETAILS
@@ -179,7 +179,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
             ) : (
               <Link
                 to={hackathon.detailsUrl}
-                className="pixel-button bg-white text-maximally-black border-2 border-black hover:bg-gray-50 text-xs px-3 py-2 font-press-start flex-1 text-center"
+                className="pixel-button bg-white text-maximally-black border-2 border-black hover:bg-gray-50 text-xs px-3 py-2 font-space font-bold flex-1 text-center"
                 data-testid={`link-details-${hackathon.id}`}
               >
                 DETAILS
@@ -192,7 +192,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
                 href={hackathon.registerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="pixel-button bg-maximally-red text-white border-2 border-black hover:bg-maximally-yellow hover:text-black text-xs px-3 py-2 font-press-start flex-1 text-center"
+                className="pixel-button bg-maximally-red text-white border-2 border-black hover:bg-maximally-yellow hover:text-black text-xs px-3 py-2 font-space font-bold flex-1 text-center"
                 data-testid={`link-register-${hackathon.id}`}
               >
                 REGISTER
@@ -201,7 +201,7 @@ const HackathonCard = ({ hackathon, className = '' }: HackathonCardProps) => {
             ) : (
               <Link
                 to={hackathon.registerUrl}
-                className="pixel-button bg-maximally-red text-white border-2 border-black hover:bg-maximally-yellow hover:text-black text-xs px-3 py-2 font-press-start flex-1 text-center"
+                className="pixel-button bg-maximally-red text-white border-2 border-black hover:bg-maximally-yellow hover:text-black text-xs px-3 py-2 font-space font-bold flex-1 text-center"
                 data-testid={`link-register-${hackathon.id}`}
               >
                 REGISTER

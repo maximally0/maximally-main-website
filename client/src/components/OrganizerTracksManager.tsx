@@ -92,25 +92,25 @@ export default function OrganizerTracksManager({ hackathonId }: Props) {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="font-press-start text-lg text-cyan-400">TRACKS ({tracks.length})</h3>
+        <h3 className="font-space font-bold text-lg text-gray-300">TRACKS ({tracks.length})</h3>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="minecraft-block bg-cyan-400 text-black px-4 py-2 hover:bg-maximally-yellow transition-colors flex items-center gap-2"
+          className="minecraft-block bg-orange-400 text-black px-4 py-2 hover:bg-maximally-yellow transition-colors flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
-          <span className="font-press-start text-xs">ADD TRACK</span>
+          <span className="font-space font-bold text-xs">ADD TRACK</span>
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="pixel-card bg-gray-900 border-2 border-cyan-400 p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="pixel-card bg-gray-900 border-2 border-gray-600 p-6 space-y-4">
           <input
             type="text"
             placeholder="Track name"
             value={formData.track_name}
             onChange={(e) => setFormData({ ...formData, track_name: e.target.value })}
             required
-            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-cyan-400 focus:outline-none"
+            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-space focus:border-gray-600 focus:outline-none"
           />
           <textarea
             placeholder="Track description"
@@ -118,35 +118,35 @@ export default function OrganizerTracksManager({ hackathonId }: Props) {
             onChange={(e) => setFormData({ ...formData, track_description: e.target.value })}
             required
             rows={3}
-            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-cyan-400 focus:outline-none resize-none"
+            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-space focus:border-gray-600 focus:outline-none resize-none"
           />
           <input
             type="text"
             placeholder="Prize pool (e.g., $5000)"
             value={formData.prize_pool}
             onChange={(e) => setFormData({ ...formData, prize_pool: e.target.value })}
-            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-cyan-400 focus:outline-none"
+            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-space focus:border-gray-600 focus:outline-none"
           />
           <input
             type="number"
             placeholder="Max submissions (optional)"
             value={formData.max_submissions}
             onChange={(e) => setFormData({ ...formData, max_submissions: e.target.value })}
-            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-cyan-400 focus:outline-none"
+            className="w-full pixel-card bg-gray-800 border-2 border-gray-600 text-white px-4 py-2 font-space focus:border-gray-600 focus:outline-none"
           />
           <div className="flex gap-2">
             <button
               type="submit"
               className="minecraft-block bg-green-600 text-white px-4 py-2 hover:bg-green-700 transition-colors flex-1"
             >
-              <span className="font-press-start text-xs">CREATE</span>
+              <span className="font-space font-bold text-xs">CREATE</span>
             </button>
             <button
               type="button"
               onClick={() => setShowForm(false)}
               className="minecraft-block bg-gray-600 text-white px-4 py-2 hover:bg-gray-700 transition-colors"
             >
-              <span className="font-press-start text-xs">CANCEL</span>
+              <span className="font-space font-bold text-xs">CANCEL</span>
             </button>
           </div>
         </form>
@@ -157,18 +157,18 @@ export default function OrganizerTracksManager({ hackathonId }: Props) {
           <div key={track.id} className="pixel-card bg-gray-900 border-2 border-gray-700 p-4">
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-cyan-400" />
-                <h4 className="font-press-start text-sm text-white">{track.track_name}</h4>
+                <Trophy className="h-5 w-5 text-gray-300" />
+                <h4 className="font-space font-bold text-sm text-white">{track.track_name}</h4>
               </div>
             </div>
-            <p className="text-sm text-gray-400 font-jetbrains mb-2">{track.track_description}</p>
+            <p className="text-sm text-gray-400 font-space mb-2">{track.track_description}</p>
             {track.prize_pool && (
-              <div className="text-xs text-maximally-yellow font-press-start">
+              <div className="text-xs text-maximally-yellow font-space font-bold">
                 💰 {track.prize_pool}
               </div>
             )}
             {track.max_submissions && (
-              <div className="text-xs text-gray-500 font-jetbrains mt-1">
+              <div className="text-xs text-gray-500 font-space mt-1">
                 Submissions: {track.current_submissions} / {track.max_submissions}
               </div>
             )}
@@ -179,7 +179,7 @@ export default function OrganizerTracksManager({ hackathonId }: Props) {
       {tracks.length === 0 && !showForm && (
         <div className="text-center py-12">
           <div className="minecraft-block bg-gray-800 text-gray-400 px-6 py-4 inline-block">
-            <span className="font-press-start text-sm">NO TRACKS YET</span>
+            <span className="font-space font-bold text-sm">NO TRACKS YET</span>
           </div>
         </div>
       )}

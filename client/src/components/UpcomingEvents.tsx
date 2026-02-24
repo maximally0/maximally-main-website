@@ -24,16 +24,16 @@ const UpcomingEvents = ({ events }: UpcomingEventsProps) => {
                 Popular
               </div>
             )}
-            <h3 className="font-press-start text-lg mb-4">{event.title}</h3>
+            <h3 className="font-space font-bold text-lg mb-4">{event.title}</h3>
             <div className="flex items-center mb-2">
               <CalendarDays className="h-4 w-4 text-maximally-blue mr-2" />
-              <span className="font-jetbrains text-sm">{event.date}</span>
+              <span className="font-space text-sm">{event.date}</span>
             </div>
             <div className="flex items-center mb-4">
               <Clock className="h-4 w-4 text-maximally-green mr-2" />
-              <span className="font-jetbrains text-sm">{event.time}</span>
+              <span className="font-space text-sm">{event.time}</span>
             </div>
-            <div className="font-press-start text-maximally-blue">{event.price}</div>
+            <div className="font-space font-bold text-maximally-blue">{event.price}</div>
           </div>
         ))}
       </div>

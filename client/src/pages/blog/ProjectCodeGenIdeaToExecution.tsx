@@ -13,11 +13,11 @@ const ProjectCodeGenIdeaToExecution = () => {
       
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <div className="bg-white shadow-lg rounded-lg p-8">
-          <h1 className="font-press-start text-3xl text-maximally-black mb-8">
+          <h1 className="font-space font-bold text-3xl text-maximally-black mb-8">
             From Idea to Execution: How Project Codegen Powers Real Hackathon Projects
           </h1>
           
-          <div className="font-jetbrains text-maximally-black space-y-6 leading-relaxed">
+          <div className="font-space text-maximally-black space-y-6 leading-relaxed">
             <p className="text-lg">
               Hackathons are wild—one moment you're sketching ideas on a notepad, the next you're racing against the clock to build something demo-worthy. But here's the thing: great ideas often stumble at the execution stage. That's exactly where Project Codegen steps in.
             </p>
@@ -26,7 +26,7 @@ const ProjectCodeGenIdeaToExecution = () => {
               Instead of getting stuck writing boilerplate code or setting up endless configs, Codegen lets you jump straight into building. It's like having a teammate who already knows the frameworks, the syntax, and the shortcuts.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Why Execution is the Hardest Part</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Why Execution is the Hardest Part</h2>
             
             <ul className="list-disc ml-6 space-y-2">
               <li><strong>Time pressure:</strong> You've got 24–48 hours. Every minute matters.</li>
@@ -38,7 +38,7 @@ const ProjectCodeGenIdeaToExecution = () => {
               With Codegen, you skip the chaos and move faster: the tool generates starter code, structures your project, and even suggests fixes while you focus on features and creativity.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Turning Ideas Into Demos</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Turning Ideas Into Demos</h2>
             
             <p>
               Imagine this:
@@ -54,7 +54,7 @@ const ProjectCodeGenIdeaToExecution = () => {
               That's what separates dreamers from demo-ers. And in hackathons, demos win prizes.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">The Secret Advantage in Hackathons</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">The Secret Advantage in Hackathons</h2>
             
             <p>
               When judges see your project, they're not just looking at the idea — they're looking at execution, polish, and how much you achieved in limited time.
@@ -74,7 +74,7 @@ const ProjectCodeGenIdeaToExecution = () => {
               In short: less time debugging, more time impressing.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Real Impact on Hackathon Success</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Real Impact on Hackathon Success</h2>
             
             <p>
               The difference between "nice idea" and "prize-winning project" often comes down to these factors:
@@ -91,7 +91,7 @@ const ProjectCodeGenIdeaToExecution = () => {
               Project Codegen addresses each of these by removing the technical friction that typically consumes 60-70% of hackathon time.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Beyond the Hackathon Weekend</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Beyond the Hackathon Weekend</h2>
             
             <p>
               But here's what's really exciting: the skills and speed you develop using Codegen don't disappear when the hackathon ends. You're learning to think in terms of rapid prototyping, efficient iteration, and focused execution.
@@ -101,7 +101,7 @@ const ProjectCodeGenIdeaToExecution = () => {
               These are exactly the skills that separate successful builders from eternal planners.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Final Take</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Final Take</h2>
             
             <p>
               Hackathons reward speed, creativity, and execution. Project Codegen doesn't just help you code faster — it helps you win smarter. Because at the end of the day, the difference between "nice idea" and "prize-winning project" is execution.

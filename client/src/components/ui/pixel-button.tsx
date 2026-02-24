@@ -4,7 +4,7 @@ import { VariantProps, cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const pixelButtonVariants = cva(
-  "relative inline-flex items-center justify-center font-press-start border-2 border-black transition-all duration-200 ease-in-out active:translate-y-1 active:shadow-none group",
+  "relative inline-flex items-center justify-center font-space font-bold border-2 border-black transition-all duration-200 ease-in-out active:translate-y-1 active:shadow-none group",
   {
     variants: {
       variant: {

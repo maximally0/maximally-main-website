@@ -44,14 +44,14 @@ export default function NewsletterUnsubscribe() {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-cyan-500/10 border border-purple-500/30 p-8 text-center">
+        <div className="bg-gradient-to-br from-orange-500/10 via-orange-400/10 to-gray-800/50 border border-gray-800 p-8 text-center">
           {status === 'loading' && (
             <>
-              <Loader2 className="w-16 h-16 mx-auto mb-4 animate-spin text-purple-400" />
-              <h1 className="font-press-start text-xl mb-4 text-purple-300">
+              <Loader2 className="w-16 h-16 mx-auto mb-4 animate-spin text-orange-400" />
+              <h1 className="font-space font-bold text-xl mb-4 text-orange-400">
                 PROCESSING...
               </h1>
-              <p className="font-jetbrains text-gray-400">
+              <p className="font-space text-gray-400">
                 Unsubscribing you from our newsletter
               </p>
             </>
@@ -60,24 +60,24 @@ export default function NewsletterUnsubscribe() {
           {status === 'success' && (
             <>
               <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-400" />
-              <h1 className="font-press-start text-xl mb-4 text-green-300">
+              <h1 className="font-space font-bold text-xl mb-4 text-green-300">
                 UNSUBSCRIBED
               </h1>
-              <p className="font-jetbrains text-gray-300 mb-6">
+              <p className="font-space text-gray-300 mb-6">
                 {message}
               </p>
-              <p className="font-jetbrains text-gray-400 text-sm mb-6">
+              <p className="font-space text-gray-400 text-sm mb-6">
                 We're sorry to see you go! You won't receive any more newsletters from us.
               </p>
               <div className="space-y-3">
                 <Link to="/">
-                  <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                  <Button className="w-full bg-gradient-to-r from-orange-500 to-orange-500 hover:from-orange-600 hover:to-orange-500">
                     Back to Home
                   </Button>
                 </Link>
-                <p className="font-jetbrains text-gray-500 text-xs">
+                <p className="font-space text-gray-500 text-xs">
                   Changed your mind?{' '}
-                  <Link to="/" className="text-purple-400 hover:underline">
+                  <Link to="/" className="text-orange-400 hover:underline">
                     Resubscribe here
                   </Link>
                 </p>
@@ -88,16 +88,16 @@ export default function NewsletterUnsubscribe() {
           {status === 'error' && (
             <>
               <XCircle className="w-16 h-16 mx-auto mb-4 text-red-400" />
-              <h1 className="font-press-start text-xl mb-4 text-red-300">
+              <h1 className="font-space font-bold text-xl mb-4 text-red-300">
                 ERROR
               </h1>
-              <p className="font-jetbrains text-gray-300 mb-6">
+              <p className="font-space text-gray-300 mb-6">
                 {message}
               </p>
               <div className="space-y-3">
                 <Button
                   onClick={handleUnsubscribe}
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-500 hover:from-orange-600 hover:to-orange-500"
                 >
                   Try Again
                 </Button>
@@ -112,10 +112,10 @@ export default function NewsletterUnsubscribe() {
         </div>
 
         <div className="mt-6 text-center">
-          <p className="font-jetbrains text-gray-500 text-sm">
+          <p className="font-space text-gray-500 text-sm">
             <Mail className="inline w-4 h-4 mr-1" />
             Need help? Contact us at{' '}
-            <a href="mailto:support@maximally.in" className="text-purple-400 hover:underline">
+            <a href="mailto:support@maximally.in" className="text-orange-400 hover:underline">
               support@maximally.in
             </a>
           </p>

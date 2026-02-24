@@ -112,7 +112,6 @@ const Events = () => {
     }
   };
 
-  // Calculate status based on start and end dates
   const calcStatusFromDates = (start?: string, end?: string): EventStatus => {
     if (!start) return 'upcoming';
     try {
@@ -122,13 +121,10 @@ const Events = () => {
       
       if (isNaN(startDate.getTime())) return 'upcoming';
       
-      // If start date is in the future, it's upcoming
       if (startDate > now) return 'upcoming';
       
-      // If end date has passed, it's completed
       if (endDate < now) return 'completed';
       
-      // Otherwise it's ongoing (between start and end)
       return 'ongoing';
     } catch {
       return 'upcoming';
@@ -351,82 +347,64 @@ const Events = () => {
       />
       
       <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
         
-        <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
-        <div className="absolute top-60 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
-        <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-cyan-500/10 rounded-full blur-[90px]" />
-        
-        {Array.from({ length: 12 }, (_, i) => (
-          <div
-            key={i}
-            className="absolute w-1.5 h-1.5 animate-float pointer-events-none"
-            style={{
-              left: `${5 + (i * 8)}%`,
-              top: `${10 + Math.sin(i) * 20}%`,
-              animationDelay: `${i * 0.3}s`,
-              animationDuration: `${4 + (i % 3)}s`,
-              backgroundColor: ['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5],
-              boxShadow: `0 0 10px ${['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5]}40`
-            }}
-          />
-        ))}
+        <div className="absolute top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
 
         <div className="relative z-10 pt-16 sm:pt-20 md:pt-24 lg:pt-28 pb-8 sm:pb-12">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="text-center max-w-4xl mx-auto mb-8 sm:mb-12">
-              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-4 sm:mb-6">
-                <Code className="w-4 h-4 text-purple-400" />
-                <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-orange-500/10 border border-orange-500/30 mb-4 sm:mb-6">
+                <Code className="w-4 h-4 text-orange-400" />
+                <span className="font-space font-semibold text-[10px] sm:text-xs text-orange-400 tracking-wider">
                   BUILD. SHIP. WIN.
                 </span>
               </div>
               
-              <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white mb-4 sm:mb-6 leading-relaxed">
+              <h1 className="font-space font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white mb-4 sm:mb-6 leading-relaxed">
                 Discover{" "}
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                   Hackathons
                 </span>
               </h1>
               
-              <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
+              <p className="font-space text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
                 Join the best coding competitions and innovation challenges. Build projects that matter, 
                 win prizes, and connect with builders worldwide.
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
-                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-cyan-500/10 border border-cyan-500/30">
-                  <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400 flex-shrink-0" />
-                  <span className="font-press-start text-[9px] sm:text-[10px] text-cyan-300">{hackathonCount}+ HACKATHONS</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-orange-500/10 border border-orange-500/30">
+                  <Code className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400 flex-shrink-0" />
+                  <span className="font-space font-semibold text-[9px] sm:text-[10px] text-orange-400">{hackathonCount}+ HACKATHONS</span>
                 </div>
-                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-pink-500/10 border border-pink-500/30">
-                  <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-pink-400 flex-shrink-0" />
-                  <span className="font-press-start text-[9px] sm:text-[10px] text-pink-300">$100K+ PRIZES</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-orange-500/10 border border-orange-500/30">
+                  <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-orange-400 flex-shrink-0" />
+                  <span className="font-space font-semibold text-[9px] sm:text-[10px] text-orange-400">$100K+ PRIZES</span>
                 </div>
-                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-green-500/10 border border-green-500/30">
-                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-400 flex-shrink-0" />
-                  <span className="font-press-start text-[9px] sm:text-[10px] text-green-300">GLOBAL</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-gray-800 border border-gray-700">
+                  <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-300 flex-shrink-0" />
+                  <span className="font-space font-semibold text-[9px] sm:text-[10px] text-gray-300">GLOBAL</span>
                 </div>
               </div>
             </div>
 
             <div className="max-w-3xl mx-auto mb-6 sm:mb-10">
-              <div className="relative bg-black/40 border border-purple-500/30 p-1 backdrop-blur-sm">
-                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-purple-400 h-4 w-4 sm:h-5 sm:w-5" />
+              <div className="relative bg-black/40 border border-gray-800 p-1 backdrop-blur-sm">
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-orange-400 h-4 w-4 sm:h-5 sm:w-5" />
                 <input
                   type="text"
                   placeholder="Search hackathons..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 sm:pl-12 pr-10 sm:pr-4 py-3 sm:py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none font-jetbrains text-sm sm:text-base"
+                  className="w-full pl-10 sm:pl-12 pr-10 sm:pr-4 py-3 sm:py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none font-space text-sm sm:text-base"
                   data-testid="search-events"
                 />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-purple-400 transition-colors p-1"
+                    className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-400 transition-colors p-1"
                   >
                     <X className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
@@ -441,13 +419,13 @@ const Events = () => {
             <div className="lg:hidden">
               <button
                 onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-purple-500/10 border border-purple-500/30 text-purple-300 font-press-start text-[10px] sm:text-xs w-full justify-center sm:w-auto"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-orange-500/10 border border-gray-800 text-orange-400 font-space font-semibold text-[10px] sm:text-xs w-full justify-center sm:w-auto"
                 data-testid="mobile-filter-toggle"
               >
                 <Filter className="h-4 w-4" />
                 FILTERS
                 {(selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length) > 0 && (
-                  <span className="ml-2 px-2 py-0.5 bg-purple-500/30 text-purple-200 text-[9px] sm:text-[10px]">
+                  <span className="ml-2 px-2 py-0.5 bg-orange-500/20 text-orange-400 text-[9px] sm:text-[10px]">
                     {selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length}
                   </span>
                 )}
@@ -455,12 +433,12 @@ const Events = () => {
             </div>
 
             <div className={`lg:w-64 xl:w-72 ${isMobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
-              <div className="lg:sticky lg:top-24 bg-black/40 border border-purple-500/20 p-4 sm:p-5 backdrop-blur-sm">
+              <div className="lg:sticky lg:top-24 bg-black/40 border border-gray-800 p-4 sm:p-5 backdrop-blur-sm">
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h3 className="font-press-start text-xs sm:text-sm text-purple-300">FILTERS</h3>
+                  <h3 className="font-space font-semibold text-xs sm:text-sm text-orange-400">FILTERS</h3>
                   <button
                     onClick={clearAllFilters}
-                    className="text-gray-500 font-jetbrains text-xs hover:text-purple-400 transition-colors"
+                    className="text-gray-500 font-space text-xs hover:text-orange-400 transition-colors"
                     data-testid="clear-all-filters"
                   >
                     Clear all
@@ -469,7 +447,7 @@ const Events = () => {
 
                 <Collapsible open={expandedFilters.format} onOpenChange={() => toggleFilterSection('format')} className="mb-6">
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                    <h4 className="font-press-start text-xs text-gray-400">FORMAT</h4>
+                    <h4 className="font-space font-semibold text-xs text-gray-400">FORMAT</h4>
                     <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${expandedFilters.format ? 'rotate-180' : ''}`} />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-3">
@@ -480,10 +458,10 @@ const Events = () => {
                             type="checkbox"
                             checked={selectedFilters.format.includes(format)}
                             onChange={() => toggleFilter('format', format)}
-                            className="mr-3 h-4 w-4 accent-purple-500 bg-transparent border-gray-600"
+                            className="mr-3 h-4 w-4 accent-orange-500 bg-transparent border-gray-600"
                             data-testid={`filter-format-${format}`}
                           />
-                          <span className="font-jetbrains text-sm text-gray-400 group-hover:text-purple-300 transition-colors capitalize">{format}</span>
+                          <span className="font-space text-sm text-gray-400 group-hover:text-orange-400 transition-colors capitalize">{format}</span>
                         </label>
                       ))}
                     </div>
@@ -492,7 +470,7 @@ const Events = () => {
 
                 <Collapsible open={expandedFilters.status} onOpenChange={() => toggleFilterSection('status')} className="mb-6">
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                    <h4 className="font-press-start text-xs text-gray-400">STATUS</h4>
+                    <h4 className="font-space font-semibold text-xs text-gray-400">STATUS</h4>
                     <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${expandedFilters.status ? 'rotate-180' : ''}`} />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-3">
@@ -503,10 +481,10 @@ const Events = () => {
                             type="checkbox"
                             checked={selectedFilters.status.includes(status)}
                             onChange={() => toggleFilter('status', status)}
-                            className="mr-3 h-4 w-4 accent-purple-500 bg-transparent border-gray-600"
+                            className="mr-3 h-4 w-4 accent-orange-500 bg-transparent border-gray-600"
                             data-testid={`filter-status-${status}`}
                           />
-                          <span className="font-jetbrains text-sm text-gray-400 group-hover:text-purple-300 transition-colors capitalize">{status}</span>
+                          <span className="font-space text-sm text-gray-400 group-hover:text-orange-400 transition-colors capitalize">{status}</span>
                         </label>
                       ))}
                     </div>
@@ -515,21 +493,21 @@ const Events = () => {
 
                 <Collapsible open={expandedFilters.tags} onOpenChange={() => toggleFilterSection('tags')} className="mb-4">
                   <CollapsibleTrigger className="flex items-center justify-between w-full group">
-                    <h4 className="font-press-start text-xs text-gray-400">TOPICS</h4>
+                    <h4 className="font-space font-semibold text-xs text-gray-400">TOPICS</h4>
                     <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${expandedFilters.tags ? 'rotate-180' : ''}`} />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="mt-3">
-                    <div className="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-purple-500/30 scrollbar-track-transparent">
+                    <div className="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                       {filterOptions.tags.map(tag => (
                         <label key={tag} className="flex items-center cursor-pointer group">
                           <input
                             type="checkbox"
                             checked={selectedFilters.tags.includes(tag)}
                             onChange={() => toggleFilter('tags', tag)}
-                            className="mr-3 h-4 w-4 accent-purple-500 bg-transparent border-gray-600"
+                            className="mr-3 h-4 w-4 accent-orange-500 bg-transparent border-gray-600"
                             data-testid={`filter-tag-${tag.toLowerCase().replace(/\s+/g, '-')}`}
                           />
-                          <span className="font-jetbrains text-sm text-gray-400 group-hover:text-purple-300 transition-colors">{tag}</span>
+                          <span className="font-space text-sm text-gray-400 group-hover:text-orange-400 transition-colors">{tag}</span>
                         </label>
                       ))}
                     </div>
@@ -541,12 +519,12 @@ const Events = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="bg-purple-500/20 border border-purple-500/40 p-2">
-                    <Code className="h-5 w-5 text-purple-400" />
+                  <div className="bg-orange-500/10 border border-orange-500/30 p-2">
+                    <Code className="h-5 w-5 text-orange-400" />
                   </div>
                   <div>
-                    <h2 className="font-press-start text-sm sm:text-base text-white">HACKATHONS</h2>
-                    <p className="font-jetbrains text-xs text-gray-500">
+                    <h2 className="font-space font-bold text-sm sm:text-base text-white">HACKATHONS</h2>
+                    <p className="font-space text-xs text-gray-500">
                       {hackathonEvents.length} events found
                     </p>
                   </div>
@@ -554,7 +532,7 @@ const Events = () => {
                 {(selectedFilters.format.length + selectedFilters.status.length + selectedFilters.tags.length > 0) && (
                   <button
                     onClick={clearAllFilters}
-                    className="flex items-center gap-1 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-jetbrains hover:bg-purple-500/20 transition-colors"
+                    className="flex items-center gap-1 px-3 py-1.5 bg-orange-500/10 border border-gray-800 text-orange-400 text-xs font-space hover:bg-orange-500/20 transition-colors"
                   >
                     <X className="h-3 w-3" />
                     Clear filters
@@ -573,15 +551,15 @@ const Events = () => {
                   ))}
                 </div>
               ) : (
-                <div className="bg-black/40 border border-purple-500/20 p-12 text-center mb-12">
-                  <Code className="h-12 w-12 text-purple-400/50 mx-auto mb-4" />
-                  <h3 className="font-press-start text-sm text-gray-400 mb-2">NO HACKATHONS FOUND</h3>
-                  <p className="font-jetbrains text-gray-500 text-sm mb-4">
+                <div className="bg-black/40 border border-gray-800 p-12 text-center mb-12">
+                  <Code className="h-12 w-12 text-orange-400/50 mx-auto mb-4" />
+                  <h3 className="font-space font-bold text-sm text-gray-400 mb-2">NO HACKATHONS FOUND</h3>
+                  <p className="font-space text-gray-500 text-sm mb-4">
                     Try adjusting your filters or search query
                   </p>
                   <button
                     onClick={clearAllFilters}
-                    className="px-4 py-2 bg-purple-500/20 border border-purple-500/40 text-purple-300 font-press-start text-xs hover:bg-purple-500/30 transition-colors"
+                    className="px-4 py-2 bg-orange-500/10 border border-orange-500/30 text-orange-400 font-space font-semibold text-xs hover:bg-orange-500/20 transition-colors"
                   >
                     CLEAR FILTERS
                   </button>
@@ -589,20 +567,20 @@ const Events = () => {
               )}
 
 
-              <div className="mt-16 p-8 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+              <div className="mt-16 p-8 bg-gradient-to-br from-gray-900/40 via-black to-gray-900/40 border border-gray-800 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.06)_0%,transparent_70%)]" />
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
                 
                 <div className="relative z-10">
-                  <h3 className="font-press-start text-sm sm:text-base text-white mb-3">
+                  <h3 className="font-space font-bold text-sm sm:text-base text-white mb-3">
                     Want to host your own hackathon?
                   </h3>
-                  <p className="font-jetbrains text-sm text-gray-400 mb-6 max-w-lg mx-auto">
+                  <p className="font-space text-sm text-gray-400 mb-6 max-w-lg mx-auto">
                     Join 1000+ organizers who have launched successful events with Maximally's support.
                   </p>
                   <Link
                     to="/host-hackathon"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs transition-all duration-300"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white font-space font-semibold text-xs transition-all duration-300"
                     data-testid="link-host-hackathon"
                   >
                     <Rocket className="h-4 w-4" />

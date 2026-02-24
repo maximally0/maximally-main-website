@@ -52,7 +52,7 @@ const TierBadge = ({ tier, size = 'md', showLabel = true }: TierBadgeProps) => {
       case 'verified':
         return 'bg-blue-400/10';
       case 'senior':
-        return 'bg-purple-400/10';
+        return 'bg-orange-500/10';
       case 'chief':
         return 'bg-yellow-400/10';
       case 'legacy':
@@ -73,7 +73,7 @@ const TierBadge = ({ tier, size = 'md', showLabel = true }: TierBadgeProps) => {
 
   return (
     <div
-      className={`${getBgColor()} border ${getTierColor(tier)} ${getBadgeSize()} inline-flex items-center gap-2 font-press-start`}
+      className={`${getBgColor()} border ${getTierColor(tier)} ${getBadgeSize()} inline-flex items-center gap-2 font-space font-bold`}
     >
       {getIcon()}
       <span className="uppercase">{tier}</span>

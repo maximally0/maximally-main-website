@@ -63,7 +63,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1.5 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
               <Terminal className="h-4 w-4 text-black" />
             </div>
-            <span className="font-press-start text-xs text-white group-hover:text-orange-400 transition-colors">
+            <span className="font-space font-bold text-xs text-white group-hover:text-orange-400 transition-colors">
               MAXIMALLY
             </span>
           </Link>
@@ -180,7 +180,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                     }`} 
                   />
                   {category.icon}
-                  <span className="ml-2 font-press-start text-xs uppercase tracking-wide">
+                  <span className="ml-2 font-space font-bold text-xs uppercase tracking-wide">
                     {category.displayName}
                   </span>
                 </button>
@@ -2342,7 +2342,7 @@ This documentation is being developed. Please check back soon for comprehensive 
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex items-center space-x-2 text-orange-500">
           <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div>
-          <span className="font-press-start text-xs">LOADING DOCS...</span>
+          <span className="font-space font-bold text-xs">LOADING DOCS...</span>
         </div>
       </div>
     );
@@ -2456,7 +2456,7 @@ This documentation is being developed. Please check back soon for comprehensive 
             <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
               <Terminal className="h-3 w-3 text-black" />
             </div>
-            <span className="font-press-start text-[10px] text-white group-hover:text-orange-400 transition-colors">
+            <span className="font-space font-bold text-[10px] text-white group-hover:text-orange-400 transition-colors">
               MAXIMALLY
             </span>
           </Link>
@@ -2525,12 +2525,12 @@ This documentation is being developed. Please check back soon for comprehensive 
                   );
                 },
                 h1: ({ children }) => (
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 font-press-start">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 font-space font-bold">
                     {children}
                   </h1>
                 ),
                 h2: ({ children }) => (
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 mt-6 md:mt-8 font-press-start">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 mt-6 md:mt-8 font-space font-bold">
                     {children}
                   </h2>
                 ),
@@ -2589,7 +2589,7 @@ This documentation is being developed. Please check back soon for comprehensive 
               <Terminal className="h-6 w-6 md:h-8 md:w-8 text-black" />
             </div>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 font-press-start px-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 font-space font-bold px-4">
             MAXIMALLY DOCUMENTATION
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto px-4">
@@ -2613,7 +2613,7 @@ This documentation is being developed. Please check back soon for comprehensive 
                 <div className="text-orange-500 group-hover:text-orange-400 transition-colors">
                   {category.icon}
                 </div>
-                <h3 className="ml-3 text-sm sm:text-base font-semibold text-white font-press-start">
+                <h3 className="ml-3 text-sm sm:text-base font-semibold text-white font-space font-bold">
                   {category.displayName.toUpperCase()}
                 </h3>
               </div>
@@ -2638,7 +2638,7 @@ This documentation is being developed. Please check back soon for comprehensive 
         </div>
 
         <div className="mt-12 md:mt-16 bg-gradient-to-r from-orange-500/10 to-red-600/10 border border-orange-500/20 rounded-lg p-6 md:p-8 text-center">
-          <h2 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 font-press-start">
+          <h2 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4 font-space font-bold">
             NEED HELP?
           </h2>
           <p className="text-sm md:text-base text-gray-400 mb-4 md:mb-6 px-4">
@@ -2647,13 +2647,13 @@ This documentation is being developed. Please check back soon for comprehensive 
           <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 md:gap-4">
             <a 
               href="https://discord.gg/maximally" 
-              className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded font-press-start text-[10px] sm:text-xs transition-colors w-full sm:w-auto"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded font-space font-bold text-[10px] sm:text-xs transition-colors w-full sm:w-auto"
             >
               JOIN DISCORD
             </a>
             <a 
               href="/contact" 
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded font-press-start text-[10px] sm:text-xs border border-gray-700 transition-colors w-full sm:w-auto"
+              className="bg-gray-800 hover:bg-gray-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded font-space font-bold text-[10px] sm:text-xs border border-gray-700 transition-colors w-full sm:w-auto"
             >
               CONTACT SUPPORT
             </a>

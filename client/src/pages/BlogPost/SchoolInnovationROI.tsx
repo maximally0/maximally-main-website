@@ -12,7 +12,7 @@ const SchoolInnovationROI = () => {
         <strong>Makeathons represent a unique opportunity to address multiple institutional goals simultaneously while creating transformative experiences that students, parents, and faculty remember long after graduation.</strong>
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">The Challenge of 21st Century Education</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">The Challenge of 21st Century Education</h2>
       
       <p>
         Traditional educational metrics—standardized test scores, graduation rates, college acceptance percentages—while important, fail to capture the full scope of skills students need for future success. Employers consistently report that recent graduates lack critical thinking abilities, collaboration skills, and innovative problem-solving approaches, despite strong academic credentials.
@@ -22,9 +22,9 @@ const SchoolInnovationROI = () => {
         Meanwhile, student engagement continues to decline, particularly in STEM subjects where workforce demand is highest. Many capable students lose interest in science, technology, engineering, and mathematics not because they lack ability, but because they can't see the relevance and impact of these subjects in addressing real-world challenges.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Measurable Outcomes from Makeathon Implementation</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Measurable Outcomes from Makeathon Implementation</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Academic Performance Improvements</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Academic Performance Improvements</h3>
       <p>
         Schools that have integrated Maximally makeathons into their programming report significant improvements in student performance across multiple metrics:
       </p>
@@ -36,7 +36,7 @@ const SchoolInnovationROI = () => {
         <li>27% increase in students pursuing STEM-related college majors</li>
       </ul>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Student Engagement Metrics</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Student Engagement Metrics</h3>
       <p>
         Engagement improvements are immediately visible and sustained over time:
       </p>
@@ -48,7 +48,7 @@ const SchoolInnovationROI = () => {
         <li>94% recommend makeathon participation to peers</li>
       </ul>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Faculty Development Benefits</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Faculty Development Benefits</h3>
       <p>
         Teachers involved in makeathon programs report professional growth and renewed enthusiasm for education:
       </p>
@@ -60,9 +60,9 @@ const SchoolInnovationROI = () => {
         <li>Increased confidence in facilitating collaborative, student-driven learning experiences</li>
       </ul>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Strategic Implementation Framework</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Strategic Implementation Framework</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Phase 1: Pilot Program Development</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Phase 1: Pilot Program Development</h3>
       <p>
         Begin with a small-scale pilot involving 20-30 students and 3-4 faculty members. This manageable scope allows you to refine processes, identify potential challenges, and demonstrate early wins that build support for program expansion.
       </p>
@@ -71,7 +71,7 @@ const SchoolInnovationROI = () => {
         Partner with Maximally to access comprehensive support including mentor networks, technical resources, and professional development for participating faculty. This partnership ensures smooth implementation while building internal capabilities for future programs.
       </p>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Phase 2: Community Integration</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Phase 2: Community Integration</h3>
       <p>
         Successful makeathons require authentic problems and real-world connections. Develop partnerships with local businesses, nonprofit organizations, and government agencies that can provide challenges for student teams to address.
       </p>
@@ -80,7 +80,7 @@ const SchoolInnovationROI = () => {
         These partnerships serve multiple purposes: they ensure project relevance, provide networking opportunities for students, create potential internship and employment pathways, and demonstrate community investment in your educational mission.
       </p>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Phase 3: Curriculum Integration</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Phase 3: Curriculum Integration</h3>
       <p>
         Move beyond standalone events toward systematic integration of makeathon methodologies into regular coursework. This might involve:
       </p>
@@ -92,9 +92,9 @@ const SchoolInnovationROI = () => {
         <li>Collaborative problem-solving components in all subject areas</li>
       </ul>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Budget Considerations and Resource Allocation</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Budget Considerations and Resource Allocation</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Initial Investment Requirements</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Initial Investment Requirements</h3>
       <p>
         Makeathon implementation requires modest upfront investment, particularly when compared to other school improvement initiatives:
       </p>
@@ -106,7 +106,7 @@ const SchoolInnovationROI = () => {
         <li>Mentor and expert honoraria: $500-$1,500 per event depending on scale and speaker quality</li>
       </ul>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Ongoing Operational Costs</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Ongoing Operational Costs</h3>
       <p>
         After initial setup, ongoing costs are minimal:
       </p>
@@ -118,7 +118,7 @@ const SchoolInnovationROI = () => {
         <li>Professional development updates: $1,000-$2,000 annually</li>
       </ul>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Revenue Generation Opportunities</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Revenue Generation Opportunities</h3>
       <p>
         Many schools discover that successful makeathon programs create unexpected revenue streams:
       </p>
@@ -130,9 +130,9 @@ const SchoolInnovationROI = () => {
         <li>Alumni donations specifically supporting innovation initiatives</li>
       </ul>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Addressing Common Administrative Concerns</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Addressing Common Administrative Concerns</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Liability and Safety Considerations</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Liability and Safety Considerations</h3>
       <p>
         Makeathons involve hands-on activities that require appropriate safety protocols. Maximally provides comprehensive safety guidelines, insurance recommendations, and risk management strategies developed specifically for educational environments.
       </p>
@@ -141,7 +141,7 @@ const SchoolInnovationROI = () => {
         Most activities use low-risk materials and tools appropriate for student age groups. When advanced equipment is required, professional supervision and safety training are provided as part of the program support.
       </p>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Standards Alignment and Academic Integration</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Standards Alignment and Academic Integration</h3>
       <p>
         Rather than competing with standards-based education, makeathons enhance standards achievement through applied learning contexts. Projects naturally integrate multiple subject areas, providing authentic assessment opportunities that demonstrate deep understanding rather than superficial memorization.
       </p>
@@ -150,9 +150,9 @@ const SchoolInnovationROI = () => {
         Detailed standards alignment documentation is available for all common educational frameworks, making it easy to demonstrate program value during accreditation reviews and state reporting requirements.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Long-Term Strategic Benefits</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Long-Term Strategic Benefits</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Reputation and Competitive Advantage</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Reputation and Competitive Advantage</h3>
       <p>
         Schools known for innovative programming attract high-quality students, faculty, and community support. Makeathon programs create distinctive institutional identity that differentiates your school from competitors.
       </p>
@@ -161,12 +161,12 @@ const SchoolInnovationROI = () => {
         This reputation enhancement supports enrollment goals, faculty recruitment efforts, and community fundraising initiatives while building long-term institutional sustainability.
       </p>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Alumni Network Development</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Alumni Network Development</h3>
       <p>
         Students who participate in transformative educational experiences often become lifelong institutional advocates. Makeathon alumni frequently return as mentors, guest speakers, internship providers, and financial supporters, creating sustainable networks that benefit future student cohorts.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Getting Started with Maximally</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Getting Started with Maximally</h2>
       
       <p>
         Ready to transform your school's culture and student outcomes? Contact Maximally's educational partnerships team to schedule a consultation and explore implementation options tailored to your institution's specific needs and constraints.
@@ -176,7 +176,7 @@ const SchoolInnovationROI = () => {
         The most successful schools of the future will be those that prepare students not just for standardized assessments, but for the complex, collaborative, and creative challenges they'll face throughout their lives and careers.
       </p>
       
-      <p className="font-press-start text-maximally-blue">
+      <p className="font-space font-bold text-maximally-blue">
         Your students deserve educational experiences that are as innovative and dynamic as the world they're preparing to enter. Make it happen.
       </p>
     </div>

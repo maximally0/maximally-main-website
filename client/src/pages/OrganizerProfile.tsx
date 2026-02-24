@@ -110,16 +110,16 @@ export default function OrganizerProfile() {
       },
       verified: { 
         label: 'Verified Organizer', 
-        gradient: 'from-blue-600/40 to-cyan-600/30',
-        border: 'border-blue-500/50',
+        gradient: 'from-blue-600/40 to-gray-700/30',
+        border: 'border-gray-700',
         text: 'text-blue-400',
         icon: <Shield className="h-4 w-4" />
       },
       senior: { 
         label: 'Senior Organizer', 
-        gradient: 'from-purple-600/40 to-pink-600/30',
-        border: 'border-purple-500/50',
-        text: 'text-purple-400',
+        gradient: 'from-orange-600 to-orange-500',
+        border: 'border-orange-500/50',
+        text: 'text-orange-400',
         icon: <Star className="h-4 w-4" />
       },
       chief: { 
@@ -146,7 +146,7 @@ export default function OrganizerProfile() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-500/40 px-8 py-6">
-          <div className="font-press-start text-green-400 animate-pulse">LOADING...</div>
+          <div className="font-space font-bold text-green-400 animate-pulse">LOADING...</div>
         </div>
       </div>
     );
@@ -157,12 +157,12 @@ export default function OrganizerProfile() {
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
           <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-500/40 px-8 py-6 mb-6">
-            <h1 className="font-press-start text-2xl text-green-400 mb-2">404</h1>
-            <p className="font-jetbrains text-gray-400">Organizer not found</p>
+            <h1 className="font-space font-bold text-2xl text-green-400 mb-2">404</h1>
+            <p className="font-space text-gray-400">Organizer not found</p>
           </div>
           <Link 
             to="/events" 
-            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-press-start text-xs border border-green-500/50 transition-all hover:scale-[1.02]"
+            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-space font-bold text-xs border border-green-500/50 transition-all hover:scale-[1.02]"
           >
             BROWSE HACKATHONS
           </Link>
@@ -202,7 +202,7 @@ export default function OrganizerProfile() {
                   />
                 ) : (
                   <div className="w-32 h-32 bg-gradient-to-br from-green-600/40 to-emerald-600/30 border-4 border-green-500/50 flex items-center justify-center group-hover:border-emerald-400 transition-colors">
-                    <span className="font-press-start text-4xl text-green-400">
+                    <span className="font-space font-bold text-4xl text-green-400">
                       {(userProfile?.full_name || userProfile?.username || 'O')[0].toUpperCase()}
                     </span>
                   </div>
@@ -216,22 +216,22 @@ export default function OrganizerProfile() {
               <div className="flex-1">
                 <div className="flex items-start justify-between gap-4 mb-4 flex-wrap">
                   <div>
-                    <h1 className="font-press-start text-2xl md:text-4xl bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent mb-3">
+                    <h1 className="font-space font-bold text-2xl md:text-4xl bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent mb-3">
                       {userProfile?.full_name || profile?.organization_name || userProfile?.username || 'Organizer'}
                     </h1>
-                    <p className="font-jetbrains text-emerald-400 text-lg mb-3">
+                    <p className="font-space text-emerald-400 text-lg mb-3">
                       @{userProfile?.username}
                     </p>
                     {/* Tier Badge */}
                     <div className={`inline-flex items-center gap-2 bg-gradient-to-r ${tierInfo.gradient} border ${tierInfo.border} px-4 py-2`}>
                       <span className={tierInfo.text}>{tierInfo.icon}</span>
-                      <span className={`font-press-start text-xs ${tierInfo.text}`}>{tierInfo.label}</span>
+                      <span className={`font-space font-bold text-xs ${tierInfo.text}`}>{tierInfo.label}</span>
                     </div>
                   </div>
                   {isOwnProfile && (
                     <Link
                       to="/organizer/dashboard"
-                      className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-press-start text-xs border border-green-500/50 transition-all hover:scale-[1.02]"
+                      className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-space font-bold text-xs border border-green-500/50 transition-all hover:scale-[1.02]"
                     >
                       DASHBOARD
                     </Link>
@@ -240,7 +240,7 @@ export default function OrganizerProfile() {
 
                 {(userProfile?.bio || profile?.bio) && (
                   <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-500/30 p-4 mb-4">
-                    <p className="font-jetbrains text-gray-300 text-base leading-relaxed">
+                    <p className="font-space text-gray-300 text-base leading-relaxed">
                       {userProfile?.bio || profile?.bio}
                     </p>
                   </div>
@@ -249,7 +249,7 @@ export default function OrganizerProfile() {
                 {/* Links */}
                 <div className="flex flex-wrap gap-4">
                   {userProfile?.location && (
-                    <div className="flex items-center gap-2 text-gray-400 font-jetbrains text-sm">
+                    <div className="flex items-center gap-2 text-gray-400 font-space text-sm">
                       <MapPin className="h-4 w-4 text-green-400" />
                       {userProfile.location}
                     </div>
@@ -259,7 +259,7 @@ export default function OrganizerProfile() {
                       href={profile.website_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-green-400 hover:text-emerald-300 transition-colors font-jetbrains text-sm"
+                      className="flex items-center gap-2 text-green-400 hover:text-emerald-300 transition-colors font-space text-sm"
                     >
                       <Globe className="h-4 w-4" />
                       Website
@@ -268,7 +268,7 @@ export default function OrganizerProfile() {
                   {profile?.contact_email && (
                     <a
                       href={`mailto:${profile.contact_email}`}
-                      className="flex items-center gap-2 text-green-400 hover:text-emerald-300 transition-colors font-jetbrains text-sm"
+                      className="flex items-center gap-2 text-green-400 hover:text-emerald-300 transition-colors font-space text-sm"
                     >
                       <Mail className="h-4 w-4" />
                       Contact
@@ -286,26 +286,26 @@ export default function OrganizerProfile() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-500/40 p-8 text-center hover:border-emerald-400/60 transition-all hover:scale-[1.02]">
                 <Trophy className="w-10 h-10 text-green-400 mx-auto mb-4" />
-                <div className="font-press-start text-3xl text-white mb-2">
+                <div className="font-space font-bold text-3xl text-white mb-2">
                   {profile?.total_hackathons_hosted || 0}
                 </div>
-                <div className="text-xs text-gray-400 font-jetbrains">Hackathons Hosted</div>
+                <div className="text-xs text-gray-400 font-space">Hackathons Hosted</div>
               </div>
 
               <div className="bg-gradient-to-br from-emerald-900/30 to-teal-900/20 border border-emerald-500/40 p-8 text-center hover:border-teal-400/60 transition-all hover:scale-[1.02]">
                 <Users className="w-10 h-10 text-emerald-400 mx-auto mb-4" />
-                <div className="font-press-start text-3xl text-white mb-2">
+                <div className="font-space font-bold text-3xl text-white mb-2">
                   {profile?.total_participants_reached || 0}
                 </div>
-                <div className="text-xs text-gray-400 font-jetbrains">Participants Reached</div>
+                <div className="text-xs text-gray-400 font-space">Participants Reached</div>
               </div>
 
-              <div className="bg-gradient-to-br from-teal-900/30 to-cyan-900/20 border border-teal-500/40 p-8 text-center hover:border-cyan-400/60 transition-all hover:scale-[1.02]">
+              <div className="bg-gradient-to-br from-teal-900/30 to-gray-900/20 border border-teal-500/40 p-8 text-center hover:border-gray-600/60 transition-all hover:scale-[1.02]">
                 <Sparkles className="w-10 h-10 text-teal-400 mx-auto mb-4" />
-                <div className="font-press-start text-3xl text-white mb-2">
+                <div className="font-space font-bold text-3xl text-white mb-2">
                   {profile?.total_prize_money_distributed || 'TBD'}
                 </div>
-                <div className="text-xs text-gray-400 font-jetbrains">Prize Money</div>
+                <div className="text-xs text-gray-400 font-space">Prize Money</div>
               </div>
             </div>
           </div>
@@ -314,7 +314,7 @@ export default function OrganizerProfile() {
         {/* Hackathons Section */}
         <section className="py-12 px-4 relative z-10">
           <div className="max-w-4xl mx-auto">
-            <h2 className="font-press-start text-xl bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-6">
+            <h2 className="font-space font-bold text-xl bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-6">
               HACKATHONS
             </h2>
 
@@ -324,7 +324,7 @@ export default function OrganizerProfile() {
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab as any)}
-                  className={`px-6 py-3 font-press-start text-xs transition-all ${
+                  className={`px-6 py-3 font-space font-bold text-xs transition-all ${
                     activeTab === tab
                       ? 'text-green-400 border-b-2 border-green-400 bg-green-500/10'
                       : 'text-gray-500 hover:text-gray-300 hover:bg-gray-900/50'
@@ -345,33 +345,33 @@ export default function OrganizerProfile() {
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
-                      <h3 className="font-press-start text-sm text-white mb-2 group-hover:text-green-400 transition-colors">
+                      <h3 className="font-space font-bold text-sm text-white mb-2 group-hover:text-green-400 transition-colors">
                         {hackathon.hackathon_name}
                       </h3>
                       {hackathon.tagline && (
-                        <p className="font-jetbrains text-gray-400 text-sm mb-3">{hackathon.tagline}</p>
+                        <p className="font-space text-gray-400 text-sm mb-3">{hackathon.tagline}</p>
                       )}
 
                       <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-green-400" />
-                          <span className="font-jetbrains">
+                          <span className="font-space">
                             {new Date(hackathon.start_date).toLocaleDateString()}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
                           <MapPin className="h-4 w-4 text-emerald-400" />
-                          <span className="font-jetbrains capitalize">{hackathon.format}</span>
+                          <span className="font-space capitalize">{hackathon.format}</span>
                         </div>
                         {hackathon.total_prize_pool && (
                           <div className="flex items-center gap-2">
                             <Trophy className="h-4 w-4 text-teal-400" />
-                            <span className="font-jetbrains">{hackathon.total_prize_pool}</span>
+                            <span className="font-space">{hackathon.total_prize_pool}</span>
                           </div>
                         )}
                         <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-cyan-400" />
-                          <span className="font-jetbrains">{hackathon.registrations_count} registered</span>
+                          <Users className="h-4 w-4 text-gray-300" />
+                          <span className="font-space">{hackathon.registrations_count} registered</span>
                         </div>
                       </div>
                     </div>
@@ -384,7 +384,7 @@ export default function OrganizerProfile() {
               {filteredHackathons.length === 0 && (
                 <div className="text-center py-12">
                   <div className="bg-gradient-to-br from-green-900/20 to-emerald-900/10 border border-green-500/30 px-8 py-6 inline-block">
-                    <p className="font-jetbrains text-gray-400">No {activeTab} hackathons</p>
+                    <p className="font-space text-gray-400">No {activeTab} hackathons</p>
                   </div>
                 </div>
               )}

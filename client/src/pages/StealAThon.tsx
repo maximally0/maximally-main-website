@@ -144,7 +144,7 @@ export default function StealAThon() {
         {[...Array(6)].map((_, i) => (
           <div
             key={`text-${i}`}
-            className="absolute opacity-10 font-press-start text-white select-none hidden md:block"
+            className="absolute opacity-10 font-space font-bold text-white select-none hidden md:block"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
@@ -173,7 +173,7 @@ export default function StealAThon() {
             }`}
           >
             <div className="bg-white text-black px-4 sm:px-6 py-2 border-2 sm:border-4 border-red-500 transform -rotate-2 shadow-xl">
-              <span className="font-press-start text-xs">
+              <span className="font-space font-bold text-xs">
                 🔥 GRAND INDIAN HACKATHON SEASON 🔥
               </span>
             </div>
@@ -187,7 +187,7 @@ export default function StealAThon() {
                 : 'translate-y-4 opacity-0'
             }`}
           >
-            <h1 className="font-press-start text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
+            <h1 className="font-space font-bold text-3xl sm:text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
               <span className="text-red-500 transform inline-block rotate-2">
                 MAXIMALLY
               </span>
@@ -202,11 +202,11 @@ export default function StealAThon() {
                 THON
               </span>
             </h1>
-            <h2 className="font-jetbrains text-lg sm:text-xl md:text-2xl text-white mb-4">
+            <h2 className="font-space text-lg sm:text-xl md:text-2xl text-white mb-4">
               24 hour online hackathon
             </h2>
             <div className="bg-yellow-400 text-black px-3 sm:px-4 py-2 inline-block transform rotate-1 border-2 border-black max-w-full">
-              <p className="font-press-start text-sm sm:text-lg md:text-xl">
+              <p className="font-space font-bold text-sm sm:text-lg md:text-xl">
                 "If it ain't broke... steal it."
               </p>
             </div>
@@ -222,7 +222,7 @@ export default function StealAThon() {
           >
             <Button
               onClick={() => window.open('https://stealathon.devpost.com/', '_self')}
-              className="bg-red-500 text-white font-press-start py-3 sm:py-4 px-6 sm:px-8 text-base sm:text-lg hover:scale-105 transition-all duration-300 border-2 sm:border-4 border-black shadow-xl transform hover:-rotate-1"
+              className="bg-red-500 text-white font-space font-bold py-3 sm:py-4 px-6 sm:px-8 text-base sm:text-lg hover:scale-105 transition-all duration-300 border-2 sm:border-4 border-black shadow-xl transform hover:-rotate-1"
             >
               <Copy className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
               REGISTER NOW
@@ -233,7 +233,7 @@ export default function StealAThon() {
                   .getElementById('rules')
                   ?.scrollIntoView({ behavior: 'smooth' })
               }
-              className="bg-white text-black font-press-start py-3 sm:py-4 px-6 sm:px-8 text-base sm:text-lg hover:scale-105 transition-all duration-300 border-2 sm:border-4 border-red-500 shadow-xl transform hover:rotate-1"
+              className="bg-white text-black font-space font-bold py-3 sm:py-4 px-6 sm:px-8 text-base sm:text-lg hover:scale-105 transition-all duration-300 border-2 sm:border-4 border-red-500 shadow-xl transform hover:rotate-1"
             >
               <FileText className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
               READ RULES
@@ -265,10 +265,10 @@ export default function StealAThon() {
                   <div className="flex items-center justify-center mb-2 text-black group-hover:text-red-500 transition-colors">
                     {fact.icon}
                   </div>
-                  <div className="font-press-start text-xs text-black mb-1">
+                  <div className="font-space font-bold text-xs text-black mb-1">
                     {fact.label}
                   </div>
-                  <div className="font-jetbrains text-xs sm:text-sm text-red-500 font-bold">
+                  <div className="font-space text-xs sm:text-sm text-red-500 font-bold">
                     {fact.value}
                   </div>
                 </div>
@@ -280,13 +280,13 @@ export default function StealAThon() {
         {/* What It Is */}
         <section className="py-12 sm:py-20 px-4">
           <div className="container mx-auto max-w-4xl text-center">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-8 text-red-500 flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-8 text-red-500 flex items-center justify-center gap-3">
               <Copy className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400 transform rotate-12" />
               WHAT IT IS
               <Copy className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400 transform -rotate-12" />
             </h2>
             <div className="bg-white text-black p-6 sm:p-8 border-2 sm:border-4 border-red-500 transform -rotate-1 shadow-xl">
-              <p className="font-jetbrains text-base sm:text-lg md:text-xl leading-relaxed">
+              <p className="font-space text-base sm:text-lg md:text-xl leading-relaxed">
                 The only hackathon where original ideas are banned. Find a
                 project, make it better, rename it, and ship. Remix culture.
                 Speed upgrades. Shameless claims. Steal like an artist.
@@ -298,7 +298,7 @@ export default function StealAThon() {
         {/* Who Joins */}
         <section className="py-12 sm:py-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
               <Users className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform rotate-6" />
               WHO JOINS
               <Users className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform -rotate-6" />
@@ -327,7 +327,7 @@ export default function StealAThon() {
                     >
                       <span className="text-white text-xs">✓</span>
                     </div>
-                    <span className="font-jetbrains font-medium text-sm sm:text-base">
+                    <span className="font-space font-medium text-sm sm:text-base">
                       {person}
                     </span>
                   </div>
@@ -340,7 +340,7 @@ export default function StealAThon() {
         {/* How It Works */}
         <section className="py-12 sm:py-20 px-4">
           <div className="container mx-auto max-w-5xl">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-12 text-red-500 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-12 text-red-500 text-center flex items-center justify-center gap-3">
               <Target className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400 transform rotate-45" />
               HOW IT WORKS
               <Target className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400 transform -rotate-45" />
@@ -364,7 +364,7 @@ export default function StealAThon() {
                           index % 2 === 0 ? '500' : '400'
                         } text-${
                           index % 2 === 0 ? 'white' : 'black'
-                        } w-10 h-10 sm:w-12 sm:h-12 border-2 border-black flex items-center justify-center font-press-start text-base sm:text-lg flex-shrink-0 transform rotate-12`}
+                        } w-10 h-10 sm:w-12 sm:h-12 border-2 border-black flex items-center justify-center font-space font-bold text-base sm:text-lg flex-shrink-0 transform rotate-12`}
                       >
                         {step.step}
                       </div>
@@ -376,7 +376,7 @@ export default function StealAThon() {
                         >
                           {step.icon}
                         </div>
-                        <p className="font-jetbrains leading-relaxed text-sm sm:text-base">
+                        <p className="font-space leading-relaxed text-sm sm:text-base">
                           {step.title}
                         </p>
                       </div>
@@ -391,7 +391,7 @@ export default function StealAThon() {
         {/* Rules */}
         <section id="rules" className="py-12 sm:py-20 px-4 bg-yellow-400">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-12 text-black text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-12 text-black text-center flex items-center justify-center gap-3">
               <Lock className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform rotate-12" />
               RULES
               <Lock className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform -rotate-12" />
@@ -408,11 +408,11 @@ export default function StealAThon() {
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-6 h-6 sm:w-8 sm:h-8 bg-red-500 border-2 border-black flex items-center justify-center text-white font-press-start text-xs sm:text-sm transform rotate-45`}
+                      className={`w-6 h-6 sm:w-8 sm:h-8 bg-red-500 border-2 border-black flex items-center justify-center text-white font-space font-bold text-xs sm:text-sm transform rotate-45`}
                     >
                       {index + 1}
                     </div>
-                    <span className="font-jetbrains font-medium text-sm sm:text-base">
+                    <span className="font-space font-medium text-sm sm:text-base">
                       {rule}
                     </span>
                   </div>
@@ -425,7 +425,7 @@ export default function StealAThon() {
         {/* Timeline */}
         <section className="py-12 sm:py-20 px-4 bg-black">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
               <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform rotate-12" />
               TIMELINE
               <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform -rotate-12" />
@@ -453,15 +453,15 @@ export default function StealAThon() {
                   }`}
                 >
                   <div className="text-center flex-shrink-0">
-                    <div className="font-press-start text-sm sm:text-lg">
+                    <div className="font-space font-bold text-sm sm:text-lg">
                       {item.date}
                     </div>
-                    <div className="font-jetbrains text-xs sm:text-sm opacity-80">
+                    <div className="font-space text-xs sm:text-sm opacity-80">
                       {item.time}
                     </div>
                   </div>
                   <div className="w-px h-8 sm:h-12 bg-black"></div>
-                  <div className="font-jetbrains text-base sm:text-lg font-bold">
+                  <div className="font-space text-base sm:text-lg font-bold">
                     {item.event}
                   </div>
                 </div>
@@ -473,13 +473,13 @@ export default function StealAThon() {
         {/* Judging */}
         <section className="py-12 sm:py-20 px-4 bg-white">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-8 text-black text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-8 text-black text-center flex items-center justify-center gap-3">
               <Star className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform rotate-12" />
               JUDGING
               <Star className="h-6 w-6 sm:h-8 sm:w-8 text-red-500 transform -rotate-12" />
             </h2>
             <div className="bg-black text-white p-6 sm:p-8 border-2 sm:border-4 border-red-500 mb-8 transform rotate-1">
-              <h3 className="font-press-start text-lg sm:text-xl text-yellow-400 mb-6">
+              <h3 className="font-space font-bold text-lg sm:text-xl text-yellow-400 mb-6">
                 CRITERIA
               </h3>
               <div className="grid gap-4">
@@ -488,10 +488,10 @@ export default function StealAThon() {
                     key={index}
                     className="flex justify-between items-center"
                   >
-                    <span className="font-jetbrains text-sm sm:text-base">
+                    <span className="font-space text-sm sm:text-base">
                       {item.criteria}
                     </span>
-                    <span className="font-press-start text-red-500 text-sm sm:text-base">
+                    <span className="font-space font-bold text-red-500 text-sm sm:text-base">
                       {item.weight}
                     </span>
                   </div>
@@ -500,7 +500,7 @@ export default function StealAThon() {
             </div>
             <div className="text-center">
               <div className="bg-yellow-400 text-black p-4 border-2 sm:border-4 border-black transform -rotate-1">
-                <p className="font-jetbrains text-base sm:text-lg">
+                <p className="font-space text-base sm:text-lg">
                   <span className="font-bold">Judged by:</span> Founders, indie
                   devs, and creators
                 </p>
@@ -512,7 +512,7 @@ export default function StealAThon() {
         {/* Submission */}
         <section className="py-12 sm:py-20 px-4 bg-red-500">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl mb-12 text-white text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl mb-12 text-white text-center flex items-center justify-center gap-3">
               <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400 transform rotate-12" />
               SUBMISSION
               <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400 transform -rotate-12" />
@@ -520,20 +520,20 @@ export default function StealAThon() {
 
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-black text-white p-4 sm:p-6 border-2 sm:border-4 border-white transform rotate-1">
-                <h3 className="font-press-start text-lg sm:text-xl text-yellow-400 mb-6 flex items-center gap-2">
+                <h3 className="font-space font-bold text-lg sm:text-xl text-yellow-400 mb-6 flex items-center gap-2">
                   <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
                   REQUIRED
                 </h3>
                 <ul className="space-y-3">
-                  <li className="font-jetbrains flex items-start gap-2 text-sm sm:text-base">
+                  <li className="font-space flex items-start gap-2 text-sm sm:text-base">
                     <span className="text-yellow-400">•</span>
                     Link to final build or repo
                   </li>
-                  <li className="font-jetbrains flex items-start gap-2 text-sm sm:text-base">
+                  <li className="font-space flex items-start gap-2 text-sm sm:text-base">
                     <span className="text-yellow-400">•</span>
                     Link to the original project
                   </li>
-                  <li className="font-jetbrains flex items-start gap-2 text-sm sm:text-base">
+                  <li className="font-space flex items-start gap-2 text-sm sm:text-base">
                     <span className="text-yellow-400">•</span>
                     Short write-up: what changed and why it's better
                   </li>
@@ -541,12 +541,12 @@ export default function StealAThon() {
               </div>
 
               <div className="bg-white text-black p-4 sm:p-6 border-2 sm:border-4 border-black transform -rotate-1">
-                <h3 className="font-press-start text-lg sm:text-xl text-red-500 mb-6 flex items-center gap-2">
+                <h3 className="font-space font-bold text-lg sm:text-xl text-red-500 mb-6 flex items-center gap-2">
                   <Video className="h-4 w-4 sm:h-5 sm:w-5" />
                   OPTIONAL
                 </h3>
                 <ul className="space-y-3">
-                  <li className="font-jetbrains flex items-start gap-2 text-sm sm:text-base">
+                  <li className="font-space flex items-start gap-2 text-sm sm:text-base">
                     <span className="text-red-500">•</span>
                     1–2 minute demo video
                   </li>
@@ -560,14 +560,14 @@ export default function StealAThon() {
         <section className="py-12 sm:py-20 px-4 bg-black">
           <div className="container mx-auto max-w-4xl">
             <div className="bg-white text-black p-6 sm:p-8 lg:p-12 border-2 sm:border-4 border-red-500 transform rotate-1 mx-4 sm:mx-0">
-              <h2 className="font-press-start text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6 text-center leading-tight">
+              <h2 className="font-space font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6 text-center leading-tight">
                 <span className="block sm:inline">READY TO</span>
                 <span className="block sm:inline"> STEAL THE SHOW?</span>
               </h2>
               <div className="text-center">
                 <Button
                   onClick={() => window.open('https://stealathon.devpost.com/', '_self')}
-                  className="bg-red-500 text-white font-press-start py-3 sm:py-4 px-4 sm:px-6 text-xs sm:text-base hover:scale-105 transition-all duration-300 border-2 sm:border-4 border-black shadow-xl transform hover:-rotate-2 w-full sm:w-auto"
+                  className="bg-red-500 text-white font-space font-bold py-3 sm:py-4 px-4 sm:px-6 text-xs sm:text-base hover:scale-105 transition-all duration-300 border-2 sm:border-4 border-black shadow-xl transform hover:-rotate-2 w-full sm:w-auto"
                 >
                   <Copy className="h-3 w-3 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                   <span className="break-words">REGISTER NOW</span>

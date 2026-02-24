@@ -123,9 +123,9 @@ export default function ParticipantAnnouncements({
       case 'reminder':
         return 'border-orange-500/50 bg-gradient-to-br from-orange-500/15 to-amber-500/10';
       case 'update':
-        return 'border-blue-500/50 bg-gradient-to-br from-blue-500/15 to-cyan-500/10';
+        return 'border-blue-500/50 bg-gradient-to-br from-blue-500/15 to-gray-800/50';
       default:
-        return 'border-purple-500/50 bg-gradient-to-br from-purple-500/15 to-pink-500/10';
+        return 'border-orange-500/50 bg-gradient-to-br from-orange-500/15 to-orange-500/10';
     }
   };
 
@@ -138,7 +138,7 @@ export default function ParticipantAnnouncements({
       case 'update':
         return 'text-blue-400';
       default:
-        return 'text-purple-400';
+        return 'text-orange-400';
     }
   };
 
@@ -164,8 +164,8 @@ export default function ParticipantAnnouncements({
   if (!user) {
     return (
       <div className="text-center py-8">
-        <p className="font-press-start text-sm text-gray-400">LOGIN_REQUIRED</p>
-        <p className="font-jetbrains text-xs text-gray-500 mt-2">You must be logged in to view announcements</p>
+        <p className="font-space font-bold text-sm text-gray-400">LOGIN_REQUIRED</p>
+        <p className="font-space text-xs text-gray-500 mt-2">You must be logged in to view announcements</p>
       </div>
     );
   }
@@ -173,7 +173,7 @@ export default function ParticipantAnnouncements({
   if (loading) {
     return (
       <div className="text-center py-8">
-        <div className="font-press-start text-sm text-gray-400">LOADING_ANNOUNCEMENTS...</div>
+        <div className="font-space font-bold text-sm text-gray-400">LOADING_ANNOUNCEMENTS...</div>
       </div>
     );
   }
@@ -181,9 +181,9 @@ export default function ParticipantAnnouncements({
   if (error) {
     return (
       <div className="text-center py-8">
-        <div className="font-press-start text-sm text-red-400">ERROR</div>
-        <p className="font-jetbrains text-xs text-gray-500 mt-2">{error}</p>
-        <p className="font-jetbrains text-xs text-gray-400 mt-2">
+        <div className="font-space font-bold text-sm text-red-400">ERROR</div>
+        <p className="font-space text-xs text-gray-500 mt-2">{error}</p>
+        <p className="font-space text-xs text-gray-400 mt-2">
           Showing public announcements only
         </p>
       </div>
@@ -194,8 +194,8 @@ export default function ParticipantAnnouncements({
     return (
       <div className="text-center py-8">
         <Megaphone className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-        <p className="font-press-start text-sm text-gray-400">NO_ANNOUNCEMENTS</p>
-        <p className="font-jetbrains text-xs text-gray-500 mt-2">No announcements for your registration status</p>
+        <p className="font-space font-bold text-sm text-gray-400">NO_ANNOUNCEMENTS</p>
+        <p className="font-space text-xs text-gray-500 mt-2">No announcements for your registration status</p>
       </div>
     );
   }
@@ -213,7 +213,7 @@ export default function ParticipantAnnouncements({
           <Megaphone className="h-5 w-5" style={{ color: primaryColor }} />
         </div>
         <h2 
-          className="font-press-start text-2xl bg-clip-text text-transparent"
+          className="font-space font-bold text-2xl bg-clip-text text-transparent"
           style={{
             backgroundImage: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`
           }}
@@ -222,12 +222,12 @@ export default function ParticipantAnnouncements({
 
       {/* User Status Info */}
       {userStatus && (
-        <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/40 p-4 mb-6">
+        <div className="bg-gradient-to-br from-blue-500/10 to-gray-800/50 border border-blue-500/40 p-4 mb-6">
           <div className="flex items-center gap-2 mb-2">
             <Info className="h-4 w-4 text-blue-400" />
-            <span className="font-press-start text-xs text-blue-400">YOUR_STATUS</span>
+            <span className="font-space font-bold text-xs text-blue-400">YOUR_STATUS</span>
           </div>
-          <div className="font-jetbrains text-sm text-gray-300">
+          <div className="font-space text-sm text-gray-300">
             <span className="text-white">Registration:</span> {userStatus.registration_status.toUpperCase()} • 
             <span className="text-white"> Type:</span> {userStatus.registration_type.toUpperCase()}
           </div>
@@ -247,28 +247,28 @@ export default function ParticipantAnnouncements({
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3 flex-wrap">
-                  <h3 className="font-press-start text-lg text-white">
+                  <h3 className="font-space font-bold text-lg text-white">
                     {announcement.title}
                   </h3>
-                  <span className={`px-3 py-1 text-xs font-press-start uppercase border ${
+                  <span className={`px-3 py-1 text-xs font-space font-bold uppercase border ${
                     announcement.announcement_type === 'important' 
                       ? 'bg-red-500/20 text-red-400 border-red-500/40'
                       : announcement.announcement_type === 'reminder'
                       ? 'bg-orange-500/20 text-orange-400 border-orange-500/40'
                       : announcement.announcement_type === 'update'
                       ? 'bg-blue-500/20 text-blue-400 border-blue-500/40'
-                      : 'bg-purple-500/20 text-purple-400 border-purple-500/40'
+                      : 'bg-orange-500/10 text-orange-400 border-orange-500/30'
                   }`}>
                     {announcement.announcement_type}
                   </span>
-                  <span className="px-2 py-1 text-xs font-jetbrains bg-gray-800/50 text-gray-300 border border-gray-700">
+                  <span className="px-2 py-1 text-xs font-space bg-gray-800/50 text-gray-300 border border-gray-700">
                     {getAudienceLabel(announcement.target_audience)}
                   </span>
                 </div>
-                <p className="text-gray-300 font-jetbrains leading-relaxed whitespace-pre-wrap mb-3">
+                <p className="text-gray-300 font-space leading-relaxed whitespace-pre-wrap mb-3">
                   {announcement.content}
                 </p>
-                <div className="flex items-center gap-2 text-xs text-gray-500 font-jetbrains">
+                <div className="flex items-center gap-2 text-xs text-gray-500 font-space">
                   <Clock className="h-3 w-3" />
                   <span>
                     {new Date(announcement.published_at || announcement.created_at).toLocaleString('en-US', {

@@ -12,7 +12,7 @@ const MaximallyMakeathonsForTeachers = () => {
         <strong>Integrating Maximally's makeathon methodologies into your classroom can transform passive learners into active innovators while addressing curriculum requirements more effectively than traditional approaches.</strong>
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">The Innovation Gap in Traditional Education</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">The Innovation Gap in Traditional Education</h2>
       
       <p>
         Current educational models were designed for a different era—one where success meant following established procedures and memorizing predetermined information. Today's students need to develop creativity, critical thinking, collaboration, and communication skills that prepare them for careers that may not yet exist.
@@ -22,26 +22,26 @@ const MaximallyMakeathonsForTeachers = () => {
         The problem isn't with our students' capabilities—it's with instructional approaches that don't leverage their natural curiosity and collaborative instincts. When given authentic problems to solve and tools to create meaningful solutions, students demonstrate engagement and capability that often surprises their teachers.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Core Makeathon Principles for Classroom Application</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Core Makeathon Principles for Classroom Application</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Problem-Based Learning Architecture</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Problem-Based Learning Architecture</h3>
       <p>
         Instead of starting with concepts and searching for applications, begin with real problems that require multiple subject area knowledge to solve. When students need to understand mathematical relationships to optimize their environmental solutions, or apply scientific principles to address community health issues, learning becomes necessary rather than theoretical.
       </p>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Rapid Prototyping and Iteration</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Rapid Prototyping and Iteration</h3>
       <p>
         Traditional assignments often involve single submissions followed by grades and forgotten outcomes. Makeathon methodology emphasizes creating, testing, getting feedback, and improving solutions continuously. This process mirrors how innovation actually occurs in professional environments.
       </p>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Collaborative Team Structures</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Collaborative Team Structures</h3>
       <p>
         Form diverse teams that combine students with different strengths, interests, and perspectives. The student who struggles with traditional math might excel at user interface design, while the science enthusiast might need support with presentation skills. This diversity creates mutual support systems while developing essential collaboration abilities.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Practical Implementation Strategies</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Practical Implementation Strategies</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Mini-Makeathon Integration (1-2 Class Periods)</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Mini-Makeathon Integration (1-2 Class Periods)</h3>
       <p>
         Transform routine assignments into mini-challenges that require creative problem-solving:
       </p>
@@ -52,7 +52,7 @@ const MaximallyMakeathonsForTeachers = () => {
         <li><strong>Social Studies:</strong> "Design a governance system for a new community that addresses historical challenges we've studied"</li>
       </ul>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Week-Long Project Intensives</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Week-Long Project Intensives</h3>
       <p>
         Dedicate one week per semester to intensive, cross-curricular projects that address complex local issues:
       </p>
@@ -63,9 +63,9 @@ const MaximallyMakeathonsForTeachers = () => {
         <li>Document student learning through portfolios rather than traditional tests</li>
       </ul>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Addressing Curriculum Standards and Assessment</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Addressing Curriculum Standards and Assessment</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Standards Integration Documentation</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Standards Integration Documentation</h3>
       <p>
         Makeathon-style projects naturally address multiple standards simultaneously. Document these connections to demonstrate how innovative approaches support rather than replace required learning objectives:
       </p>
@@ -76,7 +76,7 @@ const MaximallyMakeathonsForTeachers = () => {
         <li>Social Studies standards through community research, cultural analysis, and civic engagement</li>
       </ul>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Portfolio-Based Assessment</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Portfolio-Based Assessment</h3>
       <p>
         Move beyond traditional testing toward comprehensive documentation of student learning:
       </p>
@@ -87,9 +87,9 @@ const MaximallyMakeathonsForTeachers = () => {
         <li>Community feedback providing external validation of student work quality</li>
       </ul>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Overcoming Common Implementation Challenges</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Overcoming Common Implementation Challenges</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Time Management and Curriculum Coverage</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Time Management and Curriculum Coverage</h3>
       <p>
         Address administrator and parent concerns about "covering all the material":
       </p>
@@ -100,7 +100,7 @@ const MaximallyMakeathonsForTeachers = () => {
         <li>Provide examples of how problem-solving skills transfer to improved performance on standardized assessments</li>
       </ul>
 
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Classroom Management and Structure</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Classroom Management and Structure</h3>
       <p>
         Maintain productive learning environments while supporting collaborative, creative work:
       </p>
@@ -111,9 +111,9 @@ const MaximallyMakeathonsForTeachers = () => {
         <li>Build routines that support both collaborative work and individual reflection</li>
       </ul>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Getting Started with Maximally Support</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Getting Started with Maximally Support</h2>
       
-      <h3 className="text-xl font-press-start text-maximally-blue mt-6 mb-3">Professional Development Opportunities</h3>
+      <h3 className="text-xl font-space font-bold text-maximally-blue mt-6 mb-3">Professional Development Opportunities</h3>
       <p>
         Maximally's educator resources provide comprehensive support for teachers interested in implementing makeathon methodologies:
       </p>
@@ -132,7 +132,7 @@ const MaximallyMakeathonsForTeachers = () => {
         The choice isn't between covering curriculum and fostering innovation—it's between teaching concepts in isolation or helping students discover how knowledge becomes powerful when applied to meaningful challenges.
       </p>
       
-      <p className="font-press-start text-maximally-blue">
+      <p className="font-space font-bold text-maximally-blue">
         Start small, document your successes, and watch as your classroom transforms into a laboratory for the kind of learning that prepares students not just for tests, but for life.
       </p>
     </div>

@@ -128,10 +128,10 @@ export function OrganizerInvitations() {
   }
 
   return (
-    <Card className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border-purple-500/30">
+    <Card className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-gray-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <Mail className="w-5 h-5 text-purple-400" />
+          <Mail className="w-5 h-5 text-orange-400" />
           Organizer Invitations
         </CardTitle>
         <CardDescription className="text-gray-400">
@@ -147,7 +147,7 @@ export function OrganizerInvitations() {
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
                 <Link href={`/hackathon/${invitation.hackathon?.slug}`}>
-                  <h4 className="text-white font-medium hover:text-purple-400 cursor-pointer">
+                  <h4 className="text-white font-medium hover:text-orange-400 cursor-pointer">
                     {invitation.hackathon?.hackathon_name}
                   </h4>
                 </Link>
@@ -157,7 +157,7 @@ export function OrganizerInvitations() {
                     {invitation.hackathon?.start_date && 
                       format(new Date(invitation.hackathon.start_date), 'MMM d, yyyy')}
                   </span>
-                  <Badge className="bg-purple-500/20 text-purple-400 text-xs">
+                  <Badge className="bg-orange-500/10 text-orange-400 text-xs">
                     {invitation.role}
                   </Badge>
                 </div>

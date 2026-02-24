@@ -188,7 +188,7 @@ export default function JudgeHackathonInterface() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="font-press-start text-maximally-red">LOADING...</div>
+        <div className="font-space font-bold text-maximally-red">LOADING...</div>
       </div>
     );
   }
@@ -206,53 +206,53 @@ export default function JudgeHackathonInterface() {
             {/* Header */}
             <Link 
               to="/judge-dashboard" 
-              className="text-maximally-yellow hover:text-maximally-red font-press-start text-sm mb-4 inline-flex items-center gap-2"
+              className="text-maximally-yellow hover:text-maximally-red font-space font-bold text-sm mb-4 inline-flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
               BACK_TO_DASHBOARD
             </Link>
 
             <div className="mb-8">
-              <h1 className="font-press-start text-3xl text-maximally-red mb-2">
+              <h1 className="font-space font-bold text-3xl text-maximally-red mb-2">
                 {hackathon?.hackathon_name || 'HACKATHON'}
               </h1>
-              <p className="font-jetbrains text-gray-400">
+              <p className="font-space text-gray-400">
                 Judge submissions and provide detailed feedback
               </p>
             </div>
 
             {/* Progress Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <div className="pixel-card bg-gray-900 border-2 border-cyan-400 p-4">
+              <div className="pixel-card bg-gray-900 border-2 border-gray-600 p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Trophy className="h-5 w-5 text-cyan-400" />
-                  <span className="font-press-start text-xs text-gray-400">SUBMISSIONS</span>
+                  <Trophy className="h-5 w-5 text-gray-300" />
+                  <span className="font-space font-bold text-xs text-gray-400">SUBMISSIONS</span>
                 </div>
-                <div className="font-press-start text-2xl text-white">{totalCount}</div>
+                <div className="font-space font-bold text-2xl text-white">{totalCount}</div>
               </div>
 
               <div className="pixel-card bg-gray-900 border-2 border-green-400 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <CheckCircle className="h-5 w-5 text-green-400" />
-                  <span className="font-press-start text-xs text-gray-400">RATED</span>
+                  <span className="font-space font-bold text-xs text-gray-400">RATED</span>
                 </div>
-                <div className="font-press-start text-2xl text-white">{ratedCount}</div>
+                <div className="font-space font-bold text-2xl text-white">{ratedCount}</div>
               </div>
 
               <div className="pixel-card bg-gray-900 border-2 border-maximally-yellow p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-5 w-5 text-maximally-yellow" />
-                  <span className="font-press-start text-xs text-gray-400">PENDING</span>
+                  <span className="font-space font-bold text-xs text-gray-400">PENDING</span>
                 </div>
-                <div className="font-press-start text-2xl text-white">{totalCount - ratedCount}</div>
+                <div className="font-space font-bold text-2xl text-white">{totalCount - ratedCount}</div>
               </div>
 
               <div className="pixel-card bg-gray-900 border-2 border-maximally-red p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Star className="h-5 w-5 text-maximally-red" />
-                  <span className="font-press-start text-xs text-gray-400">PROGRESS</span>
+                  <span className="font-space font-bold text-xs text-gray-400">PROGRESS</span>
                 </div>
-                <div className="font-press-start text-2xl text-white">{progress}%</div>
+                <div className="font-space font-bold text-2xl text-white">{progress}%</div>
               </div>
             </div>
 
@@ -265,7 +265,7 @@ export default function JudgeHackathonInterface() {
                   placeholder="Search projects..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-gray-900 border-2 border-gray-700 text-white pl-12 pr-4 py-3 font-jetbrains focus:border-maximally-yellow outline-none"
+                  className="w-full bg-gray-900 border-2 border-gray-700 text-white pl-12 pr-4 py-3 font-space focus:border-maximally-yellow outline-none"
                 />
               </div>
 
@@ -274,7 +274,7 @@ export default function JudgeHackathonInterface() {
                   <button
                     key={filter}
                     onClick={() => setFilterStatus(filter as any)}
-                    className={`pixel-button px-4 py-3 font-press-start text-xs ${
+                    className={`pixel-button px-4 py-3 font-space font-bold text-xs ${
                       filterStatus === filter
                         ? 'bg-maximally-yellow text-black'
                         : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
@@ -290,7 +290,7 @@ export default function JudgeHackathonInterface() {
             {filteredSubmissions.length === 0 ? (
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-12 text-center">
                 <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                <p className="font-press-start text-gray-400">
+                <p className="font-space font-bold text-gray-400">
                   {searchTerm || filterStatus !== 'all' ? 'NO_MATCHING_SUBMISSIONS' : 'NO_SUBMISSIONS_YET'}
                 </p>
               </div>
@@ -311,22 +311,22 @@ export default function JudgeHackathonInterface() {
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                              <h3 className="font-press-start text-xl text-white">
+                              <h3 className="font-space font-bold text-xl text-white">
                                 {submission.project_name}
                               </h3>
                               {submission.has_rated && (
                                 <span className="inline-flex items-center gap-1 bg-green-600/20 border border-green-600 px-2 py-1">
                                   <CheckCircle className="h-3 w-3 text-green-400" />
-                                  <span className="font-press-start text-xs text-green-400">RATED</span>
+                                  <span className="font-space font-bold text-xs text-green-400">RATED</span>
                                 </span>
                               )}
                             </div>
                             {submission.tagline && (
-                              <p className="text-sm text-gray-400 font-jetbrains italic mb-2">
+                              <p className="text-sm text-gray-400 font-space italic mb-2">
                                 "{submission.tagline}"
                               </p>
                             )}
-                            <div className="flex items-center gap-2 text-sm text-gray-400 font-jetbrains">
+                            <div className="flex items-center gap-2 text-sm text-gray-400 font-space">
                               {submission.team ? (
                                 <>
                                   <Users className="h-4 w-4" />
@@ -341,15 +341,15 @@ export default function JudgeHackathonInterface() {
                           </div>
                           {submission.my_average_score !== null && submission.my_average_score !== undefined && (
                             <div className="text-right">
-                              <div className="text-3xl font-bold text-maximally-yellow font-press-start">
+                              <div className="text-3xl font-bold text-maximally-yellow font-space font-bold">
                                 {submission.my_average_score.toFixed(1)}
                               </div>
-                              <div className="text-xs text-gray-400 font-press-start">YOUR_SCORE</div>
+                              <div className="text-xs text-gray-400 font-space font-bold">YOUR_SCORE</div>
                             </div>
                           )}
                         </div>
 
-                        <p className="text-gray-300 font-jetbrains mb-4 leading-relaxed">
+                        <p className="text-gray-300 font-space mb-4 leading-relaxed">
                           {submission.description}
                         </p>
 
@@ -358,7 +358,7 @@ export default function JudgeHackathonInterface() {
                             {submission.technologies_used.map((tech, i) => (
                               <span 
                                 key={i} 
-                                className="text-xs bg-gray-800 border border-gray-700 px-2 py-1 text-gray-400 font-jetbrains"
+                                className="text-xs bg-gray-800 border border-gray-700 px-2 py-1 text-gray-400 font-space"
                               >
                                 {tech}
                               </span>
@@ -373,7 +373,7 @@ export default function JudgeHackathonInterface() {
                               href={submission.github_repo} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="pixel-button bg-gray-800 text-white px-4 py-2 font-press-start text-xs hover:bg-gray-700 flex items-center gap-2"
+                              className="pixel-button bg-gray-800 text-white px-4 py-2 font-space font-bold text-xs hover:bg-gray-700 flex items-center gap-2"
                             >
                               <Github className="h-4 w-4" />
                               CODE
@@ -384,7 +384,7 @@ export default function JudgeHackathonInterface() {
                               href={submission.demo_url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-press-start text-xs hover:bg-maximally-red hover:text-white flex items-center gap-2"
+                              className="pixel-button bg-maximally-yellow text-black px-4 py-2 font-space font-bold text-xs hover:bg-maximally-red hover:text-white flex items-center gap-2"
                             >
                               <ExternalLink className="h-4 w-4" />
                               DEMO
@@ -395,7 +395,7 @@ export default function JudgeHackathonInterface() {
                               href={submission.video_url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="pixel-button bg-red-600 text-white px-4 py-2 font-press-start text-xs hover:bg-red-700 flex items-center gap-2"
+                              className="pixel-button bg-red-600 text-white px-4 py-2 font-space font-bold text-xs hover:bg-red-700 flex items-center gap-2"
                             >
                               <Video className="h-4 w-4" />
                               VIDEO
@@ -408,9 +408,9 @@ export default function JudgeHackathonInterface() {
                       <div className="lg:w-48 flex flex-col gap-2">
                         <button
                           onClick={() => handleRateSubmission(submission)}
-                          className={`pixel-button px-6 py-3 font-press-start text-sm flex items-center justify-center gap-2 ${
+                          className={`pixel-button px-6 py-3 font-space font-bold text-sm flex items-center justify-center gap-2 ${
                             submission.has_rated
-                              ? 'bg-cyan-600 text-white hover:bg-cyan-700'
+                              ? 'bg-gray-700 text-white hover:bg-orange-600'
                               : 'bg-maximally-red text-white hover:bg-maximally-yellow hover:text-black'
                           }`}
                         >
@@ -432,8 +432,8 @@ export default function JudgeHackathonInterface() {
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto">
           <div className="pixel-card bg-black border-4 border-maximally-red max-w-4xl w-full my-8">
             <div className="p-6 border-b-2 border-maximally-red">
-              <h2 className="font-press-start text-xl text-maximally-red mb-2">RATE_PROJECT</h2>
-              <p className="font-jetbrains text-gray-400 text-sm">{selectedSubmission.project_name}</p>
+              <h2 className="font-space font-bold text-xl text-maximally-red mb-2">RATE_PROJECT</h2>
+              <p className="font-space text-gray-400 text-sm">{selectedSubmission.project_name}</p>
             </div>
 
             <div className="p-6 space-y-6 max-h-[60vh] overflow-y-auto">
@@ -441,15 +441,15 @@ export default function JudgeHackathonInterface() {
                 <div key={criterion.id} className="pixel-card bg-gray-900 border border-gray-700 p-4">
                   <div className="mb-3">
                     <div className="flex items-center justify-between mb-1">
-                      <label className="font-press-start text-sm text-cyan-400">
+                      <label className="font-space font-bold text-sm text-gray-300">
                         {criterion.criterion_name}
                       </label>
-                      <span className="font-jetbrains text-xs text-gray-500">
+                      <span className="font-space text-xs text-gray-500">
                         Max: {criterion.max_score} pts (Weight: {criterion.weight}x)
                       </span>
                     </div>
                     {criterion.criterion_description && (
-                      <p className="font-jetbrains text-xs text-gray-400 mb-2">
+                      <p className="font-space text-xs text-gray-400 mb-2">
                         {criterion.criterion_description}
                       </p>
                     )}
@@ -457,7 +457,7 @@ export default function JudgeHackathonInterface() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="font-jetbrains text-xs text-gray-400 mb-1 block">
+                      <label className="font-space text-xs text-gray-400 mb-1 block">
                         Score (0-{criterion.max_score}) <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -470,13 +470,13 @@ export default function JudgeHackathonInterface() {
                           ...ratings,
                           [criterion.id]: { ...ratings[criterion.id], score: e.target.value }
                         })}
-                        className="w-full bg-gray-800 border-2 border-gray-600 text-white px-3 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                        className="w-full bg-gray-800 border-2 border-gray-600 text-white px-3 py-2 font-space focus:border-maximally-yellow outline-none"
                         placeholder="8.5"
                       />
                     </div>
 
                     <div>
-                      <label className="font-jetbrains text-xs text-gray-400 mb-1 block">
+                      <label className="font-space text-xs text-gray-400 mb-1 block">
                         Notes (Optional)
                       </label>
                       <input
@@ -486,7 +486,7 @@ export default function JudgeHackathonInterface() {
                           ...ratings,
                           [criterion.id]: { ...ratings[criterion.id], notes: e.target.value }
                         })}
-                        className="w-full bg-gray-800 border-2 border-gray-600 text-white px-3 py-2 font-jetbrains focus:border-maximally-yellow outline-none"
+                        className="w-full bg-gray-800 border-2 border-gray-600 text-white px-3 py-2 font-space focus:border-maximally-yellow outline-none"
                         placeholder="Great implementation..."
                       />
                     </div>
@@ -500,14 +500,14 @@ export default function JudgeHackathonInterface() {
               <button
                 onClick={() => setShowRatingModal(false)}
                 disabled={submitting}
-                className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 disabled:opacity-50"
+                className="flex-1 pixel-button bg-gray-700 text-white px-6 py-3 font-space font-bold text-sm hover:bg-gray-600 disabled:opacity-50"
               >
                 CANCEL
               </button>
               <button
                 onClick={handleSubmitRating}
                 disabled={submitting}
-                className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-press-start text-sm hover:bg-maximally-yellow hover:text-black disabled:opacity-50"
+                className="flex-1 pixel-button bg-maximally-red text-white px-6 py-3 font-space font-bold text-sm hover:bg-maximally-yellow hover:text-black disabled:opacity-50"
               >
                 {submitting ? 'SUBMITTING...' : 'SUBMIT_RATING'}
               </button>

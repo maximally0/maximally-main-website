@@ -72,7 +72,7 @@ export default function GlobalProjectGallerySection() {
       <section className="py-16 bg-gradient-to-b from-black via-gray-900 to-black">
         <div className="container mx-auto px-4">
           <div className="text-center">
-            <div className="font-press-start text-sm text-gray-400 animate-pulse">
+            <div className="font-space font-bold text-sm text-gray-400 animate-pulse">
               LOADING_PROJECTS...
             </div>
           </div>
@@ -95,28 +95,28 @@ export default function GlobalProjectGallerySection() {
           {/* Header */}
           <div className="text-center mb-12">
             <div className="minecraft-block bg-gradient-to-r from-maximally-red via-red-600 to-maximally-red text-white px-6 py-3 inline-block mb-6 animate-[glow_2s_ease-in-out_infinite]">
-              <span className="font-press-start text-xs sm:text-sm flex items-center gap-2">
+              <span className="font-space font-bold text-xs sm:text-sm flex items-center gap-2">
                 <Rocket className="h-4 w-4 animate-bounce" />
                 PROJECT GALLERY
                 <Sparkles className="h-4 w-4 animate-spin-slow" />
               </span>
             </div>
 
-            <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 minecraft-text">
+            <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 minecraft-text">
               <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">
                 BUILT BY HACKERS
               </span>
             </h2>
 
-            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-jetbrains mb-8">
+            <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-space mb-8">
               Showcase your projects to the world. From hackathon submissions to side projects.
             </p>
 
             {/* Empty State */}
             <div className="pixel-card bg-gray-900/50 border-2 border-gray-800 p-8 max-w-lg mx-auto mb-8">
               <Code className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-              <p className="font-press-start text-sm text-gray-400 mb-2">NO_PROJECTS_YET</p>
-              <p className="text-gray-500 font-jetbrains text-sm">
+              <p className="font-space font-bold text-sm text-gray-400 mb-2">NO_PROJECTS_YET</p>
+              <p className="text-gray-500 font-space text-sm">
                 Be the first to showcase your work!
               </p>
             </div>
@@ -124,7 +124,7 @@ export default function GlobalProjectGallerySection() {
             {/* CTA Button */}
             <Link
               to="/gallery/submit"
-              className="pixel-button bg-maximally-yellow text-black group inline-flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 sm:h-14 px-6 sm:px-8 font-press-start text-xs sm:text-sm"
+              className="pixel-button bg-maximally-yellow text-black group inline-flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 sm:h-14 px-6 sm:px-8 font-space font-bold text-xs sm:text-sm"
             >
               <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
               SHOWCASE_YOUR_PROJECT
@@ -147,20 +147,20 @@ export default function GlobalProjectGallerySection() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="minecraft-block bg-gradient-to-r from-maximally-red via-red-600 to-maximally-red text-white px-6 py-3 inline-block mb-6 animate-[glow_2s_ease-in-out_infinite]">
-            <span className="font-press-start text-xs sm:text-sm flex items-center gap-2">
+            <span className="font-space font-bold text-xs sm:text-sm flex items-center gap-2">
               <Rocket className="h-4 w-4 animate-bounce" />
               PROJECT GALLERY
               <Sparkles className="h-4 w-4 animate-spin-slow" />
             </span>
           </div>
 
-          <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 minecraft-text">
+          <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 minecraft-text">
             <span className="text-maximally-red drop-shadow-[3px_3px_0px_rgba(0,0,0,1)]">
               BUILT BY HACKERS
             </span>
           </h2>
 
-          <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-jetbrains">
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-space">
             Explore amazing projects built by our community. From hackathon winners to indie creations.
           </p>
         </div>
@@ -190,7 +190,7 @@ export default function GlobalProjectGallerySection() {
                 {/* Hackathon Badge */}
                 {project.hackathon_id && (
                   <div className="absolute top-2 left-2">
-                    <div className={`px-2 py-1 text-xs font-press-start flex items-center gap-1 ${
+                    <div className={`px-2 py-1 text-xs font-space font-bold flex items-center gap-1 ${
                       project.hackathon_position 
                         ? 'bg-maximally-yellow text-black' 
                         : 'bg-maximally-red text-white'
@@ -231,11 +231,11 @@ export default function GlobalProjectGallerySection() {
                     />
                   )}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-press-start text-sm text-white truncate group-hover:text-maximally-yellow transition-colors">
+                    <h3 className="font-space font-bold text-sm text-white truncate group-hover:text-maximally-yellow transition-colors">
                       {project.name}
                     </h3>
                     {project.profiles && (
-                      <p className="text-xs text-gray-500 font-jetbrains">
+                      <p className="text-xs text-gray-500 font-space">
                         by @{project.profiles.username}
                       </p>
                     )}
@@ -243,7 +243,7 @@ export default function GlobalProjectGallerySection() {
                 </div>
 
                 {project.tagline && (
-                  <p className="text-xs text-gray-400 font-jetbrains line-clamp-2 mb-3">
+                  <p className="text-xs text-gray-400 font-space line-clamp-2 mb-3">
                     {project.tagline}
                   </p>
                 )}
@@ -254,13 +254,13 @@ export default function GlobalProjectGallerySection() {
                     {project.technologies.slice(0, 3).map((tech, i) => (
                       <span
                         key={i}
-                        className="text-[10px] bg-gray-800 border border-gray-700 px-2 py-0.5 text-gray-400 font-jetbrains"
+                        className="text-[10px] bg-gray-800 border border-gray-700 px-2 py-0.5 text-gray-400 font-space"
                       >
                         {tech}
                       </span>
                     ))}
                     {project.technologies.length > 3 && (
-                      <span className="text-[10px] text-gray-500 font-jetbrains">
+                      <span className="text-[10px] text-gray-500 font-space">
                         +{project.technologies.length - 3}
                       </span>
                     )}
@@ -270,7 +270,7 @@ export default function GlobalProjectGallerySection() {
                 {/* Hackathon Info */}
                 {project.hackathons && (
                   <div className="mt-3 pt-3 border-t border-gray-800">
-                    <p className="text-[10px] text-gray-500 font-jetbrains">
+                    <p className="text-[10px] text-gray-500 font-space">
                       Submitted to <span className="text-maximally-red">{project.hackathons.title}</span>
                     </p>
                   </div>
@@ -284,7 +284,7 @@ export default function GlobalProjectGallerySection() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             to="/gallery"
-            className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-12 sm:h-14 px-6 sm:px-8 font-press-start text-xs sm:text-sm"
+            className="pixel-button bg-maximally-red text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-red h-12 sm:h-14 px-6 sm:px-8 font-space font-bold text-xs sm:text-sm"
           >
             <Rocket className="h-4 w-4 sm:h-5 sm:w-5" />
             EXPLORE_ALL
@@ -293,7 +293,7 @@ export default function GlobalProjectGallerySection() {
 
           <Link
             to="/gallery/submit"
-            className="pixel-button bg-maximally-yellow text-black group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 sm:h-14 px-6 sm:px-8 font-press-start text-xs sm:text-sm"
+            className="pixel-button bg-maximally-yellow text-black group flex items-center justify-center gap-2 hover:scale-105 transform transition-all hover:shadow-glow-yellow h-12 sm:h-14 px-6 sm:px-8 font-space font-bold text-xs sm:text-sm"
           >
             <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
             SHOWCASE_PROJECT

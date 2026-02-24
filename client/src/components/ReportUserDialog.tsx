@@ -146,7 +146,7 @@ export default function ReportUserDialog({ reportedUserId, reportedUsername, tri
       </DialogTrigger>
       <DialogContent className="max-w-lg bg-black border-2 border-red-500/50 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-red-500 font-press-start text-sm flex items-center gap-2">
+          <DialogTitle className="text-red-500 font-space font-bold text-sm flex items-center gap-2">
             <AlertTriangle className="w-5 h-5" />
             REPORT USER
           </DialogTitle>
@@ -160,7 +160,7 @@ export default function ReportUserDialog({ reportedUserId, reportedUsername, tri
           </div>
 
           <div>
-            <Label className="text-gray-300 font-press-start text-xs mb-2 block">CATEGORY *</Label>
+            <Label className="text-gray-300 font-space font-bold text-xs mb-2 block">CATEGORY *</Label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger className="bg-black border-gray-700 text-white">
                 <SelectValue placeholder="Select a category" />
@@ -179,7 +179,7 @@ export default function ReportUserDialog({ reportedUserId, reportedUsername, tri
           </div>
 
           <div>
-            <Label className="text-gray-300 font-press-start text-xs mb-2 block">DESCRIPTION *</Label>
+            <Label className="text-gray-300 font-space font-bold text-xs mb-2 block">DESCRIPTION *</Label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -191,7 +191,7 @@ export default function ReportUserDialog({ reportedUserId, reportedUsername, tri
           </div>
 
           <div>
-            <Label className="text-gray-300 font-press-start text-xs mb-2 block">SCREENSHOTS (Optional)</Label>
+            <Label className="text-gray-300 font-space font-bold text-xs mb-2 block">SCREENSHOTS (Optional)</Label>
             <div className="space-y-2">
               {screenshots.map((url, index) => (
                 <div key={index} className="flex items-center gap-2 bg-gray-900 p-2 rounded">

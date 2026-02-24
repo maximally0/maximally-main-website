@@ -40,7 +40,7 @@ interface MultiOrganizerManagerProps {
 
 const roleColors = {
   owner: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-  'co-organizer': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  'co-organizer': 'bg-orange-500/10 text-orange-400 border-gray-800',
   admin: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   viewer: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
 };
@@ -192,7 +192,7 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
     <Card className="bg-black/40 border-white/10">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <Users className="w-5 h-5 text-purple-400" />
+          <Users className="w-5 h-5 text-orange-400" />
           Team Management
         </CardTitle>
         <CardDescription className="text-gray-400">
@@ -230,7 +230,7 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
               <Button
                 onClick={handleInvite}
                 disabled={inviteMutation.isPending}
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-orange-600 hover:bg-orange-600"
               >
                 {inviteMutation.isPending ? 'Inviting...' : 'Invite'}
               </Button>
@@ -252,7 +252,7 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
                   className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-500 flex items-center justify-center text-white font-bold">
                       {org.profile?.full_name?.[0] || org.profile?.username?.[0] || '?'}
                     </div>
                     <div>

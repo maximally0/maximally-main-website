@@ -292,12 +292,12 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
           <div className="flex items-center gap-3">
             <Check className="h-5 w-5" style={{ color: primaryColor }} />
             <div className="flex-1">
-              <p className="font-press-start text-sm mb-1" style={{ color: primaryColor }}>ONE SUBMISSION PER HACKATHON</p>
-              <p className="text-sm text-gray-300 font-jetbrains">
+              <p className="font-space font-bold text-sm mb-1" style={{ color: primaryColor }}>ONE SUBMISSION PER HACKATHON</p>
+              <p className="text-sm text-gray-300 font-space">
                 You already have a submission for this hackathon. You can update it below.
               </p>
-              <p className="text-xs text-gray-400 font-jetbrains mt-2">
-                Current Status: <span className="font-press-start" style={{ color: secondaryColor }}>{submission.status?.toUpperCase()}</span>
+              <p className="text-xs text-gray-400 font-space mt-2">
+                Current Status: <span className="font-space font-bold" style={{ color: secondaryColor }}>{submission.status?.toUpperCase()}</span>
               </p>
             </div>
           </div>
@@ -313,7 +313,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
         }}
       >
         <h2 
-          className="font-press-start text-2xl mb-6"
+          className="font-space font-bold text-2xl mb-6"
           style={{ 
             background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
             WebkitBackgroundClip: 'text',
@@ -325,14 +325,14 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
         <div className="space-y-6">
           {/* Project Name */}
           <div>
-            <label className="block font-press-start text-sm mb-2" style={{ color: secondaryColor }}>
+            <label className="block font-space font-bold text-sm mb-2" style={{ color: secondaryColor }}>
               PROJECT_NAME *
             </label>
             <input
               type="text"
               value={formData.project_name}
               onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
-              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
               style={{ '--focus-color': secondaryColor } as any}
               onFocus={(e) => e.target.style.borderColor = secondaryColor}
               onBlur={(e) => e.target.style.borderColor = '#374151'}
@@ -343,7 +343,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 
           {/* Project Logo */}
           <div>
-            <label className="block font-press-start text-sm mb-2" style={{ color: secondaryColor }}>
+            <label className="block font-space font-bold text-sm mb-2" style={{ color: secondaryColor }}>
               PROJECT_LOGO
             </label>
             <input
@@ -351,13 +351,13 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
               accept="image/*"
               onChange={handleLogoUpload}
               disabled={uploadingLogo || !submission}
-              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors file:mr-4 file:py-2 file:px-4 file:border-0 file:text-white file:font-press-start file:text-xs disabled:opacity-50"
+              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors file:mr-4 file:py-2 file:px-4 file:border-0 file:text-white file:font-space font-bold file:text-xs disabled:opacity-50"
               style={{ 
                 ['--file-bg' as any]: primaryColor
               }}
             />
             {uploadingLogo && (
-              <p className="text-xs font-jetbrains mt-2" style={{ color: secondaryColor }}>Uploading...</p>
+              <p className="text-xs font-space mt-2" style={{ color: secondaryColor }}>Uploading...</p>
             )}
             {formData.logo_url && (
               <div className="mt-3">
@@ -370,20 +370,20 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
               </div>
             )}
             {!submission && (
-              <p className="text-xs text-gray-500 font-jetbrains mt-2">Save as draft first to upload logo</p>
+              <p className="text-xs text-gray-500 font-space mt-2">Save as draft first to upload logo</p>
             )}
           </div>
 
           {/* Tagline */}
           <div>
-            <label className="block font-press-start text-sm mb-2" style={{ color: secondaryColor }}>
+            <label className="block font-space font-bold text-sm mb-2" style={{ color: secondaryColor }}>
               TAGLINE
             </label>
             <input
               type="text"
               value={formData.tagline}
               onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
-              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
               onFocus={(e) => e.target.style.borderColor = secondaryColor}
               onBlur={(e) => e.target.style.borderColor = '#374151'}
               placeholder="A short catchy description"
@@ -392,13 +392,13 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 
           {/* Description */}
           <div>
-            <label className="block font-press-start text-sm mb-2" style={{ color: secondaryColor }}>
+            <label className="block font-space font-bold text-sm mb-2" style={{ color: secondaryColor }}>
               DESCRIPTION *
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors min-h-[200px]"
+              className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors min-h-[200px]"
               onFocus={(e) => e.target.style.borderColor = secondaryColor}
               onBlur={(e) => e.target.style.borderColor = '#374151'}
               placeholder="Describe your project, what it does, and how you built it..."
@@ -409,13 +409,13 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
           {/* Track Selection */}
           {parsedTracks.length > 0 && (
             <div>
-              <label className="block font-press-start text-sm mb-2" style={{ color: secondaryColor }}>
+              <label className="block font-space font-bold text-sm mb-2" style={{ color: secondaryColor }}>
                 TRACK
               </label>
               <select
                 value={formData.track}
                 onChange={(e) => setFormData({ ...formData, track: e.target.value })}
-                className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+                className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
                 onFocus={(e) => e.target.style.borderColor = secondaryColor}
                 onBlur={(e) => e.target.style.borderColor = '#374151'}
               >
@@ -429,7 +429,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 
           {/* Technologies */}
           <div>
-            <label className="block font-press-start text-sm mb-2" style={{ color: secondaryColor }}>
+            <label className="block font-space font-bold text-sm mb-2" style={{ color: secondaryColor }}>
               TECHNOLOGIES_USED
             </label>
             <div className="flex gap-2 mb-3">
@@ -438,7 +438,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
                 value={formData.tech_input}
                 onChange={(e) => setFormData({ ...formData, tech_input: e.target.value })}
                 onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTech())}
-                className="flex-1 bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+                className="flex-1 bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
                 onFocus={(e) => e.target.style.borderColor = secondaryColor}
                 onBlur={(e) => e.target.style.borderColor = '#374151'}
                 placeholder="e.g., React, Node.js, Python"
@@ -446,7 +446,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
               <button
                 type="button"
                 onClick={handleAddTech}
-                className="border-2 px-6 py-3 font-press-start text-sm transition-all"
+                className="border-2 px-6 py-3 font-space font-bold text-sm transition-all"
                 style={{ 
                   background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
                   borderColor: primaryColor,
@@ -469,7 +469,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
                   className="inline-flex items-center gap-2 px-3 py-1 rounded"
                   style={{ backgroundColor: `${secondaryColor}20`, borderColor: secondaryColor, borderWidth: '1px' }}
                 >
-                  <span className="text-sm font-jetbrains" style={{ color: secondaryColor }}>{tech}</span>
+                  <span className="text-sm font-space" style={{ color: secondaryColor }}>{tech}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveTech(index)}
@@ -485,12 +485,12 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 
           {/* Links Section */}
           <div className="border-t-2 border-gray-800 pt-6">
-            <h3 className="font-press-start text-lg mb-4" style={{ color: secondaryColor }}>PROJECT_LINKS</h3>
+            <h3 className="font-space font-bold text-lg mb-4" style={{ color: secondaryColor }}>PROJECT_LINKS</h3>
             
             <div className="space-y-4">
               {/* GitHub */}
               <div>
-                <label className="flex items-center gap-2 font-press-start text-sm text-gray-300 mb-2">
+                <label className="flex items-center gap-2 font-space font-bold text-sm text-gray-300 mb-2">
                   <Github className="h-4 w-4" />
                   GITHUB_REPOSITORY
                 </label>
@@ -498,7 +498,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
                   type="url"
                   value={formData.github_repo}
                   onChange={(e) => setFormData({ ...formData, github_repo: e.target.value })}
-                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
                   onFocus={(e) => e.target.style.borderColor = secondaryColor}
                   onBlur={(e) => e.target.style.borderColor = '#374151'}
                   placeholder="https://github.com/username/repo"
@@ -507,7 +507,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 
               {/* Demo URL */}
               <div>
-                <label className="flex items-center gap-2 font-press-start text-sm text-gray-300 mb-2">
+                <label className="flex items-center gap-2 font-space font-bold text-sm text-gray-300 mb-2">
                   <LinkIcon className="h-4 w-4" />
                   LIVE_DEMO
                 </label>
@@ -515,7 +515,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
                   type="url"
                   value={formData.demo_url}
                   onChange={(e) => setFormData({ ...formData, demo_url: e.target.value })}
-                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
                   onFocus={(e) => e.target.style.borderColor = secondaryColor}
                   onBlur={(e) => e.target.style.borderColor = '#374151'}
                   placeholder="https://your-demo.com"
@@ -524,7 +524,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 
               {/* Video URL */}
               <div>
-                <label className="flex items-center gap-2 font-press-start text-sm text-gray-300 mb-2">
+                <label className="flex items-center gap-2 font-space font-bold text-sm text-gray-300 mb-2">
                   <Video className="h-4 w-4" />
                   VIDEO_DEMO
                 </label>
@@ -532,7 +532,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
                   type="url"
                   value={formData.video_url}
                   onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
-                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
                   onFocus={(e) => e.target.style.borderColor = secondaryColor}
                   onBlur={(e) => e.target.style.borderColor = '#374151'}
                   placeholder="https://youtube.com/watch?v=..."
@@ -541,7 +541,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 
               {/* Presentation */}
               <div>
-                <label className="flex items-center gap-2 font-press-start text-sm text-gray-300 mb-2">
+                <label className="flex items-center gap-2 font-space font-bold text-sm text-gray-300 mb-2">
                   <FileText className="h-4 w-4" />
                   PRESENTATION
                 </label>
@@ -549,7 +549,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
                   type="url"
                   value={formData.presentation_url}
                   onChange={(e) => setFormData({ ...formData, presentation_url: e.target.value })}
-                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-jetbrains transition-colors"
+                  className="w-full bg-black border-2 border-gray-700 px-4 py-3 text-white font-space transition-colors"
                   onFocus={(e) => e.target.style.borderColor = secondaryColor}
                   onBlur={(e) => e.target.style.borderColor = '#374151'}
                   placeholder="https://docs.google.com/presentation/..."
@@ -564,7 +564,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
               type="button"
               onClick={() => handleSubmit(true)}
               disabled={submitting}
-              className="flex-1 border-2 px-6 py-4 font-press-start text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 border-2 px-6 py-4 font-space font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ 
                 backgroundColor: `${primaryColor}20`,
                 borderColor: primaryColor,
@@ -585,7 +585,7 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
               type="button"
               onClick={() => handleSubmit(false)}
               disabled={submitting}
-              className="flex-1 border-2 px-6 py-4 font-press-start text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 border-2 px-6 py-4 font-space font-bold text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ 
                 background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
                 borderColor: primaryColor,
@@ -674,9 +674,9 @@ export default function HackathonSubmit() {
         <div className="fixed inset-0 bg-black pointer-events-none" />
         <div className="fixed inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:50px_50px] pointer-events-none" />
         <div className="text-center relative z-10">
-          <h1 className="font-press-start text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">404</h1>
-          <p className="font-jetbrains text-gray-400 mb-6">Hackathon not found</p>
-          <Link to="/events" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm border border-purple-500/50">
+          <h1 className="font-space font-bold text-2xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent mb-4">404</h1>
+          <p className="font-space text-gray-400 mb-6">Hackathon not found</p>
+          <Link to="/events" className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-6 py-3 font-space font-bold text-sm border border-orange-500/50">
             BROWSE_HACKATHONS
           </Link>
         </div>
@@ -740,23 +740,23 @@ export default function HackathonSubmit() {
           <div className="text-center max-w-2xl px-4">
             <div className="pixel-card bg-orange-900/20 border-4 border-orange-500 p-12">
               <Zap className="h-16 w-16 text-orange-500 mx-auto mb-6 animate-pulse" />
-              <h1 className="font-press-start text-2xl text-orange-400 mb-4">BUILDING_IN_PROGRESS</h1>
-              <p className="font-jetbrains text-gray-300 mb-2">
+              <h1 className="font-space font-bold text-2xl text-orange-400 mb-4">BUILDING_IN_PROGRESS</h1>
+              <p className="font-space text-gray-300 mb-2">
                 The building/hacking phase is currently active for {hackathon.hackathon_name}.
               </p>
-              <p className="font-jetbrains text-gray-400 mb-4">
+              <p className="font-space text-gray-400 mb-4">
                 Focus on building your project! Submissions will open after the building phase ends.
               </p>
-              <p className="font-jetbrains text-sm text-gray-500 mb-1">Building phase ends on:</p>
-              <p className="font-jetbrains text-xl text-orange-400 font-bold mb-1">
+              <p className="font-space text-sm text-gray-500 mb-1">Building phase ends on:</p>
+              <p className="font-space text-xl text-orange-400 font-bold mb-1">
                 {formattedDate}
               </p>
-              <p className="font-jetbrains text-sm text-gray-400 mb-6">
+              <p className="font-space text-sm text-gray-400 mb-6">
                 at {formattedTime} IST
               </p>
               <Link 
                 to={`/hackathon/${slug}`}
-                className="pixel-button bg-orange-600 hover:bg-orange-500 text-white px-6 py-3 font-press-start text-sm inline-flex items-center gap-2"
+                className="pixel-button bg-orange-600 hover:bg-orange-500 text-white px-6 py-3 font-space font-bold text-sm inline-flex items-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
                 BACK_TO_HACKATHON
@@ -795,19 +795,19 @@ export default function HackathonSubmit() {
           <div className="text-center max-w-2xl px-4">
             <div className="pixel-card bg-yellow-900/20 border-4 border-yellow-500 p-12">
               <Upload className="h-16 w-16 text-yellow-500 mx-auto mb-6 animate-pulse" />
-              <h1 className="font-press-start text-2xl text-yellow-400 mb-4">SUBMISSIONS_NOT_OPEN</h1>
-              <p className="font-jetbrains text-gray-300 mb-2">
+              <h1 className="font-space font-bold text-2xl text-yellow-400 mb-4">SUBMISSIONS_NOT_OPEN</h1>
+              <p className="font-space text-gray-300 mb-2">
                 Submissions for {hackathon.hackathon_name} will open on:
               </p>
-              <p className="font-jetbrains text-xl text-yellow-400 font-bold mb-1">
+              <p className="font-space text-xl text-yellow-400 font-bold mb-1">
                 {formattedDate}
               </p>
-              <p className="font-jetbrains text-sm text-gray-400 mb-6">
+              <p className="font-space text-sm text-gray-400 mb-6">
                 at {formattedTime} IST
               </p>
               <Link 
                 to={`/hackathon/${slug}`}
-                className="pixel-button bg-yellow-600 hover:bg-yellow-500 text-black px-6 py-3 font-press-start text-sm inline-flex items-center gap-2"
+                className="pixel-button bg-yellow-600 hover:bg-yellow-500 text-black px-6 py-3 font-space font-bold text-sm inline-flex items-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
                 BACK_TO_HACKATHON
@@ -832,14 +832,14 @@ export default function HackathonSubmit() {
           <div className="text-center max-w-2xl px-4">
             <div className="pixel-card bg-gray-900 border-4 border-gray-700 p-12">
               <Trophy className="h-16 w-16 text-gray-600 mx-auto mb-6" />
-              <h1 className="font-press-start text-2xl text-gray-400 mb-4">SUBMISSIONS_CLOSED</h1>
-              <p className="font-jetbrains text-gray-400 mb-6">
+              <h1 className="font-space font-bold text-2xl text-gray-400 mb-4">SUBMISSIONS_CLOSED</h1>
+              <p className="font-space text-gray-400 mb-6">
                 Submissions for {hackathon.hackathon_name} have been closed. 
                 Thank you for your interest! Stay tuned for results.
               </p>
               <Link 
                 to={`/hackathon/${slug}`}
-                className="pixel-button bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 font-press-start text-sm inline-flex items-center gap-2"
+                className="pixel-button bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 font-space font-bold text-sm inline-flex items-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
                 BACK_TO_HACKATHON
@@ -901,7 +901,7 @@ export default function HackathonSubmit() {
               {/* Back Button */}
               <Link 
                 to={`/hackathon/${slug}`}
-                className="inline-flex items-center gap-2 text-gray-400 transition-colors mb-6 font-jetbrains"
+                className="inline-flex items-center gap-2 text-gray-400 transition-colors mb-6 font-space"
                 style={{ ['--hover-color' as any]: primaryColor }}
                 onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
                 onMouseLeave={(e) => e.currentTarget.style.color = '#9CA3AF'}
@@ -912,13 +912,13 @@ export default function HackathonSubmit() {
 
               {/* Title */}
               <h1 
-                className="font-press-start text-3xl sm:text-4xl md:text-5xl mb-4 text-white leading-tight"
+                className="font-space font-bold text-3xl sm:text-4xl md:text-5xl mb-4 text-white leading-tight"
                 style={{ textShadow: `4px 4px 0px ${primaryColor}` }}
               >
                 SUBMIT_PROJECT
               </h1>
 
-              <p className="text-xl text-gray-400 mb-6 font-jetbrains">
+              <p className="text-xl text-gray-400 mb-6 font-space">
                 {hackathon.hackathon_name}
               </p>
 
@@ -934,8 +934,8 @@ export default function HackathonSubmit() {
                   <div className="flex items-center gap-3">
                     <Calendar className="h-5 w-5" style={{ color: secondaryColor }} />
                     <div>
-                      <div className="text-xs text-gray-400 font-press-start mb-1">DEADLINE</div>
-                      <div className="text-sm text-white font-jetbrains">
+                      <div className="text-xs text-gray-400 font-space font-bold mb-1">DEADLINE</div>
+                      <div className="text-sm text-white font-space">
                         {submissionDeadline.toLocaleDateString('en-US', { 
                           month: 'short', 
                           day: 'numeric',
@@ -957,8 +957,8 @@ export default function HackathonSubmit() {
                   <div className="flex items-center gap-3">
                     <Trophy className="h-5 w-5" style={{ color: secondaryColor }} />
                     <div>
-                      <div className="text-xs text-gray-400 font-press-start mb-1">PRIZE_POOL</div>
-                      <div className="text-sm text-white font-jetbrains">
+                      <div className="text-xs text-gray-400 font-space font-bold mb-1">PRIZE_POOL</div>
+                      <div className="text-sm text-white font-space">
                         {hackathon.total_prize_pool || 'TBA'}
                       </div>
                     </div>
@@ -975,8 +975,8 @@ export default function HackathonSubmit() {
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5" style={{ backgroundColor: secondaryColor }} />
                     <div>
-                      <div className="text-xs text-gray-400 font-press-start mb-1">FORMAT</div>
-                      <div className="text-sm text-white font-jetbrains capitalize">
+                      <div className="text-xs text-gray-400 font-space font-bold mb-1">FORMAT</div>
+                      <div className="text-sm text-white font-space capitalize">
                         {hackathon.format}
                       </div>
                     </div>
@@ -1011,7 +1011,7 @@ export default function HackathonSubmit() {
                 }}
               >
                 <h3 
-                  className="font-press-start text-lg mb-4"
+                  className="font-space font-bold text-lg mb-4"
                   style={{ 
                     background: `linear-gradient(to right, ${secondaryColor}, ${primaryColor})`,
                     WebkitBackgroundClip: 'text',
@@ -1019,7 +1019,7 @@ export default function HackathonSubmit() {
                     backgroundClip: 'text'
                   }}
                 >SUBMISSION_TIPS</h3>
-                <ul className="space-y-3 text-gray-300 font-jetbrains">
+                <ul className="space-y-3 text-gray-300 font-space">
                   <li className="flex items-start gap-3">
                     <span style={{ color: primaryColor }} className="mt-1">•</span>
                     <span>Make sure your project title is clear and descriptive</span>

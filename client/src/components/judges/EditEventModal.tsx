@@ -92,9 +92,9 @@ const EditEventModal = ({ isOpen, onClose, onSubmit, isLoading = false, event }:
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="minecraft-block bg-gray-900 border-2 border-cyan-400 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="minecraft-block bg-gray-900 border-2 border-gray-700 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-press-start text-xl text-cyan-400">EDIT EVENT</h2>
+          <h2 className="font-space font-bold text-xl text-gray-300">EDIT EVENT</h2>
           <button
             onClick={handleClose}
             className="pixel-button bg-red-600 text-white p-2 hover:bg-red-700"
@@ -107,31 +107,31 @@ const EditEventModal = ({ isOpen, onClose, onSubmit, isLoading = false, event }:
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Event Name */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               EVENT NAME *
             </label>
             <input
               type="text"
               value={formData.eventName}
               onChange={(e) => handleInputChange('eventName', e.target.value)}
-              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none"
+              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none"
               placeholder="e.g., TechCrunch Disrupt Hackathon"
               disabled={isLoading}
             />
             {errors.eventName && (
-              <p className="text-red-400 text-xs font-jetbrains mt-1">{errors.eventName}</p>
+              <p className="text-red-400 text-xs font-space mt-1">{errors.eventName}</p>
             )}
           </div>
 
           {/* Role */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               YOUR ROLE *
             </label>
             <select
               value={formData.role}
               onChange={(e) => handleInputChange('role', e.target.value)}
-              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none"
+              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none"
               disabled={isLoading}
             >
               <option value="">Select your role</option>
@@ -144,30 +144,30 @@ const EditEventModal = ({ isOpen, onClose, onSubmit, isLoading = false, event }:
               <option value="Other">Other</option>
             </select>
             {errors.role && (
-              <p className="text-red-400 text-xs font-jetbrains mt-1">{errors.role}</p>
+              <p className="text-red-400 text-xs font-space mt-1">{errors.role}</p>
             )}
           </div>
 
           {/* Date */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               EVENT DATE *
             </label>
             <input
               type="date"
               value={formData.date}
               onChange={(e) => handleInputChange('date', e.target.value)}
-              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none"
+              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none"
               disabled={isLoading}
             />
             {errors.date && (
-              <p className="text-red-400 text-xs font-jetbrains mt-1">{errors.date}</p>
+              <p className="text-red-400 text-xs font-space mt-1">{errors.date}</p>
             )}
           </div>
 
           {/* Event Link */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               EVENT LINK
             </label>
             <div className="relative">
@@ -175,7 +175,7 @@ const EditEventModal = ({ isOpen, onClose, onSubmit, isLoading = false, event }:
                 type="url"
                 value={formData.link}
                 onChange={(e) => handleInputChange('link', e.target.value)}
-                className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none pr-10"
+                className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none pr-10"
                 placeholder="https://example.com/hackathon"
                 disabled={isLoading}
               />
@@ -188,7 +188,7 @@ const EditEventModal = ({ isOpen, onClose, onSubmit, isLoading = false, event }:
             <button
               type="submit"
               disabled={isLoading}
-              className="pixel-button bg-cyan-600 text-white px-6 py-3 font-press-start text-sm hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="pixel-button bg-gray-700 text-white px-6 py-3 font-space font-bold text-sm hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -207,7 +207,7 @@ const EditEventModal = ({ isOpen, onClose, onSubmit, isLoading = false, event }:
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className="pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="pixel-button bg-gray-700 text-white px-6 py-3 font-space font-bold text-sm hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               CANCEL
             </button>

@@ -132,7 +132,7 @@ export function OrganizerInsights({ hackathonId }: OrganizerInsightsProps) {
     <Card className="bg-black/40 border-white/10">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <BarChart3 className="w-5 h-5 text-purple-400" />
+          <BarChart3 className="w-5 h-5 text-orange-400" />
           Hackathon Insights
         </CardTitle>
         <CardDescription className="text-gray-400">
@@ -159,7 +159,7 @@ export function OrganizerInsights({ hackathonId }: OrganizerInsightsProps) {
                 subValue={`${insights.confirmed_registrations || 0} confirmed`}
               />
               <StatCard
-                icon={<Layers className="w-5 h-5 text-purple-400" />}
+                icon={<Layers className="w-5 h-5 text-orange-400" />}
                 label="Teams Formed"
                 value={insights.total_teams || 0}
                 subValue={`Avg ${insights.avg_team_size?.toFixed(1) || 0} members`}
@@ -182,7 +182,7 @@ export function OrganizerInsights({ hackathonId }: OrganizerInsightsProps) {
             {insights.track_distribution && insights.track_distribution.length > 0 && (
               <div className="p-4 bg-white/5 rounded-lg border border-white/10">
                 <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
-                  <Layers className="w-4 h-4 text-purple-400" />
+                  <Layers className="w-4 h-4 text-orange-400" />
                   Track Distribution
                 </h4>
                 <div className="space-y-2">
@@ -191,7 +191,7 @@ export function OrganizerInsights({ hackathonId }: OrganizerInsightsProps) {
                       <span className="text-sm text-gray-400 w-32 truncate">{track.track}</span>
                       <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                          className="h-full bg-gradient-to-r from-orange-500 to-orange-500 rounded-full"
                           style={{
                             width: `${(track.count / Math.max(...insights.track_distribution!.map(t => t.count))) * 100}%`,
                           }}
@@ -352,7 +352,7 @@ export function OrganizerInsights({ hackathonId }: OrganizerInsightsProps) {
             {timingData && timingData.length > 0 && (
               <div className="p-4 bg-white/5 rounded-lg border border-white/10">
                 <h4 className="text-sm font-medium text-white mb-3 flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-purple-400" />
+                  <Activity className="w-4 h-4 text-orange-400" />
                   Submission Activity Heatmap
                 </h4>
                 <div className="overflow-x-auto">

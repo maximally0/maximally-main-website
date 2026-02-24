@@ -269,15 +269,15 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
   };
 
   if (loading) {
-    return <div className="text-center py-8 font-press-start text-gray-400">LOADING...</div>;
+    return <div className="text-center py-8 font-space font-bold text-gray-400">LOADING...</div>;
   }
 
   if (prizes.length === 0) {
     return (
       <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-8 text-center">
         <Trophy className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-        <h2 className="font-press-start text-lg text-gray-400 mb-2">NO PRIZES CONFIGURED</h2>
-        <p className="text-gray-500 font-jetbrains text-sm">
+        <h2 className="font-space font-bold text-lg text-gray-400 mb-2">NO PRIZES CONFIGURED</h2>
+        <p className="text-gray-500 font-space text-sm">
           Please add prize breakdown in the hackathon settings before announcing winners.
         </p>
       </div>
@@ -287,8 +287,8 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h2 className="font-press-start text-lg text-purple-400 flex items-center gap-2">
-          <span className="w-2 h-2 bg-purple-400"></span>
+        <h2 className="font-space font-bold text-lg text-orange-400 flex items-center gap-2">
+          <span className="w-2 h-2 bg-orange-400"></span>
           ANNOUNCE WINNERS
         </h2>
         <div className="flex items-center gap-3">
@@ -300,11 +300,11 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
             <RefreshCw className="h-4 w-4" />
           </button>
           {canAnnounce ? (
-            <span className="text-xs text-green-400 font-jetbrains flex items-center gap-1">
+            <span className="text-xs text-green-400 font-space flex items-center gap-1">
               ✓ Ready to announce
             </span>
           ) : (
-            <span className="text-xs text-amber-400 font-jetbrains">
+            <span className="text-xs text-amber-400 font-space">
               ⏳ Close judging first
             </span>
           )}
@@ -322,8 +322,8 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
               <div className="flex items-center gap-3 mb-3">
                 <Trophy className={`h-6 w-6 ${index === 0 ? 'text-amber-400' : index === 1 ? 'text-gray-300' : 'text-orange-400'}`} />
                 <div>
-                  <h3 className="font-press-start text-sm text-white">{prize.position}</h3>
-                  <p className="text-amber-400 font-jetbrains text-lg">{prize.amount}</p>
+                  <h3 className="font-space font-bold text-sm text-white">{prize.position}</h3>
+                  <p className="text-amber-400 font-space text-lg">{prize.amount}</p>
                 </div>
               </div>
               
@@ -331,7 +331,7 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
                 value={winner?.submission_id || ''}
                 onChange={(e) => handleSelectWinner(prize.position, e.target.value ? parseInt(e.target.value) : null)}
                 disabled={!canAnnounce}
-                className="w-full bg-black/50 border border-amber-500/30 text-white px-4 py-3 font-jetbrains focus:border-amber-400 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-black/50 border border-amber-500/30 text-white px-4 py-3 font-space focus:border-amber-400 outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <option value="">Select Winner...</option>
                 {submissions.map(sub => (
@@ -345,7 +345,7 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
                 <div className="mt-3 bg-green-500/10 border border-green-500/30 p-3">
                   <div className="flex items-center gap-2">
                     <Check className="h-4 w-4 text-green-400" />
-                    <span className="text-green-400 font-jetbrains text-sm">
+                    <span className="text-green-400 font-space text-sm">
                       {selectedSubmission.project_name}
                     </span>
                   </div>
@@ -364,17 +364,17 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
 
       {/* Top Submissions by Score */}
       <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 p-4">
-        <h3 className="font-press-start text-sm text-gray-400 mb-3 flex items-center gap-2">
+        <h3 className="font-space font-bold text-sm text-gray-400 mb-3 flex items-center gap-2">
           <span className="w-1.5 h-1.5 bg-gray-400"></span>
           TOP SUBMISSIONS BY SCORE
         </h3>
         <div className="space-y-2">
           {submissions.slice(0, 5).map((sub, i) => (
             <div key={sub.id} className="flex items-center justify-between text-sm">
-              <span className="text-gray-300 font-jetbrains">
+              <span className="text-gray-300 font-space">
                 {i + 1}. {sub.project_name}
               </span>
-              <span className="text-amber-400 font-press-start text-xs">
+              <span className="text-amber-400 font-space font-bold text-xs">
                 {(sub.average_score || sub.score)?.toFixed(1) || 'N/A'}
               </span>
             </div>
@@ -386,19 +386,19 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
       {ties.length > 0 && (
         <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/10 border border-amber-500/30 p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-press-start text-sm text-amber-400 flex items-center gap-2">
+            <h3 className="font-space font-bold text-sm text-amber-400 flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
               TIES DETECTED
             </h3>
             <button
               onClick={() => setShowTieBreaker(!showTieBreaker)}
-              className="text-xs text-amber-400 hover:text-amber-300 font-jetbrains"
+              className="text-xs text-amber-400 hover:text-amber-300 font-space"
             >
               {showTieBreaker ? 'Hide Details' : 'Show Details'}
             </button>
           </div>
           
-          <p className="text-sm text-gray-400 font-jetbrains mb-3">
+          <p className="text-sm text-gray-400 font-space mb-3">
             {ties.length} tie(s) found. Ties are resolved using criteria scores in order: 
             Innovation → Technical → Impact → Design → Presentation → Submission Time
           </p>
@@ -409,10 +409,10 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
                 <div key={tieIndex} className="bg-black/30 border border-amber-500/20 p-3">
                   <div className="flex items-center gap-2 mb-2">
                     <Scale className="h-4 w-4 text-amber-400" />
-                    <span className="font-press-start text-xs text-amber-400">
+                    <span className="font-space font-bold text-xs text-amber-400">
                       SCORE: {tie.score.toFixed(1)}
                     </span>
-                    <span className="text-xs text-gray-500 font-jetbrains">
+                    <span className="text-xs text-gray-500 font-space">
                       ({tie.submissions.length} submissions tied)
                     </span>
                   </div>
@@ -421,7 +421,7 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
                       const criteria = sub.criteria_scores ? JSON.parse(sub.criteria_scores) : {};
                       return (
                         <div key={sub.id} className="flex items-center justify-between text-xs">
-                          <span className="text-gray-300 font-jetbrains">
+                          <span className="text-gray-300 font-space">
                             {sub.project_name}
                           </span>
                           <div className="flex gap-2">
@@ -446,14 +446,14 @@ export default function WinnersManager({ hackathonId, prizes: prizesProp, onWinn
       <button
         onClick={handleAnnounceWinners}
         disabled={!canAnnounce || saving || winners.length === 0}
-        className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white px-6 py-4 font-press-start text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white px-6 py-4 font-space font-bold text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
         <Award className="h-5 w-5" />
         {saving ? 'ANNOUNCING...' : 'ANNOUNCE WINNERS'}
       </button>
       
       {winners.length > 0 && (
-        <p className="text-center text-xs text-gray-500 font-jetbrains">
+        <p className="text-center text-xs text-gray-500 font-space">
           {winners.length} winner(s) selected
         </p>
       )}

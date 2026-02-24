@@ -13,10 +13,10 @@ const reasons = [
     icon: Palette,
     title: "Creative Themes",
     description: "Not your typical hackathons. Each event has a unique, exciting theme.",
-    color: "text-pink-400",
-    bgColor: "bg-pink-500/10",
-    borderColor: "border-pink-500/20",
-    hoverBorder: "hover:border-pink-500/50"
+    color: "text-orange-400",
+    bgColor: "bg-orange-500/5",
+    borderColor: "border-gray-800",
+    hoverBorder: "hover:border-orange-500/30"
   },
   {
     icon: Zap,
@@ -40,19 +40,19 @@ const reasons = [
     icon: Award,
     title: "Real Judges",
     description: "Industry experts from top companies who provide genuine feedback.",
-    color: "text-cyan-400",
-    bgColor: "bg-cyan-500/10",
-    borderColor: "border-cyan-500/20",
-    hoverBorder: "hover:border-cyan-500/50"
+    color: "text-gray-300",
+    bgColor: "bg-gray-800",
+    borderColor: "border-gray-700",
+    hoverBorder: "hover:border-gray-800"
   },
   {
     icon: Users,
     title: "Builder Community",
     description: "Join a thriving network of ambitious creators and innovators.",
-    color: "text-purple-400",
-    bgColor: "bg-purple-500/10",
-    borderColor: "border-purple-500/20",
-    hoverBorder: "hover:border-purple-500/50"
+    color: "text-orange-400",
+    bgColor: "bg-orange-500/10",
+    borderColor: "border-gray-800",
+    hoverBorder: "hover:border-orange-500/50"
   },
   {
     icon: Lightbulb,
@@ -79,17 +79,17 @@ export function WhyMaximallySection() {
         <div className="text-center mb-14 sm:mb-20">
           <div className="inline-flex items-center gap-2 mb-6">
             <Star className="w-4 h-4 text-green-400" />
-            <span className="font-press-start text-[10px] sm:text-xs text-green-400 tracking-wider">
+            <span className="font-space font-bold text-[10px] sm:text-xs text-green-400 tracking-wider">
               THE DIFFERENCE
             </span>
             <Star className="w-4 h-4 text-green-400" />
           </div>
-          <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-6">
+          <h2 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-6">
             <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 bg-clip-text text-transparent">
               Why Maximally?
             </span>
           </h2>
-          <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-xl mx-auto">
+          <p className="font-space text-sm sm:text-base md:text-lg text-gray-400 max-w-xl mx-auto">
             We make building fun, competitive, and meaningful.
           </p>
         </div>
@@ -106,10 +106,10 @@ export function WhyMaximallySection() {
                   <reason.icon className={`w-5 h-5 ${reason.color}`} />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-press-start text-xs sm:text-sm text-white mb-3">
+                  <h3 className="font-space font-bold text-xs sm:text-sm text-white mb-3">
                     {reason.title}
                   </h3>
-                  <p className="font-jetbrains text-sm text-gray-400 leading-relaxed">
+                  <p className="font-space text-sm text-gray-400 leading-relaxed">
                     {reason.description}
                   </p>
                 </div>

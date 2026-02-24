@@ -116,7 +116,7 @@ export default function JoinTeam() {
   if (loading || authLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="h-8 w-8 text-purple-400 animate-spin" />
+        <Loader2 className="h-8 w-8 text-orange-400 animate-spin" />
       </div>
     );
   }
@@ -129,18 +129,18 @@ export default function JoinTeam() {
       />
 
       <div className="min-h-screen bg-black text-white pt-24 pb-12 relative overflow-hidden">
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
 
         <div className="container mx-auto px-4 relative z-10 max-w-2xl">
           {error ? (
             <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-500/50 p-8 text-center">
               <AlertCircle className="h-16 w-16 text-red-400 mx-auto mb-6" />
-              <h1 className="font-press-start text-xl text-red-400 mb-4">INVITATION_ERROR</h1>
-              <p className="font-jetbrains text-gray-400 mb-6">{error}</p>
+              <h1 className="font-space font-bold text-xl text-red-400 mb-4">INVITATION_ERROR</h1>
+              <p className="font-space text-gray-400 mb-6">{error}</p>
               <Link
                 to="/events"
-                className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-500 text-white px-6 py-3 font-press-start text-sm transition-colors"
+                className="inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white px-6 py-3 font-space font-bold text-sm transition-colors"
               >
                 BROWSE_HACKATHONS
                 <ArrowRight className="h-4 w-4" />
@@ -149,16 +149,16 @@ export default function JoinTeam() {
           ) : requiresRegistration ? (
             <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-amber-500/50 p-8 text-center">
               <UserPlus className="h-16 w-16 text-amber-400 mx-auto mb-6" />
-              <h1 className="font-press-start text-xl text-amber-400 mb-4">REGISTRATION_REQUIRED</h1>
-              <p className="font-jetbrains text-gray-400 mb-2">
-                You need to register for <span className="text-purple-400">{invitation?.team.hackathon.hackathon_name}</span> before joining this team.
+              <h1 className="font-space font-bold text-xl text-amber-400 mb-4">REGISTRATION_REQUIRED</h1>
+              <p className="font-space text-gray-400 mb-2">
+                You need to register for <span className="text-orange-400">{invitation?.team.hackathon.hackathon_name}</span> before joining this team.
               </p>
-              <p className="font-jetbrains text-gray-500 text-sm mb-6">
+              <p className="font-space text-gray-500 text-sm mb-6">
                 Register first, then come back to this link to join the team.
               </p>
               <Link
                 to={hackathonSlug ? `/hackathon/${hackathonSlug}` : '/events'}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-500 hover:to-orange-400 text-white px-6 py-4 font-press-start text-sm transition-all"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-600 to-orange-500 hover:from-amber-500 hover:to-orange-400 text-white px-6 py-4 font-space font-bold text-sm transition-all"
               >
                 REGISTER_NOW
                 <ArrowRight className="h-4 w-4" />
@@ -167,16 +167,16 @@ export default function JoinTeam() {
           ) : success ? (
             <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-green-500/50 p-8 text-center">
               <CheckCircle className="h-16 w-16 text-green-400 mx-auto mb-6" />
-              <h1 className="font-press-start text-xl text-green-400 mb-4">YOU'RE_IN!</h1>
-              <p className="font-jetbrains text-gray-400 mb-2">
-                You've successfully joined team <span className="text-purple-400">{invitation?.team.team_name}</span>
+              <h1 className="font-space font-bold text-xl text-green-400 mb-4">YOU'RE_IN!</h1>
+              <p className="font-space text-gray-400 mb-2">
+                You've successfully joined team <span className="text-orange-400">{invitation?.team.team_name}</span>
               </p>
-              <p className="font-jetbrains text-gray-500 text-sm">
+              <p className="font-space text-gray-500 text-sm">
                 Redirecting to hackathon page...
               </p>
             </div>
           ) : invitation ? (
-            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-purple-500/50 overflow-hidden">
+            <div className="bg-gradient-to-br from-gray-900 to-black border-2 border-orange-500/50 overflow-hidden">
               {/* Header with hackathon image */}
               {invitation.team.hackathon.hackathon_logo && (
                 <div className="h-48 relative">
@@ -191,26 +191,26 @@ export default function JoinTeam() {
 
               <div className="p-8">
                 <div className="text-center mb-8">
-                  <Users className="h-12 w-12 text-purple-400 mx-auto mb-4" />
-                  <h1 className="font-press-start text-xl text-purple-400 mb-2">TEAM_INVITATION</h1>
-                  <p className="font-jetbrains text-gray-400">
+                  <Users className="h-12 w-12 text-orange-400 mx-auto mb-4" />
+                  <h1 className="font-space font-bold text-xl text-orange-400 mb-2">TEAM_INVITATION</h1>
+                  <p className="font-space text-gray-400">
                     You've been invited to join a hackathon team!
                   </p>
                 </div>
 
-                <div className="bg-black/50 border border-purple-500/30 p-6 mb-6">
+                <div className="bg-black/50 border border-gray-800 p-6 mb-6">
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <span className="font-jetbrains text-gray-400">Team</span>
-                      <span className="font-press-start text-sm text-purple-400">{invitation.team.team_name}</span>
+                      <span className="font-space text-gray-400">Team</span>
+                      <span className="font-space font-bold text-sm text-orange-400">{invitation.team.team_name}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-jetbrains text-gray-400">Hackathon</span>
-                      <span className="font-jetbrains text-white">{invitation.team.hackathon.hackathon_name}</span>
+                      <span className="font-space text-gray-400">Hackathon</span>
+                      <span className="font-space text-white">{invitation.team.hackathon.hackathon_name}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="font-jetbrains text-gray-400">Dates</span>
-                      <span className="font-jetbrains text-gray-300 flex items-center gap-2">
+                      <span className="font-space text-gray-400">Dates</span>
+                      <span className="font-space text-gray-300 flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
                         {new Date(invitation.team.hackathon.start_date).toLocaleDateString()} - {new Date(invitation.team.hackathon.end_date).toLocaleDateString()}
                       </span>
@@ -220,12 +220,12 @@ export default function JoinTeam() {
 
                 {!user ? (
                   <div className="space-y-4">
-                    <p className="font-jetbrains text-center text-gray-400 text-sm">
+                    <p className="font-space text-center text-gray-400 text-sm">
                       Please log in or create an account to join this team
                     </p>
                     <button
                       onClick={handleJoinTeam}
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-4 font-press-start text-sm transition-all flex items-center justify-center gap-2"
+                      className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-6 py-4 font-space font-bold text-sm transition-all flex items-center justify-center gap-2"
                     >
                       LOGIN_TO_JOIN
                       <ArrowRight className="h-4 w-4" />
@@ -235,7 +235,7 @@ export default function JoinTeam() {
                   <button
                     onClick={handleJoinTeam}
                     disabled={joining}
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-4 font-press-start text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-6 py-4 font-space font-bold text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {joining ? (
                       <>
@@ -251,7 +251,7 @@ export default function JoinTeam() {
                   </button>
                 )}
 
-                <p className="font-jetbrains text-center text-gray-500 text-xs mt-4">
+                <p className="font-space text-center text-gray-500 text-xs mt-4">
                   This invitation expires on {new Date(invitation.expires_at).toLocaleDateString()}
                 </p>
               </div>

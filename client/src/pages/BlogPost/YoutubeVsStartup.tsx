@@ -10,9 +10,9 @@ const YoutubeVsStartup = () => {
         You're a teenager with a brilliant idea. Maybe it's a product that solves a common problem, or perhaps it's a unique perspective you'd love to share with the world. In today's digital landscape, two powerful avenues stand out for teen entrepreneurs: launching a YouTube channel or starting your own startup.
       </p>
 
-      <h2 className="font-press-start text-2xl mb-4">Understanding the Two Paths</h2>
+      <h2 className="font-space font-bold text-2xl mb-4">Understanding the Two Paths</h2>
       
-      <h3 className="font-press-start text-xl mb-4">Starting a YouTube Channel 🎥</h3>
+      <h3 className="font-space font-bold text-xl mb-4">Starting a YouTube Channel 🎥</h3>
       <div className="mb-6">
         <p className="mb-4">The Digital Creator's Journey offers several advantages:</p>
         <ul className="list-disc pl-6 mb-4">
@@ -24,7 +24,7 @@ const YoutubeVsStartup = () => {
         <p className="text-maximally-black/70">However, it requires consistency, understanding algorithms, and patience for growth.</p>
       </div>
 
-      <h3 className="font-press-start text-xl mb-4">Launching a Startup 🚀</h3>
+      <h3 className="font-space font-bold text-xl mb-4">Launching a Startup 🚀</h3>
       <div className="mb-6">
         <p className="mb-4">The Entrepreneur's Path comes with its own benefits:</p>
         <ul className="list-disc pl-6 mb-4">
@@ -35,10 +35,10 @@ const YoutubeVsStartup = () => {
         <p className="text-maximally-black/70">But be prepared for higher risks, time commitment, and regulatory challenges.</p>
       </div>
 
-      <h2 className="font-press-start text-2xl mb-4">Success Stories That Inspire</h2>
+      <h2 className="font-space font-bold text-2xl mb-4">Success Stories That Inspire</h2>
       
       <div className="mb-6">
-        <h3 className="font-press-start text-xl mb-3">Alex Costa: Content Creator to E-commerce Success</h3>
+        <h3 className="font-space font-bold text-xl mb-3">Alex Costa: Content Creator to E-commerce Success</h3>
         <p className="mb-4">
           Started as a YouTuber focused on men's fashion and grooming, leveraged his following to launch Forte Series, 
           a successful hair care brand projected to generate $10 million in revenue by 2025.
@@ -46,7 +46,7 @@ const YoutubeVsStartup = () => {
       </div>
 
       <div className="mb-6">
-        <h3 className="font-press-start text-xl mb-3">Bella Weems: Teen Jewelry Mogul</h3>
+        <h3 className="font-space font-bold text-xl mb-3">Bella Weems: Teen Jewelry Mogul</h3>
         <p className="mb-4">
           Founded Origami Owl at 14, turning a dream of earning money for a car into a multi-million dollar 
           customizable jewelry company employing thousands.
@@ -54,7 +54,7 @@ const YoutubeVsStartup = () => {
       </div>
 
       <div className="pixel-border p-6 bg-maximally-blue/5 my-8">
-        <h2 className="font-press-start text-2xl mb-4">🎯 Ready to Start Your Journey?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🎯 Ready to Start Your Journey?</h2>
         <p className="mb-4">
           Whether you choose content creation or startup building, Maximally's Entrepreneurship Bootcamp equips you with the skills, 
           mentorship, and community support you need to succeed.

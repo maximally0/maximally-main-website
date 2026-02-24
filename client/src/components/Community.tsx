@@ -28,11 +28,11 @@ const Community = () => {
     <section id="community" className="py-24 bg-gradient-to-b from-white to-maximally-blue/10 pixel-grid">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-press-start text-maximally-black mb-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-space font-bold text-maximally-black mb-4 text-center">
             &gt;&gt; Join the Community_
           </h2>
           
-          <p className="text-center font-jetbrains text-maximally-black/80 mb-12 max-w-2xl mx-auto">
+          <p className="text-center font-space text-maximally-black/80 mb-12 max-w-2xl mx-auto">
             Connect with other ambitious teens in our Discord community of 1000+ members.
           </p>
           
@@ -42,8 +42,8 @@ const Community = () => {
                 <div className={`w-16 h-16 ${feature.color} pixel-border flex items-center justify-center mb-4 mx-auto`}>
                   <feature.icon className="text-white h-8 w-8" />
                 </div>
-                <h3 className="font-press-start text-lg mb-2 text-maximally-black">{feature.title}</h3>
-                <p className="font-jetbrains text-maximally-black/70">{feature.description}</p>
+                <h3 className="font-space font-bold text-lg mb-2 text-maximally-black">{feature.title}</h3>
+                <p className="font-space text-maximally-black/70">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -57,14 +57,14 @@ const Community = () => {
           
           {/* Discord Map */}
           <div className="mt-16 pixel-border bg-white p-6">
-            <h3 className="font-press-start text-xl mb-6 text-center text-maximally-black">
+            <h3 className="font-space font-bold text-xl mb-6 text-center text-maximally-black">
               Server Map
             </h3>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {["Welcome", "Announcements", "Resources", "Challenges", "General", "Skill-Tracks", "Projects", "Showcase"].map((channel, index) => (
                 <div key={index} className="bg-maximally-black/10 pixel-border p-2 text-center">
-                  <p className="font-jetbrains text-maximally-black">#{channel}</p>
+                  <p className="font-space text-maximally-black">#{channel}</p>
                 </div>
               ))}
             </div>

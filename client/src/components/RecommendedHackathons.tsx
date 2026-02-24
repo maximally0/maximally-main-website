@@ -150,7 +150,7 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
       <CardContent className="space-y-4">
         {recommendations.map((hackathon) => (
           <Link key={hackathon.hackathon_id} href={`/hackathon/${hackathon.slug}`}>
-            <div className="group p-4 bg-white/5 rounded-lg border border-white/10 hover:border-purple-500/30 hover:bg-white/10 transition-all cursor-pointer">
+            <div className="group p-4 bg-white/5 rounded-lg border border-white/10 hover:border-gray-800 hover:bg-white/10 transition-all cursor-pointer">
               <div className="flex gap-4">
                 {/* Hackathon Logo */}
                 {hackathon.hackathon_logo && (
@@ -166,7 +166,7 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h4 className="text-white font-medium group-hover:text-purple-400 transition-colors line-clamp-1">
+                      <h4 className="text-white font-medium group-hover:text-orange-400 transition-colors line-clamp-1">
                         {hackathon.hackathon_name}
                       </h4>
                       {hackathon.tagline && (
@@ -175,7 +175,7 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
                         </p>
                       )}
                     </div>
-                    <ArrowRight className="w-5 h-5 text-gray-500 group-hover:text-purple-400 transition-colors flex-shrink-0" />
+                    <ArrowRight className="w-5 h-5 text-gray-500 group-hover:text-orange-400 transition-colors flex-shrink-0" />
                   </div>
                   
                   {/* Meta info */}
@@ -189,7 +189,7 @@ export function RecommendedHackathons({ limit = 5, showTitle = true }: Recommend
                         ? 'bg-green-500/20 text-green-400' 
                         : hackathon.format === 'offline'
                         ? 'bg-blue-500/20 text-blue-400'
-                        : 'bg-purple-500/20 text-purple-400'
+                        : 'bg-orange-500/10 text-orange-400'
                     }`}>
                       {hackathon.format}
                     </Badge>

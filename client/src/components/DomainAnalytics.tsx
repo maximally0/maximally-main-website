@@ -40,11 +40,11 @@ const domainIcons: Record<string, React.ReactNode> = {
 const domainColors: Record<string, string> = {
   'Frontend': 'bg-blue-500',
   'Backend': 'bg-green-500',
-  'AI/ML': 'bg-purple-500',
+  'AI/ML': 'bg-orange-500',
   'Database': 'bg-yellow-500',
   'Cloud/DevOps': 'bg-orange-500',
-  'Mobile': 'bg-pink-500',
-  'Web3/Blockchain': 'bg-cyan-500',
+  'Mobile': 'bg-orange-500',
+  'Web3/Blockchain': 'bg-gray-800',
   'Other': 'bg-gray-500',
 };
 
@@ -115,7 +115,7 @@ export function DomainAnalytics({ hackathonId, showPlatformTrends = true }: Doma
     <Card className="bg-black/40 border-white/10">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-white">
-          <PieChart className="w-5 h-5 text-purple-400" />
+          <PieChart className="w-5 h-5 text-orange-400" />
           Domain Analytics
         </CardTitle>
         <CardDescription className="text-gray-400">

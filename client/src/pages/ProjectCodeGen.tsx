@@ -141,7 +141,7 @@ const ProjectCodeGen = () => {
 
             {/* Badge with Sticky Note Style */}
             <div 
-              className="inline-flex items-center gap-2 bg-yellow-300 text-purple-800 px-6 py-3 rounded-lg font-bold text-lg mb-6 transform -rotate-1 shadow-lg"
+              className="inline-flex items-center gap-2 bg-yellow-300 text-gray-900 px-6 py-3 rounded-lg font-bold text-lg mb-6 transform -rotate-1 shadow-lg"
               style={{ 
                 fontFamily: 'Comic Sans MS, Quicksand, sans-serif',
                 boxShadow: '4px 4px 8px rgba(0,0,0,0.2)'
@@ -157,7 +157,7 @@ const ProjectCodeGen = () => {
             </h2>
 
             {/* Tagline */}
-            <p className="text-lg md:text-xl text-purple-600 mb-8 font-bold" style={{ fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}>
+            <p className="text-lg md:text-xl text-orange-500 mb-8 font-bold" style={{ fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}>
               A 48-hour hackathon for builders who play.
             </p>
 
@@ -231,7 +231,7 @@ const ProjectCodeGen = () => {
                 className="bg-yellow-200 p-6 rounded-2xl shadow-lg transform -rotate-2"
                 style={{ border: '3px solid #e91e63', fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}
               >
-                <h3 className="text-xl font-bold text-purple-600 mb-4">Inspired by:</h3>
+                <h3 className="text-xl font-bold text-orange-500 mb-4">Inspired by:</h3>
                 <ul className="text-lg text-gray-700 space-y-2 font-bold">
                   <li>📝 Notebooks, toys, science fairs</li>
                   <li>🧱 Feels like Lego builds</li>
@@ -240,7 +240,7 @@ const ProjectCodeGen = () => {
               </div>
               
               <div 
-                className="bg-pink-200 p-6 rounded-2xl shadow-lg transform rotate-2"
+                className="bg-orange-200 p-6 rounded-2xl shadow-lg transform rotate-2"
                 style={{ border: '3px solid #4caf50', fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}
               >
                 <h3 className="text-xl font-bold text-green-600 mb-4">The Rules:</h3>
@@ -255,9 +255,9 @@ const ProjectCodeGen = () => {
         </section>
 
         {/* Who Should Join Section */}
-        <section className="relative z-20 py-16 px-6 bg-purple-100">
+        <section className="relative z-20 py-16 px-6 bg-orange-100">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-purple-600 mb-12 text-center transform -rotate-1" style={{ fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}>
+            <h2 className="text-3xl md:text-4xl font-black text-orange-500 mb-12 text-center transform -rotate-1" style={{ fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}>
               Who Should Join?
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -266,7 +266,7 @@ const ProjectCodeGen = () => {
                 { icon: "🌟", text: "First-timers", color: "bg-yellow-200 border-yellow-400" },
                 { icon: "🎨", text: "Designers + no-coders", color: "bg-blue-200 border-blue-400" },
                 { icon: "🐱", text: "Scratch veterans", color: "bg-green-200 border-green-400" },
-                { icon: "🌈", text: "Makers who like color, fun, and zero stress", color: "bg-pink-200 border-pink-400" }
+                { icon: "🌈", text: "Makers who like color, fun, and zero stress", color: "bg-orange-200 border-orange-500" }
               ].map((group, index) => (
                 <div 
                   key={index} 
@@ -329,7 +329,7 @@ const ProjectCodeGen = () => {
                 { step: "Step 1", text: "Think of a playful idea (the sillier the better)", color: "bg-red-200 border-red-400" },
                 { step: "Step 2", text: "Build a version in 48 hours", color: "bg-blue-200 border-blue-400" },
                 { step: "Step 3", text: "Submit with short write-up", color: "bg-yellow-200 border-yellow-400" },
-                { step: "Step 4", text: "Optional 1-min fun demo video", color: "bg-purple-200 border-purple-400" }
+                { step: "Step 4", text: "Optional 1-min fun demo video", color: "bg-orange-200 border-orange-500" }
               ].map((item, index) => (
                 <div 
                   key={index} 
@@ -354,7 +354,7 @@ const ProjectCodeGen = () => {
                 fontFamily: 'Comic Sans MS, Quicksand, sans-serif'
               }}
             >
-              <h3 className="text-xl font-bold text-purple-600 mb-4 text-center">Example Ideas:</h3>
+              <h3 className="text-xl font-bold text-orange-500 mb-4 text-center">Example Ideas:</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
                 {[
                   "🏴‍☠️ Pirate chatbot",
@@ -370,9 +370,9 @@ const ProjectCodeGen = () => {
         </section>
 
         {/* Judging Section */}
-        <section className="relative z-20 py-16 px-6 bg-pink-100">
+        <section className="relative z-20 py-16 px-6 bg-orange-100">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-pink-600 mb-12 text-center transform rotate-1" style={{ fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}>
+            <h2 className="text-3xl md:text-4xl font-black text-orange-500 mb-12 text-center transform rotate-1" style={{ fontFamily: 'Comic Sans MS, Quicksand, sans-serif' }}>
               Judging
             </h2>
             
@@ -403,7 +403,7 @@ const ProjectCodeGen = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { criteria: "🧠 Imagination", percentage: "30%", color: "bg-purple-200 border-purple-400" },
+                { criteria: "🧠 Imagination", percentage: "30%", color: "bg-orange-200 border-orange-500" },
                 { criteria: "🛠 Execution", percentage: "25%", color: "bg-blue-200 border-blue-400" },
                 { criteria: "🤓 Usefulness in Disguise", percentage: "20%", color: "bg-green-200 border-green-400" },
                 { criteria: "🎨 Presentation", percentage: "15%", color: "bg-yellow-200 border-yellow-400" },
@@ -435,7 +435,7 @@ const ProjectCodeGen = () => {
               {[
                 { text: "Prototype link (GitHub, Notion, Figma, no-code, etc.)", icon: "🔗", color: "bg-green-200 border-green-400" },
                 { text: "Write-up: what you built, why it's playful, hidden smartness", icon: "📝", color: "bg-yellow-200 border-yellow-400" },
-                { text: "Optional 1-min silly demo video", icon: "🎬", color: "bg-pink-200 border-pink-400" }
+                { text: "Optional 1-min silly demo video", icon: "🎬", color: "bg-orange-200 border-orange-500" }
               ].map((requirement, index) => (
                 <div 
                   key={index} 
@@ -456,7 +456,7 @@ const ProjectCodeGen = () => {
         </section>
 
         {/* Footer Line */}
-        <section className="relative z-20 py-16 px-6 bg-purple-100">
+        <section className="relative z-20 py-16 px-6 bg-orange-100">
           <div className="text-center">
             <div 
               className="bg-white p-8 rounded-3xl shadow-lg transform -rotate-2 inline-block"
@@ -465,7 +465,7 @@ const ProjectCodeGen = () => {
                 fontFamily: 'Comic Sans MS, Quicksand, sans-serif'
               }}
             >
-              <p className="text-2xl md:text-3xl font-black text-pink-600">
+              <p className="text-2xl md:text-3xl font-black text-orange-500">
                 Build something fun. Surprise yourself.
               </p>
               <div className="flex justify-center gap-4 mt-4">

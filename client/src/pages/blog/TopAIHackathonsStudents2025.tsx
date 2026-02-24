@@ -43,7 +43,7 @@ export default function TopAIHackathonsStudents2025() {
           </ul>
         </div>
 
-        <div className="border-l-4 border-purple-500 pl-4">
+        <div className="border-l-4 border-orange-500 pl-4">
           <h3 className="font-bold text-lg">TeenHacks Global (US-Based)</h3>
           <ul className="list-disc list-inside mt-2 space-y-1">
             <li>A large platform for high school students.</li>
@@ -85,7 +85,7 @@ export default function TopAIHackathonsStudents2025() {
           <p>You'll be using <strong>no code AI tools 2025</strong> like Notion AI, Make.com, Glide, and even Canva — to build real, usable AI projects.</p>
         </div>
 
-        <div className="bg-purple-100 p-4 rounded-lg">
+        <div className="bg-gray-900 p-4 rounded-lg">
           <h3 className="font-bold text-lg mb-2">👥 It's a Hackathon for Teens — Not Professionals</h3>
           <p>The environment isn't high-stress. It's more of a guided adventure into creativity and tech. It's about collaboration over competition.</p>
         </div>
@@ -95,7 +95,7 @@ export default function TopAIHackathonsStudents2025() {
           <p>You'll go from idea to live project in just a few days. That kind of experience sticks with you — and looks great on your resume.</p>
         </div>
 
-        <div className="bg-pink-100 p-4 rounded-lg">
+        <div className="bg-orange-500 p-4 rounded-lg">
           <h3 className="font-bold text-lg mb-2">🎉 It's Actually Fun</h3>
           <p>From workshops and memes to pitch days and prizes, it's structured like a startup sprint with the energy of a youth festival.</p>
         </div>

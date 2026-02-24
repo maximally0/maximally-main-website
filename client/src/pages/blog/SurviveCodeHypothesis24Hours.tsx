@@ -120,7 +120,7 @@ const SurviveCodeHypothesis24Hours = () => {
                 { time: "Start (Hour 0)", mood: "Wild energy.", desc: "\"We're gonna do it.\"", color: "border-green-400" },
                 { time: "Hour 4–6", mood: "The dreaded \"What even is code anymore?\" slump.", desc: "", color: "border-yellow-400" },
                 { time: "Hour 12–14", mood: "Caffeine hero phase.", desc: "Bugs are your pets.", color: "border-blue-400" },
-                { time: "Hour 18–20", mood: "\"It's either brilliant or embarrassing—ship it.\"", desc: "", color: "border-purple-400" },
+                { time: "Hour 18–20", mood: "\"It's either brilliant or embarrassing—ship it.\"", desc: "", color: "border-orange-500" },
                 { time: "Hour 24 (Submission)", mood: "Exhale. Push. Tweet your chaos.", desc: "", color: "border-red-500" }
               ].map((phase, index) => (
                 <div key={index} className={`bg-black/50 border-l-4 ${phase.color} p-4`}>
@@ -162,8 +162,8 @@ const SurviveCodeHypothesis24Hours = () => {
                 </ul>
               </div>
 
-              <div className="bg-black/70 border-l-4 border-purple-400 p-6">
-                <h3 className="text-purple-400 font-bold text-xl mb-4">Hour 12–18: Finalize & Ship</h3>
+              <div className="bg-black/70 border-l-4 border-orange-500 p-6">
+                <h3 className="text-orange-400 font-bold text-xl mb-4">Hour 12–18: Finalize & Ship</h3>
                 <ul className="space-y-2 text-white/90">
                   <li>• Write your short submission: hypothesis, test, results, what surprised you.</li>
                   <li>• Optional: 2-min pitch video—record on your phone, raw is better.</li>

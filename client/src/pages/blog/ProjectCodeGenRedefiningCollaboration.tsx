@@ -13,11 +13,11 @@ const ProjectCodeGenRedefiningCollaboration = () => {
       
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <div className="bg-white shadow-lg rounded-lg p-8">
-          <h1 className="font-press-start text-3xl text-maximally-black mb-8">
+          <h1 className="font-space font-bold text-3xl text-maximally-black mb-8">
             Project CodeGen: Redefining Code Collaboration
           </h1>
           
-          <div className="font-jetbrains text-maximally-black space-y-6 leading-relaxed">
+          <div className="font-space text-maximally-black space-y-6 leading-relaxed">
             <p className="text-lg">
               Every once in a while, a project comes along that doesn't just solve a problem but reshapes how we think about creating. Project CodeGen is exactly that — an ambitious experiment in reimagining coding collaboration, productivity, and creativity in hackathons and beyond.
             </p>
@@ -26,7 +26,7 @@ const ProjectCodeGenRedefiningCollaboration = () => {
               In a world where software development is no longer just about writing lines of code but about building ecosystems, solving real problems, and doing it together, CodeGen feels less like a tool and more like a movement.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Why CodeGen?</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Why CodeGen?</h2>
             
             <p>
               Hackathons are fast, chaotic, and intense. Teams come together with diverse skill sets, ideas spark, but execution often stumbles on one simple thing: flow.
@@ -46,7 +46,7 @@ const ProjectCodeGenRedefiningCollaboration = () => {
               At its core, CodeGen is not just another coding utility. It's about fluid collaboration. Think of it as a co-pilot for your team, where ideas don't get stuck in version control chaos, and innovation doesn't get blocked by friction.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">The Philosophy Behind CodeGen</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">The Philosophy Behind CodeGen</h2>
             
             <p>
               The name itself — "CodeGen" — tells the story. It's about generating code but also about generating possibilities.
@@ -66,7 +66,7 @@ const ProjectCodeGenRedefiningCollaboration = () => {
               It's not about replacing developers. It's about amplifying them. About making coding more intuitive, more connected, and maybe even a little more fun.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Features That Set It Apart</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Features That Set It Apart</h2>
             
             <p>
               What makes CodeGen more than just a concept? Its approach to coding collaboration feels like a blend of Github + AI + community-driven hacks. Some highlights:
@@ -83,7 +83,7 @@ const ProjectCodeGenRedefiningCollaboration = () => {
               The result? Less time on logistics, more time on breakthroughs.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Why It Matters for Hackathons</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Why It Matters for Hackathons</h2>
             
             <p>
               In hackathons, time is the currency. The difference between a winning project and an unfinished prototype often comes down to how quickly a team can translate imagination into execution.
@@ -103,7 +103,7 @@ const ProjectCodeGenRedefiningCollaboration = () => {
               And beyond hackathons, in startups and enterprises, the same principle applies. Innovation thrives when collaboration is frictionless.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">The Bigger Picture</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">The Bigger Picture</h2>
             
             <p>
               CodeGen isn't just about "better code." It's about shaping the future of collaboration. Imagine classrooms where students co-create apps effortlessly, global hackathons where language and skill barriers melt away, and startups that can scale ideas into MVPs in days, not months.
@@ -113,7 +113,7 @@ const ProjectCodeGenRedefiningCollaboration = () => {
               That's the promise of CodeGen: coding not as an isolated act but as a collective rhythm.
             </p>
             
-            <h2 className="font-press-start text-xl mt-8 mb-4">Final Thoughts</h2>
+            <h2 className="font-space font-bold text-xl mt-8 mb-4">Final Thoughts</h2>
             
             <p>
               Project CodeGen feels like the natural next step in how we'll build software in the coming years. Not just faster, but smarter. Not just efficient, but fun. Not just collaborative, but deeply human.

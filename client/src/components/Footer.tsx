@@ -12,7 +12,7 @@ const Footer = () => {
             <div className="bg-gradient-to-br from-orange-500 to-red-600 p-2">
               <Terminal className="h-5 w-5 text-black" />
             </div>
-            <span className="font-press-start text-white text-sm sm:text-base">
+            <span className="font-space font-bold text-white text-sm sm:text-base">
               MAXIMALLY
             </span>
           </div>

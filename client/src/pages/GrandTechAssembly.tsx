@@ -109,8 +109,8 @@ export default function GrandTechAssembly() {
       name: 'Chaos Mode',
       description: 'Cursed, weird, experimental, art-tech',
       icon: <Flame className="h-8 w-8" />,
-      color: 'bg-purple-500',
-      textColor: 'text-purple-400',
+      color: 'bg-orange-500',
+      textColor: 'text-orange-400',
     },
     {
       name: 'Rise to Power',
@@ -205,10 +205,10 @@ export default function GrandTechAssembly() {
             }`}
           >
             <div className="bg-red-600 text-yellow-400 px-6 py-2 border-2 border-green-400 relative">
-              <span className="font-press-start text-xs">
+              <span className="font-space font-bold text-xs">
                 🎮 GRAND INDIAN HACKATHON SEASON 🎮
               </span>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-400"></div>
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400"></div>
               <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-green-400"></div>
             </div>
           </div>
@@ -221,17 +221,17 @@ export default function GrandTechAssembly() {
                 : 'translate-y-4 opacity-0'
             }`}
           >
-            <h1 className="font-press-start text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
+            <h1 className="font-space font-bold text-4xl md:text-6xl lg:text-7xl mb-6 leading-tight">
               <span className="text-red-500 drop-shadow-2xl">GRAND</span>
               <br />
               <span className="text-yellow-400 drop-shadow-2xl">TECH</span>
               <span className="text-green-400 drop-shadow-2xl"> ASSEMBLY</span>
             </h1>
-            <h2 className="font-jetbrains text-xl md:text-2xl text-gray-300 mb-4 font-bold">
+            <h2 className="font-space text-xl md:text-2xl text-gray-300 mb-4 font-bold">
               7 day online GTA-themed hackathon
             </h2>
-            <div className="bg-gray-800 border-2 border-purple-400 p-4 inline-block max-w-2xl">
-              <p className="font-press-start text-base md:text-lg text-green-400 leading-relaxed">
+            <div className="bg-gray-800 border-2 border-orange-500 p-4 inline-block max-w-2xl">
+              <p className="font-space font-bold text-base md:text-lg text-green-400 leading-relaxed">
                 Pick your mission, build your city, earn respect.
               </p>
             </div>
@@ -243,8 +243,8 @@ export default function GrandTechAssembly() {
               <div className="bg-gray-800 p-2 border border-green-400">
                 <Target className="h-6 w-6 text-green-400" />
               </div>
-              <div className="bg-gray-800 p-2 border border-purple-400">
-                <Map className="h-6 w-6 text-purple-400" />
+              <div className="bg-gray-800 p-2 border border-orange-500">
+                <Map className="h-6 w-6 text-orange-400" />
               </div>
               <div className="bg-gray-800 p-2 border border-yellow-400">
                 <Star className="h-6 w-6 text-yellow-400" />
@@ -262,7 +262,7 @@ export default function GrandTechAssembly() {
           >
             <Button
               onClick={() => window.open('https://gta-maximally.devpost.com/', '_self')}
-              className="bg-green-500 text-black font-press-start py-4 px-8 text-lg hover:scale-105 transition-all duration-300 border-2 border-purple-400 shadow-xl relative overflow-hidden z-50"
+              className="bg-green-500 text-black font-space font-bold py-4 px-8 text-lg hover:scale-105 transition-all duration-300 border-2 border-orange-500 shadow-xl relative overflow-hidden z-50"
             >
               <div className="absolute inset-0 bg-green-600 transform skew-x-6 -translate-x-full hover:translate-x-0 transition-transform duration-300"></div>
               <span className="relative z-10 flex items-center">
@@ -274,9 +274,9 @@ export default function GrandTechAssembly() {
               onClick={() =>
                 window.open('https://discord.gg/WmSXVzDYuq', '_self')
               }
-              className="bg-purple-500 text-white font-press-start py-4 px-8 text-lg hover:scale-105 transition-all duration-300 border-2 border-green-400 shadow-xl relative overflow-hidden z-50"
+              className="bg-orange-500 text-white font-space font-bold py-4 px-8 text-lg hover:scale-105 transition-all duration-300 border-2 border-green-400 shadow-xl relative overflow-hidden z-50"
             >
-              <div className="absolute inset-0 bg-purple-600 transform skew-x-6 -translate-x-full hover:translate-x-0 transition-transform duration-300"></div>
+              <div className="absolute inset-0 bg-orange-600 transform skew-x-6 -translate-x-full hover:translate-x-0 transition-transform duration-300"></div>
               <span className="relative z-10 flex items-center">
                 <MessageSquare className="h-5 w-5 mr-2" />
                 JOIN DISCORD
@@ -287,18 +287,18 @@ export default function GrandTechAssembly() {
 
         {/* Fast Facts Bar */}
         <section className="py-8 bg-gray-900 border-y-2 border-green-400 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-transparent to-purple-400/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-transparent to-orange-400/10"></div>
           <div className="container mx-auto px-4 relative z-10">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {fastFacts.map((fact, index) => (
                 <div key={index} className="text-center group">
-                  <div className="flex items-center justify-center mb-2 text-green-400 group-hover:text-purple-400 transition-colors">
+                  <div className="flex items-center justify-center mb-2 text-green-400 group-hover:text-orange-400 transition-colors">
                     {fact.icon}
                   </div>
-                  <div className="font-press-start text-xs text-gray-300 mb-1">
+                  <div className="font-space font-bold text-xs text-gray-300 mb-1">
                     {fact.label}
                   </div>
-                  <div className="font-jetbrains text-sm text-green-400 font-bold">
+                  <div className="font-space text-sm text-green-400 font-bold">
                     {fact.value}
                   </div>
                 </div>
@@ -310,14 +310,14 @@ export default function GrandTechAssembly() {
         {/* What It Is */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl text-center">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-green-400 flex items-center justify-center gap-3">
-              <Gamepad2 className="h-8 w-8 text-purple-400" />
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-8 text-green-400 flex items-center justify-center gap-3">
+              <Gamepad2 className="h-8 w-8 text-orange-400" />
               WHAT IT IS
-              <Gamepad2 className="h-8 w-8 text-purple-400" />
+              <Gamepad2 className="h-8 w-8 text-orange-400" />
             </h2>
             <div className="bg-gray-900 border-2 border-green-400 p-8 relative">
-              <div className="absolute -top-1 left-0 right-0 h-1 bg-gradient-to-r from-green-400 via-purple-400 to-green-400"></div>
-              <p className="font-jetbrains text-lg md:text-xl text-gray-300 leading-relaxed">
+              <div className="absolute -top-1 left-0 right-0 h-1 bg-gradient-to-r from-green-400 via-orange-400 to-green-400"></div>
+              <p className="font-space text-lg md:text-xl text-gray-300 leading-relaxed">
                 A 7 day global online hackathon styled after Grand Theft Auto.
                 Not crime, just missions, respect, and chaos. Open world vibe.
                 You choose your path.
@@ -329,7 +329,7 @@ export default function GrandTechAssembly() {
         {/* Who Joins */}
         <section className="py-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-purple-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-orange-400 text-center flex items-center justify-center gap-3">
               <Users className="h-8 w-8 text-green-400" />
               WHO JOINS
               <Users className="h-8 w-8 text-green-400" />
@@ -338,7 +338,7 @@ export default function GrandTechAssembly() {
               {whoJoins.map((person, index) => (
                 <div
                   key={index}
-                  className="bg-gray-800 border border-purple-400 p-4 hover:border-green-400 hover:scale-105 transition-all duration-300 relative"
+                  className="bg-gray-800 border border-orange-500 p-4 hover:border-green-400 hover:scale-105 transition-all duration-300 relative"
                 >
                   <div className="absolute top-0 right-0 w-2 h-2 bg-green-400"></div>
                   <div className="flex items-center gap-3">
@@ -346,7 +346,7 @@ export default function GrandTechAssembly() {
                       className="h-4 w-4 text-yellow-400"
                       fill="currentColor"
                     />
-                    <span className="font-jetbrains text-gray-300 font-medium">
+                    <span className="font-space text-gray-300 font-medium">
                       {person}
                     </span>
                   </div>
@@ -359,25 +359,25 @@ export default function GrandTechAssembly() {
         {/* How It Works */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-5xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-green-400 text-center flex items-center justify-center gap-3">
-              <Map className="h-8 w-8 text-purple-400" />
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-green-400 text-center flex items-center justify-center gap-3">
+              <Map className="h-8 w-8 text-orange-400" />
               HOW IT WORKS
-              <Map className="h-8 w-8 text-purple-400" />
+              <Map className="h-8 w-8 text-orange-400" />
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {howItWorksSteps.map((step, index) => (
                 <Card
                   key={index}
-                  className="bg-gray-900 border-2 border-green-400 hover:border-purple-400 hover:scale-105 transition-all duration-300"
+                  className="bg-gray-900 border-2 border-green-400 hover:border-orange-500 hover:scale-105 transition-all duration-300"
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="bg-green-500 text-black w-12 h-12 border border-purple-400 flex items-center justify-center font-press-start text-lg flex-shrink-0">
+                      <div className="bg-green-500 text-black w-12 h-12 border border-orange-500 flex items-center justify-center font-space font-bold text-lg flex-shrink-0">
                         {step.step}
                       </div>
                       <div>
-                        <div className="text-purple-400 mb-2">{step.icon}</div>
-                        <p className="font-jetbrains text-gray-300 leading-relaxed">
+                        <div className="text-orange-400 mb-2">{step.icon}</div>
+                        <p className="font-space text-gray-300 leading-relaxed">
                           {step.title}
                         </p>
                       </div>
@@ -392,7 +392,7 @@ export default function GrandTechAssembly() {
         {/* Mission Tracks */}
         <section className="py-20 px-4 bg-gradient-to-b from-black via-gray-900 to-black">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-yellow-400 text-center flex items-center justify-center gap-3">
               <Target className="h-8 w-8 text-green-400" />
               MISSION TRACKS
               <Target className="h-8 w-8 text-green-400" />
@@ -410,11 +410,11 @@ export default function GrandTechAssembly() {
                       {track.icon}
                     </div>
                     <h3
-                      className={`font-press-start text-lg ${track.textColor} mb-3 leading-tight`}
+                      className={`font-space font-bold text-lg ${track.textColor} mb-3 leading-tight`}
                     >
                       {track.name}
                     </h3>
-                    <p className="font-jetbrains text-gray-300 text-sm">
+                    <p className="font-space text-gray-300 text-sm">
                       {track.description}
                     </p>
                     <div className="absolute top-2 right-2">
@@ -433,7 +433,7 @@ export default function GrandTechAssembly() {
         {/* Side Quests */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-purple-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-orange-400 text-center flex items-center justify-center gap-3">
               <Zap className="h-8 w-8 text-yellow-400" />
               SIDE QUESTS
               <Zap className="h-8 w-8 text-yellow-400" />
@@ -442,16 +442,16 @@ export default function GrandTechAssembly() {
               {sideQuests.map((quest, index) => (
                 <div
                   key={index}
-                  className="bg-purple-900 border border-purple-400 p-4 hover:bg-purple-800 transition-colors duration-300 relative"
+                  className="bg-gray-900 border border-orange-500 p-4 hover:bg-gray-800 transition-colors duration-300 relative"
                 >
                   <div className="absolute -top-1 -left-1 w-4 h-4 bg-green-400"></div>
                   <div className="flex items-center gap-3">
                     <div className="w-6 h-6 bg-yellow-400 flex items-center justify-center">
-                      <span className="font-press-start text-xs text-black">
+                      <span className="font-space font-bold text-xs text-black">
                         ?
                       </span>
                     </div>
-                    <span className="font-jetbrains text-gray-300 font-medium">
+                    <span className="font-space text-gray-300 font-medium">
                       {quest}
                     </span>
                   </div>
@@ -464,28 +464,28 @@ export default function GrandTechAssembly() {
         {/* Timeline */}
         <section className="py-20 px-4 bg-gray-900">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-green-400 text-center flex items-center justify-center gap-3">
-              <Clock className="h-8 w-8 text-purple-400" />
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-green-400 text-center flex items-center justify-center gap-3">
+              <Clock className="h-8 w-8 text-orange-400" />
               TIMELINE
-              <Clock className="h-8 w-8 text-purple-400" />
+              <Clock className="h-8 w-8 text-orange-400" />
             </h2>
             <div className="space-y-6">
               {timeline.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-6 bg-gray-800 border border-green-400 p-6 hover:border-purple-400 transition-colors duration-300"
+                  className="flex items-center gap-6 bg-gray-800 border border-green-400 p-6 hover:border-orange-500 transition-colors duration-300"
                 >
                   <div className="text-center flex-shrink-0">
-                    <div className="font-press-start text-lg text-green-400">
+                    <div className="font-space font-bold text-lg text-green-400">
                       {item.date}
                     </div>
-                    <div className="font-jetbrains text-sm text-gray-400">
+                    <div className="font-space text-sm text-gray-400">
                       {item.time}
                     </div>
                   </div>
-                  <div className="text-purple-400">{item.icon}</div>
-                  <div className="w-px h-12 bg-gradient-to-b from-green-400 to-purple-400"></div>
-                  <div className="font-jetbrains text-gray-300 text-lg">
+                  <div className="text-orange-400">{item.icon}</div>
+                  <div className="w-px h-12 bg-gradient-to-b from-green-400 to-orange-400"></div>
+                  <div className="font-space text-gray-300 text-lg">
                     {item.event}
                   </div>
                 </div>
@@ -497,35 +497,35 @@ export default function GrandTechAssembly() {
         {/* Judging */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-8 text-purple-400 text-center flex items-center justify-center gap-3">
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-8 text-orange-400 text-center flex items-center justify-center gap-3">
               <Crown className="h-8 w-8 text-yellow-400" />
               JUDGING
               <Crown className="h-8 w-8 text-yellow-400" />
             </h2>
-            <div className="bg-gray-800 border-2 border-purple-400 p-8 relative">
-              <div className="absolute -top-1 left-4 right-4 h-2 bg-gradient-to-r from-green-400 to-purple-400"></div>
+            <div className="bg-gray-800 border-2 border-orange-500 p-8 relative">
+              <div className="absolute -top-1 left-4 right-4 h-2 bg-gradient-to-r from-green-400 to-orange-400"></div>
               <div className="mb-6">
-                <h3 className="font-press-start text-lg text-green-400 mb-4">
+                <h3 className="font-space font-bold text-lg text-green-400 mb-4">
                   MODE
                 </h3>
-                <p className="font-jetbrains text-gray-300">
+                <p className="font-space text-gray-300">
                   Async on Devpost, judges are City Kingpins
                 </p>
               </div>
               <div className="mb-6">
-                <h3 className="font-press-start text-lg text-green-400 mb-4">
+                <h3 className="font-space font-bold text-lg text-green-400 mb-4">
                   CRITERIA
                 </h3>
-                <p className="font-jetbrains text-gray-300">
+                <p className="font-space text-gray-300">
                   Originality, execution, creativity (including no-code), gut
                   feel that it screams GTA chaos
                 </p>
               </div>
               <div>
-                <h3 className="font-press-start text-lg text-green-400 mb-4">
+                <h3 className="font-space font-bold text-lg text-green-400 mb-4">
                   FEEDBACK
                 </h3>
-                <p className="font-jetbrains text-gray-300">
+                <p className="font-space text-gray-300">
                   Short written notes for teams
                 </p>
               </div>
@@ -536,44 +536,44 @@ export default function GrandTechAssembly() {
         {/* Submission */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="font-press-start text-3xl md:text-4xl mb-12 text-green-400 text-center flex items-center justify-center gap-3">
-              <FileText className="h-8 w-8 text-purple-400" />
+            <h2 className="font-space font-bold text-3xl md:text-4xl mb-12 text-green-400 text-center flex items-center justify-center gap-3">
+              <FileText className="h-8 w-8 text-orange-400" />
               SUBMISSION
-              <FileText className="h-8 w-8 text-purple-400" />
+              <FileText className="h-8 w-8 text-orange-400" />
             </h2>
 
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-green-900 border-2 border-green-400 p-6 relative">
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-purple-400 flex items-center justify-center">
-                  <span className="font-press-start text-xs text-white">!</span>
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-orange-400 flex items-center justify-center">
+                  <span className="font-space font-bold text-xs text-white">!</span>
                 </div>
-                <h3 className="font-press-start text-xl text-green-400 mb-6 flex items-center gap-2">
+                <h3 className="font-space font-bold text-xl text-green-400 mb-6 flex items-center gap-2">
                   <FileText className="h-5 w-5" />
                   REQUIRED
                 </h3>
                 <ul className="space-y-3">
-                  <li className="font-jetbrains text-gray-200 flex items-start gap-2">
+                  <li className="font-space text-gray-200 flex items-start gap-2">
                     <span className="text-green-400">▸</span>
                     Link to repo or build
                   </li>
-                  <li className="font-jetbrains text-gray-200 flex items-start gap-2">
+                  <li className="font-space text-gray-200 flex items-start gap-2">
                     <span className="text-green-400">▸</span>
                     Short writeup on what changed or why it matters
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-purple-900 border-2 border-purple-400 p-6 relative">
+              <div className="bg-gray-900 border-2 border-orange-500 p-6 relative">
                 <div className="absolute -top-1 -left-1 w-6 h-6 bg-green-400 flex items-center justify-center">
-                  <span className="font-press-start text-xs text-black">?</span>
+                  <span className="font-space font-bold text-xs text-black">?</span>
                 </div>
-                <h3 className="font-press-start text-xl text-purple-400 mb-6 flex items-center gap-2">
+                <h3 className="font-space font-bold text-xl text-orange-400 mb-6 flex items-center gap-2">
                   <Video className="h-5 w-5" />
                   OPTIONAL
                 </h3>
                 <ul className="space-y-3">
-                  <li className="font-jetbrains text-gray-200 flex items-start gap-2">
-                    <span className="text-purple-400">▸</span>
+                  <li className="font-space text-gray-200 flex items-start gap-2">
+                    <span className="text-orange-400">▸</span>
                     60s demo video
                   </li>
                 </ul>
@@ -581,7 +581,7 @@ export default function GrandTechAssembly() {
             </div>
 
             <div className="mt-8 bg-gray-800 border border-yellow-400 p-4">
-              <p className="font-jetbrains text-gray-300 text-sm">
+              <p className="font-space text-gray-300 text-sm">
                 <span className="text-yellow-400 font-bold">Note:</span>{' '}
                 Plagiarism without change is not allowed, credit sources when
                 used
@@ -594,18 +594,18 @@ export default function GrandTechAssembly() {
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-4xl text-center">
             <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-12 border-2 border-green-400 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-transparent to-purple-400/10"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 via-transparent to-orange-400/10"></div>
               <div className="relative z-10">
-                <h2 className="font-press-start text-2xl md:text-3xl mb-6 text-green-400">
+                <h2 className="font-space font-bold text-2xl md:text-3xl mb-6 text-green-400">
                   READY TO RUN THE CITY?
                 </h2>
-                <p className="font-jetbrains text-gray-300 mb-8">
+                <p className="font-space text-gray-300 mb-8">
                   Choose your mission. Build your empire. Earn respect in the
                   streets.
                 </p>
                 <Button
                   onClick={() => window.open('https://gta-maximally.devpost.com/', '_self')}
-                  className="bg-purple-500 text-white font-press-start py-4 px-6 md:py-6 md:px-12 text-sm md:text-xl hover:scale-105 transition-all duration-300 border-2 border-green-400 shadow-xl relative overflow-hidden z-50 w-full max-w-sm mx-auto"
+                  className="bg-orange-500 text-white font-space font-bold py-4 px-6 md:py-6 md:px-12 text-sm md:text-xl hover:scale-105 transition-all duration-300 border-2 border-green-400 shadow-xl relative overflow-hidden z-50 w-full max-w-sm mx-auto"
                 >
                   <div className="absolute inset-0 bg-green-500 transform skew-x-6 -translate-x-full hover:translate-x-0 transition-transform duration-300"></div>
                   <span className="relative z-10 flex items-center justify-center text-white">

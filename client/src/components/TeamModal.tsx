@@ -102,7 +102,7 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
               <div className="p-2 bg-red-500/20 border border-red-500/40">
                 <Users className="h-5 w-5 text-red-400" />
               </div>
-              <h2 className="font-press-start text-lg text-white">TEAM</h2>
+              <h2 className="font-space font-bold text-lg text-white">TEAM</h2>
             </div>
             <button 
               onClick={onClose} 
@@ -118,7 +118,7 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setTeamAction('create')}
-              className={`py-3 font-press-start text-xs transition-all duration-300 ${
+              className={`py-3 font-space font-bold text-xs transition-all duration-300 ${
                 teamAction === 'create' 
                   ? 'bg-gradient-to-r from-red-600/40 to-orange-500/30 border border-red-500/50 text-red-200' 
                   : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
@@ -128,9 +128,9 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
             </button>
             <button
               onClick={() => setTeamAction('join')}
-              className={`py-3 font-press-start text-xs transition-all duration-300 ${
+              className={`py-3 font-space font-bold text-xs transition-all duration-300 ${
                 teamAction === 'join' 
-                  ? 'bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 text-cyan-200' 
+                  ? 'bg-gradient-to-r from-orange-600 to-orange-500 border border-gray-700 text-gray-300' 
                   : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
               }`}
             >
@@ -141,7 +141,7 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
           {teamAction === 'create' ? (
             <div className="space-y-4">
               <div>
-                <label className="font-press-start text-[10px] text-red-300 mb-2 block flex items-center gap-2">
+                <label className="font-space font-bold text-[10px] text-red-300 mb-2 block flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-red-400"></span>
                   TEAM NAME
                 </label>
@@ -149,14 +149,14 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
                   type="text"
                   value={teamName}
                   onChange={(e) => setTeamName(e.target.value)}
-                  className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-jetbrains focus:border-red-400 outline-none placeholder:text-gray-600"
+                  className="w-full bg-black/50 border border-red-500/30 text-white px-4 py-3 font-space focus:border-red-400 outline-none placeholder:text-gray-600"
                   placeholder="Enter team name"
                 />
               </div>
               <button
                 onClick={handleCreateTeam}
                 disabled={!teamName.trim()}
-                className="w-full py-3 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 border border-red-500/50 text-white font-press-start text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 border border-red-500/50 text-white font-space font-bold text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 CREATE TEAM
               </button>
@@ -164,15 +164,15 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
           ) : (
             <div className="space-y-4">
               <div>
-                <label className="font-press-start text-[10px] text-cyan-300 mb-2 block flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+                <label className="font-space font-bold text-[10px] text-gray-300 mb-2 block flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-orange-400"></span>
                   TEAM CODE
                 </label>
                 <input
                   type="text"
                   value={teamCode}
                   onChange={(e) => setTeamCode(e.target.value.toUpperCase())}
-                  className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none uppercase placeholder:text-gray-600"
+                  className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-gray-600 outline-none uppercase placeholder:text-gray-600"
                   placeholder="Enter team code"
                   maxLength={8}
                 />
@@ -180,7 +180,7 @@ export default function TeamModal({ isOpen, onClose, hackathonId, onTeamChange }
               <button
                 onClick={handleJoinTeam}
                 disabled={teamCode.length < 4}
-                className="w-full py-3 bg-gradient-to-r from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400 border border-cyan-500/50 text-white font-press-start text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 bg-gradient-to-r from-gray-700 to-blue-500 hover:from-gray-700 hover:to-blue-400 border border-gray-700 text-white font-space font-bold text-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 JOIN TEAM
               </button>

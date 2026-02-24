@@ -106,10 +106,10 @@ const HostHackathon = () => {
       title: 'GLOBAL NETWORK',
       description: 'Access to MFHOP, organizer events, and cross-promotion',
       features: ['Federation membership', 'Community amplification', 'Cross-promotion in newsletters'],
-      gradient: 'from-cyan-500/20 to-blue-500/20',
-      border: 'border-cyan-500/40',
-      iconBg: 'bg-cyan-500/20',
-      iconColor: 'text-cyan-400'
+      gradient: 'from-gray-800/50 to-blue-500/20',
+      border: 'border-gray-700',
+      iconBg: 'bg-gray-800',
+      iconColor: 'text-gray-300'
     },
     {
       icon: Users,
@@ -126,10 +126,10 @@ const HostHackathon = () => {
       title: 'PRIZES & PERKS',
       description: 'Prize pools, swag kits, and software lab credits',
       features: ['Maximally prize pool', 'Emergency budget support', 'Digital and physical swag'],
-      gradient: 'from-purple-500/20 to-pink-500/20',
-      border: 'border-purple-500/40',
-      iconBg: 'bg-purple-500/20',
-      iconColor: 'text-purple-400'
+      gradient: 'from-orange-500/10 to-orange-500/20',
+      border: 'border-orange-500/30',
+      iconBg: 'bg-orange-500/10',
+      iconColor: 'text-orange-400'
     },
     {
       icon: Lightbulb,
@@ -158,8 +158,8 @@ const HostHackathon = () => {
       features: ['Post-event surveys', 'Media coverage', 'Project integrity review'],
       gradient: 'from-indigo-500/20 to-violet-500/20',
       border: 'border-indigo-500/40',
-      iconBg: 'bg-indigo-500/20',
-      iconColor: 'text-indigo-400'
+      iconBg: 'bg-gray-800',
+      iconColor: 'text-gray-300'
     }
   ];
 
@@ -180,13 +180,13 @@ const HostHackathon = () => {
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(249,115,22,0.04)_0%,transparent_50%)]" />
         
-        <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
-        <div className="absolute top-60 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
-        <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-cyan-500/10 rounded-full blur-[90px]" />
+        <div className="absolute top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-60 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
+        <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-gray-800 rounded-full blur-[90px]" />
         
         {Array.from({ length: 15 }, (_, i) => (
           <div
@@ -206,32 +206,32 @@ const HostHackathon = () => {
         <section className="min-h-screen relative flex items-center pt-24 sm:pt-32 pb-12">
           <div className="container mx-auto px-4 sm:px-6 z-10">
             <div className="max-w-5xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-6">
-                <Rocket className="w-4 h-4 text-purple-400" />
-                <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-gray-800 mb-6">
+                <Rocket className="w-4 h-4 text-orange-400" />
+                <span className="font-space font-bold text-[10px] sm:text-xs text-orange-400 tracking-wider">
                   FOR ORGANIZERS
                 </span>
-                <Sparkles className="w-4 h-4 text-pink-400" />
+                <Sparkles className="w-4 h-4 text-orange-400" />
               </div>
 
-              <h1 className="font-press-start text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              <h1 className="font-space font-bold text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                   HOST YOUR OWN
                 </span>
                 <br />
                 <span className="text-white">HACKATHON</span>
               </h1>
 
-              <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed mb-8">
+              <p className="font-space text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed mb-8">
                 Turn your vision into reality. Whether you're a first-time organizer or a seasoned host,
-                <span className="text-purple-300 font-semibold"> Maximally supports you every step of the way.</span>
+                <span className="text-orange-400 font-semibold"> Maximally supports you every step of the way.</span>
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                 <button
                   onClick={handleGetStarted}
                   disabled={authLoading || checkingStatus}
-                  className="group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600/30 to-pink-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs sm:text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white font-space font-bold text-xs sm:text-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   data-testid="button-get-started"
                 >
                   <buttonContent.icon className="h-4 w-4 sm:h-5 sm:w-5 group-hover:animate-bounce" />
@@ -245,7 +245,7 @@ const HostHackathon = () => {
                   href="https://discord.gg/MpBnYk8qMX"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center justify-center gap-2 px-8 py-4 bg-black/40 border border-gray-700 hover:border-purple-500/50 text-gray-300 hover:text-purple-300 font-press-start text-xs sm:text-sm transition-all duration-300"
+                  className="group flex items-center justify-center gap-2 px-8 py-4 bg-black/40 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-orange-400 font-space font-bold text-xs sm:text-sm transition-all duration-300"
                   data-testid="button-join-discord"
                 >
                   <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -257,22 +257,22 @@ const HostHackathon = () => {
         </section>
 
         <section className="py-16 sm:py-24 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-900/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/5 to-transparent" />
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 border border-pink-500/30 mb-6">
-                  <Star className="w-4 h-4 text-pink-400" />
-                  <span className="font-press-start text-[10px] sm:text-xs text-pink-300">FULL SUPPORT PACKAGE</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/5 border border-gray-800 mb-6">
+                  <Star className="w-4 h-4 text-orange-400" />
+                  <span className="font-space font-bold text-[10px] sm:text-xs text-orange-400">FULL SUPPORT PACKAGE</span>
                 </div>
-                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+                <h2 className="font-space font-bold text-xl sm:text-2xl md:text-3xl text-white mb-4">
                   WHAT WE{" "}
-                  <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                     OFFER
                   </span>
                 </h2>
-                <p className="font-jetbrains text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
+                <p className="font-space text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
                   From planning to execution to post-event analytics, we've got you covered.
                 </p>
               </div>
@@ -281,22 +281,22 @@ const HostHackathon = () => {
                 {benefits.map((benefit, i) => (
                   <div
                     key={i}
-                    className={`group bg-gradient-to-br ${benefit.gradient} border ${benefit.border} p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]`}
+                    className={`group bg-gradient-to-br ${benefit.gradient} border ${benefit.border} p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.08)]`}
                     data-testid={`benefit-${i}`}
                   >
                     <div className={`${benefit.iconBg} border ${benefit.border} w-12 h-12 flex items-center justify-center mb-4`}>
                       <benefit.icon className={`h-6 w-6 ${benefit.iconColor}`} />
                     </div>
-                    <h3 className="font-press-start text-xs text-white mb-3 group-hover:text-purple-300 transition-colors">
+                    <h3 className="font-space font-bold text-xs text-white mb-3 group-hover:text-orange-400 transition-colors">
                       {benefit.title}
                     </h3>
-                    <p className="font-jetbrains text-sm text-gray-400 mb-4 leading-relaxed">
+                    <p className="font-space text-sm text-gray-400 mb-4 leading-relaxed">
                       {benefit.description}
                     </p>
                     <ul className="space-y-2">
                       {benefit.features.map((feature, j) => (
-                        <li key={j} className="flex items-start gap-2 text-xs font-jetbrains text-gray-500">
-                          <CheckCircle2 className="h-3.5 w-3.5 text-purple-400 flex-shrink-0 mt-0.5" />
+                        <li key={j} className="flex items-start gap-2 text-xs font-space text-gray-500">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-orange-400 flex-shrink-0 mt-0.5" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -312,13 +312,13 @@ const HostHackathon = () => {
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 mb-6">
-                  <Target className="w-4 h-4 text-cyan-400" />
-                  <span className="font-press-start text-[10px] sm:text-xs text-cyan-300">SIMPLE PROCESS</span>
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 border border-gray-700 mb-6">
+                  <Target className="w-4 h-4 text-gray-300" />
+                  <span className="font-space font-bold text-[10px] sm:text-xs text-gray-300">SIMPLE PROCESS</span>
                 </div>
-                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+                <h2 className="font-space font-bold text-xl sm:text-2xl md:text-3xl text-white mb-4">
                   HOW IT{" "}
-                  <span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                     WORKS
                   </span>
                 </h2>
@@ -328,20 +328,20 @@ const HostHackathon = () => {
                 {steps.map((item, i) => (
                   <div
                     key={i}
-                    className="group bg-black/40 border border-purple-500/20 hover:border-purple-500/40 p-6 flex items-center gap-5 transition-all duration-300 hover:bg-purple-500/5"
+                    className="group bg-black/40 border border-gray-800 hover:border-orange-500/30 p-6 flex items-center gap-5 transition-all duration-300 hover:bg-orange-500/5"
                     data-testid={`step-${i}`}
                   >
-                    <div className="bg-gradient-to-br from-purple-500/30 to-pink-500/20 border border-purple-500/40 w-14 h-14 flex items-center justify-center flex-shrink-0">
-                      <span className="font-press-start text-lg text-purple-300">{item.step}</span>
+                    <div className="bg-gradient-to-br from-orange-500/30 to-orange-500/20 border border-orange-500/30 w-14 h-14 flex items-center justify-center flex-shrink-0">
+                      <span className="font-space font-bold text-lg text-orange-400">{item.step}</span>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <item.icon className="h-5 w-5 text-purple-400" />
-                        <h3 className="font-press-start text-xs sm:text-sm text-purple-300 group-hover:text-purple-200 transition-colors">
+                        <item.icon className="h-5 w-5 text-orange-400" />
+                        <h3 className="font-space font-bold text-xs sm:text-sm text-orange-400 group-hover:text-white transition-colors">
                           {item.title}
                         </h3>
                       </div>
-                      <p className="font-jetbrains text-sm text-gray-400 leading-relaxed">
+                      <p className="font-space text-sm text-gray-400 leading-relaxed">
                         {item.description}
                       </p>
                     </div>
@@ -353,22 +353,22 @@ const HostHackathon = () => {
         </section>
 
         <section className="py-16 sm:py-24 relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-pink-900/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/5 to-transparent" />
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/30 mb-6">
                   <Handshake className="w-4 h-4 text-green-400" />
-                  <span className="font-press-start text-[10px] sm:text-xs text-green-300">INITIATIVES BY MAXIMALLY</span>
+                  <span className="font-space font-bold text-[10px] sm:text-xs text-green-300">INITIATIVES BY MAXIMALLY</span>
                 </div>
-                <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl text-white mb-4">
+                <h2 className="font-space font-bold text-xl sm:text-2xl md:text-3xl text-white mb-4">
                   FOR{" "}
-                  <span className="bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                     ORGANIZERS
                   </span>
                 </h2>
-                <p className="font-jetbrains text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
+                <p className="font-space text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
                   Explore our programs designed to empower hackathon organizers worldwide.
                 </p>
               </div>
@@ -376,27 +376,27 @@ const HostHackathon = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Link
                   to="/partner"
-                  className="group bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 hover:border-blue-400/50 p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]"
+                  className="group bg-gradient-to-br from-blue-500/10 to-gray-800/50 border border-gray-700 hover:border-blue-400/50 p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]"
                   data-testid="link-partner-network"
                 >
-                  <div className="bg-blue-500/20 border border-blue-500/40 w-16 h-16 flex items-center justify-center mb-6">
+                  <div className="bg-gray-800 border border-blue-500/40 w-16 h-16 flex items-center justify-center mb-6">
                     <Handshake className="h-8 w-8 text-blue-400" />
                   </div>
-                  <h3 className="font-press-start text-sm sm:text-base text-white mb-3 group-hover:text-blue-300 transition-colors">
+                  <h3 className="font-space font-bold text-sm sm:text-base text-white mb-3 group-hover:text-blue-300 transition-colors">
                     PARTNER NETWORK
                   </h3>
-                  <p className="font-jetbrains text-sm text-gray-400 mb-6 leading-relaxed">
+                  <p className="font-space text-sm text-gray-400 mb-6 leading-relaxed">
                     Co-organize, feature, or partner with Maximally to host your hackathon with full support.
                   </p>
                   <ul className="space-y-2 mb-6">
                     {['Global network access', 'Full operational support', 'Prizes & perks', 'Media coverage'].map((feature, j) => (
-                      <li key={j} className="flex items-start gap-2 text-xs font-jetbrains text-gray-500">
+                      <li key={j} className="flex items-start gap-2 text-xs font-space text-gray-500">
                         <CheckCircle2 className="h-3.5 w-3.5 text-blue-400 flex-shrink-0 mt-0.5" />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="flex items-center gap-2 font-press-start text-xs text-blue-400 group-hover:text-blue-300">
+                  <div className="flex items-center gap-2 font-space font-bold text-xs text-blue-400 group-hover:text-blue-300">
                     LEARN MORE <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
@@ -409,21 +409,21 @@ const HostHackathon = () => {
                   <div className="bg-amber-500/20 border border-amber-500/40 w-16 h-16 flex items-center justify-center mb-6">
                     <Globe className="h-8 w-8 text-amber-400" />
                   </div>
-                  <h3 className="font-press-start text-sm sm:text-base text-white mb-3 group-hover:text-amber-300 transition-colors">
+                  <h3 className="font-space font-bold text-sm sm:text-base text-white mb-3 group-hover:text-amber-300 transition-colors">
                     MFHOP FEDERATION
                   </h3>
-                  <p className="font-jetbrains text-sm text-gray-400 mb-6 leading-relaxed">
+                  <p className="font-space text-sm text-gray-400 mb-6 leading-relaxed">
                     Join the Maximally Federation of Hackathon Organizer Partners for exclusive resources.
                   </p>
                   <ul className="space-y-2 mb-6">
                     {['Exclusive organizer events', 'Shared sponsor network', 'Cross-promotion', 'Best practices library'].map((feature, j) => (
-                      <li key={j} className="flex items-start gap-2 text-xs font-jetbrains text-gray-500">
+                      <li key={j} className="flex items-start gap-2 text-xs font-space text-gray-500">
                         <CheckCircle2 className="h-3.5 w-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
                         <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <div className="flex items-center gap-2 font-press-start text-xs text-amber-400 group-hover:text-amber-300">
+                  <div className="flex items-center gap-2 font-space font-bold text-xs text-amber-400 group-hover:text-amber-300">
                     LEARN MORE <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </Link>
@@ -435,25 +435,25 @@ const HostHackathon = () => {
         <section className="py-16 sm:py-24 relative">
           <div className="container mx-auto px-4 sm:px-6">
             <div className="max-w-4xl mx-auto">
-              <div className="p-8 sm:p-12 bg-gradient-to-br from-purple-900/20 via-black to-pink-900/20 border border-purple-500/30 text-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1)_0%,transparent_70%)]" />
-                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
-                <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent" />
+              <div className="p-8 sm:p-12 bg-gradient-to-br from-gray-900/40 via-black to-gray-900/20 border border-gray-800 text-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.05)_0%,transparent_70%)]" />
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
                 
                 <div className="relative z-10">
-                  <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-purple-500/20 border border-purple-500/40">
-                    <Rocket className="w-8 h-8 text-purple-400" />
+                  <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-orange-500/10 border border-orange-500/30">
+                    <Rocket className="w-8 h-8 text-orange-400" />
                   </div>
-                  <h3 className="font-press-start text-base sm:text-lg md:text-xl text-white mb-4">
+                  <h3 className="font-space font-bold text-base sm:text-lg md:text-xl text-white mb-4">
                     Ready to host your hackathon?
                   </h3>
-                  <p className="font-jetbrains text-sm sm:text-base text-gray-400 mb-8 max-w-xl mx-auto">
+                  <p className="font-space text-sm sm:text-base text-gray-400 mb-8 max-w-xl mx-auto">
                     Join 1000+ organizers who have launched successful events with Maximally's support.
                   </p>
                   <button
                     onClick={handleGetStarted}
                     disabled={authLoading || checkingStatus}
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs sm:text-sm transition-all duration-300 disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white font-space font-bold text-xs sm:text-sm transition-all duration-300 disabled:opacity-50"
                     data-testid="button-cta-get-started"
                   >
                     <buttonContent.icon className="h-5 w-5" />

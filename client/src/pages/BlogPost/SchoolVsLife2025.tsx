@@ -6,7 +6,7 @@ import { Twitter, Linkedin, MessageSquare } from 'lucide-react';
 const SchoolVsLife2025 = () => {
   const content = (
     <>
-      <p className="lead font-jetbrains text-lg mb-6">
+      <p className="lead font-space text-lg mb-6">
         "I got straight A's… but no clue how to write an email, pitch an idea, or even file taxes."
       </p>
 
@@ -15,12 +15,12 @@ const SchoolVsLife2025 = () => {
       </p>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">🧠 School ≠ Life</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🧠 School ≠ Life</h2>
         <p className="mb-4">Here's the gap:</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pixel-border p-6 bg-maximally-blue/5 my-8">
           <div>
-            <h3 className="font-press-start text-lg mb-2">School Teaches You...</h3>
+            <h3 className="font-space font-bold text-lg mb-2">School Teaches You...</h3>
             <ul className="space-y-2">
               <li>How to solve for X</li>
               <li>Memorizing history</li>
@@ -29,7 +29,7 @@ const SchoolVsLife2025 = () => {
             </ul>
           </div>
           <div>
-            <h3 className="font-press-start text-lg mb-2">Real Life Demands...</h3>
+            <h3 className="font-space font-bold text-lg mb-2">Real Life Demands...</h3>
             <ul className="space-y-2">
               <li>How to sell your ideas</li>
               <li>Building your own story</li>
@@ -41,11 +41,11 @@ const SchoolVsLife2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">🚀 Enter Maximally: Real-World Skills for Teen Trailblazers</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🚀 Enter Maximally: Real-World Skills for Teen Trailblazers</h2>
         <p className="mb-4">We built Maximally to be what school isn't.</p>
 
         <div className="pixel-border p-6 bg-maximally-red/5 my-8">
-          <h3 className="font-press-start text-xl mb-4">💡 Our 7-Day Summer Bootcamp</h3>
+          <h3 className="font-space font-bold text-xl mb-4">💡 Our 7-Day Summer Bootcamp</h3>
           <p>From June 1–7, we're hosting an immersive bootcamp for India's most ambitious teens.</p>
           <ul className="space-y-2 mt-4">
             <li>🧑‍💼 Entrepreneurship – Build your own startup idea</li>
@@ -67,7 +67,7 @@ const SchoolVsLife2025 = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">🔗 Learn More About This Global Movement</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">🔗 Learn More About This Global Movement</h2>
         <ul className="space-y-4">
           <li><a href="https://hbr.org/2019/10/why-companies-value-real-world-skills-over-degrees" className="text-maximally-blue hover:underline">📚 Why Real-World Skills Matter More Than Degrees – Harvard Business Review</a></li>
           <li><a href="https://www.forbes.com/sites/allbusiness/2019/05/26/teen-entrepreneurs-success-stories" className="text-maximally-blue hover:underline">🧑‍💻 Teen Entrepreneurs Changing the World – Forbes</a></li>

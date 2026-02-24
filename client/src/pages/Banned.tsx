@@ -28,7 +28,7 @@ export default function Banned() {
           <Ban className="w-10 h-10 text-red-500" />
         </div>
         
-        <h1 className="font-press-start text-xl text-red-500 mb-4">
+        <h1 className="font-space font-bold text-xl text-red-500 mb-4">
           ACCOUNT BANNED
         </h1>
         

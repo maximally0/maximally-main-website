@@ -113,13 +113,13 @@ export default function GalleryEdit() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-purple-500/10 border border-purple-500/30">
-            <Layers className="h-8 w-8 text-purple-500/50" />
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-orange-500/10 border border-gray-800">
+            <Layers className="h-8 w-8 text-orange-400" />
           </div>
-          <h2 className="font-press-start text-sm sm:text-base text-gray-400 mb-4">LOGIN REQUIRED</h2>
+          <h2 className="font-space font-bold text-sm sm:text-base text-gray-400 mb-4">LOGIN REQUIRED</h2>
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600/30 to-pink-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-xs transition-all duration-300"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white font-space font-bold text-xs transition-all duration-300"
           >
             LOGIN
           </Link>
@@ -203,7 +203,7 @@ export default function GalleryEdit() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="font-press-start text-sm text-gray-400 animate-pulse">LOADING...</div>
+        <div className="font-space font-bold text-sm text-gray-400 animate-pulse">LOADING...</div>
       </div>
     );
   }
@@ -220,14 +220,14 @@ export default function GalleryEdit() {
           <div className="container mx-auto px-4 max-w-3xl">
             <Link
               to={`/gallery/${id}`}
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 font-jetbrains text-sm"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 font-space text-sm"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Project
             </Link>
 
             <div className="text-center mb-8">
-              <h1 className="font-press-start text-2xl sm:text-3xl text-white mb-2">
+              <h1 className="font-space font-bold text-2xl sm:text-3xl text-white mb-2">
                 EDIT PROJECT
               </h1>
             </div>
@@ -235,24 +235,24 @@ export default function GalleryEdit() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Basic Info */}
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                <h2 className="font-press-start text-sm text-white mb-4">BASIC_INFO</h2>
+                <h2 className="font-space font-bold text-sm text-white mb-4">BASIC_INFO</h2>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2">
                       Project Name *
                     </label>
                     <input
                       type="text"
                       value={form.name}
                       onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2">
                       Tagline
                     </label>
                     <input
@@ -260,31 +260,31 @@ export default function GalleryEdit() {
                       value={form.tagline}
                       onChange={(e) => setForm(prev => ({ ...prev, tagline: e.target.value }))}
                       maxLength={200}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2">
                       Description *
                     </label>
                     <textarea
                       value={form.description}
                       onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
                       rows={5}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none resize-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none resize-none"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2">
                       Category
                     </label>
                     <select
                       value={form.category}
                       onChange={(e) => setForm(prev => ({ ...prev, category: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     >
                       <option value="">Select a category</option>
                       {CATEGORIES.map(cat => (
@@ -297,30 +297,30 @@ export default function GalleryEdit() {
 
               {/* Images */}
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                <h2 className="font-press-start text-sm text-white mb-4">IMAGES</h2>
+                <h2 className="font-space font-bold text-sm text-white mb-4">IMAGES</h2>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2">
                       Logo URL
                     </label>
                     <input
                       type="url"
                       value={form.logo_url}
                       onChange={(e) => setForm(prev => ({ ...prev, logo_url: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2">
                       Cover Image URL
                     </label>
                     <input
                       type="url"
                       value={form.cover_image_url}
                       onChange={(e) => setForm(prev => ({ ...prev, cover_image_url: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     />
                   </div>
                 </div>
@@ -328,11 +328,11 @@ export default function GalleryEdit() {
 
               {/* Links */}
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                <h2 className="font-press-start text-sm text-white mb-4">LINKS</h2>
+                <h2 className="font-space font-bold text-sm text-white mb-4">LINKS</h2>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2 flex items-center gap-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2 flex items-center gap-2">
                       <Github className="h-4 w-4" />
                       GitHub Repository
                     </label>
@@ -340,12 +340,12 @@ export default function GalleryEdit() {
                       type="url"
                       value={form.github_url}
                       onChange={(e) => setForm(prev => ({ ...prev, github_url: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2 flex items-center gap-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2 flex items-center gap-2">
                       <ExternalLink className="h-4 w-4" />
                       Live Demo URL
                     </label>
@@ -353,12 +353,12 @@ export default function GalleryEdit() {
                       type="url"
                       value={form.demo_url}
                       onChange={(e) => setForm(prev => ({ ...prev, demo_url: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2 flex items-center gap-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2 flex items-center gap-2">
                       <Video className="h-4 w-4" />
                       Video URL
                     </label>
@@ -366,12 +366,12 @@ export default function GalleryEdit() {
                       type="url"
                       value={form.video_url}
                       onChange={(e) => setForm(prev => ({ ...prev, video_url: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm text-gray-400 font-jetbrains mb-2 flex items-center gap-2">
+                    <label className="block text-sm text-gray-400 font-space mb-2 flex items-center gap-2">
                       <Globe className="h-4 w-4" />
                       Website URL
                     </label>
@@ -379,7 +379,7 @@ export default function GalleryEdit() {
                       type="url"
                       value={form.website_url}
                       onChange={(e) => setForm(prev => ({ ...prev, website_url: e.target.value }))}
-                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none"
+                      className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none"
                     />
                   </div>
                 </div>
@@ -387,7 +387,7 @@ export default function GalleryEdit() {
 
               {/* Technologies */}
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                <h2 className="font-press-start text-sm text-white mb-4">TECH_STACK</h2>
+                <h2 className="font-space font-bold text-sm text-white mb-4">TECH_STACK</h2>
                 
                 <div className="flex gap-2 mb-3">
                   <input
@@ -396,7 +396,7 @@ export default function GalleryEdit() {
                     onChange={(e) => setTechInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTech())}
                     placeholder="Add technology..."
-                    className="flex-1 bg-gray-800 border-2 border-gray-700 text-white px-4 py-2 font-jetbrains focus:border-maximally-red outline-none"
+                    className="flex-1 bg-gray-800 border-2 border-gray-700 text-white px-4 py-2 font-space focus:border-maximally-red outline-none"
                   />
                   <button
                     type="button"
@@ -412,7 +412,7 @@ export default function GalleryEdit() {
                     {form.technologies.map((tech, i) => (
                       <span
                         key={i}
-                        className="text-sm bg-gray-800 border border-gray-700 px-3 py-1 text-gray-300 font-jetbrains flex items-center gap-2"
+                        className="text-sm bg-gray-800 border border-gray-700 px-3 py-1 text-gray-300 font-space flex items-center gap-2"
                       >
                         {tech}
                         <button
@@ -430,7 +430,7 @@ export default function GalleryEdit() {
 
               {/* Tags */}
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                <h2 className="font-press-start text-sm text-white mb-4">TAGS</h2>
+                <h2 className="font-space font-bold text-sm text-white mb-4">TAGS</h2>
                 
                 <div className="flex gap-2 mb-3">
                   <input
@@ -439,7 +439,7 @@ export default function GalleryEdit() {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
                     placeholder="Add tag..."
-                    className="flex-1 bg-gray-800 border-2 border-gray-700 text-white px-4 py-2 font-jetbrains focus:border-maximally-red outline-none"
+                    className="flex-1 bg-gray-800 border-2 border-gray-700 text-white px-4 py-2 font-space focus:border-maximally-red outline-none"
                   />
                   <button
                     type="button"
@@ -455,7 +455,7 @@ export default function GalleryEdit() {
                     {form.tags.map((tag, i) => (
                       <span
                         key={i}
-                        className="text-sm bg-maximally-red/20 border border-maximally-red px-3 py-1 text-maximally-red font-jetbrains flex items-center gap-2"
+                        className="text-sm bg-maximally-red/20 border border-maximally-red px-3 py-1 text-maximally-red font-space flex items-center gap-2"
                       >
                         #{tag}
                         <button
@@ -473,13 +473,13 @@ export default function GalleryEdit() {
 
               {/* README */}
               <div className="pixel-card bg-gray-900 border-2 border-gray-800 p-6">
-                <h2 className="font-press-start text-sm text-white mb-4">README (Markdown)</h2>
+                <h2 className="font-space font-bold text-sm text-white mb-4">README (Markdown)</h2>
                 
                 <textarea
                   value={form.readme_content}
                   onChange={(e) => setForm(prev => ({ ...prev, readme_content: e.target.value }))}
                   rows={12}
-                  className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-maximally-red outline-none resize-none"
+                  className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-maximally-red outline-none resize-none"
                 />
               </div>
 
@@ -488,7 +488,7 @@ export default function GalleryEdit() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 pixel-button bg-maximally-red text-white py-4 font-press-start text-sm hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 pixel-button bg-maximally-red text-white py-4 font-space font-bold text-sm hover:bg-red-700 disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {saving ? (
                     'SAVING...'
@@ -502,7 +502,7 @@ export default function GalleryEdit() {
 
                 <Link
                   to={`/gallery/${id}`}
-                  className="pixel-button bg-gray-800 text-gray-400 px-8 py-4 font-press-start text-sm hover:text-white"
+                  className="pixel-button bg-gray-800 text-gray-400 px-8 py-4 font-space font-bold text-sm hover:text-white"
                 >
                   CANCEL
                 </Link>

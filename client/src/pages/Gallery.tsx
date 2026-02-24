@@ -151,38 +151,38 @@ export default function Gallery() {
       <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
         <section className="pt-20 sm:pt-28 pb-12 sm:pb-16 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(249,115,22,0.04)_0%,transparent_50%)]" />
           
-          <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
-          <div className="absolute top-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+          <div className="absolute top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
+          <div className="absolute top-40 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
           
           <div className="container mx-auto px-4 sm:px-6 relative z-10">
             <Link 
               to="/"
-              className="group inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 font-jetbrains text-sm mb-6 transition-colors"
+              className="group inline-flex items-center gap-2 text-gray-400 hover:text-orange-400 font-space text-sm mb-6 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Back to Home
             </Link>
 
             <div className="text-center">
-              <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-purple-500/10 border border-purple-500/30">
-                <Layers className="w-4 h-4 text-purple-400" />
-                <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
+              <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-orange-500/10 border border-gray-800">
+                <Layers className="w-4 h-4 text-orange-400" />
+                <span className="font-space font-bold text-[10px] sm:text-xs text-orange-400 tracking-wider">
                   PROJECT GALLERY
                 </span>
-                <Sparkles className="w-4 h-4 text-purple-400" />
+                <Sparkles className="w-4 h-4 text-orange-400" />
               </div>
 
-              <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight">
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
+              <h1 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight">
+                <span className="bg-gradient-to-r from-orange-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
                   Built by Builders
                 </span>
               </h1>
 
-              <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8">
+              <p className="font-space text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-8">
                 Discover projects from our community. Hackathon submissions, 
                 side projects, and everything in between.
               </p>
@@ -190,7 +190,7 @@ export default function Gallery() {
               {user && (
                 <Link
                   to="/gallery/submit"
-                  className="group inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600/30 to-pink-500/20 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-[10px] sm:text-xs transition-all duration-300"
+                  className="group inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white font-space font-bold text-[10px] sm:text-xs transition-all duration-300"
                 >
                   <Plus className="w-4 h-4" />
                   SUBMIT PROJECT
@@ -202,7 +202,7 @@ export default function Gallery() {
 
 
         {/* Filters Section */}
-        <section className="py-4 sm:py-6 border-y border-purple-500/20 bg-gray-900/30 backdrop-blur-sm">
+        <section className="py-4 sm:py-6 border-y border-gray-800 bg-gray-900/30 backdrop-blur-sm">
           <div className="container mx-auto px-6 sm:px-8 lg:px-12">
             <div className="flex flex-col md:flex-row gap-4 mb-4">
               <div className="relative flex-1">
@@ -215,12 +215,12 @@ export default function Gallery() {
                     setSearch(e.target.value);
                     setPagination(prev => ({ ...prev, page: 1 }));
                   }}
-                  className="w-full bg-black/50 border border-purple-500/30 text-white pl-12 pr-4 py-3 font-jetbrains text-sm focus:border-purple-400 outline-none transition-colors"
+                  className="w-full bg-black/50 border border-gray-800 text-white pl-12 pr-4 py-3 font-space text-sm focus:border-orange-500 outline-none transition-colors"
                 />
                 {search && (
                   <button
                     onClick={() => setSearch('')}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-purple-400 transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-orange-400 transition-colors"
                   >
                     <X className="h-4 w-4" />
                   </button>
@@ -230,27 +230,27 @@ export default function Gallery() {
               <div className="flex gap-2">
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className={`px-4 py-3 font-press-start text-[10px] flex items-center gap-2 border transition-all ${
+                  className={`px-4 py-3 font-space font-bold text-[10px] flex items-center gap-2 border transition-all ${
                     showFilters || hasActiveFilters 
-                      ? 'bg-purple-500/20 border-purple-500/50 text-purple-300' 
-                      : 'bg-black/50 border-gray-700 text-gray-400 hover:border-purple-500/30'
+                      ? 'bg-orange-500/10 border-orange-500/50 text-orange-400' 
+                      : 'bg-black/50 border-gray-700 text-gray-400 hover:border-gray-800'
                   }`}
                 >
                   <Filter className="h-4 w-4" />
                   FILTERS
-                  {hasActiveFilters && <span className="w-2 h-2 bg-pink-500 rounded-full" />}
+                  {hasActiveFilters && <span className="w-2 h-2 bg-orange-500 rounded-full" />}
                 </button>
 
                 <div className="flex border border-gray-700">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-3 transition-colors ${viewMode === 'grid' ? 'bg-purple-500/20 text-purple-300' : 'bg-black/50 text-gray-500 hover:text-purple-400'}`}
+                    className={`p-3 transition-colors ${viewMode === 'grid' ? 'bg-orange-500/10 text-orange-400' : 'bg-black/50 text-gray-500 hover:text-orange-400'}`}
                   >
                     <Grid className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-3 transition-colors ${viewMode === 'list' ? 'bg-purple-500/20 text-purple-300' : 'bg-black/50 text-gray-500 hover:text-purple-400'}`}
+                    className={`p-3 transition-colors ${viewMode === 'list' ? 'bg-orange-500/10 text-orange-400' : 'bg-black/50 text-gray-500 hover:text-orange-400'}`}
                   >
                     <List className="h-4 w-4" />
                   </button>
@@ -259,7 +259,7 @@ export default function Gallery() {
             </div>
 
             {showFilters && (
-              <div className="flex flex-wrap gap-4 pt-4 border-t border-purple-500/20">
+              <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-800">
                 <div className="relative">
                   <select
                     value={category}
@@ -267,7 +267,7 @@ export default function Gallery() {
                       setCategory(e.target.value);
                       setPagination(prev => ({ ...prev, page: 1 }));
                     }}
-                    className="appearance-none bg-black/50 border border-purple-500/30 text-white px-4 py-2 pr-10 font-jetbrains text-sm focus:border-purple-400 outline-none"
+                    className="appearance-none bg-black/50 border border-gray-800 text-white px-4 py-2 pr-10 font-space text-sm focus:border-orange-500 outline-none"
                   >
                     <option value="">All Categories</option>
                     {categories.map(cat => (
@@ -284,7 +284,7 @@ export default function Gallery() {
                       setSort(e.target.value);
                       setPagination(prev => ({ ...prev, page: 1 }));
                     }}
-                    className="appearance-none bg-black/50 border border-purple-500/30 text-white px-4 py-2 pr-10 font-jetbrains text-sm focus:border-purple-400 outline-none"
+                    className="appearance-none bg-black/50 border border-gray-800 text-white px-4 py-2 pr-10 font-space text-sm focus:border-orange-500 outline-none"
                   >
                     {SORT_OPTIONS.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -301,15 +301,15 @@ export default function Gallery() {
                       setHackathonOnly(e.target.checked);
                       setPagination(prev => ({ ...prev, page: 1 }));
                     }}
-                    className="w-4 h-4 accent-purple-500"
+                    className="w-4 h-4 accent-orange-500"
                   />
-                  <span className="text-sm text-gray-400 font-jetbrains">Hackathon Projects Only</span>
+                  <span className="text-sm text-gray-400 font-space">Hackathon Projects Only</span>
                 </label>
 
                 {hasActiveFilters && (
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-purple-400 hover:text-pink-400 font-jetbrains flex items-center gap-1 transition-colors"
+                    className="text-sm text-orange-400 hover:text-orange-400 font-space flex items-center gap-1 transition-colors"
                   >
                     <X className="h-3 w-3" />
                     Clear Filters
@@ -318,7 +318,7 @@ export default function Gallery() {
               </div>
             )}
 
-            <div className="mt-4 text-sm text-gray-500 font-jetbrains">
+            <div className="mt-4 text-sm text-gray-500 font-space">
               {loading ? 'Loading...' : `${pagination.total} project${pagination.total !== 1 ? 's' : ''} found`}
             </div>
           </div>
@@ -342,11 +342,11 @@ export default function Gallery() {
               </div>
             ) : projects.length === 0 ? (
               <div className="text-center py-16">
-                <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-purple-500/10 border border-purple-500/30">
-                  <Code2 className="h-10 w-10 text-purple-500/50" />
+                <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-orange-500/10 border border-gray-800">
+                  <Code2 className="h-10 w-10 text-orange-400" />
                 </div>
-                <h3 className="font-press-start text-sm sm:text-base text-gray-400 mb-3">NO PROJECTS FOUND</h3>
-                <p className="text-gray-500 font-jetbrains text-sm">Try adjusting your filters or search terms</p>
+                <h3 className="font-space font-bold text-sm sm:text-base text-gray-400 mb-3">NO PROJECTS FOUND</h3>
+                <p className="text-gray-500 font-space text-sm">Try adjusting your filters or search terms</p>
               </div>
             ) : viewMode === 'grid' ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
@@ -367,17 +367,17 @@ export default function Gallery() {
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
                   disabled={pagination.page === 1}
-                  className="px-5 py-2.5 bg-black/50 border border-purple-500/30 text-purple-300 font-press-start text-[10px] disabled:opacity-30 disabled:cursor-not-allowed hover:border-purple-400 transition-colors"
+                  className="px-5 py-2.5 bg-black/50 border border-gray-800 text-orange-400 font-space font-bold text-[10px] disabled:opacity-30 disabled:cursor-not-allowed hover:border-orange-500 transition-colors"
                 >
                   PREV
                 </button>
-                <span className="px-5 py-2.5 font-press-start text-[10px] text-gray-500">
+                <span className="px-5 py-2.5 font-space font-bold text-[10px] text-gray-500">
                   {pagination.page} / {pagination.totalPages}
                 </span>
                 <button
                   onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
                   disabled={pagination.page === pagination.totalPages}
-                  className="px-5 py-2.5 bg-black/50 border border-purple-500/30 text-purple-300 font-press-start text-[10px] disabled:opacity-30 disabled:cursor-not-allowed hover:border-purple-400 transition-colors"
+                  className="px-5 py-2.5 bg-black/50 border border-gray-800 text-orange-400 font-space font-bold text-[10px] disabled:opacity-30 disabled:cursor-not-allowed hover:border-orange-500 transition-colors"
                 >
                   NEXT
                 </button>
@@ -405,7 +405,7 @@ function ProjectCard({ project }: { project: GalleryProject }) {
   return (
     <Link
       to={`/gallery/${project.id}`}
-      className="group bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 hover:border-purple-500/40 transition-all duration-300 overflow-hidden"
+      className="group bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 hover:border-orange-500/30 transition-all duration-300 overflow-hidden"
     >
       <div className="relative h-40 bg-gray-800/50 overflow-hidden">
         {project.cover_image_url ? (
@@ -415,17 +415,17 @@ function ProjectCard({ project }: { project: GalleryProject }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900/20 to-pink-900/20">
-            <Code2 className="h-12 w-12 text-purple-500/30" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900/40 to-gray-900/20">
+            <Code2 className="h-12 w-12 text-orange-400/30" />
           </div>
         )}
         
         {project.hackathon_id && (
           <div className="absolute top-3 left-3">
-            <div className={`px-2.5 py-1 text-[10px] font-press-start flex items-center gap-1.5 ${
+            <div className={`px-2.5 py-1 text-[10px] font-space font-bold flex items-center gap-1.5 ${
               project.hackathon_position 
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-black' 
-                : 'bg-purple-500/80 text-white'
+                : 'bg-orange-500/80 text-white'
             }`}>
               {project.hackathon_position ? (
                 <>
@@ -461,11 +461,11 @@ function ProjectCard({ project }: { project: GalleryProject }) {
             />
           )}
           <div className="flex-1 min-w-0">
-            <h3 className="font-press-start text-xs text-white truncate group-hover:text-purple-400 transition-colors">
+            <h3 className="font-space font-bold text-xs text-white truncate group-hover:text-orange-400 transition-colors">
               {project.name}
             </h3>
             {project.profiles && (
-              <p className="text-[10px] text-gray-500 font-jetbrains mt-1">
+              <p className="text-[10px] text-gray-500 font-space mt-1">
                 by @{project.profiles.username}
               </p>
             )}
@@ -473,7 +473,7 @@ function ProjectCard({ project }: { project: GalleryProject }) {
         </div>
 
         {project.tagline && (
-          <p className="text-xs text-gray-400 font-jetbrains line-clamp-2 mb-3 leading-relaxed">
+          <p className="text-xs text-gray-400 font-space line-clamp-2 mb-3 leading-relaxed">
             {project.tagline}
           </p>
         )}
@@ -481,7 +481,7 @@ function ProjectCard({ project }: { project: GalleryProject }) {
         {project.technologies && project.technologies.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {project.technologies.slice(0, 3).map((tech, i) => (
-              <span key={i} className="text-[10px] bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 text-purple-300 font-jetbrains">
+              <span key={i} className="text-[10px] bg-orange-500/10 border border-gray-800 px-2 py-0.5 text-orange-400 font-space">
                 {tech}
               </span>
             ))}
@@ -493,8 +493,8 @@ function ProjectCard({ project }: { project: GalleryProject }) {
 
         {project.hackathons && (
           <div className="mt-4 pt-3 border-t border-gray-800">
-            <p className="text-[10px] text-gray-500 font-jetbrains">
-              Submitted to <span className="text-purple-400">{project.hackathons.title}</span>
+            <p className="text-[10px] text-gray-500 font-space">
+              Submitted to <span className="text-orange-400">{project.hackathons.title}</span>
             </p>
           </div>
         )}
@@ -507,7 +507,7 @@ function ProjectListItem({ project }: { project: GalleryProject }) {
   return (
     <Link
       to={`/gallery/${project.id}`}
-      className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 hover:border-purple-500/40 transition-all p-5 flex gap-5 group"
+      className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 hover:border-orange-500/30 transition-all p-5 flex gap-5 group"
     >
       <div className="w-24 h-24 flex-shrink-0 bg-gray-800/50 overflow-hidden">
         {project.cover_image_url ? (
@@ -515,8 +515,8 @@ function ProjectListItem({ project }: { project: GalleryProject }) {
         ) : project.logo_url ? (
           <img src={project.logo_url} alt={project.name} className="w-full h-full object-contain bg-white p-2" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900/20 to-pink-900/20">
-            <Code2 className="h-8 w-8 text-purple-500/30" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900/40 to-gray-900/20">
+            <Code2 className="h-8 w-8 text-orange-400/30" />
           </div>
         )}
       </div>
@@ -524,16 +524,16 @@ function ProjectListItem({ project }: { project: GalleryProject }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h3 className="font-press-start text-xs text-white group-hover:text-purple-400 transition-colors">
+            <h3 className="font-space font-bold text-xs text-white group-hover:text-orange-400 transition-colors">
               {project.name}
             </h3>
             {project.profiles && (
-              <p className="text-[10px] text-gray-500 font-jetbrains mt-1">by @{project.profiles.username}</p>
+              <p className="text-[10px] text-gray-500 font-space mt-1">by @{project.profiles.username}</p>
             )}
           </div>
           
           {project.hackathon_position && (
-            <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-black text-[10px] font-press-start flex items-center gap-1">
+            <div className="px-2.5 py-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-black text-[10px] font-space font-bold flex items-center gap-1">
               <Trophy className="h-3 w-3" />
               {project.hackathon_position}
             </div>
@@ -541,7 +541,7 @@ function ProjectListItem({ project }: { project: GalleryProject }) {
         </div>
 
         {project.tagline && (
-          <p className="text-xs text-gray-400 font-jetbrains mt-2 line-clamp-1">{project.tagline}</p>
+          <p className="text-xs text-gray-400 font-space mt-2 line-clamp-1">{project.tagline}</p>
         )}
 
         <div className="flex items-center gap-4 mt-3">
@@ -552,7 +552,7 @@ function ProjectListItem({ project }: { project: GalleryProject }) {
             <Heart className="h-3 w-3" /> {project.like_count}
           </div>
           {project.hackathons && (
-            <span className="text-[10px] text-purple-400 font-jetbrains">{project.hackathons.title}</span>
+            <span className="text-[10px] text-orange-400 font-space">{project.hackathons.title}</span>
           )}
         </div>
       </div>

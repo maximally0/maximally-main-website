@@ -178,7 +178,7 @@ export default function GalleryProjectDetail() {
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="font-press-start text-sm text-gray-400 animate-pulse">LOADING...</div>
+        <div className="font-space font-bold text-sm text-gray-400 animate-pulse">LOADING...</div>
       </div>
     );
   }
@@ -187,11 +187,11 @@ export default function GalleryProjectDetail() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-purple-500/10 border border-purple-500/30">
-            <Code2 className="h-10 w-10 text-purple-500/50" />
+          <div className="inline-flex items-center justify-center w-20 h-20 mb-6 bg-orange-500/10 border border-gray-800">
+            <Code2 className="h-10 w-10 text-orange-400" />
           </div>
-          <h2 className="font-press-start text-sm sm:text-base text-gray-400 mb-4">PROJECT NOT FOUND</h2>
-          <Link to="/gallery" className="text-purple-400 hover:text-purple-300 font-jetbrains text-sm transition-colors">
+          <h2 className="font-space font-bold text-sm sm:text-base text-gray-400 mb-4">PROJECT NOT FOUND</h2>
+          <Link to="/gallery" className="text-orange-400 hover:text-orange-400 font-space text-sm transition-colors">
             Back to Gallery
           </Link>
         </div>
@@ -211,17 +211,17 @@ export default function GalleryProjectDetail() {
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         {/* Background effects */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
-        <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
-        <div className="absolute top-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
+        <div className="absolute top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-40 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
 
         {/* Header */}
-        <div className="relative z-10 pt-20 sm:pt-24 pb-8 border-b border-purple-500/20">
+        <div className="relative z-10 pt-20 sm:pt-24 pb-8 border-b border-gray-800">
           <div className="container mx-auto px-4 sm:px-6">
             <Link
               to="/gallery"
-              className="group inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 mb-6 font-jetbrains text-sm transition-colors"
+              className="group inline-flex items-center gap-2 text-gray-400 hover:text-orange-400 mb-6 font-space text-sm transition-colors"
             >
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
               Back to Gallery
@@ -239,13 +239,13 @@ export default function GalleryProjectDetail() {
                     />
                   )}
                   <div>
-                    <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl mb-2">
-                      <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
+                    <h1 className="font-space font-bold text-xl sm:text-2xl md:text-3xl mb-2">
+                      <span className="bg-gradient-to-r from-orange-400 via-orange-400 to-red-400 bg-clip-text text-transparent">
                         {project.name}
                       </span>
                     </h1>
                     {project.tagline && (
-                      <p className="text-gray-400 font-jetbrains text-sm sm:text-base">{project.tagline}</p>
+                      <p className="text-gray-400 font-space text-sm sm:text-base">{project.tagline}</p>
                     )}
                   </div>
                 </div>
@@ -255,12 +255,12 @@ export default function GalleryProjectDetail() {
                   <div className="mb-4">
                     <Link
                       to={`/hackathon/${project.hackathons.slug}`}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 hover:border-purple-400 transition-colors"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-gray-800 hover:border-orange-500 transition-colors"
                     >
                       {project.hackathon_position ? (
                         <>
                           <Trophy className="h-4 w-4 text-amber-400" />
-                          <span className="font-press-start text-[10px] text-amber-300">
+                          <span className="font-space font-bold text-[10px] text-amber-300">
                             {project.hackathon_position}
                           </span>
                           <span className="text-gray-400 text-sm">at</span>
@@ -268,7 +268,7 @@ export default function GalleryProjectDetail() {
                       ) : (
                         <span className="text-gray-400 text-sm">Submitted to</span>
                       )}
-                      <span className="font-press-start text-[10px] text-purple-300">
+                      <span className="font-space font-bold text-[10px] text-orange-400">
                         {project.hackathons.title}
                       </span>
                     </Link>
@@ -293,7 +293,7 @@ export default function GalleryProjectDetail() {
                       </div>
                     )}
                     <div>
-                      <p className="text-sm text-white font-jetbrains">
+                      <p className="text-sm text-white font-space">
                         {project.profiles.full_name || project.profiles.username}
                       </p>
                       <p className="text-xs text-gray-500">@{project.profiles.username}</p>
@@ -308,7 +308,7 @@ export default function GalleryProjectDetail() {
                     {project.view_count} views
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Heart className={`h-4 w-4 ${liked ? 'text-pink-500 fill-pink-500' : ''}`} />
+                    <Heart className={`h-4 w-4 ${liked ? 'text-orange-400 fill-orange-500' : ''}`} />
                     {likeCount} likes
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -326,7 +326,7 @@ export default function GalleryProjectDetail() {
                     href={project.demo_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-[10px] transition-all duration-300"
+                    className="flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white font-space font-bold text-[10px] transition-all duration-300"
                   >
                     <ExternalLink className="h-4 w-4" />
                     LIVE DEMO
@@ -338,7 +338,7 @@ export default function GalleryProjectDetail() {
                     href={project.github_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-3 bg-black/50 border border-gray-700 hover:border-purple-500/50 text-gray-300 hover:text-white font-press-start text-[10px] transition-all duration-300"
+                    className="flex items-center justify-center gap-2 py-3 bg-black/50 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-white font-space font-bold text-[10px] transition-all duration-300"
                   >
                     <Github className="h-4 w-4" />
                     VIEW CODE
@@ -350,7 +350,7 @@ export default function GalleryProjectDetail() {
                     href={project.video_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-3 bg-pink-500/20 border border-pink-500/40 hover:border-pink-400 text-pink-300 hover:text-white font-press-start text-[10px] transition-all duration-300"
+                    className="flex items-center justify-center gap-2 py-3 bg-orange-500/10 border border-orange-500/30 hover:border-orange-500 text-orange-400 hover:text-white font-space font-bold text-[10px] transition-all duration-300"
                   >
                     <Video className="h-4 w-4" />
                     WATCH VIDEO
@@ -362,7 +362,7 @@ export default function GalleryProjectDetail() {
                     href={project.website_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-3 bg-black/50 border border-gray-700 hover:border-purple-500/50 text-gray-300 hover:text-white font-press-start text-[10px] transition-all duration-300"
+                    className="flex items-center justify-center gap-2 py-3 bg-black/50 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-white font-space font-bold text-[10px] transition-all duration-300"
                   >
                     <Globe className="h-4 w-4" />
                     WEBSITE
@@ -374,19 +374,19 @@ export default function GalleryProjectDetail() {
                   <button
                     onClick={handleLike}
                     disabled={liking}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 font-press-start text-[10px] transition-all duration-300 ${
+                    className={`flex-1 flex items-center justify-center gap-2 py-3 font-space font-bold text-[10px] transition-all duration-300 ${
                       liked
-                        ? 'bg-pink-500/30 border border-pink-500/50 text-pink-300'
-                        : 'bg-black/50 border border-gray-700 text-gray-400 hover:text-white hover:border-pink-500/50'
+                        ? 'bg-orange-500/20 border border-orange-500/40 text-orange-400'
+                        : 'bg-black/50 border border-gray-700 text-gray-400 hover:text-white hover:border-orange-500/40'
                     }`}
                   >
-                    <Heart className={`h-4 w-4 ${liked ? 'fill-pink-400' : ''}`} />
+                    <Heart className={`h-4 w-4 ${liked ? 'fill-orange-400' : ''}`} />
                     {liked ? 'LIKED' : 'LIKE'}
                   </button>
 
                   <button
                     onClick={handleShare}
-                    className="bg-black/50 border border-gray-700 text-gray-400 hover:text-white hover:border-purple-500/50 px-4 py-3 transition-all duration-300"
+                    className="bg-black/50 border border-gray-700 text-gray-400 hover:text-white hover:border-orange-500/50 px-4 py-3 transition-all duration-300"
                   >
                     <Share2 className="h-4 w-4" />
                   </button>
@@ -394,10 +394,10 @@ export default function GalleryProjectDetail() {
 
                 {/* Owner Actions */}
                 {isOwner && (
-                  <div className="flex gap-2 pt-2 border-t border-purple-500/20">
+                  <div className="flex gap-2 pt-2 border-t border-gray-800">
                     <Link
                       to={`/gallery/edit/${project.id}`}
-                      className="flex-1 flex items-center justify-center gap-2 py-2 bg-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 font-press-start text-[10px] transition-all duration-300"
+                      className="flex-1 flex items-center justify-center gap-2 py-2 bg-amber-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 font-space font-bold text-[10px] transition-all duration-300"
                     >
                       <Edit className="h-3 w-3" />
                       EDIT
@@ -423,7 +423,7 @@ export default function GalleryProjectDetail() {
               <div className="lg:col-span-2 space-y-6 sm:space-y-8">
                 {/* Cover Image */}
                 {project.cover_image_url && (
-                  <div className="border border-purple-500/20 overflow-hidden">
+                  <div className="border border-gray-800 overflow-hidden">
                     <img
                       src={project.cover_image_url}
                       alt={project.name}
@@ -433,18 +433,18 @@ export default function GalleryProjectDetail() {
                 )}
 
                 {/* Description */}
-                <div className="bg-gray-900/50 border border-purple-500/20 p-5 sm:p-6">
-                  <h2 className="font-press-start text-sm sm:text-base text-purple-300 mb-4">ABOUT</h2>
-                  <p className="text-gray-300 font-jetbrains text-sm leading-relaxed whitespace-pre-wrap">
+                <div className="bg-gray-900/50 border border-gray-800 p-5 sm:p-6">
+                  <h2 className="font-space font-bold text-sm sm:text-base text-orange-400 mb-4">ABOUT</h2>
+                  <p className="text-gray-300 font-space text-sm leading-relaxed whitespace-pre-wrap">
                     {project.description}
                   </p>
                 </div>
 
                 {/* README */}
                 {project.readme_content && (
-                  <div className="bg-gray-900/50 border border-purple-500/20 p-5 sm:p-6">
-                    <h2 className="font-press-start text-sm sm:text-base text-purple-300 mb-4">README</h2>
-                    <div className="prose prose-invert prose-sm max-w-none font-jetbrains">
+                  <div className="bg-gray-900/50 border border-gray-800 p-5 sm:p-6">
+                    <h2 className="font-space font-bold text-sm sm:text-base text-orange-400 mb-4">README</h2>
+                    <div className="prose prose-invert prose-sm max-w-none font-space">
                       <ReactMarkdown>{project.readme_content}</ReactMarkdown>
                     </div>
                   </div>
@@ -456,12 +456,12 @@ export default function GalleryProjectDetail() {
                 {/* Technologies */}
                 {project.technologies && project.technologies.length > 0 && (
                   <div className="bg-gray-900/50 border border-green-500/20 p-4 sm:p-5">
-                    <h3 className="font-press-start text-xs text-green-300 mb-3">TECH STACK</h3>
+                    <h3 className="font-space font-bold text-xs text-green-300 mb-3">TECH STACK</h3>
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech, i) => (
                         <span
                           key={i}
-                          className="text-[10px] bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 text-purple-300 font-jetbrains"
+                          className="text-[10px] bg-orange-500/10 border border-gray-800 px-2.5 py-1 text-orange-400 font-space"
                         >
                           {tech}
                         </span>
@@ -472,14 +472,14 @@ export default function GalleryProjectDetail() {
 
                 {/* Tags */}
                 {project.tags && project.tags.length > 0 && (
-                  <div className="bg-gray-900/50 border border-pink-500/20 p-4 sm:p-5">
-                    <h3 className="font-press-start text-xs text-pink-300 mb-3">TAGS</h3>
+                  <div className="bg-gray-900/50 border border-orange-500/20 p-4 sm:p-5">
+                    <h3 className="font-space font-bold text-xs text-orange-400 mb-3">TAGS</h3>
                     <div className="flex flex-wrap gap-2">
                       {project.tags.map((tag, i) => (
                         <Link
                           key={i}
                           to={`/gallery?search=${encodeURIComponent(tag)}`}
-                          className="text-[10px] bg-pink-500/10 border border-pink-500/30 px-2.5 py-1 text-pink-300 font-jetbrains hover:bg-pink-500/20 transition-colors"
+                          className="text-[10px] bg-orange-500/5 border border-gray-800 px-2.5 py-1 text-orange-400 font-space hover:bg-orange-500/10 transition-colors"
                         >
                           #{tag}
                         </Link>
@@ -491,10 +491,10 @@ export default function GalleryProjectDetail() {
                 {/* Category */}
                 {project.category && (
                   <div className="bg-gray-900/50 border border-amber-500/20 p-4 sm:p-5">
-                    <h3 className="font-press-start text-xs text-amber-300 mb-3">CATEGORY</h3>
+                    <h3 className="font-space font-bold text-xs text-amber-300 mb-3">CATEGORY</h3>
                     <Link
                       to={`/gallery?category=${encodeURIComponent(project.category)}`}
-                      className="text-sm text-purple-400 font-jetbrains hover:text-purple-300 transition-colors"
+                      className="text-sm text-orange-400 font-space hover:text-orange-400 transition-colors"
                     >
                       {project.category}
                     </Link>
@@ -535,10 +535,10 @@ export default function GalleryProjectDetail() {
               </div>
 
               {/* Content */}
-              <h3 className="font-press-start text-sm sm:text-base text-white text-center mb-2">
+              <h3 className="font-space font-bold text-sm sm:text-base text-white text-center mb-2">
                 DELETE PROJECT?
               </h3>
-              <p className="text-gray-400 text-center font-jetbrains text-sm mb-6">
+              <p className="text-gray-400 text-center font-space text-sm mb-6">
                 Are you sure you want to delete "{project?.name}"? This action cannot be undone.
               </p>
 
@@ -547,14 +547,14 @@ export default function GalleryProjectDetail() {
                 <button
                   onClick={() => setShowDeleteDialog(false)}
                   disabled={deleting}
-                  className="flex-1 py-3 bg-black/50 border border-gray-700 text-gray-300 font-press-start text-[10px] hover:border-gray-600 disabled:opacity-50 transition-all duration-300"
+                  className="flex-1 py-3 bg-black/50 border border-gray-700 text-gray-300 font-space font-bold text-[10px] hover:border-gray-600 disabled:opacity-50 transition-all duration-300"
                 >
                   CANCEL
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="flex-1 py-3 bg-red-500/20 border border-red-500/50 text-red-300 font-press-start text-[10px] hover:border-red-400 disabled:opacity-50 flex items-center justify-center gap-2 transition-all duration-300"
+                  className="flex-1 py-3 bg-red-500/20 border border-red-500/50 text-red-300 font-space font-bold text-[10px] hover:border-red-400 disabled:opacity-50 flex items-center justify-center gap-2 transition-all duration-300"
                 >
                   {deleting ? (
                     'DELETING...'

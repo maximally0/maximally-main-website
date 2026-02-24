@@ -212,7 +212,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
   };
 
   if (loading) {
-    return <div className="text-center py-8 font-press-start text-gray-400">LOADING...</div>;
+    return <div className="text-center py-8 font-space font-bold text-gray-400">LOADING...</div>;
   }
 
   return (
@@ -220,8 +220,8 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <Scale className="h-6 w-6 text-purple-400" />
-          <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <Scale className="h-6 w-6 text-orange-400" />
+          <h2 className="font-space font-bold text-xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
             JUDGES
           </h2>
         </div>
@@ -230,7 +230,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
             <button
               onClick={handleResendScoringLinks}
               disabled={sendingLinks}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 font-press-start text-xs transition-all flex items-center gap-2 border border-green-500/50 disabled:opacity-50"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 font-space font-bold text-xs transition-all flex items-center gap-2 border border-green-500/50 disabled:opacity-50"
             >
               <Send className="h-4 w-4" />
               {sendingLinks ? 'SENDING...' : 'SEND_SCORING_LINKS'}
@@ -238,7 +238,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
           )}
           <button
             onClick={handleOpenAddModal}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all flex items-center gap-2 border border-pink-500/50"
+            className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-6 py-3 font-space font-bold text-sm transition-all flex items-center gap-2 border border-orange-500/40"
           >
             <UserPlus className="h-4 w-4" />
             ADD_JUDGE
@@ -248,7 +248,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
 
       {/* Info Box */}
       <div className="bg-blue-900/20 border border-blue-500/50 p-4">
-        <p className="font-jetbrains text-sm text-blue-300">
+        <p className="font-space text-sm text-blue-300">
           💡 <span className="text-blue-400 font-bold">Simplified Judging:</span> Add judges here with their basic info. 
           When you make the project gallery public, they'll automatically receive secure scoring links via email - no account needed!
         </p>
@@ -256,13 +256,13 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
 
       {/* Judges List */}
       <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-green-500/30 p-6">
-        <h3 className="font-press-start text-lg text-white mb-4">HACKATHON_JUDGES ({judges.length})</h3>
+        <h3 className="font-space font-bold text-lg text-white mb-4">HACKATHON_JUDGES ({judges.length})</h3>
         
         {judges.length === 0 ? (
           <div className="text-center py-12">
             <Scale className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 font-jetbrains">No judges added yet</p>
-            <p className="text-gray-500 font-jetbrains text-sm mt-2">
+            <p className="text-gray-400 font-space">No judges added yet</p>
+            <p className="text-gray-500 font-space text-sm mt-2">
               Add judges to enable project scoring
             </p>
           </div>
@@ -278,20 +278,20 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
                     <img 
                       src={judge.profile_photo} 
                       alt={judge.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-purple-500/50"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-orange-500/50"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
-                      <span className="font-press-start text-white text-sm">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-600 to-orange-500 flex items-center justify-center">
+                      <span className="font-space font-bold text-white text-sm">
                         {judge.name.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   )}
                   <div>
-                    <div className="font-jetbrains text-white font-bold">{judge.name}</div>
+                    <div className="font-space text-white font-bold">{judge.name}</div>
                     <div className="text-sm text-gray-400">{judge.email}</div>
                     {(judge.role_title || judge.company) && (
-                      <div className="text-xs text-purple-400 mt-1">
+                      <div className="text-xs text-orange-400 mt-1">
                         {judge.role_title}{judge.role_title && judge.company && ' at '}{judge.company}
                       </div>
                     )}
@@ -300,7 +300,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleOpenEditModal(judge)}
-                    className="p-2 text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 transition-colors"
+                    className="p-2 text-orange-400 hover:text-orange-400 hover:bg-orange-500/10 transition-colors"
                     title="Edit judge"
                   >
                     <Edit2 className="h-4 w-4" />
@@ -322,13 +322,13 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
       {/* Add/Edit Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-purple-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-purple-500/30 bg-gradient-to-r from-purple-900/30 to-pink-900/20">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-orange-500/50 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-800 bg-gradient-to-r from-gray-900/40 to-gray-900/20">
               <div className="flex items-center justify-between">
-                <h2 className="font-press-start text-xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h2 className="font-space font-bold text-xl bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                   {editingJudge ? 'EDIT_JUDGE' : 'ADD_JUDGE'}
                 </h2>
-                <button onClick={handleCloseModal} className="text-gray-400 hover:text-pink-400 transition-colors">
+                <button onClick={handleCloseModal} className="text-gray-400 hover:text-orange-400 transition-colors">
                   <X className="h-6 w-6" />
                 </button>
               </div>
@@ -337,68 +337,68 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
             <div className="p-6 space-y-6">
               {/* Name */}
               <div>
-                <label className="font-press-start text-sm text-purple-400 mb-2 block">NAME *</label>
+                <label className="font-space font-bold text-sm text-orange-400 mb-2 block">NAME *</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                  className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
                   placeholder="Judge's full name"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="font-press-start text-sm text-purple-400 mb-2 block">EMAIL *</label>
+                <label className="font-space font-bold text-sm text-orange-400 mb-2 block">EMAIL *</label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                  className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
                   placeholder="judge@example.com"
                 />
-                <p className="text-xs text-gray-500 mt-1 font-jetbrains">
+                <p className="text-xs text-gray-500 mt-1 font-space">
                   Scoring link will be sent to this email
                 </p>
               </div>
 
               {/* Role Title */}
               <div>
-                <label className="font-press-start text-sm text-purple-400 mb-2 block">ROLE/TITLE</label>
+                <label className="font-space font-bold text-sm text-orange-400 mb-2 block">ROLE/TITLE</label>
                 <input
                   type="text"
                   value={formData.role_title}
                   onChange={(e) => setFormData({ ...formData, role_title: e.target.value })}
-                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                  className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
                   placeholder="e.g., CTO, Senior Engineer, Founder"
                 />
               </div>
 
               {/* Company */}
               <div>
-                <label className="font-press-start text-sm text-purple-400 mb-2 block">COMPANY</label>
+                <label className="font-space font-bold text-sm text-orange-400 mb-2 block">COMPANY</label>
                 <input
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+                  className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
                   placeholder="e.g., Google, Microsoft, Startup Inc."
                 />
               </div>
 
               {/* Bio */}
               <div>
-                <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                   BIO <span className="text-gray-500">(max 100 chars)</span>
                 </label>
                 <textarea
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value.slice(0, 100) })}
                   rows={3}
-                  className="w-full bg-black/50 border border-purple-500/30 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none resize-none"
+                  className="w-full bg-black/50 border border-gray-800 text-white px-4 py-3 font-space focus:border-orange-500 outline-none resize-none"
                   placeholder="Brief bio about the judge..."
                 />
-                <p className="text-xs text-gray-500 mt-1 font-jetbrains">
+                <p className="text-xs text-gray-500 mt-1 font-space">
                   {formData.bio.length}/100 characters
                 </p>
               </div>
@@ -407,7 +407,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
               <button
                 onClick={handleSubmit}
                 disabled={saving}
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-3 font-press-start text-sm transition-all flex items-center justify-center gap-2 border border-pink-500/50 disabled:opacity-50"
+                className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white px-6 py-3 font-space font-bold text-sm transition-all flex items-center justify-center gap-2 border border-orange-500/40 disabled:opacity-50"
               >
                 <Save className="h-4 w-4" />
                 {saving ? 'SAVING...' : (editingJudge ? 'UPDATE_JUDGE' : 'ADD_JUDGE')}
@@ -425,7 +425,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Send className="h-5 w-5 text-green-400" />
-                  <h2 className="font-press-start text-sm bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                  <h2 className="font-space font-bold text-sm bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
                     SEND_SCORING_LINKS
                   </h2>
                 </div>
@@ -439,7 +439,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
             </div>
 
             <div className="p-6">
-              <p className="text-gray-300 font-jetbrains text-sm leading-relaxed mb-6">
+              <p className="text-gray-300 font-space text-sm leading-relaxed mb-6">
                 This will send scoring link emails to all <span className="text-green-400 font-bold">{judges.length}</span> judge(s). 
                 Each judge will receive a unique link to score projects.
               </p>
@@ -447,13 +447,13 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowSendLinksModal(false)}
-                  className="flex-1 bg-gray-800/50 border border-gray-600/50 hover:border-gray-500 text-gray-300 hover:text-white px-4 py-3 font-press-start text-xs transition-all"
+                  className="flex-1 bg-gray-800/50 border border-gray-600/50 hover:border-gray-500 text-gray-300 hover:text-white px-4 py-3 font-space font-bold text-xs transition-all"
                 >
                   CANCEL
                 </button>
                 <button
                   onClick={confirmSendLinks}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 font-press-start text-xs transition-all border border-green-500/50"
+                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 font-space font-bold text-xs transition-all border border-green-500/50"
                 >
                   SEND_LINKS
                 </button>

@@ -4,7 +4,7 @@ import BlogPost from '../../components/BlogPost';
 const CanTeensLaunchStartups = () => {
   const content = (
     <div className="space-y-6">
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">"Aren't Startups Just for Adults?"</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">"Aren't Startups Just for Adults?"</h2>
       
       <p className="text-lg">
         That's what most people think. But here's the truth: teenagers today are more equipped than ever to solve real-world problems. With access to technology, creativity, and curiosity — all they need is the right launchpad.
@@ -14,7 +14,7 @@ const CanTeensLaunchStartups = () => {
         <strong>That's where Maximally's Makeathon comes in.</strong>
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Startups Begin With a Simple Idea</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Startups Begin With a Simple Idea</h2>
       
       <p>
         Every successful startup begins with a simple question: <em>"Why hasn't anyone solved this yet?"</em>
@@ -28,7 +28,7 @@ const CanTeensLaunchStartups = () => {
         What they need is the environment to nurture that spark into a startup.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Skills &gt; Age</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Skills &gt; Age</h2>
       
       <p>
         Building a startup doesn't require an MBA or a fancy office. It requires:
@@ -46,7 +46,7 @@ const CanTeensLaunchStartups = () => {
         These are skills teenagers can absolutely develop — and that's exactly what the Makeathon experience is designed to build.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Tools and Tech Are No Longer a Barrier</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Tools and Tech Are No Longer a Barrier</h2>
       
       <p>
         In today's world, teens don't need to code or hire a designer to build a startup. With no-code tools, AI support, and collaborative platforms, the barriers to entry are lower than ever.
@@ -56,7 +56,7 @@ const CanTeensLaunchStartups = () => {
         <strong>A student with a laptop and an idea can build a working prototype within a week.</strong>
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Why the Right Mentorship Matters</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Why the Right Mentorship Matters</h2>
       
       <p>
         Even with talent and tools, young founders need guidance. Mentors at Maximally don't tell students what to build — they teach them how to think like a founder:
@@ -73,7 +73,7 @@ const CanTeensLaunchStartups = () => {
         It's not just startup training. It's a mindset shift — from consumer to creator.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Real Examples of Teen Success</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Real Examples of Teen Success</h2>
       
       <p>
         The evidence is everywhere. Teen entrepreneurs are already making their mark:
@@ -90,7 +90,7 @@ const CanTeensLaunchStartups = () => {
         These aren't just school projects — they're real solutions addressing real problems.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">The Maximally Advantage</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">The Maximally Advantage</h2>
       
       <p>
         What makes Maximally's approach different? We don't just teach theory — we provide:
@@ -104,7 +104,7 @@ const CanTeensLaunchStartups = () => {
         <li><strong>Long-term guidance:</strong> Support that continues beyond the makeathon</li>
       </ul>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">From Idea to Impact</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">From Idea to Impact</h2>
       
       <p>
         The journey from having an idea to building something that matters isn't easy — but it's absolutely possible. Here's what the process looks like:
@@ -124,7 +124,7 @@ const CanTeensLaunchStartups = () => {
         This isn't just a business process — it's a life skill that applies to any challenge you'll face.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Beyond Just Business</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Beyond Just Business</h2>
       
       <p>
         Building a startup teaches you skills that go far beyond entrepreneurship:
@@ -142,7 +142,7 @@ const CanTeensLaunchStartups = () => {
         These skills make you better at everything — from school projects to future careers to personal relationships.
       </p>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">So, Can Teens Really Build Startups?</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">So, Can Teens Really Build Startups?</h2>
       
       <div className="bg-maximally-blue/10 p-6 rounded-lg border-2 border-maximally-blue">
         <p className="text-lg font-bold">
@@ -161,12 +161,12 @@ const CanTeensLaunchStartups = () => {
           They're starting here.
         </p>
         
-        <p className="font-press-start text-maximally-blue">
+        <p className="font-space font-bold text-maximally-blue">
           They're starting at Maximally.
         </p>
       </div>
 
-      <h2 className="text-2xl font-press-start text-maximally-black mt-8 mb-4">Ready to Start Your Journey?</h2>
+      <h2 className="text-2xl font-space font-bold text-maximally-black mt-8 mb-4">Ready to Start Your Journey?</h2>
       
       <p>
         Don't wait for permission. Don't wait for the "perfect" idea. Don't wait until you feel "ready."

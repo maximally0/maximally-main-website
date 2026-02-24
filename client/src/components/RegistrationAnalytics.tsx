@@ -22,9 +22,9 @@ interface AnalyticsProps {
 // Team role icons and colors
 const ROLE_CONFIG: Record<string, { icon: any; color: string; bgColor: string }> = {
   leader: { icon: Crown, color: 'text-yellow-400', bgColor: 'from-yellow-900/40 to-amber-900/20' },
-  developer: { icon: Code, color: 'text-blue-400', bgColor: 'from-blue-900/40 to-cyan-900/20' },
-  designer: { icon: Palette, color: 'text-pink-400', bgColor: 'from-pink-900/40 to-rose-900/20' },
-  pm: { icon: Briefcase, color: 'text-purple-400', bgColor: 'from-purple-900/40 to-violet-900/20' },
+  developer: { icon: Code, color: 'text-blue-400', bgColor: 'from-blue-900/40 to-gray-900/20' },
+  designer: { icon: Palette, color: 'text-orange-400', bgColor: 'from-gray-900/40 to-rose-900/20' },
+  pm: { icon: Briefcase, color: 'text-orange-400', bgColor: 'from-gray-900/50 to-violet-900/20' },
   marketing: { icon: Megaphone, color: 'text-green-400', bgColor: 'from-green-900/40 to-emerald-900/20' },
   other: { icon: HelpCircle, color: 'text-gray-400', bgColor: 'from-gray-900/40 to-gray-800/20' },
 };
@@ -56,7 +56,7 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
   if (loading) {
     return (
       <div className="text-center py-8">
-        <div className="font-press-start text-sm text-gray-400">LOADING_ANALYTICS...</div>
+        <div className="font-space font-bold text-sm text-gray-400">LOADING_ANALYTICS...</div>
       </div>
     );
   }
@@ -72,29 +72,29 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
         <div className="bg-gradient-to-br from-green-900/40 to-emerald-900/20 border border-green-500/30 p-4 hover:border-green-400/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
             <Users className="h-5 w-5 text-green-400" />
-            <span className="font-press-start text-xs text-gray-400">CHECK-IN_RATE</span>
+            <span className="font-space font-bold text-xs text-gray-400">CHECK-IN_RATE</span>
           </div>
-          <div className="text-3xl font-bold text-green-300 font-press-start">
+          <div className="text-3xl font-bold text-green-300 font-space font-bold">
             {overview.checkInRate}%
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-900/40 to-pink-900/20 border border-purple-500/30 p-4 hover:border-purple-400/50 transition-all">
+        <div className="bg-gradient-to-br from-gray-900/50 to-gray-900/20 border border-gray-800 p-4 hover:border-orange-500/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="h-5 w-5 text-purple-400" />
-            <span className="font-press-start text-xs text-gray-400">TEAMS</span>
+            <Users className="h-5 w-5 text-orange-400" />
+            <span className="font-space font-bold text-xs text-gray-400">TEAMS</span>
           </div>
-          <div className="text-3xl font-bold text-purple-300 font-press-start">
+          <div className="text-3xl font-bold text-orange-400 font-space font-bold">
             {overview.teams}
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/20 border border-cyan-500/30 p-4 hover:border-cyan-400/50 transition-all">
+        <div className="bg-gradient-to-br from-gray-900/40 to-blue-900/20 border border-gray-700 p-4 hover:border-gray-600/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
-            <Users className="h-5 w-5 text-cyan-400" />
-            <span className="font-press-start text-xs text-gray-400">INDIVIDUALS</span>
+            <Users className="h-5 w-5 text-gray-300" />
+            <span className="font-space font-bold text-xs text-gray-400">INDIVIDUALS</span>
           </div>
-          <div className="text-3xl font-bold text-cyan-300 font-press-start">
+          <div className="text-3xl font-bold text-gray-300 font-space font-bold">
             {overview.individuals}
           </div>
         </div>
@@ -102,9 +102,9 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
         <div className="bg-gradient-to-br from-amber-900/40 to-orange-900/20 border border-amber-500/30 p-4 hover:border-amber-400/50 transition-all">
           <div className="flex items-center gap-2 mb-2">
             <Users className="h-5 w-5 text-amber-400" />
-            <span className="font-press-start text-xs text-gray-400">WAITLIST</span>
+            <span className="font-space font-bold text-xs text-gray-400">WAITLIST</span>
           </div>
-          <div className="text-3xl font-bold text-amber-300 font-press-start">
+          <div className="text-3xl font-bold text-amber-300 font-space font-bold">
             {overview.waitlist}
           </div>
         </div>
@@ -115,13 +115,13 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
         <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-amber-500/30 p-6 hover:border-amber-400/50 transition-all">
           <div className="flex items-center gap-2 mb-4">
             <School className="h-5 w-5 text-amber-400" />
-            <h3 className="font-press-start text-sm bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">TOP_COLLEGES</h3>
+            <h3 className="font-space font-bold text-sm bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">TOP_COLLEGES</h3>
           </div>
           <div className="space-y-3">
             {collegeStats.slice(0, 5).map((college: any, i: number) => (
               <div key={i} className="flex items-center justify-between">
                 <div className="flex-1">
-                  <div className="font-jetbrains text-white text-sm">{college.college_university}</div>
+                  <div className="font-space text-white text-sm">{college.college_university}</div>
                   <div className="w-full bg-gray-800/50 h-2 mt-1 overflow-hidden">
                     <div 
                       className="bg-gradient-to-r from-amber-500 to-orange-500 h-full"
@@ -129,7 +129,7 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
                     />
                   </div>
                 </div>
-                <div className="ml-4 font-press-start text-sm text-amber-300">
+                <div className="ml-4 font-space font-bold text-sm text-amber-300">
                   {college.total_registrations}
                 </div>
               </div>
@@ -140,18 +140,18 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
 
       {/* Experience Level Distribution */}
       {experienceStats && experienceStats.length > 0 && (
-        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-pink-500/30 p-6 hover:border-pink-400/50 transition-all">
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 p-6 hover:border-orange-500/50 transition-all">
           <div className="flex items-center gap-2 mb-4">
-            <Award className="h-5 w-5 text-pink-400" />
-            <h3 className="font-press-start text-sm bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">EXPERIENCE_LEVELS</h3>
+            <Award className="h-5 w-5 text-orange-400" />
+            <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">EXPERIENCE_LEVELS</h3>
           </div>
           <div className="grid grid-cols-3 gap-4">
             {experienceStats.map((exp: any) => (
-              <div key={exp.experience_level} className="text-center bg-black/30 border border-purple-500/20 p-3">
-                <div className="text-2xl font-bold text-white font-press-start mb-1">
+              <div key={exp.experience_level} className="text-center bg-black/30 border border-gray-800 p-3">
+                <div className="text-2xl font-bold text-white font-space font-bold mb-1">
                   {exp.total_registrations}
                 </div>
-                <div className="text-xs text-gray-400 font-press-start uppercase">
+                <div className="text-xs text-gray-400 font-space font-bold uppercase">
                   {exp.experience_level}
                 </div>
               </div>
@@ -162,10 +162,10 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
 
       {/* Team Role Distribution */}
       {analytics.teamRoleStats && analytics.teamRoleStats.length > 0 && (
-        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-cyan-500/30 p-6 hover:border-cyan-400/50 transition-all">
+        <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6 hover:border-gray-600/50 transition-all">
           <div className="flex items-center gap-2 mb-4">
-            <Users className="h-5 w-5 text-cyan-400" />
-            <h3 className="font-press-start text-sm bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">TEAM_ROLE_DISTRIBUTION</h3>
+            <Users className="h-5 w-5 text-gray-300" />
+            <h3 className="font-space font-bold text-sm bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-transparent">TEAM_ROLE_DISTRIBUTION</h3>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {analytics.teamRoleStats.map((role: any) => {
@@ -178,16 +178,16 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <Icon className={`h-5 w-5 ${config.color}`} />
-                    <span className="font-press-start text-xs text-gray-300 uppercase">
+                    <span className="font-space font-bold text-xs text-gray-300 uppercase">
                       {role.team_role || 'UNASSIGNED'}
                     </span>
                   </div>
                   <div className="flex items-end justify-between">
-                    <div className="text-2xl font-bold text-white font-press-start">
+                    <div className="text-2xl font-bold text-white font-space font-bold">
                       {role.count}
                     </div>
                     {role.percentage && (
-                      <div className="text-xs text-gray-400 font-jetbrains">
+                      <div className="text-xs text-gray-400 font-space">
                         {role.percentage}%
                       </div>
                     )}
@@ -204,12 +204,12 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
         <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-green-500/30 p-6 hover:border-green-400/50 transition-all">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="h-5 w-5 text-green-400" />
-            <h3 className="font-press-start text-sm bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">REGISTRATION_TIMELINE</h3>
+            <h3 className="font-space font-bold text-sm bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">REGISTRATION_TIMELINE</h3>
           </div>
           <div className="space-y-2">
             {Object.entries(timeline).slice(-7).map(([date, count]: [string, any]) => (
               <div key={date} className="flex items-center gap-3">
-                <div className="font-jetbrains text-xs text-gray-400 w-24">
+                <div className="font-space text-xs text-gray-400 w-24">
                   {new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </div>
                 <div className="flex-1 bg-gray-800/50 h-6 overflow-hidden">
@@ -217,7 +217,7 @@ export default function RegistrationAnalytics({ hackathonId }: AnalyticsProps) {
                     className="bg-gradient-to-r from-green-500 to-emerald-500 h-full flex items-center justify-end pr-2"
                     style={{ width: `${Math.min((count / Math.max(...Object.values(timeline) as number[])) * 100, 100)}%` }}
                   >
-                    <span className="font-press-start text-xs text-white">{count}</span>
+                    <span className="font-space font-bold text-xs text-white">{count}</span>
                   </div>
                 </div>
               </div>

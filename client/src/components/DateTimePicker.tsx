@@ -64,13 +64,13 @@ export default function DateTimePicker({
         onChange={handleChange}
         min={minDateStr}
         placeholder={placeholder}
-        className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-jetbrains hover:border-gray-600 focus:border-blue-500 outline-none transition-colors pr-12"
+        className="w-full bg-gray-800 border-2 border-gray-700 text-white px-4 py-3 font-space hover:border-gray-600 focus:border-blue-500 outline-none transition-colors pr-12"
         style={{
           colorScheme: 'dark',
         }}
       />
       <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-      <span className="absolute right-10 top-1/2 -translate-y-1/2 text-xs text-gray-500 font-jetbrains">UTC</span>
+      <span className="absolute right-10 top-1/2 -translate-y-1/2 text-xs text-gray-500 font-space">UTC</span>
     </div>
   );
 }

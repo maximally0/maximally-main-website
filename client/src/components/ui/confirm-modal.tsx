@@ -77,12 +77,12 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
         };
       default:
         return {
-          border: 'border-purple-500/50',
-          header: 'from-purple-900/30 to-pink-900/20',
-          headerBorder: 'border-purple-500/30',
-          title: 'from-purple-400 to-pink-400',
-          icon: 'text-purple-400',
-          confirmBtn: 'from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 border-pink-500/50',
+          border: 'border-orange-500/30',
+          header: 'from-gray-900/30 to-gray-900/20',
+          headerBorder: 'border-gray-800',
+          title: 'from-orange-400 to-orange-400',
+          icon: 'text-orange-400',
+          confirmBtn: 'from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 border-orange-500/30',
         };
     }
   };
@@ -99,7 +99,7 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <AlertTriangle className={`h-5 w-5 ${styles.icon}`} />
-                  <h2 className={`font-press-start text-sm bg-gradient-to-r ${styles.title} bg-clip-text text-transparent`}>
+                  <h2 className={`font-space font-bold text-sm bg-gradient-to-r ${styles.title} bg-clip-text text-transparent`}>
                     {options.title || 'CONFIRM'}
                   </h2>
                 </div>
@@ -113,20 +113,20 @@ export function ConfirmProvider({ children }: ConfirmProviderProps) {
             </div>
 
             <div className="p-6">
-              <p className="text-gray-300 font-jetbrains text-sm leading-relaxed mb-6">
+              <p className="text-gray-300 font-space text-sm leading-relaxed mb-6">
                 {options.message}
               </p>
 
               <div className="flex gap-3">
                 <button
                   onClick={handleCancel}
-                  className="flex-1 bg-gray-800/50 border border-gray-600/50 hover:border-gray-500 text-gray-300 hover:text-white px-4 py-3 font-press-start text-xs transition-all"
+                  className="flex-1 bg-gray-800/50 border border-gray-600/50 hover:border-gray-500 text-gray-300 hover:text-white px-4 py-3 font-space font-bold text-xs transition-all"
                 >
                   {options.cancelText || 'CANCEL'}
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className={`flex-1 bg-gradient-to-r ${styles.confirmBtn} text-white px-4 py-3 font-press-start text-xs transition-all`}
+                  className={`flex-1 bg-gradient-to-r ${styles.confirmBtn} text-white px-4 py-3 font-space font-bold text-xs transition-all`}
                 >
                   {options.confirmText || 'CONFIRM'}
                 </button>

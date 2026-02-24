@@ -123,7 +123,7 @@ export default function NoCodeAIShipathon() {
         </div>
         <div className="space-y-4">
           <div>
-            <h3 className="font-bold text-purple-600">💼 Hustlers</h3>
+            <h3 className="font-bold text-orange-400">💼 Hustlers</h3>
             <p>who want to launch an idea with zero tech barrier</p>
           </div>
           <div>

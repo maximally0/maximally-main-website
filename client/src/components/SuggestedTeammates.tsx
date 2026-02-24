@@ -172,7 +172,7 @@ export function SuggestedTeammates({
               <Link href={`/profile/${teammate.username}`}>
                 <Avatar className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-green-500 transition-all">
                   <AvatarImage src={teammate.avatar_url || undefined} />
-                  <AvatarFallback className="bg-gradient-to-br from-green-500 to-cyan-500 text-white">
+                  <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-500 text-white">
                     {teammate.full_name?.[0] || '?'}
                   </AvatarFallback>
                 </Avatar>
@@ -190,7 +190,7 @@ export function SuggestedTeammates({
                     </Badge>
                   )}
                   {teammate.collaboration_count > 0 && (
-                    <Badge className="bg-purple-500/20 text-purple-400 text-xs">
+                    <Badge className="bg-orange-500/10 text-orange-400 text-xs">
                       <History className="w-3 h-3 mr-1" />
                       {teammate.collaboration_count}x teammate
                     </Badge>

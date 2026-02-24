@@ -37,11 +37,11 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
 const categoryColors: Record<string, string> = {
   framework: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  library: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  library: 'bg-orange-500/10 text-orange-400 border-gray-800',
   database: 'bg-green-500/20 text-green-400 border-green-500/30',
   hosting: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-  design: 'bg-pink-500/20 text-pink-400 border-pink-500/30',
-  devops: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+  design: 'bg-orange-500/10 text-orange-400 border-gray-800',
+  devops: 'bg-gray-800 text-gray-300 border-gray-700',
   api: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
   testing: 'bg-red-500/20 text-red-400 border-red-500/30',
   other: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
@@ -111,7 +111,7 @@ export function RecommendedTools({ limit = 6, showTitle = true }: RecommendedToo
         {showTitle && (
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <Wrench className="w-5 h-5 text-cyan-400" />
+              <Wrench className="w-5 h-5 text-gray-300" />
               Recommended Tools
             </CardTitle>
           </CardHeader>
@@ -130,7 +130,7 @@ export function RecommendedTools({ limit = 6, showTitle = true }: RecommendedToo
       {showTitle && (
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
-            <Wrench className="w-5 h-5 text-cyan-400" />
+            <Wrench className="w-5 h-5 text-gray-300" />
             Tools For Your Stack
           </CardTitle>
           <CardDescription className="text-gray-400">
@@ -146,7 +146,7 @@ export function RecommendedTools({ limit = 6, showTitle = true }: RecommendedToo
               href={tool.tool_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-4 bg-white/5 rounded-lg border border-white/10 hover:border-cyan-500/30 hover:bg-white/10 transition-all"
+              className="group p-4 bg-white/5 rounded-lg border border-white/10 hover:border-gray-700 hover:bg-white/10 transition-all"
             >
               <div className="flex items-start gap-3">
                 {tool.tool_logo ? (
@@ -156,16 +156,16 @@ export function RecommendedTools({ limit = 6, showTitle = true }: RecommendedToo
                     className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gray-700 to-blue-500 flex items-center justify-center flex-shrink-0">
                     {categoryIcons[tool.category] || <Wrench className="w-5 h-5 text-white" />}
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-white font-medium group-hover:text-cyan-400 transition-colors">
+                    <h4 className="text-white font-medium group-hover:text-gray-300 transition-colors">
                       {tool.tool_name}
                     </h4>
-                    <ExternalLink className="w-3 h-3 text-gray-500 group-hover:text-cyan-400" />
+                    <ExternalLink className="w-3 h-3 text-gray-500 group-hover:text-gray-300" />
                   </div>
                   <Badge className={`${categoryColors[tool.category]} text-xs mt-1`}>
                     {tool.category}
@@ -193,8 +193,8 @@ export function RecommendedTools({ limit = 6, showTitle = true }: RecommendedToo
               {/* Match reasons */}
               {tool.match_reasons && tool.match_reasons.length > 0 && (
                 <div className="flex items-center gap-1 mt-2">
-                  <Sparkles className="w-3 h-3 text-cyan-400" />
-                  <span className="text-xs text-cyan-400/80">
+                  <Sparkles className="w-3 h-3 text-gray-300" />
+                  <span className="text-xs text-gray-300/80">
                     {tool.match_reasons[0]}
                   </span>
                 </div>

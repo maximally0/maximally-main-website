@@ -26,7 +26,7 @@ const MakeathonReport = () => {
       color: 'blue',
     },
     { icon: Globe, label: 'Digital Reach', value: '70k+', color: 'green' },
-    { icon: Target, label: 'Prize Pool', value: '₹10k', color: 'purple' },
+    { icon: Target, label: 'Prize Pool', value: '₹10k', color: 'orange' },
   ];
 
   const highlights = [
@@ -56,7 +56,7 @@ const MakeathonReport = () => {
       description:
         'High-energy Gen Z content across Instagram, LinkedIn, YouTube, and Devpost',
       icon: Globe,
-      color: 'purple',
+      color: 'orange',
     },
   ];
 
@@ -79,7 +79,7 @@ const MakeathonReport = () => {
     {
       name: 'Saket Ozarkar',
       role: 'Software Engineer @ Replit',
-      color: 'purple',
+      color: 'orange',
     },
     {
       name: 'Nidhi Mahajan',
@@ -124,8 +124,8 @@ const MakeathonReport = () => {
         ? 'border-green-600 shadow-green-500/30'
         : 'border-green-400',
       purple: isHover
-        ? 'border-purple-600 shadow-purple-500/30'
-        : 'border-purple-400',
+        ? 'border-orange-500 shadow-orange-500/30'
+        : 'border-orange-500',
       yellow: isHover
         ? 'border-yellow-600 shadow-yellow-500/30'
         : 'border-yellow-400',
@@ -141,7 +141,7 @@ const MakeathonReport = () => {
       red: 'text-red-600',
       blue: 'text-blue-600',
       green: 'text-green-600',
-      purple: 'text-purple-600',
+      purple: 'text-orange-500',
       yellow: 'text-yellow-600',
       orange: 'text-orange-600',
     };
@@ -166,7 +166,7 @@ const MakeathonReport = () => {
                 i % 3 === 0
                   ? 'w-3 h-3 bg-red-500/20'
                   : i % 3 === 1
-                  ? 'w-4 h-4 bg-blue-500/20'
+                  ? 'w-4 h-4 bg-gray-800'
                   : 'w-2 h-2 bg-green-500/20'
               }`}
               style={{
@@ -188,7 +188,7 @@ const MakeathonReport = () => {
           >
             <Link
               to="/events"
-              className="inline-flex items-center gap-2 font-jetbrains text-gray-600 hover:text-red-600 transition-colors mb-6 group"
+              className="inline-flex items-center gap-2 font-space text-gray-600 hover:text-red-600 transition-colors mb-6 group"
             >
               <ArrowLeft className="h-4 w-4 group-hover:transform group-hover:-translate-x-1 transition-transform" />
               Back to Events
@@ -196,7 +196,7 @@ const MakeathonReport = () => {
 
             <div className="text-center">
               <motion.h1
-                className="font-press-start text-3xl md:text-5xl mb-6 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-clip-text text-transparent leading-tight drop-shadow-lg"
+                className="font-space font-bold text-3xl md:text-5xl mb-6 bg-gradient-to-r from-red-600 via-red-500 to-red-700 bg-clip-text text-transparent leading-tight drop-shadow-lg"
                 animate={{
                   textShadow: [
                     '0 0 0px rgba(220, 38, 38, 0)',
@@ -211,16 +211,16 @@ const MakeathonReport = () => {
               <div className="flex items-center justify-center gap-6 mb-4">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-gray-600" />
-                  <span className="font-jetbrains text-gray-700">
+                  <span className="font-space text-gray-700">
                     July 1-7, 2025
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-gray-600" />
-                  <span className="font-jetbrains text-gray-700">7 Days</span>
+                  <span className="font-space text-gray-700">7 Days</span>
                 </div>
               </div>
-              <p className="font-jetbrains text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
+              <p className="font-space text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
                 India's first-ever startup building sprint - from idea to
                 prototype in one week
               </p>
@@ -263,10 +263,10 @@ const MakeathonReport = () => {
                           className={`h-6 w-6 ${getAccentColor(stat.color)}`}
                         />
                       </div>
-                      <div className="font-press-start text-2xl mb-2 text-gray-900">
+                      <div className="font-space font-bold text-2xl mb-2 text-gray-900">
                         {stat.value}
                       </div>
-                      <div className="font-jetbrains text-sm text-gray-600 font-medium">
+                      <div className="font-space text-sm text-gray-600 font-medium">
                         {stat.label}
                       </div>
                     </CardContent>
@@ -284,7 +284,7 @@ const MakeathonReport = () => {
             transition={{ delay: 0.4 }}
           >
             <div className="text-center mb-12">
-              <h2 className="font-press-start text-3xl md:text-4xl mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent drop-shadow-sm">
+              <h2 className="font-space font-bold text-3xl md:text-4xl mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent drop-shadow-sm">
                 Event Highlights
               </h2>
               <div className="w-32 h-2 bg-gradient-to-r from-red-600 to-red-500 mx-auto pixel-border shadow-lg"></div>
@@ -321,13 +321,13 @@ const MakeathonReport = () => {
                         />
                       </div>
                       <h3
-                        className={`font-press-start text-lg mb-4 text-black group-hover:${getAccentColor(
+                        className={`font-space font-bold text-lg mb-4 text-black group-hover:${getAccentColor(
                           highlight.color
                         )} transition-colors leading-tight`}
                       >
                         {highlight.title}
                       </h3>
-                      <p className="font-jetbrains text-gray-700 text-sm leading-relaxed font-medium">
+                      <p className="font-space text-gray-700 text-sm leading-relaxed font-medium">
                         {highlight.description}
                       </p>
                     </CardContent>
@@ -345,11 +345,11 @@ const MakeathonReport = () => {
             transition={{ delay: 0.6 }}
           >
             <div className="text-center mb-12">
-              <h2 className="font-press-start text-3xl md:text-4xl mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent drop-shadow-sm">
+              <h2 className="font-space font-bold text-3xl md:text-4xl mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent drop-shadow-sm">
                 Global Judges & Mentors
               </h2>
               <div className="w-32 h-2 bg-gradient-to-r from-blue-600 to-blue-500 mx-auto pixel-border shadow-lg"></div>
-              <p className="font-jetbrains text-gray-600 mt-4 max-w-2xl mx-auto">
+              <p className="font-space text-gray-600 mt-4 max-w-2xl mx-auto">
                 15+ global professionals from Meta, Amazon, Intuit, Replit,
                 Visa, and more
               </p>
@@ -377,13 +377,13 @@ const MakeathonReport = () => {
                     ></div>
                     <CardContent className="p-6">
                       <h3
-                        className={`font-press-start text-sm mb-3 text-black group-hover:${getAccentColor(
+                        className={`font-space font-bold text-sm mb-3 text-black group-hover:${getAccentColor(
                           judge.color
                         )} transition-colors leading-tight`}
                       >
                         {judge.name}
                       </h3>
-                      <p className="font-jetbrains text-gray-600 text-xs leading-relaxed font-medium">
+                      <p className="font-space text-gray-600 text-xs leading-relaxed font-medium">
                         {judge.role}
                       </p>
                     </CardContent>
@@ -401,7 +401,7 @@ const MakeathonReport = () => {
             transition={{ delay: 0.8 }}
           >
             <div className="text-center mb-12">
-              <h2 className="font-press-start text-3xl md:text-4xl mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent drop-shadow-sm">
+              <h2 className="font-space font-bold text-3xl md:text-4xl mb-6 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent drop-shadow-sm">
                 Content & Media
               </h2>
               <div className="w-32 h-2 bg-gradient-to-r from-green-600 to-green-500 mx-auto pixel-border shadow-lg"></div>
@@ -421,10 +421,10 @@ const MakeathonReport = () => {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-press-start text-sm text-black group-hover:text-green-600 transition-colors mb-2">
+                          <h3 className="font-space font-bold text-sm text-black group-hover:text-green-600 transition-colors mb-2">
                             {link.title}
                           </h3>
-                          <p className="font-jetbrains text-xs text-gray-600 font-medium">
+                          <p className="font-space text-xs text-gray-600 font-medium">
                             {link.platform}
                           </p>
                         </div>
@@ -432,7 +432,7 @@ const MakeathonReport = () => {
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="pixel-button bg-gradient-to-r from-green-600 to-green-700 text-white font-press-start text-xs px-4 py-2 hover:scale-105 hover:shadow-lg transition-all flex items-center gap-2 border-2 border-green-800"
+                          className="pixel-button bg-gradient-to-r from-green-600 to-green-700 text-white font-space font-bold text-xs px-4 py-2 hover:scale-105 hover:shadow-lg transition-all flex items-center gap-2 border-2 border-green-800"
                         >
                           <ExternalLink className="h-3 w-3" />
                           <span>View</span>
@@ -447,7 +447,7 @@ const MakeathonReport = () => {
 
           {/* Impact Statement */}
           <motion.section
-            className="text-center pixel-border p-12 md:p-16 bg-gradient-to-r from-red-600/10 via-purple-600/5 to-blue-600/10 relative overflow-hidden"
+            className="text-center pixel-border p-12 md:p-16 bg-gradient-to-r from-red-600/10 via-gray-800/5 to-blue-600/10 relative overflow-hidden"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.0 }}
@@ -465,17 +465,17 @@ const MakeathonReport = () => {
               ))}
             </div>
 
-            <h2 className="font-press-start text-2xl md:text-3xl mb-8 bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent leading-tight drop-shadow-sm relative z-10">
+            <h2 className="font-space font-bold text-2xl md:text-3xl mb-8 bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent leading-tight drop-shadow-sm relative z-10">
               Legacy & Next Steps
             </h2>
-            <p className="font-jetbrains text-lg md:text-xl text-gray-700 mb-6 max-w-4xl mx-auto font-medium relative z-10">
+            <p className="font-space text-lg md:text-xl text-gray-700 mb-6 max-w-4xl mx-auto font-medium relative z-10">
               The Startup Makeathon was more than just an event — it was the
               kickoff to Maximally's hackathon ecosystem. It proved that
               students are hungry for startup-style building sprints, global
               professionals are willing to join as judges and mentors, and
               sponsors see value in funding Gen Z competitions.
             </p>
-            <p className="font-jetbrains text-base text-gray-600 max-w-3xl mx-auto relative z-10">
+            <p className="font-space text-base text-gray-600 max-w-3xl mx-auto relative z-10">
               This impact carried directly into planning the Maximally AI
               Shipathon (Aug 30–Sept 1, 2025) and the upcoming Grand Indian
               Hackathon Season.

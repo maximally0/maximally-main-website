@@ -124,7 +124,7 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
   if (loading) {
     return (
       <div className="text-center py-4">
-        <div className="font-press-start text-sm text-gray-400">LOADING...</div>
+        <div className="font-space font-bold text-sm text-gray-400">LOADING...</div>
       </div>
     );
   }
@@ -137,16 +137,16 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
       <div className="bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 p-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="font-press-start text-lg text-white mb-2">{team.team_name}</h3>
-            <p className="text-sm text-gray-400 font-jetbrains">
-              Team Code: <span className="text-amber-400 font-press-start">{team.team_code}</span>
+            <h3 className="font-space font-bold text-lg text-white mb-2">{team.team_name}</h3>
+            <p className="text-sm text-gray-400 font-space">
+              Team Code: <span className="text-amber-400 font-space font-bold">{team.team_code}</span>
             </p>
           </div>
           <div className="text-right">
-            <div className="text-2xl font-bold text-amber-400 font-press-start">
+            <div className="text-2xl font-bold text-amber-400 font-space font-bold">
               {team.members.length}
             </div>
-            <div className="text-xs text-gray-400 font-press-start">MEMBERS</div>
+            <div className="text-xs text-gray-400 font-space font-bold">MEMBERS</div>
           </div>
         </div>
 
@@ -162,8 +162,8 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
                   <Crown className="h-4 w-4 text-amber-400" />
                 )}
                 <div>
-                  <p className="font-jetbrains text-white text-sm">{member.full_name}</p>
-                  <p className="font-jetbrains text-gray-400 text-xs">{member.email}</p>
+                  <p className="font-space text-white text-sm">{member.full_name}</p>
+                  <p className="font-space text-gray-400 text-xs">{member.email}</p>
                 </div>
               </div>
               {isLeader && member.user_id !== team.team_leader_id && (
@@ -182,8 +182,8 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
       {/* Invite Members (Leader Only) */}
       {isLeader && (
         <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-6">
-          <h4 className="font-press-start text-sm text-cyan-400 mb-4 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+          <h4 className="font-space font-bold text-sm text-gray-300 mb-4 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-orange-400"></span>
             INVITE MEMBERS
           </h4>
           <div className="flex gap-2">
@@ -192,19 +192,19 @@ export default function TeamManagement({ teamId, hackathonId, isLeader, onUpdate
               value={inviteEmail}
               onChange={(e) => setInviteEmail(e.target.value)}
               placeholder="Enter email address"
-              className="flex-1 bg-black/50 border border-cyan-500/30 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none placeholder:text-gray-600"
+              className="flex-1 bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-gray-600 outline-none placeholder:text-gray-600"
             />
             <button
               onClick={handleInvite}
               disabled={sending || !inviteEmail.trim()}
-              className="bg-gradient-to-r from-cyan-600 to-blue-500 hover:from-cyan-500 hover:to-blue-400 border border-cyan-500/50 text-white px-6 py-3 font-press-start text-xs transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+              className="bg-gradient-to-r from-gray-700 to-blue-500 hover:from-gray-700 hover:to-blue-400 border border-gray-700 text-white px-6 py-3 font-space font-bold text-xs transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
             >
               <Mail className="h-4 w-4" />
               SEND
             </button>
           </div>
-          <p className="text-xs text-gray-400 font-jetbrains mt-2">
-            Share your team code <span className="text-amber-400 font-press-start">{team.team_code}</span> with teammates to join instantly
+          <p className="text-xs text-gray-400 font-space mt-2">
+            Share your team code <span className="text-amber-400 font-space font-bold">{team.team_code}</span> with teammates to join instantly
           </p>
         </div>
       )}

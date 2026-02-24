@@ -113,33 +113,33 @@ const PeopleOrganizers = () => {
             <section className="text-center mb-16">
               <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600/30 to-emerald-600/20 border border-green-500/40 mb-8">
                 <Building2 className="h-5 w-5 text-green-400" />
-                <span className="font-press-start text-xs text-green-300">EVENT HOSTS</span>
+                <span className="font-space font-bold text-xs text-green-300">EVENT HOSTS</span>
                 <Sparkles className="h-5 w-5 text-emerald-400" />
               </div>
               
-              <h1 className="font-press-start text-4xl md:text-5xl lg:text-6xl mb-8">
+              <h1 className="font-space font-bold text-4xl md:text-5xl lg:text-6xl mb-8">
                 <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
                   ORGANIZERS
                 </span>
               </h1>
               
-              <p className="text-gray-300 text-lg md:text-xl font-jetbrains max-w-4xl mx-auto leading-relaxed mb-8">
+              <p className="text-gray-300 text-lg md:text-xl font-space max-w-4xl mx-auto leading-relaxed mb-8">
                 The community leaders who bring Maximally hackathons to life. 
                 <span className="text-green-400 font-bold"> Event hosts from around the world</span> making innovation happen.
               </p>
               
               <div className="flex justify-center gap-4 mb-8 flex-wrap">
                 <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/20 border border-green-500/40 px-5 py-3">
-                  <span className="font-press-start text-xs text-green-300">{apiOrganizers.length} ORGANIZERS</span>
+                  <span className="font-space font-bold text-xs text-green-300">{apiOrganizers.length} ORGANIZERS</span>
                 </div>
-                <div className="bg-gradient-to-r from-teal-600/30 to-cyan-600/20 border border-teal-500/40 px-5 py-3">
-                  <span className="font-press-start text-xs text-teal-300">5 TIERS</span>
+                <div className="bg-gradient-to-r from-teal-600/30 to-gray-700/20 border border-teal-500/40 px-5 py-3">
+                  <span className="font-space font-bold text-xs text-teal-300">5 TIERS</span>
                 </div>
               </div>
               
               <Link 
                 to="/people" 
-                className="inline-block bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-press-start text-xs border border-green-500/50 transition-all hover:scale-[1.02]"
+                className="inline-block bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-space font-bold text-xs border border-green-500/50 transition-all hover:scale-[1.02]"
               >
                 ← BACK TO PEOPLE
               </Link>
@@ -154,14 +154,14 @@ const PeopleOrganizers = () => {
                   placeholder="Search organizers by name, organization, location..." 
                   value={searchQuery} 
                   onChange={(e) => { setSearchQuery(e.target.value); setCurrentPage(1); }} 
-                  className="w-full bg-black/50 border border-green-500/40 text-white pl-12 pr-4 py-4 font-jetbrains focus:border-emerald-400 focus:outline-none transition-colors placeholder:text-gray-500" 
+                  className="w-full bg-black/50 border border-green-500/40 text-white pl-12 pr-4 py-4 font-space focus:border-emerald-400 focus:outline-none transition-colors placeholder:text-gray-500" 
                 />
               </div>
               
               <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
                 <button 
                   onClick={() => setShowFilters(!showFilters)} 
-                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-5 py-2 font-press-start text-xs border border-green-500/50 flex items-center gap-2 transition-all"
+                  className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-5 py-2 font-space font-bold text-xs border border-green-500/50 flex items-center gap-2 transition-all"
                 >
                   <Filter className="h-4 w-4" />
                   {showFilters ? 'HIDE FILTERS' : 'SHOW FILTERS'}
@@ -170,7 +170,7 @@ const PeopleOrganizers = () => {
                 {hasActiveFilters && (
                   <button 
                     onClick={clearFilters} 
-                    className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white px-5 py-2 font-press-start text-xs border border-red-500/50 flex items-center gap-2 transition-all"
+                    className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white px-5 py-2 font-space font-bold text-xs border border-red-500/50 flex items-center gap-2 transition-all"
                   >
                     <X className="h-4 w-4" />
                     CLEAR ALL
@@ -180,11 +180,11 @@ const PeopleOrganizers = () => {
               
               {showFilters && (
                 <div className="mb-6 bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-500/40 p-6">
-                  <label className="font-press-start text-xs text-green-400 mb-3 block">FILTER BY TIER</label>
+                  <label className="font-space font-bold text-xs text-green-400 mb-3 block">FILTER BY TIER</label>
                   <select 
                     value={selectedTier} 
                     onChange={(e) => { setSelectedTier(e.target.value as OrganizerTier | 'all'); setCurrentPage(1); }} 
-                    className="w-full bg-black/50 border border-green-500/40 text-white px-4 py-3 font-jetbrains focus:border-emerald-400 focus:outline-none transition-colors"
+                    className="w-full bg-black/50 border border-green-500/40 text-white px-4 py-3 font-space focus:border-emerald-400 focus:outline-none transition-colors"
                   >
                     <option value="all">All Tiers</option>
                     <option value="legacy">🔥 Legacy Organizer</option>
@@ -196,7 +196,7 @@ const PeopleOrganizers = () => {
                 </div>
               )}
               
-              <p className="text-center font-jetbrains text-gray-400 text-sm">
+              <p className="text-center font-space text-gray-400 text-sm">
                 Showing <span className="text-green-400 font-bold">{filteredOrganizers.length}</span> organizers
                 {hasActiveFilters && ' (filtered)'}
               </p>
@@ -232,7 +232,7 @@ const PeopleOrganizers = () => {
                         <ChevronLeft className="h-5 w-5" />
                       </button>
                       
-                      <span className="px-6 py-2 font-press-start text-sm text-green-400 bg-green-900/20 border border-green-500/30">
+                      <span className="px-6 py-2 font-space font-bold text-sm text-green-400 bg-green-900/20 border border-green-500/30">
                         {currentPage} / {totalPages}
                       </span>
                       
@@ -250,12 +250,12 @@ const PeopleOrganizers = () => {
                 <div className="text-center py-16">
                   <div className="bg-gradient-to-br from-green-900/20 to-emerald-900/10 border border-green-500/30 px-8 py-6 inline-block mb-6">
                     <Users className="h-12 w-12 text-green-500/50 mx-auto mb-4" />
-                    <p className="font-press-start text-sm text-gray-400">NO ORGANIZERS FOUND</p>
+                    <p className="font-space font-bold text-sm text-gray-400">NO ORGANIZERS FOUND</p>
                   </div>
-                  <p className="text-gray-500 font-jetbrains mb-6">Try adjusting your search or filters.</p>
+                  <p className="text-gray-500 font-space mb-6">Try adjusting your search or filters.</p>
                   <button 
                     onClick={clearFilters} 
-                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-press-start text-xs border border-green-500/50 transition-all"
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-6 py-3 font-space font-bold text-xs border border-green-500/50 transition-all"
                   >
                     CLEAR FILTERS
                   </button>
@@ -266,15 +266,15 @@ const PeopleOrganizers = () => {
               <div className="mt-16 text-center">
                 <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/20 border border-green-500/40 p-10 max-w-2xl mx-auto">
                   <Sparkles className="h-12 w-12 text-green-400 mx-auto mb-6" />
-                  <h3 className="font-press-start text-lg bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-4">
+                  <h3 className="font-space font-bold text-lg bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent mb-4">
                     BECOME AN ORGANIZER
                   </h3>
-                  <p className="font-jetbrains text-gray-300 mb-6">
+                  <p className="font-space text-gray-300 mb-6">
                     Want to host hackathons with Maximally? Join our community of organizers and bring innovation to your city.
                   </p>
                   <Link 
                     to="/organizer/apply" 
-                    className="inline-block bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-8 py-4 font-press-start text-sm border border-green-500/50 transition-all hover:scale-[1.02]"
+                    className="inline-block bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-8 py-4 font-space font-bold text-sm border border-green-500/50 transition-all hover:scale-[1.02]"
                   >
                     APPLY TO BE AN ORGANIZER
                   </Link>

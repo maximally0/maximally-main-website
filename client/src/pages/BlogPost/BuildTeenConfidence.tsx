@@ -4,7 +4,7 @@ import BlogPost from '@/components/BlogPost';
 const BuildTeenConfidence = () => {
   const content = (
     <>
-      <p className="lead font-jetbrains text-lg mb-6">
+      <p className="lead font-space text-lg mb-6">
         Here's the truth no one talks about: confidence doesn't come from marks. Or medals. Or attending the most expensive tuition center in town.
       </p>
 
@@ -17,7 +17,7 @@ const BuildTeenConfidence = () => {
       </p>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Confidence Is Built, Not Taught</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Confidence Is Built, Not Taught</h2>
         <p className="mb-4">You can't download confidence into a teenager's brain.</p>
         <p className="mb-4">They have to earn it. Feel it. Internalize it.</p>
         <p className="mb-4">That only happens when they face small but meaningful challenges and come out the other side with a win — or even a lesson.</p>
@@ -35,7 +35,7 @@ const BuildTeenConfidence = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">The Problem With Tutors and Tuitions</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">The Problem With Tutors and Tuitions</h2>
         <p className="mb-4">Tutors aren't evil. But too often, they become a crutch.</p>
         <p className="mb-4">Teens end up thinking, <em>"I'll wait for sir to explain this,"</em> or <em>"I can't do this without help."</em></p>
         <p className="mb-4">That mindset kills initiative. And initiative is the seed of confidence.</p>
@@ -44,7 +44,7 @@ const BuildTeenConfidence = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">So What Works Better?</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">So What Works Better?</h2>
         <p className="mb-4">Experiences that feel like real life.</p>
 
         <blockquote className="pixel-border p-6 bg-maximally-blue/5 my-6">
@@ -58,7 +58,7 @@ const BuildTeenConfidence = () => {
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">What We Do Differently at Maximally</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">What We Do Differently at Maximally</h2>
         <p className="mb-4">At Maximally, we've built our 7-day bootcamp around one goal: to help teens walk taller.</p>
         <p className="mb-4">We don't drown them in slides or prep them for exams. We hand them real challenges — and then step back.</p>
         <p className="mb-4">Public speaking. Team projects. Career simulations. Leadership games. Moments where they have to step up, speak up, and stand out.</p>
@@ -66,14 +66,14 @@ const BuildTeenConfidence = () => {
         <p className="mb-4">By Day 7, they've found their voice. And they're using it.</p>
 
         <div className="flex justify-center my-8">
-          <a href="/bootcamps" className="pixel-button bg-[#39FF14] text-black px-8 py-3 font-press-start hover:scale-105 transform transition-all">
+          <a href="/bootcamps" className="pixel-button bg-[#39FF14] text-black px-8 py-3 font-space font-bold hover:scale-105 transform transition-all">
             👉 Explore the Bootcamp
           </a>
         </div>
       </section>
 
       <section className="my-8">
-        <h2 className="font-press-start text-2xl mb-4">Final Thought: Your Teen Is Capable — They Just Need Proof</h2>
+        <h2 className="font-space font-bold text-2xl mb-4">Final Thought: Your Teen Is Capable — They Just Need Proof</h2>
         <p className="mb-4">Confidence isn't about being the smartest kid in class. It's about knowing you can figure things out, even when it's hard.</p>
         <p className="mb-4">Give your teen the kind of summer that builds that belief.</p>
         <p className="mb-4">No tutors. No tuitions. Just the right kind of challenge.</p>

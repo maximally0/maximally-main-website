@@ -33,7 +33,7 @@ const VerificationIndicator = ({ verified, size = 'sm', showLabel = false }: Ver
     return (
       <span className="inline-flex items-center gap-1 text-green-400" title="Verified by Maximally">
         <CheckCircle2 className={getIconSize()} />
-        {showLabel && <span className={`${getTextSize()} font-jetbrains`}>Verified</span>}
+        {showLabel && <span className={`${getTextSize()} font-space`}>Verified</span>}
       </span>
     );
   }
@@ -41,7 +41,7 @@ const VerificationIndicator = ({ verified, size = 'sm', showLabel = false }: Ver
   return (
     <span className="inline-flex items-center gap-1 text-gray-500" title="Self-declared">
       <Circle className={getIconSize()} />
-      {showLabel && <span className={`${getTextSize()} font-jetbrains`}>Self-declared</span>}
+      {showLabel && <span className={`${getTextSize()} font-space`}>Self-declared</span>}
     </span>
   );
 };

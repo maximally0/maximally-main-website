@@ -170,7 +170,7 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 text-purple-400 animate-spin" />
+        <Loader2 className="h-8 w-8 text-orange-400 animate-spin" />
       </div>
     );
   }
@@ -180,14 +180,14 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <HelpCircle className="h-6 w-6 text-cyan-400" />
-          <h2 className="font-press-start text-lg bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+          <HelpCircle className="h-6 w-6 text-gray-300" />
+          <h2 className="font-space font-bold text-lg bg-gradient-to-r from-orange-400 to-blue-400 bg-clip-text text-transparent">
             CUSTOM QUESTIONS
           </h2>
         </div>
         <button
           onClick={addQuestion}
-          className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-4 py-2 font-press-start text-xs transition-all flex items-center gap-2 border border-cyan-500/50"
+          className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-gray-700 hover:to-blue-500 text-white px-4 py-2 font-space font-bold text-xs transition-all flex items-center gap-2 border border-gray-700"
         >
           <Plus className="h-4 w-4" />
           ADD QUESTION
@@ -195,8 +195,8 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
       </div>
 
       {/* Info Box */}
-      <div className="bg-gradient-to-br from-cyan-900/20 to-blue-900/10 border border-cyan-500/30 p-4">
-        <p className="font-jetbrains text-sm text-cyan-200">
+      <div className="bg-gradient-to-br from-gray-900/20 to-gray-900/10 border border-gray-700 p-4">
+        <p className="font-space text-sm text-gray-300">
           Add custom questions to collect additional information during registration. 
           These questions will appear after the standard registration fields.
         </p>
@@ -206,8 +206,8 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
       {questions.length === 0 ? (
         <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700 p-12 text-center">
           <HelpCircle className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-          <p className="font-press-start text-gray-400 mb-2">NO CUSTOM QUESTIONS</p>
-          <p className="font-jetbrains text-sm text-gray-500">
+          <p className="font-space font-bold text-gray-400 mb-2">NO CUSTOM QUESTIONS</p>
+          <p className="font-space text-sm text-gray-500">
             Click "Add Question" to create custom registration questions
           </p>
         </div>
@@ -226,10 +226,10 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                 <div className="flex items-center gap-3">
                   <GripVertical className="h-5 w-5 text-gray-600" />
                   <div>
-                    <p className="font-press-start text-sm text-white">
+                    <p className="font-space font-bold text-sm text-white">
                       {question.question_text || 'New Question'}
                     </p>
-                    <p className="font-jetbrains text-xs text-gray-500 mt-1">
+                    <p className="font-space text-xs text-gray-500 mt-1">
                       {QUESTION_TYPES.find(t => t.value === question.question_type)?.label}
                       {question.is_required && <span className="text-red-400 ml-2">• Required</span>}
                     </p>
@@ -264,7 +264,7 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                 <div className="border-t border-gray-700 p-4 space-y-4">
                   {/* Question Text */}
                   <div>
-                    <label className="block font-press-start text-xs text-gray-400 mb-2">
+                    <label className="block font-space font-bold text-xs text-gray-400 mb-2">
                       QUESTION TEXT
                     </label>
                     <input
@@ -272,13 +272,13 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                       value={question.question_text}
                       onChange={(e) => updateQuestion(index, { question_text: e.target.value })}
                       placeholder="Enter your question..."
-                      className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none"
+                      className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-gray-600 outline-none"
                     />
                   </div>
 
                   {/* Question Type */}
                   <div>
-                    <label className="block font-press-start text-xs text-gray-400 mb-2">
+                    <label className="block font-space font-bold text-xs text-gray-400 mb-2">
                       QUESTION TYPE
                     </label>
                     <select
@@ -287,7 +287,7 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                         question_type: e.target.value as CustomQuestion['question_type'],
                         options: ['select', 'multiselect', 'radio'].includes(e.target.value) ? (question.options || ['', '']) : []
                       })}
-                      className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none"
+                      className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-gray-600 outline-none"
                     >
                       {QUESTION_TYPES.map(type => (
                         <option key={type.value} value={type.value}>
@@ -300,7 +300,7 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                   {/* Options (for select/multiselect/radio) */}
                   {['select', 'multiselect', 'radio'].includes(question.question_type) && (
                     <div>
-                      <label className="block font-press-start text-xs text-gray-400 mb-2">
+                      <label className="block font-space font-bold text-xs text-gray-400 mb-2">
                         OPTIONS
                       </label>
                       <div className="space-y-2">
@@ -311,7 +311,7 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                               value={option}
                               onChange={(e) => updateOption(index, optIndex, e.target.value)}
                               placeholder={`Option ${optIndex + 1}`}
-                              className="flex-1 bg-black/50 border border-gray-700 text-white px-4 py-2 font-jetbrains focus:border-cyan-400 outline-none"
+                              className="flex-1 bg-black/50 border border-gray-700 text-white px-4 py-2 font-space focus:border-gray-600 outline-none"
                             />
                             <button
                               onClick={() => removeOption(index, optIndex)}
@@ -323,7 +323,7 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                         ))}
                         <button
                           onClick={() => addOption(index)}
-                          className="text-cyan-400 hover:text-cyan-300 font-jetbrains text-sm flex items-center gap-1"
+                          className="text-gray-300 hover:text-gray-300 font-space text-sm flex items-center gap-1"
                         >
                           <Plus className="h-4 w-4" />
                           Add Option
@@ -339,9 +339,9 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
                       id={`required-${index}`}
                       checked={question.is_required}
                       onChange={(e) => updateQuestion(index, { is_required: e.target.checked })}
-                      className="w-5 h-5 bg-black border-2 border-gray-600 rounded checked:bg-cyan-500 checked:border-cyan-500"
+                      className="w-5 h-5 bg-black border-2 border-gray-600 rounded checked:bg-gray-800 checked:border-gray-700"
                     />
-                    <label htmlFor={`required-${index}`} className="font-jetbrains text-sm text-gray-300">
+                    <label htmlFor={`required-${index}`} className="font-space text-sm text-gray-300">
                       This question is required
                     </label>
                   </div>
@@ -357,7 +357,7 @@ export default function CustomQuestionsManager({ hackathonId }: CustomQuestionsM
         <button
           onClick={saveQuestions}
           disabled={saving}
-          className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-6 py-4 font-press-start text-xs transition-all flex items-center justify-center gap-2 border border-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-gray-700 hover:to-blue-500 text-white px-6 py-4 font-space font-bold text-xs transition-all flex items-center justify-center gap-2 border border-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {saving ? (
             <Loader2 className="h-5 w-5 animate-spin" />

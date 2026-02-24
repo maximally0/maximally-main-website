@@ -14,7 +14,7 @@ export function PartnersSection() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 mb-4">
             <Handshake className="w-4 h-4 text-gray-500" />
-            <p className="font-press-start text-[10px] sm:text-xs text-gray-500 tracking-wider">
+            <p className="font-space font-bold text-[10px] sm:text-xs text-gray-500 tracking-wider">
               TRUSTED PARTNERS
             </p>
             <Handshake className="w-4 h-4 text-gray-500" />
@@ -43,7 +43,7 @@ export function PartnersSection() {
                 />
               ) : null}
               <span 
-                className={`font-press-start text-[10px] sm:text-xs text-gray-500 hover:text-white transition-colors ${partner.logoUrl ? 'hidden' : 'block'}`}
+                className={`font-space font-bold text-[10px] sm:text-xs text-gray-500 hover:text-white transition-colors ${partner.logoUrl ? 'hidden' : 'block'}`}
               >
                 {partner.name}
               </span>
@@ -52,7 +52,7 @@ export function PartnersSection() {
         </div>
         
         <div className="mt-10 text-center">
-          <p className="font-jetbrains text-xs text-gray-600">
+          <p className="font-space text-xs text-gray-600">
             Want to partner with us?{' '}
             <a href="/contact" className="text-red-500 hover:text-red-400 transition-colors">
               Get in touch

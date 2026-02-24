@@ -51,7 +51,7 @@ const Judges = () => {
       level: 'Level 3',
       title: 'Senior Judge',
       description: 'Established leaders with extensive professional or entrepreneurial backgrounds and consistent judging experience.',
-      color: 'purple',
+      color: 'orange',
       icon: <Star className="h-8 w-8" />,
       whoThisIsFor: 'Senior professionals, successful founders, or established technical leaders',
       whatWeLookFor: [
@@ -238,27 +238,27 @@ const Judges = () => {
       />
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
         <div className="fixed inset-0 bg-black" />
-        <div className="fixed inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="fixed inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
 
         <main className="relative z-10 pt-24">
           <section className="container mx-auto px-4 py-20">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16">
-                <h1 className="font-press-start text-3xl md:text-5xl lg:text-6xl mb-6 bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent leading-tight" data-testid="heading-judges-hero">
+                <h1 className="font-space font-bold text-3xl md:text-5xl lg:text-6xl mb-6 bg-gradient-to-r from-orange-400 via-orange-400 to-orange-400 bg-clip-text text-transparent leading-tight" data-testid="heading-judges-hero">
                   THE BUILDERS OF THE FUTURE<br />DESERVE JUDGES WHO'VE BUILT BEFORE
                 </h1>
-                <p className="font-jetbrains text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                <p className="font-space text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
                   Join the world's top 0.1% of innovators mentoring and evaluating the next generation of builders.
                 </p>
-                <p className="font-jetbrains text-lg text-pink-400 mb-12">
+                <p className="font-space text-lg text-orange-400 mb-12">
                   Become a Maximally Judge — the global standard of innovation credibility.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
                   <Link
                     to="/judges/apply"
-                    className="bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all h-14 px-8 font-press-start text-sm"
+                    className="bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all h-14 px-8 font-space font-bold text-sm"
                     data-testid="button-apply-judge-main"
                   >
                     <Star className="h-5 w-5" />
@@ -268,7 +268,7 @@ const Judges = () => {
 
                   <Link
                     to="/people/judges"
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all h-14 px-8 font-press-start text-sm border border-purple-500/50"
+                    className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white group flex items-center justify-center gap-2 hover:scale-105 transform transition-all h-14 px-8 font-space font-bold text-sm border border-orange-500/50"
                     data-testid="button-view-judges"
                   >
                     <Users className="h-5 w-5" />
@@ -279,41 +279,41 @@ const Judges = () => {
               </div>
 
               <section className="mb-20">
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8 mb-8">
-                  <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent mb-6 flex items-center gap-3" data-testid="heading-problem">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-8 mb-8">
+                  <h2 className="font-space font-bold text-2xl md:text-3xl bg-gradient-to-r from-orange-400 to-orange-400 bg-clip-text text-transparent mb-6 flex items-center gap-3" data-testid="heading-problem">
                     <Zap className="h-8 w-8 text-orange-400" />
                     THE PROBLEM
                   </h2>
-                  <div className="font-jetbrains text-gray-300 space-y-4 text-lg leading-relaxed">
+                  <div className="font-space text-gray-300 space-y-4 text-lg leading-relaxed">
                     <p>Every hackathon claims to be the future.</p>
                     <p>But the people evaluating that future? Random. Rotating. Forgettable.</p>
                     <p>The judging process — the very thing that decides what ideas get celebrated and what builders get seen — has never had a standard.</p>
-                    <p className="text-pink-400 font-bold">It's opinion masquerading as evaluation. It's chaos without credibility.</p>
+                    <p className="text-orange-400 font-bold">It's opinion masquerading as evaluation. It's chaos without credibility.</p>
                     <p>Because you can't build the next generation of innovators… without the right generation of judges.</p>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-orange-900/20 to-pink-900/20 border border-orange-500/40 p-8">
-                  <h2 className="font-press-start text-2xl md:text-3xl bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent mb-6" data-testid="heading-vision">
+                <div className="bg-gradient-to-br from-orange-900/20 to-gray-900/20 border border-orange-500/40 p-8">
+                  <h2 className="font-space font-bold text-2xl md:text-3xl bg-gradient-to-r from-orange-400 to-orange-400 bg-clip-text text-transparent mb-6" data-testid="heading-vision">
                     THE VISION
                   </h2>
-                  <div className="font-jetbrains text-gray-300 space-y-4 text-lg leading-relaxed">
+                  <div className="font-space text-gray-300 space-y-4 text-lg leading-relaxed">
                     <p className="text-xl font-bold text-white">Maximally Judges exists to standardize excellence in the innovation ecosystem.</p>
                     <p>We're building the world's first identity and credibility layer for hackathon and competition judges — a network of the top 0.1% of global builders, engineers, founders, and creatives who mentor, evaluate, and shape the world's next generation of innovators.</p>
-                    <p className="text-pink-400 italic">If Y Combinator created the standard for founders, Maximally will create the standard for judging innovation itself.</p>
+                    <p className="text-orange-400 italic">If Y Combinator created the standard for founders, Maximally will create the standard for judging innovation itself.</p>
                   </div>
                 </div>
               </section>
 
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-12" data-testid="heading-beliefs">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center bg-gradient-to-r from-orange-400 via-orange-400 to-orange-400 bg-clip-text text-transparent mb-12" data-testid="heading-beliefs">
                   WHAT WE BELIEVE
                 </h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   {beliefs.map((belief, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-6 hover:border-pink-400 transition-all"
+                      className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-6 hover:border-orange-500 transition-all"
                       data-testid={`card-belief-${index}`}
                     >
                       <div className="flex items-start gap-4">
@@ -321,8 +321,8 @@ const Judges = () => {
                           {belief.icon}
                         </div>
                         <div>
-                          <h3 className="font-press-start text-sm text-white mb-3">{belief.title.toUpperCase()}</h3>
-                          <p className="font-jetbrains text-gray-300 text-sm leading-relaxed">{belief.description}</p>
+                          <h3 className="font-space font-bold text-sm text-white mb-3">{belief.title.toUpperCase()}</h3>
+                          <p className="font-space text-gray-300 text-sm leading-relaxed">{belief.description}</p>
                         </div>
                       </div>
                     </div>
@@ -331,38 +331,38 @@ const Judges = () => {
               </section>
 
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent mb-12" data-testid="heading-system">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center bg-gradient-to-r from-orange-400 to-orange-400 bg-clip-text text-transparent mb-12" data-testid="heading-system">
                   THE SYSTEM
                 </h2>
-                <div className="bg-gradient-to-br from-pink-900/30 to-purple-900/20 border border-pink-500/40 p-8 mb-8">
-                  <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-6">
+                <div className="bg-gradient-to-br from-gray-900/30 to-gray-900/20 border border-orange-500/30 p-8 mb-8">
+                  <p className="font-space text-gray-300 text-lg leading-relaxed mb-6">
                     Becoming a Maximally Judge means being verified, recognized, and immortalized for your expertise.
                   </p>
                   <div className="space-y-4">
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-1" />
-                      <p className="font-jetbrains text-gray-300">A <span className="text-pink-400 font-bold">public profile</span> showcasing their expertise, background, and past events judged.</p>
+                      <p className="font-space text-gray-300">A <span className="text-orange-400 font-bold">public profile</span> showcasing their expertise, background, and past events judged.</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-1" />
-                      <p className="font-jetbrains text-gray-300"><span className="text-pink-400 font-bold">Judging credits</span> — a track record of credibility that travels with them.</p>
+                      <p className="font-space text-gray-300"><span className="text-orange-400 font-bold">Judging credits</span> — a track record of credibility that travels with them.</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-1" />
-                      <p className="font-jetbrains text-gray-300">A <span className="text-pink-400 font-bold">verified badge</span> signifying trust, excellence, and mentorship.</p>
+                      <p className="font-space text-gray-300">A <span className="text-orange-400 font-bold">verified badge</span> signifying trust, excellence, and mentorship.</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <CheckCircle2 className="h-5 w-5 text-green-400 flex-shrink-0 mt-1" />
-                      <p className="font-jetbrains text-gray-300"><span className="text-pink-400 font-bold">Invitations</span> to judge future events, mentor upcoming founders, and shape global competitions.</p>
+                      <p className="font-space text-gray-300"><span className="text-orange-400 font-bold">Invitations</span> to judge future events, mentor upcoming founders, and shape global competitions.</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="text-center">
-                  <p className="font-jetbrains text-xl text-gray-300 mb-4">
+                  <p className="font-space text-xl text-gray-300 mb-4">
                     Every hackathon that uses Maximally Judges gains access to a vetted, global panel — instantly.
                   </p>
-                  <p className="font-jetbrains text-2xl bg-gradient-to-r from-orange-400 to-pink-400 bg-clip-text text-transparent font-bold">
+                  <p className="font-space text-2xl bg-gradient-to-r from-orange-400 to-orange-400 bg-clip-text text-transparent font-bold">
                     Just excellence on demand.
                   </p>
                 </div>
@@ -370,24 +370,24 @@ const Judges = () => {
 
               {/* SECTION 1: The Judge Level Framework (Overview) */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center bg-gradient-to-r from-orange-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-6" data-testid="heading-level-system">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center bg-gradient-to-r from-orange-400 via-orange-400 to-orange-400 bg-clip-text text-transparent mb-6" data-testid="heading-level-system">
                   THE JUDGE LEVEL FRAMEWORK
                 </h2>
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/40 p-8 mb-12">
-                  <p className="font-jetbrains text-xl text-white font-bold mb-6 text-center">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-orange-500/30 p-8 mb-12">
+                  <p className="font-space text-xl text-white font-bold mb-6 text-center">
                     A global standard for credibility in innovation.
                   </p>
                   <div className="space-y-4 max-w-3xl mx-auto">
-                    <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
-                      Every Maximally Judge is placed into one of five levels — a clear, transparent hierarchy that reflects their expertise, experience, and impact. This isn't about titles. It's about <span className="text-pink-400 font-bold">proof of work.</span> What you've built, what you've led, and how you shape the next generation of builders.
+                    <p className="font-space text-gray-300 text-lg leading-relaxed">
+                      Every Maximally Judge is placed into one of five levels — a clear, transparent hierarchy that reflects their expertise, experience, and impact. This isn't about titles. It's about <span className="text-orange-400 font-bold">proof of work.</span> What you've built, what you've led, and how you shape the next generation of builders.
                     </p>
-                    <p className="font-jetbrains text-orange-400 text-lg leading-relaxed">
+                    <p className="font-space text-orange-400 text-lg leading-relaxed">
                       Your level is your starting point.
                     </p>
-                    <p className="font-jetbrains text-orange-400 text-lg leading-relaxed">
+                    <p className="font-space text-orange-400 text-lg leading-relaxed">
                       Your journey is in your hands.
                     </p>
-                    <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
+                    <p className="font-space text-gray-300 text-lg leading-relaxed">
                       From first-time mentors to ecosystem legends, this framework creates a shared language across all Maximally events — ensuring every builder is evaluated with <span className="text-white font-bold">fairness, depth, and world-class judgment.</span>
                     </p>
                   </div>
@@ -397,7 +397,7 @@ const Judges = () => {
                   {tierLevels.map((tier, index) => (
                     <div
                       key={index}
-                      className={`bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-${tier.color}-400 p-6 hover:shadow-glow-${tier.color} transition-all`}
+                      className={`bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-${tier.color}-400 p-6 hover:shadow-glow-${tier.color} transition-all`}
                       data-testid={`tier-${tier.level.toLowerCase().replace(' ', '-')}`}
                     >
                       <div className="flex items-start gap-4">
@@ -406,10 +406,10 @@ const Judges = () => {
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <span className={`font-press-start text-xs text-${tier.color}-400`}>{tier.level}</span>
-                            <h3 className="font-press-start text-lg text-white">{tier.title}</h3>
+                            <span className={`font-space font-bold text-xs text-${tier.color}-400`}>{tier.level}</span>
+                            <h3 className="font-space font-bold text-lg text-white">{tier.title}</h3>
                           </div>
-                          <p className="font-jetbrains text-gray-300 leading-relaxed">{tier.description}</p>
+                          <p className="font-space text-gray-300 leading-relaxed">{tier.description}</p>
                         </div>
                       </div>
                     </div>
@@ -419,28 +419,28 @@ const Judges = () => {
 
               {/* SECTION 2: Criteria For Each Level */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-level-criteria">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-level-criteria">
                   JUDGE LEVEL CRITERIA
                 </h2>
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-8">
-                  <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-6 text-center">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-8">
+                  <p className="font-space text-gray-300 text-lg leading-relaxed mb-6 text-center">
                     A Maximally Judge's level reflects three things:
                   </p>
                   <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
                     <div className="text-center">
-                      <p className="font-press-start text-sm text-pink-400 mb-2">(1)</p>
-                      <p className="font-jetbrains text-white font-bold">What they've built</p>
+                      <p className="font-space font-bold text-sm text-orange-400 mb-2">(1)</p>
+                      <p className="font-space text-white font-bold">What they've built</p>
                     </div>
                     <div className="text-center">
-                      <p className="font-press-start text-sm text-pink-400 mb-2">(2)</p>
-                      <p className="font-jetbrains text-white font-bold">How deeply they understand their domain</p>
+                      <p className="font-space font-bold text-sm text-orange-400 mb-2">(2)</p>
+                      <p className="font-space text-white font-bold">How deeply they understand their domain</p>
                     </div>
                     <div className="text-center">
-                      <p className="font-press-start text-sm text-pink-400 mb-2">(3)</p>
-                      <p className="font-jetbrains text-white font-bold">How consistently they mentor or evaluate innovators</p>
+                      <p className="font-space font-bold text-sm text-orange-400 mb-2">(3)</p>
+                      <p className="font-space text-white font-bold">How consistently they mentor or evaluate innovators</p>
                     </div>
                   </div>
-                  <p className="font-jetbrains text-gray-400 text-center mt-6">
+                  <p className="font-space text-gray-400 text-center mt-6">
                     Below is the exact criteria we use to place judges into each tier.
                   </p>
                 </div>
@@ -448,7 +448,7 @@ const Judges = () => {
                   {tierLevels.map((tier, index) => (
                     <div
                       key={index}
-                      className={`bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-${tier.color}-400 p-8`}
+                      className={`bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-${tier.color}-400 p-8`}
                       data-testid={`criteria-${tier.level.toLowerCase().replace(' ', '-')}`}
                     >
                       <div className="flex items-center gap-4 mb-6">
@@ -456,44 +456,44 @@ const Judges = () => {
                           {tier.icon}
                         </div>
                         <div>
-                          <span className={`font-press-start text-xs text-${tier.color}-400 block mb-1`}>{tier.level}</span>
-                          <h3 className="font-press-start text-xl text-white">{tier.title}</h3>
+                          <span className={`font-space font-bold text-xs text-${tier.color}-400 block mb-1`}>{tier.level}</span>
+                          <h3 className="font-space font-bold text-xl text-white">{tier.title}</h3>
                         </div>
                       </div>
 
                       <div className="space-y-6">
                         <div>
-                          <h4 className="font-press-start text-sm text-pink-400 mb-3">WHO THIS IS FOR</h4>
-                          <p className="font-jetbrains text-gray-300 leading-relaxed">{tier.whoThisIsFor}</p>
+                          <h4 className="font-space font-bold text-sm text-orange-400 mb-3">WHO THIS IS FOR</h4>
+                          <p className="font-space text-gray-300 leading-relaxed">{tier.whoThisIsFor}</p>
                         </div>
 
                         <div>
-                          <h4 className="font-press-start text-sm text-pink-400 mb-3">WHAT WE LOOK FOR</h4>
+                          <h4 className="font-space font-bold text-sm text-orange-400 mb-3">WHAT WE LOOK FOR</h4>
                           <ul className="space-y-2">
                             {tier.whatWeLookFor.map((item, i) => (
                               <li key={i} className="flex items-start gap-2">
                                 <CheckCircle2 className="h-4 w-4 text-green-400 flex-shrink-0 mt-1" />
-                                <span className="font-jetbrains text-gray-300">{item}</span>
+                                <span className="font-space text-gray-300">{item}</span>
                               </li>
                             ))}
                           </ul>
                         </div>
 
                         <div>
-                          <h4 className="font-press-start text-sm text-pink-400 mb-3">TYPICAL PROFILE EXAMPLES</h4>
+                          <h4 className="font-space font-bold text-sm text-orange-400 mb-3">TYPICAL PROFILE EXAMPLES</h4>
                           <ul className="space-y-2">
                             {tier.typicalProfiles.map((profile, i) => (
                               <li key={i} className="flex items-start gap-2">
                                 <Star className={`h-4 w-4 text-${tier.color}-400 flex-shrink-0 mt-1`} />
-                                <span className="font-jetbrains text-gray-300">{profile}</span>
+                                <span className="font-space text-gray-300">{profile}</span>
                               </li>
                             ))}
                           </ul>
                         </div>
 
                         <div className="pt-4 border-t border-gray-700">
-                          <h4 className="font-press-start text-sm text-orange-400 mb-2">WHAT THEY CAN JUDGE</h4>
-                          <p className="font-jetbrains text-gray-300">{tier.canJudge}</p>
+                          <h4 className="font-space font-bold text-sm text-orange-400 mb-2">WHAT THEY CAN JUDGE</h4>
+                          <p className="font-space text-gray-300">{tier.canJudge}</p>
                         </div>
                       </div>
                     </div>
@@ -503,24 +503,24 @@ const Judges = () => {
 
               {/* SECTION 3: How Judges Grow Inside Maximally */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-pink-400 mb-8" data-testid="heading-progression">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-progression">
                   HOW JUDGES GROW INSIDE MAXIMALLY
                 </h2>
 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-purple-500/40 p-8 mb-8">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/30 p-8 mb-8">
                   <div className="text-center mb-8">
-                    <p className="font-jetbrains text-xl text-white font-bold mb-4">
+                    <p className="font-space text-xl text-white font-bold mb-4">
                       Being a Maximally Judge is not a fixed label.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-300">
-                      It's a <span className="text-pink-400 font-bold">progression system</span> — the more you judge, mentor, and contribute, the higher you rise.
+                    <p className="font-space text-lg text-gray-300">
+                      It's a <span className="text-orange-400 font-bold">progression system</span> — the more you judge, mentor, and contribute, the higher you rise.
                     </p>
-                    <p className="font-jetbrains text-gray-400 mt-4">
+                    <p className="font-space text-gray-400 mt-4">
                       We evaluate every judge across four pillars, and your tier evolves as your impact grows.
                     </p>
                   </div>
 
-                  <h3 className="font-press-start text-xl text-pink-400 mb-6 flex items-center gap-3 justify-center">
+                  <h3 className="font-space font-bold text-xl text-orange-400 mb-6 flex items-center gap-3 justify-center">
                     <TrendingUp className="h-6 w-6" />
                     THE FOUR PILLARS OF PROGRESSION
                   </h3>
@@ -528,97 +528,97 @@ const Judges = () => {
                     <div className="flex items-start gap-3">
                       <Award className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-2">Judging Credits</h4>
-                        <p className="font-jetbrains text-gray-300 text-sm">Number of events judged and submissions evaluated</p>
+                        <h4 className="font-space font-bold text-white mb-2">Judging Credits</h4>
+                        <p className="font-space text-gray-300 text-sm">Number of events judged and submissions evaluated</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <MessageSquare className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-2">Feedback Quality Score</h4>
-                        <p className="font-jetbrains text-gray-300 text-sm">Depth, specificity, and helpfulness of your evaluations</p>
+                        <h4 className="font-space font-bold text-white mb-2">Feedback Quality Score</h4>
+                        <p className="font-space text-gray-300 text-sm">Depth, specificity, and helpfulness of your evaluations</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <Clock className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-2">Reliability Score</h4>
-                        <p className="font-jetbrains text-gray-300 text-sm">Consistency in showing up and meeting deadlines</p>
+                        <h4 className="font-space font-bold text-white mb-2">Reliability Score</h4>
+                        <p className="font-space text-gray-300 text-sm">Consistency in showing up and meeting deadlines</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
                       <Users className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-2">Community Contribution</h4>
-                        <p className="font-jetbrains text-gray-300 text-sm">Mentorship, ecosystem building, and platform advocacy</p>
+                        <h4 className="font-space font-bold text-white mb-2">Community Contribution</h4>
+                        <p className="font-space text-gray-300 text-sm">Mentorship, ecosystem building, and platform advocacy</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-8">
-                  <h3 className="font-press-start text-xl text-orange-400 mb-6 flex items-center gap-3 justify-center">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-8">
+                  <h3 className="font-space font-bold text-xl text-orange-400 mb-6 flex items-center gap-3 justify-center">
                     <ArrowRight className="h-6 w-6" />
                     HOW PROMOTIONS WORK
                   </h3>
-                  <p className="font-jetbrains text-gray-300 text-center mb-8">
+                  <p className="font-space text-gray-300 text-center mb-8">
                     We review every judge at the end of each Maximally season.
                   </p>
                   <div className="space-y-6">
                     <div>
                       <div className="flex items-start gap-3 mb-2">
-                        <span className="font-press-start text-sm text-green-400 min-w-[120px]">L1 → L2</span>
-                        <span className="font-jetbrains text-white font-bold">Getting Verified</span>
+                        <span className="font-space font-bold text-sm text-green-400 min-w-[120px]">L1 → L2</span>
+                        <span className="font-space text-white font-bold">Getting Verified</span>
                       </div>
-                      <p className="font-jetbrains text-gray-300 ml-[132px]">Judge 1-2 events + give strong feedback + show reliability + demonstrate domain depth</p>
-                      <p className="font-jetbrains text-pink-400 text-sm ml-[132px] mt-1">Most active judges achieve this within one season.</p>
+                      <p className="font-space text-gray-300 ml-[132px]">Judge 1-2 events + give strong feedback + show reliability + demonstrate domain depth</p>
+                      <p className="font-space text-orange-400 text-sm ml-[132px] mt-1">Most active judges achieve this within one season.</p>
                     </div>
                     <div>
                       <div className="flex items-start gap-3 mb-2">
-                        <span className="font-press-start text-sm text-blue-400 min-w-[120px]">L2 → L3</span>
-                        <span className="font-jetbrains text-white font-bold">Becoming Senior</span>
+                        <span className="font-space font-bold text-sm text-blue-400 min-w-[120px]">L2 → L3</span>
+                        <span className="font-space text-white font-bold">Becoming Senior</span>
                       </div>
-                      <p className="font-jetbrains text-gray-300 ml-[132px]">Judge multiple events across categories + show consistent high-quality evaluation + demonstrate strong professional advancement + show ability to guide juniors</p>
-                      <p className="font-jetbrains text-pink-400 text-sm ml-[132px] mt-1">This marks you as a mature evaluator.</p>
+                      <p className="font-space text-gray-300 ml-[132px]">Judge multiple events across categories + show consistent high-quality evaluation + demonstrate strong professional advancement + show ability to guide juniors</p>
+                      <p className="font-space text-orange-400 text-sm ml-[132px] mt-1">This marks you as a mature evaluator.</p>
                     </div>
                     <div>
                       <div className="flex items-start gap-3 mb-2">
-                        <span className="font-press-start text-sm text-purple-400 min-w-[120px]">L3 → L4</span>
-                        <span className="font-jetbrains text-white font-bold">Becoming Chief Judge</span>
+                        <span className="font-space font-bold text-sm text-orange-400 min-w-[120px]">L3 → L4</span>
+                        <span className="font-space text-white font-bold">Becoming Chief Judge</span>
                       </div>
-                      <p className="font-jetbrains text-gray-300 ml-[132px]">Lead panels or full tracks + help design judging frameworks + mentor Level 1-2 judges + show leadership qualities in the community</p>
-                      <p className="font-jetbrains text-pink-400 text-sm ml-[132px] mt-1">This tier is rare.</p>
+                      <p className="font-space text-gray-300 ml-[132px]">Lead panels or full tracks + help design judging frameworks + mentor Level 1-2 judges + show leadership qualities in the community</p>
+                      <p className="font-space text-orange-400 text-sm ml-[132px] mt-1">This tier is rare.</p>
                     </div>
                     <div>
                       <div className="flex items-start gap-3 mb-2">
-                        <span className="font-press-start text-sm text-red-400 min-w-[120px]">L4 → L5</span>
-                        <span className="font-jetbrains text-white font-bold">Achieving Legacy Status</span>
+                        <span className="font-space font-bold text-sm text-red-400 min-w-[120px]">L4 → L5</span>
+                        <span className="font-space text-white font-bold">Achieving Legacy Status</span>
                       </div>
-                      <p className="font-jetbrains text-gray-300 ml-[132px]">Shape innovation ecosystems + consistently elevate the standard + judge major events over years + act as ambassadors for the movement + bring outsized credibility and influence</p>
-                      <p className="font-jetbrains text-pink-400 text-sm ml-[132px] mt-1">Legacy Judge is the highest honor in the Maximally universe.</p>
+                      <p className="font-space text-gray-300 ml-[132px]">Shape innovation ecosystems + consistently elevate the standard + judge major events over years + act as ambassadors for the movement + bring outsized credibility and influence</p>
+                      <p className="font-space text-orange-400 text-sm ml-[132px] mt-1">Legacy Judge is the highest honor in the Maximally universe.</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-8">
-                  <h3 className="font-press-start text-xl text-orange-400 mb-4 flex items-center gap-3 justify-center">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-8">
+                  <h3 className="font-space font-bold text-xl text-orange-400 mb-4 flex items-center gap-3 justify-center">
                     <Calendar className="h-6 w-6" />
                     REVIEW CYCLE
                   </h3>
-                  <p className="font-jetbrains text-gray-300 text-lg leading-relaxed text-center">
-                    We review judge levels <span className="text-pink-400 font-bold">after every Maximally Season.</span> Tiers are upgraded based on contribution, performance, and leadership. Your journey is tracked, and excellence is rewarded.
+                  <p className="font-space text-gray-300 text-lg leading-relaxed text-center">
+                    We review judge levels <span className="text-orange-400 font-bold">after every Maximally Season.</span> Tiers are upgraded based on contribution, performance, and leadership. Your journey is tracked, and excellence is rewarded.
                   </p>
                 </div>
 
-                <div className="minecraft-block from-cyan-900/80 to-purple-900/80 border-2 border-purple-500/40 p-8 bg-[#090c14]">
+                <div className="minecraft-block from-gray-900/80 to-gray-900/80 border-2 border-orange-500/30 p-8 bg-[#090c14]">
                   <div className="border-l-4 border-orange-500/40 pl-6">
-                    <p className="font-press-start text-lg text-white mb-4">
+                    <p className="font-space font-bold text-lg text-white mb-4">
                       THE RULE
                     </p>
-                    <p className="font-jetbrains text-xl text-gray-300 leading-relaxed">
-                      Your level reflects your <span className="text-pink-400 font-bold">impact</span> — not your title.
+                    <p className="font-space text-xl text-gray-300 leading-relaxed">
+                      Your level reflects your <span className="text-orange-400 font-bold">impact</span> — not your title.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-400 mt-2">
+                    <p className="font-space text-lg text-gray-400 mt-2">
                       The more you build, contribute, and mentor, the higher you rise.
                     </p>
                   </div>
@@ -627,63 +627,63 @@ const Judges = () => {
 
               {/* SECTION 4: Fast-Track & Direct Placement */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-fast-track">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-fast-track">
                   FAST-TRACK & DIRECT PLACEMENT
                 </h2>
 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-8">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-8">
                   <div className="space-y-4 max-w-3xl mx-auto">
-                    <p className="font-jetbrains text-xl text-white font-bold text-center">
+                    <p className="font-space text-xl text-white font-bold text-center">
                       Not everyone needs to start at Level 1.
                     </p>
-                    <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
+                    <p className="font-space text-gray-300 text-lg leading-relaxed">
                       Some people have already built enough, led enough, and contributed enough to enter the Maximally system at a higher tier from day one.
                     </p>
-                    <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
-                      Our fast-track process ensures that accomplished founders, senior engineers, researchers, and leaders are placed where their experience actually belongs — <span className="text-pink-400 font-bold">instantly.</span>
+                    <p className="font-space text-gray-300 text-lg leading-relaxed">
+                      Our fast-track process ensures that accomplished founders, senior engineers, researchers, and leaders are placed where their experience actually belongs — <span className="text-orange-400 font-bold">instantly.</span>
                     </p>
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-purple-500/40 p-8 mb-8">
-                  <h3 className="font-press-start text-lg text-pink-400 mb-6 text-center">WHY FAST-TRACK EXISTS</h3>
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/30 p-8 mb-8">
+                  <h3 className="font-space font-bold text-lg text-orange-400 mb-6 text-center">WHY FAST-TRACK EXISTS</h3>
                   <div className="space-y-4 max-w-3xl mx-auto">
-                    <p className="font-jetbrains text-xl text-white text-center">
+                    <p className="font-space text-xl text-white text-center">
                       Innovation moves fast. <span className="text-orange-400 font-bold">Credibility should too.</span>
                     </p>
-                    <p className="font-jetbrains text-gray-300 text-lg leading-relaxed">
+                    <p className="font-space text-gray-300 text-lg leading-relaxed">
                       Judges with strong professional backgrounds shouldn't wait to "climb" the ladder from the bottom. If your track record proves you already operate at Level 3, 4, or 5, we reflect that immediately.
                     </p>
                     <div className="grid md:grid-cols-3 gap-6 text-center mt-6">
                       <div>
-                        <p className="font-jetbrains text-white font-bold mb-1">No gatekeeping.</p>
+                        <p className="font-space text-white font-bold mb-1">No gatekeeping.</p>
                       </div>
                       <div>
-                        <p className="font-jetbrains text-white font-bold mb-1">No unnecessary thresholds.</p>
+                        <p className="font-space text-white font-bold mb-1">No unnecessary thresholds.</p>
                       </div>
                       <div>
-                        <p className="font-jetbrains text-white font-bold mb-1">Just placing talent where it deserves to be.</p>
+                        <p className="font-space text-white font-bold mb-1">Just placing talent where it deserves to be.</p>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                <h3 className="font-press-start text-xl text-center text-orange-400 mb-8">FAST-TRACK CRITERIA</h3>
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-6">
-                  <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-8 text-center">
+                <h3 className="font-space font-bold text-xl text-center text-orange-400 mb-8">FAST-TRACK CRITERIA</h3>
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-6">
+                  <p className="font-space text-gray-300 text-lg leading-relaxed mb-8 text-center">
                     <span className="text-white font-bold">If your profile demonstrates exceptional credibility, we place you directly into the level you deserve</span> — no need to climb from Level 1.
                   </p>
 
                   <div className="space-y-6">
                     <div className="flex items-start gap-4">
-                      <Sparkles className="h-8 w-8 text-purple-400 flex-shrink-0" />
+                      <Sparkles className="h-8 w-8 text-orange-400 flex-shrink-0" />
                       <div>
-                        <h3 className="font-press-start text-sm text-purple-400 mb-3">FAST-TRACK TO LEVEL 3</h3>
-                        <p className="font-jetbrains text-gray-300 mb-2">Staff engineers, successful founders, seasoned mentors with proven track records</p>
+                        <h3 className="font-space font-bold text-sm text-orange-400 mb-3">FAST-TRACK TO LEVEL 3</h3>
+                        <p className="font-space text-gray-300 mb-2">Staff engineers, successful founders, seasoned mentors with proven track records</p>
                         <ul className="space-y-1 ml-4">
-                          <li className="font-jetbrains text-gray-400 text-sm">• 5+ years senior-level experience</li>
-                          <li className="font-jetbrains text-gray-400 text-sm">• Multiple shipped products or significant projects</li>
-                          <li className="font-jetbrains text-gray-400 text-sm">• Clear domain expertise</li>
+                          <li className="font-space text-gray-400 text-sm">• 5+ years senior-level experience</li>
+                          <li className="font-space text-gray-400 text-sm">• Multiple shipped products or significant projects</li>
+                          <li className="font-space text-gray-400 text-sm">• Clear domain expertise</li>
                         </ul>
                       </div>
                     </div>
@@ -691,12 +691,12 @@ const Judges = () => {
                     <div className="flex items-start gap-4">
                       <Crown className="h-8 w-8 text-yellow-400 flex-shrink-0" />
                       <div>
-                        <h3 className="font-press-start text-sm text-yellow-400 mb-3">FAST-TRACK TO LEVEL 4</h3>
-                        <p className="font-jetbrains text-gray-300 mb-2">Directors, VPs, CTOs, senior academics, established ecosystem leaders</p>
+                        <h3 className="font-space font-bold text-sm text-yellow-400 mb-3">FAST-TRACK TO LEVEL 4</h3>
+                        <p className="font-space text-gray-300 mb-2">Directors, VPs, CTOs, senior academics, established ecosystem leaders</p>
                         <ul className="space-y-1 ml-4">
-                          <li className="font-jetbrains text-gray-400 text-sm">• C-suite or director-level roles</li>
-                          <li className="font-jetbrains text-gray-400 text-sm">• Published research or thought leadership</li>
-                          <li className="font-jetbrains text-gray-400 text-sm">• Recognized industry contributions</li>
+                          <li className="font-space text-gray-400 text-sm">• C-suite or director-level roles</li>
+                          <li className="font-space text-gray-400 text-sm">• Published research or thought leadership</li>
+                          <li className="font-space text-gray-400 text-sm">• Recognized industry contributions</li>
                         </ul>
                       </div>
                     </div>
@@ -704,34 +704,34 @@ const Judges = () => {
                     <div className="flex items-start gap-4">
                       <Flame className="h-8 w-8 text-red-400 flex-shrink-0" />
                       <div>
-                        <h3 className="font-press-start text-sm text-red-400 mb-3">DIRECT LEGACY LEVEL</h3>
-                        <p className="font-jetbrains text-gray-300 mb-2">Exceptional global figures with extraordinary ecosystem impact</p>
+                        <h3 className="font-space font-bold text-sm text-red-400 mb-3">DIRECT LEGACY LEVEL</h3>
+                        <p className="font-space text-gray-300 mb-2">Exceptional global figures with extraordinary ecosystem impact</p>
                         <ul className="space-y-1 ml-4">
-                          <li className="font-jetbrains text-gray-400 text-sm">• Invitation-only or special evaluation</li>
-                          <li className="font-jetbrains text-gray-400 text-sm">• Global recognition and influence</li>
-                          <li className="font-jetbrains text-gray-400 text-sm">• Transformational contributions to innovation</li>
+                          <li className="font-space text-gray-400 text-sm">• Invitation-only or special evaluation</li>
+                          <li className="font-space text-gray-400 text-sm">• Global recognition and influence</li>
+                          <li className="font-space text-gray-400 text-sm">• Transformational contributions to innovation</li>
                         </ul>
                       </div>
                     </div>
                   </div>
                   
                   <div className="mt-8 pt-8 border-t border-gray-700">
-                    <h4 className="font-press-start text-sm text-pink-400 mb-4 text-center">HOW FAST-TRACK EVALUATION WORKS</h4>
-                    <p className="font-jetbrains text-gray-300 text-center mb-4">We review: professional seniority • projects and products shipped • ecosystem impact • leadership roles • prior judging or mentorship experience • public work (talks, research, OSS, writing)</p>
-                    <p className="font-jetbrains text-gray-400 text-center text-sm">If your profile shows you're already operating at a higher tier, we elevate you immediately.</p>
+                    <h4 className="font-space font-bold text-sm text-orange-400 mb-4 text-center">HOW FAST-TRACK EVALUATION WORKS</h4>
+                    <p className="font-space text-gray-300 text-center mb-4">We review: professional seniority • projects and products shipped • ecosystem impact • leadership roles • prior judging or mentorship experience • public work (talks, research, OSS, writing)</p>
+                    <p className="font-space text-gray-400 text-center text-sm">If your profile shows you're already operating at a higher tier, we elevate you immediately.</p>
                   </div>
                 </div>
 
-                <div className="minecraft-block from-purple-900/80 to-yellow-900/80 border-2 border-orange-500/40 p-8 bg-[#090c14]">
-                  <div className="border-l-4 border-purple-500/40 pl-6">
-                    <p className="font-press-start text-lg text-white mb-4">
+                <div className="minecraft-block from-gray-900/80 to-gray-900/80 border-2 border-orange-500/40 p-8 bg-[#090c14]">
+                  <div className="border-l-4 border-orange-500/30 pl-6">
+                    <p className="font-space font-bold text-lg text-white mb-4">
                       THE PROMISE
                     </p>
-                    <p className="font-jetbrains text-xl text-gray-300 leading-relaxed">
+                    <p className="font-space text-xl text-gray-300 leading-relaxed">
                       We don't make you prove what your career has already proven.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-400 mt-2">
-                      Your level reflects your <span className="text-pink-400 font-bold">true credibility</span> — from the very first day.
+                    <p className="font-space text-lg text-gray-400 mt-2">
+                      Your level reflects your <span className="text-orange-400 font-bold">true credibility</span> — from the very first day.
                     </p>
                   </div>
                 </div>
@@ -739,98 +739,98 @@ const Judges = () => {
 
               {/* SECTION 5: What We Expect From Every Maximally Judge */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-responsibilities">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-responsibilities">
                   WHAT WE EXPECT FROM EVERY MAXIMALLY JUDGE
                 </h2>
                 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-8">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-8">
                   <div className="text-center mb-8">
-                    <p className="font-jetbrains text-xl text-white font-bold mb-4">
+                    <p className="font-space text-xl text-white font-bold mb-4">
                       Great judging isn't just about scoring projects.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-300">
+                    <p className="font-space text-lg text-gray-300">
                       It's about showing up with professionalism, clarity, and real respect for builders.
                     </p>
-                    <p className="font-jetbrains text-gray-400 mt-2">
+                    <p className="font-space text-gray-400 mt-2">
                       Every Maximally Judge — regardless of level — follows the same core responsibilities.
                     </p>
                   </div>
 
                   <div className="space-y-6">
                     <div>
-                      <h3 className="font-press-start text-sm text-pink-400 mb-3">1. SHOW UP. FULLY.</h3>
+                      <h3 className="font-space font-bold text-sm text-orange-400 mb-3">1. SHOW UP. FULLY.</h3>
                       <ul className="space-y-2 ml-6">
-                        <li className="font-jetbrains text-gray-300">• Attend the judging session you commit to</li>
-                        <li className="font-jetbrains text-gray-300">• Be on time</li>
-                        <li className="font-jetbrains text-gray-300">• Complete all assigned evaluations</li>
-                        <li className="font-jetbrains text-gray-300">• Communicate early if anything changes</li>
+                        <li className="font-space text-gray-300">• Attend the judging session you commit to</li>
+                        <li className="font-space text-gray-300">• Be on time</li>
+                        <li className="font-space text-gray-300">• Complete all assigned evaluations</li>
+                        <li className="font-space text-gray-300">• Communicate early if anything changes</li>
                       </ul>
-                      <p className="font-jetbrains text-pink-400 text-sm mt-2 ml-6">Reliability is non-negotiable.</p>
+                      <p className="font-space text-orange-400 text-sm mt-2 ml-6">Reliability is non-negotiable.</p>
                     </div>
 
                     <div>
-                      <h3 className="font-press-start text-sm text-pink-400 mb-3">2. REVIEW EVERY ASSIGNED SUBMISSION</h3>
-                      <p className="font-jetbrains text-gray-300 ml-6 mb-2">Each project deserves fairness. We expect judges to read thoroughly, explore demos, evaluate based on the rubric, and give scores grounded in reasoning.</p>
-                      <p className="font-jetbrains text-pink-400 text-sm ml-6">Builders put hours into their work — judges should too.</p>
+                      <h3 className="font-space font-bold text-sm text-orange-400 mb-3">2. REVIEW EVERY ASSIGNED SUBMISSION</h3>
+                      <p className="font-space text-gray-300 ml-6 mb-2">Each project deserves fairness. We expect judges to read thoroughly, explore demos, evaluate based on the rubric, and give scores grounded in reasoning.</p>
+                      <p className="font-space text-orange-400 text-sm ml-6">Builders put hours into their work — judges should too.</p>
                     </div>
 
                     <div>
-                      <h3 className="font-press-start text-sm text-pink-400 mb-3">3. GIVE SPECIFIC, ACTIONABLE FEEDBACK</h3>
-                      <p className="font-jetbrains text-gray-300 ml-6 mb-3">Good judges don't say "good project." They say:</p>
+                      <h3 className="font-space font-bold text-sm text-orange-400 mb-3">3. GIVE SPECIFIC, ACTIONABLE FEEDBACK</h3>
+                      <p className="font-space text-gray-300 ml-6 mb-3">Good judges don't say "good project." They say:</p>
                       <ul className="space-y-2 ml-12">
-                        <li className="font-jetbrains text-gray-300">• what was strong</li>
-                        <li className="font-jetbrains text-gray-300">• what could be better</li>
-                        <li className="font-jetbrains text-gray-300">• what direction to take next</li>
-                        <li className="font-jetbrains text-gray-300">• how to turn the idea into something real</li>
+                        <li className="font-space text-gray-300">• what was strong</li>
+                        <li className="font-space text-gray-300">• what could be better</li>
+                        <li className="font-space text-gray-300">• what direction to take next</li>
+                        <li className="font-space text-gray-300">• how to turn the idea into something real</li>
                       </ul>
-                      <p className="font-jetbrains text-pink-400 text-sm mt-2 ml-6">Feedback is mentorship. Mentorship is impact.</p>
+                      <p className="font-space text-orange-400 text-sm mt-2 ml-6">Feedback is mentorship. Mentorship is impact.</p>
                     </div>
 
                     <div>
-                      <h3 className="font-press-start text-sm text-pink-400 mb-3">4. STAY FAIR AND UNBIASED</h3>
+                      <h3 className="font-space font-bold text-sm text-orange-400 mb-3">4. STAY FAIR AND UNBIASED</h3>
                       <ul className="space-y-2 ml-6">
-                        <li className="font-jetbrains text-gray-300">• Avoid favoritism</li>
-                        <li className="font-jetbrains text-gray-300">• Avoid scoring bias based on school, resume, or background</li>
-                        <li className="font-jetbrains text-gray-300">• Evaluate only the work presented</li>
-                        <li className="font-jetbrains text-gray-300">• Declare conflicts of interest immediately</li>
+                        <li className="font-space text-gray-300">• Avoid favoritism</li>
+                        <li className="font-space text-gray-300">• Avoid scoring bias based on school, resume, or background</li>
+                        <li className="font-space text-gray-300">• Evaluate only the work presented</li>
+                        <li className="font-space text-gray-300">• Declare conflicts of interest immediately</li>
                       </ul>
-                      <p className="font-jetbrains text-pink-400 text-sm mt-2 ml-6">We protect fairness at all costs.</p>
+                      <p className="font-space text-orange-400 text-sm mt-2 ml-6">We protect fairness at all costs.</p>
                     </div>
 
                     <div>
-                      <h3 className="font-press-start text-sm text-pink-400 mb-3">5. RESPECT YOUNG & EMERGING BUILDERS</h3>
-                      <p className="font-jetbrains text-gray-300 ml-6 mb-2">Maximally events include teenagers, beginners, and first-time founders. Judges must be encouraging, provide clarity without arrogance, guide without dismissing ambition, and remember that early feedback can shape someone's life direction.</p>
-                      <p className="font-jetbrains text-pink-400 text-sm ml-6">We build people, not just scorecards.</p>
+                      <h3 className="font-space font-bold text-sm text-orange-400 mb-3">5. RESPECT YOUNG & EMERGING BUILDERS</h3>
+                      <p className="font-space text-gray-300 ml-6 mb-2">Maximally events include teenagers, beginners, and first-time founders. Judges must be encouraging, provide clarity without arrogance, guide without dismissing ambition, and remember that early feedback can shape someone's life direction.</p>
+                      <p className="font-space text-orange-400 text-sm ml-6">We build people, not just scorecards.</p>
                     </div>
 
                     <div>
-                      <h3 className="font-press-start text-sm text-pink-400 mb-3">6. MAINTAIN PROFESSIONAL CONDUCT</h3>
-                      <p className="font-jetbrains text-gray-300 ml-6 mb-2">This includes: no harassment, no rude comments, no mocking of projects, no public criticism outside the judging environment, and maintaining confidentiality where required.</p>
-                      <p className="font-jetbrains text-pink-400 text-sm ml-6">Judging is a leadership role. We expect leadership behavior.</p>
+                      <h3 className="font-space font-bold text-sm text-orange-400 mb-3">6. MAINTAIN PROFESSIONAL CONDUCT</h3>
+                      <p className="font-space text-gray-300 ml-6 mb-2">This includes: no harassment, no rude comments, no mocking of projects, no public criticism outside the judging environment, and maintaining confidentiality where required.</p>
+                      <p className="font-space text-orange-400 text-sm ml-6">Judging is a leadership role. We expect leadership behavior.</p>
                     </div>
 
                     <div>
-                      <h3 className="font-press-start text-sm text-pink-400 mb-3">7. PROTECT THE INTEGRITY OF THE SYSTEM</h3>
+                      <h3 className="font-space font-bold text-sm text-orange-400 mb-3">7. PROTECT THE INTEGRITY OF THE SYSTEM</h3>
                       <ul className="space-y-2 ml-6">
-                        <li className="font-jetbrains text-gray-300">• Avoid leaking scoring details</li>
-                        <li className="font-jetbrains text-gray-300">• Avoid sharing internal judging conversations</li>
-                        <li className="font-jetbrains text-gray-300">• Respect panel decisions</li>
-                        <li className="font-jetbrains text-gray-300">• Help maintain judging standards</li>
+                        <li className="font-space text-gray-300">• Avoid leaking scoring details</li>
+                        <li className="font-space text-gray-300">• Avoid sharing internal judging conversations</li>
+                        <li className="font-space text-gray-300">• Respect panel decisions</li>
+                        <li className="font-space text-gray-300">• Help maintain judging standards</li>
                       </ul>
-                      <p className="font-jetbrains text-pink-400 text-sm mt-2 ml-6">Maximally is building a global trust layer — and trust requires discipline.</p>
+                      <p className="font-space text-orange-400 text-sm mt-2 ml-6">Maximally is building a global trust layer — and trust requires discipline.</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="minecraft-block from-red-900/80 to-orange-900/80 border-2 border-orange-500/40 p-8 bg-[#090c14]">
+                <div className="minecraft-block from-gray-900/80 to-orange-900/80 border-2 border-orange-500/40 p-8 bg-[#090c14]">
                   <div className="border-l-4 border-orange-500/40 pl-6">
-                    <p className="font-press-start text-lg text-white mb-4">
+                    <p className="font-space font-bold text-lg text-white mb-4">
                       THE BOTTOM LINE
                     </p>
-                    <p className="font-jetbrains text-xl text-gray-300 leading-relaxed mb-2">
-                      If you show up, review with depth, give strong feedback, and respect the process — <span className="text-pink-400 font-bold">you rise fast.</span>
+                    <p className="font-space text-xl text-gray-300 leading-relaxed mb-2">
+                      If you show up, review with depth, give strong feedback, and respect the process — <span className="text-orange-400 font-bold">you rise fast.</span>
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-400">
+                    <p className="font-space text-lg text-gray-400">
                       If you ghost, disrespect builders, or break trust — <span className="text-red-400 font-bold">you lose access.</span>
                     </p>
                   </div>
@@ -839,17 +839,17 @@ const Judges = () => {
 
               {/* SECTION 6: What You Unlock As You Level Up */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-pink-400 mb-8" data-testid="heading-perks">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-perks">
                   WHAT YOU UNLOCK AS YOU LEVEL UP
                 </h2>
                 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-purple-500/40 p-8 mb-8">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/30 p-8 mb-8">
                   <div className="text-center">
-                    <p className="font-jetbrains text-xl text-white font-bold mb-4">
+                    <p className="font-space text-xl text-white font-bold mb-4">
                       Every level in the Maximally Judge system unlocks new responsibilities, visibility, and opportunities.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-300">
-                      As you rise, you don't just judge more — you <span className="text-pink-400 font-bold">shape the ecosystem.</span>
+                    <p className="font-space text-lg text-gray-300">
+                      As you rise, you don't just judge more — you <span className="text-orange-400 font-bold">shape the ecosystem.</span>
                     </p>
                   </div>
                 </div>
@@ -860,7 +860,7 @@ const Judges = () => {
                     return (
                       <div
                         key={index}
-                        className={`bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-${tier.color}-400 p-6`}
+                        className={`bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-${tier.color}-400 p-6`}
                         data-testid={`perks-${tier.level.toLowerCase().replace(' ', '-')}`}
                       >
                         <div className="flex items-center gap-4 mb-4">
@@ -868,15 +868,15 @@ const Judges = () => {
                             {tier.icon}
                           </div>
                           <div>
-                            <span className={`font-press-start text-xs text-${tier.color}-400 block mb-1`}>{tier.level}</span>
-                            <h3 className="font-press-start text-lg text-white">{tier.title}</h3>
+                            <span className={`font-space font-bold text-xs text-${tier.color}-400 block mb-1`}>{tier.level}</span>
+                            <h3 className="font-space font-bold text-lg text-white">{tier.title}</h3>
                           </div>
                         </div>
                         <ul className="space-y-2">
                           {levelPerk.perks.map((perk, i) => (
                             <li key={i} className="flex items-start gap-2">
                               <Gift className={`h-4 w-4 text-${tier.color}-400 flex-shrink-0 mt-1`} />
-                              <span className="font-jetbrains text-gray-300">{perk}</span>
+                              <span className="font-space text-gray-300">{perk}</span>
                             </li>
                           ))}
                         </ul>
@@ -885,18 +885,18 @@ const Judges = () => {
                   })}
                 </div>
 
-                <div className="minecraft-block from-cyan-900/80 to-green-900/80 border-2 border-purple-500/40 p-8 mt-8 bg-[#090c14]">
+                <div className="minecraft-block from-gray-900/80 to-green-900/80 border-2 border-orange-500/30 p-8 mt-8 bg-[#090c14]">
                   <div className="border-l-4 border-orange-500/40 pl-6">
-                    <p className="font-press-start text-lg text-white mb-4">
+                    <p className="font-space font-bold text-lg text-white mb-4">
                       THE PHILOSOPHY
                     </p>
-                    <p className="font-jetbrains text-xl text-gray-300 leading-relaxed mb-2">
-                      As your level rises, your <span className="text-pink-400 font-bold">influence grows.</span>
+                    <p className="font-space text-xl text-gray-300 leading-relaxed mb-2">
+                      As your level rises, your <span className="text-orange-400 font-bold">influence grows.</span>
                     </p>
-                    <p className="font-jetbrains text-xl text-gray-300 leading-relaxed mb-2">
+                    <p className="font-space text-xl text-gray-300 leading-relaxed mb-2">
                       As your influence grows, the ecosystem improves.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-400">
+                    <p className="font-space text-lg text-gray-400">
                       This is how we standardize excellence globally.
                     </p>
                   </div>
@@ -905,97 +905,97 @@ const Judges = () => {
 
               {/* SECTION 7: Your Maximally Judge Profile */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-profile">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-profile">
                   YOUR MAXIMALLY JUDGE PROFILE
                 </h2>
                 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-8">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-8">
                   <div className="text-center mb-8">
-                    <p className="font-jetbrains text-xl text-white font-bold mb-4">
+                    <p className="font-space text-xl text-white font-bold mb-4">
                       Every Maximally Judge gets a public, permanent profile — your identity in the global judging ecosystem.
                     </p>
                     <div className="space-y-3">
-                      <p className="font-jetbrains text-lg text-gray-300">
+                      <p className="font-space text-lg text-gray-300">
                         It showcases who you are, what you've judged, what you've built, and what you bring to the next generation of innovators.
                       </p>
-                      <p className="font-jetbrains text-gray-300">
-                        Your profile grows with you. <span className="text-pink-400 font-bold">Your credibility compounds over time.</span>
+                      <p className="font-space text-gray-300">
+                        Your profile grows with you. <span className="text-orange-400 font-bold">Your credibility compounds over time.</span>
                       </p>
-                      <p className="font-jetbrains text-gray-300">
+                      <p className="font-space text-gray-300">
                         Your work becomes part of your legacy.
                       </p>
                     </div>
                   </div>
 
-                  <h3 className="font-press-start text-lg text-pink-400 mb-6 text-center">WHAT YOUR PROFILE SHOWS</h3>
-                  <p className="font-jetbrains text-gray-300 text-lg leading-relaxed mb-6">
-                    Every judge gets a <span className="text-pink-400 font-bold">public profile</span> that showcases your expertise, credibility, and contributions to the innovation ecosystem.
+                  <h3 className="font-space font-bold text-lg text-orange-400 mb-6 text-center">WHAT YOUR PROFILE SHOWS</h3>
+                  <p className="font-space text-gray-300 text-lg leading-relaxed mb-6">
+                    Every judge gets a <span className="text-orange-400 font-bold">public profile</span> that showcases your expertise, credibility, and contributions to the innovation ecosystem.
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div className="flex items-start gap-3">
-                      <Shield className="h-6 w-6 text-pink-400 flex-shrink-0 mt-1" />
+                      <Shield className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Judge Level & Badge</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Your verified rank in the ecosystem</p>
+                        <h4 className="font-space font-bold text-white mb-1">Judge Level & Badge</h4>
+                        <p className="font-space text-gray-400 text-sm">Your verified rank in the ecosystem</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Target className="h-6 w-6 text-pink-400 flex-shrink-0 mt-1" />
+                      <Target className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Domain Expertise</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">AI, product, fintech, design, hardware...</p>
+                        <h4 className="font-space font-bold text-white mb-1">Domain Expertise</h4>
+                        <p className="font-space text-gray-400 text-sm">AI, product, fintech, design, hardware...</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Calendar className="h-6 w-6 text-pink-400 flex-shrink-0 mt-1" />
+                      <Calendar className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Events Judged</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Complete history of competitions evaluated</p>
+                        <h4 className="font-space font-bold text-white mb-1">Events Judged</h4>
+                        <p className="font-space text-gray-400 text-sm">Complete history of competitions evaluated</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Award className="h-6 w-6 text-pink-400 flex-shrink-0 mt-1" />
+                      <Award className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Judging Credits</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Quantified track record of contributions</p>
+                        <h4 className="font-space font-bold text-white mb-1">Judging Credits</h4>
+                        <p className="font-space text-gray-400 text-sm">Quantified track record of contributions</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Star className="h-6 w-6 text-pink-400 flex-shrink-0 mt-1" />
+                      <Star className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Badges & Seasons</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Special recognition and achievements</p>
+                        <h4 className="font-space font-bold text-white mb-1">Badges & Seasons</h4>
+                        <p className="font-space text-gray-400 text-sm">Special recognition and achievements</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Users className="h-6 w-6 text-pink-400 flex-shrink-0 mt-1" />
+                      <Users className="h-6 w-6 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Mentorship Impact</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Teams coached and builders helped</p>
+                        <h4 className="font-space font-bold text-white mb-1">Mentorship Impact</h4>
+                        <p className="font-space text-gray-400 text-sm">Teams coached and builders helped</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="pt-6 border-t border-gray-700">
-                    <h4 className="font-press-start text-sm text-pink-400 mb-4 text-center">HOW THE CREDITS SYSTEM WORKS</h4>
-                    <p className="font-jetbrains text-gray-300 text-center mb-4">
+                    <h4 className="font-space font-bold text-sm text-orange-400 mb-4 text-center">HOW THE CREDITS SYSTEM WORKS</h4>
+                    <p className="font-space text-gray-300 text-center mb-4">
                       Credits are the backbone of the Maximally Judge Framework. You earn credits for: judging events • leading panels • judging higher rounds • contributing workshops or mentorship • referring strong judges • designing rubrics • special roles in flagship seasons
                     </p>
-                    <p className="font-jetbrains text-pink-400 text-center font-bold">More credits = higher trust = higher tiers</p>
-                    <p className="font-jetbrains text-gray-400 text-center text-sm mt-2">This system ensures you grow based on work, not vibes.</p>
+                    <p className="font-space text-orange-400 text-center font-bold">More credits = higher trust = higher tiers</p>
+                    <p className="font-space text-gray-400 text-center text-sm mt-2">This system ensures you grow based on work, not vibes.</p>
                   </div>
                 </div>
 
                 <div className="minecraft-block from-yellow-900/80 to-orange-900/80 border-2 border-orange-500/40 p-8 mt-8 bg-[#090c14]">
-                  <div className="border-l-4 border-purple-500/40 pl-6">
-                    <p className="font-press-start text-lg text-white mb-4">
+                  <div className="border-l-4 border-orange-500/30 pl-6">
+                    <p className="font-space font-bold text-lg text-white mb-4">
                       THE PHILOSOPHY
                     </p>
-                    <p className="font-jetbrains text-xl text-gray-300 leading-relaxed mb-2">
-                      Your judge profile is your <span className="text-pink-400 font-bold">innovation identity.</span>
+                    <p className="font-space text-xl text-gray-300 leading-relaxed mb-2">
+                      Your judge profile is your <span className="text-orange-400 font-bold">innovation identity.</span>
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-400">
+                    <p className="font-space text-lg text-gray-400">
                       Your credits are your track record. Your legacy is built in public.
                     </p>
                   </div>
@@ -1004,106 +1004,106 @@ const Judges = () => {
 
               {/* SECTION 8: How We Select Judges */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-selection">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-selection">
                   HOW WE SELECT JUDGES
                 </h2>
                 
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 mb-8">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 mb-8">
                   <div className="text-center mb-8">
-                    <p className="font-jetbrains text-xl text-white font-bold mb-4">
-                      We don't collect judges. We <span className="text-pink-400 font-bold">curate</span> them.
+                    <p className="font-space text-xl text-white font-bold mb-4">
+                      We don't collect judges. We <span className="text-orange-400 font-bold">curate</span> them.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-300">
+                    <p className="font-space text-lg text-gray-300">
                       Every application goes through a structured, multi-layer evaluation to ensure only credible, experienced, and value-aligned individuals become Maximally Judges.
                     </p>
-                    <p className="font-jetbrains text-gray-400 mt-4">
+                    <p className="font-space text-gray-400 mt-4">
                       Our acceptance rate is intentionally low — because the next generation of builders deserves the highest standard of evaluation.
                     </p>
                   </div>
 
-                  <h3 className="font-press-start text-lg text-pink-400 mb-8 text-center">THE SELECTION FRAMEWORK</h3>
-                  <p className="font-jetbrains text-gray-300 text-center mb-8">
+                  <h3 className="font-space font-bold text-lg text-orange-400 mb-8 text-center">THE SELECTION FRAMEWORK</h3>
+                  <p className="font-space text-gray-300 text-center mb-8">
                     We assess every applicant across five key pillars:
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-6 mb-8">
                     <div className="flex items-start gap-3">
-                      <UserCheck className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <UserCheck className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Professional Background</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Verified experience and credentials</p>
+                        <h4 className="font-space font-bold text-white mb-1">Professional Background</h4>
+                        <p className="font-space text-gray-400 text-sm">Verified experience and credentials</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Zap className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <Zap className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Past Projects / Products Shipped</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Real-world creation and execution</p>
+                        <h4 className="font-space font-bold text-white mb-1">Past Projects / Products Shipped</h4>
+                        <p className="font-space text-gray-400 text-sm">Real-world creation and execution</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Award className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <Award className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Judging Experience</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Prior evaluation or mentorship history</p>
+                        <h4 className="font-space font-bold text-white mb-1">Judging Experience</h4>
+                        <p className="font-space text-gray-400 text-sm">Prior evaluation or mentorship history</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Target className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <Target className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Domain Depth</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Expertise in specific technical or business areas</p>
+                        <h4 className="font-space font-bold text-white mb-1">Domain Depth</h4>
+                        <p className="font-space text-gray-400 text-sm">Expertise in specific technical or business areas</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Users className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <Users className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Ability to Mentor</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Clear communication and teaching skills</p>
+                        <h4 className="font-space font-bold text-white mb-1">Ability to Mentor</h4>
+                        <p className="font-space text-gray-400 text-sm">Clear communication and teaching skills</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Shield className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <Shield className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Credibility & Track Record</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Reputation and verifiable achievements</p>
+                        <h4 className="font-space font-bold text-white mb-1">Credibility & Track Record</h4>
+                        <p className="font-space text-gray-400 text-sm">Reputation and verifiable achievements</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Clock className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <Clock className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Reliability Indicators</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Consistency and commitment signals</p>
+                        <h4 className="font-space font-bold text-white mb-1">Reliability Indicators</h4>
+                        <p className="font-space text-gray-400 text-sm">Consistency and commitment signals</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Globe className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                      <Globe className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                       <div>
-                        <h4 className="font-jetbrains font-bold text-white mb-1">Ecosystem Contributions</h4>
-                        <p className="font-jetbrains text-gray-400 text-sm">Open source, talks, community building</p>
+                        <h4 className="font-space font-bold text-white mb-1">Ecosystem Contributions</h4>
+                        <p className="font-space text-gray-400 text-sm">Open source, talks, community building</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="text-center pt-6 border-t border-gray-700">
-                    <p className="font-press-start text-2xl text-orange-400 mb-2">
+                    <p className="font-space font-bold text-2xl text-orange-400 mb-2">
                       WE ACCEPT LESS THAN 15% OF JUDGE APPLICATIONS
                     </p>
-                    <p className="font-jetbrains text-gray-400">
+                    <p className="font-space text-gray-400">
                       Quality over quantity. Excellence over volume. Always.
                     </p>
                   </div>
                 </div>
 
-                <div className="minecraft-block from-red-900/80 to-pink-900/80 border-2 border-orange-500/40 p-8 mt-8 bg-[#090c14]">
-                  <div className="border-l-4 border-purple-500/40 pl-6">
-                    <p className="font-press-start text-lg text-white mb-4">
+                <div className="minecraft-block from-gray-900/80 to-gray-900/80 border-2 border-orange-500/40 p-8 mt-8 bg-[#090c14]">
+                  <div className="border-l-4 border-orange-500/30 pl-6">
+                    <p className="font-space font-bold text-lg text-white mb-4">
                       THE STANDARD
                     </p>
-                    <p className="font-jetbrains text-xl text-gray-300 leading-relaxed mb-2">
-                      We accept less than <span className="text-pink-400 font-bold">15%</span> of judge applications.
+                    <p className="font-space text-xl text-gray-300 leading-relaxed mb-2">
+                      We accept less than <span className="text-orange-400 font-bold">15%</span> of judge applications.
                     </p>
-                    <p className="font-jetbrains text-lg text-gray-400">
+                    <p className="font-space text-lg text-gray-400">
                       Quality is the foundation of credibility — and credibility is the foundation of innovation.
                     </p>
                   </div>
@@ -1112,11 +1112,11 @@ const Judges = () => {
 
               {/* SECTION 9: FAQ */}
               <section className="mb-20">
-                <h2 className="font-press-start text-2xl md:text-3xl text-center text-pink-400 mb-8" data-testid="heading-faq">
+                <h2 className="font-space font-bold text-2xl md:text-3xl text-center text-orange-400 mb-8" data-testid="heading-faq">
                   FREQUENTLY ASKED QUESTIONS
                 </h2>
                 
-                <p className="font-jetbrains text-gray-300 text-center text-lg mb-12 max-w-2xl mx-auto">
+                <p className="font-space text-gray-300 text-center text-lg mb-12 max-w-2xl mx-auto">
                   Short, direct answers that maintain exclusivity and clarity.
                 </p>
                 
@@ -1124,14 +1124,14 @@ const Judges = () => {
                   {faqs.map((faq, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-gray-700 hover:border-purple-500/40 p-6 transition-all"
+                      className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-gray-700 hover:border-orange-500/30 p-6 transition-all"
                       data-testid={`faq-${index}`}
                     >
                       <div className="flex items-start gap-3">
-                        <AlertCircle className="h-5 w-5 text-pink-400 flex-shrink-0 mt-1" />
+                        <AlertCircle className="h-5 w-5 text-orange-400 flex-shrink-0 mt-1" />
                         <div>
-                          <h3 className="font-press-start text-sm text-white mb-3">{faq.question}</h3>
-                          <p className="font-jetbrains text-gray-300 leading-relaxed">{faq.answer}</p>
+                          <h3 className="font-space font-bold text-sm text-white mb-3">{faq.question}</h3>
+                          <p className="font-space text-gray-300 leading-relaxed">{faq.answer}</p>
                         </div>
                       </div>
                     </div>
@@ -1140,27 +1140,27 @@ const Judges = () => {
               </section>
 
               <section className="mb-20">
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-orange-500/40 p-8 text-center">
-                  <h2 className="font-press-start text-2xl md:text-3xl text-orange-400 mb-6" data-testid="heading-standard">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/40 p-8 text-center">
+                  <h2 className="font-space font-bold text-2xl md:text-3xl text-orange-400 mb-6" data-testid="heading-standard">
                     THE STANDARD
                   </h2>
-                  <div className="font-jetbrains text-gray-300 space-y-4 text-lg leading-relaxed max-w-3xl mx-auto">
+                  <div className="font-space text-gray-300 space-y-4 text-lg leading-relaxed max-w-3xl mx-auto">
                     <p className="text-xl text-white font-bold">"A Maximally Judge" will become the gold standard of credibility in innovation.</p>
                     <p>Like Chartered Accountants for finance, or IMDB Credits for film, this is the universal credential for those who evaluate innovation.</p>
-                    <p className="text-pink-400">It's how we create a consistent global standard across competitions, hackathons, and accelerators — a shared language of judgment and mentorship.</p>
+                    <p className="text-orange-400">It's how we create a consistent global standard across competitions, hackathons, and accelerators — a shared language of judgment and mentorship.</p>
                   </div>
                 </div>
               </section>
 
               <section className="mb-20">
-                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border-2 border-purple-500/40 p-8 text-center">
-                  <h2 className="font-press-start text-2xl md:text-3xl text-pink-400 mb-6" data-testid="heading-future">
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border-2 border-orange-500/30 p-8 text-center">
+                  <h2 className="font-space font-bold text-2xl md:text-3xl text-orange-400 mb-6" data-testid="heading-future">
                     THE FUTURE WE'RE BUILDING
                   </h2>
-                  <div className="font-jetbrains text-gray-300 space-y-4 text-lg leading-relaxed max-w-3xl mx-auto">
+                  <div className="font-space text-gray-300 space-y-4 text-lg leading-relaxed max-w-3xl mx-auto">
                     <p>The next decade belongs to builders — but the builders will only thrive if the <span className="text-orange-400 font-bold">judging layer</span> evolves with them.</p>
                     <p>We're building that layer.</p>
-                    <p>A global network of thinkers, doers, mentors, and rebels — who don't just observe innovation, they <span className="text-pink-400 font-bold">understand</span> it.</p>
+                    <p>A global network of thinkers, doers, mentors, and rebels — who don't just observe innovation, they <span className="text-orange-400 font-bold">understand</span> it.</p>
                     <p className="text-xl text-white font-bold">Because innovation deserves better judges.</p>
                     <p className="text-xl text-white font-bold">And the world deserves better innovators.</p>
                   </div>
@@ -1169,16 +1169,16 @@ const Judges = () => {
 
               <section className="text-center mb-20">
                 <div className="minecraft-block bg-gradient-to-br from-maximally-red to-maximally-yellow p-12">
-                  <h2 className="font-press-start text-2xl md:text-3xl text-black mb-6" data-testid="heading-cta">
+                  <h2 className="font-space font-bold text-2xl md:text-3xl text-black mb-6" data-testid="heading-cta">
                     THE MOVEMENT STARTS NOW
                   </h2>
-                  <div className="font-jetbrains text-black space-y-4 text-lg leading-relaxed max-w-3xl mx-auto mb-8">
+                  <div className="font-space text-black space-y-4 text-lg leading-relaxed max-w-3xl mx-auto mb-8">
                     <p className="font-bold">We're not collecting judges. We're curating a standard.</p>
                     <p>If you've built, shipped, failed, led, or created — if you believe that the next wave of human progress starts with better feedback, deeper mentorship, and credible evaluation — then this is your arena.</p>
                   </div>
                   <Link
                     to="/judges/apply"
-                    className="pixel-button bg-black text-orange-400 group inline-flex items-center justify-center gap-3 hover:scale-105 transform transition-all h-16 px-10 font-press-start text-base hover:bg-gray-900"
+                    className="pixel-button bg-black text-orange-400 group inline-flex items-center justify-center gap-3 hover:scale-105 transform transition-all h-16 px-10 font-space font-bold text-base hover:bg-gray-900"
                     data-testid="button-apply-judge-cta"
                   >
                     <Star className="h-6 w-6" />
@@ -1186,15 +1186,15 @@ const Judges = () => {
                     <ArrowRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
                   </Link>
                   <div className="mt-8">
-                    <p className="font-press-start text-sm text-black">SHAPE THE FUTURE OF INNOVATION</p>
-                    <p className="font-press-start text-sm text-black">SET THE STANDARD FOR EXCELLENCE</p>
+                    <p className="font-space font-bold text-sm text-black">SHAPE THE FUTURE OF INNOVATION</p>
+                    <p className="font-space font-bold text-sm text-black">SET THE STANDARD FOR EXCELLENCE</p>
                   </div>
                 </div>
               </section>
 
               <section className="text-center">
-                <p className="font-press-start text-xl text-pink-400 mb-2">MAXIMALLY JUDGES</p>
-                <p className="font-jetbrains text-2xl text-orange-400 italic">The World's Top 0.1% Mentoring the Next 1%.</p>
+                <p className="font-space font-bold text-xl text-orange-400 mb-2">MAXIMALLY JUDGES</p>
+                <p className="font-space text-2xl text-orange-400 italic">The World's Top 0.1% Mentoring the Next 1%.</p>
               </section>
             </div>
           </section>

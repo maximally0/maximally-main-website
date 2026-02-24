@@ -59,14 +59,14 @@ const SummerBootcamps = () => {
     <section className="py-20 bg-maximally-black">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="font-press-start text-4xl text-maximally-blue mb-4">
+          <h2 className="font-space font-bold text-4xl text-maximally-blue mb-4">
             Summer Bootcamp 2025
           </h2>
-          <p className="font-jetbrains text-white/80 mb-6">
+          <p className="font-space text-white/80 mb-6">
             Level up your skills this summer. Bootcamps start May 2025.
           </p>
           <div className="inline-block bg-maximally-blue/20 px-4 py-2 rounded-full">
-            <span className="font-jetbrains text-maximally-blue animate-pulse">
+            <span className="font-space text-maximally-blue animate-pulse">
               ⏰ Early bird registration open
             </span>
           </div>
@@ -83,13 +83,13 @@ const SummerBootcamps = () => {
         </div>
 
         <div className="bg-white pixel-border p-8 text-center">
-          <h3 className="font-press-start text-2xl text-maximally-black mb-6">
+          <h3 className="font-space font-bold text-2xl text-maximally-black mb-6">
             Bundle & Save
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
             <div className="pixel-border p-6">
-              <h4 className="font-press-start text-lg mb-2">Any 2 Bootcamps</h4>
-              <p className="font-press-start text-2xl text-maximally-blue mb-4">₹1,799</p>
+              <h4 className="font-space font-bold text-lg mb-2">Any 2 Bootcamps</h4>
+              <p className="font-space font-bold text-2xl text-maximally-blue mb-4">₹1,799</p>
               <Button 
                 onClick={() => handlePreRegister('Bundle - 2 Bootcamps')}
                 className="bg-maximally-red text-white w-full"
@@ -98,8 +98,8 @@ const SummerBootcamps = () => {
               </Button>
             </div>
             <div className="pixel-border p-6 bg-maximally-blue/5">
-              <h4 className="font-press-start text-lg mb-2">All-Access Pass</h4>
-              <p className="font-press-start text-2xl text-maximally-blue mb-4">₹3,999</p>
+              <h4 className="font-space font-bold text-lg mb-2">All-Access Pass</h4>
+              <p className="font-space font-bold text-2xl text-maximally-blue mb-4">₹3,999</p>
               <Button 
                 onClick={() => handlePreRegister('All-Access Pass')}
                 className="bg-maximally-red text-white w-full"
@@ -108,7 +108,7 @@ const SummerBootcamps = () => {
               </Button>
             </div>
           </div>
-          <p className="font-jetbrains text-maximally-black/60 mt-6">
+          <p className="font-space text-maximally-black/60 mt-6">
             * Scholarships available for select students
           </p>
         </div>

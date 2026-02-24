@@ -103,8 +103,8 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
 
   const formatColors: Record<string, string> = {
     online: "bg-blue-500/20 text-blue-300 border-blue-500/40",
-    "in-person": "bg-purple-500/20 text-purple-300 border-purple-500/40",
-    hybrid: "bg-pink-500/20 text-pink-300 border-pink-500/40"
+    "in-person": "bg-orange-500/10 text-orange-400 border-orange-500/30",
+    hybrid: "bg-orange-500/10 text-orange-400 border-orange-500/30"
   };
 
   const durationDays = getDurationDays(hackathon.startDate, hackathon.endDate);
@@ -113,58 +113,58 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
     <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <SheetContent 
         side="right" 
-        className="w-full sm:max-w-lg bg-black border-l border-purple-500/30 p-0 overflow-hidden"
+        className="w-full sm:max-w-lg bg-black border-l border-gray-800 p-0 overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-950/30 via-black to-cyan-950/20" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:30px_30px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-950/30 via-black to-gray-950/20" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px]" />
         
         <ScrollArea className="h-full relative z-10">
           <div className="p-6">
             <SheetHeader className="mb-6">
               <div className="flex items-center gap-2 mb-3">
-                <span className={`px-2 py-1 border text-[10px] font-press-start uppercase ${statusColors[displayState]}`}>
+                <span className={`px-2 py-1 border text-[10px] font-space font-bold uppercase ${statusColors[displayState]}`}>
                   {statusLabels[displayState]}
                 </span>
-                <span className={`px-2 py-1 border text-[10px] font-jetbrains capitalize ${formatColors[hackathon.format]}`}>
+                <span className={`px-2 py-1 border text-[10px] font-space capitalize ${formatColors[hackathon.format]}`}>
                   {hackathon.format}
                 </span>
                 {hackathon.featured && (
-                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[10px] font-press-start flex items-center gap-1">
+                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-300 border border-yellow-500/40 text-[10px] font-space font-bold flex items-center gap-1">
                     <Zap className="w-3 h-3" />
                     FEATURED
                   </span>
                 )}
               </div>
-              <SheetTitle className="font-press-start text-lg sm:text-xl text-white leading-tight text-left">
+              <SheetTitle className="font-space font-bold text-lg sm:text-xl text-white leading-tight text-left">
                 {hackathon.name}
               </SheetTitle>
-              <SheetDescription className="font-jetbrains text-sm text-gray-400 mt-2 text-left leading-relaxed">
+              <SheetDescription className="font-space text-sm text-gray-400 mt-2 text-left leading-relaxed">
                 {hackathon.description}
               </SheetDescription>
             </SheetHeader>
 
             <div className="space-y-4 mb-6">
-              <div className="bg-gradient-to-br from-purple-500/10 to-cyan-500/10 border border-purple-500/30 p-4">
-                <h3 className="font-press-start text-xs text-purple-300 mb-3">EVENT DETAILS</h3>
+              <div className="bg-gradient-to-br from-orange-500/10 to-gray-800/50 border border-gray-800 p-4">
+                <h3 className="font-space font-bold text-xs text-orange-400 mb-3">EVENT DETAILS</h3>
                 
                 <div className="space-y-3">
                   <div className="flex items-start gap-3">
-                    <Calendar className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
+                    <Calendar className="w-4 h-4 text-gray-300 mt-0.5 shrink-0" />
                     <div>
-                      <p className="font-jetbrains text-sm text-white">{getDateRange(hackathon.startDate, hackathon.endDate)}</p>
-                      <p className="font-jetbrains text-xs text-gray-500">{durationDays} day{durationDays > 1 ? 's' : ''}</p>
+                      <p className="font-space text-sm text-white">{getDateRange(hackathon.startDate, hackathon.endDate)}</p>
+                      <p className="font-space text-xs text-gray-500">{durationDays} day{durationDays > 1 ? 's' : ''}</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start gap-3">
-                    <MapPin className="w-4 h-4 text-pink-400 mt-0.5 shrink-0" />
-                    <p className="font-jetbrains text-sm text-white">{hackathon.location}</p>
+                    <MapPin className="w-4 h-4 text-orange-400 mt-0.5 shrink-0" />
+                    <p className="font-space text-sm text-white">{hackathon.location}</p>
                   </div>
                   
                   {hackathon.prizes && (
                     <div className="flex items-start gap-3">
                       <Trophy className="w-4 h-4 text-yellow-400 mt-0.5 shrink-0" />
-                      <p className="font-jetbrains text-sm text-white">{hackathon.prizes}</p>
+                      <p className="font-space text-sm text-white">{hackathon.prizes}</p>
                     </div>
                   )}
                   
@@ -172,9 +172,9 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
                     <div className="flex items-start gap-3">
                       <Building className="w-4 h-4 text-gray-400 mt-0.5 shrink-0" />
                       <div className="flex items-center gap-2">
-                        <p className="font-jetbrains text-sm text-white">{hackathon.organizer}</p>
+                        <p className="font-space text-sm text-white">{hackathon.organizer}</p>
                         {hackathon.isMaximallyOfficial && (
-                          <span className="px-1.5 py-0.5 bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[8px] font-press-start">
+                          <span className="px-1.5 py-0.5 bg-orange-500/10 text-orange-400 border border-gray-800 text-[8px] font-space font-bold">
                             OFFICIAL
                           </span>
                         )}
@@ -185,14 +185,14 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
               </div>
 
               {hackathon.tags.length > 0 && (
-                <div className="bg-gradient-to-br from-pink-500/10 to-purple-500/10 border border-pink-500/30 p-4">
-                  <h3 className="font-press-start text-xs text-pink-300 mb-3">TOPICS</h3>
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 p-4">
+                  <h3 className="font-space font-bold text-xs text-orange-400 mb-3">TOPICS</h3>
                   <div className="flex flex-wrap gap-2">
                     {hackathon.tags.map((tag) => (
                       <Badge
                         key={tag}
                         variant="outline"
-                        className="bg-white/5 border-white/20 text-gray-300 font-jetbrains text-xs"
+                        className="bg-white/5 border-white/20 text-gray-300 font-space text-xs"
                       >
                         {tag}
                       </Badge>
@@ -207,7 +207,7 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
                 <Link
                   to={hackathon.registerUrl}
                   onClick={onClose}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-press-start text-xs transition-all duration-300 hover:from-purple-500 hover:via-purple-400 hover:to-pink-400 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02]"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-500 text-white font-space font-bold text-xs transition-all duration-300 hover:from-orange-500 hover:via-orange-400 hover:to-orange-400 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02]"
                   data-testid="button-register-hackathon"
                 >
                   <Zap className="w-4 h-4" />
@@ -218,7 +218,7 @@ export function HackathonDetailSheet({ hackathon, isOpen, onClose }: HackathonDe
                   href={hackathon.registerUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-500 text-white font-press-start text-xs transition-all duration-300 hover:from-purple-500 hover:via-purple-400 hover:to-pink-400 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 hover:scale-[1.02]"
+                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-500 text-white font-space font-bold text-xs transition-all duration-300 hover:from-orange-500 hover:via-orange-400 hover:to-orange-400 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02]"
                   data-testid="button-register-hackathon"
                 >
                   <Zap className="w-4 h-4" />

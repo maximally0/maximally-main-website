@@ -56,12 +56,12 @@ const Hero = () => {
       <div className="z-10 text-center max-w-4xl px-4">
         <h1 
           ref={textRef} 
-          className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-press-start text-maximally-black mb-4 sm:mb-6 terminal"
+          className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-space font-bold text-maximally-black mb-4 sm:mb-6 terminal"
         >
           {text}
         </h1>
 
-        <p className="text-lg sm:text-xl md:text-2xl font-jetbrains text-maximally-black/80 mb-8 sm:mb-12 max-w-2xl mx-auto">
+        <p className="text-lg sm:text-xl md:text-2xl font-space text-maximally-black/80 mb-8 sm:mb-12 max-w-2xl mx-auto">
           Learn the real-world skills schools forgot to teach.
         </p>
 
@@ -76,16 +76,16 @@ const Hero = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <h2 className="text-2xl md:text-3xl font-press-start text-maximally-black mb-6">
+          <h2 className="text-2xl md:text-3xl font-space font-bold text-maximally-black mb-6">
             Join Our Community
           </h2>
-          <p className="text-lg text-maximally-black/80 font-jetbrains max-w-2xl mx-auto mb-8">
+          <p className="text-lg text-maximally-black/80 font-space max-w-2xl mx-auto mb-8">
             Connect with ambitious teens learning real-world skills. Share experiences, collaborate on projects, and grow together.
           </p>
           <Link to="/community" className="inline-block">
             <div className="bg-white p-6 rounded-lg shadow-lg border-2 border-maximally-black hover:transform hover:scale-105 transition-transform cursor-pointer">
               <Users className="h-12 w-12 text-maximally-blue mx-auto mb-4" />
-              <p className="font-press-start text-sm text-maximally-black">1000+ members and growing</p>
+              <p className="font-space font-bold text-sm text-maximally-black">1000+ members and growing</p>
             </div>
           </Link>
         </div>

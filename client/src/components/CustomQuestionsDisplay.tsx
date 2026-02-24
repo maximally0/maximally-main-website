@@ -48,7 +48,7 @@ export default function CustomQuestionsDisplay({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 text-purple-400 animate-spin" />
+        <Loader2 className="h-6 w-6 text-orange-400 animate-spin" />
       </div>
     );
   }
@@ -69,13 +69,13 @@ export default function CustomQuestionsDisplay({
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-4">
-        <HelpCircle className="h-5 w-5 text-cyan-400" />
-        <h3 className="font-press-start text-sm text-cyan-400">ADDITIONAL QUESTIONS</h3>
+        <HelpCircle className="h-5 w-5 text-gray-300" />
+        <h3 className="font-space font-bold text-sm text-gray-300">ADDITIONAL QUESTIONS</h3>
       </div>
 
       {questions.map((question) => (
         <div key={question.id} className="space-y-2">
-          <label className="block font-jetbrains text-sm text-gray-300">
+          <label className="block font-space text-sm text-gray-300">
             {question.question_text}
             {question.is_required && <span className="text-red-400 ml-1">*</span>}
           </label>
@@ -86,7 +86,7 @@ export default function CustomQuestionsDisplay({
               type="text"
               value={(answers[question.id] as string) || ''}
               onChange={(e) => onChange(question.id, e.target.value)}
-              className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+              className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
               placeholder="Enter your answer..."
             />
           )}
@@ -97,7 +97,7 @@ export default function CustomQuestionsDisplay({
               value={(answers[question.id] as string) || ''}
               onChange={(e) => onChange(question.id, e.target.value)}
               rows={4}
-              className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none resize-none"
+              className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500 outline-none resize-none"
               placeholder="Enter your answer..."
             />
           )}
@@ -107,7 +107,7 @@ export default function CustomQuestionsDisplay({
             <select
               value={(answers[question.id] as string) || ''}
               onChange={(e) => onChange(question.id, e.target.value)}
-              className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-purple-400 outline-none"
+              className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500 outline-none"
             >
               <option value="">Select an option...</option>
               {(question.options || []).map((option, i) => (
@@ -125,9 +125,9 @@ export default function CustomQuestionsDisplay({
                     type="checkbox"
                     checked={((answers[question.id] as string[]) || []).includes(option)}
                     onChange={(e) => handleMultiSelectChange(question.id, option, e.target.checked)}
-                    className="w-5 h-5 bg-black border-2 border-gray-600 rounded checked:bg-purple-500 checked:border-purple-500"
+                    className="w-5 h-5 bg-black border-2 border-gray-600 rounded checked:bg-orange-500 checked:border-orange-500"
                   />
-                  <span className="font-jetbrains text-sm text-gray-300">{option}</span>
+                  <span className="font-space text-sm text-gray-300">{option}</span>
                 </label>
               ))}
             </div>
@@ -140,9 +140,9 @@ export default function CustomQuestionsDisplay({
                 type="checkbox"
                 checked={(answers[question.id] as boolean) || false}
                 onChange={(e) => onChange(question.id, e.target.checked)}
-                className="w-5 h-5 bg-black border-2 border-gray-600 rounded checked:bg-purple-500 checked:border-purple-500"
+                className="w-5 h-5 bg-black border-2 border-gray-600 rounded checked:bg-orange-500 checked:border-orange-500"
               />
-              <span className="font-jetbrains text-sm text-gray-300">Yes</span>
+              <span className="font-space text-sm text-gray-300">Yes</span>
             </label>
           )}
 
@@ -157,9 +157,9 @@ export default function CustomQuestionsDisplay({
                     value={option}
                     checked={(answers[question.id] as string) === option}
                     onChange={(e) => onChange(question.id, e.target.value)}
-                    className="w-5 h-5 bg-black border-2 border-gray-600 rounded-full checked:bg-purple-500 checked:border-purple-500"
+                    className="w-5 h-5 bg-black border-2 border-gray-600 rounded-full checked:bg-orange-500 checked:border-orange-500"
                   />
-                  <span className="font-jetbrains text-sm text-gray-300">{option}</span>
+                  <span className="font-space text-sm text-gray-300">{option}</span>
                 </label>
               ))}
             </div>
@@ -167,7 +167,7 @@ export default function CustomQuestionsDisplay({
 
           {/* Error Message */}
           {errors[question.id] && (
-            <p className="text-red-400 text-xs font-jetbrains">{errors[question.id]}</p>
+            <p className="text-red-400 text-xs font-space">{errors[question.id]}</p>
           )}
         </div>
       ))}

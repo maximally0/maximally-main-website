@@ -119,7 +119,7 @@ export function TeammatesHistory({ userId, showTitle = true, limit = 10 }: Teamm
         {showTitle && (
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <Users className="w-5 h-5 text-purple-400" />
+              <Users className="w-5 h-5 text-orange-400" />
               Teammates
             </CardTitle>
           </CardHeader>
@@ -138,7 +138,7 @@ export function TeammatesHistory({ userId, showTitle = true, limit = 10 }: Teamm
       {showTitle && (
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white">
-            <Users className="w-5 h-5 text-purple-400" />
+            <Users className="w-5 h-5 text-orange-400" />
             Teammates Worked With
           </CardTitle>
           <CardDescription className="text-gray-400">
@@ -150,13 +150,13 @@ export function TeammatesHistory({ userId, showTitle = true, limit = 10 }: Teamm
         {teammates.map((teammate) => (
           <div
             key={teammate.teammate_id}
-            className="p-4 bg-white/5 rounded-lg border border-white/10 hover:border-purple-500/30 transition-colors"
+            className="p-4 bg-white/5 rounded-lg border border-white/10 hover:border-gray-800 transition-colors"
           >
             <div className="flex items-start gap-4">
               <Link href={`/profile/${teammate.teammate_username}`}>
-                <Avatar className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-purple-500 transition-all">
+                <Avatar className="w-12 h-12 cursor-pointer hover:ring-2 hover:ring-orange-500 transition-all">
                   <AvatarImage src={teammate.teammate_avatar} />
-                  <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white">
+                  <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-500 text-white">
                     {teammate.teammate_name[0]}
                   </AvatarFallback>
                 </Avatar>
@@ -164,11 +164,11 @@ export function TeammatesHistory({ userId, showTitle = true, limit = 10 }: Teamm
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <Link href={`/profile/${teammate.teammate_username}`}>
-                    <span className="text-white font-medium hover:text-purple-400 cursor-pointer">
+                    <span className="text-white font-medium hover:text-orange-400 cursor-pointer">
                       {teammate.teammate_name}
                     </span>
                   </Link>
-                  <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">
+                  <Badge className="bg-orange-500/10 text-orange-400 border-gray-800">
                     {teammate.collaboration_count} hackathon{teammate.collaboration_count > 1 ? 's' : ''}
                   </Badge>
                 </div>
@@ -180,7 +180,7 @@ export function TeammatesHistory({ userId, showTitle = true, limit = 10 }: Teamm
                     <div key={idx} className="flex items-center gap-2 text-xs">
                       <Calendar className="w-3 h-3 text-gray-500" />
                       <Link href={`/hackathon/${hack.hackathon_slug}`}>
-                        <span className="text-gray-400 hover:text-purple-400 cursor-pointer">
+                        <span className="text-gray-400 hover:text-orange-400 cursor-pointer">
                           {hack.hackathon_name}
                         </span>
                       </Link>

@@ -94,7 +94,7 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
 
   const getRoleBadge = (role: string) => {
     const colors = {
-      judge: 'bg-purple-500/20 border-purple-500/40 text-purple-300',
+      judge: 'bg-orange-500/10 border-orange-500/30 text-orange-400',
       organizer: 'bg-blue-500/20 border-blue-500/40 text-blue-300',
       mentor: 'bg-green-500/20 border-green-500/40 text-green-300',
     };
@@ -104,7 +104,7 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
   if (loading) {
     return (
       <div className="text-center py-8">
-        <div className="font-press-start text-sm text-gray-400">LOADING COMMENTS...</div>
+        <div className="font-space font-bold text-sm text-gray-400">LOADING COMMENTS...</div>
       </div>
     );
   }
@@ -113,8 +113,8 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <MessageSquare className="h-5 w-5 text-cyan-400" />
-        <h3 className="font-press-start text-lg text-cyan-400">
+        <MessageSquare className="h-5 w-5 text-gray-300" />
+        <h3 className="font-space font-bold text-lg text-gray-300">
           FEEDBACK & COMMENTS ({comments.length})
         </h3>
       </div>
@@ -124,7 +124,7 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
         {comments.length === 0 ? (
           <div className="text-center py-8">
             <div className="bg-gray-800/50 border border-gray-700 text-gray-400 px-6 py-4 inline-block">
-              <span className="font-press-start text-sm">NO COMMENTS YET</span>
+              <span className="font-space font-bold text-sm">NO COMMENTS YET</span>
             </div>
           </div>
         ) : (
@@ -141,23 +141,23 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className={`border px-2 py-1 ${getRoleBadge(comment.commenter_role)}`}>
-                    <span className="font-press-start text-xs">
+                    <span className="font-space font-bold text-xs">
                       {comment.commenter_role.toUpperCase()}
                     </span>
                   </span>
                   {comment.is_private && (
                     <span className="bg-amber-500/20 border border-amber-500/40 text-amber-300 px-2 py-1">
-                      <span className="font-press-start text-xs">PRIVATE</span>
+                      <span className="font-space font-bold text-xs">PRIVATE</span>
                     </span>
                   )}
                 </div>
-                <span className="text-xs text-gray-500 font-jetbrains">
+                <span className="text-xs text-gray-500 font-space">
                   {formatDate(comment.created_at)}
                 </span>
               </div>
 
               {/* Comment Text */}
-              <p className="text-gray-300 font-jetbrains leading-relaxed whitespace-pre-wrap">
+              <p className="text-gray-300 font-space leading-relaxed whitespace-pre-wrap">
                 {comment.comment_text}
               </p>
             </div>
@@ -167,9 +167,9 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
 
       {/* Add Comment Form (for judges/organizers only) */}
       {canComment && user && (
-        <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-6">
-          <h4 className="font-press-start text-sm text-cyan-400 mb-4 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-cyan-400"></span>
+        <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-700 p-6">
+          <h4 className="font-space font-bold text-sm text-gray-300 mb-4 flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-orange-400"></span>
             ADD COMMENT
           </h4>
           <div className="space-y-4">
@@ -177,7 +177,7 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               placeholder="Write your feedback or comment..."
-              className="w-full bg-black/50 border border-cyan-500/30 text-white px-4 py-3 font-jetbrains focus:border-cyan-400 outline-none resize-none placeholder:text-gray-600"
+              className="w-full bg-black/50 border border-gray-700 text-white px-4 py-3 font-space focus:border-gray-600 outline-none resize-none placeholder:text-gray-600"
               rows={4}
             />
             
@@ -187,9 +187,9 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
                 type="checkbox"
                 checked={isPrivate}
                 onChange={(e) => setIsPrivate(e.target.checked)}
-                className="w-5 h-5 accent-cyan-500"
+                className="w-5 h-5 accent-orange-500"
               />
-              <span className="font-jetbrains text-sm text-gray-300">
+              <span className="font-space text-sm text-gray-300">
                 Private comment (only visible to judges and organizers)
               </span>
             </label>
@@ -197,10 +197,10 @@ export default function SubmissionComments({ submissionId, userRole }: Submissio
             <button
               onClick={handleSubmitComment}
               disabled={submitting || !newComment.trim()}
-              className="bg-gradient-to-r from-cyan-600/40 to-blue-500/30 border border-cyan-500/50 hover:border-cyan-400 text-cyan-200 hover:text-white px-6 py-3 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
+              className="bg-gradient-to-r from-orange-600 to-orange-500 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white px-6 py-3 transition-all duration-300 disabled:opacity-50 flex items-center gap-2"
             >
               <Send className="h-4 w-4" />
-              <span className="font-press-start text-xs">
+              <span className="font-space font-bold text-xs">
                 {submitting ? 'POSTING...' : 'POST COMMENT'}
               </span>
             </button>

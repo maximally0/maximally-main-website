@@ -106,49 +106,49 @@ export default function VerifyEmail() {
         <title>Verify Email - Maximally</title>
       </Helmet>
       <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center p-4 pt-24">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
         
-        <div className="absolute top-20 left-[10%] w-60 h-60 bg-purple-500/15 rounded-full blur-[100px]" />
-        <div className="absolute bottom-40 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
+        <div className="absolute top-20 left-[10%] w-60 h-60 bg-orange-500/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-40 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
 
         <div className="w-full max-w-lg relative z-10">
-          <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-purple-500/30 hover:border-purple-400/60 transition-all duration-500 p-8 relative overflow-hidden backdrop-blur-sm">
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+          <div className="bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 hover:border-orange-500/50 transition-all duration-500 p-8 relative overflow-hidden backdrop-blur-sm">
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
             
             <div className="relative z-10">
               <div className="text-center mb-8">
-                <div className="bg-purple-500/20 border border-purple-500/40 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                  <Mail className="w-8 h-8 text-purple-400" />
+                <div className="bg-orange-500/10 border border-orange-500/30 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                  <Mail className="w-8 h-8 text-orange-400" />
                 </div>
-                <h1 className="font-press-start text-xl md:text-2xl mb-4">
-                  <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">VERIFY EMAIL</span>
+                <h1 className="font-space font-bold text-xl md:text-2xl mb-4">
+                  <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">VERIFY EMAIL</span>
                 </h1>
-                <p className="font-jetbrains text-sm text-gray-400">Enter the 6-digit code we emailed to you.</p>
+                <p className="font-space text-sm text-gray-400">Enter the 6-digit code we emailed to you.</p>
               </div>
 
               {error && (
                 <div className="bg-red-500/10 border border-red-500/30 p-3 mb-6">
-                  <div className="text-red-300 font-press-start text-xs" role="alert">⚠️ {error}</div>
+                  <div className="text-red-300 font-space font-bold text-xs" role="alert">⚠️ {error}</div>
                 </div>
               )}
               {success && (
                 <div className="bg-green-500/10 border border-green-500/30 p-3 mb-6">
-                  <div className="text-green-300 font-press-start text-xs" role="status">✓ Verified! Redirecting…</div>
+                  <div className="text-green-300 font-space font-bold text-xs" role="status">✓ Verified! Redirecting…</div>
                 </div>
               )}
 
               <form onSubmit={handleVerify} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="font-press-start text-xs text-cyan-300 flex items-center gap-2">
-                    <span className="w-2 h-2 bg-cyan-400"></span>
+                  <Label htmlFor="email" className="font-space font-bold text-xs text-gray-300 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-orange-400"></span>
                     EMAIL ADDRESS
                   </Label>
-                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-black/40 border border-purple-500/30 text-white font-jetbrains focus:border-purple-400 placeholder:text-gray-500 transition-colors" required />
+                  <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-black/40 border border-gray-800 text-white font-space focus:border-orange-500 placeholder:text-gray-500 transition-colors" required />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="code" className="font-press-start text-xs text-green-300 flex items-center gap-2">
+                  <Label htmlFor="code" className="font-space font-bold text-xs text-green-300 flex items-center gap-2">
                     <span className="w-2 h-2 bg-green-400"></span>
                     VERIFICATION CODE
                   </Label>
@@ -157,12 +157,12 @@ export default function VerifyEmail() {
                   </div>
                 </div>
 
-                <Button type="submit" disabled={loading || !canSubmit} className="w-full bg-gradient-to-r from-purple-600/40 to-pink-500/30 border border-purple-500/50 hover:border-purple-400 text-purple-200 hover:text-white font-press-start text-sm py-4 transition-all">
+                <Button type="submit" disabled={loading || !canSubmit} className="w-full bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-500 text-white hover:text-white font-space font-bold text-sm py-4 transition-all">
                   {loading ? 'VERIFYING...' : 'VERIFY'}
                 </Button>
 
                 <div className="text-center">
-                  <button type="button" onClick={handleResend} disabled={resending || Date.now() < nextResendAt} className="font-press-start text-xs text-gray-400 hover:text-purple-300 transition-colors">
+                  <button type="button" onClick={handleResend} disabled={resending || Date.now() < nextResendAt} className="font-space font-bold text-xs text-gray-400 hover:text-orange-400 transition-colors">
                     {resending ? 'SENDING...' : (Date.now() < nextResendAt ? `WAIT ${Math.ceil((nextResendAt - Date.now())/1000)}s` : 'RESEND CODE')}
                   </button>
                 </div>

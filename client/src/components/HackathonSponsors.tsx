@@ -76,7 +76,7 @@ export default function HackathonSponsors({ hackathonId, sponsorsData }: Hackath
       gold: 'border-yellow-400 bg-yellow-900/20',
       silver: 'border-gray-400 bg-gray-800/20',
       bronze: 'border-orange-600 bg-orange-900/20',
-      partner: 'border-cyan-400 bg-cyan-900/20',
+      partner: 'border-gray-600 bg-gray-900/20',
     };
     return colors[tier as keyof typeof colors] || colors.partner;
   };
@@ -117,7 +117,7 @@ export default function HackathonSponsors({ hackathonId, sponsorsData }: Hackath
     return (
       <div className="text-center py-12">
         <div className="minecraft-block bg-gray-800 text-gray-400 px-6 py-4 inline-block">
-          <span className="font-press-start text-sm">NO SPONSORS YET</span>
+          <span className="font-space font-bold text-sm">NO SPONSORS YET</span>
         </div>
       </div>
     );
@@ -132,8 +132,8 @@ export default function HackathonSponsors({ hackathonId, sponsorsData }: Hackath
         return (
           <div key={tier}>
             {/* Tier Title */}
-            <div className="minecraft-block bg-cyan-400 text-black px-4 py-2 inline-block mb-6">
-              <span className="font-press-start text-sm">
+            <div className="minecraft-block bg-orange-400 text-black px-4 py-2 inline-block mb-6">
+              <span className="font-space font-bold text-sm">
                 {getTierLabel(tier)} SPONSORS
               </span>
             </div>
@@ -161,7 +161,7 @@ export default function HackathonSponsors({ hackathonId, sponsorsData }: Hackath
                     />
                   ) : (
                     <div className="flex items-center justify-center h-full">
-                      <span className="font-press-start text-sm text-center text-white">
+                      <span className="font-space font-bold text-sm text-center text-white">
                         {sponsor.sponsor_name}
                       </span>
                     </div>
@@ -170,7 +170,7 @@ export default function HackathonSponsors({ hackathonId, sponsorsData }: Hackath
                   {/* External Link Icon */}
                   {sponsor.sponsor_website && (
                     <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <ExternalLink className="h-4 w-4 text-cyan-400" />
+                      <ExternalLink className="h-4 w-4 text-gray-300" />
                     </div>
                   )}
                 </a>

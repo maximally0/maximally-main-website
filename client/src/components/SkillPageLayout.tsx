@@ -32,7 +32,7 @@ const SkillPageLayout = ({
       <main className="container mx-auto px-4 pt-24 pb-16">
         <Link
           to="/"
-          className="inline-flex items-center mb-8 text-maximally-black hover:text-maximally-blue font-jetbrains"
+          className="inline-flex items-center mb-8 text-maximally-black hover:text-maximally-blue font-space"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
@@ -44,11 +44,11 @@ const SkillPageLayout = ({
               <div className={`p-3 rounded-lg ${iconBgColor} transform hover:scale-110 transition-transform`}>
                 {icon}
               </div>
-              <h1 className="font-press-start text-3xl text-maximally-black bg-clip-text">
+              <h1 className="font-space font-bold text-3xl text-maximally-black bg-clip-text">
                 {title}
               </h1>
             </div>
-            <p className="font-jetbrains text-xl text-maximally-black/80 mb-8 leading-relaxed">
+            <p className="font-space text-xl text-maximally-black/80 mb-8 leading-relaxed">
               {tagline}
             </p>
           </div>

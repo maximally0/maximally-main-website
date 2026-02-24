@@ -16,15 +16,15 @@ interface HackathonCardProps {
 const tagColors: Record<string, string> = {
   online: "bg-blue-500/20 text-blue-400 border-blue-500/50",
   offline: "bg-green-500/20 text-green-400 border-green-500/50",
-  hybrid: "bg-purple-500/20 text-purple-400 border-purple-500/50",
-  AI: "bg-cyan-500/20 text-cyan-400 border-cyan-500/50",
+  hybrid: "bg-orange-500/10 text-orange-400 border-orange-500/50",
+  AI: "bg-gray-800 text-gray-300 border-gray-800",
   "beginner-friendly": "bg-emerald-500/20 text-emerald-400 border-emerald-500/50",
   intermediate: "bg-amber-500/20 text-amber-400 border-amber-500/50",
   advanced: "bg-red-500/20 text-red-400 border-red-500/50",
   flagship: "bg-yellow-500/20 text-yellow-400 border-yellow-500/50",
   science: "bg-indigo-500/20 text-indigo-400 border-indigo-500/50",
   security: "bg-rose-500/20 text-rose-400 border-rose-500/50",
-  creative: "bg-pink-500/20 text-pink-400 border-pink-500/50",
+  creative: "bg-orange-500/10 text-orange-400 border-orange-500/30",
   "all-levels": "bg-teal-500/20 text-teal-400 border-teal-500/50",
 };
 
@@ -36,10 +36,10 @@ const typeStyles: Record<string, { gradient: string; icon: typeof Sparkles; acce
     glowColor: "shadow-yellow-500/20",
   },
   ai: {
-    gradient: "from-cyan-600/30 via-blue-600/20 to-purple-600/30",
+    gradient: "from-gray-800/30 via-blue-600/20 to-gray-900/30",
     icon: Brain,
-    accentColor: "text-cyan-400",
-    glowColor: "shadow-cyan-500/20",
+    accentColor: "text-gray-300",
+    glowColor: "shadow-gray-700/20",
   },
   security: {
     gradient: "from-rose-600/30 via-red-600/20 to-orange-600/30",
@@ -48,19 +48,19 @@ const typeStyles: Record<string, { gradient: string; icon: typeof Sparkles; acce
     glowColor: "shadow-rose-500/20",
   },
   creative: {
-    gradient: "from-pink-600/30 via-purple-600/20 to-indigo-600/30",
+    gradient: "from-orange-600/30 via-gray-900/20 to-indigo-600/30",
     icon: Palette,
-    accentColor: "text-pink-400",
-    glowColor: "shadow-pink-500/20",
+    accentColor: "text-orange-400",
+    glowColor: "shadow-orange-500/20",
   },
   science: {
-    gradient: "from-indigo-600/30 via-blue-600/20 to-cyan-600/30",
+    gradient: "from-indigo-600/30 via-blue-600/20 to-gray-800/30",
     icon: Zap,
     accentColor: "text-indigo-400",
     glowColor: "shadow-indigo-500/20",
   },
   general: {
-    gradient: "from-red-600/30 via-purple-600/20 to-blue-600/30",
+    gradient: "from-red-600/30 via-gray-900/20 to-blue-600/30",
     icon: Rocket,
     accentColor: "text-red-400",
     glowColor: "shadow-red-500/20",
@@ -116,7 +116,7 @@ export function HackathonCard({
             {tags.slice(0, 2).map((tag) => (
               <span
                 key={tag}
-                className={`px-2 py-0.5 text-[9px] font-press-start border ${tagColors[tag] || "bg-gray-500/20 text-gray-400 border-gray-500/50"}`}
+                className={`px-2 py-0.5 text-[9px] font-space font-bold border ${tagColors[tag] || "bg-gray-500/20 text-gray-400 border-gray-500/50"}`}
               >
                 {tag.toUpperCase()}
               </span>
@@ -125,15 +125,15 @@ export function HackathonCard({
         </div>
         
         <div className="space-y-2">
-          <h3 className="font-press-start text-sm text-white group-hover:text-red-400 transition-colors line-clamp-2 leading-relaxed">
+          <h3 className="font-space font-bold text-sm text-white group-hover:text-red-400 transition-colors line-clamp-2 leading-relaxed">
             {name}
           </h3>
-          <p className="text-gray-400 text-sm font-jetbrains line-clamp-2 leading-relaxed">
+          <p className="text-gray-400 text-sm font-space line-clamp-2 leading-relaxed">
             {theme}
           </p>
         </div>
         
-        <div className="flex flex-col gap-2 text-xs font-jetbrains">
+        <div className="flex flex-col gap-2 text-xs font-space">
           <div className="flex items-center gap-2 text-gray-400">
             <Calendar className="w-4 h-4 text-red-500 flex-shrink-0" />
             <span>{formatDateRange(startDate, endDate)}</span>
@@ -149,7 +149,7 @@ export function HackathonCard({
             href={registrationUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-press-start text-[10px] transition-all duration-300 group/btn shadow-lg shadow-red-500/20 hover:shadow-red-500/40"
+            className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-space font-bold text-[10px] transition-all duration-300 group/btn shadow-lg shadow-red-500/20 hover:shadow-red-500/40"
             data-testid={`button-register-${id}`}
           >
             <span>REGISTER NOW</span>

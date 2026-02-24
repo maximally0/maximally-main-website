@@ -64,7 +64,7 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
       <div className="bg-gradient-to-br from-red-900/30 to-red-900/10 border border-red-500/30 p-4 rounded">
         <div className="flex items-center gap-3">
           <XCircle className="h-5 w-5 text-red-400" />
-          <span className="font-jetbrains text-sm text-red-300">Error: {error}</span>
+          <span className="font-space text-sm text-red-300">Error: {error}</span>
         </div>
       </div>
     );
@@ -72,10 +72,10 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
 
   if (!progress) {
     return (
-      <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/20 border border-purple-500/30 p-4 rounded">
+      <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 p-4 rounded">
         <div className="flex items-center gap-3">
-          <Loader2 className="h-5 w-5 text-purple-400 animate-spin" />
-          <span className="font-jetbrains text-sm text-purple-300">Loading progress...</span>
+          <Loader2 className="h-5 w-5 text-orange-400 animate-spin" />
+          <span className="font-space text-sm text-orange-400">Loading progress...</span>
         </div>
       </div>
     );
@@ -85,7 +85,7 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
   const isComplete = progress.status === 'completed' || progress.status === 'failed';
 
   return (
-    <div className="bg-gradient-to-br from-cyan-900/30 to-blue-900/20 border border-cyan-500/30 p-6 rounded space-y-4">
+    <div className="bg-gradient-to-br from-gray-900/30 to-blue-900/20 border border-gray-700 p-6 rounded space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -96,13 +96,13 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
               <XCircle className="h-6 w-6 text-red-400" />
             )
           ) : (
-            <Mail className="h-6 w-6 text-cyan-400 animate-pulse" />
+            <Mail className="h-6 w-6 text-gray-300 animate-pulse" />
           )}
-          <h3 className="font-press-start text-sm text-cyan-300">
+          <h3 className="font-space font-bold text-sm text-gray-300">
             {isComplete ? 'EMAIL_BATCH_COMPLETE' : 'SENDING_EMAILS...'}
           </h3>
         </div>
-        <span className="font-jetbrains text-xs text-gray-400">
+        <span className="font-space text-xs text-gray-400">
           {percentage}%
         </span>
       </div>
@@ -115,7 +115,7 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
               ? progress.status === 'completed'
                 ? 'bg-gradient-to-r from-green-600 to-emerald-600'
                 : 'bg-gradient-to-r from-red-600 to-orange-600'
-              : 'bg-gradient-to-r from-cyan-600 to-blue-600'
+              : 'bg-gradient-to-r from-orange-600 to-orange-500'
           }`}
           style={{ width: `${percentage}%` }}
         />
@@ -130,20 +130,20 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
         <div className="text-center">
-          <div className="font-press-start text-lg text-white">{progress.total}</div>
-          <div className="font-jetbrains text-xs text-gray-400 mt-1">TOTAL</div>
+          <div className="font-space font-bold text-lg text-white">{progress.total}</div>
+          <div className="font-space text-xs text-gray-400 mt-1">TOTAL</div>
         </div>
         <div className="text-center">
-          <div className="font-press-start text-lg text-green-400">{progress.sent}</div>
-          <div className="font-jetbrains text-xs text-gray-400 mt-1">SENT</div>
+          <div className="font-space font-bold text-lg text-green-400">{progress.sent}</div>
+          <div className="font-space text-xs text-gray-400 mt-1">SENT</div>
         </div>
         <div className="text-center">
-          <div className="font-press-start text-lg text-cyan-400">{progress.pending}</div>
-          <div className="font-jetbrains text-xs text-gray-400 mt-1">PENDING</div>
+          <div className="font-space font-bold text-lg text-gray-300">{progress.pending}</div>
+          <div className="font-space text-xs text-gray-400 mt-1">PENDING</div>
         </div>
         <div className="text-center">
-          <div className="font-press-start text-lg text-red-400">{progress.failed}</div>
-          <div className="font-jetbrains text-xs text-gray-400 mt-1">FAILED</div>
+          <div className="font-space font-bold text-lg text-red-400">{progress.failed}</div>
+          <div className="font-space text-xs text-gray-400 mt-1">FAILED</div>
         </div>
       </div>
 
@@ -152,7 +152,7 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
         {isComplete ? (
           <>
             <CheckCircle className="h-4 w-4 text-green-400" />
-            <span className="font-jetbrains text-xs text-green-300">
+            <span className="font-space text-xs text-green-300">
               {progress.status === 'completed'
                 ? `All emails sent successfully! (${progress.sent}/${progress.total})`
                 : `Batch completed with ${progress.failed} failures`}
@@ -160,8 +160,8 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
           </>
         ) : (
           <>
-            <Clock className="h-4 w-4 text-cyan-400" />
-            <span className="font-jetbrains text-xs text-cyan-300">
+            <Clock className="h-4 w-4 text-gray-300" />
+            <span className="font-space text-xs text-gray-300">
               Sending at ~2 emails/second (rate limited for deliverability)
             </span>
           </>
@@ -171,7 +171,7 @@ export default function EmailProgressTracker({ batchId, onComplete }: EmailProgr
       {/* Estimated Time */}
       {!isComplete && progress.pending > 0 && (
         <div className="text-center">
-          <span className="font-jetbrains text-xs text-gray-400">
+          <span className="font-space text-xs text-gray-400">
             Est. time remaining: ~{Math.ceil(progress.pending * 0.6 / 60)} min
           </span>
         </div>

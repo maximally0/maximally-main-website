@@ -83,9 +83,9 @@ const Protocol404FutureOfHackathons = () => {
             <h3 className="font-bold text-blue-800 mb-2">Working Professionals</h3>
             <p className="text-sm text-blue-700">Can contribute without putting life on pause.</p>
           </div>
-          <div className="bg-purple-50 border border-purple-200 p-4 rounded-lg">
-            <h3 className="font-bold text-purple-800 mb-2">Communities & Startups</h3>
-            <p className="text-sm text-purple-700">Gain access to ideas that are more polished and sustained.</p>
+          <div className="bg-gray-900 border border-orange-500 p-4 rounded-lg">
+            <h3 className="font-bold text-orange-400 mb-2">Communities & Startups</h3>
+            <p className="text-sm text-orange-400">Gain access to ideas that are more polished and sustained.</p>
           </div>
         </div>
 

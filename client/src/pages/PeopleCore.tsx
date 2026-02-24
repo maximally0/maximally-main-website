@@ -81,9 +81,9 @@ const PeopleCore = () => {
       <div className="text-center mb-10">
         <div className={`inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r ${colorTheme.gradient} border ${colorTheme.border} mb-6`}>
           <Icon className={`h-5 w-5 ${colorTheme.text}`} />
-          <span className={`font-press-start text-xs ${colorTheme.text}`}>{title.toUpperCase()}</span>
+          <span className={`font-space font-bold text-xs ${colorTheme.text}`}>{title.toUpperCase()}</span>
         </div>
-        <h2 className={`font-press-start text-2xl md:text-3xl bg-gradient-to-r ${colorTheme.text === 'text-red-400' ? 'from-red-400 to-orange-400' : colorTheme.text === 'text-amber-400' ? 'from-amber-400 to-yellow-400' : colorTheme.text === 'text-green-400' ? 'from-green-400 to-emerald-400' : 'from-blue-400 to-cyan-400'} bg-clip-text text-transparent`}>
+        <h2 className={`font-space font-bold text-2xl md:text-3xl bg-gradient-to-r ${colorTheme.text === 'text-red-400' ? 'from-red-400 to-orange-400' : colorTheme.text === 'text-amber-400' ? 'from-amber-400 to-yellow-400' : colorTheme.text === 'text-green-400' ? 'from-green-400 to-emerald-400' : 'from-blue-400 to-gray-500'} bg-clip-text text-transparent`}>
           {title}
         </h2>
       </div>
@@ -99,22 +99,22 @@ const PeopleCore = () => {
                 <Icon className={`h-7 w-7 ${colorTheme.text}`} />
               </div>
               
-              <h3 className="font-press-start text-sm mb-2 text-center text-white">
+              <h3 className="font-space font-bold text-sm mb-2 text-center text-white">
                 {member.name}
               </h3>
               
-              <p className="font-jetbrains text-xs text-gray-400 text-center mb-1">
+              <p className="font-space text-xs text-gray-400 text-center mb-1">
                 {member.role_in_company}
               </p>
               
               {member.company && (
-                <p className={`font-jetbrains text-xs font-bold ${colorTheme.text} text-center mb-3`}>
+                <p className={`font-space text-xs font-bold ${colorTheme.text} text-center mb-3`}>
                   {member.company}
                 </p>
               )}
               
               {member.description && (
-                <p className="font-jetbrains text-xs text-gray-400 text-center italic mb-4 line-clamp-3">
+                <p className="font-space text-xs text-gray-400 text-center italic mb-4 line-clamp-3">
                   "{member.description}"
                 </p>
               )}
@@ -126,7 +126,7 @@ const PeopleCore = () => {
                       href={member.linkedin_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-8 h-8 bg-blue-600/30 hover:bg-blue-600/50 border border-blue-500/50 flex items-center justify-center transition-all"
+                      className="w-8 h-8 bg-blue-600/30 hover:bg-blue-600/50 border border-gray-700 flex items-center justify-center transition-all"
                     >
                       <FaLinkedin className="w-4 h-4 text-blue-400" />
                     </a>
@@ -136,9 +136,9 @@ const PeopleCore = () => {
                       href={member.twitter_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-8 h-8 bg-cyan-600/30 hover:bg-cyan-600/50 border border-cyan-500/50 flex items-center justify-center transition-all"
+                      className="w-8 h-8 bg-gray-700/30 hover:bg-gray-700/50 border border-gray-700 flex items-center justify-center transition-all"
                     >
-                      <FaTwitter className="w-4 h-4 text-cyan-400" />
+                      <FaTwitter className="w-4 h-4 text-gray-300" />
                     </a>
                   )}
                   {member.github_url && (
@@ -169,7 +169,7 @@ const PeopleCore = () => {
       ) : (
         <div className="text-center py-12">
           <div className={`bg-gradient-to-br ${colorTheme.gradient} border ${colorTheme.border} px-8 py-6 inline-block`}>
-            <p className="font-jetbrains text-sm text-gray-400">{emptyMessage}</p>
+            <p className="font-space text-sm text-gray-400">{emptyMessage}</p>
           </div>
         </div>
       )}
@@ -200,24 +200,24 @@ const PeopleCore = () => {
             <section className="text-center mb-16">
               <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600/30 to-orange-600/20 border border-red-500/40 mb-8">
                 <Star className="h-5 w-5 text-red-400" />
-                <span className="font-press-start text-xs text-red-300">THE BUILDERS</span>
+                <span className="font-space font-bold text-xs text-red-300">THE BUILDERS</span>
                 <Sparkles className="h-5 w-5 text-orange-400" />
               </div>
               
-              <h1 className="font-press-start text-4xl md:text-5xl lg:text-6xl mb-8">
+              <h1 className="font-space font-bold text-4xl md:text-5xl lg:text-6xl mb-8">
                 <span className="bg-gradient-to-r from-red-400 via-orange-400 to-amber-400 bg-clip-text text-transparent">
                   CORE TEAM
                 </span>
               </h1>
               
-              <p className="text-gray-300 text-lg md:text-xl font-jetbrains max-w-4xl mx-auto leading-relaxed mb-8">
+              <p className="text-gray-300 text-lg md:text-xl font-space max-w-4xl mx-auto leading-relaxed mb-8">
                 The builders, mentors, and organizers making Maximally 
                 <span className="text-red-400 font-bold"> the world's premier hackathon league.</span>
               </p>
               
               <Link
                 to="/people"
-                className="inline-block bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-6 py-3 font-press-start text-xs border border-red-500/50 transition-all hover:scale-[1.02]"
+                className="inline-block bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-6 py-3 font-space font-bold text-xs border border-red-500/50 transition-all hover:scale-[1.02]"
               >
                 ← BACK TO PEOPLE
               </Link>
@@ -228,9 +228,9 @@ const PeopleCore = () => {
               <div className="text-center py-16">
                 <div className="bg-gradient-to-br from-red-900/30 to-orange-900/20 border border-red-500/40 px-8 py-6 inline-block mb-4">
                   <Loader2 className="h-8 w-8 text-red-400 animate-spin mx-auto mb-4" />
-                  <span className="font-press-start text-sm text-red-300">LOADING TEAM DATA</span>
+                  <span className="font-space font-bold text-sm text-red-300">LOADING TEAM DATA</span>
                 </div>
-                <p className="text-gray-400 font-jetbrains">Fetching our amazing team members...</p>
+                <p className="text-gray-400 font-space">Fetching our amazing team members...</p>
               </div>
             )}
 
@@ -238,12 +238,12 @@ const PeopleCore = () => {
             {error && !loading && (
               <div className="text-center py-16">
                 <div className="bg-gradient-to-br from-red-900/30 to-rose-900/20 border border-red-500/40 px-8 py-6 inline-block mb-4">
-                  <span className="font-press-start text-sm text-red-400">ERROR LOADING TEAM</span>
+                  <span className="font-space font-bold text-sm text-red-400">ERROR LOADING TEAM</span>
                 </div>
-                <p className="text-red-400 font-jetbrains mb-6">{error}</p>
+                <p className="text-red-400 font-space mb-6">{error}</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-6 py-3 font-press-start text-xs border border-red-500/50 transition-all"
+                  className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white px-6 py-3 font-space font-bold text-xs border border-red-500/50 transition-all"
                 >
                   RETRY
                 </button>
@@ -297,7 +297,7 @@ const PeopleCore = () => {
                   members={alumni}
                   icon={GraduationCap}
                   colorTheme={{
-                    gradient: "from-blue-900/30 to-cyan-900/20",
+                    gradient: "from-blue-900/30 to-gray-900/20",
                     border: "border-blue-500/40",
                     text: "text-blue-400",
                     iconBg: "bg-blue-600/30"

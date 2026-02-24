@@ -36,13 +36,13 @@ const Resources = () => {
     color?: string;
   }) => {
     const colorClasses: Record<string, { bg: string; border: string; text: string }> = {
-      purple: { bg: 'bg-purple-500/20', border: 'border-purple-500/40', text: 'text-purple-300' },
+      purple: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400' },
       amber: { bg: 'bg-amber-500/20', border: 'border-amber-500/40', text: 'text-amber-300' },
-      cyan: { bg: 'bg-cyan-500/20', border: 'border-cyan-500/40', text: 'text-cyan-300' },
-      pink: { bg: 'bg-pink-500/20', border: 'border-pink-500/40', text: 'text-pink-300' },
+      cyan: { bg: 'bg-gray-800', border: 'border-gray-700', text: 'text-gray-300' },
+      pink: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400' },
       green: { bg: 'bg-green-500/20', border: 'border-green-500/40', text: 'text-green-300' },
       red: { bg: 'bg-red-500/20', border: 'border-red-500/40', text: 'text-red-300' },
-      indigo: { bg: 'bg-indigo-500/20', border: 'border-indigo-500/40', text: 'text-indigo-300' },
+      indigo: { bg: 'bg-indigo-500/20', border: 'border-indigo-500/40', text: 'text-gray-300' },
     };
     const c = colorClasses[color] || colorClasses.purple;
     
@@ -50,7 +50,7 @@ const Resources = () => {
       <section className="mb-12">
         <div className={`inline-flex items-center gap-2 px-4 py-2 ${c.bg} border ${c.border} mb-6`}>
           <Icon className={`h-4 w-4 ${c.text}`} />
-          <h2 className={`font-press-start text-xs ${c.text}`}>
+          <h2 className={`font-space font-bold text-xs ${c.text}`}>
             {title.toUpperCase()}
           </h2>
         </div>
@@ -67,13 +67,13 @@ const Resources = () => {
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.15)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(236,72,153,0.10)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(249,115,22,0.04)_0%,transparent_50%)]" />
         
-        <div className="absolute top-20 left-[5%] w-80 h-80 bg-purple-500/15 rounded-full blur-[100px]" />
-        <div className="absolute top-60 right-[10%] w-60 h-60 bg-pink-500/12 rounded-full blur-[80px]" />
-        <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-cyan-500/10 rounded-full blur-[90px]" />
+        <div className="absolute top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-60 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
+        <div className="absolute bottom-40 left-[20%] w-72 h-72 bg-gray-800 rounded-full blur-[90px]" />
         
         {Array.from({ length: 12 }, (_, i) => (
           <div
@@ -94,16 +94,16 @@ const Resources = () => {
           <div className="max-w-7xl mx-auto">
             {/* Hero Section */}
             <section className="text-center mb-16">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30 mb-6">
-                <Book className="w-4 h-4 text-purple-400" />
-                <span className="font-press-start text-[10px] sm:text-xs text-purple-300">CONTENT & COMMUNITY HUB</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-gray-800 mb-6">
+                <Book className="w-4 h-4 text-orange-400" />
+                <span className="font-space font-bold text-[10px] sm:text-xs text-orange-400">CONTENT & COMMUNITY HUB</span>
               </div>
-              <h1 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6">
-                <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              <h1 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6">
+                <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
                   RESOURCES
                 </span>
               </h1>
-              <p className="text-gray-400 text-sm sm:text-base md:text-lg font-jetbrains max-w-4xl mx-auto leading-relaxed">
+              <p className="text-gray-400 text-sm sm:text-base md:text-lg font-space max-w-4xl mx-auto leading-relaxed">
                 Everything someone can use, read, or join. Your one-stop hub for all Maximally content, guides, and community connections.
               </p>
             </section>
@@ -120,20 +120,20 @@ const Resources = () => {
                     <div className="bg-amber-500/20 border border-amber-500/40 w-10 h-10 mb-4 flex items-center justify-center group-hover:bg-amber-500/30 transition-colors">
                       <Book className="h-5 w-5 text-amber-400" />
                     </div>
-                    <h3 className="font-press-start text-[10px] sm:text-xs mb-3 text-amber-300 group-hover:text-amber-200 transition-colors leading-relaxed">
+                    <h3 className="font-space font-bold text-[10px] sm:text-xs mb-3 text-amber-300 group-hover:text-amber-200 transition-colors leading-relaxed">
                       {post.title}
                     </h3>
                   </Link>
                 ))}
                 <Link
                   to="/blog"
-                  className="group bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700/50 p-6 hover:border-purple-500/50 transition-all duration-300 hover:scale-[1.02] flex items-center justify-center"
+                  className="group bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-700/50 p-6 hover:border-orange-500/50 transition-all duration-300 hover:scale-[1.02] flex items-center justify-center"
                 >
                   <div className="text-center">
-                    <div className="bg-gray-700/30 border border-gray-600/50 w-10 h-10 mx-auto mb-4 flex items-center justify-center group-hover:bg-purple-500/20 group-hover:border-purple-500/40 transition-colors">
-                      <ExternalLink className="h-5 w-5 text-gray-400 group-hover:text-purple-400" />
+                    <div className="bg-gray-700/30 border border-gray-600/50 w-10 h-10 mx-auto mb-4 flex items-center justify-center group-hover:bg-orange-500/10 group-hover:border-orange-500/30 transition-colors">
+                      <ExternalLink className="h-5 w-5 text-gray-400 group-hover:text-orange-400" />
                     </div>
-                    <span className="font-press-start text-[10px] text-gray-400 group-hover:text-purple-300 transition-colors">
+                    <span className="font-space font-bold text-[10px] text-gray-400 group-hover:text-orange-400 transition-colors">
                       VIEW ALL POSTS
                     </span>
                   </div>
@@ -148,17 +148,17 @@ const Resources = () => {
                   <div className="bg-green-500/20 border border-green-500/40 w-10 h-10 mb-4 flex items-center justify-center">
                     <Video className="h-5 w-5 text-green-400" />
                   </div>
-                  <h3 className="font-press-start text-xs mb-3 text-green-300">UPCOMING</h3>
-                  <p className="font-jetbrains text-gray-400 text-sm">
+                  <h3 className="font-space font-bold text-xs mb-3 text-green-300">UPCOMING</h3>
+                  <p className="font-space text-gray-400 text-sm">
                     Stay tuned for upcoming webinars and live sessions with industry experts.
                   </p>
                 </div>
-                <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-6">
-                  <div className="bg-cyan-500/20 border border-cyan-500/40 w-10 h-10 mb-4 flex items-center justify-center">
-                    <Video className="h-5 w-5 text-cyan-400" />
+                <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-700 p-6">
+                  <div className="bg-gray-800 border border-gray-700 w-10 h-10 mb-4 flex items-center justify-center">
+                    <Video className="h-5 w-5 text-gray-300" />
                   </div>
-                  <h3 className="font-press-start text-xs mb-3 text-cyan-300">RECORDINGS</h3>
-                  <p className="font-jetbrains text-gray-400 text-sm">
+                  <h3 className="font-space font-bold text-xs mb-3 text-gray-300">RECORDINGS</h3>
+                  <p className="font-space text-gray-400 text-sm">
                     Access past webinar recordings and educational content.
                   </p>
                 </div>
@@ -172,15 +172,15 @@ const Resources = () => {
                   <div className="bg-red-500/20 border border-red-500/40 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
                     <Video className="h-8 w-8 text-red-400" />
                   </div>
-                  <h3 className="font-press-start text-sm sm:text-base mb-4 text-red-300">MAXIMALLY CHANNEL</h3>
-                  <p className="font-jetbrains text-gray-400 mb-6">
+                  <h3 className="font-space font-bold text-sm sm:text-base mb-4 text-red-300">MAXIMALLY CHANNEL</h3>
+                  <p className="font-space text-gray-400 mb-6">
                     Watch our latest videos, event highlights, and builder stories.
                   </p>
                   <a
                     href="https://www.youtube.com/@MaximallyYT"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-red-500/20 border border-red-500/40 hover:border-red-400 text-red-300 hover:text-red-200 font-press-start text-[10px] sm:text-xs transition-all duration-300"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-red-500/20 border border-red-500/40 hover:border-red-400 text-red-300 hover:text-red-200 font-space font-bold text-[10px] sm:text-xs transition-all duration-300"
                   >
                     VISIT CHANNEL <ExternalLink className="h-4 w-4" />
                   </a>
@@ -198,12 +198,12 @@ const Resources = () => {
                   className="group bg-gradient-to-br from-indigo-500/10 to-violet-500/10 border border-indigo-500/30 p-6 hover:border-indigo-400/60 transition-all duration-300 hover:scale-[1.01]"
                 >
                   <div className="bg-indigo-500/20 border border-indigo-500/40 w-10 h-10 mb-4 flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors">
-                    <Users className="h-5 w-5 text-indigo-400" />
+                    <Users className="h-5 w-5 text-gray-300" />
                   </div>
-                  <h3 className="font-press-start text-xs mb-3 text-indigo-300 group-hover:text-indigo-200 transition-colors">
+                  <h3 className="font-space font-bold text-xs mb-3 text-gray-300 group-hover:text-indigo-200 transition-colors">
                     DISCORD
                   </h3>
-                  <p className="font-jetbrains text-gray-400 text-sm">
+                  <p className="font-space text-gray-400 text-sm">
                     Join our main community server for real-time discussions and updates.
                   </p>
                 </a>
@@ -217,15 +217,15 @@ const Resources = () => {
                   <Link
                     key={index}
                     to={initiative.link}
-                    className="group bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 p-6 hover:border-purple-400/60 transition-all duration-300 hover:scale-[1.02]"
+                    className="group bg-gradient-to-br from-gray-900/80 to-gray-900/40 border border-gray-800 p-6 hover:border-orange-500/50 transition-all duration-300 hover:scale-[1.02]"
                   >
-                    <div className="bg-purple-500/20 border border-purple-500/40 w-10 h-10 mb-4 flex items-center justify-center group-hover:bg-purple-500/30 transition-colors">
-                      <Target className="h-5 w-5 text-purple-400" />
+                    <div className="bg-orange-500/10 border border-orange-500/30 w-10 h-10 mb-4 flex items-center justify-center group-hover:bg-orange-500/20 transition-colors">
+                      <Target className="h-5 w-5 text-orange-400" />
                     </div>
-                    <h3 className="font-press-start text-xs mb-3 text-purple-300 group-hover:text-purple-200 transition-colors">
+                    <h3 className="font-space font-bold text-xs mb-3 text-orange-400 group-hover:text-white transition-colors">
                       {initiative.title}
                     </h3>
-                    <p className="font-jetbrains text-gray-400 text-sm">
+                    <p className="font-space text-gray-400 text-sm">
                       {initiative.description}
                     </p>
                   </Link>
@@ -235,17 +235,17 @@ const Resources = () => {
 
             {/* Newsletter Section */}
             <ResourceSection title="Newsletter & Updates" icon={Mail} color="cyan">
-              <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 p-8">
+              <div className="bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-700 p-8">
                 <div className="text-center max-w-2xl mx-auto">
-                  <div className="bg-cyan-500/20 border border-cyan-500/40 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
-                    <Mail className="h-8 w-8 text-cyan-400" />
+                  <div className="bg-gray-800 border border-gray-700 w-16 h-16 mx-auto mb-6 flex items-center justify-center">
+                    <Mail className="h-8 w-8 text-gray-300" />
                   </div>
-                  <h3 className="font-press-start text-sm sm:text-base mb-4 text-cyan-300">STAY UPDATED</h3>
-                  <p className="font-jetbrains text-gray-400 mb-6">
+                  <h3 className="font-space font-bold text-sm sm:text-base mb-4 text-gray-300">STAY UPDATED</h3>
+                  <p className="font-space text-gray-400 mb-6">
                     Get the latest hackathon announcements, opportunities, and builder stories delivered to your inbox.
                   </p>
                   <div className="bg-gray-800/50 border border-gray-700/50 px-6 py-4 inline-block">
-                    <span className="font-jetbrains text-sm text-gray-400">Newsletter signup coming soon</span>
+                    <span className="font-space text-sm text-gray-400">Newsletter signup coming soon</span>
                   </div>
                 </div>
               </div>
@@ -260,11 +260,11 @@ const Resources = () => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group bg-gradient-to-br from-pink-500/10 to-rose-500/10 border border-pink-500/30 p-6 hover:border-pink-400/60 transition-all duration-300 hover:scale-[1.02]"
+                    className="group bg-gradient-to-br from-gray-900/40 to-gray-900/20 border border-gray-800 p-6 hover:border-orange-500/60 transition-all duration-300 hover:scale-[1.02]"
                   >
                     <div className="text-center">
                       <div className="text-4xl mb-3">{social.icon}</div>
-                      <h3 className="font-press-start text-xs text-pink-300 group-hover:text-pink-200 transition-colors">
+                      <h3 className="font-space font-bold text-xs text-orange-400 group-hover:text-orange-200 transition-colors">
                         {social.name.toUpperCase()}
                       </h3>
                     </div>

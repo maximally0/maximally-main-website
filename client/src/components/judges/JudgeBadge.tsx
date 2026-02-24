@@ -28,7 +28,7 @@ const JudgeBadge = ({
     },
     senior: {
       label: 'Senior Judge',
-      color: 'text-purple-400 border-purple-400 bg-purple-400/10',
+      color: 'text-orange-400 border-orange-500 bg-orange-500/10',
       icon: Star,
       description: 'Senior Maximally Judge'
     },
@@ -53,19 +53,19 @@ const JudgeBadge = ({
     sm: {
       container: 'px-2 py-1',
       icon: 'h-3 w-3',
-      text: 'text-xs font-press-start',
+      text: 'text-xs font-space font-bold',
       gap: 'gap-1'
     },
     md: {
       container: 'px-3 py-1.5',
       icon: 'h-4 w-4',
-      text: 'text-xs font-press-start',
+      text: 'text-xs font-space font-bold',
       gap: 'gap-2'
     },
     lg: {
       container: 'px-4 py-2',
       icon: 'h-5 w-5',
-      text: 'text-sm font-press-start',
+      text: 'text-sm font-space font-bold',
       gap: 'gap-2'
     }
   };

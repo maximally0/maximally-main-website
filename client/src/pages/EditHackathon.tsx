@@ -157,15 +157,15 @@ function BrandingTab({
 
   return (
     <div className="space-y-8">
-      <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-        <p className="font-jetbrains text-sm text-gray-300">
-          🎨 <span className="text-pink-400 font-bold">Branding:</span> Customize the look and feel of your hackathon page with custom colors and images.
+      <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+        <p className="font-space text-sm text-gray-300">
+          🎨 <span className="text-orange-400 font-bold">Branding:</span> Customize the look and feel of your hackathon page with custom colors and images.
         </p>
       </div>
 
       {/* Banner Image Upload */}
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
           <Image className="h-4 w-4" />
           BANNER IMAGE
         </label>
@@ -190,14 +190,14 @@ function BrandingTab({
                 <button
                   onClick={() => bannerInputRef.current?.click()}
                   disabled={uploading}
-                  className="pixel-button bg-pink-500 text-black px-3 py-2 font-press-start text-xs flex items-center gap-1"
+                  className="pixel-button bg-orange-500 text-black px-3 py-2 font-space font-bold text-xs flex items-center gap-1"
                 >
                   <Upload className="h-3 w-3" />
                   CHANGE
                 </button>
                 <button
                   onClick={handleRemoveBanner}
-                  className="pixel-button bg-red-600 text-white px-3 py-2 font-press-start text-xs flex items-center gap-1"
+                  className="pixel-button bg-red-600 text-white px-3 py-2 font-space font-bold text-xs flex items-center gap-1"
                 >
                   <Trash2 className="h-3 w-3" />
                   REMOVE
@@ -208,18 +208,18 @@ function BrandingTab({
         ) : (
           <div 
             onClick={() => !uploading && bannerInputRef.current?.click()}
-            className="pixel-card bg-gray-900 border-2 border-dashed border-gray-600 p-8 text-center cursor-pointer hover:border-pink-500/50 transition-colors"
+            className="pixel-card bg-gray-900 border-2 border-dashed border-gray-600 p-8 text-center cursor-pointer hover:border-orange-500/40 transition-colors"
           >
             {uploading ? (
               <div className="flex flex-col items-center gap-3">
-                <div className="animate-spin w-8 h-8 border-2 border-pink-500/50 border-t-transparent rounded-full" />
-                <p className="font-jetbrains text-gray-400">Uploading...</p>
+                <div className="animate-spin w-8 h-8 border-2 border-orange-500/40 border-t-transparent rounded-full" />
+                <p className="font-space text-gray-400">Uploading...</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3">
                 <Upload className="h-10 w-10 text-gray-500" />
-                <p className="font-press-start text-sm text-gray-400">CLICK TO UPLOAD BANNER</p>
-                <p className="font-jetbrains text-xs text-gray-500">
+                <p className="font-space font-bold text-sm text-gray-400">CLICK TO UPLOAD BANNER</p>
+                <p className="font-space text-xs text-gray-500">
                   Recommended: 1920x400px • PNG, JPG, WebP • Max 5MB
                 </p>
               </div>
@@ -230,10 +230,10 @@ function BrandingTab({
 
       {/* Color Scheme */}
       <div className="pixel-card bg-gray-900 border-2 border-gray-700 p-6">
-        <h3 className="font-press-start text-lg text-pink-400 mb-4">COLOR_SCHEME</h3>
+        <h3 className="font-space font-bold text-lg text-orange-400 mb-4">COLOR_SCHEME</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Primary Color</label>
+            <label className="font-space text-sm text-gray-300 mb-2 block">Primary Color</label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
@@ -246,12 +246,12 @@ function BrandingTab({
                 value={hackathon.primary_color || '#8B5CF6'}
                 onChange={(e) => updateField('primary_color', e.target.value)}
                 placeholder="#8B5CF6"
-                className="flex-1 bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500/50 outline-none"
+                className="flex-1 bg-black border border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500/40 outline-none"
               />
             </div>
           </div>
           <div>
-            <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Secondary Color</label>
+            <label className="font-space text-sm text-gray-300 mb-2 block">Secondary Color</label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
@@ -264,12 +264,12 @@ function BrandingTab({
                 value={hackathon.secondary_color || '#EC4899'}
                 onChange={(e) => updateField('secondary_color', e.target.value)}
                 placeholder="#EC4899"
-                className="flex-1 bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500/50 outline-none"
+                className="flex-1 bg-black border border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500/40 outline-none"
               />
             </div>
           </div>
           <div>
-            <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Accent Color</label>
+            <label className="font-space text-sm text-gray-300 mb-2 block">Accent Color</label>
             <div className="flex items-center gap-3">
               <input
                 type="color"
@@ -282,7 +282,7 @@ function BrandingTab({
                 value={hackathon.accent_color || '#06B6D4'}
                 onChange={(e) => updateField('accent_color', e.target.value)}
                 placeholder="#06B6D4"
-                className="flex-1 bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500/50 outline-none"
+                className="flex-1 bg-black border border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500/40 outline-none"
               />
             </div>
           </div>
@@ -291,7 +291,7 @@ function BrandingTab({
 
       {/* Color Preview */}
       <div className="pixel-card bg-gray-900 border-2 border-gray-700 p-6">
-        <h3 className="font-press-start text-lg text-pink-400 mb-4">COLOR_PREVIEW</h3>
+        <h3 className="font-space font-bold text-lg text-orange-400 mb-4">COLOR_PREVIEW</h3>
         <div 
           className="p-6 rounded-lg"
           style={{ 
@@ -300,19 +300,19 @@ function BrandingTab({
           }}
         >
           <h4 
-            className="font-press-start text-xl mb-2"
+            className="font-space font-bold text-xl mb-2"
             style={{ color: hackathon.primary_color || '#8B5CF6' }}
           >
             {hackathon.hackathon_name || 'Your Hackathon'}
           </h4>
           <p 
-            className="font-jetbrains mb-4"
+            className="font-space mb-4"
             style={{ color: hackathon.secondary_color || '#EC4899' }}
           >
             {hackathon.tagline || 'Your tagline here'}
           </p>
           <button
-            className="px-4 py-2 font-press-start text-xs text-white rounded"
+            className="px-4 py-2 font-space font-bold text-xs text-white rounded"
             style={{ backgroundColor: hackathon.accent_color || '#06B6D4' }}
           >
             REGISTER_NOW
@@ -322,16 +322,16 @@ function BrandingTab({
 
       {/* Font Style */}
       <div>
-        <label className="font-press-start text-sm text-purple-400 mb-3 block">FONT_STYLE</label>
+        <label className="font-space font-bold text-sm text-orange-400 mb-3 block">FONT_STYLE</label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {['default', 'modern', 'retro', 'minimal'].map((style) => (
             <button
               key={style}
               type="button"
               onClick={() => updateField('font_style', style)}
-              className={`pixel-button py-4 font-press-start text-sm transition-colors ${
+              className={`pixel-button py-4 font-space font-bold text-sm transition-colors ${
                 (hackathon.font_style || 'default') === style
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
+                  ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white'
                   : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
               }`}
             >
@@ -339,7 +339,7 @@ function BrandingTab({
             </button>
           ))}
         </div>
-        <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+        <p className="text-xs text-gray-500 mt-2 font-space">
           Choose a font style that matches your hackathon's theme
         </p>
       </div>
@@ -567,7 +567,7 @@ export default function EditHackathon() {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="font-press-start text-purple-400">LOADING...</div>
+        <div className="font-space font-bold text-orange-400">LOADING...</div>
       </div>
     );
   }
@@ -612,26 +612,26 @@ export default function EditHackathon() {
           <div className="mb-8">
             <button
               onClick={() => navigate('/organizer/dashboard')}
-              className="flex items-center gap-2 text-gray-400 hover:text-purple-400 font-press-start text-xs transition-all duration-300 group mb-6"
+              className="flex items-center gap-2 text-gray-400 hover:text-orange-400 font-space font-bold text-xs transition-all duration-300 group mb-6"
             >
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 group-hover:scale-110 transition-all" />
               <span>BACK_TO_DASHBOARD</span>
             </button>
 
-            <div className="pixel-card bg-gradient-to-r from-gray-900 to-black border-4 border-purple-500/50 p-6 mb-6">
+            <div className="pixel-card bg-gradient-to-r from-gray-900 to-black border-4 border-orange-500/50 p-6 mb-6">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div className="flex-1">
-                  <h1 className="font-press-start text-xl sm:text-2xl md:text-3xl text-purple-400 mb-3">
+                  <h1 className="font-space font-bold text-xl sm:text-2xl md:text-3xl text-orange-400 mb-3">
                     {hackathon.hackathon_name}
                   </h1>
                   <div className="flex flex-wrap items-center gap-3">
-                    <div className="pixel-card bg-black border-2 border-pink-500/50 px-3 py-1">
-                      <span className="font-press-start text-xs text-pink-400">
+                    <div className="pixel-card bg-black border-2 border-orange-500/40 px-3 py-1">
+                      <span className="font-space font-bold text-xs text-orange-400">
                         {hackathon.status.toUpperCase().replace('_', ' ')}
                       </span>
                     </div>
                     {saving && (
-                      <span className="font-jetbrains text-sm text-gray-400 animate-pulse">
+                      <span className="font-space text-sm text-gray-400 animate-pulse">
                         💾 Saving...
                       </span>
                     )}
@@ -643,7 +643,7 @@ export default function EditHackathon() {
                     <button
                       onClick={handleRequestEdit}
                       disabled={saving}
-                      className="pixel-button bg-pink-500 text-black flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-gradient-to-r from-purple-600 to-pink-600 hover:text-white transition-colors disabled:opacity-50"
+                      className="pixel-button bg-orange-500 text-black flex items-center gap-2 px-6 py-3 font-space font-bold text-sm hover:bg-gradient-to-r from-orange-600 to-orange-500 hover:text-white transition-colors disabled:opacity-50"
                     >
                       <Send className="h-4 w-4" />
                       {saving ? 'SUBMITTING...' : 'REQUEST_EDIT'}
@@ -653,7 +653,7 @@ export default function EditHackathon() {
                       <button
                         onClick={handleSave}
                         disabled={saving}
-                        className="pixel-button bg-pink-500 text-black flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-gradient-to-r from-purple-600 to-pink-600 hover:text-white transition-colors disabled:opacity-50"
+                        className="pixel-button bg-orange-500 text-black flex items-center gap-2 px-6 py-3 font-space font-bold text-sm hover:bg-gradient-to-r from-orange-600 to-orange-500 hover:text-white transition-colors disabled:opacity-50"
                       >
                         <Save className="h-4 w-4" />
                         {saving ? 'SAVING...' : 'SAVE'}
@@ -663,7 +663,7 @@ export default function EditHackathon() {
                         <button
                           onClick={() => setShowPublishConfirm(true)}
                           disabled={!requiredFieldsFilled}
-                          className="pixel-button bg-gradient-to-r from-purple-600 to-pink-600 text-white flex items-center gap-2 px-6 py-3 font-press-start text-sm hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="pixel-button bg-gradient-to-r from-orange-600 to-orange-500 text-white flex items-center gap-2 px-6 py-3 font-space font-bold text-sm hover:bg-green-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           title={!requiredFieldsFilled ? 'Please fill in Name, Description, Start Date, and End Date' : 'Request publication'}
                         >
                           <Send className="h-4 w-4" />
@@ -679,9 +679,9 @@ export default function EditHackathon() {
 
           {/* Required Fields Indicator */}
           {!requiredFieldsFilled && (
-            <div className="pixel-card bg-pink-500/10 border-2 border-pink-500/50 p-4 mb-6">
-              <p className="font-press-start text-xs text-pink-400 mb-2">⚠️ REQUIRED FIELDS</p>
-              <p className="font-jetbrains text-sm text-gray-300">
+            <div className="pixel-card bg-orange-500/5 border-2 border-orange-500/40 p-4 mb-6">
+              <p className="font-space font-bold text-xs text-orange-400 mb-2">⚠️ REQUIRED FIELDS</p>
+              <p className="font-space text-sm text-gray-300">
                 Please fill in: Name, Description, Start Date, and End Date before requesting publication
               </p>
             </div>
@@ -696,16 +696,16 @@ export default function EditHackathon() {
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`relative flex items-center justify-center gap-2 px-6 py-4 font-press-start text-xs whitespace-nowrap transition-all border-b-4 ${
+                  className={`relative flex items-center justify-center gap-2 px-6 py-4 font-space font-bold text-xs whitespace-nowrap transition-all border-b-4 ${
                     isActive
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white border-pink-500/50 shadow-lg shadow-purple-500/30'
+                      ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white border-orange-500/40 shadow-lg shadow-orange-500/30'
                       : 'bg-gray-900 text-gray-400 border-transparent hover:bg-gray-800 hover:text-gray-300'
                   }`}
                 >
                   <Icon className={`h-5 w-5 ${isActive ? 'animate-pulse' : ''}`} />
                   <span>{tab.label}</span>
                   {isActive && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-pink-500 rotate-45" />
+                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-orange-500 rotate-45" />
                   )}
                 </button>
               );
@@ -713,28 +713,28 @@ export default function EditHackathon() {
           </div>
 
           {/* Content */}
-          <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-purple-500/50 p-6 sm:p-8 relative overflow-hidden group">
+          <div className="pixel-card bg-gradient-to-br from-gray-900 via-black to-gray-900 border-4 border-orange-500/50 p-6 sm:p-8 relative overflow-hidden group">
             {/* Animated glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500 opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500" />
             
             {/* Corner decorations */}
-            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-pink-500/50 animate-pulse" />
-            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-pink-500/50 animate-pulse delay-200" />
-            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-pink-500/50 animate-pulse delay-400" />
-            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-pink-500/50 animate-pulse delay-600" />
+            <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-orange-500/40 animate-pulse" />
+            <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-orange-500/40 animate-pulse delay-200" />
+            <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-orange-500/40 animate-pulse delay-400" />
+            <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-orange-500/40 animate-pulse delay-600" />
 
             <div className="relative z-10">
               {/* Basic Info Tab */}
               {activeTab === 'basic' && (
                 <div className="space-y-8">
-                  <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                    <p className="font-jetbrains text-sm text-gray-300">
-                      💡 <span className="text-pink-400 font-bold">Tip:</span> Make your hackathon stand out with a compelling name and description. This is what participants will see first!
+                  <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                    <p className="font-space text-sm text-gray-300">
+                      💡 <span className="text-orange-400 font-bold">Tip:</span> Make your hackathon stand out with a compelling name and description. This is what participants will see first!
                     </p>
                   </div>
 
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                       <Zap className="h-4 w-4" />
                       HACKATHON NAME *
                     </label>
@@ -742,13 +742,13 @@ export default function EditHackathon() {
                       type="text"
                       value={hackathon.hackathon_name}
                       onChange={(e) => updateField('hackathon_name', e.target.value)}
-                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-500/50 outline-none transition-colors"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space text-lg focus:border-orange-500/40 outline-none transition-colors"
                       placeholder="e.g., AI Innovation Hackathon 2025"
                     />
                   </div>
 
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                       <Sparkles className="h-4 w-4" />
                       TAGLINE
                     </label>
@@ -757,15 +757,15 @@ export default function EditHackathon() {
                       value={hackathon.tagline || ''}
                       onChange={(e) => updateField('tagline', e.target.value)}
                       placeholder="A catchy one-liner that captures your hackathon's essence"
-                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none transition-colors"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none transition-colors"
                     />
-                    <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                    <p className="text-xs text-gray-500 mt-2 font-space">
                       Example: "Build the future of AI in 48 hours"
                     </p>
                   </div>
 
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                       <FileText className="h-4 w-4" />
                       DESCRIPTION
                     </label>
@@ -774,9 +774,9 @@ export default function EditHackathon() {
                       onChange={(e) => updateField('description', e.target.value)}
                       rows={10}
                       placeholder="Tell participants what makes your hackathon special. Include:&#10;• What they'll build&#10;• Who should participate&#10;• What they'll learn&#10;• Why they should join"
-                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none leading-relaxed"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none leading-relaxed"
                     />
-                    <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                    <p className="text-xs text-gray-500 mt-2 font-space">
                       {hackathon.description?.length || 0} characters
                     </p>
                   </div>
@@ -786,15 +786,15 @@ export default function EditHackathon() {
               {/* Schedule Tab */}
               {activeTab === 'schedule' && (
                 <div className="space-y-8">
-                  <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                    <p className="font-jetbrains text-sm text-gray-300">
-                      📅 <span className="text-pink-400 font-bold">Tip:</span> Choose dates carefully! Make sure to give participants enough time to build something amazing.
+                  <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                    <p className="font-space text-sm text-gray-300">
+                      📅 <span className="text-orange-400 font-bold">Tip:</span> Choose dates carefully! Make sure to give participants enough time to build something amazing.
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                      <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
                         START DATE & TIME *
                       </label>
@@ -802,12 +802,12 @@ export default function EditHackathon() {
                         type="datetime-local"
                         value={hackathon.start_date?.slice(0, 16)}
                         onChange={(e) => updateField('start_date', e.target.value)}
-                        className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-500/50 outline-none transition-colors"
+                        className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space text-lg focus:border-orange-500/40 outline-none transition-colors"
                       />
                     </div>
 
                     <div>
-                      <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                      <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                         <Calendar className="h-4 w-4" />
                         END DATE & TIME *
                       </label>
@@ -815,13 +815,13 @@ export default function EditHackathon() {
                         type="datetime-local"
                         value={hackathon.end_date?.slice(0, 16)}
                         onChange={(e) => updateField('end_date', e.target.value)}
-                        className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-500/50 outline-none transition-colors"
+                        className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space text-lg focus:border-orange-500/40 outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                       <MapPin className="h-4 w-4" />
                       FORMAT *
                     </label>
@@ -831,9 +831,9 @@ export default function EditHackathon() {
                           key={format}
                           type="button"
                           onClick={() => updateField('format', format)}
-                          className={`pixel-button py-4 font-press-start text-sm transition-colors ${
+                          className={`pixel-button py-4 font-space font-bold text-sm transition-colors ${
                             hackathon.format === format
-                              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
+                              ? 'bg-gradient-to-r from-orange-600 to-orange-500 text-white'
                               : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
                           }`}
                         >
@@ -844,8 +844,8 @@ export default function EditHackathon() {
                   </div>
 
                   {(hackathon.format === 'offline' || hackathon.format === 'hybrid') && (
-                    <div className="pixel-card bg-pink-500/10 border-2 border-pink-500/50 p-6">
-                      <label className="font-press-start text-sm text-pink-400 mb-3 block">
+                    <div className="pixel-card bg-orange-500/5 border-2 border-orange-500/40 p-6">
+                      <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                         VENUE ADDRESS
                       </label>
                       <input
@@ -853,13 +853,13 @@ export default function EditHackathon() {
                         value={hackathon.venue || ''}
                         onChange={(e) => updateField('venue', e.target.value)}
                         placeholder="Full venue address with city and state"
-                        className="w-full pixel-card bg-black border-2 border-pink-500/50 text-white px-6 py-4 font-jetbrains focus:border-purple-500/50 outline-none transition-colors"
+                        className="w-full pixel-card bg-black border-2 border-orange-500/40 text-white px-6 py-4 font-space focus:border-orange-500/50 outline-none transition-colors"
                       />
                     </div>
                   )}
 
                   <div className="pixel-card bg-blue-900/20 border-2 border-blue-500 p-4">
-                    <p className="font-jetbrains text-sm text-blue-300">
+                    <p className="font-space text-sm text-blue-300">
                       💡 <span className="text-blue-400 font-bold">Note:</span> Registration timing is now controlled by the Timeline tab. Set registration open/close dates there for strict enforcement.
                     </p>
                   </div>
@@ -871,7 +871,7 @@ export default function EditHackathon() {
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                       MIN TEAM SIZE
                     </label>
                     <input
@@ -879,12 +879,12 @@ export default function EditHackathon() {
                       value={hackathon.team_size_min || 1}
                       onChange={(e) => updateField('team_size_min', parseInt(e.target.value))}
                       min="1"
-                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                       MAX TEAM SIZE
                     </label>
                     <input
@@ -892,14 +892,14 @@ export default function EditHackathon() {
                       value={hackathon.team_size_max || 4}
                       onChange={(e) => updateField('team_size_max', parseInt(e.target.value))}
                       min="1"
-                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                       REGISTRATION FEE (₹)
                     </label>
                     <input
@@ -907,13 +907,13 @@ export default function EditHackathon() {
                       value={hackathon.registration_fee || 0}
                       onChange={(e) => updateField('registration_fee', parseInt(e.target.value))}
                       min="0"
-                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                     />
-                    <p className="text-xs text-gray-500 mt-1 font-jetbrains">0 = Free</p>
+                    <p className="text-xs text-gray-500 mt-1 font-space">0 = Free</p>
                   </div>
 
                   <div>
-                    <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                    <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                       MAX PARTICIPANTS
                     </label>
                     <input
@@ -921,13 +921,13 @@ export default function EditHackathon() {
                       value={hackathon.max_participants || ''}
                       onChange={(e) => updateField('max_participants', e.target.value ? parseInt(e.target.value) : null)}
                       placeholder="Leave empty for unlimited"
-                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                      className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                     COMMUNICATION CHANNEL
                   </label>
                   <input
@@ -935,12 +935,12 @@ export default function EditHackathon() {
                     value={hackathon.communication_channel || ''}
                     onChange={(e) => updateField('communication_channel', e.target.value)}
                     placeholder="e.g., Discord, WhatsApp, Slack"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                     COMMUNICATION LINK
                   </label>
                   <input
@@ -948,7 +948,7 @@ export default function EditHackathon() {
                     value={hackathon.communication_link || ''}
                     onChange={(e) => updateField('communication_link', e.target.value)}
                     placeholder="https://discord.gg/..."
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                   />
                 </div>
               </div>
@@ -957,14 +957,14 @@ export default function EditHackathon() {
             {/* Prizes Tab */}
             {activeTab === 'prizes' && (
               <div className="space-y-8">
-                <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300">
-                    🏆 <span className="text-pink-400 font-bold">Tip:</span> Add prizes to attract more participants. You can add multiple prize positions.
+                <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                  <p className="font-space text-sm text-gray-300">
+                    🏆 <span className="text-orange-400 font-bold">Tip:</span> Add prizes to attract more participants. You can add multiple prize positions.
                   </p>
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     TOTAL PRIZE POOL
                   </label>
                   <input
@@ -972,14 +972,14 @@ export default function EditHackathon() {
                     value={hackathon.total_prize_pool || ''}
                     onChange={(e) => updateField('total_prize_pool', e.target.value)}
                     placeholder="e.g., ₹50,000 or $5,000"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains text-lg focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space text-lg focus:border-orange-500/40 outline-none"
                   />
                 </div>
 
                 {/* Prize Breakdown Builder */}
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <label className="font-press-start text-sm text-purple-400">
+                    <label className="font-space font-bold text-sm text-orange-400">
                       PRIZE BREAKDOWN
                     </label>
                     <button
@@ -989,7 +989,7 @@ export default function EditHackathon() {
                         prizes.push({ position: '', amount: '', description: '' });
                         updateField('prize_breakdown', JSON.stringify(prizes));
                       }}
-                      className="pixel-button bg-pink-500 text-black px-4 py-2 font-press-start text-xs hover:bg-gradient-to-r from-purple-600 to-pink-600 hover:text-white transition-colors flex items-center gap-2"
+                      className="pixel-button bg-orange-500 text-black px-4 py-2 font-space font-bold text-xs hover:bg-gradient-to-r from-orange-600 to-orange-500 hover:text-white transition-colors flex items-center gap-2"
                     >
                       <Plus className="h-4 w-4" />
                       ADD_PRIZE
@@ -1006,14 +1006,14 @@ export default function EditHackathon() {
                             prizes.splice(index, 1);
                             updateField('prize_breakdown', JSON.stringify(prizes));
                           }}
-                          className="absolute top-4 right-4 text-gray-500 hover:text-purple-400 transition-colors"
+                          className="absolute top-4 right-4 text-gray-500 hover:text-orange-400 transition-colors"
                         >
                           <X className="h-5 w-5" />
                         </button>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Position
                             </label>
                             <input
@@ -1025,12 +1025,12 @@ export default function EditHackathon() {
                                 updateField('prize_breakdown', JSON.stringify(prizes));
                               }}
                               placeholder="1st Place"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500/50 outline-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500/40 outline-none"
                             />
                           </div>
 
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Amount
                             </label>
                             <input
@@ -1042,12 +1042,12 @@ export default function EditHackathon() {
                                 updateField('prize_breakdown', JSON.stringify(prizes));
                               }}
                               placeholder="₹20,000"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500/50 outline-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500/40 outline-none"
                             />
                           </div>
 
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Description (Optional)
                             </label>
                             <input
@@ -1059,7 +1059,7 @@ export default function EditHackathon() {
                                 updateField('prize_breakdown', JSON.stringify(prizes));
                               }}
                               placeholder="Winner"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-jetbrains focus:border-pink-500/50 outline-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-2 font-space focus:border-orange-500/40 outline-none"
                             />
                           </div>
                         </div>
@@ -1067,7 +1067,7 @@ export default function EditHackathon() {
                     ))}
 
                     {JSON.parse(hackathon.prize_breakdown || '[]').length === 0 && (
-                      <div className="text-center py-8 text-gray-500 font-jetbrains">
+                      <div className="text-center py-8 text-gray-500 font-space">
                         No prizes added yet. Click "ADD_PRIZE" to add your first prize.
                       </div>
                     )}
@@ -1079,14 +1079,14 @@ export default function EditHackathon() {
             {/* Rules Tab */}
             {activeTab === 'rules' && (
               <div className="space-y-8">
-                <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300">
-                    📋 <span className="text-pink-400 font-bold">Tip:</span> Clear rules help participants understand what's expected and create a fair competition.
+                <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                  <p className="font-space text-sm text-gray-300">
+                    📋 <span className="text-orange-400 font-bold">Tip:</span> Clear rules help participants understand what's expected and create a fair competition.
                   </p>
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                     <Sparkles className="h-4 w-4" />
                     RULES & REGULATIONS
                   </label>
@@ -1095,12 +1095,12 @@ export default function EditHackathon() {
                     onChange={(e) => updateField('rules_content', e.target.value)}
                     rows={10}
                     placeholder="Detailed rules and regulations for your hackathon:&#10;&#10;1. Team Formation&#10;   • Teams can have 1-4 members&#10;   • Team formation allowed until registration closes&#10;&#10;2. Project Requirements&#10;   • All code must be written during the event&#10;   • Projects must be original work&#10;   • Open source libraries are allowed&#10;&#10;3. Submission&#10;   • Submit before the deadline&#10;   • Include demo video and source code"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none leading-relaxed"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none leading-relaxed"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     ELIGIBILITY CRITERIA
                   </label>
                   <textarea
@@ -1108,12 +1108,12 @@ export default function EditHackathon() {
                     onChange={(e) => updateField('eligibility_criteria', e.target.value)}
                     rows={6}
                     placeholder="Who can participate?&#10;&#10;• Open to students from all universities&#10;• Professionals and working individuals welcome&#10;• Must be 18 years or older&#10;• International participants allowed"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none leading-relaxed"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none leading-relaxed"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     SUBMISSION GUIDELINES
                   </label>
                   <textarea
@@ -1121,12 +1121,12 @@ export default function EditHackathon() {
                     onChange={(e) => updateField('submission_guidelines', e.target.value)}
                     rows={8}
                     placeholder="What participants need to submit:&#10;&#10;• Working prototype or demo&#10;• Source code repository (GitHub/GitLab)&#10;• Demo video (2-3 minutes)&#10;• Project documentation&#10;• Presentation slides (optional)"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none leading-relaxed"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none leading-relaxed"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     JUDGING PROCESS
                   </label>
                   <textarea
@@ -1134,12 +1134,12 @@ export default function EditHackathon() {
                     onChange={(e) => updateField('judging_process', e.target.value)}
                     rows={8}
                     placeholder="How projects will be evaluated:&#10;&#10;Judging Criteria:&#10;• Innovation & Creativity (30%)&#10;• Technical Implementation (25%)&#10;• Design & User Experience (20%)&#10;• Impact & Usefulness (15%)&#10;• Presentation (10%)&#10;&#10;Process:&#10;• Initial screening by organizers&#10;• Top 10 teams present to judges&#10;• Winners announced at closing ceremony"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none leading-relaxed"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none leading-relaxed"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     CODE OF CONDUCT
                   </label>
                   <textarea
@@ -1147,14 +1147,14 @@ export default function EditHackathon() {
                     onChange={(e) => updateField('code_of_conduct', e.target.value)}
                     rows={6}
                     placeholder="Expected behavior and community guidelines:&#10;&#10;• Be respectful and inclusive&#10;• No harassment or discrimination&#10;• Collaborate and help others&#10;• Follow organizer instructions"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none leading-relaxed"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none leading-relaxed"
                   />
                 </div>
 
                 {/* FAQs Builder */}
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <label className="font-press-start text-sm text-purple-400">
+                    <label className="font-space font-bold text-sm text-orange-400">
                       FREQUENTLY ASKED QUESTIONS
                     </label>
                     <button
@@ -1164,7 +1164,7 @@ export default function EditHackathon() {
                         faqs.push({ question: '', answer: '' });
                         updateField('faqs', JSON.stringify(faqs));
                       }}
-                      className="pixel-button bg-pink-500 text-black px-4 py-2 font-press-start text-xs hover:bg-gradient-to-r from-purple-600 to-pink-600 hover:text-white transition-colors flex items-center gap-2"
+                      className="pixel-button bg-orange-500 text-black px-4 py-2 font-space font-bold text-xs hover:bg-gradient-to-r from-orange-600 to-orange-500 hover:text-white transition-colors flex items-center gap-2"
                     >
                       <Plus className="h-4 w-4" />
                       ADD_FAQ
@@ -1181,14 +1181,14 @@ export default function EditHackathon() {
                             faqs.splice(index, 1);
                             updateField('faqs', JSON.stringify(faqs));
                           }}
-                          className="absolute top-4 right-4 text-gray-500 hover:text-purple-400 transition-colors"
+                          className="absolute top-4 right-4 text-gray-500 hover:text-orange-400 transition-colors"
                         >
                           <X className="h-5 w-5" />
                         </button>
 
                         <div className="space-y-4">
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Question
                             </label>
                             <input
@@ -1200,12 +1200,12 @@ export default function EditHackathon() {
                                 updateField('faqs', JSON.stringify(faqs));
                               }}
                               placeholder="Can I participate alone?"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                             />
                           </div>
 
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Answer
                             </label>
                             <textarea
@@ -1217,7 +1217,7 @@ export default function EditHackathon() {
                               }}
                               rows={3}
                               placeholder="Yes, solo participation is allowed!"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none resize-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none resize-none"
                             />
                           </div>
                         </div>
@@ -1225,7 +1225,7 @@ export default function EditHackathon() {
                     ))}
 
                     {JSON.parse(hackathon.faqs || '[]').length === 0 && (
-                      <div className="text-center py-8 text-gray-500 font-jetbrains">
+                      <div className="text-center py-8 text-gray-500 font-space">
                         No FAQs added yet. Click "ADD_FAQ" to add your first question.
                       </div>
                     )}
@@ -1237,16 +1237,16 @@ export default function EditHackathon() {
             {/* Tracks Tab */}
             {activeTab === 'tracks' && (
               <div className="space-y-8">
-                <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300">
-                    🎯 <span className="text-pink-400 font-bold">Tip:</span> Tracks help participants focus on specific problem areas or technologies.
+                <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                  <p className="font-space text-sm text-gray-300">
+                    🎯 <span className="text-orange-400 font-bold">Tip:</span> Tracks help participants focus on specific problem areas or technologies.
                   </p>
                 </div>
 
                 {/* Tracks Builder */}
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <label className="font-press-start text-sm text-purple-400 flex items-center gap-2">
+                    <label className="font-space font-bold text-sm text-orange-400 flex items-center gap-2">
                       <Zap className="h-4 w-4" />
                       HACKATHON TRACKS
                     </label>
@@ -1257,7 +1257,7 @@ export default function EditHackathon() {
                         tracks.push({ name: '', description: '', prize: '' });
                         updateField('tracks', JSON.stringify(tracks));
                       }}
-                      className="pixel-button bg-pink-500 text-black px-4 py-2 font-press-start text-xs hover:bg-gradient-to-r from-purple-600 to-pink-600 hover:text-white transition-colors flex items-center gap-2"
+                      className="pixel-button bg-orange-500 text-black px-4 py-2 font-space font-bold text-xs hover:bg-gradient-to-r from-orange-600 to-orange-500 hover:text-white transition-colors flex items-center gap-2"
                     >
                       <Plus className="h-4 w-4" />
                       ADD_TRACK
@@ -1274,14 +1274,14 @@ export default function EditHackathon() {
                             tracks.splice(index, 1);
                             updateField('tracks', JSON.stringify(tracks));
                           }}
-                          className="absolute top-4 right-4 text-gray-500 hover:text-purple-400 transition-colors"
+                          className="absolute top-4 right-4 text-gray-500 hover:text-orange-400 transition-colors"
                         >
                           <X className="h-5 w-5" />
                         </button>
 
                         <div className="space-y-4">
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Track Name
                             </label>
                             <input
@@ -1293,12 +1293,12 @@ export default function EditHackathon() {
                                 updateField('tracks', JSON.stringify(tracks));
                               }}
                               placeholder="AI & Machine Learning"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                             />
                           </div>
 
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Description
                             </label>
                             <textarea
@@ -1310,12 +1310,12 @@ export default function EditHackathon() {
                               }}
                               rows={3}
                               placeholder="Build intelligent solutions using AI/ML technologies"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none resize-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none resize-none"
                             />
                           </div>
 
                           <div>
-                            <label className="font-jetbrains text-xs text-gray-400 mb-2 block">
+                            <label className="font-space text-xs text-gray-400 mb-2 block">
                               Prize (Optional)
                             </label>
                             <input
@@ -1327,7 +1327,7 @@ export default function EditHackathon() {
                                 updateField('tracks', JSON.stringify(tracks));
                               }}
                               placeholder="₹20,000"
-                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                              className="w-full bg-black border border-gray-600 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                             />
                           </div>
                         </div>
@@ -1335,7 +1335,7 @@ export default function EditHackathon() {
                     ))}
 
                     {JSON.parse(hackathon.tracks || '[]').length === 0 && (
-                      <div className="text-center py-8 text-gray-500 font-jetbrains">
+                      <div className="text-center py-8 text-gray-500 font-space">
                         No tracks added yet. Click "ADD_TRACK" to add your first track.
                       </div>
                     )}
@@ -1343,7 +1343,7 @@ export default function EditHackathon() {
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     THEMES/TAGS
                   </label>
                   <input
@@ -1360,15 +1360,15 @@ export default function EditHackathon() {
                       updateField('themes', cleanedThemes);
                     }}
                     placeholder="AI, Web3, Healthcare, Education (comma separated)"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none"
                   />
-                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                  <p className="text-xs text-gray-500 mt-2 font-space">
                     Comma-separated theme tags for categorization
                   </p>
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                     <input
                       type="checkbox"
                       checked={hackathon.open_innovation || false}
@@ -1377,7 +1377,7 @@ export default function EditHackathon() {
                     />
                     OPEN INNOVATION
                   </label>
-                  <p className="text-sm text-gray-400 font-jetbrains ml-7">
+                  <p className="text-sm text-gray-400 font-space ml-7">
                     Allow participants to work on any idea, not restricted to specific tracks
                   </p>
                 </div>
@@ -1387,14 +1387,14 @@ export default function EditHackathon() {
             {/* Sponsors Tab */}
             {activeTab === 'sponsors' && (
               <div className="space-y-8">
-                <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300">
-                    🤝 <span className="text-pink-400 font-bold">Tip:</span> Showcase your sponsors and partners to give them visibility.
+                <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                  <p className="font-space text-sm text-gray-300">
+                    🤝 <span className="text-orange-400 font-bold">Tip:</span> Showcase your sponsors and partners to give them visibility.
                   </p>
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block flex items-center gap-2">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block flex items-center gap-2">
                     <Trophy className="h-4 w-4" />
                     SPONSORS
                   </label>
@@ -1412,15 +1412,15 @@ export default function EditHackathon() {
                     }}
                     rows={6}
                     placeholder="List sponsor names (one per line):&#10;Google Cloud&#10;GitHub&#10;Microsoft Azure&#10;AWS"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none"
                   />
-                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                  <p className="text-xs text-gray-500 mt-2 font-space">
                     One sponsor name per line
                   </p>
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     PARTNERS
                   </label>
                   <textarea
@@ -1437,15 +1437,15 @@ export default function EditHackathon() {
                     }}
                     rows={6}
                     placeholder="List partner organizations (one per line):&#10;IEEE Computer Society&#10;ACM Student Chapter&#10;Developer Student Clubs"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none"
                   />
-                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                  <p className="text-xs text-gray-500 mt-2 font-space">
                     One partner name per line
                   </p>
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-3 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-3 block">
                     PERKS & BENEFITS
                   </label>
                   <textarea
@@ -1462,9 +1462,9 @@ export default function EditHackathon() {
                     }}
                     rows={6}
                     placeholder="List perks for participants (one per line):&#10;Free GitHub Pro for 6 months&#10;$100 AWS credits&#10;Free domain from Domain.com&#10;Exclusive swag kit"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-jetbrains focus:border-pink-500/50 outline-none resize-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none"
                   />
-                  <p className="text-xs text-gray-500 mt-2 font-jetbrains">
+                  <p className="text-xs text-gray-500 mt-2 font-space">
                     One perk per line
                   </p>
                 </div>
@@ -1475,7 +1475,7 @@ export default function EditHackathon() {
             {activeTab === 'links' && (
               <div className="space-y-6">
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                     DISCORD LINK
                   </label>
                   <input
@@ -1483,12 +1483,12 @@ export default function EditHackathon() {
                     value={hackathon.discord_link || ''}
                     onChange={(e) => updateField('discord_link', e.target.value)}
                     placeholder="https://discord.gg/..."
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                     WHATSAPP LINK
                   </label>
                   <input
@@ -1496,12 +1496,12 @@ export default function EditHackathon() {
                     value={hackathon.whatsapp_link || ''}
                     onChange={(e) => updateField('whatsapp_link', e.target.value)}
                     placeholder="https://chat.whatsapp.com/..."
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                     WEBSITE URL
                   </label>
                   <input
@@ -1509,12 +1509,12 @@ export default function EditHackathon() {
                     value={hackathon.website_url || ''}
                     onChange={(e) => updateField('website_url', e.target.value)}
                     placeholder="https://yourhackathon.com"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="font-press-start text-sm text-purple-400 mb-2 block">
+                  <label className="font-space font-bold text-sm text-orange-400 mb-2 block">
                     CONTACT EMAIL
                   </label>
                   <input
@@ -1522,7 +1522,7 @@ export default function EditHackathon() {
                     value={hackathon.contact_email || ''}
                     onChange={(e) => updateField('contact_email', e.target.value)}
                     placeholder="contact@yourhackathon.com"
-                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-jetbrains focus:border-pink-500/50 outline-none"
+                    className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-4 py-3 font-space focus:border-orange-500/40 outline-none"
                   />
                 </div>
               </div>
@@ -1531,21 +1531,21 @@ export default function EditHackathon() {
             {/* Timeline Tab */}
             {activeTab === 'timeline' && (
               <div className="space-y-8">
-                <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300">
-                    ⏰ <span className="text-pink-400 font-bold">Timeline:</span> Set important dates for your hackathon. These dates help participants know when to register, submit, and expect results.
+                <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                  <p className="font-space text-sm text-gray-300">
+                    ⏰ <span className="text-orange-400 font-bold">Timeline:</span> Set important dates for your hackathon. These dates help participants know when to register, submit, and expect results.
                   </p>
                 </div>
 
                 {/* Registration Period */}
                 <div className="pixel-card bg-gray-900 border-2 border-blue-500 p-6">
-                  <h3 className="font-press-start text-lg text-blue-500 mb-4 flex items-center gap-2">
+                  <h3 className="font-space font-bold text-lg text-blue-500 mb-4 flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
                     REGISTRATION_PERIOD
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Opens At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Opens At</label>
                       <DateTimePicker
                         value={hackathon.registration_opens_at}
                         onChange={(date) => updateField('registration_opens_at', date)}
@@ -1553,7 +1553,7 @@ export default function EditHackathon() {
                       />
                     </div>
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Closes At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Closes At</label>
                       <DateTimePicker
                         value={hackathon.registration_closes_at}
                         onChange={(date) => updateField('registration_closes_at', date)}
@@ -1566,16 +1566,16 @@ export default function EditHackathon() {
 
                 {/* Building/Hacking Phase */}
                 <div className="pixel-card bg-gray-900 border-2 border-orange-500 p-6">
-                  <h3 className="font-press-start text-lg text-orange-500 mb-4 flex items-center gap-2">
+                  <h3 className="font-space font-bold text-lg text-orange-500 mb-4 flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
                     BUILDING_PHASE
                   </h3>
-                  <p className="text-gray-400 font-jetbrains text-sm mb-4">
+                  <p className="text-gray-400 font-space text-sm mb-4">
                     The hacking/building period when participants work on their projects. No registrations or submissions during this phase.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Starts At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Starts At</label>
                       <DateTimePicker
                         value={hackathon.building_starts_at}
                         onChange={(date) => updateField('building_starts_at', date)}
@@ -1584,7 +1584,7 @@ export default function EditHackathon() {
                       />
                     </div>
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Ends At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Ends At</label>
                       <DateTimePicker
                         value={hackathon.building_ends_at}
                         onChange={(date) => updateField('building_ends_at', date)}
@@ -1597,13 +1597,13 @@ export default function EditHackathon() {
 
                 {/* Submission Period */}
                 <div className="pixel-card bg-gray-900 border-2 border-green-500 p-6">
-                  <h3 className="font-press-start text-lg text-green-500 mb-4 flex items-center gap-2">
+                  <h3 className="font-space font-bold text-lg text-green-500 mb-4 flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
                     SUBMISSION_PERIOD
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Opens At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Opens At</label>
                       <DateTimePicker
                         value={hackathon.submission_opens_at}
                         onChange={(date) => updateField('submission_opens_at', date)}
@@ -1612,7 +1612,7 @@ export default function EditHackathon() {
                       />
                     </div>
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Closes At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Closes At</label>
                       <DateTimePicker
                         value={hackathon.submission_closes_at}
                         onChange={(date) => updateField('submission_closes_at', date)}
@@ -1624,14 +1624,14 @@ export default function EditHackathon() {
                 </div>
 
                 {/* Judging Period */}
-                <div className="pixel-card bg-gray-900 border-2 border-purple-500 p-6">
-                  <h3 className="font-press-start text-lg text-purple-500 mb-4 flex items-center gap-2">
+                <div className="pixel-card bg-gray-900 border-2 border-orange-500 p-6">
+                  <h3 className="font-space font-bold text-lg text-orange-400 mb-4 flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
                     JUDGING_PERIOD
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Starts At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Starts At</label>
                       <DateTimePicker
                         value={hackathon.judging_starts_at}
                         onChange={(date) => updateField('judging_starts_at', date)}
@@ -1640,7 +1640,7 @@ export default function EditHackathon() {
                       />
                     </div>
                     <div>
-                      <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Ends At</label>
+                      <label className="font-space text-sm text-gray-300 mb-2 block">Ends At</label>
                       <DateTimePicker
                         value={hackathon.judging_ends_at}
                         onChange={(date) => updateField('judging_ends_at', date)}
@@ -1653,12 +1653,12 @@ export default function EditHackathon() {
 
                 {/* Results Announcement */}
                 <div className="pixel-card bg-gray-900 border-2 border-yellow-500 p-6">
-                  <h3 className="font-press-start text-lg text-yellow-500 mb-4 flex items-center gap-2">
+                  <h3 className="font-space font-bold text-lg text-yellow-500 mb-4 flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
                     RESULTS_ANNOUNCEMENT
                   </h3>
                   <div>
-                    <label className="font-jetbrains text-sm text-gray-300 mb-2 block">Announced At</label>
+                    <label className="font-space text-sm text-gray-300 mb-2 block">Announced At</label>
                     <DateTimePicker
                       value={hackathon.results_announced_at}
                       onChange={(date) => updateField('results_announced_at', date)}
@@ -1682,9 +1682,9 @@ export default function EditHackathon() {
             {/* Team Tab */}
             {activeTab === 'team' && (
               <div className="space-y-8">
-                <div className="pixel-card bg-black/50 border-2 border-pink-500/50/30 p-4 mb-6">
-                  <p className="font-jetbrains text-sm text-gray-300">
-                    👥 <span className="text-pink-400 font-bold">Team Management:</span> Invite co-organizers to help manage your hackathon. They can help with registrations, submissions, and announcements.
+                <div className="pixel-card bg-black/50 border-2 border-orange-500/40/30 p-4 mb-6">
+                  <p className="font-space text-sm text-gray-300">
+                    👥 <span className="text-orange-400 font-bold">Team Management:</span> Invite co-organizers to help manage your hackathon. They can help with registrations, submissions, and announcements.
                   </p>
                 </div>
                 <MultiOrganizerManager hackathonId={hackathon.id} isOwner={true} />

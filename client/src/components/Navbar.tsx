@@ -119,7 +119,7 @@ const Navbar = () => {
             <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1.5 sm:p-2 mr-2 sm:mr-3 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
               <Terminal className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-black" />
             </div>
-            <span className="font-press-start text-white text-xs sm:text-sm md:text-base lg:text-lg group-hover:text-orange-400 transition-colors">
+            <span className="font-space font-bold text-white text-xs sm:text-sm md:text-base lg:text-lg group-hover:text-orange-400 transition-colors">
               MAXIMALLY
             </span>
           </Link>
@@ -155,7 +155,7 @@ const Navbar = () => {
                   <>
                     <Link
                       to="/organizer/dashboard"
-                      className="relative font-space text-sm font-medium px-3 py-2 text-purple-400 hover:text-purple-300 transition-all duration-200"
+                      className="relative font-space text-sm font-medium px-3 py-2 text-orange-400 hover:text-orange-400 transition-all duration-200"
                       data-testid="button-organizer-dashboard"
                     >
                       Dashboard
@@ -166,7 +166,7 @@ const Navbar = () => {
                       data-testid="button-organizer-inbox"
                       aria-label={`Organizer inbox${organizerUnreadCount > 0 ? ` - ${organizerUnreadCount} unread` : ''}`}
                     >
-                      <Mail className="h-5 w-5 text-purple-400" />
+                      <Mail className="h-5 w-5 text-orange-400" />
                       {organizerUnreadCount > 0 && (
                         <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-space px-1.5 py-0.5 min-w-[18px] text-center leading-none rounded-full">
                           {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
@@ -305,7 +305,7 @@ const Navbar = () => {
                           <Link
                             to="/organizer/dashboard"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-space text-center py-4 px-6 text-base font-medium bg-purple-900/30 text-purple-400 border border-purple-500/50 hover:bg-purple-900/50 transition-all duration-300"
+                            className="block font-space text-center py-4 px-6 text-base font-medium bg-gray-900/30 text-orange-400 border border-orange-500/50 hover:bg-gray-900/50 transition-all duration-300"
                             data-testid="button-organizer-dashboard-mobile"
                           >
                             Organizer Dashboard
@@ -313,7 +313,7 @@ const Navbar = () => {
                           <Link
                             to="/organizer-inbox"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-space text-center py-4 px-6 text-base font-medium bg-purple-900/30 text-purple-400 border border-purple-500/50 hover:bg-purple-900/50 transition-all duration-300 relative"
+                            className="block font-space text-center py-4 px-6 text-base font-medium bg-gray-900/30 text-orange-400 border border-orange-500/50 hover:bg-gray-900/50 transition-all duration-300 relative"
                             data-testid="button-organizer-inbox-mobile"
                           >
                             Organizer Inbox

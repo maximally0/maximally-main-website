@@ -4,7 +4,7 @@ import { VariantProps, cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const pixelHeadingVariants = cva(
-  "font-press-start relative inline-block",
+  "font-space font-bold relative inline-block",
   {
     variants: {
       variant: {

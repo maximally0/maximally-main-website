@@ -45,7 +45,7 @@ export default function FirstAIProject48Hours() {
           <p>To automate syncing between Google Calendar and Notion</p>
         </div>
         <div className="bg-white p-4 rounded-lg border border-gray-200">
-          <h3 className="font-bold text-purple-600 mb-2">📱 Glide</h3>
+          <h3 className="font-bold text-orange-400 mb-2">📱 Glide</h3>
           <p>To build the mobile app interface</p>
         </div>
         <div className="bg-white p-4 rounded-lg border border-gray-200">
@@ -113,7 +113,7 @@ export default function FirstAIProject48Hours() {
         </div>
 
         <div className="bg-white p-6 rounded-lg border border-gray-200">
-          <h3 className="font-bold text-lg text-purple-600 mb-2">👥 Teamwork &gt; Solo genius.</h3>
+          <h3 className="font-bold text-lg text-orange-400 mb-2">👥 Teamwork &gt; Solo genius.</h3>
           <p>My teammates brought skills I didn't have, and vice versa.</p>
         </div>
 

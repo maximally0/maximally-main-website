@@ -28,9 +28,9 @@ const exploreTiles = [
     description: "Deep conversations with extraordinary operators.",
     icon: Mic,
     url: "/explore",
-    color: "text-purple-400",
-    borderColor: "border-purple-500/20",
-    hoverBorder: "hover:border-purple-500/50",
+    color: "text-orange-400",
+    borderColor: "border-gray-800",
+    hoverBorder: "hover:border-orange-500/50",
     badge: "Coming Soon",
   },
   {
@@ -95,7 +95,7 @@ export function ExploreMaximallySection() {
               data-testid={`explore-tile-${tile.id}`}
             >
               {tile.badge && (
-                <span className="absolute top-4 right-4 px-2 py-0.5 bg-purple-500/20 border border-purple-500/30 text-purple-300 font-space text-[10px] font-medium">
+                <span className="absolute top-4 right-4 px-2 py-0.5 bg-orange-500/10 border border-gray-800 text-orange-400 font-space text-[10px] font-medium">
                   {tile.badge}
                 </span>
               )}

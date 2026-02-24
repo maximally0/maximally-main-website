@@ -70,9 +70,9 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="minecraft-block bg-gray-900 border-2 border-cyan-400 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="minecraft-block bg-gray-900 border-2 border-gray-700 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-press-start text-xl text-cyan-400">ADD JUDGING EVENT</h2>
+          <h2 className="font-space font-bold text-xl text-gray-300">ADD JUDGING EVENT</h2>
           <button
             onClick={handleClose}
             className="pixel-button bg-red-600 text-white p-2 hover:bg-red-700"
@@ -85,31 +85,31 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Event Name */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               EVENT NAME *
             </label>
             <input
               type="text"
               value={formData.eventName}
               onChange={(e) => handleInputChange('eventName', e.target.value)}
-              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none"
+              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none"
               placeholder="e.g., TechCrunch Disrupt Hackathon"
               disabled={isLoading}
             />
             {errors.eventName && (
-              <p className="text-red-400 text-xs font-jetbrains mt-1">{errors.eventName}</p>
+              <p className="text-red-400 text-xs font-space mt-1">{errors.eventName}</p>
             )}
           </div>
 
           {/* Role */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               YOUR ROLE *
             </label>
             <select
               value={formData.role}
               onChange={(e) => handleInputChange('role', e.target.value)}
-              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none"
+              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none"
               disabled={isLoading}
             >
               <option value="">Select your role</option>
@@ -122,30 +122,30 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
               <option value="Other">Other</option>
             </select>
             {errors.role && (
-              <p className="text-red-400 text-xs font-jetbrains mt-1">{errors.role}</p>
+              <p className="text-red-400 text-xs font-space mt-1">{errors.role}</p>
             )}
           </div>
 
           {/* Date */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               EVENT DATE *
             </label>
             <input
               type="date"
               value={formData.date}
               onChange={(e) => handleInputChange('date', e.target.value)}
-              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none"
+              className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none"
               disabled={isLoading}
             />
             {errors.date && (
-              <p className="text-red-400 text-xs font-jetbrains mt-1">{errors.date}</p>
+              <p className="text-red-400 text-xs font-space mt-1">{errors.date}</p>
             )}
           </div>
 
           {/* Event Link */}
           <div>
-            <label className="block font-press-start text-sm text-white mb-2">
+            <label className="block font-space font-bold text-sm text-white mb-2">
               EVENT LINK
             </label>
             <div className="relative">
@@ -153,7 +153,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
                 type="url"
                 value={formData.link}
                 onChange={(e) => handleInputChange('link', e.target.value)}
-                className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none pr-10"
+                className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none pr-10"
                 placeholder="https://example.com/hackathon"
                 disabled={isLoading}
               />
@@ -164,7 +164,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
           {/* Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block font-press-start text-sm text-white mb-2">
+              <label className="block font-space font-bold text-sm text-white mb-2">
                 TEAMS EVALUATED
               </label>
               <div className="relative">
@@ -173,7 +173,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
                   min="0"
                   value={formData.teamsEvaluated}
                   onChange={(e) => handleInputChange('teamsEvaluated', parseInt(e.target.value) || 0)}
-                  className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none pr-10"
+                  className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none pr-10"
                   placeholder="0"
                   disabled={isLoading}
                 />
@@ -182,7 +182,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
             </div>
 
             <div>
-              <label className="block font-press-start text-sm text-white mb-2">
+              <label className="block font-space font-bold text-sm text-white mb-2">
                 HOURS SPENT
               </label>
               <div className="relative">
@@ -191,7 +191,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
                   min="0"
                   value={formData.hoursSpent}
                   onChange={(e) => handleInputChange('hoursSpent', parseInt(e.target.value) || 0)}
-                  className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-jetbrains focus:border-cyan-400 focus:outline-none pr-10"
+                  className="w-full minecraft-block bg-black border-2 border-gray-600 text-white p-3 font-space focus:border-gray-700 focus:outline-none pr-10"
                   placeholder="0"
                   disabled={isLoading}
                 />
@@ -202,7 +202,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
 
           {/* Note */}
           <div className="minecraft-block bg-yellow-900/20 border border-yellow-600 p-4">
-            <p className="font-jetbrains text-yellow-300 text-sm">
+            <p className="font-space text-yellow-300 text-sm">
               <strong>Note:</strong> New events will be marked as "Pending Verification" until reviewed by our team. 
               This helps maintain the credibility of the Maximally Judge network.
             </p>
@@ -213,7 +213,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
             <button
               type="submit"
               disabled={isLoading}
-              className="pixel-button bg-maximally-yellow text-maximally-black px-6 py-3 font-press-start text-sm hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="pixel-button bg-maximally-yellow text-maximally-black px-6 py-3 font-space font-bold text-sm hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -232,7 +232,7 @@ const AddEventModal = ({ isOpen, onClose, onSubmit, isLoading = false }: AddEven
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className="pixel-button bg-gray-700 text-white px-6 py-3 font-press-start text-sm hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="pixel-button bg-gray-700 text-white px-6 py-3 font-space font-bold text-sm hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               CANCEL
             </button>

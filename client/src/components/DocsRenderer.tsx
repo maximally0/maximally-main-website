@@ -256,7 +256,7 @@ Continue reading the documentation to learn more about ${doc.title}.`;
           <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1.5 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
             <Terminal className="h-4 w-4 text-black" />
           </div>
-          <span className="font-press-start text-xs text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">
+          <span className="font-space font-bold text-xs text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">
             MAXIMALLY
           </span>
         </Link>
@@ -380,7 +380,7 @@ Continue reading the documentation to learn more about ${doc.title}.`;
               <div className="bg-gradient-to-br from-orange-500 to-red-600 p-1 group-hover:from-orange-400 group-hover:to-orange-500 transition-all duration-300">
                 <Terminal className="h-3 w-3 text-black" />
               </div>
-              <span className="font-press-start text-[10px] text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">
+              <span className="font-space font-bold text-[10px] text-gray-900 dark:text-white group-hover:text-orange-500 transition-colors">
                 MAXIMALLY
               </span>
             </Link>
