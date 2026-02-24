@@ -26,12 +26,12 @@
     Access-Control-Allow-Headers = "Content-Type, Authorization"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
 
-# Redirects for SPA
+# Redirects for SPA (exclude function routes)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  conditions = {Role = ["admin"], Country = ["US"]}
+  force = false
 
 # API redirects (for production)
 [[redirects]]
