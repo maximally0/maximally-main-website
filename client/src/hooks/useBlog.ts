@@ -29,16 +29,16 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
         }
       }
 
-      // Fallback to old API
+      // Fallback to Netlify Functions (direct call)
       const params = new URLSearchParams({
-        page: String(page),
-        pageSize: String(pageSize),
+        limit: String(pageSize),
+        offset: String((page - 1) * pageSize),
       });
       if (search.trim()) {
         params.set('search', search);
       }
 
-      const res = await fetch(`/api/blogs?${params.toString()}`);
+      const res = await fetch(`/.netlify/functions/blogs/getAll?${params.toString()}`);
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.message || `Failed to fetch blogs (${res.status})`);
@@ -46,8 +46,8 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
 
       const json = await res.json();
       return {
-        data: json.data || [],
-        total: json.total || 0,
+        data: json.data?.blogs || [],
+        total: json.data?.total || 0,
       };
     },
     staleTime: 5 * 60 * 1000,
@@ -81,8 +81,8 @@ export const useBlog = (slug: string) => {
         }
       }
 
-      // Fallback to old API
-      const res = await fetch(`/api/blogs/${encodeURIComponent(slug)}`);
+      // Fallback to Netlify Functions (direct call)
+      const res = await fetch(`/.netlify/functions/blogs/getBySlug?slug=${encodeURIComponent(slug)}`);
       if (res.status === 404) {
         return null;
       }
@@ -92,7 +92,7 @@ export const useBlog = (slug: string) => {
       }
 
       const json = await res.json();
-      return json.data || null;
+      return json.data?.blog || null;
     },
     enabled: !!slug,
     staleTime: 5 * 60 * 1000,
