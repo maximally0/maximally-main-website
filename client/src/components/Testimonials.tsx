@@ -127,7 +127,7 @@ const Testimonials = () => {
       <div className="container mx-auto px-4 relative z-10">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-space font-bold text-white mb-8 sm:mb-12 text-center">
           <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-            Student Success Stories
+            Builder Success Stories
           </span>
         </h2>
         

@@ -80,7 +80,7 @@ const Hero = () => {
             Join Our Community
           </h2>
           <p className="text-lg text-maximally-black/80 font-space max-w-2xl mx-auto mb-8">
-            Connect with ambitious teens learning real-world skills. Share experiences, collaborate on projects, and grow together.
+            Connect with ambitious builders learning real-world skills. Share experiences, collaborate on projects, and grow together.
           </p>
           <Link to="/community" className="inline-block">
             <div className="bg-white p-6 rounded-lg shadow-lg border-2 border-maximally-black hover:transform hover:scale-105 transition-transform cursor-pointer">

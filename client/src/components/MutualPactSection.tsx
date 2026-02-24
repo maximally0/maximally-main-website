@@ -38,7 +38,7 @@ const whatYouOffer: PactItem[] = [
   },
   {
     icon: '⭐',
-    title: 'Nominate Top Students',
+    title: 'Nominate Top Builders',
     description: 'Refer exceptional talent'
   },
   {

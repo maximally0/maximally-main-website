@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const eventsData = [
   {
-    title: "TeenBiz Bootcamp",
+    title: "BizBuilder Bootcamp",
     description: "Learn to launch your first micro-business.",
     date: "May 1st, 2025",
     price: "₹499",

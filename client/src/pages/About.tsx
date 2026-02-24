@@ -208,7 +208,7 @@ const Partners = () => {
     {
       name: "Young Researchers Institute",
       type: "Research Partnership",
-      description: "Advancing research and innovation in youth-led technology initiatives",
+      description: "Advancing research and innovation in community-led technology initiatives",
       highlight: "Research Partner",
       gradient: 'from-orange-500/10 to-orange-500/5',
       border: 'border-gray-800',

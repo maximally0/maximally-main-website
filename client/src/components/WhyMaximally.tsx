@@ -22,8 +22,8 @@ const features = [
     iconColor: 'text-gray-300'
   },
   {
-    title: "By teens, for teens.",
-    description: "Built by ambitious teens who get what you need.",
+    title: "By builders, for builders.",
+    description: "Built by ambitious builders who get what you need.",
     icon: Users,
     gradient: 'from-green-500/20 to-emerald-500/20',
     border: 'border-green-500/40',

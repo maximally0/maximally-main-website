@@ -140,7 +140,7 @@ const PartnerNetwork = () => {
     <>
       <SEO
         title="Partner Network - Maximally"
-        description="Host, co-organize, or feature your hackathon with Maximally. Join hundreds of student, startup, and community hackathons worldwide."
+        description="Host, co-organize, or feature your hackathon with Maximally. Join hundreds of startup and community hackathons worldwide."
         keywords="hackathon partnership, co-organize hackathon, hackathon network, organizer support"
       />
 
@@ -181,7 +181,7 @@ const PartnerNetwork = () => {
                 </p>
 
                 <p className="text-gray-400 text-base sm:text-lg font-space leading-relaxed">
-                  Each year, Maximally collaborates with <span className="text-orange-400 font-bold">hundreds</span> of student, startup, and community hackathons that inspire creativity, 
+                  Each year, Maximally collaborates with <span className="text-orange-400 font-bold">hundreds</span> of startup and community hackathons that inspire creativity, 
                   build networks, and teach real-world innovation skills to <span className="text-gray-300 font-bold">thousands</span> of builders worldwide.
                 </p>
               </div>

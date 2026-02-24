@@ -213,7 +213,7 @@ const OrganizerApplicationForm = () => {
                     >
                       <option value="">Select type</option>
                       <option value="individual">Individual</option>
-                      <option value="student_club">Student Club</option>
+                      <option value="student_club">Community Group</option>
                       <option value="company">Company</option>
                       <option value="nonprofit">Non-Profit</option>
                       <option value="community">Community</option>

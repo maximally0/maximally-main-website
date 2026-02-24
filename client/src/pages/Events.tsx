@@ -342,8 +342,8 @@ const Events = () => {
     <>
       <SEO
         title="Hackathons | Discover & Join Global Hackathons | Maximally"
-        description="Find the best hackathons for teen builders. Join coding competitions, innovation challenges, and build projects that matter. Plus workshops, conferences & more."
-        keywords="hackathons, coding competitions, teen hackathons, programming contests, innovation challenges, builder events, coding events"
+        description="Find the best hackathons for builders. Join coding competitions, innovation challenges, and build projects that matter. Plus workshops, conferences & more."
+        keywords="hackathons, coding competitions, programming contests, innovation challenges, builder events, coding events"
       />
       
       <div className="min-h-screen bg-black text-white relative overflow-x-hidden">

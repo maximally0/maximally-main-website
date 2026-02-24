@@ -33,7 +33,7 @@ const Community = () => {
           </h2>
           
           <p className="text-center font-space text-maximally-black/80 mb-12 max-w-2xl mx-auto">
-            Connect with other ambitious teens in our Discord community of 1000+ members.
+            Connect with other ambitious builders in our Discord community of 1000+ members.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

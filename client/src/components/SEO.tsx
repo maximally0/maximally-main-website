@@ -35,11 +35,11 @@ const SEO = ({
   const { pathname } = useLocation();
   
   const seo = {
-    title: title || "Maximally - Global Teen Hackathon Platform",
-    description: description || "Join the world's premier teen hackathon platform. AI shipathons, startup makeathons & Gen Z builder challenges. Global innovation league for ambitious teens.",
+    title: title || "Maximally - Global Builder Ecosystem",
+    description: description || "Join the world's premier builder ecosystem. AI shipathons, startup makeathons & builder challenges. Global innovation league for ambitious builders.",
     image: image || "https://maximally.in/og-thumbnail.png",
     url: canonicalUrl || `https://maximally.in${pathname}`,
-    keywords: keywords || "teen hackathons, global hackathons, startup makeathons, AI shipathon, Gen Z builders, teen innovation, global tech"
+    keywords: keywords || "hackathons, global hackathons, startup makeathons, AI shipathon, builders, innovation, global tech"
   };
 
   // Ensure absolute URL for image
@@ -136,7 +136,7 @@ const SEO = ({
           "@type": "Organization",
           "name": "Maximally",
           "alternateName": "Maximally.in",
-          "description": "The world's premier teen hackathon platform. AI shipathons, startup makeathons & Gen Z builder challenges.",
+          "description": "The world's premier builder ecosystem. AI shipathons, startup makeathons & builder challenges.",
           "url": "https://maximally.in",
           "logo": "https://maximally.in/og-thumbnail.png",
           "foundingDate": "2023",

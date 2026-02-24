@@ -1107,7 +1107,7 @@ export default function EditHackathon() {
                     value={hackathon.eligibility_criteria || ''}
                     onChange={(e) => updateField('eligibility_criteria', e.target.value)}
                     rows={6}
-                    placeholder="Who can participate?&#10;&#10;• Open to students from all universities&#10;• Professionals and working individuals welcome&#10;• Must be 18 years or older&#10;• International participants allowed"
+                    placeholder="Who can participate?&#10;&#10;• Open to builders from all backgrounds&#10;• Professionals and working individuals welcome&#10;• Must be 18 years or older&#10;• International participants allowed"
                     className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none leading-relaxed"
                   />
                 </div>
@@ -1436,7 +1436,7 @@ export default function EditHackathon() {
                       updateField('partners', cleanedPartners);
                     }}
                     rows={6}
-                    placeholder="List partner organizations (one per line):&#10;IEEE Computer Society&#10;ACM Student Chapter&#10;Developer Student Clubs"
+                    placeholder="List partner organizations (one per line):&#10;IEEE Computer Society&#10;ACM Chapter&#10;Developer Clubs"
                     className="w-full pixel-card bg-black border-2 border-gray-700 text-white px-6 py-4 font-space focus:border-orange-500/40 outline-none resize-none"
                   />
                   <p className="text-xs text-gray-500 mt-2 font-space">

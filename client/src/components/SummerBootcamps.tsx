@@ -109,7 +109,7 @@ const SummerBootcamps = () => {
             </div>
           </div>
           <p className="font-space text-maximally-black/60 mt-6">
-            * Scholarships available for select students
+            * Scholarships available for select participants
           </p>
         </div>
       </div>

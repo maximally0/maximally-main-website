@@ -4,6 +4,12 @@
 A full-stack hackathon/builder ecosystem platform ("Maximally") built with React (Vite) frontend and Express backend, using Supabase as the database/auth provider. The app serves both API and client from a single Express server on port 5000. Positioned as "the world's most serious builder ecosystem."
 
 ## Recent Changes
+- 2026-02-24: Major codebase cleanup
+  - Removed all teen/student/youth wording site-wide; replaced with builder/participant/creator language
+  - Removed ~30 unused pages: old event pages (CodeHypothesis, Protocol404, ProjectCodeGen, PromptStorm, StealAThon, Codepocalypse, GrandTechAssembly, Hacktober, Makeathon), event reports (MakeathonReport, ShipathonReport), dead pages (People*, Gallery*, Docs*, Bootcamps, Allies, Careers, Sponsor, Partnership, Support, Resources, Judges, JudgeApplicationForm)
+  - Removed all static blog posts (47 BlogPost + 17 blog files) - platform uses only Supabase-powered dynamic blogs now
+  - Cleaned App.tsx: removed all commented-out imports/routes, dead routes, unused imports
+  - Deleted unused components (MaximallyDocs, DocsRenderer)
 - 2026-02-24: Comprehensive website redesign
   - New positioning: "The world's most serious builder ecosystem" (from youth-focused hackathon platform)
   - Visual: Space Grotesk font for body/headings, Press Start 2P pixel font for logo only
@@ -11,19 +17,9 @@ A full-stack hackathon/builder ecosystem platform ("Maximally") built with React
   - Visual: Increased whitespace, removed decorative sparkles/icons
   - Navbar: Center links (Hackathons, Senior Council, Explore), dual CTAs (Join the Ecosystem + Partner With Us)
   - Hero: New headline, dual CTAs, stat strip
-  - CredibilitySection: "Judges, mentors, and partners from" label
-  - UpcomingHackathonsSection: OPEN NOW label, new copy
-  - ExploreMaximallySection: 6-tile grid
-  - ForOrganizersSection: Updated headlines/copy for enterprise
   - New Senior Council feature: Homepage teaser section + full standalone page (/senior-council)
-  - Newsletter, Footer: Simplified with new brand statement
-  - DotNavigation: Updated labels and orange accent color
-  - SEO: Updated all meta tags (index.html, App.tsx, Index.tsx) for new positioning
+  - SEO: Updated all meta tags for new positioning
 - 2026-02-24: Initial Replit import and setup
-  - Removed X-Frame-Options SAMEORIGIN header to allow Replit iframe proxy
-  - Opened CORS to allow Replit proxy origin
-  - Added guard for missing Supabase env vars in newsletter routes
-  - Installed missing `nanoid` dependency
 
 ## Project Architecture
 - **Frontend**: React 18 + TypeScript, Vite, TailwindCSS, Radix UI, shadcn/ui components
@@ -49,10 +45,20 @@ shared/           - Shared types/schemas between client and server
 docs/             - Documentation
 ```
 
-### Key Pages
+### Active Pages
 - `/` - Landing page (Hero, Credibility, Hackathons, Senior Council teaser, Explore, For Companies, Newsletter)
-- `/senior-council` - Full Senior Council directory page
-- `/login`, `/profile`, `/blog`, `/contact`, `/about` - Standard pages
+- `/senior-council` - Senior Council directory
+- `/explore` - Explore Maximally tiles
+- `/events` - Events listing
+- `/blog` - Blog (Supabase-powered)
+- `/mfhop` - Federation of Hackathon Organizers
+- `/partner` - Partner network
+- `/host-hackathon` - Host a hackathon
+- `/login`, `/profile/:username`, `/contact`, `/about` - Standard pages
+- `/hackathon/:slug` - Public hackathon pages
+- `/organizer/*` - Organizer dashboard pages
+- `/judge/*` - Judge dashboard pages
+- `/my-hackathons` - Participant dashboard
 
 ### Key Scripts
 - `npm run dev` - Start development server (tsx)
@@ -72,4 +78,5 @@ docs/             - Documentation
 ## User Preferences
 - Design: Clean sans-serif typography (Space Grotesk), single orange accent, increased whitespace
 - Positioning: "serious builder ecosystem" targeting builders and enterprise partners
+- No teen/student/youth language anywhere - use builder/participant/creator instead
 - Dual CTAs: "Join the Ecosystem" (builders) + "Partner With Us" (companies)

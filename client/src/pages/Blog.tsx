@@ -151,7 +151,7 @@ const Blog = () => {
             </span>
           </h1>
           <p className="font-space text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
-            Stories, guides, and insights for teen builders and innovators.
+            Stories, guides, and insights for builders and innovators.
           </p>
         </div>
 

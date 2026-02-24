@@ -175,7 +175,7 @@ const HostHackathon = () => {
       <SEO
         title="Host a Hackathon | Partner with Maximally"
         description="Host your own hackathon with Maximally. Get full support, mentorship, prizes, and access to a global network of organizers and participants."
-        keywords="host hackathon, organize hackathon, hackathon support, event organizing, teen hackathons"
+        keywords="host hackathon, organize hackathon, hackathon support, event organizing, hackathons"
         canonicalUrl="https://maximally.in/host-hackathon"
       />
 

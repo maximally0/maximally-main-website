@@ -21,7 +21,7 @@ const MFHOP = () => {
   };
 
   const benefits = [
-    { title: 'Cross-Promotion', description: 'Share posts, newsletters, and reach new student bases.', icon: Globe, color: 'orange' },
+    { title: 'Cross-Promotion', description: 'Share posts, newsletters, and reach new audiences.', icon: Globe, color: 'orange' },
     { title: 'Sponsors & Partnerships', description: 'Exchange leads, pitch bigger packages together.', icon: Trophy, color: 'amber' },
     { title: 'Judges & Mentors', description: 'Tap into a shared circuit of experienced names.', icon: Users, color: 'orange' },
     { title: 'Marketing & Media', description: 'Swap press contacts, email copy, and community shoutouts.', icon: Target, color: 'orange' },
