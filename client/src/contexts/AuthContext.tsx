@@ -15,6 +15,8 @@ import {
   type SignUpPayload,
   type ModerationStatus
 } from '@/lib/supabaseClient';
+import { apiClient } from '@/lib/apiClient';
+import { FEATURE_FLAGS } from '@/lib/featureFlags';
 
 interface AuthContextType {
   user: User | null;
@@ -92,7 +94,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     let timeoutId: NodeJS.Timeout | undefined;
     
     try {
-  setLoading(true);
+      setLoading(true);
       
       // Set a backup timeout to clear loading state
       timeoutId = setTimeout(() => {
@@ -100,14 +102,43 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setLoading(false);
       }, 3000); // 3 second max wait
       
-      const user = await signInWithEmailPassword(email, password);
-      
-  // Sign in successful
-      // Clear the timeout since sign in was successful
-      if (timeoutId) clearTimeout(timeoutId);
-      
-      // The auth state change listener will handle setting user/profile
-      return { error: null };
+      // Use API client if feature flag is enabled
+      if (FEATURE_FLAGS.USE_API_AUTH) {
+        console.log('🔄 Using Netlify Functions for authentication...');
+        try {
+          const result = await apiClient.login(email, password);
+          
+          if (result.success && result.data) {
+            const { user: userData, session: sessionData, profile: profileData } = result.data;
+            
+            // Set the auth state manually since we're bypassing Supabase client
+            setUser(userData);
+            setSession(sessionData);
+            setProfile(profileData);
+            
+            // Store session data for persistence
+            localStorage.setItem('sb-session', JSON.stringify(sessionData));
+            
+            if (timeoutId) clearTimeout(timeoutId);
+            return { error: null };
+          } else {
+            throw new Error(result.error || 'Authentication failed');
+          }
+        } catch (apiError) {
+          console.error('❌ Netlify Functions auth failed:', apiError);
+          throw apiError;
+        }
+      } else {
+        // Fallback to direct Supabase client
+        const user = await signInWithEmailPassword(email, password);
+        
+        // Sign in successful
+        // Clear the timeout since sign in was successful
+        if (timeoutId) clearTimeout(timeoutId);
+        
+        // The auth state change listener will handle setting user/profile
+        return { error: null };
+      }
     } catch (error: any) {
       console.error('❌ Sign in error:', error.message || error);
       if (timeoutId) clearTimeout(timeoutId);
@@ -115,7 +146,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } finally {
       // Always ensure loading is cleared after a short delay
       setTimeout(() => {
-    // Final clearing of sign in loading state
+        // Final clearing of sign in loading state
         setLoading(false);
       }, 100);
     }
@@ -123,22 +154,51 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signUp = async (email: string, password: string, name: string, username: string) => {
     try {
-  setLoading(true);
-  // Starting sign up (logging removed)
+      setLoading(true);
+      // Starting sign up (logging removed)
       
-      const payload: SignUpPayload = { email, password, name, username };
-      const user = await signUpWithEmailPassword(payload);
-      
-  // Sign up successful
-  // Waiting for auth state change to load profile
-      // The auth state change listener will handle setting user/profile
-      return { error: null };
+      // Use API client if feature flag is enabled
+      if (FEATURE_FLAGS.USE_API_AUTH) {
+        console.log('🔄 Using Netlify Functions for sign up...');
+        try {
+          const result = await apiClient.signup(email, password, username, name);
+          
+          if (result.success && result.data) {
+            const { user: userData, session: sessionData } = result.data;
+            
+            // Set the auth state manually
+            setUser(userData);
+            setSession(sessionData);
+            
+            // Store session data for persistence
+            if (sessionData) {
+              localStorage.setItem('sb-session', JSON.stringify(sessionData));
+            }
+            
+            return { error: null };
+          } else {
+            throw new Error(result.error || 'Sign up failed');
+          }
+        } catch (apiError) {
+          console.error('❌ Netlify Functions sign up failed:', apiError);
+          throw apiError;
+        }
+      } else {
+        // Fallback to direct Supabase client
+        const payload: SignUpPayload = { email, password, name, username };
+        const user = await signUpWithEmailPassword(payload);
+        
+        // Sign up successful
+        // Waiting for auth state change to load profile
+        // The auth state change listener will handle setting user/profile
+        return { error: null };
+      }
     } catch (error: any) {
       console.error('❌ Sign up error:', error.message || error);
       return { error };
     } finally {
       // Add a shorter delay and ensure loading is always cleared
-        setTimeout(() => {
+      setTimeout(() => {
         // Clearing sign up loading state
         setLoading(false);
       }, 300);
