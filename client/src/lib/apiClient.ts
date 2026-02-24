@@ -115,7 +115,7 @@ class ApiClient {
     return this.request(`/hackathons/getAll${query ? `?${query}` : ''}`);
   }
 
-  // User methods
+  // User/Profile methods
   async getUserProfile(userId?: string, username?: string) {
     const searchParams = new URLSearchParams();
     
@@ -127,7 +127,51 @@ class ApiClient {
       throw new Error('Either userId or username is required');
     }
     
-    return this.request(`/user/getProfile?${searchParams.toString()}`);
+    return this.request(`/profiles?${searchParams.toString()}`);
+  }
+
+  async getProfiles(params: { limit?: number; offset?: number } = {}) {
+    const searchParams = new URLSearchParams();
+    
+    if (params.limit) {
+      searchParams.set('limit', params.limit.toString());
+    }
+    if (params.offset) {
+      searchParams.set('offset', params.offset.toString());
+    }
+    
+    const query = searchParams.toString();
+    return this.request(`/profiles${query ? `?${query}` : ''}`);
+  }
+
+  // Certificate methods
+  async getCertificates(params: {
+    maximally_username?: string;
+    participant_email?: string;
+    certificate_id?: string;
+    limit?: number;
+    offset?: number;
+  } = {}) {
+    const searchParams = new URLSearchParams();
+    
+    if (params.maximally_username) {
+      searchParams.set('maximally_username', params.maximally_username);
+    }
+    if (params.participant_email) {
+      searchParams.set('participant_email', params.participant_email);
+    }
+    if (params.certificate_id) {
+      searchParams.set('certificate_id', params.certificate_id);
+    }
+    if (params.limit) {
+      searchParams.set('limit', params.limit.toString());
+    }
+    if (params.offset) {
+      searchParams.set('offset', params.offset.toString());
+    }
+    
+    const query = searchParams.toString();
+    return this.request(`/certificates${query ? `?${query}` : ''}`);
   }
 }
 

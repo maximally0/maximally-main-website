@@ -12,6 +12,12 @@ export const FEATURE_FLAGS = {
   // Enable new API client for hackathons
   USE_API_HACKATHONS: import.meta.env.VITE_USE_API_HACKATHONS === 'true',
   
+  // Enable new API client for profiles
+  USE_API_PROFILES: import.meta.env.VITE_USE_API_PROFILES === 'true',
+  
+  // Enable new API client for certificates
+  USE_API_CERTIFICATES: import.meta.env.VITE_USE_API_CERTIFICATES === 'true',
+  
   // Development mode - use local Netlify dev server
   USE_LOCAL_FUNCTIONS: import.meta.env.DEV,
 } as const;

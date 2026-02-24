@@ -76,7 +76,7 @@ export const hybridClient = {
 
 // Legacy exports for backward compatibility
 export const getProfileByUsername = async (username: string) => {
-  if (FEATURE_FLAGS.USE_API_AUTH) {
+  if (FEATURE_FLAGS.USE_API_PROFILES) {
     try {
       const result = await apiClient.getUserProfile(undefined, username);
       return result.data.profile;
@@ -102,7 +102,7 @@ export const getCurrentUserWithProfile = async () => {
     return { user: null, profile: null };
   }
   
-  if (FEATURE_FLAGS.USE_API_AUTH) {
+  if (FEATURE_FLAGS.USE_API_PROFILES) {
     try {
       const result = await apiClient.getUserProfile(session.user.id);
       return {
@@ -136,6 +136,26 @@ export const updateProfileMe = async (updates: any) => {
     .eq('id', session.user.id)
     .select()
     .single() || { data: null, error: new Error('Supabase not initialized') };
+    
+  if (error) throw error;
+  return data;
+};
+
+export const getCertificatesByUsername = async (username: string) => {
+  if (FEATURE_FLAGS.USE_API_CERTIFICATES) {
+    try {
+      const result = await apiClient.getCertificates({ maximally_username: username });
+      return result.data.certificates;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
+  // Fallback to original Supabase
+  const { data, error } = await supabase?.from('certificates')
+    .select('*')
+    .eq('maximally_username', username)
+    .order('created_at', { ascending: false }) || { data: null, error: new Error('Supabase not initialized') };
     
   if (error) throw error;
   return data;

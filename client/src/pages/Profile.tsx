@@ -14,7 +14,7 @@ import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail,
 import PixelLoader from '@/components/PixelLoader';
 import { format } from 'date-fns';
 import type { Achievement, SelectHackathon } from '@shared/schema';
-import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut } from '@/lib/supabaseClient';
+import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut, getCertificatesByUsername } from '@/lib/hybridClient';
 import { useAuth } from '@/contexts/AuthContext';
 import UsernameSettings from '@/components/UsernameSettings';
 import PasswordSettings from '@/components/PasswordSettings';
@@ -717,16 +717,7 @@ export default function Profile() {
       }
 
       // Get certificates for the user
-      const { data: certificates, error: certError } = await supabase
-        .from('certificates')
-        .select('*')
-        .eq('maximally_username', username)
-        .order('created_at', { ascending: false });
-
-      if (certError) {
-        console.error('Error fetching certificates:', certError);
-        throw new Error('Failed to fetch certificates');
-      }
+      const certificates = await getCertificatesByUsername(username!);
 
       const typedCertificates = (certificates || []) as Certificate[];
 
