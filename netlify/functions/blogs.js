@@ -31,6 +31,7 @@ export async function handler(event, context) {
     
     // Route based on query parameters
     const slug = queryStringParameters?.slug;
+    const action = queryStringParameters?.action;
     
     if (slug) {
       console.log('Fetching blog by slug:', slug);
@@ -39,15 +40,21 @@ export async function handler(event, context) {
       const { data, error } = await supabase
         .from('blogs')
         .select(`
-          *,
-          profiles:author_id (
-            username,
-            full_name,
-            avatar_url
-          )
+          id,
+          title,
+          slug,
+          content,
+          author,
+          cover_image,
+          excerpt,
+          tags,
+          created_at,
+          updated_at,
+          reading_time_minutes,
+          status
         `)
         .eq('slug', slug)
-        .eq('published', true)
+        .eq('status', 'published')
         .single();
       
       if (error) {
@@ -58,18 +65,8 @@ export async function handler(event, context) {
         return createResponse(500, null, 'Failed to fetch blog: ' + error.message);
       }
       
-      // Increment view count (don't fail if this errors)
-      try {
-        await supabase
-          .from('blogs')
-          .update({ 
-            views: (data.views || 0) + 1,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', data.id);
-      } catch (viewError) {
-        console.warn('View count update failed:', viewError);
-      }
+      // Note: View count tracking not implemented in current schema
+      // TODO: Add views column to blogs table if needed
       
       return createResponse(200, {
         blog: data
@@ -84,19 +81,21 @@ export async function handler(event, context) {
       let query = supabase
         .from('blogs')
         .select(`
-          *,
-          profiles:author_id (
-            username,
-            full_name
-          )
+          id,
+          title,
+          slug,
+          content,
+          author,
+          cover_image,
+          excerpt,
+          tags,
+          created_at,
+          updated_at,
+          reading_time_minutes,
+          status
         `)
-        .eq('published', true)
+        .eq('status', 'published')
         .order('created_at', { ascending: false });
-      
-      // Filter by featured if specified
-      if (featured === 'true') {
-        query = query.eq('featured', true);
-      }
       
       // Apply pagination
       const limitNum = Math.min(parseInt(limit) || 50, 100); // Max 100 items
