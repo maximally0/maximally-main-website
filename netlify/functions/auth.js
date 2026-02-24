@@ -6,14 +6,10 @@ import { getSupabaseAdmin, createResponse, validateMethod, parseBody } from './s
 
 export async function handler(event, context) {
   try {
-    const { path, httpMethod } = event;
-    const { queryStringParameters } = event;
+    const { httpMethod, queryStringParameters } = event;
     
-    // Route based on path or action parameter
-    const action = queryStringParameters?.action || 
-                  (path.includes('/login') ? 'login' : 
-                   path.includes('/signup') ? 'signup' : 
-                   path.includes('/logout') ? 'logout' : null);
+    // Route based on action parameter
+    const action = queryStringParameters?.action;
     
     if (action === 'login') {
       // Handle CORS preflight
