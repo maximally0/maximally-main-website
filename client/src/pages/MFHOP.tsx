@@ -30,10 +30,8 @@ const MFHOP = () => {
   ];
 
   const colorClasses: Record<string, { gradient: string; border: string; text: string; iconBg: string }> = {
-    cyan: { gradient: 'from-gray-800/50 to-blue-500/20', border: 'border-gray-700', text: 'text-gray-300', iconBg: 'bg-gray-800' },
+    orange: { gradient: 'from-orange-500/10 to-orange-500/20', border: 'border-orange-500/30', text: 'text-orange-400', iconBg: 'bg-orange-500/10' },
     amber: { gradient: 'from-amber-500/20 to-orange-500/20', border: 'border-amber-500/40', text: 'text-amber-300', iconBg: 'bg-amber-500/20' },
-    purple: { gradient: 'from-orange-500/10 to-violet-500/20', border: 'border-orange-500/30', text: 'text-orange-400', iconBg: 'bg-orange-500/10' },
-    pink: { gradient: 'from-orange-500/10 to-rose-500/20', border: 'border-orange-500/30', text: 'text-orange-400', iconBg: 'bg-orange-500/10' },
     green: { gradient: 'from-green-500/20 to-emerald-500/20', border: 'border-green-500/40', text: 'text-green-300', iconBg: 'bg-green-500/20' },
     rose: { gradient: 'from-rose-500/20 to-red-500/20', border: 'border-rose-500/40', text: 'text-rose-300', iconBg: 'bg-rose-500/20' },
   };
@@ -78,8 +76,8 @@ const MFHOP = () => {
               top: `${10 + Math.sin(i) * 20}%`,
               animationDelay: `${i * 0.3}s`,
               animationDuration: `${4 + (i % 3)}s`,
-              backgroundColor: ['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5],
-              boxShadow: `0 0 10px ${['#a855f7', '#ec4899', '#06b6d4', '#22c55e', '#f59e0b'][i % 5]}40`
+              backgroundColor: ['#f97316', '#d4d4d8', '#f59e0b', '#9ca3af', '#fb923c'][i % 5],
+              boxShadow: `0 0 10px ${['#f97316', '#d4d4d8', '#f59e0b', '#9ca3af', '#fb923c'][i % 5]}40`
             }}
           />
         ))}
@@ -219,7 +217,7 @@ const MFHOP = () => {
               <div className="space-y-4">
                 <div className="bg-gradient-to-br from-gray-900/80 to-gray-900/40 border border-gray-800 p-6">
                   <h3 className="font-space font-bold text-xs text-orange-400 mb-2">PRESIDENT</h3>
-                  <p className="font-space text-white">Raghwender Vasisth</p>
+                  <p className="font-space text-white">Drishti Arora</p>
                 </div>
 
                 <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 p-6">
