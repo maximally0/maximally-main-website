@@ -248,22 +248,16 @@ const Navbar = () => {
                 </div>
               </>
             ) : (
-              <div className="flex items-center space-x-3">
-                <Link
-                  to="/login"
-                  className="font-space text-sm font-medium text-gray-300 hover:text-white px-4 py-2 transition-colors"
-                  data-testid="button-join-ecosystem"
-                >
-                  Join the Ecosystem
-                </Link>
-                <Link
-                  to="/contact"
-                  className="font-space text-sm font-medium px-5 py-2.5 border border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-black transition-all duration-300"
-                  data-testid="button-partner"
-                >
-                  Partner With Us
-                </Link>
-              </div>
+              <Link
+                to="/login"
+                className="group relative"
+                data-testid="button-login"
+                aria-label="Sign in"
+              >
+                <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-orange-500 transition-colors duration-200 flex items-center justify-center bg-gray-900 rounded-full">
+                  <PixelUserIcon className="w-6 h-6 text-gray-400 group-hover:text-orange-400 transition-colors duration-200" />
+                </div>
+              </Link>
             )}
           </div>
 
@@ -361,24 +355,17 @@ const Navbar = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="space-y-3">
-                      <Link
-                        to="/login"
-                        onClick={() => setIsMenuOpen(false)}
-                        className="block font-space text-center py-4 px-6 text-base font-medium bg-gray-900 text-white border border-gray-700 hover:border-orange-500 transition-all duration-300"
-                        data-testid="button-login-mobile"
-                      >
-                        Join the Ecosystem
-                      </Link>
-                      <Link
-                        to="/contact"
-                        onClick={() => setIsMenuOpen(false)}
-                        className="block font-space text-center py-4 px-6 text-base font-medium border border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-black transition-all duration-300"
-                        data-testid="button-partner-mobile"
-                      >
-                        Partner With Us
-                      </Link>
-                    </div>
+                    <Link
+                      to="/login"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center justify-center py-4"
+                      data-testid="button-login-mobile"
+                      aria-label="Sign in"
+                    >
+                      <div className="w-12 h-12 border-2 border-gray-700 hover:border-orange-500 transition-colors duration-200 flex items-center justify-center bg-gray-900 rounded-full">
+                        <PixelUserIcon className="w-7 h-7 text-gray-400 hover:text-orange-400 transition-colors duration-200" />
+                      </div>
+                    </Link>
                   )}
                 </div>
               </div>

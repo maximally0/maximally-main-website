@@ -1,24 +1,7 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
-  const [stats, setStats] = useState({ hackathons: 12, organizers: 50, builders: 2000 });
-  const [currentStat, setCurrentStat] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStat((prev) => (prev + 1) % 3);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const statLabels = [
-    `${stats.hackathons} hackathons`,
-    `${stats.organizers}+ organizers`,
-    `${stats.builders.toLocaleString()}+ builders`,
-  ];
-
   return (
     <section className="min-h-screen relative flex items-center pt-20 sm:pt-28 pb-16 overflow-hidden">
       <div className="absolute inset-0 bg-black" />
@@ -42,22 +25,9 @@ export function HeroSection() {
             </span>
           </h1>
 
-          <p className="text-gray-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-space leading-relaxed mb-6 sm:mb-8 px-4">
+          <p className="text-gray-400 text-base sm:text-lg md:text-xl max-w-2xl mx-auto font-space leading-relaxed mb-10 sm:mb-14 px-4">
             Where extraordinary operators, builders, and innovators converge. Not the largest. The best.
           </p>
-
-          <div className="flex items-center justify-center gap-4 mb-10 sm:mb-14">
-            {statLabels.map((label, i) => (
-              <span key={i} className="flex items-center gap-4">
-                {i > 0 && <span className="text-gray-700">·</span>}
-                <span className={`font-space text-sm transition-all duration-500 ${
-                  i === currentStat ? 'text-orange-400' : 'text-gray-500'
-                }`}>
-                  {label}
-                </span>
-              </span>
-            ))}
-          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center px-4">
             <Link
