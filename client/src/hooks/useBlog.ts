@@ -31,6 +31,7 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
 
       // Fallback to Netlify Functions (direct call)
       const params = new URLSearchParams({
+        action: 'getAll',
         limit: String(pageSize),
         offset: String((page - 1) * pageSize),
       });
@@ -38,7 +39,7 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
         params.set('search', search);
       }
 
-      const res = await fetch(`/.netlify/functions/blogs/getAll?${params.toString()}`);
+      const res = await fetch(`/.netlify/functions/blogs?${params.toString()}`);
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.message || `Failed to fetch blogs (${res.status})`);
@@ -82,7 +83,7 @@ export const useBlog = (slug: string) => {
       }
 
       // Fallback to Netlify Functions (direct call)
-      const res = await fetch(`/.netlify/functions/blogs/getBySlug?slug=${encodeURIComponent(slug)}`);
+      const res = await fetch(`/.netlify/functions/blogs?slug=${encodeURIComponent(slug)}`);
       if (res.status === 404) {
         return null;
       }

@@ -45,14 +45,14 @@ class ApiClient {
 
   // Authentication methods
   async login(email: string, password: string) {
-    return this.request('/auth/login', {
+    return this.request('/auth?action=login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
   }
 
   async signup(email: string, password: string, username?: string, fullName?: string) {
-    return this.request('/auth/signup', {
+    return this.request('/auth?action=signup', {
       method: 'POST',
       body: JSON.stringify({ email, password, username, fullName }),
     });
@@ -65,6 +65,7 @@ class ApiClient {
     offset?: number;
   } = {}) {
     const searchParams = new URLSearchParams();
+    searchParams.set('action', 'getAll');
     
     if (params.featured !== undefined) {
       searchParams.set('featured', params.featured.toString());
@@ -77,11 +78,11 @@ class ApiClient {
     }
     
     const query = searchParams.toString();
-    return this.request(`/blogs/getAll${query ? `?${query}` : ''}`);
+    return this.request(`/blogs?${query}`);
   }
 
   async getBlogBySlug(slug: string) {
-    return this.request(`/blogs/getBySlug?slug=${encodeURIComponent(slug)}`);
+    return this.request(`/blogs?slug=${encodeURIComponent(slug)}`);
   }
 
   // Hackathon methods
