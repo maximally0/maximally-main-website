@@ -168,28 +168,15 @@ const Events = () => {
     }
     
     try {
-      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-      const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const eventsRes = await fetch('/api/events');
+      const eventsJson = await eventsRes.json();
       
-      const [adminResponse, organizerResponse] = await Promise.all([
-        fetch(`${SUPABASE_URL}/rest/v1/hackathons?select=id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url,sort_order&is_active=eq.true&order=sort_order.asc,created_at.desc`, {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        }),
-        fetch(`${SUPABASE_URL}/rest/v1/organizer_hackathons?select=id,hackathon_name,tagline,start_date,end_date,format,venue,slug,total_prize_pool,themes&status=eq.published&order=start_date.desc`, {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        })
-      ]);
+      if (!eventsJson.success) {
+        throw new Error('Failed to fetch events');
+      }
       
-      const adminData = adminResponse.ok ? await adminResponse.json() : [];
-      const organizerData = organizerResponse.ok ? await organizerResponse.json() : [];
+      const adminData = eventsJson.admin || [];
+      const organizerData = eventsJson.organizer || [];
       
       const adminItems = Array.isArray(adminData) ? adminData : [];
       const organizerItems = Array.isArray(organizerData) ? organizerData : [];

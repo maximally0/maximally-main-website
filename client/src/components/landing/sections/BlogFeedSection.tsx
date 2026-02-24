@@ -77,101 +77,42 @@ export function BlogFeedSection() {
 
   const fetchFeaturedBlogs = async () => {
     try {
-      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-      const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const res = await fetch('/api/featured-blogs');
+      const json = await res.json();
 
-      // Fetch featured blogs config
-      const featuredRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/featured_blogs?id=eq.1&select=*`,
-        {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          }
-        }
-      );
-      
-      const featuredData = await featuredRes.json();
-      const config = featuredData?.[0];
-      
-      if (!config) {
-        // Fallback to static data
+      if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        const getExcerpt = (content: string, maxLength: number = 120) => {
+          const plainText = content
+            .replace(/#{1,6}\s/g, '')
+            .replace(/\*\*|__/g, '')
+            .replace(/\*|_/g, '')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            .replace(/<[^>]+>/g, '')
+            .replace(/\n+/g, ' ')
+            .trim();
+          if (plainText.length <= maxLength) return plainText;
+          return plainText.substring(0, maxLength).trim() + '...';
+        };
+
+        const mapped: BlogPost[] = json.data.map((blog: any) => {
+          const tags = Array.isArray(blog.tags) ? blog.tags : [];
+          const category = tags[0] || 'Guides';
+          const excerpt = blog.excerpt || (blog.content ? getExcerpt(blog.content) : '');
+          return {
+            id: blog.id.toString(),
+            title: blog.title,
+            excerpt,
+            category,
+            readTime: `${blog.reading_time_minutes || 5} min`,
+            date: '',
+            slug: blog.slug,
+            featured: true,
+          };
+        });
+        setPosts(mapped);
+      } else {
         setPosts(blogData.featuredPosts.slice(0, 3));
-        setLoading(false);
-        return;
       }
-
-      // Collect blog IDs
-      const blogIds: number[] = [];
-      for (let i = 1; i <= 3; i++) {
-        const id = config[`slot_${i}_id`];
-        if (id) blogIds.push(id);
-      }
-
-      if (blogIds.length === 0) {
-        setPosts(blogData.featuredPosts.slice(0, 3));
-        setLoading(false);
-        return;
-      }
-
-      // Fetch blogs from database
-      const blogsRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/blogs?id=in.(${blogIds.join(',')})&status=eq.published&select=id,title,slug,excerpt,content,tags,reading_time_minutes`,
-        {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          }
-        }
-      );
-      
-      const blogsData = await blogsRes.json();
-
-      // Helper to extract excerpt from content
-      const getExcerpt = (content: string, maxLength: number = 120) => {
-        // Remove markdown/HTML tags
-        const plainText = content
-          .replace(/#{1,6}\s/g, '')
-          .replace(/\*\*|__/g, '')
-          .replace(/\*|_/g, '')
-          .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-          .replace(/<[^>]+>/g, '')
-          .replace(/\n+/g, ' ')
-          .trim();
-        
-        if (plainText.length <= maxLength) return plainText;
-        return plainText.substring(0, maxLength).trim() + '...';
-      };
-
-      // Map and order by slot
-      const orderedPosts: BlogPost[] = [];
-      for (let i = 1; i <= 3; i++) {
-        const id = config[`slot_${i}_id`];
-        if (id) {
-          const blog = blogsData.find((b: any) => b.id === id);
-          if (blog) {
-            // Extract category from tags
-            const tags = Array.isArray(blog.tags) ? blog.tags : [];
-            const category = tags[0] || 'Guides';
-            
-            // Get excerpt - use excerpt field if available, otherwise extract from content
-            const excerpt = blog.excerpt || (blog.content ? getExcerpt(blog.content) : '');
-            
-            orderedPosts.push({
-              id: blog.id.toString(),
-              title: blog.title,
-              excerpt: excerpt,
-              category: category,
-              readTime: `${blog.reading_time_minutes || 5} min`,
-              date: '',
-              slug: blog.slug,
-              featured: true
-            });
-          }
-        }
-      }
-
-      setPosts(orderedPosts.length > 0 ? orderedPosts : blogData.featuredPosts.slice(0, 3));
     } catch (error) {
       console.error('Error fetching featured blogs:', error);
       setPosts(blogData.featuredPosts.slice(0, 3));

@@ -53,113 +53,17 @@ export function UpcomingHackathonsSection() {
 
   const fetchFeaturedHackathons = async () => {
     try {
-      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-      const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const res = await fetch('/api/featured-hackathons');
+      const json = await res.json();
 
-      const featuredRes = await fetch(
-        `${SUPABASE_URL}/rest/v1/featured_hackathons?id=eq.1&select=*`,
-        {
-          headers: {
-            'apikey': SUPABASE_ANON_KEY,
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          }
-        }
-      );
-      
-      const featuredData = await featuredRes.json();
-      const config = featuredData?.[0];
-      
-      if (!config) {
-        setLoading(false);
-        return;
+      if (json.success && Array.isArray(json.data)) {
+        setHackathons(json.data.map((h: any) => ({
+          ...h,
+          status: calcStatus(h.startDate, h.endDate || h.startDate),
+        })));
       }
-
-      const adminIds: number[] = [];
-      const organizerIds: number[] = [];
-      
-      for (let i = 1; i <= 6; i++) {
-        const type = config[`slot_${i}_type`];
-        const id = config[`slot_${i}_id`];
-        if (type && id) {
-          if (type === 'admin') adminIds.push(id);
-          else organizerIds.push(id);
-        }
-      }
-
-      const results: FeaturedHackathon[] = [];
-
-      if (adminIds.length > 0) {
-        const adminRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/hackathons?id=in.(${adminIds.join(',')})&select=id,title,subtitle,start_date,end_date,location,status,focus_areas,devpost_register_url,registration_url`,
-          {
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            }
-          }
-        );
-        const adminData = await adminRes.json();
-        
-        (adminData || []).forEach((h: any) => {
-          results.push({
-            id: `admin-${h.id}`,
-            name: h.title,
-            description: h.subtitle || '',
-            startDate: h.start_date,
-            endDate: h.end_date || h.start_date,
-            prize: 'TBD',
-            format: h.location?.toLowerCase().includes('online') ? 'online' : 'hybrid',
-            tags: Array.isArray(h.focus_areas) ? h.focus_areas.slice(0, 2) : [],
-            status: calcStatus(h.start_date, h.end_date || h.start_date),
-            registerUrl: h.devpost_register_url || h.registration_url || '#',
-            type: 'admin'
-          });
-        });
-      }
-
-      if (organizerIds.length > 0) {
-        const orgRes = await fetch(
-          `${SUPABASE_URL}/rest/v1/organizer_hackathons?id=in.(${organizerIds.join(',')})&select=id,hackathon_name,tagline,start_date,end_date,format,venue,slug,total_prize_pool,themes`,
-          {
-            headers: {
-              'apikey': SUPABASE_ANON_KEY,
-              'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-            }
-          }
-        );
-        const orgData = await orgRes.json();
-        
-        (orgData || []).forEach((h: any) => {
-          results.push({
-            id: `org-${h.id}`,
-            name: h.hackathon_name,
-            description: h.tagline || '',
-            startDate: h.start_date,
-            endDate: h.end_date,
-            prize: h.total_prize_pool || 'TBD',
-            format: h.format || 'hybrid',
-            tags: Array.isArray(h.themes) ? h.themes.slice(0, 2) : [],
-            status: calcStatus(h.start_date, h.end_date),
-            registerUrl: `/hackathon/${h.slug}`,
-            type: 'organizer'
-          });
-        });
-      }
-
-      const orderedResults: FeaturedHackathon[] = [];
-      for (let i = 1; i <= 6; i++) {
-        const type = config[`slot_${i}_type`];
-        const id = config[`slot_${i}_id`];
-        if (type && id) {
-          const prefix = type === 'admin' ? 'admin' : 'org';
-          const found = results.find(r => r.id === `${prefix}-${id}`);
-          if (found) orderedResults.push(found);
-        }
-      }
-
-      setHackathons(orderedResults);
-    } catch (error) {
-      console.error('Error fetching featured hackathons:', error);
+    } catch (error: any) {
+      console.error('Error fetching featured hackathons:', error?.message || 'unknown error');
     } finally {
       setLoading(false);
     }

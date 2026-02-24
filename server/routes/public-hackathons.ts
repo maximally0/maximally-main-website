@@ -346,4 +346,163 @@ export function registerPublicHackathonRoutes(app: Express) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });
+
+  app.get("/api/featured-blogs", async (req, res) => {
+    try {
+      const { data: config, error: configError } = await supabaseAdmin
+        .from('featured_blogs')
+        .select('*')
+        .eq('id', 1)
+        .single();
+
+      if (configError || !config) {
+        return res.json({ success: true, data: [] });
+      }
+
+      const blogIds: number[] = [];
+      for (let i = 1; i <= 3; i++) {
+        const id = (config as any)[`slot_${i}_id`];
+        if (id) blogIds.push(id);
+      }
+
+      if (blogIds.length === 0) {
+        return res.json({ success: true, data: [] });
+      }
+
+      const { data: blogs } = await supabaseAdmin
+        .from('blogs')
+        .select('id,title,slug,excerpt,content,tags,reading_time_minutes')
+        .in('id', blogIds)
+        .eq('status', 'published');
+
+      const orderedBlogs: any[] = [];
+      for (let i = 1; i <= 3; i++) {
+        const id = (config as any)[`slot_${i}_id`];
+        if (id && blogs) {
+          const blog = blogs.find((b: any) => b.id === id);
+          if (blog) orderedBlogs.push(blog);
+        }
+      }
+
+      return res.json({ success: true, data: orderedBlogs });
+    } catch (error: any) {
+      console.error('Error fetching featured blogs:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  app.get("/api/events", async (req, res) => {
+    try {
+      const [adminResult, organizerResult] = await Promise.all([
+        supabaseAdmin
+          .from('hackathons')
+          .select('id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url,sort_order')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true }),
+        supabaseAdmin
+          .from('organizer_hackathons')
+          .select('id,hackathon_name,tagline,start_date,end_date,format,venue,slug,total_prize_pool,themes')
+          .eq('status', 'published')
+          .order('start_date', { ascending: false })
+      ]);
+
+      return res.json({
+        success: true,
+        admin: adminResult.data || [],
+        organizer: organizerResult.data || []
+      });
+    } catch (error: any) {
+      console.error('Error fetching events:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  app.get("/api/featured-hackathons", async (req, res) => {
+    try {
+      const { data: featuredData, error: featuredError } = await supabaseAdmin
+        .from('featured_hackathons')
+        .select('*')
+        .eq('id', 1)
+        .single();
+
+      if (featuredError || !featuredData) {
+        return res.json({ success: true, data: [] });
+      }
+
+      const config = featuredData as any;
+      const adminIds: number[] = [];
+      const organizerIds: number[] = [];
+
+      for (let i = 1; i <= 6; i++) {
+        const type = config[`slot_${i}_type`];
+        const id = config[`slot_${i}_id`];
+        if (type && id) {
+          if (type === 'admin') adminIds.push(id);
+          else organizerIds.push(id);
+        }
+      }
+
+      const results: any[] = [];
+
+      if (adminIds.length > 0) {
+        const { data: adminData } = await supabaseAdmin
+          .from('hackathons')
+          .select('id,title,subtitle,start_date,end_date,location,status,focus_areas,devpost_register_url,registration_url')
+          .in('id', adminIds);
+
+        (adminData || []).forEach((h: any) => {
+          results.push({
+            id: `admin-${h.id}`,
+            name: h.title,
+            description: h.subtitle || '',
+            startDate: h.start_date,
+            endDate: h.end_date || h.start_date,
+            prize: 'TBD',
+            format: h.location?.toLowerCase().includes('online') ? 'online' : 'hybrid',
+            tags: Array.isArray(h.focus_areas) ? h.focus_areas.slice(0, 2) : [],
+            registerUrl: h.devpost_register_url || h.registration_url || '#',
+            type: 'admin'
+          });
+        });
+      }
+
+      if (organizerIds.length > 0) {
+        const { data: orgData } = await supabaseAdmin
+          .from('organizer_hackathons')
+          .select('id,hackathon_name,tagline,start_date,end_date,format,venue,slug,total_prize_pool,themes')
+          .in('id', organizerIds);
+
+        (orgData || []).forEach((h: any) => {
+          results.push({
+            id: `org-${h.id}`,
+            name: h.hackathon_name,
+            description: h.tagline || '',
+            startDate: h.start_date,
+            endDate: h.end_date,
+            prize: h.total_prize_pool || 'TBD',
+            format: h.format || 'hybrid',
+            tags: Array.isArray(h.themes) ? h.themes.slice(0, 2) : [],
+            registerUrl: `/hackathon/${h.slug}`,
+            type: 'organizer'
+          });
+        });
+      }
+
+      const orderedResults: any[] = [];
+      for (let i = 1; i <= 6; i++) {
+        const type = config[`slot_${i}_type`];
+        const id = config[`slot_${i}_id`];
+        if (type && id) {
+          const prefix = type === 'admin' ? 'admin' : 'org';
+          const found = results.find(r => r.id === `${prefix}-${id}`);
+          if (found) orderedResults.push(found);
+        }
+      }
+
+      return res.json({ success: true, data: orderedResults });
+    } catch (error: any) {
+      console.error('Error fetching featured hackathons:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
 }
