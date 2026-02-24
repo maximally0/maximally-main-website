@@ -1,0 +1,139 @@
+# Maximally — About Page Redesign Task Brief
+
+---
+
+## What's Wrong With the Current Page
+
+The current About page reads like a feature directory — it lists *what exists* (platform, federation, community) without landing the *why this exists* punch. The brand positioning doc is explicit: the About page is not a founding story or a product overview. It's a **positioning statement**. It should answer one question: **why does this need to exist?**
+
+Specific issues to fix:
+- "Hackathons as culture, not just code" framing is too soft — it sounds like a thought piece, not a category-defining claim
+- The 5-card "What We're Building" grid belongs on the homepage or a products page, not About
+- The partners section is fine but misplaced — it's social proof, not positioning
+- Nothing on the page communicates the *bar*. Who's in this ecosystem? What does it take to belong?
+- Rishul's presence is absent entirely — About pages that say nothing about the founder feel anonymous
+
+---
+
+## New Page Architecture
+
+### Section 1 — Opening Statement (above the fold)
+**Not a hero. A declaration.**
+
+Headline: `The world's most serious builder ecosystem.`
+Subtext: 1–2 sentences on *why* it needed to be built. The builder ecosystem globally is full of noise. Hackathons with thousands of participants and mediocre output. Serious builders — the ones actually building things that matter — have nowhere to belong. Maximally is that place.
+
+No image. No animation. Just the words. Dark background, the words do the work.
+
+---
+
+### Section 2 — What We Believe (The Manifesto Block)
+**2–3 short, punchy paragraphs. Opinionated. No bullets.**
+
+Pull from the positioning doc's core arguments:
+- Most platforms compete on size. Maximally competes on signal.
+- "Serious" is the entire brand. It defines who belongs, what we build, who we work with.
+- Hackathons deserve better. Builders deserve better. We're building the infrastructure that makes that real.
+
+Tone: authoritative, warm, not arrogant. Short sentences. Trust the reader.
+
+---
+
+### Section 3 — The Three Layers (What Maximally Actually Is)
+**Clean, minimal 3-block layout. Not cards — just clearly separated content.**
+
+Each layer gets:
+- A 1-line name (`The Ecosystem`, `The Enterprise Layer`, `The Media Layer`)
+- 2–3 sentences of plain-English explanation
+- Who it's for
+
+No icons needed. The words should be enough. If there's a visual element, make it typographic — large numerals `01`, `02`, `03`.
+
+---
+
+### Section 4 — The Bar (Who's In This Ecosystem)
+**This is the section that doesn't exist yet and absolutely needs to.**
+
+Current page has no signal about the *quality* of who's inside Maximally. This section fixes that.
+
+Content:
+- Mention of the Senior Council — a directory of operators with documented extraordinary ability
+- Brief framing of what MFHOP is (50+ vetted organizers, not an open network)
+- A stat strip: `12 hackathons executed. 50+ vetted organizers. EB1A and O1 caliber judges. Real execution, not projections.`
+
+This section should feel exclusive, not open. The message: *you have to earn your place here.*
+
+---
+
+### Section 5 — The Founder
+**Short. Led by what he's built, not who he is.**
+
+Don't lead with age. Don't make it a personal story. Frame it as: here's the person who understands the builder ecosystem deeply enough to build this, and here's what that understanding is based on.
+
+~3–4 sentences. A real photo (actual, not stock).
+
+---
+
+### Section 6 — The Two CTAs
+**Two audiences, two doors.**
+
+- Builders: `Apply to Join →`
+- Companies: `Partner With Us →`
+
+Clean. No filler copy around them. Let the page do the convincing; the CTAs just open the door.
+
+---
+
+## Copy Principles for the Writer
+
+Follow the voice from the positioning doc exactly:
+
+**Use:**
+- "Serious builders" / "extraordinary operators"
+- "High-signal" / "curated ecosystem"
+- "Built, not participated"
+- "Evidence, not noise"
+
+**Never use:**
+- "Super excited to announce..."
+- "We're exploring..."
+- "Community" without specificity
+- "Young founders" or any age-forward framing
+- Excessive exclamation points
+
+**Tone:** Authoritative, not arrogant. Precise, not dense. Warm the way serious people are warm — genuine, direct, no corporate padding.
+
+---
+
+## What to Remove From the Current Page
+
+| Element | Why |
+|---|---|
+| "Hackathons (Events)" card grid | Belongs on homepage or a programs page |
+| Partners section | Move to homepage or a dedicated partners page |
+| "Get in Touch" section | Footer handles this |
+| Generic subheadlines like "Hackathons as culture, not just code" | Too soft, undercuts the brand |
+
+---
+
+## Design Direction
+
+Stay in the existing visual language (dark bg, orange accent, mono/tight typography) but make this page **sparser and more confident**. Less grid, more white space. The current page is too busy for what an About page needs to do.
+
+- **No stock imagery.** Real photos or no photos.
+- **No feature cards.** This isn't a product spec page.
+- **Typography does the heavy lifting.** Large, bold, few words per block.
+- Stat numbers (12, 50+, etc.) should be displayed large — they're credibility anchors.
+
+---
+
+## Definition of Done
+
+- [ ] Page answers "why does Maximally exist?" within the first two scrolls
+- [ ] The bar for membership is communicated (not everyone gets in)
+- [ ] Three layers are explained in plain English
+- [ ] Senior Council / EB1A angle is present but framed as a quality signal, not a service
+- [ ] Founder section is present, led by credibility not bio facts
+- [ ] Two clear CTAs (builder + company)
+- [ ] No language that signals uncertainty, student focus, or feature-listing
+- [ ] Copy reviewed against positioning doc voice guidelines before publish
