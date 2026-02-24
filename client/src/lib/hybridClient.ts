@@ -69,6 +69,7 @@ export const getProfileByUsername = async (username: string) => {
       const result = await apiClient.getUserProfile(undefined, username);
       return result.data.profile;
     } catch (error) {
+      console.error('❌ getProfileByUsername error:', error);
       throw error;
     }
   }
@@ -98,6 +99,7 @@ export const getCurrentUserWithProfile = async () => {
         profile: result.data.profile
       };
     } catch (error) {
+      console.error('❌ getCurrentUserWithProfile error:', error);
       return { user: session.user, profile: null };
     }
   }
@@ -135,6 +137,7 @@ export const getCertificatesByUsername = async (username: string) => {
       const result = await apiClient.getCertificates({ maximally_username: username });
       return result.data.certificates;
     } catch (error) {
+      console.error('❌ getCertificatesByUsername error:', error);
       throw error;
     }
   }
@@ -155,6 +158,7 @@ export const signOut = async () => {
     localStorage.removeItem('maximally_session');
     localStorage.removeItem('maximally_user');
     localStorage.removeItem('maximally_profile');
+    localStorage.removeItem('sb-session');
   }
   
   // Also sign out from Supabase

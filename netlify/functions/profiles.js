@@ -1,8 +1,8 @@
 /**
  * Netlify Function: Profiles API
- * Handles all profile-related endpoints
+ * Handles profile-related endpoints
  */
-import { getSupabaseAdmin, createResponse, validateMethod } from './shared/supabase.js';
+import { getSupabaseAdmin, createResponse } from './shared/supabase.js';
 
 export async function handler(event, context) {
   // Handle CORS preflight
@@ -18,7 +18,7 @@ export async function handler(event, context) {
     };
   }
   
-  // Only allow GET requests for now
+  // Only allow GET requests
   if (event.httpMethod !== 'GET') {
     return createResponse(405, null, 'Method not allowed');
   }
@@ -29,15 +29,37 @@ export async function handler(event, context) {
     const supabase = getSupabaseAdmin();
     const { queryStringParameters } = event;
     
-    // Route based on query parameters
-    const username = queryStringParameters?.username;
     const userId = queryStringParameters?.userId;
-    const id = queryStringParameters?.id;
+    const username = queryStringParameters?.username;
+    const limit = parseInt(queryStringParameters?.limit || '50');
+    const offset = parseInt(queryStringParameters?.offset || '0');
     
-    if (username) {
+    if (userId) {
+      console.log('Fetching profile by user ID:', userId);
+      
+      // Get Profile by User ID
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error) {
+        console.error('Profile fetch error:', error);
+        if (error.code === 'PGRST116') {
+          return createResponse(404, null, 'Profile not found');
+        }
+        return createResponse(500, null, 'Failed to fetch profile: ' + error.message);
+      }
+      
+      return createResponse(200, {
+        profile: data
+      });
+      
+    } else if (username) {
       console.log('Fetching profile by username:', username);
       
-      // Get profile by username
+      // Get Profile by Username
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -56,38 +78,17 @@ export async function handler(event, context) {
         profile: data
       });
       
-    } else if (userId || id) {
-      console.log('Fetching profile by ID:', userId || id);
-      
-      // Get profile by user ID
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId || id)
-        .single();
-      
-      if (error) {
-        console.error('Profile fetch error:', error);
-        if (error.code === 'PGRST116') {
-          return createResponse(404, null, 'Profile not found');
-        }
-        return createResponse(500, null, 'Failed to fetch profile: ' + error.message);
-      }
-      
-      return createResponse(200, {
-        profile: data
-      });
-      
     } else {
-      // Get all profiles (with pagination)
-      const { limit = 50, offset = 0 } = queryStringParameters || {};
+      console.log('Fetching all profiles');
       
-      const limitNum = Math.min(parseInt(limit) || 50, 100);
-      const offsetNum = parseInt(offset) || 0;
+      // Get All Profiles (with pagination)
+      const limitNum = Math.min(limit, 100); // Max 100 items
+      const offsetNum = offset;
       
       const { data, error, count } = await supabase
         .from('profiles')
         .select('*', { count: 'exact' })
+        .order('created_at', { ascending: false })
         .range(offsetNum, offsetNum + limitNum - 1);
       
       if (error) {

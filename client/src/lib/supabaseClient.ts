@@ -1,4 +1,6 @@
 import { createClient, type User, type Session } from '@supabase/supabase-js';
+import { USE_API } from './featureFlags';
+import { apiClient } from './apiClient';
 
 // Check multiple environment variable sources
 const getEnvVar = (key: string): string | undefined => {
@@ -325,6 +327,17 @@ function extractOAuthProfileData(user: User): OAuthProfileData {
 
 // -------------------- Profile Helpers --------------------
 export async function getProfile(userId: string): Promise<Profile | null> {
+  // Use API client if feature flag is enabled
+  if (USE_API) {
+    try {
+      const result = await apiClient.getUserProfile(userId);
+      return result.data.profile;
+    } catch (error) {
+      console.error('❌ getProfile API error:', error);
+      return null;
+    }
+  }
+  
   if (!supabase) return null;
   try {
     const { data, error } = await supabase
@@ -341,6 +354,17 @@ export async function getProfile(userId: string): Promise<Profile | null> {
 }
 
 export async function getProfileByUsername(username: string): Promise<Profile | null> {
+  // Use API client if feature flag is enabled
+  if (USE_API) {
+    try {
+      const result = await apiClient.getUserProfile(undefined, username);
+      return result.data.profile;
+    } catch (error) {
+      console.error('❌ getProfileByUsername API error:', error);
+      return null;
+    }
+  }
+  
   if (!supabase) return null;
   try {
   // getProfileByUsername: Direct query for username
@@ -841,7 +865,31 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
       
   // getCurrentUserWithProfile: Looking for profile for user
       
-      // DIRECT QUERY - BYPASS ALL POLICIES
+      // Use API client if feature flag is enabled
+      if (USE_API) {
+        try {
+          const result = await apiClient.getUserProfile(user.id);
+          const profile = result.data.profile;
+          
+          if (!profile) {
+            console.warn('⚠️ No profile found via API, creating one for OAuth user');
+            const createdProfile = await ensureUserProfile(user);
+            if (!createdProfile) {
+              console.error('❌ Failed to create profile for user:', user.email);
+              return null;
+            }
+            return { user, profile: createdProfile };
+          }
+          
+          return { user, profile };
+        } catch (apiError) {
+          console.error('❌ API profile fetch failed:', apiError);
+          // Don't fallback to direct Supabase if API is enabled - it will fail due to ISP blocking
+          return null;
+        }
+      }
+      
+      // DIRECT QUERY - BYPASS ALL POLICIES (only when API is disabled)
       if (!supabase) {
         console.error('❌ Supabase not initialized');
         return null;
@@ -892,6 +940,35 @@ export async function getCurrentUserWithProfile(): Promise<{ user: User; profile
 export async function isAdmin(): Promise<boolean> {
   const c = await getCurrentUserWithProfile();
   return c?.profile.role === 'admin';
+}
+
+// -------------------- Certificate Helpers --------------------
+export async function getCertificatesByUsername(username: string): Promise<any[]> {
+  // Use API client if feature flag is enabled
+  if (USE_API) {
+    try {
+      const result = await apiClient.getCertificates({ maximally_username: username });
+      return result.data.certificates || [];
+    } catch (error) {
+      console.error('❌ getCertificatesByUsername API error:', error);
+      return [];
+    }
+  }
+  
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase
+      .from('certificates')
+      .select('*')
+      .eq('maximally_username', username)
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('getCertificatesByUsername error:', err);
+    return [];
+  }
 }
 
 // -------------------- Avatar Helpers --------------------

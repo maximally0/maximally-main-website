@@ -1,118 +1,116 @@
 /**
  * Netlify Function: Authentication API
- * Handles all auth-related endpoints
+ * Handles login and signup endpoints
  */
-import { getSupabaseAdmin, createResponse, validateMethod, parseBody } from './shared/supabase.js';
+import { getSupabaseAdmin, createResponse, parseBody } from './shared/supabase.js';
 
 export async function handler(event, context) {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
+      },
+      body: ''
+    };
+  }
+  
   try {
-    const { httpMethod, queryStringParameters } = event;
+    console.log('Auth function called with:', event.queryStringParameters);
     
-    // Route based on action parameter
+    const supabase = getSupabaseAdmin();
+    const { queryStringParameters } = event;
     const action = queryStringParameters?.action;
     
-    if (action === 'login') {
-      // Handle CORS preflight
-      const methodCheck = validateMethod(event, ['POST']);
-      if (methodCheck) return methodCheck;
+    if (event.httpMethod === 'POST') {
+      const body = parseBody(event);
       
-      const { email, password } = parseBody(event);
-      
-      // Validate input
-      if (!email || !password) {
-        return createResponse(400, null, 'Email and password are required');
-      }
-      
-      if (!email.includes('@')) {
-        return createResponse(400, null, 'Invalid email format');
-      }
-      
-      const supabase = getSupabaseAdmin();
-      
-      // Attempt to sign in with email/password
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-      
-      if (error) {
-        console.error('Login error:', error);
-        return createResponse(401, null, error.message);
-      }
-      
-      if (!data.user) {
-        return createResponse(401, null, 'Authentication failed');
-      }
-      
-      // Get user profile for additional info
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
-      
-      if (profileError) {
-        console.warn('Profile fetch error:', profileError);
-      }
-      
-      // Return user data and session info
-      return createResponse(200, {
-        user: data.user,
-        session: data.session,
-        profile: profile || null
-      });
-      
-    } else if (action === 'signup') {
-      // Handle CORS preflight
-      const methodCheck = validateMethod(event, ['POST']);
-      if (methodCheck) return methodCheck;
-      
-      const { email, password, username, fullName } = parseBody(event);
-      
-      // Validate input
-      if (!email || !password) {
-        return createResponse(400, null, 'Email and password are required');
-      }
-      
-      if (!email.includes('@')) {
-        return createResponse(400, null, 'Invalid email format');
-      }
-      
-      if (password.length < 6) {
-        return createResponse(400, null, 'Password must be at least 6 characters');
-      }
-      
-      const supabase = getSupabaseAdmin();
-      
-      // Create user account
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username: username || null,
-            full_name: fullName || null
-          }
+      if (action === 'login') {
+        console.log('Processing login request');
+        
+        const { email, password } = body;
+        
+        if (!email || !password) {
+          return createResponse(400, null, 'Email and password are required');
         }
-      });
-      
-      if (error) {
-        console.error('Signup error:', error);
-        return createResponse(400, null, error.message);
+        
+        // Authenticate with Supabase
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        
+        if (authError) {
+          console.error('Auth error:', authError);
+          return createResponse(401, null, authError.message);
+        }
+        
+        if (!authData.user || !authData.session) {
+          return createResponse(401, null, 'Authentication failed');
+        }
+        
+        // Get user profile
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authData.user.id)
+          .single();
+        
+        if (profileError) {
+          console.error('Profile fetch error:', profileError);
+          return createResponse(500, null, 'Failed to fetch user profile');
+        }
+        
+        return createResponse(200, {
+          user: authData.user,
+          session: authData.session,
+          profile: profile
+        });
+        
+      } else if (action === 'signup') {
+        console.log('Processing signup request');
+        
+        const { email, password, username, fullName } = body;
+        
+        if (!email || !password) {
+          return createResponse(400, null, 'Email and password are required');
+        }
+        
+        // Sign up with Supabase
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              username: username || email.split('@')[0],
+              full_name: fullName || ''
+            }
+          }
+        });
+        
+        if (authError) {
+          console.error('Signup error:', authError);
+          return createResponse(400, null, authError.message);
+        }
+        
+        return createResponse(200, {
+          user: authData.user,
+          session: authData.session,
+          message: 'Please check your email to confirm your account'
+        });
+        
+      } else {
+        return createResponse(400, null, 'Invalid action');
       }
-      
-      return createResponse(200, {
-        user: data.user,
-        session: data.session,
-        message: 'Account created successfully'
-      });
-      
     } else {
-      return createResponse(400, null, 'Invalid auth action');
+      return createResponse(405, null, 'Method not allowed');
     }
     
   } catch (error) {
     console.error('Auth function error:', error);
-    return createResponse(500, null, 'Internal server error');
+    return createResponse(500, null, 'Internal server error: ' + error.message);
   }
 }

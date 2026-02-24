@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { AlertCircle, CheckCircle, XCircle, ExternalLink, Download, Eye, Award } from 'lucide-react';
 import { Helmet } from 'react-helmet';
 import { supabase } from '@/lib/supabaseClient';
+import { USE_API } from '@/lib/featureFlags';
+import { apiClient } from '@/lib/apiClient';
 
 interface CertificateData {
   participant_name: string;
@@ -38,6 +40,44 @@ const CertificateVerification: React.FC = () => {
       }
 
       try {
+        // Use API client if feature flag is enabled
+        if (USE_API) {
+          try {
+            const result = await apiClient.getCertificates({ certificate_id: certificate_id.toUpperCase() });
+            const certificates = result.data.certificates || [];
+            const certificate = certificates.length > 0 ? certificates[0] : null;
+            
+            if (!certificate) {
+              setVerification({
+                success: true,
+                status: 'invalid_id',
+                message: 'Invalid certificate ID',
+                certificate_id: certificate_id.toUpperCase()
+              });
+            } else if (certificate.status !== 'active') {
+              setVerification({
+                success: true,
+                status: 'revoked',
+                message: 'This certificate has been revoked',
+                certificate_id: certificate_id.toUpperCase(),
+                certificate: certificate
+              });
+            } else {
+              setVerification({
+                success: true,
+                status: 'valid',
+                message: 'Certificate is valid and authentic',
+                certificate_id: certificate_id.toUpperCase(),
+                certificate: certificate
+              });
+            }
+            return;
+          } catch (apiError) {
+            console.error('❌ Certificate verification API error:', apiError);
+            throw apiError;
+          }
+        }
+        
         if (!supabase) {
           throw new Error('Database connection not available');
         }

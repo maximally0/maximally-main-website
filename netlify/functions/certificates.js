@@ -1,8 +1,8 @@
 /**
  * Netlify Function: Certificates API
- * Handles all certificate-related endpoints
+ * Handles certificate-related endpoints
  */
-import { getSupabaseAdmin, createResponse, validateMethod } from './shared/supabase.js';
+import { getSupabaseAdmin, createResponse } from './shared/supabase.js';
 
 export async function handler(event, context) {
   // Handle CORS preflight
@@ -18,7 +18,7 @@ export async function handler(event, context) {
     };
   }
   
-  // Only allow GET requests for now
+  // Only allow GET requests
   if (event.httpMethod !== 'GET') {
     return createResponse(405, null, 'Method not allowed');
   }
@@ -29,96 +29,54 @@ export async function handler(event, context) {
     const supabase = getSupabaseAdmin();
     const { queryStringParameters } = event;
     
-    // Route based on query parameters
     const maximally_username = queryStringParameters?.maximally_username;
     const participant_email = queryStringParameters?.participant_email;
     const certificate_id = queryStringParameters?.certificate_id;
+    const limit = parseInt(queryStringParameters?.limit || '50');
+    const offset = parseInt(queryStringParameters?.offset || '0');
     
+    let query = supabase
+      .from('certificates')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    // Apply filters
     if (maximally_username) {
-      console.log('Fetching certificates by username:', maximally_username);
-      
-      // Get certificates by Maximally username
-      const { data, error } = await supabase
-        .from('certificates')
-        .select('*')
-        .eq('maximally_username', maximally_username)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Certificates fetch error:', error);
-        return createResponse(500, null, 'Failed to fetch certificates: ' + error.message);
-      }
-      
-      return createResponse(200, {
-        certificates: data || []
-      });
-      
-    } else if (participant_email) {
-      console.log('Fetching certificates by email:', participant_email);
-      
-      // Get certificates by participant email
-      const { data, error } = await supabase
-        .from('certificates')
-        .select('*')
-        .eq('participant_email', participant_email)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Certificates fetch error:', error);
-        return createResponse(500, null, 'Failed to fetch certificates: ' + error.message);
-      }
-      
-      return createResponse(200, {
-        certificates: data || []
-      });
-      
-    } else if (certificate_id) {
-      console.log('Fetching certificate by ID:', certificate_id);
-      
-      // Get certificate by ID
-      const { data, error } = await supabase
-        .from('certificates')
-        .select('*')
-        .eq('certificate_id', certificate_id)
-        .single();
-      
-      if (error) {
-        console.error('Certificate fetch error:', error);
-        if (error.code === 'PGRST116') {
-          return createResponse(404, null, 'Certificate not found');
-        }
-        return createResponse(500, null, 'Failed to fetch certificate: ' + error.message);
-      }
-      
-      return createResponse(200, {
-        certificate: data
-      });
-      
-    } else {
-      // Get all certificates (with pagination)
-      const { limit = 50, offset = 0 } = queryStringParameters || {};
-      
-      const limitNum = Math.min(parseInt(limit) || 50, 100);
-      const offsetNum = parseInt(offset) || 0;
-      
-      const { data, error, count } = await supabase
-        .from('certificates')
-        .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false })
-        .range(offsetNum, offsetNum + limitNum - 1);
-      
-      if (error) {
-        console.error('Certificates fetch error:', error);
-        return createResponse(500, null, 'Failed to fetch certificates: ' + error.message);
-      }
-      
-      return createResponse(200, {
-        certificates: data || [],
-        total: count,
-        limit: limitNum,
-        offset: offsetNum
-      });
+      console.log('Filtering by maximally_username:', maximally_username);
+      query = query.eq('maximally_username', maximally_username);
     }
+    
+    if (participant_email) {
+      console.log('Filtering by participant_email:', participant_email);
+      query = query.eq('participant_email', participant_email);
+    }
+    
+    if (certificate_id) {
+      console.log('Filtering by certificate_id:', certificate_id);
+      query = query.eq('certificate_id', certificate_id);
+    }
+    
+    // Apply pagination
+    const limitNum = Math.min(limit, 100); // Max 100 items
+    const offsetNum = offset;
+    
+    query = query.range(offsetNum, offsetNum + limitNum - 1);
+    
+    const { data, error, count } = await query;
+    
+    if (error) {
+      console.error('Certificates fetch error:', error);
+      return createResponse(500, null, 'Failed to fetch certificates: ' + error.message);
+    }
+    
+    console.log('Certificates fetched successfully:', data?.length || 0);
+    
+    return createResponse(200, {
+      certificates: data || [],
+      total: count,
+      limit: limitNum,
+      offset: offsetNum
+    });
     
   } catch (error) {
     console.error('Certificates function error:', error);
