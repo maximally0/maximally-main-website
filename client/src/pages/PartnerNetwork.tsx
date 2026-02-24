@@ -181,7 +181,7 @@ const PartnerNetwork = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
                 <a
-                  href="https://forms.gle/Pcxr6vDVuN9GLjav5"
+                  href="https://cal.com/maximally"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space font-semibold text-sm transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02]"
@@ -304,7 +304,7 @@ const PartnerNetwork = () => {
 
               <div className="text-center mt-10">
                 <a
-                  href="https://forms.gle/Pcxr6vDVuN9GLjav5"
+                  href="https://cal.com/maximally"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-6 py-3 border border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-white font-space font-semibold text-sm transition-all duration-300"
@@ -472,7 +472,7 @@ const PartnerNetwork = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="https://forms.gle/Pcxr6vDVuN9GLjav5"
+                  href="https://cal.com/maximally"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space font-semibold text-sm transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02]"
