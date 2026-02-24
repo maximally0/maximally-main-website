@@ -60,7 +60,7 @@ const exploreTiles = [
     title: "Partner",
     description: "Run a high-signal hackathon with your company.",
     icon: Handshake,
-    url: "/contact",
+    url: "/partner",
     color: "text-orange-400",
     borderColor: "border-orange-500/20",
     hoverBorder: "hover:border-orange-500/50",
