@@ -40,7 +40,7 @@ export function HeroSection() {
             </Link>
 
             <Link
-              to="/contact"
+              to="/partner"
               className="group flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-transparent border border-gray-600 hover:border-orange-500 text-gray-300 hover:text-white font-space text-sm sm:text-base font-semibold transition-all duration-300"
               data-testid="button-partner-with-us"
             >

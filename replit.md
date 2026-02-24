@@ -52,7 +52,7 @@ docs/             - Documentation
 - `/events` - Events listing
 - `/blog` - Blog (Supabase-powered)
 - `/mfhop` - Federation of Hackathon Organizers
-- `/partner` - Partner network
+- `/partner` - Partner With Us (hackathon services page, inspired by AngelHack)
 - `/host-hackathon` - Host a hackathon
 - `/login`, `/profile/:username`, `/contact`, `/about` - Standard pages
 - `/hackathon/:slug` - Public hackathon pages

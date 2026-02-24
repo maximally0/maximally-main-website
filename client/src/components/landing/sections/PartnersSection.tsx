@@ -54,7 +54,7 @@ export function PartnersSection() {
         <div className="mt-10 text-center">
           <p className="font-space text-xs text-gray-600">
             Want to partner with us?{' '}
-            <a href="/contact" className="text-red-500 hover:text-red-400 transition-colors">
+            <a href="/partner" className="text-orange-400 hover:text-orange-300 transition-colors">
               Get in touch
             </a>
           </p>
