@@ -85,14 +85,10 @@ const SEO = ({
       <meta property="og:locale" content="en_US" />
       
       {/* Article specific meta tags */}
-      {article && (
-        <>
-          {publishedTime && <meta property="article:published_time" content={publishedTime} />}
-          {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
-          {author && <meta property="article:author" content={author} />}
-          {section && <meta property="article:section" content={section} />}
-        </>
-      )}
+      {article && publishedTime && <meta property="article:published_time" content={publishedTime} />}
+      {article && modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+      {article && author && <meta property="article:author" content={author} />}
+      {article && section && <meta property="article:section" content={section} />}
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />

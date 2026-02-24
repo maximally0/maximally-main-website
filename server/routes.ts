@@ -42,6 +42,7 @@ import { registerAutoPublishGalleryRoutes } from "./routes/auto-publish-gallery"
 import { registerCertificateRoutes } from "./routes/certificates";
 import { registerSubmissionModerationRoutes } from "./routes/submission-moderation";
 import { registerFeaturedContentRoutes } from "./routes/featured-content";
+import { registerBlogRoutes } from "./routes/blogs";
 import { registerEdgeCaseTestRoutes } from "./routes/edge-case-tests";
 import { registerDocsRoutes } from "./routes/docs";
 import { registerNewsletterRoutes } from "./routes/newsletter";
@@ -3999,6 +4000,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerSubmissionModerationRoutes(app); // Submission moderation (disqualify) for organizers
   registerCertificateRoutes(app); // Certificate generation for organizers
   registerFeaturedContentRoutes(app); // Featured blogs and hackathons management
+  registerBlogRoutes(app); // Public blog listing and individual posts
   registerEdgeCaseTestRoutes(app); // Edge case testing endpoints for production verification
   registerDocsRoutes(app); // Documentation API endpoints
   registerNewsletterRoutes(app); // Newsletter subscription endpoints
