@@ -52,8 +52,8 @@ const MFHOP = () => {
     <>
       <SEO
         title="MFHOP - Maximally Federation of Hackathon Organizers and Partners"
-        description="A global network of hackathon organizers working together to grow reach, share sponsors, and strengthen events."
-        keywords="hackathon organizers, federation, hackathon community, event collaboration, MFHOP"
+        description="50+ vetted hackathon organizers sharing infrastructure, sponsors, and collective credibility. A curated federation, not an open network."
+        keywords="hackathon organizers, federation, MFHOP, vetted organizers, hackathon infrastructure, curated network"
         canonicalUrl="https://maximally.in/mfhop"
       />
 

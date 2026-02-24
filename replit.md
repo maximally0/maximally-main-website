@@ -19,6 +19,15 @@ A full-stack hackathon/builder ecosystem platform ("Maximally") built with React
   - Hero: New headline, dual CTAs, stat strip
   - New Senior Council feature: Homepage teaser section + full standalone page (/senior-council)
   - SEO: Updated all meta tags for new positioning
+- 2026-02-24: About page complete redesign
+  - Transformed from feature-listing page to positioning statement page
+  - Six sections: Opening Statement, Manifesto, Three Layers, The Bar, Founder, Dual CTAs
+  - Follows brand positioning doc voice/tone precisely
+  - No cards, icons, or feature grids — typography-driven, sparse layout
+- 2026-02-24: Site-wide SEO audit and update
+  - Updated SEO.tsx defaults (title, description, organization structured data) to match new positioning
+  - Updated SEO on /explore, /mfhop, /host-hackathon, /about, BecomeASupporter pages
+  - All public pages now use "serious builder ecosystem" positioning language
 - 2026-02-24: Initial Replit import and setup
 
 ## Project Architecture
@@ -54,7 +63,8 @@ docs/             - Documentation
 - `/mfhop` - Federation of Hackathon Organizers
 - `/partner` - Partner With Us (hackathon services page, inspired by AngelHack)
 - `/host-hackathon` - Host a hackathon
-- `/login`, `/profile/:username`, `/contact`, `/about` - Standard pages
+- `/about` - About/positioning statement page (6 sections: declaration, manifesto, three layers, the bar, founder, dual CTAs)
+- `/login`, `/profile/:username`, `/contact` - Standard pages
 - `/hackathon/:slug` - Public hackathon pages
 - `/organizer/*` - Organizer dashboard pages
 - `/judge/*` - Judge dashboard pages

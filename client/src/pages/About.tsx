@@ -1,62 +1,59 @@
 import { Link } from 'react-router-dom';
-import { 
-  ArrowRight, 
-  Globe, 
-  Code, 
-  Calendar, 
-  ExternalLink,
-  Zap,
-  Heart,
-  Mail,
-  Sparkles,
-  Rocket,
-  MessageSquare
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
 
-// REMOVED - Judge account system deprecated (Platform Simplification)
-// FeaturedJudge interface removed - judges are now managed per-hackathon without accounts
-
-const HeroSection = () => {
+const OpeningStatement = () => {
   return (
-    <section className="min-h-screen bg-black text-white relative overflow-hidden flex items-center pt-24 sm:pt-32">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
-      
-      <div className="absolute top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
-      <div className="absolute top-60 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
-      
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 text-center">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/30 mb-6">
-          <Code className="w-4 h-4 text-orange-400" />
-          <span className="font-space font-semibold text-[10px] sm:text-xs text-orange-400 tracking-wider">
-            OUR STORY
-          </span>
-        </div>
-        
-        <h1 className="font-space font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl mb-6 leading-tight">
-          ABOUT{" "}
-          <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-            MAXIMALLY
-          </span>
+    <section className="min-h-[80vh] bg-black text-white relative flex items-center pt-32 sm:pt-40 pb-20">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.06)_0%,transparent_50%)]" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+        <h1 className="font-space font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-white mb-8">
+          The world's most serious<br />
+          <span className="text-orange-400">builder ecosystem.</span>
         </h1>
-        
-        <div className="bg-black/40 border border-gray-800 p-6 sm:p-8 max-w-4xl mx-auto backdrop-blur-sm">
-          <p className="font-space font-semibold text-orange-400 text-sm sm:text-base mb-4">
-            HACKATHONS AS CULTURE, NOT JUST CODE
+
+        <p className="font-space text-lg sm:text-xl text-gray-400 leading-relaxed max-w-3xl">
+          The builder ecosystem globally is full of noise. Hackathons with thousands of participants
+          and mediocre output. Communities that feel vibrant but produce nothing. Serious builders —
+          the ones actually building things that matter — have nowhere to belong. Maximally is that place.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+const Manifesto = () => {
+  return (
+    <section className="py-24 sm:py-32 bg-black relative">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10">
+        <span className="font-space text-sm text-orange-400 tracking-widest font-medium mb-10 block">
+          WHAT WE BELIEVE
+        </span>
+
+        <div className="space-y-8">
+          <p className="font-space text-base sm:text-lg text-gray-300 leading-relaxed">
+            Most platforms compete on size — the largest number of participants, the most events hosted,
+            the widest reach. We are not competing on size. We are competing on signal. Every person in
+            this ecosystem, every hackathon we run, every partnership we enter is filtered through a
+            single question: is this serious?
           </p>
-          
-          <p className="font-space text-gray-400 text-sm sm:text-base leading-relaxed">
-            Hackathons have always been more than just code. They are experiments in how people think, 
-            create, and work together under pressure. They are places where rules bend, ideas collide, 
-            and the boundaries of what's possible shift overnight.
+
+          <p className="font-space text-base sm:text-lg text-gray-300 leading-relaxed">
+            That word — <span className="text-white font-semibold">serious</span> — is the entire brand.
+            It defines who belongs, who doesn't, what we build, what we publish, and who we work with.
+            It is not a marketing position. It is an operating principle. The moment we stop meaning it
+            is the moment this stops working.
           </p>
-          
-          <p className="font-space text-gray-400 text-sm sm:text-base leading-relaxed mt-4">
-            Yet, for too long, hackathons have been scattered — run in silos, limited by geography, 
-            or tied to a single school or company. Maximally was born out of a simple belief: 
-            <span className="text-white font-semibold"> hackathons deserve to be open, accessible, and cultural.</span>
+
+          <p className="font-space text-base sm:text-lg text-gray-300 leading-relaxed">
+            Hackathons deserve better. Builders deserve better. The people who actually ship things —
+            who care about craft, who show up to solve real problems under real constraints — deserve
+            infrastructure that takes them as seriously as they take their work. We are building that
+            infrastructure.
           </p>
         </div>
       </div>
@@ -64,288 +61,180 @@ const HeroSection = () => {
   );
 };
 
-const WhatWereBuilding = () => {
-  const buildingBlocks = [
+const ThreeLayers = () => {
+  const layers = [
     {
-      title: "HACKATHONS (EVENTS)",
-      description: "Where it all started. We run global online and hybrid hackathons with open themes, beginner-friendly tracks, and experimental formats.",
-      icon: Calendar,
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400',
-      link: "/events"
+      number: "01",
+      name: "The Ecosystem",
+      description: "A curated network of the world's most serious builders, hackathon organizers, and innovation operators. Entry is earned through demonstrated seriousness — execution track record, peer recognition, or extraordinary credentialing. The ecosystem is the product. Everything else is built on top of it.",
+      audience: "For builders, organizers, and operators who have shipped real things."
     },
     {
-      title: "MAXIMALLY PLATFORM",
-      description: "An AI-native hackathon platform that gives organizers creative tools for submissions, judging, and community engagement.",
-      icon: Code,
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400',
-      link: "#"
+      number: "02",
+      name: "The Enterprise Access Layer",
+      description: "Companies that want access to serious builders cannot find them on their own. Most hackathons attract participants chasing prizes. Maximally attracts builders chasing problems. We offer enterprise partners curated, high-signal access to this ecosystem through structured hackathons and innovation programs.",
+      audience: "For devrel teams, innovation leads, growth teams, and talent functions."
     },
     {
-      title: "EXPLORE MAXIMALLY",
-      description: "Your gateway to opportunities beyond hackathons — careers, resources, labs, fellowships, and community initiatives.",
-      icon: Sparkles,
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400',
-      link: "/explore"
-    },
-    {
-      title: "FEDERATION (MFHOP)",
-      description: "A cross-school, cross-company network where organizers share resources, partnerships, and reach.",
-      icon: Globe,
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400',
-      link: "/mfhop"
-    },
-    {
-      title: "COMMUNITY",
-      description: "A living network of participants, mentors, and judges that stays connected long after events end.",
-      icon: Heart,
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400',
-      link: "https://discord.gg/MpBnYk8qMX"
+      number: "03",
+      name: "The Media Layer",
+      description: "Exhibit A is not a podcast about startups. It is deep, structured conversations with EB1A and O1 caliber operators that extract frameworks, decisions, and institutional realities. It proves the ecosystem's quality, attracts extraordinary new members, and builds Maximally's public authority as the defining voice on serious building.",
+      audience: "For serious builders who want frameworks, not vibes."
     }
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-black relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/5 to-transparent" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:30px_30px]" />
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/30 mb-6">
-            <Rocket className="w-4 h-4 text-orange-400" />
-            <span className="font-space font-semibold text-[10px] sm:text-xs text-orange-400">OUR VISION</span>
-          </div>
-          <h2 className="font-space font-bold text-xl sm:text-2xl md:text-3xl text-white mb-4">
-            WHAT WE'RE{" "}
-            <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-              BUILDING
-            </span>
-          </h2>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {buildingBlocks.map((block, index) => (
-            <div 
-              key={index} 
-              className={`group bg-gradient-to-br ${block.gradient} border ${block.border} p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] hover:border-orange-500/50`}
-              data-testid={`building-block-${index}`}
-            >
-              <div className={`${block.iconBg} border ${block.border} w-12 h-12 flex items-center justify-center mb-4`}>
-                <block.icon className={`h-6 w-6 ${block.iconColor}`} />
-              </div>
-              
-              <h3 className="font-space font-semibold text-xs text-white mb-3 group-hover:text-orange-400 transition-colors">
-                {block.title}
-              </h3>
-              
-              <p className="font-space text-gray-400 text-sm leading-relaxed mb-4">
-                {block.description}
-              </p>
-              
-              {block.link.startsWith('http') ? (
-                <a 
-                  href={block.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className={`inline-flex items-center font-space font-semibold text-[10px] ${block.iconColor} hover:text-white transition-colors`}
-                >
-                  EXPLORE <ExternalLink className="h-3 w-3 ml-2" />
-                </a>
-              ) : (
-                <Link 
-                  to={block.link}
-                  className={`inline-flex items-center font-space font-semibold text-[10px] ${block.iconColor} hover:text-white transition-colors`}
-                >
-                  EXPLORE <ArrowRight className="h-3 w-3 ml-2" />
-                </Link>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+    <section className="py-24 sm:py-32 bg-black relative">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
 
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+        <span className="font-space text-sm text-orange-400 tracking-widest font-medium mb-16 block">
+          WHAT MAXIMALLY IS
+        </span>
 
-
-const Partners = () => {
-  const partners = [
-    {
-      name: "Masters' Union",
-      type: "Educational Partnership",
-      description: "Leading business school backing our vision of creating entrepreneurial leaders",
-      highlight: "Education Partner",
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400'
-    },
-    {
-      name: "MakeX",
-      type: "Technology Partnership", 
-      description: "Innovative technology company supporting our hackathon infrastructure",
-      highlight: "Tech Partner",
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400'
-    },
-    {
-      name: "Young Researchers Institute",
-      type: "Research Partnership",
-      description: "Advancing research and innovation in community-led technology initiatives",
-      highlight: "Research Partner",
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400'
-    },
-    {
-      name: "NexFellow",
-      type: "Media Partnership",
-      description: "Amplifying stories of young builders and innovators through strategic media coverage",
-      highlight: "Media Partner",
-      gradient: 'from-orange-500/10 to-orange-500/5',
-      border: 'border-gray-800',
-      iconBg: 'bg-orange-500/10',
-      iconColor: 'text-orange-400'
-    }
-  ];
-
-  return (
-    <section className="py-16 sm:py-24 bg-black relative">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gray-900/5 to-transparent" />
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]" />
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/30 mb-6">
-            <Heart className="w-4 h-4 text-orange-400" />
-            <span className="font-space font-semibold text-[10px] sm:text-xs text-orange-400">SUPPORTERS</span>
-          </div>
-          <h2 className="font-space font-bold text-xl sm:text-2xl md:text-3xl text-white mb-4">
-            OUR{" "}
-            <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-              PARTNERS
-            </span>
-          </h2>
-          <p className="font-space font-semibold text-orange-400 text-xs sm:text-sm">
-            THEY BELIEVE IN OUR VISION
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {partners.map((partner, index) => (
-            <div 
-              key={index} 
-              className={`group bg-gradient-to-br ${partner.gradient} border ${partner.border} p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(249,115,22,0.1)] hover:border-orange-500/50`}
-              data-testid={`partner-${index}`}
-            >
-              <div className={`${partner.iconBg} border ${partner.border} px-3 py-1.5 inline-block mb-4`}>
-                <span className="font-space font-semibold text-[10px] text-white">
-                  {partner.highlight}
+        <div className="space-y-20">
+          {layers.map((layer) => (
+            <div key={layer.number} className="group">
+              <div className="flex items-start gap-6 sm:gap-10">
+                <span className="font-space font-bold text-4xl sm:text-5xl md:text-6xl text-gray-800 group-hover:text-orange-500/30 transition-colors duration-500 shrink-0 leading-none">
+                  {layer.number}
                 </span>
-              </div>
-              
-              <h3 className="font-space font-semibold text-sm text-white mb-2 group-hover:text-orange-400 transition-colors">
-                {partner.name}
-              </h3>
-              
-              <p className={`font-space font-semibold text-[10px] ${partner.iconColor} mb-4`}>
-                {partner.type}
-              </p>
-              
-              <p className="font-space text-gray-400 text-sm leading-relaxed mb-4">
-                {partner.description}
-              </p>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 ${partner.iconBg}`} />
-                  <span className="font-space font-semibold text-[9px] text-gray-500">
-                    ACTIVE PARTNER
-                  </span>
-                </div>
-                
-                <div className={`${partner.iconBg} border ${partner.border} p-2`}>
-                  <Heart className={`h-4 w-4 ${partner.iconColor}`} />
+                <div>
+                  <h3 className="font-space font-bold text-xl sm:text-2xl text-white mb-4">
+                    {layer.name}
+                  </h3>
+                  <p className="font-space text-base text-gray-400 leading-relaxed mb-3">
+                    {layer.description}
+                  </p>
+                  <p className="font-space text-sm text-orange-400/80">
+                    {layer.audience}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
-        </div>
-        
-        <div className="text-center mt-10">
-          <Link 
-            to="/sponsor" 
-            className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500/10 border border-orange-500/30 hover:border-orange-500 text-orange-400 hover:text-orange-300 font-space font-semibold text-[10px] transition-all duration-300"
-            data-testid="link-become-partner"
-          >
-            BECOME A PARTNER <ArrowRight className="h-3 w-3" />
-          </Link>
         </div>
       </div>
     </section>
   );
 };
 
-const ContactSection = () => {
+const TheBar = () => {
+  const stats = [
+    { number: "12", label: "Hackathons Executed" },
+    { number: "50+", label: "Vetted Organizers" },
+    { number: "EB1A & O1", label: "Caliber Judges" },
+    { number: "100%", label: "Real Execution" },
+  ];
+
   return (
-    <section className="py-16 sm:py-24 bg-black relative">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="p-8 sm:p-12 bg-gradient-to-br from-orange-950/15 via-black to-gray-950/20 border border-orange-500/30 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(249,115,22,0.08)_0%,transparent_70%)]" />
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
-            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
-            
-            <div className="relative z-10">
-              <div className="inline-flex items-center justify-center w-16 h-16 mb-6 bg-orange-500/10 border border-orange-500/30">
-                <Mail className="w-8 h-8 text-orange-400" />
-              </div>
-              <h3 className="font-space font-bold text-base sm:text-lg md:text-xl text-white mb-4">
-                Get in Touch
-              </h3>
-              <p className="font-space text-sm sm:text-base text-gray-400 mb-8 max-w-xl mx-auto">
-                Have questions or want to collaborate? We'd love to hear from you.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="mailto:hello@maximally.in"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 border border-orange-500/50 hover:border-orange-400 text-white hover:text-white font-space font-semibold text-[10px] sm:text-xs transition-all duration-300"
-                  data-testid="button-email-us"
-                >
-                  <Mail className="h-4 w-4" />
-                  EMAIL US
-                </a>
-                <a
-                  href="https://discord.gg/MpBnYk8qMX"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-black/40 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-orange-400 font-space font-semibold text-[10px] sm:text-xs transition-all duration-300"
-                  data-testid="button-join-discord"
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  JOIN DISCORD
-                </a>
-              </div>
+    <section className="py-24 sm:py-32 bg-black relative">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+        <span className="font-space text-sm text-orange-400 tracking-widest font-medium mb-10 block">
+          THE BAR
+        </span>
+
+        <h2 className="font-space font-bold text-2xl sm:text-3xl text-white mb-6 max-w-2xl">
+          Not everyone gets in. That's the point.
+        </h2>
+
+        <div className="space-y-6 mb-16">
+          <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
+            The Senior Council is a directory of operators with documented extraordinary ability —
+            people who have built at the highest level and now set the standard for what serious
+            building looks like inside this ecosystem.
+          </p>
+
+          <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
+            The Maximally Federation of Hackathon Organizers and Partners includes 50+ vetted
+            organizers — not an open network, but a curated group that shares infrastructure,
+            sponsors, and collective credibility. Being Maximally-affiliated means something to
+            participants and sponsors because the bar is real.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-800/50">
+          {stats.map((stat, index) => (
+            <div key={index} className="bg-black p-6 sm:p-8 text-center">
+              <span className="font-space font-bold text-2xl sm:text-3xl md:text-4xl text-white block mb-2">
+                {stat.number}
+              </span>
+              <span className="font-space text-xs sm:text-sm text-gray-500 tracking-wide">
+                {stat.label}
+              </span>
             </div>
-          </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Founder = () => {
+  return (
+    <section className="py-24 sm:py-32 bg-black relative">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10">
+        <span className="font-space text-sm text-orange-400 tracking-widest font-medium mb-10 block">
+          THE FOUNDER
+        </span>
+
+        <h3 className="font-space font-bold text-xl sm:text-2xl text-white mb-6">
+          Rishul Chandrasekar
+        </h3>
+
+        <div className="space-y-4">
+          <p className="font-space text-base text-gray-400 leading-relaxed">
+            Rishul built Maximally because he understood something most people in the ecosystem
+            miss: the problem isn't a lack of hackathons. It's a lack of serious ones. He has
+            personally operated and advised on 12+ hackathons, built the federation from zero to
+            50+ organizers, and assembled a judge network that includes EB1A and O1 caliber operators.
+          </p>
+
+          <p className="font-space text-base text-gray-400 leading-relaxed">
+            He leads with execution, not announcements. Every layer of Maximally — the ecosystem,
+            the enterprise partnerships, the media — exists because he shipped it first and talked
+            about it second. That operating principle is the reason the brand means what it means.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const DualCTA = () => {
+  return (
+    <section className="py-24 sm:py-32 bg-black relative">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+        <h2 className="font-space font-bold text-2xl sm:text-3xl text-white mb-4">
+          Two doors. Pick yours.
+        </h2>
+        <p className="font-space text-base text-gray-500 mb-12">
+          Whether you build or you partner with builders, there's a place for you here.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="https://cal.com/maximally"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-400 text-black font-space font-semibold text-sm transition-all duration-300"
+          >
+            Apply to Join
+            <ArrowRight className="w-4 h-4" />
+          </a>
+          <Link
+            to="/partner"
+            className="inline-flex items-center justify-center gap-3 px-8 py-4 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-white font-space font-semibold text-sm transition-all duration-300"
+          >
+            Partner With Us
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>
@@ -356,17 +245,19 @@ const About = () => {
   return (
     <>
       <SEO
-        title="About Maximally | Builder Ecosystem Platform"
-        description="Learn about Maximally's mission to make hackathons open, accessible, and cultural. Meet our team, partners, and discover what we're building."
-        keywords="about maximally, hackathon platform, builders, global hackathons, builder ecosystem"
+        title="About Maximally | The World's Most Serious Builder Ecosystem"
+        description="Maximally exists because serious builders deserve a serious place to belong. A curated ecosystem of extraordinary operators, not a platform competing on size — competing on signal."
+        keywords="about maximally, builder ecosystem, serious builders, extraordinary operators, curated ecosystem, hackathon infrastructure"
         canonicalUrl="https://maximally.in/about"
       />
-      
+
       <div className="min-h-screen bg-black text-white">
-        <HeroSection />
-        <WhatWereBuilding />
-        <Partners />
-        <ContactSection />
+        <OpeningStatement />
+        <Manifesto />
+        <ThreeLayers />
+        <TheBar />
+        <Founder />
+        <DualCTA />
         <Footer />
       </div>
     </>

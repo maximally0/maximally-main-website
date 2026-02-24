@@ -71,9 +71,9 @@ const Explore = () => {
   return (
     <>
       <SEO
-        title="Explore - Maximally"
-        description="Explore everything Maximally has to offer. Discover hackathons, the Senior Council, MFHOP, our platform, and partnership opportunities."
-        keywords="hackathons, explore, ecosystem, organizers, judges, community"
+        title="Explore the Ecosystem | Maximally"
+        description="Discover what the world's most serious builder ecosystem has to offer. Hackathons, the Senior Council, MFHOP, platform tools, and enterprise partnerships."
+        keywords="builder ecosystem, hackathons, Senior Council, MFHOP, serious builders, explore"
         canonicalUrl="https://maximally.in/explore"
       />
 

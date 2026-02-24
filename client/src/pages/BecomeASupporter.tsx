@@ -511,9 +511,9 @@ const BecomeASupporter = () => {
   return (
     <>
       <SEO
-        title="Become a Supporter - Maximally"
-        description="Support the global hackathon movement. Help us build the world's most powerful hackathon ecosystem and bring hackathons to every corner of the world."
-        keywords="support hackathons, hackathon funding, become supporter, hackathon movement"
+        title="Become a Supporter | Maximally"
+        description="Support the world's most serious builder ecosystem. Help us build the infrastructure that serious builders and extraordinary operators deserve."
+        keywords="support maximally, builder ecosystem, serious builders, hackathon ecosystem"
       />
       
       <div className="bg-black min-h-screen">
