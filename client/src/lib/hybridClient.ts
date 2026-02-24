@@ -4,7 +4,7 @@
  */
 import { createClient } from '@supabase/supabase-js';
 import { apiClient, supabaseCompat } from './apiClient';
-import { FEATURE_FLAGS } from './featureFlags';
+import { USE_API } from './featureFlags';
 
 // Original Supabase client setup
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -28,11 +28,11 @@ export const supabase = _supabaseInstance;
 // Hybrid client that routes to appropriate backend
 export const hybridClient = {
   auth: {
-    signInWithPassword: FEATURE_FLAGS.USE_API_AUTH 
+    signInWithPassword: USE_API 
       ? supabaseCompat.auth.signInWithPassword
       : _supabaseInstance?.auth.signInWithPassword.bind(_supabaseInstance.auth),
       
-    signUp: FEATURE_FLAGS.USE_API_AUTH
+    signUp: USE_API
       ? supabaseCompat.auth.signUp
       : _supabaseInstance?.auth.signUp.bind(_supabaseInstance.auth),
       
@@ -44,25 +44,13 @@ export const hybridClient = {
   },
   
   from: (table: string) => {
-    // Route specific tables to new API if enabled
-    if (table === 'blogs' && FEATURE_FLAGS.USE_API_BLOGS) {
+    // Route ALL tables to new API if enabled
+    if (USE_API) {
       return {
         select: () => ({
           eq: () => ({
             single: () => {
-              throw new Error('Use useApiBlogs hook instead of direct queries');
-            }
-          })
-        })
-      };
-    }
-    
-    if (table === 'hackathons' && FEATURE_FLAGS.USE_API_HACKATHONS) {
-      return {
-        select: () => ({
-          eq: () => ({
-            single: () => {
-              throw new Error('Use useApiHackathons hook instead of direct queries');
+              throw new Error('Direct Supabase queries disabled. Use API client methods instead.');
             }
           })
         })
@@ -76,7 +64,7 @@ export const hybridClient = {
 
 // Legacy exports for backward compatibility
 export const getProfileByUsername = async (username: string) => {
-  if (FEATURE_FLAGS.USE_API_PROFILES) {
+  if (USE_API) {
     try {
       const result = await apiClient.getUserProfile(undefined, username);
       return result.data.profile;
@@ -102,7 +90,7 @@ export const getCurrentUserWithProfile = async () => {
     return { user: null, profile: null };
   }
   
-  if (FEATURE_FLAGS.USE_API_PROFILES) {
+  if (USE_API) {
     try {
       const result = await apiClient.getUserProfile(session.user.id);
       return {
@@ -142,7 +130,7 @@ export const updateProfileMe = async (updates: any) => {
 };
 
 export const getCertificatesByUsername = async (username: string) => {
-  if (FEATURE_FLAGS.USE_API_CERTIFICATES) {
+  if (USE_API) {
     try {
       const result = await apiClient.getCertificates({ maximally_username: username });
       return result.data.certificates;
@@ -162,7 +150,7 @@ export const getCertificatesByUsername = async (username: string) => {
 };
 
 export const signOut = async () => {
-  if (FEATURE_FLAGS.USE_API_AUTH) {
+  if (USE_API) {
     // Clear local storage
     localStorage.removeItem('maximally_session');
     localStorage.removeItem('maximally_user');

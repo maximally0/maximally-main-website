@@ -1,28 +1,10 @@
 /**
- * Feature flags for gradual migration to Netlify Functions
+ * Feature flag for ISP blocking fix
  */
 
-export const FEATURE_FLAGS = {
-  // Enable new API client for authentication
-  USE_API_AUTH: import.meta.env.VITE_USE_API_AUTH === 'true',
-  
-  // Enable new API client for blogs
-  USE_API_BLOGS: import.meta.env.VITE_USE_API_BLOGS === 'true',
-  
-  // Enable new API client for hackathons
-  USE_API_HACKATHONS: import.meta.env.VITE_USE_API_HACKATHONS === 'true',
-  
-  // Enable new API client for profiles
-  USE_API_PROFILES: import.meta.env.VITE_USE_API_PROFILES === 'true',
-  
-  // Enable new API client for certificates
-  USE_API_CERTIFICATES: import.meta.env.VITE_USE_API_CERTIFICATES === 'true',
-  
-  // Development mode - use local Netlify dev server
-  USE_LOCAL_FUNCTIONS: import.meta.env.DEV,
-} as const;
+export const USE_API = import.meta.env.VITE_USE_API === 'true';
 
-// Helper to check if we should use new API
-export function shouldUseNewApi(feature: keyof typeof FEATURE_FLAGS): boolean {
-  return FEATURE_FLAGS[feature] === true;
+// Helper to check if we should use Netlify Functions
+export function shouldUseApi(): boolean {
+  return USE_API;
 }

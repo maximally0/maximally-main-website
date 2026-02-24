@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { BlogPost } from '@/lib/supabaseClient';
 import { apiClient } from '@/lib/apiClient';
-import { FEATURE_FLAGS } from '@/lib/featureFlags';
+import { USE_API } from '@/lib/featureFlags';
 
 export const useBlogs = (page = 1, pageSize = 10, search = '') => {
   return useQuery({
     queryKey: ['blogs', page, pageSize, search],
     queryFn: async (): Promise<{ data: BlogPost[]; total: number }> => {
       // Use new API client if feature flag is enabled
-      if (FEATURE_FLAGS.USE_API_BLOGS) {
+      if (USE_API) {
         try {
           const offset = (page - 1) * pageSize;
           const result = await apiClient.getBlogs({
@@ -62,7 +62,7 @@ export const useBlog = (slug: string) => {
     queryKey: ['blog', slug],
     queryFn: async (): Promise<BlogPost | null> => {
       // Use new API client if feature flag is enabled
-      if (FEATURE_FLAGS.USE_API_BLOGS) {
+      if (USE_API) {
         try {
           const result = await apiClient.getBlogBySlug(slug);
           

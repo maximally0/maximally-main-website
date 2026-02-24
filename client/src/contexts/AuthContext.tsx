@@ -16,7 +16,7 @@ import {
   type ModerationStatus
 } from '@/lib/supabaseClient';
 import { apiClient } from '@/lib/apiClient';
-import { FEATURE_FLAGS } from '@/lib/featureFlags';
+import { USE_API } from '@/lib/featureFlags';
 
 interface AuthContextType {
   user: User | null;
@@ -103,7 +103,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }, 3000); // 3 second max wait
       
       // Use API client if feature flag is enabled
-      if (FEATURE_FLAGS.USE_API_AUTH) {
+      if (USE_API) {
         console.log('🔄 Using Netlify Functions for authentication...');
         try {
           const result = await apiClient.login(email, password);
@@ -158,7 +158,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Starting sign up (logging removed)
       
       // Use API client if feature flag is enabled
-      if (FEATURE_FLAGS.USE_API_AUTH) {
+      if (USE_API) {
         console.log('🔄 Using Netlify Functions for sign up...');
         try {
           const result = await apiClient.signup(email, password, username, name);
