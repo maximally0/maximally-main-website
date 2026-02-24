@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -78,7 +77,7 @@ const ThreeLayers = () => {
     {
       number: "03",
       name: "The Media Layer",
-      description: "Exhibit A is not a podcast about startups. It is deep, structured conversations with EB1A and O1 caliber operators that extract frameworks, decisions, and institutional realities. It proves the ecosystem's quality, attracts extraordinary new members, and builds Maximally's public authority as the defining voice on serious building.",
+      description: "Exhibit A is not a podcast about startups. It is deep, structured conversations with extraordinary operators that extract frameworks, decisions, and institutional realities. It proves the ecosystem's quality, attracts extraordinary new members, and builds Maximally's public authority as the defining voice on serious building.",
       audience: "For serious builders who want frameworks, not vibes."
     }
   ];
@@ -120,13 +119,6 @@ const ThreeLayers = () => {
 };
 
 const TheBar = () => {
-  const stats = [
-    { number: "12", label: "Hackathons Executed" },
-    { number: "50+", label: "Vetted Organizers" },
-    { number: "EB1A & O1", label: "Caliber Judges" },
-    { number: "100%", label: "Real Execution" },
-  ];
-
   return (
     <section className="py-24 sm:py-32 bg-black relative">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
@@ -140,7 +132,7 @@ const TheBar = () => {
           Not everyone gets in. That's the point.
         </h2>
 
-        <div className="space-y-6 mb-16">
+        <div className="space-y-6">
           <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
             The Senior Council is a directory of operators with documented extraordinary ability —
             people who have built at the highest level and now set the standard for what serious
@@ -148,24 +140,11 @@ const TheBar = () => {
           </p>
 
           <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
-            The Maximally Federation of Hackathon Organizers and Partners includes 50+ vetted
+            The Maximally Federation of Hackathon Organizers and Partners includes 100+ vetted
             organizers — not an open network, but a curated group that shares infrastructure,
             sponsors, and collective credibility. Being Maximally-affiliated means something to
             participants and sponsors because the bar is real.
           </p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-800/50">
-          {stats.map((stat, index) => (
-            <div key={index} className="bg-black p-6 sm:p-8 text-center">
-              <span className="font-space font-bold text-2xl sm:text-3xl md:text-4xl text-white block mb-2">
-                {stat.number}
-              </span>
-              <span className="font-space text-xs sm:text-sm text-gray-500 tracking-wide">
-                {stat.label}
-              </span>
-            </div>
-          ))}
         </div>
       </div>
     </section>
@@ -183,15 +162,16 @@ const Founder = () => {
         </span>
 
         <h3 className="font-space font-bold text-xl sm:text-2xl text-white mb-6">
-          Rishul Chandrasekar
+          Rishul Chanana
         </h3>
 
         <div className="space-y-4">
           <p className="font-space text-base text-gray-400 leading-relaxed">
             Rishul built Maximally because he understood something most people in the ecosystem
             miss: the problem isn't a lack of hackathons. It's a lack of serious ones. He has
-            personally operated and advised on 12+ hackathons, built the federation from zero to
-            50+ organizers, and assembled a judge network that includes EB1A and O1 caliber operators.
+            personally operated and advised on 20+ hackathons, built the federation from zero to
+            100+ organizers, and assembled a judge network of extraordinary operators who have
+            built at the highest level.
           </p>
 
           <p className="font-space text-base text-gray-400 leading-relaxed">
@@ -199,42 +179,16 @@ const Founder = () => {
             the enterprise partnerships, the media — exists because he shipped it first and talked
             about it second. That operating principle is the reason the brand means what it means.
           </p>
-        </div>
-      </div>
-    </section>
-  );
-};
 
-const DualCTA = () => {
-  return (
-    <section className="py-24 sm:py-32 bg-black relative">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent" />
-
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10 text-center">
-        <h2 className="font-space font-bold text-2xl sm:text-3xl text-white mb-4">
-          Two doors. Pick yours.
-        </h2>
-        <p className="font-space text-base text-gray-500 mb-12">
-          Whether you build or you partner with builders, there's a place for you here.
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
-            href="https://cal.com/maximally"
+            href="https://www.linkedin.com/in/rishul-chanana"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-orange-500 hover:bg-orange-400 text-black font-space font-semibold text-sm transition-all duration-300"
+            className="inline-flex items-center gap-2 font-space text-sm text-orange-400 hover:text-orange-300 transition-colors mt-2"
           >
-            Apply to Join
-            <ArrowRight className="w-4 h-4" />
+            LinkedIn
+            <ArrowRight className="w-3 h-3" />
           </a>
-          <Link
-            to="/partner"
-            className="inline-flex items-center justify-center gap-3 px-8 py-4 border border-gray-700 hover:border-orange-500/50 text-gray-300 hover:text-white font-space font-semibold text-sm transition-all duration-300"
-          >
-            Partner With Us
-            <ArrowRight className="w-4 h-4" />
-          </Link>
         </div>
       </div>
     </section>
@@ -257,7 +211,6 @@ const About = () => {
         <ThreeLayers />
         <TheBar />
         <Founder />
-        <DualCTA />
         <Footer />
       </div>
     </>
