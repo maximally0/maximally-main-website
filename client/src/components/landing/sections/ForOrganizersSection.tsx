@@ -1,75 +1,62 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Building2, BookOpen, Users, Crown } from "lucide-react";
+import { ArrowRight, Building2, Network } from "lucide-react";
 
 const organizerCards = [
   {
     icon: Building2,
-    title: "Host With Maximally",
-    description: "Partner with us to run your hackathon. We handle the tech, you bring the vision.",
+    title: "Host on Maximally",
+    description: "Our platform handles submissions, judging, and visibility. You run the event. We handle the infrastructure.",
     url: "/host-hackathon",
-    color: "text-amber-400",
-    bgColor: "bg-amber-500/10",
-    borderColor: "border-amber-500/20"
+    cta: "Start Hosting",
   },
   {
-    icon: BookOpen,
-    title: "Join MFHOP",
-    description: "Maximally For Hackathon Organizer Program - resources and support for event organizers.",
+    icon: Network,
+    title: "Join the Federation",
+    description: "MFHOP is Maximally's invite-reviewed network of serious hackathon organizers. Shared infrastructure, collective credibility, and a community of people solving the same problems.",
     url: "/mfhop",
-    color: "text-orange-400",
-    bgColor: "bg-orange-500/10",
-    borderColor: "border-orange-500/20"
+    cta: "Apply to Join",
   },
 ];
 
 export function ForOrganizersSection() {
   return (
-    <section className="py-20 sm:py-24 relative bg-black overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-green-950/5 via-transparent to-amber-950/10" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(251,191,36,0.08)_0%,transparent_50%)]" />
+    <section className="py-24 sm:py-32 relative bg-black overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
       
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
-      
-      <div className="absolute bottom-20 right-[15%] w-64 h-64 bg-amber-500/10 rounded-full blur-[80px]" />
+      <div className="absolute bottom-20 right-[15%] w-64 h-64 bg-orange-500/5 rounded-full blur-[80px]" />
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 mb-6">
-            <Crown className="w-4 h-4 text-amber-400" />
-            <span className="font-press-start text-[10px] sm:text-xs text-amber-400 tracking-wider">
-              FOR ORGANIZERS
-            </span>
-            <Crown className="w-4 h-4 text-amber-400" />
-          </div>
-          <h2 className="font-press-start text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white mb-4">
-            <span className="bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-400 bg-clip-text text-transparent">
-              Run Better Events
-            </span>
+        <div className="text-center mb-14 sm:mb-18">
+          <span className="font-space text-sm text-orange-400 tracking-wide font-medium mb-4 block">
+            FOR ORGANIZERS
+          </span>
+          <h2 className="font-space text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5">
+            Build Events That Attract Serious Builders
           </h2>
-          <p className="font-jetbrains text-sm sm:text-base text-gray-400 max-w-xl mx-auto">
-            Everything you need to host successful hackathons
+          <p className="font-space text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Two ways to work with Maximally — host on our platform, or join the federation of organizers shaping the standard.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {organizerCards.map((card, index) => (
             <Link
               key={index}
               to={card.url}
-              className="group p-6 sm:p-8 bg-gradient-to-br from-gray-900/60 to-gray-900/30 border border-gray-800 hover:border-amber-500/40 transition-all duration-300"
+              className="group p-7 sm:p-9 bg-gray-900/40 border border-gray-800 hover:border-orange-500/40 transition-all duration-300"
               data-testid={`organizer-card-${index}`}
             >
-              <div className={`p-4 ${card.bgColor} border ${card.borderColor} inline-block mb-5 group-hover:scale-110 transition-transform`}>
-                <card.icon className={`w-6 h-6 ${card.color}`} />
+              <div className="p-3 bg-orange-500/10 border border-orange-500/20 inline-block mb-6 group-hover:bg-orange-500/20 transition-colors">
+                <card.icon className="w-6 h-6 text-orange-400" />
               </div>
-              <h3 className="font-press-start text-xs sm:text-sm text-white mb-3 group-hover:text-amber-400 transition-colors">
+              <h3 className="font-space text-lg sm:text-xl font-semibold text-white mb-3 group-hover:text-orange-400 transition-colors">
                 {card.title}
               </h3>
-              <p className="font-jetbrains text-sm text-gray-400 mb-5 leading-relaxed">
+              <p className="font-space text-sm text-gray-400 mb-6 leading-relaxed">
                 {card.description}
               </p>
-              <div className="flex items-center gap-2 text-amber-500 font-press-start text-[10px] group-hover:translate-x-1 transition-transform">
-                <span>LEARN MORE</span>
+              <div className="flex items-center gap-2 text-orange-400 font-space text-sm font-medium group-hover:translate-x-1 transition-transform">
+                <span>{card.cta}</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </Link>
@@ -77,7 +64,7 @@ export function ForOrganizersSection() {
         </div>
       </div>
       
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
     </section>
   );
 }

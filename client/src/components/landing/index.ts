@@ -17,3 +17,4 @@ export { BecomeJudgeSection } from "./sections/BecomeJudgeSection";
 export { BecomeOrganizerSection } from "./sections/BecomeOrganizerSection";
 export { GlobalGallerySection } from "./sections/GlobalGallerySection";
 export { PartnersSection } from "./sections/PartnersSection";
+export { SeniorCouncilSection } from "./sections/SeniorCouncilSection";

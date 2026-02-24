@@ -38,7 +38,7 @@ export function PartnerLogoRow({ partners, animateMarquee = true }: PartnerLogoR
               />
             ) : null}
             <span 
-              className={`font-press-start text-sm text-gray-400 hover:text-white transition-colors ${partner.logoUrl ? 'hidden' : 'flex'}`}
+              className={`font-space text-sm font-medium text-gray-400 hover:text-white transition-colors ${partner.logoUrl ? 'hidden' : 'flex'}`}
             >
               {partner.name}
             </span>
@@ -55,16 +55,16 @@ export function CompanyMarquee({ companies }: { companies: string[] }) {
   return (
     <div className="overflow-hidden">
       <div className="flex animate-marquee hover:pause-marquee whitespace-nowrap">
-        <div className="flex items-center space-x-6 md:space-x-8 text-white font-press-start text-xs sm:text-sm">
+        <div className="flex items-center space-x-6 md:space-x-8 text-white font-space text-sm sm:text-base font-semibold tracking-wide">
           {duplicatedCompanies.map((company, index) => (
             <span
               key={index}
               className="flex items-center space-x-6 md:space-x-8"
             >
-              <span className="hover:text-red-500 transition-colors duration-300 whitespace-nowrap">
+              <span className="hover:text-orange-400 transition-colors duration-300 whitespace-nowrap">
                 {company}
               </span>
-              <span className="text-red-500">&bull;</span>
+              <span className="text-gray-600">&bull;</span>
             </span>
           ))}
         </div>

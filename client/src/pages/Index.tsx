@@ -5,8 +5,8 @@ import { NewsletterSignup } from "@/components/NewsletterSignup";
 import {
   HeroSection,
   CredibilitySection,
-  BlogFeedSection,
   UpcomingHackathonsSection,
+  SeniorCouncilSection,
   ExploreMaximallySection,
   ForOrganizersSection,
   DotNavigation,
@@ -16,15 +16,15 @@ const Index = () => {
   return (
     <>
       <SEO
-        title="Maximally - Welcome to the Hackathon Universe"
-        description="High-energy hackathons and programs for ambitious builders. Discover events, join challenges, and explore everything Maximally has to offer."
-        keywords="hackathon, hackathons, coding competition, builders, developers, innovation, tech events"
+        title="Maximally - The World's Most Serious Builder Ecosystem"
+        description="Where extraordinary operators, builders, and innovators converge. Curated hackathons, the Senior Council, and programs for serious builders."
+        keywords="hackathon, builder ecosystem, hackathons, innovation, Senior Council, operators, builders"
         canonicalUrl="https://maximally.in"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Maximally",
-          description: "A global innovation league that hosts high-stakes hackathons for ambitious builders",
+          description: "The world's most serious builder ecosystem. Where extraordinary operators converge.",
           url: "https://maximally.in",
         }}
       />
@@ -44,7 +44,7 @@ const Index = () => {
         </div>
         
         <div id="section-3">
-          <BlogFeedSection />
+          <SeniorCouncilSection />
         </div>
         
         <div id="section-4">

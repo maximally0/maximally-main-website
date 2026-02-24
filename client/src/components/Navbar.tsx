@@ -62,7 +62,6 @@ const Navbar = () => {
     };
   }, [isMenuOpen]);
 
-  // Only show logged in state when both user exists AND profile is loaded
   const isProfileLoaded = !!profile;
   const isLoggedIn = !!user && !loading && isProfileLoaded;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : '/profile';
@@ -92,8 +91,9 @@ const Navbar = () => {
   };
 
   const navItems = [
-    { path: "/events", label: "JOIN HACKATHON" },
-    { path: "/host-hackathon", label: "HOST HACKATHON" },
+    { path: "/events", label: "Hackathons" },
+    { path: "/senior-council", label: "Senior Council" },
+    { path: "/explore", label: "Explore" },
   ];
 
   const isActiveRoute = (path: string) => {
@@ -109,7 +109,7 @@ const Navbar = () => {
       }}
       className={`fixed top-0 w-full z-50 ${
         isScrolled 
-          ? "py-2 sm:py-3 bg-black/98 backdrop-blur-md border-b border-red-500/30 shadow-lg shadow-red-500/5" 
+          ? "py-2 sm:py-3 bg-black/98 backdrop-blur-md border-b border-orange-500/20 shadow-lg shadow-black/20" 
           : "py-3 sm:py-4 bg-black/95 backdrop-blur-md border-b border-gray-800/50"
       }`}
     >
@@ -129,9 +129,9 @@ const Navbar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative font-press-start text-[10px] xl:text-xs px-3 xl:px-4 py-2 transition-colors duration-200 group ${
+                className={`relative font-space text-sm font-medium px-4 py-2 transition-colors duration-200 group ${
                   isActiveRoute(item.path) 
-                    ? 'text-orange-500' 
+                    ? 'text-orange-400' 
                     : 'text-gray-300 hover:text-white'
                 }`}
                 data-testid={`link-nav-${item.label.toLowerCase()}`}
@@ -144,22 +144,21 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-3">
             {loading || (user && !profile) ? (
-              <div className="font-press-start text-xs px-4 py-2 text-gray-500 animate-pulse">
-                LOADING...
+              <div className="font-space text-sm px-4 py-2 text-gray-500 animate-pulse">
+                Loading...
               </div>
             ) : isLoggedIn ? (
               <>
-                {/* Judges don't have accounts - removed judge dashboard/inbox */}
                 {isOrganizer && (
                   <>
                     <Link
                       to="/organizer/dashboard"
-                      className="relative font-press-start text-[10px] xl:text-xs px-3 py-2 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent hover:from-purple-300 hover:via-pink-400 hover:to-pink-300 transition-all duration-200"
+                      className="relative font-space text-sm font-medium px-3 py-2 text-purple-400 hover:text-purple-300 transition-all duration-200"
                       data-testid="button-organizer-dashboard"
                     >
-                      ORGANIZER DASHBOARD
+                      Dashboard
                     </Link>
                     <Link
                       to="/organizer-inbox"
@@ -167,9 +166,9 @@ const Navbar = () => {
                       data-testid="button-organizer-inbox"
                       aria-label={`Organizer inbox${organizerUnreadCount > 0 ? ` - ${organizerUnreadCount} unread` : ''}`}
                     >
-                      <Mail className="h-5 w-5 text-pink-500" style={{ filter: 'drop-shadow(0 0 4px rgba(236, 72, 153, 0.5))' }} />
+                      <Mail className="h-5 w-5 text-purple-400" />
                       {organizerUnreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-press-start px-1.5 py-0.5 min-w-[18px] text-center leading-none">
+                        <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] font-space px-1.5 py-0.5 min-w-[18px] text-center leading-none rounded-full">
                           {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
                         </span>
                       )}
@@ -184,7 +183,7 @@ const Navbar = () => {
                     aria-label="User profile"
                   >
                     {profile?.avatar_url ? (
-                      <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-red-500 transition-colors duration-200 overflow-hidden">
+                      <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-orange-500 transition-colors duration-200 overflow-hidden rounded-full">
                         <img 
                           src={profile.avatar_url} 
                           alt={profile.username || user?.email || 'User'} 
@@ -192,56 +191,56 @@ const Navbar = () => {
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
                             if (e.currentTarget.parentElement) {
-                              e.currentTarget.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-red-600 text-white font-press-start text-lg">${(profile?.username || user?.email || 'U')[0].toUpperCase()}</div>`;
+                              e.currentTarget.parentElement.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-orange-600 text-white font-space text-lg font-bold">${(profile?.username || user?.email || 'U')[0].toUpperCase()}</div>`;
                             }
                           }}
                         />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 border-2 border-pink-500/60 group-hover:border-pink-400 transition-colors duration-200 flex items-center justify-center bg-gradient-to-br from-purple-900/40 to-pink-900/40 group-hover:from-purple-800/50 group-hover:to-pink-800/50">
+                      <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-orange-500 transition-colors duration-200 flex items-center justify-center bg-gray-900 rounded-full">
                         {profile?.username || user?.email ? (
-                          <span className="font-press-start text-lg bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent" style={{ textShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>
+                          <span className="font-space text-lg font-bold text-orange-400">
                             {(profile?.username || user?.email || 'U')[0].toUpperCase()}
                           </span>
                         ) : (
-                          <PixelUserIcon className="w-6 h-6 text-pink-400 group-hover:text-pink-300 transition-colors duration-200" />
+                          <PixelUserIcon className="w-6 h-6 text-gray-400 group-hover:text-orange-400 transition-colors duration-200" />
                         )}
                       </div>
                     )}
                   </button>
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-60 border-2 border-pink-500/60 shadow-2xl shadow-pink-500/30 z-50 overflow-hidden bg-black/95 backdrop-blur-sm">
-                      <div className="px-5 py-4 border-b border-pink-500/30 bg-gradient-to-r from-purple-900/30 to-pink-900/30">
-                        <p className="font-press-start text-[9px] text-pink-300/70 mb-2 tracking-wider">SIGNED IN AS</p>
-                        <p className="font-press-start text-xs bg-gradient-to-r from-purple-400 via-pink-400 to-pink-300 bg-clip-text text-transparent truncate">
+                    <div className="absolute right-0 mt-3 w-56 border border-gray-700 shadow-2xl z-50 overflow-hidden bg-gray-900/98 backdrop-blur-sm rounded-lg">
+                      <div className="px-5 py-4 border-b border-gray-800">
+                        <p className="font-space text-xs text-gray-500 mb-1">Signed in as</p>
+                        <p className="font-space text-sm font-medium text-white truncate">
                           @{profile?.username || 'user'}
                         </p>
                       </div>
-                      <div className="py-2 bg-gray-900/50">
+                      <div className="py-1">
                         <Link
                           to={profileUrl}
-                          className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-[10px] text-gray-300 hover:bg-gradient-to-r hover:from-purple-600/50 hover:to-pink-600/50 hover:text-white transition-all duration-200 group"
+                          className="flex items-center space-x-3 px-5 py-3 font-space text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all duration-200 group"
                           onClick={() => setProfileDropdownOpen(false)}
                         >
-                          <User className="h-4 w-4 text-pink-400 group-hover:text-white group-hover:scale-110 transition-all" />
-                          <span>MY PROFILE</span>
+                          <User className="h-4 w-4 text-gray-500 group-hover:text-white transition-all" />
+                          <span>My Profile</span>
                         </Link>
                         {!isOrganizer && (
                           <Link
                             to="/my-hackathons"
-                            className="flex items-center space-x-3 px-5 py-3.5 font-press-start text-[10px] text-gray-300 hover:bg-gradient-to-r hover:from-purple-600/50 hover:to-pink-600/50 hover:text-white transition-all duration-200 group"
+                            className="flex items-center space-x-3 px-5 py-3 font-space text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all duration-200 group"
                             onClick={() => setProfileDropdownOpen(false)}
                           >
-                            <Trophy className="h-4 w-4 text-pink-400 group-hover:text-white group-hover:scale-110 transition-all" />
-                            <span>MY HACKATHONS</span>
+                            <Trophy className="h-4 w-4 text-gray-500 group-hover:text-white transition-all" />
+                            <span>My Hackathons</span>
                           </Link>
                         )}
                         <button
                           onClick={handleSignOut}
-                          className="w-full flex items-center space-x-3 px-5 py-3.5 font-press-start text-[10px] text-gray-300 hover:bg-gradient-to-r hover:from-purple-600/50 hover:to-pink-600/50 hover:text-white transition-all duration-200 group"
+                          className="w-full flex items-center space-x-3 px-5 py-3 font-space text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-all duration-200 group"
                         >
-                          <LogOut className="h-4 w-4 text-pink-400 group-hover:text-white group-hover:scale-110 transition-all" />
-                          <span>SIGN OUT</span>
+                          <LogOut className="h-4 w-4 text-gray-500 group-hover:text-white transition-all" />
+                          <span>Sign Out</span>
                         </button>
                       </div>
                     </div>
@@ -249,23 +248,28 @@ const Navbar = () => {
                 </div>
               </>
             ) : (
-              <Link
-                to="/login"
-                className="group"
-                data-testid="button-login"
-                aria-label="Sign in"
-              >
-                <div className="w-10 h-10 border-2 border-gray-700 group-hover:border-red-500 transition-colors duration-200 flex items-center justify-center bg-gray-900">
-                  <PixelUserIcon className="w-6 h-6 text-gray-300 group-hover:text-red-500 transition-colors duration-200" />
-                </div>
-              </Link>
+              <div className="flex items-center space-x-3">
+                <Link
+                  to="/login"
+                  className="font-space text-sm font-medium text-gray-300 hover:text-white px-4 py-2 transition-colors"
+                  data-testid="button-join-ecosystem"
+                >
+                  Join the Ecosystem
+                </Link>
+                <Link
+                  to="/contact"
+                  className="font-space text-sm font-medium px-5 py-2.5 border border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-black transition-all duration-300"
+                  data-testid="button-partner"
+                >
+                  Partner With Us
+                </Link>
+              </div>
             )}
-
           </div>
 
           <div className="flex items-center lg:hidden">
             <button
-              className="p-2 bg-gray-900 border border-gray-700 hover:border-red-500 text-white transition-colors"
+              className="p-2 bg-gray-900 border border-gray-700 hover:border-orange-500 text-white transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
               data-testid="button-menu-toggle"
@@ -277,7 +281,6 @@ const Navbar = () => {
 
         {isMenuOpen && (
           <div className="lg:hidden fixed inset-0 top-[60px] sm:top-[70px] bg-black z-40">
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,0,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]" />
             <div className="container mx-auto px-4 py-8 relative z-10">
               <div className="flex flex-col space-y-3 max-w-md mx-auto">
                 {navItems.map((item) => (
@@ -285,7 +288,7 @@ const Navbar = () => {
                     key={item.path}
                     to={item.path}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`font-press-start text-center py-4 px-6 text-sm border transition-all duration-300 ${
+                    className={`font-space text-center py-4 px-6 text-base font-medium border transition-all duration-300 ${
                       isActiveRoute(item.path)
                         ? 'bg-orange-600 text-white border-orange-500'
                         : 'bg-gray-900 text-gray-300 border-gray-800 hover:border-orange-500 hover:text-white'
@@ -298,31 +301,30 @@ const Navbar = () => {
                 
                 <div className="border-t border-gray-800 pt-4 mt-2">
                   {loading || (user && !profile) ? (
-                    <div className="font-press-start text-center py-4 text-gray-500 animate-pulse">
-                      LOADING...
+                    <div className="font-space text-center py-4 text-gray-500 animate-pulse">
+                      Loading...
                     </div>
                   ) : isLoggedIn ? (
                     <div className="space-y-3">
-                      {/* Judges don't have accounts - removed judge dashboard/inbox */}
                       {isOrganizer && (
                         <>
                           <Link
                             to="/organizer/dashboard"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300"
+                            className="block font-space text-center py-4 px-6 text-base font-medium bg-purple-900/30 text-purple-400 border border-purple-500/50 hover:bg-purple-900/50 transition-all duration-300"
                             data-testid="button-organizer-dashboard-mobile"
                           >
-                            ORGANIZER DASHBOARD
+                            Organizer Dashboard
                           </Link>
                           <Link
                             to="/organizer-inbox"
                             onClick={() => setIsMenuOpen(false)}
-                            className="block font-press-start text-center py-4 px-6 text-sm bg-pink-900/30 bg-gradient-to-r from-purple-400 via-pink-500 to-pink-400 bg-clip-text text-transparent border border-pink-500/50 hover:bg-pink-900/50 transition-all duration-300 relative"
+                            className="block font-space text-center py-4 px-6 text-base font-medium bg-purple-900/30 text-purple-400 border border-purple-500/50 hover:bg-purple-900/50 transition-all duration-300 relative"
                             data-testid="button-organizer-inbox-mobile"
                           >
-                            ORGANIZER INBOX
+                            Organizer Inbox
                             {organizerUnreadCount > 0 && (
-                              <span className="ml-2 bg-green-500 text-white text-xs font-press-start px-2 py-0.5">
+                              <span className="ml-2 bg-green-500 text-white text-xs font-space px-2 py-0.5 rounded-full">
                                 {organizerUnreadCount > 99 ? '99+' : organizerUnreadCount}
                               </span>
                             )}
@@ -332,19 +334,19 @@ const Navbar = () => {
                       <Link
                         to={profileUrl}
                         onClick={() => setIsMenuOpen(false)}
-                        className="block font-press-start text-center py-4 px-6 text-sm bg-gray-900 text-white border border-gray-700 hover:border-red-500 transition-all duration-300"
+                        className="block font-space text-center py-4 px-6 text-base font-medium bg-gray-900 text-white border border-gray-700 hover:border-orange-500 transition-all duration-300"
                         data-testid="button-profile-mobile"
                       >
-                        MY PROFILE
+                        My Profile
                       </Link>
                       {!isOrganizer && (
                         <Link
                           to="/my-hackathons"
                           onClick={() => setIsMenuOpen(false)}
-                          className="block font-press-start text-center py-4 px-6 text-sm bg-gray-900 text-white border border-gray-700 hover:border-pink-500 transition-all duration-300"
+                          className="block font-space text-center py-4 px-6 text-base font-medium bg-gray-900 text-white border border-gray-700 hover:border-orange-500 transition-all duration-300"
                           data-testid="button-my-hackathons-mobile"
                         >
-                          MY HACKATHONS
+                          My Hackathons
                         </Link>
                       )}
                       <button
@@ -352,21 +354,31 @@ const Navbar = () => {
                           handleSignOut();
                           setIsMenuOpen(false);
                         }}
-                        className="w-full font-press-start text-center py-4 px-6 text-sm bg-gray-900 text-red-400 border border-gray-700 hover:bg-red-900/20 hover:border-red-500 transition-all duration-300"
+                        className="w-full font-space text-center py-4 px-6 text-base font-medium bg-gray-900 text-red-400 border border-gray-700 hover:bg-red-900/20 hover:border-red-500 transition-all duration-300"
                         data-testid="button-signout-mobile"
                       >
-                        SIGN OUT
+                        Sign Out
                       </button>
                     </div>
                   ) : (
-                    <Link
-                      to="/login"
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block font-press-start text-center py-4 px-6 text-sm bg-gray-900 text-white border border-gray-700 hover:border-red-500 transition-all duration-300"
-                      data-testid="button-login-mobile"
-                    >
-                      SIGN IN
-                    </Link>
+                    <div className="space-y-3">
+                      <Link
+                        to="/login"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block font-space text-center py-4 px-6 text-base font-medium bg-gray-900 text-white border border-gray-700 hover:border-orange-500 transition-all duration-300"
+                        data-testid="button-login-mobile"
+                      >
+                        Join the Ecosystem
+                      </Link>
+                      <Link
+                        to="/contact"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block font-space text-center py-4 px-6 text-base font-medium border border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-black transition-all duration-300"
+                        data-testid="button-partner-mobile"
+                      >
+                        Partner With Us
+                      </Link>
+                    </div>
                   )}
                 </div>
               </div>

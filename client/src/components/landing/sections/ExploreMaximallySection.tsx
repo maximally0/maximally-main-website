@@ -1,125 +1,123 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Compass, Sparkles } from "lucide-react";
-import { ExploreCard } from "../ExploreCard";
-import exploreData from "@/data/exploreCards.json";
+import { ArrowRight, Trophy, Users, Mic, Network, Laptop, Handshake } from "lucide-react";
 
-interface ExploreCardData {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  url: string;
-  status: string;
-  badge: string | null;
-  color?: string;
-}
+const exploreTiles = [
+  {
+    id: "hackathons",
+    title: "Hackathons",
+    description: "Browse all open and upcoming hackathons. The core product.",
+    icon: Trophy,
+    url: "/events",
+    color: "text-orange-400",
+    borderColor: "border-orange-500/20",
+    hoverBorder: "hover:border-orange-500/50",
+  },
+  {
+    id: "senior-council",
+    title: "Senior Council",
+    description: "Meet the operators who judge and mentor across Maximally programs.",
+    icon: Users,
+    url: "/senior-council",
+    color: "text-white",
+    borderColor: "border-gray-700",
+    hoverBorder: "hover:border-gray-500",
+  },
+  {
+    id: "exhibit-a",
+    title: "Exhibit A",
+    description: "Deep conversations with extraordinary operators.",
+    icon: Mic,
+    url: "/explore",
+    color: "text-purple-400",
+    borderColor: "border-purple-500/20",
+    hoverBorder: "hover:border-purple-500/50",
+    badge: "Coming Soon",
+  },
+  {
+    id: "mfhop",
+    title: "MFHOP",
+    description: "The Maximally Federation of Hackathon Organizers. Apply to join.",
+    icon: Network,
+    url: "/mfhop",
+    color: "text-orange-400",
+    borderColor: "border-orange-500/20",
+    hoverBorder: "hover:border-orange-500/50",
+  },
+  {
+    id: "platform",
+    title: "Platform",
+    description: "Host your own hackathon on the Maximally platform.",
+    icon: Laptop,
+    url: "/host-hackathon",
+    color: "text-gray-300",
+    borderColor: "border-gray-700",
+    hoverBorder: "hover:border-gray-500",
+  },
+  {
+    id: "partner",
+    title: "Partner",
+    description: "Run a high-signal hackathon with your company.",
+    icon: Handshake,
+    url: "/contact",
+    color: "text-orange-400",
+    borderColor: "border-orange-500/20",
+    hoverBorder: "hover:border-orange-500/50",
+  },
+];
 
 export function ExploreMaximallySection() {
-  const { exploreCards } = exploreData as { exploreCards: ExploreCardData[] };
-  const activeCards = exploreCards.filter(c => c.status === "active");
-  const comingSoonCards = exploreCards.filter(c => c.status === "coming-soon");
-
   return (
-    <section className="py-20 sm:py-28 relative bg-black overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(168,85,247,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(168,85,247,0.03)_1px,transparent_1px)] bg-[size:40px_40px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(168,85,247,0.12)_0%,transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(236,72,153,0.08)_0%,transparent_50%)]" />
+    <section className="py-24 sm:py-32 relative bg-black overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
       
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
-      
-      <div className="absolute top-20 left-[5%] w-72 h-72 bg-purple-500/15 rounded-full blur-[100px]" />
-      <div className="absolute top-60 right-[10%] w-48 h-48 bg-pink-500/12 rounded-full blur-[80px]" />
-      <div className="absolute bottom-40 left-[20%] w-60 h-60 bg-blue-500/10 rounded-full blur-[80px]" />
+      <div className="absolute top-20 left-[5%] w-72 h-72 bg-orange-500/5 rounded-full blur-[100px]" />
+      <div className="absolute bottom-40 right-[10%] w-60 h-60 bg-gray-500/5 rounded-full blur-[80px]" />
       
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-14 sm:mb-20">
-          <div className="inline-flex items-center gap-3 mb-6">
-            <div className="flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/30">
-              <Compass className="w-4 h-4 text-purple-400" />
-              <span className="font-press-start text-[10px] sm:text-xs text-purple-300 tracking-wider">
-                DISCOVER MORE
-              </span>
-            </div>
-          </div>
-          <h2 className="font-press-start text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white mb-6">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
-              Explore Maximally
-            </span>
+        <div className="text-center mb-16 sm:mb-20">
+          <span className="font-space text-sm text-orange-400 tracking-wide font-medium mb-4 block">
+            THE ECOSYSTEM
+          </span>
+          <h2 className="font-space text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5">
+            Explore Maximally
           </h2>
-          <p className="font-jetbrains text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Everything we're building around the hackathon ecosystem. 
-            Blog, jobs, community, resources, and more.
+          <p className="font-space text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Everything we're building. Each piece serves the ecosystem.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-6xl mx-auto mb-10">
-          {activeCards.map((card, index) => (
-            <div 
-              key={card.id}
-              className="animate-fade-in"
-              style={{ animationDelay: `${index * 50}ms` }}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-5xl mx-auto">
+          {exploreTiles.map((tile) => (
+            <Link
+              key={tile.id}
+              to={tile.url}
+              className={`group relative p-6 sm:p-8 bg-gray-900/40 border ${tile.borderColor} ${tile.hoverBorder} transition-all duration-300`}
+              data-testid={`explore-tile-${tile.id}`}
             >
-              <ExploreCard
-                id={card.id}
-                title={card.title}
-                description={card.description}
-                icon={card.icon}
-                url={card.url}
-                status={card.status as "active" | "coming-soon"}
-                badge={card.badge}
-                color={card.color}
-              />
-            </div>
-          ))}
-        </div>
-
-        {comingSoonCards.length > 0 && (
-          <>
-            <div className="flex items-center justify-center gap-4 mb-8 mt-16">
-              <div className="h-px flex-1 max-w-[100px] bg-gradient-to-r from-transparent to-gray-700" />
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-3 h-3 text-gray-600" />
-                <p className="font-press-start text-[10px] text-gray-500">COMING SOON</p>
-                <Sparkles className="w-3 h-3 text-gray-600" />
+              {tile.badge && (
+                <span className="absolute top-4 right-4 px-2 py-0.5 bg-purple-500/20 border border-purple-500/30 text-purple-300 font-space text-[10px] font-medium">
+                  {tile.badge}
+                </span>
+              )}
+              <div className="mb-5">
+                <tile.icon className={`w-7 h-7 ${tile.color}`} />
               </div>
-              <div className="h-px flex-1 max-w-[100px] bg-gradient-to-l from-transparent to-gray-700" />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-6xl mx-auto">
-              {comingSoonCards.map((card, index) => (
-                <div 
-                  key={card.id}
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${(activeCards.length + index) * 50}ms` }}
-                >
-                  <ExploreCard
-                    id={card.id}
-                    title={card.title}
-                    description={card.description}
-                    icon={card.icon}
-                    url={card.url}
-                    status={card.status as "active" | "coming-soon"}
-                    badge={card.badge}
-                    color={card.color}
-                  />
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        <div className="text-center mt-14">
-          <Link
-            to="/explore"
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-600/20 to-pink-500/10 border border-purple-500/40 hover:border-purple-400 hover:from-purple-600/30 hover:to-pink-500/20 text-purple-300 hover:text-purple-200 font-press-start text-[10px] sm:text-xs transition-all duration-300"
-            data-testid="button-explore-all"
-          >
-            <span>EXPLORE ALL</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
+              <h3 className={`font-space text-lg font-semibold mb-2 ${tile.color} group-hover:text-white transition-colors`}>
+                {tile.title}
+              </h3>
+              <p className="font-space text-sm text-gray-400 leading-relaxed mb-5">
+                {tile.description}
+              </p>
+              <div className="flex items-center gap-2 text-gray-500 group-hover:text-orange-400 font-space text-sm font-medium transition-colors">
+                <span>Explore</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
       
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/40 to-transparent" />
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
     </section>
   );
 }

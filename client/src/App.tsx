@@ -18,6 +18,7 @@ import Navbar from '@/components/Navbar';
 import { LoadingBar } from '@/components/LoadingBar';
 
 import Index from './pages/Index';
+import SeniorCouncil from './pages/SeniorCouncil';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
@@ -200,6 +201,7 @@ const AppContent = () => {
       {!hideNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/senior-council" element={<SeniorCouncil />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
@@ -564,18 +566,18 @@ const AppContent = () => {
 const App = () => {
   useEffect(() => {
     // Set default meta tags
-    document.title = 'Maximally - Learn Real-World Skills for Indian Students';
+    document.title = 'Maximally - The World\'s Most Serious Builder Ecosystem';
     document
       .querySelector('meta[name="description"]')
       ?.setAttribute(
         'content',
-        "Join India's premier skill development platform for students. Learn AI, Digital Marketing, Public Speaking & more through hands-on bootcamps."
+        "Where extraordinary operators, builders, and innovators converge. Curated hackathons, the Senior Council, and programs for serious builders."
       );
     document
       .querySelector('meta[name="keywords"]')
       ?.setAttribute(
         'content',
-        'student education India, skill development, digital marketing, AI courses, public speaking, entrepreneurship, Indian students'
+        'hackathon, builder ecosystem, hackathons, innovation, Senior Council, operators, builders, startups'
       );
 
     // Add robots meta tag

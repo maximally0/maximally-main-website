@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 
 const sections = [
   { id: "section-1", label: "Hero" },
-  { id: "section-2", label: "Join The Next Wave" },
-  { id: "section-3", label: "Latest Stories" },
-  { id: "section-4", label: "Explore Maximally" },
-  { id: "section-5", label: "Run Better Events" },
+  { id: "section-2", label: "Hackathons" },
+  { id: "section-3", label: "Senior Council" },
+  { id: "section-4", label: "Explore" },
+  { id: "section-5", label: "For Companies" },
 ];
 
 export function DotNavigation() {
@@ -53,8 +53,7 @@ export function DotNavigation() {
       className="fixed left-4 lg:left-8 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-center gap-3"
       aria-label="Page sections"
     >
-      {/* Vertical line */}
-      <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-purple-500/20" />
+      <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-orange-500/20" />
 
       {sections.map((section, index) => (
         <button
@@ -62,8 +61,8 @@ export function DotNavigation() {
           onClick={() => scrollToSection(index)}
           className={`relative z-10 rounded-full transition-all duration-300 ease-out ${
             activeSection === index
-              ? "w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg shadow-purple-500/30"
-              : "w-2 h-2 bg-purple-500/30 hover:bg-purple-500/50"
+              ? "w-3 h-3 bg-orange-500 shadow-lg shadow-orange-500/30"
+              : "w-2 h-2 bg-gray-600 hover:bg-gray-400"
           }`}
           aria-label={section.label}
           aria-current={activeSection === index ? "true" : undefined}
