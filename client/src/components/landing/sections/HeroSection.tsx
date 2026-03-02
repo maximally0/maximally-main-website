@@ -1,7 +1,16 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useCallback } from "react";
 
 export function HeroSection() {
+  const scrollToExplore = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const el = document.getElementById('explore');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
   return (
     <section className="min-h-screen relative flex items-center pt-20 sm:pt-28 pb-16 overflow-hidden">
       <div className="absolute inset-0 bg-black" />
@@ -32,6 +41,7 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center px-4">
             <a
               href="#explore"
+              onClick={scrollToExplore}
               className="group flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space text-sm sm:text-base font-semibold transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:scale-[1.02]"
               data-testid="button-join-ecosystem"
             >
