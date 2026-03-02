@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Trophy, Users, Mic, Network, Laptop, Handshake, ArrowRight, Lightbulb } from "lucide-react";
+import { ArrowLeft, Trophy, Users, Network, Laptop, Handshake, ArrowRight, Lightbulb } from "lucide-react";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 
@@ -23,17 +23,6 @@ const exploreTiles = [
     color: "text-white",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
-  },
-  {
-    id: "exhibit-a",
-    title: "Exhibit A",
-    description: "Deep conversations with extraordinary operators.",
-    icon: Mic,
-    url: "/explore",
-    color: "text-orange-400",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
-    badge: "Coming Soon",
   },
   {
     id: "mfhop",

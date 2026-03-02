@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Trophy, Users, Mic, Network, Laptop, Handshake } from "lucide-react";
+import { ArrowRight, Trophy, Users, Network, Laptop, Handshake } from "lucide-react";
 
 const exploreTiles = [
   {
@@ -21,17 +21,6 @@ const exploreTiles = [
     color: "text-white",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
-  },
-  {
-    id: "exhibit-a",
-    title: "Exhibit A",
-    description: "Deep conversations with extraordinary operators.",
-    icon: Mic,
-    url: "/explore",
-    color: "text-orange-400",
-    borderColor: "border-gray-800",
-    hoverBorder: "hover:border-orange-500/50",
-    badge: "Coming Soon",
   },
   {
     id: "mfhop",
@@ -67,7 +56,7 @@ const exploreTiles = [
 
 export function ExploreMaximallySection() {
   return (
-    <section className="py-24 sm:py-32 relative bg-black overflow-hidden">
+    <section id="explore" className="py-24 sm:py-32 relative bg-black overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
       
       <div className="absolute top-20 left-[5%] w-72 h-72 bg-orange-500/5 rounded-full blur-[100px]" />

@@ -74,12 +74,6 @@ const ThreeLayers = () => {
       description: "Companies that want access to serious builders cannot find them on their own. Most hackathons attract participants chasing prizes. Maximally attracts builders chasing problems. We offer enterprise partners curated, high-signal access to this ecosystem through structured hackathons and innovation programs.",
       audience: "For devrel teams, innovation leads, growth teams, and talent functions."
     },
-    {
-      number: "03",
-      name: "The Media Layer",
-      description: "Exhibit A is not a podcast about startups. It is deep, structured conversations with extraordinary operators that extract frameworks, decisions, and institutional realities. It proves the ecosystem's quality, attracts extraordinary new members, and builds Maximally's public authority as the defining voice on serious building.",
-      audience: "For serious builders who want frameworks, not vibes."
-    }
   ];
 
   return (
