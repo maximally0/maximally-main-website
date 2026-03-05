@@ -40,7 +40,6 @@ import NewsletterUnsubscribe from './components/NewsletterUnsubscribe';
 import NotFound from '@/pages/NotFound';
 
 import MFHOP from './pages/MFHOP';
-import PartnerNetwork from './pages/PartnerNetwork';
 import HostHackathon from './pages/HostHackathon';
 import Explore from './pages/Explore';
 import CreateHackathon from './pages/CreateHackathon';
@@ -128,7 +127,6 @@ const AppContent = () => {
         <Route path="/analytics" element={<PlatformAnalytics />} />
         
         <Route path="/mfhop" element={<MFHOP />} />
-        <Route path="/partner" element={<PartnerNetwork />} />
         <Route path="/host-hackathon" element={<HostHackathon />} />
         <Route path="/create-hackathon" element={<CreateHackathon />} />
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Trophy, Users, Network, Laptop, Handshake } from "lucide-react";
+import { ArrowRight, Trophy, Users, Network, Laptop } from "lucide-react";
 
 const exploreTiles = [
   {
@@ -41,16 +41,6 @@ const exploreTiles = [
     color: "text-gray-300",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
-  },
-  {
-    id: "partner",
-    title: "Partner",
-    description: "Run a high-signal hackathon with your company.",
-    icon: Handshake,
-    url: "/partner",
-    color: "text-orange-400",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
   },
 ];
 
