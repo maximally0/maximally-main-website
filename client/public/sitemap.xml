@@ -1,137 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Main Pages -->
+  <!-- Core Pages -->
   <url>
     <loc>https://maximally.in/</loc>
     <priority>1.0</priority>
     <changefreq>weekly</changefreq>
-    <lastmod>2026-01-18</lastmod>
-  </url>
-  <url>
-    <loc>https://maximally.in/makeathon</loc>
-    <priority>0.9</priority>
-    <changefreq>weekly</changefreq>
-    <lastmod>2026-01-18</lastmod>
+    <lastmod>2026-03-09</lastmod>
   </url>
   <url>
     <loc>https://maximally.in/events</loc>
     <priority>0.9</priority>
-    <changefreq>weekly</changefreq>
-    <lastmod>2026-01-18</lastmod>
+    <changefreq>daily</changefreq>
+    <lastmod>2026-03-09</lastmod>
   </url>
   <url>
-    <loc>https://maximally.in/explore</loc>
+    <loc>https://maximally.in/platform</loc>
     <priority>0.9</priority>
     <changefreq>weekly</changefreq>
-    <lastmod>2026-01-18</lastmod>
+    <lastmod>2026-03-09</lastmod>
+  </url>
+  <url>
+    <loc>https://maximally.in/network</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-09</lastmod>
+  </url>
+  <url>
+    <loc>https://maximally.in/resources</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-09</lastmod>
   </url>
   <url>
     <loc>https://maximally.in/blog</loc>
     <priority>0.8</priority>
     <changefreq>daily</changefreq>
-    <lastmod>2026-01-18</lastmod>
+    <lastmod>2026-03-09</lastmod>
   </url>
-  
-  <!-- Documentation Pages -->
+
+  <!-- Network Pages -->
   <url>
-    <loc>https://maximally.in/docs</loc>
-    <priority>0.9</priority>
+    <loc>https://maximally.in/senior-council</loc>
+    <priority>0.8</priority>
     <changefreq>weekly</changefreq>
-    <lastmod>2026-01-18</lastmod>
+    <lastmod>2026-03-09</lastmod>
   </url>
   <url>
-    <loc>https://maximally.in/docs/getting-started/introduction</loc>
+    <loc>https://maximally.in/mfhop</loc>
     <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-09</lastmod>
   </url>
+
+  <!-- Platform Pages -->
   <url>
-    <loc>https://maximally.in/docs/getting-started/quick-start</loc>
+    <loc>https://maximally.in/host-hackathon</loc>
     <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
+    <lastmod>2026-03-09</lastmod>
   </url>
   <url>
-    <loc>https://maximally.in/docs/getting-started/profile-setup</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/participants/finding-events</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/participants/team-formation</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/participants/project-submission</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/organizers/creating-hackathon</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/organizers/managing-participants</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/organizers/judging-scoring</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/guides/creating-hackathon</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/guides/team-building</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/platform/overview</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/platform/user-roles</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/api/authentication</loc>
+    <loc>https://maximally.in/become-a-supporter</loc>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
+    <lastmod>2026-03-09</lastmod>
+  </url>
+
+  <!-- Utility Pages -->
+  <url>
+    <loc>https://maximally.in/contact</loc>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+    <lastmod>2026-03-09</lastmod>
   </url>
   <url>
-    <loc>https://maximally.in/docs/api/endpoints</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
+    <loc>https://maximally.in/privacy</loc>
+    <priority>0.3</priority>
+    <changefreq>yearly</changefreq>
   </url>
   <url>
-    <loc>https://maximally.in/docs/community/discord</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
+    <loc>https://maximally.in/terms</loc>
+    <priority>0.3</priority>
+    <changefreq>yearly</changefreq>
   </url>
-  <url>
-    <loc>https://maximally.in/docs/community/success-stories</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/help/faq</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://maximally.in/docs/help/contact</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-</urlset>

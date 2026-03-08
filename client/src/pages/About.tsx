@@ -193,8 +193,9 @@ const About = () => {
   return (
     <>
       <SEO
-        title="About Maximally | The World's Most Serious Builder Ecosystem"
-        description="Maximally exists because serious builders deserve a serious place to belong. A curated ecosystem of extraordinary operators, not a platform competing on size — competing on signal."
+        title="About Maximally — Infrastructure for Serious Builders"
+        description="Maximally is infrastructure for serious builders. A platform where builders compete, organizers run events, and real products get shipped."
+        keywords="about Maximally, builder infrastructure, builder ecosystem, hackathon platform"
         keywords="about maximally, builder ecosystem, serious builders, extraordinary operators, curated ecosystem, hackathon infrastructure"
         canonicalUrl="https://maximally.in/about"
       />

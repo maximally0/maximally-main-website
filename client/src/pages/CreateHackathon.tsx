@@ -96,8 +96,9 @@ export default function CreateHackathon() {
   return (
     <>
       <SEO
-        title="Create Your Hackathon - Maximally"
-        description="Start hosting your own hackathon with Maximally. Get full support, mentorship, and access to a global network."
+        title="Create Your Hackathon — Builder Event Setup | Maximally"
+        description="Set up and launch your hackathon on Maximally infrastructure. Full event management, submissions, judging, and analytics."
+        keywords="create hackathon, launch event, hackathon setup, builder event, Maximally organizer"
         keywords="create hackathon, host hackathon, organize event"
       />
 

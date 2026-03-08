@@ -173,8 +173,9 @@ const HostHackathon = () => {
   return (
     <>
       <SEO
-        title="Host a Hackathon | Maximally"
-        description="Run a high-signal hackathon with Maximally's infrastructure. Full-service support, curated builder access, and a federation of 50+ vetted organizers behind you."
+        title="Host a Builder Event — Run Hackathons on Maximally Infrastructure"
+        description="Run hackathons and builder events on Maximally infrastructure. Submissions, judging, team formation, analytics, and a federation of 50+ vetted organizers behind you."
+        keywords="host hackathon, run builder event, hackathon infrastructure, event platform, Maximally hosting, organizer tools"
         keywords="host hackathon, run hackathon, hackathon infrastructure, builder access, serious hackathon"
         canonicalUrl="https://maximally.in/host-hackathon"
       />

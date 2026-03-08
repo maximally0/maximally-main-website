@@ -341,9 +341,9 @@ const Events = () => {
   return (
     <>
       <SEO
-        title="Hackathons | Discover & Join Global Hackathons | Maximally"
-        description="Find the best hackathons for builders. Join coding competitions, innovation challenges, and build projects that matter. Plus workshops, conferences & more."
-        keywords="hackathons, coding competitions, programming contests, innovation challenges, builder events, coding events"
+        title="Events — Builder Competitions & Hackathons | Maximally"
+        description="Browse live builder events on Maximally infrastructure. Hackathons, build sprints, and competitions where serious builders ship real products."
+        keywords="builder events, hackathons, build sprints, coding competitions, ship products, Maximally events, builder infrastructure"
       />
       
       <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
@@ -358,20 +358,19 @@ const Events = () => {
               <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 bg-orange-500/10 border border-orange-500/30 mb-4 sm:mb-6">
                 <Code className="w-4 h-4 text-orange-400" />
                 <span className="font-space font-semibold text-[10px] sm:text-xs text-orange-400 tracking-wider">
-                  BUILD. SHIP. WIN.
+                  LIVE BUILDER EVENTS
                 </span>
               </div>
               
               <h1 className="font-space font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-white mb-4 sm:mb-6 leading-relaxed">
-                Discover{" "}
+                Builder{" "}
                 <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-                  Hackathons
+                  Events
                 </span>
               </h1>
               
               <p className="font-space text-sm sm:text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
-                Join the best coding competitions and innovation challenges. Build projects that matter, 
-                win prizes, and connect with builders worldwide.
+                Live competitions running on Maximally infrastructure. Find hackathons, build sprints, and events where serious builders ship real products.
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">

@@ -79,8 +79,9 @@ const SeniorCouncil = () => {
   return (
     <>
       <SEO
-        title="Senior Council - Maximally"
-        description="The Maximally Senior Council — a directory of extraordinary operators who judge, mentor, and set the standard for serious building."
+        title="Senior Council — Builder Ecosystem Operators | Maximally"
+        description="The Senior Council is a directory of operators who judge, mentor, and set the standard across Maximally builder events. Apply or nominate."
+        keywords="Senior Council, builder judges, hackathon mentors, operators, Maximally council, builder ecosystem"
         keywords="senior council, mentors, judges, hackathon experts, industry leaders"
         canonicalUrl="https://maximally.in/senior-council"
       />

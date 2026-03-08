@@ -12,144 +12,74 @@ const Footer = () => {
             <div className="bg-gradient-to-br from-orange-500 to-red-600 p-2">
               <Terminal className="h-5 w-5 text-black" />
             </div>
-            <span className="font-space font-bold text-white text-sm sm:text-base">
-              MAXIMALLY
-            </span>
+            <span className="font-space font-bold text-white text-sm sm:text-base">MAXIMALLY</span>
           </div>
-          
           <h2 className="font-space text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">
-            The world's most serious builder ecosystem.
+            Infrastructure for serious builders.
           </h2>
           <p className="font-space text-gray-500 text-sm">
-            Where extraordinary operators converge.
+            Run events. Compete in events. Ship real products.
           </p>
         </div>
 
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent mb-12 sm:mb-16"></div>
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent mb-12 sm:mb-16" />
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-10 max-w-4xl mx-auto">
           <div>
-            <h3 className="font-space text-sm font-semibold mb-4 text-white">
-              Programs
-            </h3>
+            <h3 className="font-space text-sm font-semibold mb-4 text-white">Events</h3>
             <ul className="space-y-3 font-space text-sm">
-              <li>
-                <Link to="/events" className="text-gray-400 hover:text-white transition-colors">
-                  Hackathons
-                </Link>
-              </li>
-              <li>
-                <Link to="/senior-council" className="text-gray-400 hover:text-white transition-colors">
-                  Senior Council
-                </Link>
-              </li>
-              <li>
-                <Link to="/mfhop" className="text-gray-400 hover:text-white transition-colors">
-                  MFHOP
-                </Link>
-              </li>
-              <li>
-                <Link to="/host-hackathon" className="text-gray-400 hover:text-white transition-colors">
-                  Platform
-                </Link>
-              </li>
+              <li><Link to="/events" className="text-gray-400 hover:text-white transition-colors">Browse Events</Link></li>
+              <li><Link to="/host-hackathon" className="text-gray-400 hover:text-white transition-colors">Host an Event</Link></li>
             </ul>
           </div>
-
           <div>
-            <h3 className="font-space text-sm font-semibold mb-4 text-white">
-              Content
-            </h3>
+            <h3 className="font-space text-sm font-semibold mb-4 text-white">Platform</h3>
             <ul className="space-y-3 font-space text-sm">
-              <li>
-                <Link to="/blog" className="text-gray-400 hover:text-white transition-colors">
-                  Blog
-                </Link>
-              </li>
+              <li><Link to="/platform" className="text-gray-400 hover:text-white transition-colors">Infrastructure</Link></li>
+              <li><Link to="/host-hackathon" className="text-gray-400 hover:text-white transition-colors">Host on Maximally</Link></li>
+              <li><Link to="/organizer/apply" className="text-gray-400 hover:text-white transition-colors">Organizer Dashboard</Link></li>
             </ul>
           </div>
-
           <div>
-            <h3 className="font-space text-sm font-semibold mb-4 text-white">
-              Company
-            </h3>
+            <h3 className="font-space text-sm font-semibold mb-4 text-white">Network</h3>
             <ul className="space-y-3 font-space text-sm">
-              <li>
-                <Link to="/about" className="text-gray-400 hover:text-white transition-colors">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-gray-400 hover:text-white transition-colors">
-                  Contact
-                </Link>
-              </li>
+              <li><Link to="/senior-council" className="text-gray-400 hover:text-white transition-colors">Senior Council</Link></li>
+              <li><Link to="/mfhop" className="text-gray-400 hover:text-white transition-colors">Organizer Federation</Link></li>
+              <li><Link to="/network" className="text-gray-400 hover:text-white transition-colors">View Network</Link></li>
             </ul>
           </div>
-
           <div>
-            <h3 className="font-space text-sm font-semibold mb-4 text-white">
-              Legal
-            </h3>
+            <h3 className="font-space text-sm font-semibold mb-4 text-white">Resources</h3>
             <ul className="space-y-3 font-space text-sm">
-              <li>
-                <Link to="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                  Privacy
-                </Link>
-              </li>
-              <li>
-                <Link to="/terms" className="text-gray-400 hover:text-white transition-colors">
-                  Terms
-                </Link>
-              </li>
+              <li><Link to="/blog" className="text-gray-400 hover:text-white transition-colors">Blog</Link></li>
+              <li><Link to="/resources" className="text-gray-400 hover:text-white transition-colors">All Resources</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 sm:mt-16 text-center">
-          <div className="flex justify-center gap-4 mb-8">
-            {[
-              {
-                name: 'LinkedIn',
-                url: 'https://www.linkedin.com/company/maximallyedu',
-                icon: Linkedin,
-              },
-              {
-                name: 'Instagram',
-                url: 'https://www.instagram.com/maximallyhq/',
-                icon: Instagram,
-              },
-              {
-                name: 'X',
-                url: 'https://twitter.com/maximally_in',
-                icon: Twitter,
-              },
-              {
-                name: 'Discord',
-                url: 'https://discord.gg/WmSXVzDYuq',
-                icon: MessageCircle,
-              },
-            ].map((social, i) => (
-              <a
-                key={i}
-                href={social.url}
-                className="group"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid={`social-${social.name.toLowerCase()}`}
-              >
-                <div className="w-10 h-10 sm:w-11 sm:h-11 border border-gray-800 hover:border-gray-600 flex items-center justify-center transition-all duration-300 group-hover:text-white">
-                  <social.icon className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500 group-hover:text-white transition-colors" />
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-gray-800 to-transparent my-12 sm:my-16" />
 
-        <div className="mt-8 pt-6 border-t border-gray-800/50 text-center">
-          <p className="font-space text-gray-600 text-xs sm:text-sm">
-            &copy; {new Date().getFullYear()} Maximally. All rights reserved.
-          </p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 max-w-4xl mx-auto">
+          <div className="flex items-center gap-5">
+            <a href="https://www.linkedin.com/company/maximallyclub" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="LinkedIn">
+              <Linkedin className="h-5 w-5" />
+            </a>
+            <a href="https://www.instagram.com/maximally.club" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Instagram">
+              <Instagram className="h-5 w-5" />
+            </a>
+            <a href="https://x.com/maximallyclub" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="X">
+              <Twitter className="h-5 w-5" />
+            </a>
+            <a href="https://discord.gg/maximally" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Discord">
+              <MessageCircle className="h-5 w-5" />
+            </a>
+          </div>
+          <div className="flex items-center gap-6 font-space text-xs text-gray-500">
+            <Link to="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link to="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <span>© {new Date().getFullYear()} Maximally</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -27,7 +27,7 @@ import Contact from './pages/Contact';
 import BecomeASupporter from './pages/BecomeASupporter';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
-import About from './pages/About';
+// About page removed
 import Profile from './pages/Profile';
 import RequireAuth from '@/components/RequireAuth';
 import MyProfileRedirect from './pages/MyProfileRedirect';
@@ -42,6 +42,9 @@ import NotFound from '@/pages/NotFound';
 import MFHOP from './pages/MFHOP';
 import HostHackathon from './pages/HostHackathon';
 import Explore from './pages/Explore';
+import Platform from './pages/Platform';
+import Network from './pages/Network';
+import Resources from './pages/Resources';
 import CreateHackathon from './pages/CreateHackathon';
 import OrganizerDashboard from './pages/OrganizerDashboard';
 import EditHackathon from './pages/EditHackathon';
@@ -105,7 +108,7 @@ const AppContent = () => {
 
         <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about" element={<Navigate to="/" replace />} />
         <Route path="/become-a-supporter" element={<BecomeASupporter />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -139,7 +142,10 @@ const AppContent = () => {
         <Route path="/team/join/:token" element={<JoinTeam />} />
 
         <Route path="/events" element={<Events />} />
-        <Route path="/explore" element={<Explore />} />
+        <Route path="/platform" element={<Platform />} />
+        <Route path="/network" element={<Network />} />
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/explore" element={<Navigate to="/events" replace />} />
 
         <Route path="/blog/:slug" element={<BlogRouter />} />
 
@@ -151,18 +157,18 @@ const AppContent = () => {
 
 const App = () => {
   useEffect(() => {
-    document.title = 'Maximally - The World\'s Most Serious Builder Ecosystem';
+    document.title = 'Maximally — Infrastructure for Serious Builders';
     document
       .querySelector('meta[name="description"]')
       ?.setAttribute(
         'content',
-        "Where extraordinary operators, builders, and innovators converge. Curated hackathons, the Senior Council, and programs for serious builders."
+        "Infrastructure for serious builders. Run events, compete in hackathons, ship real products, and earn reputation in the builder ecosystem."
       );
     document
       .querySelector('meta[name="keywords"]')
       ?.setAttribute(
         'content',
-        'hackathon, builder ecosystem, hackathons, innovation, Senior Council, operators, builders, startups'
+        'builder infrastructure, hackathons, builder events, event platform, Senior Council, Organizer Federation, ship products, builder ecosystem'
       );
 
     let robotsTag = document.querySelector('meta[name="robots"]');
