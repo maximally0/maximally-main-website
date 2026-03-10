@@ -45,6 +45,7 @@ const Footer = () => {
             <ul className="space-y-3 font-space text-sm">
               <li><Link to="/senior-council" className="text-gray-400 hover:text-white transition-colors">Senior Council</Link></li>
               <li><Link to="/mfhop" className="text-gray-400 hover:text-white transition-colors">Organizer Federation</Link></li>
+              <li><a href="https://discord.gg/MpBnYk8qMX" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">Builder Community</a></li>
               <li><Link to="/network" className="text-gray-400 hover:text-white transition-colors">View Network</Link></li>
             </ul>
           </div>

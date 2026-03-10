@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Network } from "lucide-react";
+import { ArrowRight, Shield, Network, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
 const councilMembers = [
@@ -41,7 +41,7 @@ export function SeniorCouncilSection() {
               The people layer of the Maximally ecosystem. Operators who judge, organizers who run events, and builders who ship.
             </p>
 
-            {/* Two network entry cards */}
+            {/* Three network entry cards */}
             <div className="space-y-3 mb-8">
               <Link
                 to="/senior-council"
@@ -70,6 +70,22 @@ export function SeniorCouncilSection() {
                 </div>
                 <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-orange-400 group-hover:translate-x-1 transition-all mt-1 ml-auto shrink-0" />
               </Link>
+
+              <a
+                href="https://discord.gg/MpBnYk8qMX"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-start gap-4 p-4 bg-gray-900/50 border border-gray-800 hover:border-orange-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/5"
+              >
+                <div className="p-2 bg-orange-500/10 border border-orange-500/20 shrink-0 group-hover:bg-orange-500/20 transition-colors">
+                  <MessageSquare className="w-4 h-4 text-orange-400" />
+                </div>
+                <div>
+                  <span className="font-space text-sm font-semibold text-white group-hover:text-orange-400 transition-colors block">Builder Community</span>
+                  <span className="font-space text-xs text-gray-500 leading-relaxed">The live community of Maximally builders. Share progress, find teammates, get feedback, and stay close to new events.</span>
+                </div>
+                <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-orange-400 group-hover:translate-x-1 transition-all mt-1 ml-auto shrink-0" />
+              </a>
             </div>
 
             <Link

@@ -29,6 +29,7 @@ const dropdownMenus = {
   Network: [
     { title: "Senior Council", description: "Directory of operators who judge Maximally programs.", href: "/senior-council" },
     { title: "Organizer Federation", description: "Network of serious hackathon organizers (MFHOP).", href: "/mfhop" },
+    { title: "Builder Community", description: "The live community of Maximally builders on Discord.", href: "https://discord.gg/MpBnYk8qMX", external: true },
   ],
   Resources: [
     { title: "Blog", description: "Articles on building, organizing, and the ecosystem.", href: "/blog" },
@@ -45,6 +46,7 @@ const mobileNavSections = [
   { label: "Resources", path: "/resources" },
   { label: "Senior Council", path: "/senior-council" },
   { label: "Organizer Federation", path: "/mfhop" },
+  { label: "Builder Community", path: "https://discord.gg/MpBnYk8qMX" },
   { label: "Host an Event", path: "/host-hackathon" },
   { label: "Blog", path: "/blog" },
 ];
@@ -219,20 +221,34 @@ const Navbar = () => {
           <div className="lg:hidden fixed inset-0 top-[60px] sm:top-[70px] bg-black z-40 overflow-y-auto">
             <div className="container mx-auto px-4 py-6 relative z-10">
               <div className="flex flex-col space-y-2 max-w-md mx-auto">
-                {mobileNavSections.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`font-space text-center py-3.5 px-6 text-sm font-medium border transition-all duration-200 ${
-                      isActiveRoute(item.path)
-                        ? "bg-orange-600 text-white border-orange-500"
-                        : "bg-gray-900/60 text-gray-300 border-gray-800 hover:border-orange-500 hover:text-white"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {mobileNavSections.map((item) => {
+                  const isExternal = item.path.startsWith("http");
+                  return isExternal ? (
+                    <a
+                      key={item.path}
+                      href={item.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="font-space text-center py-3.5 px-6 text-sm font-medium border transition-all duration-200 bg-gray-900/60 text-gray-300 border-gray-800 hover:border-orange-500 hover:text-white"
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`font-space text-center py-3.5 px-6 text-sm font-medium border transition-all duration-200 ${
+                        isActiveRoute(item.path)
+                          ? "bg-orange-600 text-white border-orange-500"
+                          : "bg-gray-900/60 text-gray-300 border-gray-800 hover:border-orange-500 hover:text-white"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
                 <div className="border-t border-gray-800 pt-4 mt-2">
                   {loading || (user && !profile) ? (
                     <div className="font-space text-center py-4 text-gray-500 animate-pulse">Loading...</div>

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Users, Network as NetworkIcon, Shield } from "lucide-react";
+import { ArrowRight, Users, Network as NetworkIcon, Shield, MessageSquare } from "lucide-react";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 
@@ -16,8 +16,8 @@ export default function Network() {
   return (
     <>
       <SEO
-        title="Network — Senior Council & Organizer Federation | Maximally"
-        description="The people powering the builder ecosystem. Senior Council operators, the Organizer Federation (MFHOP), and the network behind Maximally infrastructure."
+        title="Network — Senior Council, Organizer Federation & Builder Community | Maximally"
+        description="The people powering the builder ecosystem. Senior Council operators, the Organizer Federation (MFHOP), the Builder Community on Discord, and the network behind Maximally infrastructure."
         canonicalUrl="https://maximally.in/network"
       />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24 relative">
@@ -66,33 +66,69 @@ export default function Network() {
             </Link>
           </div>
 
-          {/* Organizer Federation */}
-          <div className="mb-16">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2 bg-orange-500/10 border border-orange-500/20">
-                <NetworkIcon className="w-5 h-5 text-orange-400" />
+          {/* Organizer Federation + Builder Community — side by side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+            {/* Organizer Federation */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-orange-500/10 border border-orange-500/20">
+                  <NetworkIcon className="w-5 h-5 text-orange-400" />
+                </div>
+                <div>
+                  <h2 className="font-space text-xl sm:text-2xl font-bold text-white">Organizer Federation</h2>
+                  <p className="font-space text-sm text-gray-400">The Maximally Federation of Hackathon Organizers (MFHOP).</p>
+                </div>
               </div>
-              <div>
-                <h2 className="font-space text-xl sm:text-2xl font-bold text-white">Organizer Federation</h2>
-                <p className="font-space text-sm text-gray-400">The Maximally Federation of Hackathon Organizers (MFHOP).</p>
+
+              <div className="bg-gray-900/40 border border-gray-800 p-6 sm:p-8 flex-1 flex flex-col">
+                <p className="font-space text-sm text-gray-300 leading-relaxed mb-4">
+                  MFHOP is Maximally's invite-reviewed network of serious hackathon organizers. Members get shared infrastructure, collective credibility, and access to a community of people solving the same problems in the builder ecosystem.
+                </p>
+                <p className="font-space text-sm text-gray-400 leading-relaxed mb-6">
+                  The federation exists to raise the standard of hackathon organizing globally. If you run events for builders and care about quality over quantity, this is your network.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 mt-auto">
+                  <Link to="/mfhop" className="group flex items-center justify-center gap-3 px-5 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space text-sm font-semibold transition-all duration-300">
+                    <span>Join the Federation</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link to="/host-hackathon" className="flex items-center justify-center gap-3 px-5 py-3 border border-gray-600 hover:border-orange-500 text-gray-300 hover:text-white font-space text-sm font-semibold transition-all duration-300">
+                    Host on Maximally
+                  </Link>
+                </div>
               </div>
             </div>
 
-            <div className="max-w-3xl bg-gray-900/40 border border-gray-800 p-8 sm:p-10 mb-8">
-              <p className="font-space text-sm text-gray-300 leading-relaxed mb-6">
-                MFHOP is Maximally's invite-reviewed network of serious hackathon organizers. Members get shared infrastructure, collective credibility, and access to a community of people solving the same problems in the builder ecosystem.
-              </p>
-              <p className="font-space text-sm text-gray-400 leading-relaxed mb-8">
-                The federation exists to raise the standard of hackathon organizing globally. If you run events for builders and care about quality over quantity, this is your network.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/mfhop" className="group flex items-center justify-center gap-3 px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space text-sm font-semibold transition-all duration-300">
-                  <span>Join the Federation</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link to="/host-hackathon" className="flex items-center justify-center gap-3 px-6 py-3 border border-gray-600 hover:border-orange-500 text-gray-300 hover:text-white font-space text-sm font-semibold transition-all duration-300">
-                  Host on Maximally
-                </Link>
+            {/* Builder Community */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-orange-500/10 border border-orange-500/20">
+                  <MessageSquare className="w-5 h-5 text-orange-400" />
+                </div>
+                <div>
+                  <h2 className="font-space text-xl sm:text-2xl font-bold text-white">Builder Community</h2>
+                  <p className="font-space text-sm text-gray-400">The live community of Maximally builders on Discord.</p>
+                </div>
+              </div>
+
+              <div className="bg-gray-900/40 border border-gray-800 p-6 sm:p-8 flex-1 flex flex-col">
+                <p className="font-space text-sm text-gray-300 leading-relaxed mb-4">
+                  The live community of Maximally builders. Share progress, find teammates, get feedback, and stay close to new events.
+                </p>
+                <p className="font-space text-sm text-gray-400 leading-relaxed mb-6">
+                  Whether you're looking for a co-founder, need feedback on your project, or want to stay plugged into what's happening across the ecosystem — this is where builders hang out.
+                </p>
+                <div className="mt-auto">
+                  <a
+                    href="https://discord.gg/MpBnYk8qMX"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center justify-center gap-3 px-5 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space text-sm font-semibold transition-all duration-300"
+                  >
+                    <span>Join the Discord</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -100,7 +136,7 @@ export default function Network() {
           {/* Future categories hint */}
           <div className="border-t border-gray-800 pt-12">
             <p className="font-space text-xs text-gray-600 text-center">
-              More network categories coming soon: Mentors · Judges · Builders
+              More network categories coming soon: Mentors · Judges
             </p>
           </div>
         </div>
