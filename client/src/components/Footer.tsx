@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Linkedin, Twitter, MessageCircle, Terminal } from 'lucide-react';
+import { Instagram, Linkedin, MessageCircle, Terminal } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -63,16 +63,13 @@ const Footer = () => {
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 max-w-4xl mx-auto">
           <div className="flex items-center gap-5">
-            <a href="https://www.linkedin.com/company/maximallyclub" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/company/maximallyedu" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="LinkedIn">
               <Linkedin className="h-5 w-5" />
             </a>
-            <a href="https://www.instagram.com/maximally.club" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Instagram">
+            <a href="https://www.instagram.com/maximallyhq/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Instagram">
               <Instagram className="h-5 w-5" />
             </a>
-            <a href="https://x.com/maximallyclub" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="X">
-              <Twitter className="h-5 w-5" />
-            </a>
-            <a href="https://discord.gg/maximally" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Discord">
+            <a href="https://discord.gg/MpBnYk8qMX" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors" aria-label="Discord">
               <MessageCircle className="h-5 w-5" />
             </a>
           </div>
