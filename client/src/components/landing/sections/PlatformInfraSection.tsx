@@ -30,13 +30,13 @@ export function PlatformInfraSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6 }}
-          className="max-w-3xl mb-10 sm:mb-12"
+          className="max-w-3xl mx-auto text-center mb-10 sm:mb-12"
         >
           <span className="font-space text-sm text-orange-400 tracking-wide font-medium mb-4 block uppercase">Platform</span>
           <h2 className="font-space text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5">
             Run events with Maximally infrastructure
           </h2>
-          <p className="font-space text-base sm:text-lg text-gray-400 leading-relaxed max-w-2xl">
+          <p className="font-space text-base sm:text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto">
             The complete infrastructure layer for running serious builder events. From submissions to judging to payments — everything in one system.
           </p>
         </motion.div>
@@ -46,7 +46,7 @@ export function PlatformInfraSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-w-6xl mb-12"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-w-6xl mx-auto mb-12"
         >
           {capabilities.map((cap, i) => (
             <motion.div
@@ -73,6 +73,7 @@ export function PlatformInfraSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.15 }}
+          className="text-center"
         >
           <Link
             to="/platform"
