@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Trophy, Users, Network, Laptop } from "lucide-react";
+import { ArrowRight, Trophy, Users, Laptop } from "lucide-react";
 
 const exploreTiles = [
   {
@@ -21,16 +21,6 @@ const exploreTiles = [
     color: "text-white",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
-  },
-  {
-    id: "mfhop",
-    title: "MFHOP",
-    description: "The Maximally Federation of Hackathon Organizers. Apply to join.",
-    icon: Network,
-    url: "/mfhop",
-    color: "text-orange-400",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
   },
   {
     id: "platform",

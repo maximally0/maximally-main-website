@@ -18,5 +18,4 @@ export { GlobalGallerySection } from "./sections/GlobalGallerySection";
 export { PartnersSection } from "./sections/PartnersSection";
 export { SeniorCouncilSection } from "./sections/SeniorCouncilSection";
 export { PlatformInfraSection } from "./sections/PlatformInfraSection";
-export { OrganizerNetworkSection } from "./sections/OrganizerNetworkSection";
 export { JoinEcosystemCTA } from "./sections/JoinEcosystemCTA";

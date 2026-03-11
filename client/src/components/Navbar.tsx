@@ -29,7 +29,6 @@ const dropdownMenus = {
   ],
   Network: [
     { title: "Senior Council", description: "Directory of operators who judge Maximally programs.", href: "/senior-council" },
-    { title: "Organizer Federation", description: "Network of serious hackathon organizers (MFHOP).", href: "/mfhop" },
     { title: "Builder Community", description: "The live community of Maximally builders on Discord.", href: "https://discord.gg/MpBnYk8qMX", external: true },
   ],
   Resources: [
@@ -373,7 +372,6 @@ const Navbar = () => {
                   {[
                     { label: "Host an Event", path: "/host-hackathon" },
                     { label: "Senior Council", path: "/senior-council" },
-                    { label: "MFHOP", path: "/mfhop" },
                     { label: "Blog", path: "/blog" },
                   ].map((item) => (
                     <Link

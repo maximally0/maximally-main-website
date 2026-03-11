@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Network, MessageSquare } from "lucide-react";
+import { ArrowRight, Shield, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
 const councilMembers = [
@@ -53,20 +53,6 @@ export function SeniorCouncilSection() {
                 <div>
                   <span className="font-space text-sm font-semibold text-white group-hover:text-orange-400 transition-colors block">Senior Council</span>
                   <span className="font-space text-xs text-gray-500 leading-relaxed">Directory of operators who judge Maximally programs.</span>
-                </div>
-                <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-orange-400 group-hover:translate-x-1 transition-all mt-1 ml-auto shrink-0" />
-              </Link>
-
-              <Link
-                to="/mfhop"
-                className="group flex items-start gap-4 p-4 bg-gray-900/50 border border-gray-800 hover:border-orange-500/30 transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/5"
-              >
-                <div className="p-2 bg-orange-500/10 border border-orange-500/20 shrink-0 group-hover:bg-orange-500/20 transition-colors">
-                  <Network className="w-4 h-4 text-orange-400" />
-                </div>
-                <div>
-                  <span className="font-space text-sm font-semibold text-white group-hover:text-orange-400 transition-colors block">Organizer Federation</span>
-                  <span className="font-space text-xs text-gray-500 leading-relaxed">Network of serious hackathon organizers (MFHOP).</span>
                 </div>
                 <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-orange-400 group-hover:translate-x-1 transition-all mt-1 ml-auto shrink-0" />
               </Link>

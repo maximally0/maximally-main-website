@@ -39,7 +39,6 @@ import BlogRouter from './pages/BlogRouter';
 import NewsletterUnsubscribe from './components/NewsletterUnsubscribe';
 import NotFound from '@/pages/NotFound';
 
-import MFHOP from './pages/MFHOP';
 import HostHackathon from './pages/HostHackathon';
 import Explore from './pages/Explore';
 import Platform from './pages/Platform';
@@ -129,7 +128,7 @@ const AppContent = () => {
         
         <Route path="/analytics" element={<PlatformAnalytics />} />
         
-        <Route path="/mfhop" element={<MFHOP />} />
+        <Route path="/mfhop" element={<Navigate to="/network" replace />} />
         <Route path="/host-hackathon" element={<HostHackathon />} />
         <Route path="/create-hackathon" element={<CreateHackathon />} />
         <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
@@ -168,7 +167,7 @@ const App = () => {
       .querySelector('meta[name="keywords"]')
       ?.setAttribute(
         'content',
-        'builder infrastructure, hackathons, builder events, event platform, Senior Council, Organizer Federation, ship products, builder ecosystem'
+        'builder infrastructure, hackathons, builder events, event platform, Senior Council, ship products, builder ecosystem'
       );
 
     let robotsTag = document.querySelector('meta[name="robots"]');

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Trophy, Users, Network, Laptop, ArrowRight, Lightbulb } from "lucide-react";
+import { ArrowLeft, Trophy, Users, Laptop, ArrowRight, Lightbulb } from "lucide-react";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 
@@ -25,16 +25,6 @@ const exploreTiles = [
     hoverBorder: "hover:border-gray-500",
   },
   {
-    id: "mfhop",
-    title: "MFHOP",
-    description: "The Maximally Federation of Hackathon Organizers. Apply to join.",
-    icon: Network,
-    url: "/mfhop",
-    color: "text-orange-400",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
-  },
-  {
     id: "platform",
     title: "Platform",
     description: "Host your own hackathon on the Maximally platform.",
@@ -51,9 +41,9 @@ const Explore = () => {
     <>
       <SEO
         title="Explore — Builder Ecosystem | Maximally"
-        description="Explore the Maximally ecosystem. Events, Senior Council, Organizer Federation, platform infrastructure, and builder tools."
-        keywords="builder ecosystem, hackathons, Senior Council, MFHOP, platform tools, Maximally explore"
-        keywords="builder ecosystem, hackathons, Senior Council, MFHOP, serious builders, explore"
+        description="Explore the Maximally ecosystem. Events, Senior Council, platform infrastructure, and builder tools."
+        keywords="builder ecosystem, hackathons, Senior Council, platform tools, Maximally explore"
+        keywords="builder ecosystem, hackathons, Senior Council, serious builders, explore"
         canonicalUrl="https://maximally.in/explore"
       />
 

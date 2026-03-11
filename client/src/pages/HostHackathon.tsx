@@ -104,8 +104,8 @@ const HostHackathon = () => {
     {
       icon: Globe,
       title: 'GLOBAL NETWORK',
-      description: 'Access to MFHOP, organizer events, and cross-promotion',
-      features: ['Federation membership', 'Community amplification', 'Cross-promotion in newsletters'],
+      description: 'Access to organizer events and cross-promotion',
+      features: ['Community amplification', 'Cross-promotion in newsletters', 'Global reach'],
       gradient: 'from-gray-800/50 to-blue-500/20',
       border: 'border-gray-700',
       iconBg: 'bg-gray-800',
@@ -174,7 +174,7 @@ const HostHackathon = () => {
     <>
       <SEO
         title="Host a Builder Event — Run Hackathons on Maximally Infrastructure"
-        description="Run hackathons and builder events on Maximally infrastructure. Submissions, judging, team formation, analytics, and a federation of 50+ vetted organizers behind you."
+        description="Run hackathons and builder events on Maximally infrastructure. Submissions, judging, team formation, analytics, and full support behind you."
         keywords="host hackathon, run builder event, hackathon infrastructure, event platform, Maximally hosting, organizer tools"
         keywords="host hackathon, run hackathon, hackathon infrastructure, builder access, serious hackathon"
         canonicalUrl="https://maximally.in/host-hackathon"
@@ -374,7 +374,7 @@ const HostHackathon = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 max-w-2xl mx-auto gap-6">
                 <Link
                   to="/partner"
                   className="group bg-gradient-to-br from-blue-500/10 to-gray-800/50 border border-gray-700 hover:border-blue-400/50 p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(59,130,246,0.15)]"
@@ -402,32 +402,7 @@ const HostHackathon = () => {
                   </div>
                 </Link>
 
-                <Link
-                  to="/mfhop"
-                  className="group bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 hover:border-amber-400/50 p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(245,158,11,0.15)]"
-                  data-testid="link-mfhop"
-                >
-                  <div className="bg-amber-500/20 border border-amber-500/40 w-16 h-16 flex items-center justify-center mb-6">
-                    <Globe className="h-8 w-8 text-amber-400" />
-                  </div>
-                  <h3 className="font-space font-bold text-sm sm:text-base text-white mb-3 group-hover:text-amber-300 transition-colors">
-                    MFHOP FEDERATION
-                  </h3>
-                  <p className="font-space text-sm text-gray-400 mb-6 leading-relaxed">
-                    Join the Maximally Federation of Hackathon Organizer Partners for exclusive resources.
-                  </p>
-                  <ul className="space-y-2 mb-6">
-                    {['Exclusive organizer events', 'Shared sponsor network', 'Cross-promotion', 'Best practices library'].map((feature, j) => (
-                      <li key={j} className="flex items-start gap-2 text-xs font-space text-gray-500">
-                        <CheckCircle2 className="h-3.5 w-3.5 text-amber-400 flex-shrink-0 mt-0.5" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="flex items-center gap-2 font-space font-bold text-xs text-amber-400 group-hover:text-amber-300">
-                    LEARN MORE <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
+
               </div>
             </div>
           </div>

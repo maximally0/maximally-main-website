@@ -130,13 +130,7 @@ const TheBar = () => {
           <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
             The Senior Council is a directory of operators with documented extraordinary ability —
             people who have built at the highest level and now set the standard for what serious
-            building looks like inside this ecosystem.
-          </p>
-
-          <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
-            The Maximally Federation of Hackathon Organizers and Partners includes 100+ vetted
-            organizers — not an open network, but a curated group that shares infrastructure,
-            sponsors, and collective credibility. Being Maximally-affiliated means something to
+            building looks like inside this ecosystem. Being Maximally-affiliated means something to
             participants and sponsors because the bar is real.
           </p>
         </div>
@@ -163,8 +157,7 @@ const Founder = () => {
           <p className="font-space text-base text-gray-400 leading-relaxed">
             Rishul built Maximally because he understood something most people in the ecosystem
             miss: the problem isn't a lack of hackathons. It's a lack of serious ones. He has
-            personally operated and advised on 20+ hackathons, built the federation from zero to
-            100+ organizers, and assembled a judge network of extraordinary operators who have
+            personally operated and advised on 20+ hackathons and assembled a judge network of extraordinary operators who have
             built at the highest level.
           </p>
 

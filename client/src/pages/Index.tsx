@@ -6,7 +6,6 @@ import {
   UpcomingHackathonsSection,
   SeniorCouncilSection,
   PlatformInfraSection,
-  OrganizerNetworkSection,
   JoinEcosystemCTA,
 } from "@/components/landing";
 
@@ -33,7 +32,6 @@ const Index = () => {
         <UpcomingHackathonsSection />
         <SeniorCouncilSection />
         <PlatformInfraSection />
-        <OrganizerNetworkSection />
         <JoinEcosystemCTA />
         <Footer />
       </div>
