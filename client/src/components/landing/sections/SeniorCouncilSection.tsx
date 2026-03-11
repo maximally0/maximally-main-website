@@ -17,13 +17,13 @@ const cardVariants = {
 
 export function SeniorCouncilSection() {
   return (
-    <section className="py-24 sm:py-32 relative bg-black overflow-hidden">
+    <section className="py-28 sm:py-36 relative bg-black overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700/30 to-transparent" />
       <div className="absolute top-40 right-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[120px]" />
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Split layout: text left, cards right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 items-start max-w-6xl mx-auto">
           {/* Left — text + network cards */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -95,8 +95,9 @@ export function SeniorCouncilSection() {
               <motion.div
                 key={index}
                 variants={cardVariants}
-                whileHover={{ y: -4 }}
-                className="p-5 bg-gray-900/60 border border-gray-800 text-center transition-all duration-200 hover:border-orange-500/20 hover:shadow-lg hover:shadow-orange-500/5"
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="p-5 bg-gray-900/60 border border-gray-800 text-center transition-all duration-200 hover:border-orange-500/25 hover:shadow-xl hover:shadow-orange-500/[0.06]"
               >
                 <div className="w-14 h-14 mx-auto mb-3 bg-gray-800 border border-gray-700 flex items-center justify-center rounded-full">
                   <span className="font-space text-base font-bold text-gray-400">{member.initials}</span>

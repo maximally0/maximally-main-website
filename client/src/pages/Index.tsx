@@ -14,14 +14,14 @@ const Index = () => {
     <>
       <SEO
         title="Maximally — Infrastructure for Serious Builders"
-        description="Run events. Compete in events. Ship real products. Maximally is the infrastructure layer powering builder ecosystems."
-        keywords="hackathon platform, builder ecosystem, event infrastructure, hackathons, innovation, builders"
+        description="Run serious competitions. Compete in events. Ship real products. Maximally is the infrastructure layer powering builder ecosystems."
+        keywords="hackathon platform, builder ecosystem, competition infrastructure, hackathons, innovation, builders"
         canonicalUrl="https://maximally.in"
         structuredData={{
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Maximally",
-          description: "Infrastructure for serious builders. Run events, compete in events, ship real products.",
+          description: "Infrastructure for serious builders. Run competitions, compete in events, ship real products.",
           url: "https://maximally.in",
         }}
       />
