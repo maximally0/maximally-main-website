@@ -17,7 +17,7 @@ const exploreTiles = [
   {
     id: "senior-council",
     title: "Senior Council",
-    description: "Meet the operators who judge and mentor across Maximally programs.",
+    description: "Operators selected for documented extraordinary achievement who evaluate Maximally programs.",
     icon: Users,
     url: "/senior-council",
     color: "text-white",
@@ -41,7 +41,7 @@ const Explore = () => {
     <>
       <SEO
         title="Explore — Builder Ecosystem | Maximally"
-        description="Explore the Maximally ecosystem. Events, Senior Council, platform infrastructure, and builder tools."
+        description="Explore the Maximally ecosystem. Events, Senior Council operators, platform infrastructure, and builder tools."
         keywords="builder ecosystem, hackathons, Senior Council, platform tools, Maximally explore"
         keywords="builder ecosystem, hackathons, Senior Council, serious builders, explore"
         canonicalUrl="https://maximally.in/explore"

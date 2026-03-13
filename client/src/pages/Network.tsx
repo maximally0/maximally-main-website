@@ -17,7 +17,7 @@ export default function Network() {
     <>
       <SEO
         title="Network — Senior Council & Builder Community | Maximally"
-        description="The people powering the builder ecosystem. Senior Council operators, the Builder Community on Discord, and the network behind Maximally infrastructure."
+        description="The network behind Maximally. Senior Council operators with documented extraordinary achievement, and the builder community powering the ecosystem."
         canonicalUrl="https://maximally.in/network"
       />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24 relative">
@@ -31,7 +31,7 @@ export default function Network() {
               The people behind<br />the ecosystem
             </h1>
             <p className="font-space text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Operators, organizers, judges, and builders. The network that powers Maximally.
+              Operators with documented achievement. Organizers running serious programs. Builders who ship. The network that powers Maximally.
             </p>
           </div>
 
@@ -43,7 +43,7 @@ export default function Network() {
               </div>
               <div>
                 <h2 className="font-space text-xl sm:text-2xl font-bold text-white">Senior Council</h2>
-                <p className="font-space text-sm text-gray-400">Extraordinary operators who evaluate builders across Maximally events.</p>
+                <p className="font-space text-sm text-gray-400">A selective network of operators selected for documented extraordinary achievement.</p>
               </div>
             </div>
 
@@ -61,7 +61,7 @@ export default function Network() {
             </div>
 
             <Link to="/senior-council" className="group inline-flex items-center gap-2 font-space text-sm text-gray-400 hover:text-orange-400 transition-colors">
-              <span>View full Senior Council</span>
+              <span>View the full Senior Council</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>

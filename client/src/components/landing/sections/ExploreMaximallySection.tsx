@@ -15,7 +15,7 @@ const exploreTiles = [
   {
     id: "senior-council",
     title: "Senior Council",
-    description: "Meet the operators who judge and mentor across Maximally programs.",
+    description: "Operators selected for documented extraordinary achievement who evaluate Maximally programs.",
     icon: Users,
     url: "/senior-council",
     color: "text-white",

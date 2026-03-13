@@ -128,10 +128,10 @@ const TheBar = () => {
 
         <div className="space-y-6">
           <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
-            The Senior Council is a directory of operators with documented extraordinary ability —
-            people who have built at the highest level and now set the standard for what serious
-            building looks like inside this ecosystem. Being Maximally-affiliated means something to
-            participants and sponsors because the bar is real.
+            The Senior Council is a network of operators with documented extraordinary ability —
+            people who have built at the highest level and now set the standard for evaluation
+            across this ecosystem. Being Maximally-affiliated means something to
+            participants and sponsors because admission is selective and evidence-based.
           </p>
         </div>
       </div>

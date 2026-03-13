@@ -36,7 +36,7 @@ export function HeroSection() {
             transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
             className="font-space text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-8 sm:mb-10 leading-[1.1] tracking-tight px-2"
           >
-            <span className="block text-white">Run serious competitions</span>
+            <span className="block text-white">Serious competitions</span>
             <span className="block mt-2 sm:mt-3">
               <span className="text-white">for </span>
               <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">

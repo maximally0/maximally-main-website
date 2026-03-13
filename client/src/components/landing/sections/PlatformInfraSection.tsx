@@ -59,11 +59,14 @@ export function PlatformInfraSection() {
           className="max-w-3xl mx-auto text-center mb-16 sm:mb-20"
         >
           <span className="font-space text-sm text-orange-400 tracking-wide font-medium mb-4 block uppercase">Infrastructure</span>
+          <div className="inline-block px-3 py-1 bg-orange-500/10 border border-orange-500/30 mb-5">
+            <span className="font-space text-xs text-orange-400 font-semibold tracking-wider uppercase">Coming Soon</span>
+          </div>
           <h2 className="font-space text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5">
             The infrastructure behind serious competitions
           </h2>
           <p className="font-space text-base sm:text-lg text-gray-400 leading-relaxed max-w-2xl mx-auto">
-            Everything needed to run and participate in high-quality competitions.
+            Everything needed to run and participate in high-quality competitions. We're building this right now.
           </p>
         </motion.div>
 

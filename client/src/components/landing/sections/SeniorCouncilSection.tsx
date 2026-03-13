@@ -35,10 +35,10 @@ export function SeniorCouncilSection() {
               The Network
             </span>
             <h2 className="font-space text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
-              Evaluated by people who build the future
+              Evaluated by operators with documented achievement
             </h2>
             <p className="font-space text-base text-gray-400 leading-relaxed mb-8">
-              The people layer of the Maximally ecosystem. Operators who judge, organizers who run events, and builders who ship.
+              Founders, researchers, engineers, and product leaders selected for extraordinary contribution to their fields. They set the standard across every Maximally program.
             </p>
 
             {/* Three network entry cards */}
@@ -52,7 +52,7 @@ export function SeniorCouncilSection() {
                 </div>
                 <div>
                   <span className="font-space text-sm font-semibold text-white group-hover:text-orange-400 transition-colors block">Senior Council</span>
-                  <span className="font-space text-xs text-gray-500 leading-relaxed">Directory of operators who judge Maximally programs.</span>
+                  <span className="font-space text-xs text-gray-500 leading-relaxed">A selective network of operators with documented extraordinary achievement.</span>
                 </div>
                 <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-orange-400 group-hover:translate-x-1 transition-all mt-1 ml-auto shrink-0" />
               </Link>

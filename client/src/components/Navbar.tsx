@@ -28,7 +28,7 @@ const dropdownMenus = {
     { title: "Organizer Dashboard", description: "Manage events, analytics, and participants.", href: "/organizer/dashboard" },
   ],
   Network: [
-    { title: "Senior Council", description: "Directory of operators who judge Maximally programs.", href: "/senior-council" },
+    { title: "Senior Council", description: "Operators selected for documented extraordinary achievement.", href: "/senior-council" },
     { title: "Builder Community", description: "The live community of Maximally builders on Discord.", href: "https://discord.gg/MpBnYk8qMX", external: true },
   ],
   Resources: [

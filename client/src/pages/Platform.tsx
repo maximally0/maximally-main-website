@@ -89,11 +89,14 @@ export default function Platform() {
             className="max-w-3xl mx-auto text-center mb-16"
           >
             <span className="font-space text-sm text-orange-400 tracking-[0.2em] font-medium mb-4 block uppercase">Platform</span>
+            <div className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-500/30 mb-6">
+              <span className="font-space text-xs text-orange-400 font-semibold tracking-wider uppercase">Coming Soon</span>
+            </div>
             <h1 className="font-space text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               The infrastructure behind<br />serious competitions
             </h1>
             <p className="font-space text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
-              Everything needed to run and participate in high-quality competitions. From applications and submissions to judging and results.
+              We're building everything needed to run and participate in high-quality competitions. From applications and submissions to judging and results — launching soon.
             </p>
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -174,7 +177,7 @@ export default function Platform() {
             >
               <span className="font-space text-sm text-orange-400 tracking-wide font-medium mb-3 block uppercase">Core Infrastructure</span>
               <h2 className="font-space text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3">Competition Modules</h2>
-              <p className="font-space text-sm text-gray-400 max-w-xl mx-auto">The building blocks for running any competition.</p>
+              <p className="font-space text-sm text-gray-400 max-w-xl mx-auto">The building blocks for running any competition. Currently under development.</p>
             </motion.div>
 
             <motion.div
@@ -270,7 +273,7 @@ export default function Platform() {
               transition={{ duration: 0.6 }}
               className="font-space text-xs text-gray-500 tracking-wide uppercase text-center mb-6"
             >
-              Competitions powered by Maximally
+              Competitions we'll power on Maximally
             </motion.p>
           </div>
 
@@ -336,7 +339,7 @@ export default function Platform() {
                 Built for competitions — not generic events
               </h2>
               <p className="font-space text-sm text-gray-400 max-w-lg mx-auto">
-                Maximally is designed for programs where participants submit work and judges evaluate it.
+                Maximally is being designed for programs where participants submit work and judges evaluate it.
               </p>
             </motion.div>
 
@@ -387,15 +390,15 @@ export default function Platform() {
               className="max-w-3xl mx-auto text-center"
             >
               <h2 className="font-space text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-5">
-                Ready to run your competition?
+                We're building this.
               </h2>
               <p className="font-space text-base sm:text-lg text-gray-400 max-w-xl mx-auto leading-relaxed mb-12">
-                Infrastructure for serious competitions. Launch in minutes.
+                The platform isn't live yet — but it's coming. Get notified when we launch.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link to="/host-hackathon" className="group flex items-center justify-center gap-3 px-8 py-4 sm:py-5 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space text-sm font-semibold transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40">
-                    <span>Host a Competition</span>
+                    <span>Get Early Access</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
