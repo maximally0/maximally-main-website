@@ -352,7 +352,7 @@ export default function Login() {
     <>
       <Helmet>
         <title>{isSignUp ? 'Sign Up' : 'Login'} - Maximally</title>
-        <meta name="description" content="Join Maximally - World's First AI-Native Hackathon Platform" />
+        <meta name="description" content="Sign in to Maximally — infrastructure for serious builders. Manage events, submissions, and your builder profile." />
       </Helmet>
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden flex items-center justify-center p-4 pt-24">

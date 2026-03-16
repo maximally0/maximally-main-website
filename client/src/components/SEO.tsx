@@ -35,11 +35,11 @@ const SEO = ({
   const { pathname } = useLocation();
   
   const seo = {
-    title: title || "Maximally - The World's Most Serious Builder Ecosystem",
-    description: description || "The world's most serious builder ecosystem. Where extraordinary operators converge, serious work gets done, and real builders earn the recognition they deserve.",
+    title: title || "Maximally — Infrastructure for Serious Builders",
+    description: description || "Infrastructure for serious builders. Run events, compete in hackathons, ship real products, and earn reputation in the builder ecosystem.",
     image: image || "https://maximally.in/og-thumbnail.png",
     url: canonicalUrl || `https://maximally.in${pathname}`,
-    keywords: keywords || "builder ecosystem, serious builders, hackathons, extraordinary operators, curated ecosystem, innovation"
+    keywords: keywords || "builder infrastructure, hackathons, builder events, event platform, ship products, builder ecosystem, hackathon platform"
   };
 
   // Ensure absolute URL for image
@@ -132,7 +132,7 @@ const SEO = ({
           "@type": "Organization",
           "name": "Maximally",
           "alternateName": "Maximally.in",
-          "description": "The world's most serious builder ecosystem. Where extraordinary operators converge and real builders earn the recognition they deserve.",
+          "description": "Infrastructure for serious builders. Run events, compete in hackathons, ship real products, and earn reputation.",
           "url": "https://maximally.in",
           "logo": "https://maximally.in/og-thumbnail.png",
           "foundingDate": "2023",

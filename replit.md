@@ -61,7 +61,6 @@ docs/             - Documentation
 - `/events` - Events listing
 - `/blog` - Blog (Supabase-powered)
 - `/mfhop` - Federation of Hackathon Organizers
-- `/partner` - Partner With Us (hackathon services page, inspired by AngelHack)
 - `/host-hackathon` - Host a hackathon
 - `/about` - About/positioning statement page (6 sections: declaration, manifesto, three layers, the bar, founder, dual CTAs)
 - `/login`, `/profile/:username`, `/contact` - Standard pages
@@ -89,4 +88,4 @@ docs/             - Documentation
 - Design: Clean sans-serif typography (Space Grotesk), single orange accent, increased whitespace
 - Positioning: "serious builder ecosystem" targeting builders and enterprise partners
 - No teen/student/youth language anywhere - use builder/participant/creator instead
-- Dual CTAs: "Join the Ecosystem" (builders) + "Partner With Us" (companies)
+- Dual CTAs: "Join the Ecosystem" (scrolls to explore) + "SaaS Sprint" (links to saas-sprint.devpost.com)

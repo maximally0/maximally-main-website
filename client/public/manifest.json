@@ -2,9 +2,9 @@
 {
   "name": "Maximally",
   "short_name": "Maximally",
-  "description": "Bootcamps for ambitious teens. Learn startup-building, MUN, public speaking, and more.",
-  "theme_color": "#000000",
-  "background_color": "#ffffff",
+  "description": "Infrastructure for serious builders. Run events, compete in hackathons, ship real products.",
+  "theme_color": "#0a0a0a",
+  "background_color": "#000000",
   "display": "standalone",
   "icons": [
     {

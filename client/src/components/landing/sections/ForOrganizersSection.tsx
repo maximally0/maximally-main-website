@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Building2, Network } from "lucide-react";
+import { ArrowRight, Building2 } from "lucide-react";
 
 const organizerCards = [
   {
@@ -8,13 +8,6 @@ const organizerCards = [
     description: "Our platform handles submissions, judging, and visibility. You run the event. We handle the infrastructure.",
     url: "/host-hackathon",
     cta: "Start Hosting",
-  },
-  {
-    icon: Network,
-    title: "Join the Federation",
-    description: "MFHOP is Maximally's invite-reviewed network of serious hackathon organizers. Shared infrastructure, collective credibility, and a community of people solving the same problems.",
-    url: "/mfhop",
-    cta: "Apply to Join",
   },
 ];
 
@@ -34,11 +27,11 @@ export function ForOrganizersSection() {
             Build Events That Attract Serious Builders
           </h2>
           <p className="font-space text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Two ways to work with Maximally — host on our platform, or join the federation of organizers shaping the standard.
+            Host your events on Maximally infrastructure — we handle submissions, judging, and visibility.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 max-w-lg mx-auto">
           {organizerCards.map((card, index) => (
             <Link
               key={index}

@@ -1,10 +1,9 @@
-export { HackathonCard } from "./HackathonCard";
+﻿export { HackathonCard } from "./HackathonCard";
 export { ExploreCard } from "./ExploreCard";
 export { DotNavigation } from "./DotNavigation";
 export { EventCard } from "./EventCard";
 export { HappeningNowCard } from "./HappeningNowCard";
 export { PartnerLogoRow, CompanyMarquee } from "./PartnerLogoRow";
-
 export { HeroSection } from "./sections/HeroSection";
 export { CredibilitySection } from "./sections/CredibilitySection";
 export { HappeningNowSection } from "./sections/HappeningNowSection";
@@ -18,3 +17,7 @@ export { BecomeOrganizerSection } from "./sections/BecomeOrganizerSection";
 export { GlobalGallerySection } from "./sections/GlobalGallerySection";
 export { PartnersSection } from "./sections/PartnersSection";
 export { SeniorCouncilSection } from "./sections/SeniorCouncilSection";
+export { PlatformInfraSection } from "./sections/PlatformInfraSection";
+export { CompetitionMarqueeSection } from "./sections/CompetitionMarqueeSection";
+export { WhyBuildersJoinSection } from "./sections/WhyBuildersJoinSection";
+export { JoinEcosystemCTA } from "./sections/JoinEcosystemCTA";

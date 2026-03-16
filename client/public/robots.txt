@@ -1,13 +1,16 @@
 # Maximally.in Robots.txt
-# Updated: 2026-01-18
+# Updated: 2026-03-09
 
 User-agent: *
 Allow: /
-Allow: /docs/
-Allow: /blog/
-Allow: /makeathon
 Allow: /events
-Allow: /explore
+Allow: /platform
+Allow: /network
+Allow: /resources
+Allow: /blog/
+Allow: /senior-council
+Allow: /mfhop
+Allow: /host-hackathon
 
 # Disallow admin and private areas
 Disallow: /admin/
@@ -30,7 +33,7 @@ Allow: /*.gif$
 Allow: /*.svg$
 Allow: /*.webp$
 
-# Crawl delay (optional, helps prevent server overload)
+# Crawl delay
 Crawl-delay: 1
 
 # Sitemaps
@@ -44,7 +47,4 @@ User-agent: Googlebot-Image
 Allow: /
 
 User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
 Allow: /

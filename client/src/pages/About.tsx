@@ -74,12 +74,6 @@ const ThreeLayers = () => {
       description: "Companies that want access to serious builders cannot find them on their own. Most hackathons attract participants chasing prizes. Maximally attracts builders chasing problems. We offer enterprise partners curated, high-signal access to this ecosystem through structured hackathons and innovation programs.",
       audience: "For devrel teams, innovation leads, growth teams, and talent functions."
     },
-    {
-      number: "03",
-      name: "The Media Layer",
-      description: "Exhibit A is not a podcast about startups. It is deep, structured conversations with extraordinary operators that extract frameworks, decisions, and institutional realities. It proves the ecosystem's quality, attracts extraordinary new members, and builds Maximally's public authority as the defining voice on serious building.",
-      audience: "For serious builders who want frameworks, not vibes."
-    }
   ];
 
   return (
@@ -134,16 +128,10 @@ const TheBar = () => {
 
         <div className="space-y-6">
           <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
-            The Senior Council is a directory of operators with documented extraordinary ability —
-            people who have built at the highest level and now set the standard for what serious
-            building looks like inside this ecosystem.
-          </p>
-
-          <p className="font-space text-base text-gray-400 leading-relaxed max-w-3xl">
-            The Maximally Federation of Hackathon Organizers and Partners includes 100+ vetted
-            organizers — not an open network, but a curated group that shares infrastructure,
-            sponsors, and collective credibility. Being Maximally-affiliated means something to
-            participants and sponsors because the bar is real.
+            The Senior Council is a network of operators with documented extraordinary ability —
+            people who have built at the highest level and now set the standard for evaluation
+            across this ecosystem. Being Maximally-affiliated means something to
+            participants and sponsors because admission is selective and evidence-based.
           </p>
         </div>
       </div>
@@ -169,8 +157,7 @@ const Founder = () => {
           <p className="font-space text-base text-gray-400 leading-relaxed">
             Rishul built Maximally because he understood something most people in the ecosystem
             miss: the problem isn't a lack of hackathons. It's a lack of serious ones. He has
-            personally operated and advised on 20+ hackathons, built the federation from zero to
-            100+ organizers, and assembled a judge network of extraordinary operators who have
+            personally operated and advised on 20+ hackathons and assembled a judge network of extraordinary operators who have
             built at the highest level.
           </p>
 
@@ -199,8 +186,9 @@ const About = () => {
   return (
     <>
       <SEO
-        title="About Maximally | The World's Most Serious Builder Ecosystem"
-        description="Maximally exists because serious builders deserve a serious place to belong. A curated ecosystem of extraordinary operators, not a platform competing on size — competing on signal."
+        title="About Maximally — Infrastructure for Serious Builders"
+        description="Maximally is infrastructure for serious builders. A platform where builders compete, organizers run events, and real products get shipped."
+        keywords="about Maximally, builder infrastructure, builder ecosystem, hackathon platform"
         keywords="about maximally, builder ecosystem, serious builders, extraordinary operators, curated ecosystem, hackathon infrastructure"
         canonicalUrl="https://maximally.in/about"
       />

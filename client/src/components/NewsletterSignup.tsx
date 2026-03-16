@@ -72,7 +72,7 @@ export const NewsletterSignup = () => {
             </h2>
             
             <p className="font-space text-gray-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-              Hackathon announcements, builder spotlights, and Senior Council insights — delivered when there's something worth reading. No noise.
+              Hackathon announcements, builder spotlights, and Senior Council updates — delivered when there's something worth reading. No noise.
             </p>
           </div>
 

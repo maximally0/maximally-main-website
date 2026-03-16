@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Trophy, Users, Mic, Network, Laptop, Handshake, ArrowRight, Lightbulb } from "lucide-react";
+import { ArrowLeft, Trophy, Users, Laptop, ArrowRight, Lightbulb } from "lucide-react";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 
@@ -17,33 +17,12 @@ const exploreTiles = [
   {
     id: "senior-council",
     title: "Senior Council",
-    description: "Meet the operators who judge and mentor across Maximally programs.",
+    description: "Operators selected for documented extraordinary achievement who evaluate Maximally programs.",
     icon: Users,
     url: "/senior-council",
     color: "text-white",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
-  },
-  {
-    id: "exhibit-a",
-    title: "Exhibit A",
-    description: "Deep conversations with extraordinary operators.",
-    icon: Mic,
-    url: "/explore",
-    color: "text-orange-400",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
-    badge: "Coming Soon",
-  },
-  {
-    id: "mfhop",
-    title: "MFHOP",
-    description: "The Maximally Federation of Hackathon Organizers. Apply to join.",
-    icon: Network,
-    url: "/mfhop",
-    color: "text-orange-400",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
   },
   {
     id: "platform",
@@ -55,25 +34,16 @@ const exploreTiles = [
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
   },
-  {
-    id: "partner",
-    title: "Partner",
-    description: "Run a high-signal hackathon with your company.",
-    icon: Handshake,
-    url: "/partner",
-    color: "text-orange-400",
-    borderColor: "border-orange-500/20",
-    hoverBorder: "hover:border-orange-500/50",
-  },
 ];
 
 const Explore = () => {
   return (
     <>
       <SEO
-        title="Explore the Ecosystem | Maximally"
-        description="Discover what the world's most serious builder ecosystem has to offer. Hackathons, the Senior Council, MFHOP, platform tools, and enterprise partnerships."
-        keywords="builder ecosystem, hackathons, Senior Council, MFHOP, serious builders, explore"
+        title="Explore — Builder Ecosystem | Maximally"
+        description="Explore the Maximally ecosystem. Events, Senior Council operators, platform infrastructure, and builder tools."
+        keywords="builder ecosystem, hackathons, Senior Council, platform tools, Maximally explore"
+        keywords="builder ecosystem, hackathons, Senior Council, serious builders, explore"
         canonicalUrl="https://maximally.in/explore"
       />
 
