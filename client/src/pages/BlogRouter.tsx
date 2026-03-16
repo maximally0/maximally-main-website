@@ -183,11 +183,11 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
   const readTime = calculateReadTime(post.content);
   const excerpt = generateExcerpt(post.content);
   const title = post.title;
-  const canonicalUrl = `https://maximally.in/blog/${post.slug}`;
+  const canonicalUrl = `https://maximally.org/blog/${post.slug}`;
   
   // Helper function to get production URL
   const getProductionUrl = () => {
-    return `https://maximally.in/blog/${post.slug}`;
+    return `https://maximally.org/blog/${post.slug}`;
   };
   
   // Create structured data for SEO
@@ -196,7 +196,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
     "@type": "BlogPosting",
     "headline": title,
     "description": excerpt,
-    "image": post.cover_image || "https://maximally.in/og-thumbnail.png",
+    "image": post.cover_image || "https://maximally.org/og-thumbnail.png",
     "author": {
       "@type": "Person",
       "name": post.author_name || "Maximally Team"
@@ -206,7 +206,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
       "name": "Maximally",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://maximally.in/og-thumbnail.png"
+        "url": "https://maximally.org/og-thumbnail.png"
       }
     },
     "datePublished": post.created_at,
@@ -510,7 +510,7 @@ const DynamicBlog = ({ slug }: { slug: string }) => {
       <SEO
         title={`${title} | Maximally Blog`}
         description={excerpt}
-        image={post.cover_image || "https://maximally.in/og-thumbnail.png"}
+        image={post.cover_image || "https://maximally.org/og-thumbnail.png"}
         article={true}
         keywords={`${title}, builders, startup, hackathon, Maximally`}
         canonicalUrl={canonicalUrl}

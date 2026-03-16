@@ -401,7 +401,7 @@ const CorporateSponsorship = () => {
           </div>
           
           <a 
-            href="mailto:partnerships@maximally.in"
+            href="mailto:partnerships@maximally.org"
             className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white font-space font-bold text-xs py-3 px-8 transition-all duration-300 border border-orange-500/40"
           >
             <Mail className="h-4 w-4" />
@@ -434,7 +434,7 @@ const FAQ = () => {
     },
     {
       question: "Can I support in other ways besides money?",
-      answer: "Yes! We also need judges, mentors, content creators, and community builders. Reach out to us at support@maximally.in to explore non-financial ways to contribute."
+      answer: "Yes! We also need judges, mentors, content creators, and community builders. Reach out to us at support@maximally.org to explore non-financial ways to contribute."
     }
   ];
 
@@ -494,7 +494,7 @@ const FinalCTA = () => {
             </a>
             
             <a 
-              href="mailto:support@maximally.in"
+              href="mailto:support@maximally.org"
               className="bg-gradient-to-r from-gray-900 to-gray-800 border border-orange-500/30 hover:border-orange-500 text-gray-300 hover:text-white font-space font-bold text-xs py-4 px-8 transition-all duration-300 inline-flex items-center gap-2"
             >
               <Mail className="h-4 w-4" />

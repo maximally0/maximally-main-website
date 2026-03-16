@@ -14,8 +14,8 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
     'http://localhost:5173',
     'http://localhost:5002',
     'http://localhost:5001',
-    'https://maximally.in',
-    'https://www.maximally.in',
+    'https://maximally.org',
+    'https://www.maximally.org',
     'https://maximally-admin-panel.vercel.app'
   ];
 
@@ -127,7 +127,7 @@ async function sendOtpEmail(data: { email: string; otp: string; expiresInMinutes
   if (!resend) return { success: true };
   try {
     await resend.emails.send({
-      from: process.env.FROM_EMAIL || 'noreply@maximally.in', to: data.email,
+      from: process.env.FROM_EMAIL || 'noreply@maximally.org', to: data.email,
       subject: 'Your Maximally Verification Code',
       html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <h2>Verify Your Email</h2><p>Your verification code is:</p>
@@ -142,11 +142,11 @@ async function sendWelcomeEmail(data: { email: string; userName: string }) {
   if (!resend) return;
   try {
     await resend.emails.send({
-      from: process.env.FROM_EMAIL || 'noreply@maximally.in', to: data.email,
+      from: process.env.FROM_EMAIL || 'noreply@maximally.org', to: data.email,
       subject: 'Welcome to Maximally!',
       html: `<div style="font-family: Arial, sans-serif;"><h2>Welcome to Maximally, ${data.userName}!</h2>
         <p>Your account has been created successfully.</p>
-        <a href="https://maximally.in" style="display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Get Started</a></div>`
+        <a href="https://maximally.org" style="display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Get Started</a></div>`
     });
   } catch {}
 }

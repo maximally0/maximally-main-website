@@ -62,11 +62,11 @@ export default function Banned() {
           </p>
           
           <a 
-            href="mailto:support@maximally.in" 
+            href="mailto:support@maximally.org" 
             className="inline-flex items-center gap-2 text-maximally-blue hover:underline"
           >
             <Mail className="w-4 h-4" />
-            support@maximally.in
+            support@maximally.org
           </a>
 
           <div className="pt-4">
