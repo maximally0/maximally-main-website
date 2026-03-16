@@ -28,8 +28,8 @@ const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || 'fa
 // Route through main website:
 callMainWebsiteApi('/api/admin/hackathons')
 ```
-- **Mechanism**: Admin panel → maximally.in → Supabase
-- **Benefit**: ISPs don't block maximally.in domain
+- **Mechanism**: Admin panel → maximally.org → Supabase
+- **Benefit**: ISPs don't block maximally.org domain
 - **Transparency**: Same functionality, different routing
 
 ### 3. Automatic Fallback Detection
