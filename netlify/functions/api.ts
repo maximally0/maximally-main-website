@@ -20,7 +20,6 @@
 import express, { type Request, Response, NextFunction } from "express";
 import serverless from "serverless-http";
 import { Resend } from 'resend';
-import { db } from "../../server/db";
 import { getSupabaseAdmin } from "../../server/supabaseAdmin";
 import { registerCoreRoutes } from "../../server/routes/core-routes";
 import { registerOrganizerRoutes } from "../../server/routes/organizer";
@@ -99,9 +98,12 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 
 // Initialize Supabase admin client
 let supabaseAdmin: any;
-
-supabaseAdmin = getSupabaseAdmin();
-app.locals.supabaseAdmin = supabaseAdmin;
+try {
+  supabaseAdmin = getSupabaseAdmin();
+  app.locals.supabaseAdmin = supabaseAdmin;
+} catch (e) {
+  console.error('[api] Failed to initialize Supabase admin:', e);
+}
 
 // Initialize Resend for emails
 let resend: Resend | null = null;
