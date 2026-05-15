@@ -21,11 +21,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use((_req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = [
     'http://localhost:5173',
-    'http://localhost:5174',  // Added for admin panel
+    'http://localhost:5174',
     'http://localhost:5002',
     'http://localhost:5001',
     'https://maximally.in',
-    'https://maximally-admin-panel.vercel.app'
+    'https://www.maximally.in',
+    'https://maximally.org',
+    'https://www.maximally.org',
+    'https://maximally-admin-panel.vercel.app',
+    'https://maximally-admin-panel-git-master-gautamxgambhir.vercel.app'
   ];
 
   const origin = _req.headers.origin;

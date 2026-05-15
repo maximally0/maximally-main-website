@@ -77,7 +77,8 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
     'https://maximally.org',
     'https://www.maximally.org',
     'https://maximally.netlify.app',
-    'https://maximally-admin-panel.vercel.app'
+    'https://maximally-admin-panel.vercel.app',
+    'https://maximally-admin-panel-git-master-gautamxgambhir.vercel.app'
   ];
 
   const origin = _req.headers.origin;
