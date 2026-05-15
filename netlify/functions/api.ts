@@ -1195,21 +1195,6 @@ app.use('/api/*', (_req: Request, res: Response) => {
   return res.status(404).json({ success: false, message: 'API endpoint not found' });
 });
 
-// Use request transformation to ensure path starts with /api for Netlify
-export const handler = serverless(app, {
-  request: (req: any, event: any, context: any) => {
-    // Handle various Netlify path formats
-    if (req.url) {
-      // Remove /.netlify/functions/api prefix if present
-      if (req.url.startsWith('/.netlify/functions/api')) {
-        req.url = '/api' + req.url.replace('/.netlify/functions/api', '');
-      }
-      // Ensure /api prefix is present
-      else if (!req.url.startsWith('/api')) {
-        req.url = '/api' + req.url;
-      }
-    }
-    
-    return req;
-  }
-});
+// Export the handler - serverless-http reads event.path directly from the Netlify event
+// The path is already correct (/api/mentors etc.) from the redirect
+export const handler = serverless(app);
