@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
@@ -71,7 +71,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center px-4"
+            className="flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-5 justify-center px-4"
           >
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Link
@@ -90,6 +90,16 @@ export function HeroSection() {
                 data-testid="button-host-event"
               >
                 <span>Host a Competition</span>
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to="/mentors"
+                className="group flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-transparent border border-gray-600 hover:border-orange-500 text-gray-300 hover:text-white font-space text-sm sm:text-base font-semibold transition-all duration-300"
+                data-testid="button-find-mentors-hero"
+              >
+                <Users className="w-5 h-5 text-orange-400" />
+                <span>Find Mentors</span>
               </Link>
             </motion.div>
           </motion.div>

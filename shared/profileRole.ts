@@ -9,10 +9,10 @@
  */
 
 /**
- * Valid profile roles after platform simplification.
- * 'judge' role has been removed - judges now use tokenized access without accounts.
+ * Valid profile roles after platform expansion to support mentors and judges.
+ * Added 'mentor' and 'judge' roles for the new role-based ecosystem.
  */
-export const VALID_ROLES = ['user', 'admin', 'organizer'] as const;
+export const VALID_ROLES = ['user', 'admin', 'organizer', 'mentor', 'judge'] as const;
 
 /**
  * Type representing valid profile roles.
@@ -42,7 +42,7 @@ export function isValidProfileRole(role: unknown): role is ProfileRole {
  * @returns The validated role
  * @throws Error if the role is invalid
  * 
- * Requirements: 23.1, 23.3 - THE system SHALL NOT allow setting profile role to 'judge'
+ * Requirements: 23.1, 23.3 - Support mentor and judge roles for role-based ecosystem
  */
 export function validateProfileRoleUpdate(role: unknown): ProfileRole {
   if (!isValidProfileRole(role)) {
@@ -87,6 +87,10 @@ export const ROLE_CONFIG = {
   /** Roles that have elevated permissions */
   ELEVATED_ROLES: ['admin', 'organizer'] as ProfileRole[],
   
-  /** Legacy roles that should be migrated */
+  /** Roles that can access specialized features */
+  SPECIALIZED_ROLES: ['mentor', 'judge'] as ProfileRole[],
+  
+  /** All roles that require additional profile data */
+  EXTENDED_ROLES: ['organizer', 'mentor', 'judge'] as ProfileRole[],
   LEGACY_ROLES: ['judge'] as const,
 } as const;

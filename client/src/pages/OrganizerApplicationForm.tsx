@@ -131,8 +131,7 @@ const OrganizerApplicationForm = () => {
       <SEO
         title="Organizer Application — Join the Builder Network | Maximally"
         description="Apply to become a Maximally organizer. Run events on builder infrastructure with full support, tools, and network access."
-        keywords="organizer application, hackathon organizer, Maximally organizer, run events, builder infrastructure"
-        keywords="organizer application, host hackathon, hackathon organizer"
+        keywords="organizer application, hackathon organizer, Maximally organizer, run events, builder infrastructure, host hackathon"
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">

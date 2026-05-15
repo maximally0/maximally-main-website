@@ -15,7 +15,6 @@
 
 // @ts-nocheck
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   const { data, error } = await supabaseAdmin.auth.getUser(token);

@@ -188,8 +188,7 @@ const About = () => {
       <SEO
         title="About Maximally — Infrastructure for Serious Builders"
         description="Maximally is infrastructure for serious builders. A platform where builders compete, organizers run events, and real products get shipped."
-        keywords="about Maximally, builder infrastructure, builder ecosystem, hackathon platform"
-        keywords="about maximally, builder ecosystem, serious builders, extraordinary operators, curated ecosystem, hackathon infrastructure"
+        keywords="about Maximally, builder infrastructure, builder ecosystem, hackathon platform, serious builders, extraordinary operators, curated ecosystem, hackathon infrastructure"
         canonicalUrl="https://maximally.org/about"
       />
 

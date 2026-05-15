@@ -2388,32 +2388,49 @@ export async function sendCertificateEmail(data: {
   userName: string;
   hackathonName: string;
   certificateId: string;
-  certificateType: 'participant' | 'winner' | 'judge';
+  /** DB enum (e.g. participation) or legacy UI value (participant) */
+  certificateType: string;
   position?: string;
   batchId?: string;
 }) {
-  const typeLabels = {
+  const typeLabels: Record<string, string> = {
     participant: 'Participation',
+    participation: 'Participation',
     winner: 'Winner',
-    judge: 'Judge Appreciation'
+    runner_up: 'Runner Up',
+    special_mention: 'Special Mention',
+    judge: 'Judge Appreciation',
+    mentor: 'Mentor',
+    organizer: 'Organizer',
+    volunteer: 'Volunteer',
   };
-  
-  const typeEmoji = {
+
+  const typeEmoji: Record<string, string> = {
     participant: '🎓',
+    participation: '🎓',
     winner: '🏆',
-    judge: '⚖️'
+    runner_up: '🥈',
+    special_mention: '⭐',
+    judge: '⚖️',
+    mentor: '👨‍🏫',
+    organizer: '📋',
+    volunteer: '🤝',
   };
+
+  const t = (data.certificateType || 'participation').toLowerCase();
+  const label = typeLabels[t] ?? typeLabels.participation;
+  const emoji = typeEmoji[t] ?? typeEmoji.participation;
   
   const verificationUrl = `${PLATFORM_URL}/certificates/verify/${data.certificateId}`;
   
   const html = getBaseTemplate(`
-    <div class="emoji-header">${typeEmoji[data.certificateType]}</div>
+    <div class="emoji-header">${emoji}</div>
     <h1 class="title title-fallback">YOUR CERTIFICATE IS READY!</h1>
     
     <p class="greeting">Congratulations, <span class="highlight-name">${data.userName}</span>! 🎉</p>
     
     <p class="message">
-      Your <strong>${typeLabels[data.certificateType]} Certificate</strong> for 
+      Your <strong>${label} Certificate</strong> for 
       <strong>${data.hackathonName}</strong> has been generated and is ready for download!
     </p>
     
@@ -2425,7 +2442,7 @@ export async function sendCertificateEmail(data: {
       </div>
       <div class="info-row">
         <span class="info-row-label">Type</span>
-        <span class="info-row-value">${typeLabels[data.certificateType]}</span>
+        <span class="info-row-value">${label}</span>
       </div>
       ${data.position ? `
       <div class="info-row">
@@ -2453,10 +2470,10 @@ export async function sendCertificateEmail(data: {
     <p class="message" style="text-align: center;">
       Thank you for being part of ${data.hackathonName}! 🚀
     </p>
-  `, `Your ${typeLabels[data.certificateType]} Certificate for ${data.hackathonName} is ready!`);
+  `, `Your ${label} Certificate for ${data.hackathonName} is ready!`);
   
   // Use global email queue for rate limiting across all organizers
-  const subject = `${typeEmoji[data.certificateType]} Your ${typeLabels[data.certificateType]} Certificate - ${data.hackathonName}`;
+  const subject = `${emoji} Your ${label} Certificate - ${data.hackathonName}`;
   
   console.log(`📧 Queueing certificate email to ${data.email}${data.batchId ? ` (batch: ${data.batchId})` : ''}`);
   return sendEmailQueued({

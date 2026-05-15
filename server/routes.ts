@@ -47,6 +47,17 @@ import { registerEdgeCaseTestRoutes } from "./routes/edge-case-tests";
 import { registerDocsRoutes } from "./routes/docs";
 import { registerNewsletterRoutes } from "./routes/newsletter";
 import { registerAdminNewsletterRoutes } from "./routes/admin-newsletter";
+import { registerDbProxyRoutes } from "./routes/db-proxy";
+import { registerCoreRoutes } from "./routes/core-routes";
+import { registerOAuthCallbackRoutes } from "./routes/oauth-callback";
+import { registerRoleRoutes } from "./routes/roles";
+import { registerAdminOrganizerApplicationRoutes } from "./routes/admin-organizer-applications";
+import { registerOrganizerApplicationRoutes } from "./routes/organizer-applications";
+// Role-based profiles routes
+import { registerProfileRoutes } from "./routes/profiles";
+import { registerMentorRoutes } from "./routes/mentors";
+import { registerMentorshipRoutes } from "./routes/mentorship";
+import { registerJudgeEvaluationRoutes } from "./routes/judge-evaluations";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
 import { 
   sendSubmissionConfirmation, 
@@ -3797,29 +3808,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ success: false, message: 'Judge role required' });
       }
 
-      // Fetch assigned hackathons
+      // Fetch assignments first, then fetch hackathons by IDs.
+      // This avoids PostgREST relation-alias syntax that breaks on Neon DB proxy.
       const { data: assignments, error } = await supabaseAdmin
         .from('judge_hackathon_assignments')
-        .select(`
-          hackathon:organizer_hackathons(
-            id,
-            hackathon_name,
-            slug,
-            start_date,
-            end_date,
-            format,
-            registrations_count
-          )
-        `)
+        .select('hackathon_id, created_at')
         .eq('judge_id', userId)
         .eq('status', 'active')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      const hackathons = (assignments || [])
-        .map((a: any) => a.hackathon)
-        .filter(Boolean);
+      const hackathonIds = Array.from(
+        new Set((assignments || []).map((a: any) => a.hackathon_id).filter(Boolean))
+      );
+
+      const { data: hackathonsRaw, error: hackathonsError } = hackathonIds.length > 0
+        ? await supabaseAdmin
+            .from('organizer_hackathons')
+            .select('id, hackathon_name, slug, start_date, end_date, format, registrations_count')
+            .in('id', hackathonIds)
+        : { data: [], error: null as any };
+
+      if (hackathonsError) throw hackathonsError;
+
+      const orderMap = new Map(hackathonIds.map((id: string, idx: number) => [id, idx]));
+      const hackathons = (hackathonsRaw || [])
+        .slice()
+        .sort((a: any, b: any) => (orderMap.get(a.id) ?? 0) - (orderMap.get(b.id) ?? 0));
 
       // Add submissions_count
       const enrichedData = await Promise.all(hackathons.map(async (hackathon: any) => {
@@ -3979,13 +3995,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Register route modules
+  registerCoreRoutes(app); // Core routes including profiles, moderation, auth
+  registerOAuthCallbackRoutes(app); // OAuth callback handling for profile creation
+  registerRoleRoutes(app); // Role-based access control and management
+  
+  // Role-based profiles routes
+  registerProfileRoutes(app);
+  registerMentorRoutes(app);
+  registerMentorshipRoutes(app);
+  registerJudgeEvaluationRoutes(app);
+  
   registerOrganizerRoutes(app);
+  registerOrganizerApplicationRoutes(app); // Organizer application submission (/api/organizer/apply)
   registerAdminHackathonRoutes(app);
   registerHackathonRegistrationRoutes(app);
   registerOrganizerAdvancedRoutes(app);
   registerPublicHackathonRoutes(app);
   registerJudgeInvitationRoutes(app);
   registerJudgeProfileRoutes(app); // Re-enabled with fix
+  registerSimpleJudgeRoutes(app); // Simple judge profile lookup by username
   registerJudgingRoutes(app); // Complete judging system
   registerFileUploadRoutes(app); // File upload endpoints for logos
   registerHackathonFeatureRoutes(app); // Tracks, sponsors, feedback, tasks, etc.
@@ -4005,6 +4033,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerDocsRoutes(app); // Documentation API endpoints
   registerNewsletterRoutes(app); // Newsletter subscription endpoints
   registerAdminNewsletterRoutes(app); // Admin newsletter management endpoints
+  registerAdminOrganizerApplicationRoutes(app); // Admin organizer application approve/reject/delete
+  registerDbProxyRoutes(app); // DB proxy for admin panel frontend
 
   // Auto-publish is handled by the cron endpoint /api/cron/auto-publish-galleries
   // In production, this should be triggered by an external cron service (e.g., Netlify scheduled functions)

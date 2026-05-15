@@ -1,14 +1,11 @@
 import type { Express } from 'express';
-import { createClient } from '@supabase/supabase-js';
 
 export function registerNewsletterRoutes(app: Express) {
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!supabaseUrl || !supabaseKey) {
-    console.log('Newsletter routes not registered: missing Supabase env vars');
+  const supabase = app.locals.supabaseAdmin;
+  if (!supabase) {
+    console.log('Newsletter routes not registered: DB adapter not initialized');
     return;
   }
-  const supabase = createClient(supabaseUrl, supabaseKey);
 
   // Subscribe to newsletter
   app.post('/api/newsletter/subscribe', async (req, res) => {

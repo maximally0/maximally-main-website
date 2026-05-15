@@ -11,6 +11,7 @@ const exploreTiles = [
     color: "text-orange-400",
     borderColor: "border-orange-500/20",
     hoverBorder: "hover:border-orange-500/50",
+    badge: undefined as string | undefined,
   },
   {
     id: "senior-council",
@@ -21,6 +22,7 @@ const exploreTiles = [
     color: "text-white",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
+    badge: undefined as string | undefined,
   },
   {
     id: "platform",
@@ -31,6 +33,7 @@ const exploreTiles = [
     color: "text-gray-300",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
+    badge: undefined as string | undefined,
   },
 ];
 

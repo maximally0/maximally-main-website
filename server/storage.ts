@@ -146,20 +146,12 @@ function getStorage(): IStorage {
   }
 
   try {
-    
-    
-    
-    
-    if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      
+    if (process.env.DATABASE_URL) {
       _storage = new SupabaseStorage();
-      
     } else {
-      
       _storage = new MemStorage();
     }
   } catch (error) {
-    
     _storage = new MemStorage();
   }
 

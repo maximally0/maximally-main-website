@@ -10,8 +10,7 @@ export default function PlatformAnalytics() {
       <SEO
         title="Platform Analytics — Builder Ecosystem Insights | Maximally"
         description="Technology trends and insights across the Maximally builder ecosystem. Explore data from events, submissions, and builder activity."
-        keywords="platform analytics, builder insights, hackathon data, technology trends, Maximally analytics"
-        keywords="hackathon analytics, technology trends, developer insights"
+        keywords="platform analytics, builder insights, hackathon data, technology trends, Maximally analytics, hackathon analytics, developer insights"
       />
 
       <div className="min-h-screen bg-black text-white">

@@ -3,7 +3,7 @@
  * Allows gradual migration based on feature flags
  */
 import { createClient } from '@supabase/supabase-js';
-import { apiClient, supabaseCompat } from './apiClient';
+import { apiClient } from './apiClient';
 import { USE_API } from './featureFlags';
 
 // Original Supabase client setup
@@ -28,13 +28,9 @@ export const supabase = _supabaseInstance;
 // Hybrid client that routes to appropriate backend
 export const hybridClient = {
   auth: {
-    signInWithPassword: USE_API 
-      ? supabaseCompat.auth.signInWithPassword
-      : _supabaseInstance?.auth.signInWithPassword.bind(_supabaseInstance.auth),
+    signInWithPassword: _supabaseInstance?.auth.signInWithPassword.bind(_supabaseInstance.auth),
       
-    signUp: USE_API
-      ? supabaseCompat.auth.signUp
-      : _supabaseInstance?.auth.signUp.bind(_supabaseInstance.auth),
+    signUp: _supabaseInstance?.auth.signUp.bind(_supabaseInstance.auth),
       
     signOut: _supabaseInstance?.auth.signOut.bind(_supabaseInstance.auth),
     
@@ -44,37 +40,14 @@ export const hybridClient = {
   },
   
   from: (table: string) => {
-    // Route ALL tables to new API if enabled
-    if (USE_API) {
-      return {
-        select: () => ({
-          eq: () => ({
-            single: () => {
-              throw new Error('Direct Supabase queries disabled. Use API client methods instead.');
-            }
-          })
-        })
-      };
-    }
-    
-    // Fallback to original Supabase for other tables
+    // Use Supabase directly
     return _supabaseInstance?.from(table);
   }
 };
 
 // Legacy exports for backward compatibility
 export const getProfileByUsername = async (username: string) => {
-  if (USE_API) {
-    try {
-      const result = await apiClient.getUserProfile(undefined, username);
-      return result.data.profile;
-    } catch (error) {
-      console.error('❌ getProfileByUsername error:', error);
-      throw error;
-    }
-  }
-  
-  // Fallback to original Supabase
+  // Use Supabase directly
   const { data, error } = await supabase?.from('profiles')
     .select('*')
     .eq('username', username)
@@ -91,20 +64,7 @@ export const getCurrentUserWithProfile = async () => {
     return { user: null, profile: null };
   }
   
-  if (USE_API) {
-    try {
-      const result = await apiClient.getUserProfile(session.user.id);
-      return {
-        user: session.user,
-        profile: result.data.profile
-      };
-    } catch (error) {
-      console.error('❌ getCurrentUserWithProfile error:', error);
-      return { user: session.user, profile: null };
-    }
-  }
-  
-  // Fallback to original Supabase
+  // Use Supabase directly
   const { data: profile } = await supabase?.from('profiles')
     .select('*')
     .eq('id', session.user.id)
@@ -120,8 +80,8 @@ export const updateProfileMe = async (updates: any) => {
     throw new Error('Not authenticated');
   }
   
-  // For now, keep using Supabase for updates until we implement update endpoints
-  const { data, error } = await supabase?.from('profiles')
+  // Use Supabase directly
+  const { data, error } = await (supabase?.from('profiles') as any)
     .update(updates)
     .eq('id', session.user.id)
     .select()
@@ -132,17 +92,7 @@ export const updateProfileMe = async (updates: any) => {
 };
 
 export const getCertificatesByUsername = async (username: string) => {
-  if (USE_API) {
-    try {
-      const result = await apiClient.getCertificates({ maximally_username: username });
-      return result.data.certificates;
-    } catch (error) {
-      console.error('❌ getCertificatesByUsername error:', error);
-      throw error;
-    }
-  }
-  
-  // Fallback to original Supabase
+  // Use Supabase directly
   const { data, error } = await supabase?.from('certificates')
     .select('*')
     .eq('maximally_username', username)
@@ -153,15 +103,13 @@ export const getCertificatesByUsername = async (username: string) => {
 };
 
 export const signOut = async () => {
-  if (USE_API) {
-    // Clear local storage
-    localStorage.removeItem('maximally_session');
-    localStorage.removeItem('maximally_user');
-    localStorage.removeItem('maximally_profile');
-    localStorage.removeItem('sb-session');
-  }
+  // Clear local storage
+  localStorage.removeItem('maximally_session');
+  localStorage.removeItem('maximally_user');
+  localStorage.removeItem('maximally_profile');
+  localStorage.removeItem('sb-session');
   
-  // Also sign out from Supabase
+  // Sign out from Supabase
   await supabase?.auth.signOut();
 };
 

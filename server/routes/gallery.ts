@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { Router, Request, Response } from 'express';
-import { createClient } from '@supabase/supabase-js';
 
 const router = Router();
 

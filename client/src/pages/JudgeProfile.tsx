@@ -311,9 +311,10 @@ const JudgeProfile = () => {
                   <p className="font-space text-gray-300 leading-relaxed italic">"{judge.mentorshipStatement}"</p>
                 </section>
 
-                {/* Event Portfolio */}
+                {/* Hackathons judged (public portfolio) */}
                 <section className="bg-gradient-to-br from-gray-900/20 to-gray-900/20 border border-orange-500/30 p-6">
-                  <h2 className="font-space font-bold text-xl mb-4 bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">EVENT PORTFOLIO</h2>
+                  <h2 className="font-space font-bold text-xl mb-1 bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">HACKATHONS JUDGED</h2>
+                  <p className="font-space text-gray-500 text-sm mb-4">Events and roles from this judge&apos;s verified portfolio.</p>
                   <div className="space-y-4">
                     {judge.topEventsJudged.map((event, i) => (
                       <div

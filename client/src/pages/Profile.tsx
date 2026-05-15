@@ -14,7 +14,7 @@ import { Calendar, MapPin, Trophy, Edit, Github, Linkedin, Twitter, Globe, Mail,
 import PixelLoader from '@/components/PixelLoader';
 import { format } from 'date-fns';
 import type { Achievement, SelectHackathon } from '@shared/schema';
-import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, signOut, getCertificatesByUsername } from '@/lib/hybridClient';
+import { supabase, getProfileByUsername, getCurrentUserWithProfile, updateProfileMe, getCertificatesByUsername } from '@/lib/hybridClient';
 import { useAuth } from '@/contexts/AuthContext';
 import UsernameSettings from '@/components/UsernameSettings';
 import PasswordSettings from '@/components/PasswordSettings';
@@ -689,17 +689,15 @@ function DeleteAccountButton() {
 export default function Profile() {
   const { username } = useParams<{ username: string }>();
   const queryClient = useQueryClient();
-  const { user: authUser, profile: authProfile, refreshProfile } = useAuth();
+  const { user: authUser, profile: authProfile, refreshProfile, signOut } = useAuth();
   const { toast } = useToast();
 
   const { data: currentCtx } = useQuery({ queryKey: ['auth:me'], queryFn: getCurrentUserWithProfile });
   const { data: dbProfile, isLoading: profileLoading, error: profileError } = useQuery({ 
     queryKey: ['profile', username], 
     queryFn: async () => {
-      
       const result = await getProfileByUsername(username!);
-      
-      return result;
+      return result as any;
     }, 
     enabled: !!username,
     retry: false,
@@ -1067,13 +1065,9 @@ export default function Profile() {
                   <button
                     onClick={async () => {
                       try {
-                        
                         await signOut();
-                        
-                        // Force a hard refresh to clear all state
-                        window.location.href = '/';
+                        // The signOut function in AuthContext now handles the redirect
                       } catch (error: any) {
-                        
                         toast({
                           title: "Logout Failed",
                           description: "Failed to logout. Please try again.",

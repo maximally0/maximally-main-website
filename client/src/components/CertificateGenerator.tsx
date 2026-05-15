@@ -325,19 +325,31 @@ export default function CertificateGenerator({ hackathonId, hackathonName }: Cer
 
       if (data.success) {
         const replacedMsg = data.replaced > 0 ? ` (${data.replaced} replaced)` : '';
-        
-        // Set batch ID for tracking if emails are being sent
+
         if (sendEmail && data.batchId) {
           setEmailBatchId(data.batchId);
         }
-        
-        toast({
-          title: "Certificates Generated!",
-          description: sendEmail 
-            ? `${data.generated} certificates generated${replacedMsg}. Track email progress below.`
-            : `${data.generated} certificates generated${replacedMsg}`,
-        });
-        
+
+        if (data.generated === 0) {
+          const errLines = Array.isArray(data.errors) ? data.errors.filter(Boolean) : [];
+          const detail =
+            errLines.length > 0
+              ? errLines.slice(0, 3).join(' ')
+              : 'Nothing was saved. If you meant to generate, use “Select without certs” or check each person, then try again.';
+          toast({
+            title: 'No certificates created',
+            description: detail,
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Certificates Generated!',
+            description: sendEmail
+              ? `${data.generated} certificates generated${replacedMsg}. Track email progress below.`
+              : `${data.generated} certificates generated${replacedMsg}`,
+          });
+        }
+
         await fetchRecipients();
         setRecipients(prev => prev.map(r => ({ ...r, selected: false })));
       } else {

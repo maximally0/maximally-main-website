@@ -150,8 +150,7 @@ const PartnerNetwork = () => {
       <SEO
         title="Partner With Maximally — Builder Event Infrastructure"
         description="Run your best builder event with Maximally infrastructure. Full-service event design, execution, and community access for companies and organizations."
-        keywords="partner with Maximally, hackathon partner, builder events, event infrastructure, corporate hackathon"
-        keywords="hackathon partnership, hackathon organizer, hackathon agency, developer engagement, hackathon services"
+        keywords="partner with Maximally, hackathon partner, builder events, event infrastructure, corporate hackathon, hackathon partnership, hackathon organizer, hackathon agency, developer engagement, hackathon services"
       />
 
       <div className="min-h-screen bg-black text-white">

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Scale, UserPlus, X, Mail, Trash2, Edit2, Save, Upload, Image, Send } from 'lucide-react';
+import { Scale, UserPlus, X, Mail, Trash2, Edit2, Save, Upload, Image, Send, Copy, Check, Link } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { getAuthHeaders } from '@/lib/auth';
 import { useConfirm } from '@/components/ui/confirm-modal';
@@ -30,6 +30,12 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
   const [editingJudge, setEditingJudge] = useState<Judge | null>(null);
   const [saving, setSaving] = useState(false);
   const [sendingLinks, setSendingLinks] = useState(false);
+  const [scoringLinks, setScoringLinks] = useState<{ name: string; email: string; url: string }[]>([]);
+  const [previewJudgeLinks, setPreviewJudgeLinks] = useState<
+    { judgeId: string; name: string; email: string; token: string | null }[]
+  >([]);
+  const [previewLinksLoading, setPreviewLinksLoading] = useState(false);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -180,12 +186,28 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
       return;
     }
 
-    // Show confirmation modal
     setShowSendLinksModal(true);
+    setScoringLinks([]);
+    setPreviewJudgeLinks([]);
+    setPreviewLinksLoading(true);
+    setCopiedKey(null);
+    try {
+      const headers = await getAuthHeaders();
+      const response = await fetch(`/api/organizer/hackathons/${hackathonId}/judge-scoring-links`, { headers });
+      const data = await response.json();
+      if (data.success) {
+        setPreviewJudgeLinks(data.judges || []);
+      } else {
+        throw new Error(data.message || 'Failed to load scoring links');
+      }
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } finally {
+      setPreviewLinksLoading(false);
+    }
   };
 
   const confirmSendLinks = async () => {
-    setShowSendLinksModal(false);
     setSendingLinks(true);
     try {
       const headers = await getAuthHeaders();
@@ -197,6 +219,22 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
       const data = await response.json();
 
       if (data.success) {
+        // Build scoring links from judge tokens
+        const frontendUrl = window.location.origin;
+        const links = (data.judgeTokens || []).map((jt: any) => ({
+          name: jt.name,
+          email: jt.email,
+          url: `${frontendUrl}/judge/${jt.token}`
+        }));
+        // Fallback: build links from judges list if tokens not returned
+        if (links.length === 0 && data.tokens) {
+          data.tokens.forEach((t: any) => {
+            const judge = judges.find(j => j.id === t.judgeId);
+            if (judge) links.push({ name: judge.name, email: judge.email, url: `${frontendUrl}/judge/${t.token}` });
+          });
+        }
+        setScoringLinks(links);
+        setPreviewJudgeLinks([]);
         toast({ 
           title: "Scoring Links Sent!", 
           description: `Successfully sent scoring links to ${data.emailsSent || judges.length} judge(s)` 
@@ -209,6 +247,12 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
     } finally {
       setSendingLinks(false);
     }
+  };
+
+  const handleCopyLink = (url: string, key: string) => {
+    navigator.clipboard.writeText(url);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
   };
 
   if (loading) {
@@ -420,7 +464,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
       {/* Send Scoring Links Confirmation Modal */}
       {showSendLinksModal && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-green-500/50 max-w-md w-full">
+          <div className="bg-gradient-to-br from-gray-900 to-gray-950 border border-green-500/50 max-w-xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-4 border-b border-green-500/30 bg-gradient-to-r from-green-900/30 to-emerald-900/20">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -430,7 +474,7 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
                   </h2>
                 </div>
                 <button 
-                  onClick={() => setShowSendLinksModal(false)} 
+                  onClick={() => { setShowSendLinksModal(false); setScoringLinks([]); setPreviewJudgeLinks([]); }} 
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   <X className="h-5 w-5" />
@@ -438,26 +482,114 @@ export default function SimplifiedJudgesManager({ hackathonId }: SimplifiedJudge
               </div>
             </div>
 
-            <div className="p-6">
-              <p className="text-gray-300 font-space text-sm leading-relaxed mb-6">
-                This will send scoring link emails to all <span className="text-green-400 font-bold">{judges.length}</span> judge(s). 
-                Each judge will receive a unique link to score projects.
-              </p>
-
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowSendLinksModal(false)}
-                  className="flex-1 bg-gray-800/50 border border-gray-600/50 hover:border-gray-500 text-gray-300 hover:text-white px-4 py-3 font-space font-bold text-xs transition-all"
-                >
-                  CANCEL
-                </button>
-                <button
-                  onClick={confirmSendLinks}
-                  className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 font-space font-bold text-xs transition-all border border-green-500/50"
-                >
-                  SEND_LINKS
-                </button>
-              </div>
+            <div className="p-6 space-y-4">
+              {scoringLinks.length === 0 ? (
+                <>
+                  <p className="text-gray-300 font-space text-sm leading-relaxed">
+                    This will send scoring link emails to all <span className="text-green-400 font-bold">{judges.length}</span> judge(s). 
+                    Each judge will receive a unique link to score projects.
+                  </p>
+                  <p className="text-amber-600/90 font-space text-xs leading-relaxed">
+                    Sending generates new tokens for every judge; older links shown below stop working after a successful send.
+                  </p>
+                  <div className="space-y-3">
+                    <p className="font-space text-xs text-gray-500 uppercase tracking-wide">Current links (copy to share manually)</p>
+                    {previewLinksLoading ? (
+                      <p className="text-gray-500 font-space text-sm">LOADING_LINKS...</p>
+                    ) : (
+                      previewJudgeLinks.map((row) => {
+                        const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                        const url = row.token ? `${origin}/judge/${row.token}` : '';
+                        const copyKey = `preview-${row.judgeId}`;
+                        return (
+                          <div key={row.judgeId} className="bg-black/50 border border-gray-700 p-3 space-y-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-space text-xs text-orange-400 font-bold truncate">{row.name}</span>
+                              <span className="font-space text-xs text-gray-500 shrink-0 truncate max-w-[40%]">{row.email}</span>
+                            </div>
+                            {row.token ? (
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  readOnly
+                                  value={url}
+                                  className="flex-1 min-w-0 bg-black border border-gray-700 text-gray-300 px-3 py-2 font-space text-xs outline-none select-all"
+                                  onClick={(e) => (e.target as HTMLInputElement).select()}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopyLink(url, copyKey)}
+                                  className="shrink-0 bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 hover:text-white px-3 py-2 transition-all flex items-center gap-1 font-space text-xs"
+                                >
+                                  {copiedKey === copyKey ? <Check className="h-3 w-3 text-green-400" /> : <Copy className="h-3 w-3" />}
+                                  {copiedKey === copyKey ? 'COPIED' : 'COPY'}
+                                </button>
+                              </div>
+                            ) : (
+                              <p className="text-gray-500 font-space text-xs">
+                                No link yet — sending will generate a new link and email it.
+                              </p>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => { setShowSendLinksModal(false); setPreviewJudgeLinks([]); }}
+                      className="flex-1 bg-gray-800/50 border border-gray-600/50 hover:border-gray-500 text-gray-300 hover:text-white px-4 py-3 font-space font-bold text-xs transition-all"
+                    >
+                      CANCEL
+                    </button>
+                    <button
+                      onClick={confirmSendLinks}
+                      disabled={sendingLinks}
+                      className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white px-4 py-3 font-space font-bold text-xs transition-all border border-green-500/50 disabled:opacity-50"
+                    >
+                      {sendingLinks ? 'SENDING...' : 'SEND_LINKS'}
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="text-green-400 font-space text-sm font-bold">
+                    ✓ Links sent! Share these directly if email delivery fails:
+                  </p>
+                  <div className="space-y-3">
+                    {scoringLinks.map((link, i) => (
+                      <div key={i} className="bg-black/50 border border-gray-700 p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="font-space text-xs text-orange-400 font-bold">{link.name}</span>
+                          <span className="font-space text-xs text-gray-500">{link.email}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            readOnly
+                            value={link.url}
+                            className="flex-1 bg-black border border-gray-700 text-gray-300 px-3 py-2 font-space text-xs outline-none select-all"
+                            onClick={(e) => (e.target as HTMLInputElement).select()}
+                          />
+                          <button
+                            onClick={() => handleCopyLink(link.url, `sent-${i}`)}
+                            className="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 hover:text-white px-3 py-2 transition-all flex items-center gap-1 font-space text-xs"
+                          >
+                            {copiedKey === `sent-${i}` ? <Check className="h-3 w-3 text-green-400" /> : <Copy className="h-3 w-3" />}
+                            {copiedKey === `sent-${i}` ? 'COPIED' : 'COPY'}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => { setShowSendLinksModal(false); setScoringLinks([]); setPreviewJudgeLinks([]); }}
+                    className="w-full bg-gray-800/50 border border-gray-600/50 hover:border-gray-500 text-gray-300 hover:text-white px-4 py-3 font-space font-bold text-xs transition-all"
+                  >
+                    CLOSE
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

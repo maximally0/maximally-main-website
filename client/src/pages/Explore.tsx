@@ -13,6 +13,7 @@ const exploreTiles = [
     color: "text-orange-400",
     borderColor: "border-orange-500/20",
     hoverBorder: "hover:border-orange-500/50",
+    badge: undefined as string | undefined,
   },
   {
     id: "senior-council",
@@ -23,6 +24,7 @@ const exploreTiles = [
     color: "text-white",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
+    badge: undefined as string | undefined,
   },
   {
     id: "platform",
@@ -33,6 +35,7 @@ const exploreTiles = [
     color: "text-gray-300",
     borderColor: "border-gray-700",
     hoverBorder: "hover:border-gray-500",
+    badge: undefined as string | undefined,
   },
 ];
 
@@ -42,8 +45,7 @@ const Explore = () => {
       <SEO
         title="Explore — Builder Ecosystem | Maximally"
         description="Explore the Maximally ecosystem. Events, Senior Council operators, platform infrastructure, and builder tools."
-        keywords="builder ecosystem, hackathons, Senior Council, platform tools, Maximally explore"
-        keywords="builder ecosystem, hackathons, Senior Council, serious builders, explore"
+        keywords="builder ecosystem, hackathons, Senior Council, platform tools, Maximally explore, serious builders"
         canonicalUrl="https://maximally.in/explore"
       />
 

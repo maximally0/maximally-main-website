@@ -5,6 +5,8 @@ import { ConfirmProvider } from '@/components/ui/confirm-modal';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { RoleBasedRedirect, WithRoleProtection } from '@/components/RoleBasedRedirect';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import ModerationGuard from '@/components/ModerationGuard';
 import {
   BrowserRouter as Router,
@@ -12,6 +14,8 @@ import {
   Route,
   Navigate,
   useLocation,
+  useNavigate,
+  Link,
 } from 'react-router-dom';
 import { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
@@ -58,6 +62,7 @@ import JoinTeam from './pages/JoinTeam';
 import JudgeProfile from './pages/JudgeProfile';
 import OrganizerApplicationForm from './pages/OrganizerApplicationForm';
 import JudgeDashboard from './pages/JudgeDashboard';
+import MentorDashboard from './pages/MentorDashboard';
 import JudgeInbox from './pages/JudgeInbox';
 import OrganizerInbox from './pages/OrganizerInbox';
 import JudgeHackathons from './pages/JudgeHackathons';
@@ -69,6 +74,11 @@ import ParticipantDashboard from './pages/ParticipantDashboard';
 import TestEmailValidation from './pages/TestEmailValidation';
 import CertificateVerification from './pages/CertificateVerification';
 import PlatformAnalytics from './pages/PlatformAnalytics';
+import AuthCallback from './pages/AuthCallback';
+import MentorGallery from './pages/MentorGallery';
+import MentorPublicProfile from './pages/MentorPublicProfile';
+import MyMentor from './pages/MyMentor';
+import JudgeEvaluationView from './pages/JudgeEvaluationView';
 
 const queryClient = new QueryClient();
 
@@ -81,9 +91,21 @@ const ScrollToTop = () => {
 };
 
 const AppContent = () => {
-  const { loading } = useAuth();
+  const { loading, profile } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const hideNavbar = false;
+
+  // Requirement 9.1: Redirect judges to /judging/dashboard after sign-in
+  useEffect(() => {
+    if (!loading && profile?.role === 'judge') {
+      const isOnAuthPage = location.pathname === '/login' || location.pathname === '/auth/sign-in';
+      const isOnRoot = location.pathname === '/';
+      if (isOnAuthPage || isOnRoot) {
+        navigate('/judging/dashboard', { replace: true });
+      }
+    }
+  }, [loading, profile, location.pathname, navigate]);
   
   return (
     <>
@@ -94,6 +116,7 @@ const AppContent = () => {
         <Route path="/" element={<Index />} />
         <Route path="/senior-council" element={<SeniorCouncil />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
@@ -115,26 +138,104 @@ const AppContent = () => {
         <Route path="/community" element={<CommunityRedirect />} />
 
         <Route path="/organizer/apply" element={<OrganizerApplicationForm />} />
-        <Route path="/judge-dashboard" element={<JudgeDashboard />} />
-        <Route path="/judge-inbox" element={<JudgeInbox />} />
-        <Route path="/organizer-inbox" element={<OrganizerInbox />} />
-        <Route path="/judge/hackathons" element={<JudgeHackathons />} />
-        <Route path="/judge/hackathons/:hackathonId/submissions" element={<JudgeSubmissions />} />
+        <Route path="/mentor/dashboard" element={
+          <WithRoleProtection requiredRoles={['mentor', 'admin']}>
+            <MentorDashboard />
+          </WithRoleProtection>
+        } />
+        <Route path="/mentor-settings" element={
+          <WithRoleProtection requiredRoles={['mentor', 'admin']}>
+            <Navigate to="/mentor/dashboard" replace />
+          </WithRoleProtection>
+        } />
+        <Route path="/judge-dashboard" element={
+          <WithRoleProtection requiredRoles={['judge', 'admin']}>
+            <JudgeDashboard />
+          </WithRoleProtection>
+        } />
+        <Route path="/judging/dashboard" element={
+          <ProtectedRoute requiredRole="judge">
+            <JudgeDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/judging" element={
+          <ProtectedRoute requiredRole="judge">
+            <Navigate to="/judging/dashboard" replace />
+          </ProtectedRoute>
+        } />
+        <Route path="/judge-inbox" element={
+          <WithRoleProtection requiredRoles={['judge', 'admin']}>
+            <JudgeInbox />
+          </WithRoleProtection>
+        } />
+        <Route path="/organizer-inbox" element={
+          <WithRoleProtection requiredRoles={['organizer', 'admin']}>
+            <OrganizerInbox />
+          </WithRoleProtection>
+        } />
+        <Route path="/judge/hackathons" element={
+          <WithRoleProtection requiredRoles={['judge', 'admin']}>
+            <JudgeHackathons />
+          </WithRoleProtection>
+        } />
+        <Route path="/judge/hackathons/:hackathonId/submissions" element={
+          <WithRoleProtection requiredRoles={['judge', 'admin']}>
+            <JudgeSubmissions />
+          </WithRoleProtection>
+        } />
+        {/* Token-only judge scoring: no platform role or login required */}
         <Route path="/judge/:token" element={<JudgeScoring />} />
         <Route path="/project/:projectId" element={<ProjectDetail />} />
         <Route path="/project/:source/:projectId" element={<ProjectDetail />} />
         <Route path="/submissions/:slug" element={<SubmissionDetail />} />
-        <Route path="/my-hackathons" element={<ParticipantDashboard />} />
+        <Route path="/my-hackathons" element={
+          <WithRoleProtection requiredRoles={['participant', 'admin']}>
+            <ParticipantDashboard />
+          </WithRoleProtection>
+        } />
+        <Route path="/mentors/:mentorId" element={<MentorPublicProfile />} />
+        <Route path="/mentors" element={<MentorGallery />} />
+        <Route path="/my-mentor" element={
+          <ProtectedRoute>
+            <MyMentor />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/judging/evaluate/:evaluationId" element={
+          <ProtectedRoute requiredRole="judge">
+            <JudgeEvaluationView />
+          </ProtectedRoute>
+        } />
         
         <Route path="/analytics" element={<PlatformAnalytics />} />
         
         <Route path="/mfhop" element={<Navigate to="/network" replace />} />
         <Route path="/host-hackathon" element={<HostHackathon />} />
-        <Route path="/create-hackathon" element={<CreateHackathon />} />
-        <Route path="/organizer/dashboard" element={<OrganizerDashboard />} />
-        <Route path="/organizer/hackathons/:id" element={<UnifiedHackathonDashboard />} />
-        <Route path="/organizer/hackathons/:hackathonId/manage" element={<UnifiedHackathonDashboard />} />
-        <Route path="/organizer/invite/:token" element={<OrganizerInvite />} />
+        <Route path="/create-hackathon" element={
+          <WithRoleProtection requiredRoles={['organizer', 'admin']}>
+            <CreateHackathon />
+          </WithRoleProtection>
+        } />
+        <Route path="/organizer/dashboard" element={
+          <WithRoleProtection requiredRoles={['organizer', 'admin']}>
+            <OrganizerDashboard />
+          </WithRoleProtection>
+        } />
+        <Route path="/organizer/hackathons/:id" element={
+          <WithRoleProtection requiredRoles={['organizer', 'admin']}>
+            <UnifiedHackathonDashboard />
+          </WithRoleProtection>
+        } />
+        <Route path="/organizer/hackathons/:hackathonId/manage" element={
+          <WithRoleProtection requiredRoles={['organizer', 'admin']}>
+            <UnifiedHackathonDashboard />
+          </WithRoleProtection>
+        } />
+        <Route path="/organizer/invite/:token" element={
+          <WithRoleProtection requiredRoles={['organizer', 'admin']}>
+            <OrganizerInvite />
+          </WithRoleProtection>
+        } />
         <Route path="/organizer/:username" element={<OrganizerProfile />} />
         <Route path="/hackathon/:slug" element={<PublicHackathon />} />
         <Route path="/hackathon/:slug/submit" element={<HackathonSubmit />} />
@@ -153,6 +254,11 @@ const AppContent = () => {
     </>
   );
 };
+
+// Auth wrapper — no longer needed (Neon Auth removed)
+function NeonAuthWrapper({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
 
 const App = () => {
   useEffect(() => {
@@ -185,15 +291,17 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <AuthProvider>
-            <ConfirmProvider>
-              <Router>
-                <ModerationGuard>
-                  <AppContent />
-                </ModerationGuard>
-              </Router>
-            </ConfirmProvider>
-          </AuthProvider>
+          <Router>
+            <NeonAuthWrapper>
+              <AuthProvider>
+                <ConfirmProvider>
+                  <ModerationGuard>
+                    <AppContent />
+                  </ModerationGuard>
+                </ConfirmProvider>
+              </AuthProvider>
+            </NeonAuthWrapper>
+          </Router>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

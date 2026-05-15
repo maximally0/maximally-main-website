@@ -65,7 +65,7 @@ const CertificateVerification: React.FC = () => {
             } else {
               setVerification({
                 success: true,
-                status: 'valid',
+                status: 'verified',
                 message: 'Certificate is valid and authentic',
                 certificate_id: certificate_id.toUpperCase(),
                 certificate: certificate

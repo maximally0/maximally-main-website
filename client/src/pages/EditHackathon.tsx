@@ -133,7 +133,7 @@ function BrandingTab({
 
     setUploading(true);
     try {
-      const url = await uploadHackathonImage(file, hackathon.id, 'banner');
+      const url = await uploadHackathonImage(file, hackathon.id);
       updateField('banner_image', url);
       toast({ title: "Success", description: "Banner uploaded successfully!" });
     } catch (err: any) {

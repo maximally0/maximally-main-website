@@ -7,7 +7,7 @@ import { FaGithub } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '@/lib/supabaseClient';
+import { signInWithGoogle, signInWithGitHub } from '@/lib/supabaseClient';
 import Recaptcha, { RecaptchaRef } from '@/components/ui/recaptcha';
 import { isCaptchaRequired, isValidCaptchaToken } from '@/lib/captcha';
 import { Sparkles, Zap, Mail, ArrowLeft, RefreshCw, Eye, EyeOff } from 'lucide-react';
@@ -53,10 +53,8 @@ export default function Login() {
     
     if (oauthError) {
       window.history.replaceState({}, document.title, window.location.pathname);
-      if (supabase) {
-        supabase.auth.signOut().catch(() => {});
-      }
       try {
+        localStorage.removeItem('sb-session');
         localStorage.removeItem('maximally-supabase-auth');
         sessionStorage.clear();
       } catch (e) {}
@@ -69,9 +67,7 @@ export default function Login() {
       if (currentError) {
         localStorage.removeItem('oauth_profile_error');
         setError('Profile creation failed. Please try signing in again.');
-        if (supabase) {
-          supabase.auth.signOut().catch(() => {});
-        }
+        localStorage.removeItem('sb-session');
       }
     }
     
@@ -108,8 +104,8 @@ export default function Login() {
     setSuccessMessage(null);
   };
 
-  // Step 1: Request OTP
-  const handleRequestOtp = async () => {
+  // Step 1: Create Account Directly (OTP disabled)
+  const handleCreateAccount = async () => {
     setError(null);
     setSuccessMessage(null);
     setLoading(true);
@@ -146,7 +142,8 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch('/api/auth/signup-request-otp', {
+      // Use direct signup API that bypasses OTP completely
+      const response = await fetch('/api/auth/signup-direct', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -160,11 +157,20 @@ export default function Login() {
       const data = await response.json();
 
       if (data.success) {
-        setSignupStep('otp');
-        setSuccessMessage('Verification code sent! Check your email.');
-        setResendCooldown(60); // 60 second cooldown
+        setSuccessMessage('Account created successfully! Signing you in...');
+        // Auto sign in
+        setTimeout(async () => {
+          const result = await signIn(email, password);
+          if (result.error) {
+            setError('Account created but auto-login failed. Please sign in manually.');
+            setIsSignUp(false);
+            resetSignupForm();
+          } else {
+            navigate('/');
+          }
+        }, 1500);
       } else {
-        setError(data.message || 'Failed to send verification code');
+        setError(data.message || 'Failed to create account');
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
@@ -285,7 +291,7 @@ export default function Login() {
     
     if (isSignUp) {
       if (signupStep === 'form') {
-        await handleRequestOtp();
+        await handleCreateAccount(); // Changed from handleRequestOtp
       } else {
         await handleVerifyOtp();
       }
@@ -295,7 +301,6 @@ export default function Login() {
   };
 
   const handleGoogleSignIn = async () => {
-    if (!supabase) return;
     if (captchaRequired) {
       const currentToken = captchaToken || captchaTokenRef.current;
       if (!isValidCaptchaToken(currentToken)) {
@@ -304,25 +309,13 @@ export default function Login() {
       }
     }
     try {
-      await supabase.auth.signOut();
-      setTimeout(async () => {
-        if (!supabase) {
-          setError('Authentication service not available');
-          return;
-        }
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: { redirectTo: window.location.origin }
-        });
-        if (error) setError('Google sign-in failed: ' + error.message);
-      }, 100);
+      await signInWithGoogle();
     } catch (err) {
       setError('Google sign-in failed');
     }
   };
 
   const handleGithubSignIn = async () => {
-    if (!supabase) return;
     if (captchaRequired) {
       const currentToken = captchaToken || captchaTokenRef.current;
       if (!isValidCaptchaToken(currentToken)) {
@@ -331,18 +324,7 @@ export default function Login() {
       }
     }
     try {
-      await supabase.auth.signOut();
-      setTimeout(async () => {
-        if (!supabase) {
-          setError('Authentication service not available');
-          return;
-        }
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: 'github',
-          options: { redirectTo: window.location.origin }
-        });
-        if (error) setError('GitHub sign-in failed: ' + error.message);
-      }, 100);
+      await signInWithGitHub();
     } catch (err) {
       setError('GitHub sign-in failed');
     }
@@ -639,7 +621,7 @@ export default function Login() {
                     data-testid="button-submit"
                     disabled={loading}
                   >
-                    {loading ? 'LOADING...' : (isSignUp ? 'SEND VERIFICATION CODE' : 'ACCESS DASHBOARD')}
+                    {loading ? 'LOADING...' : (isSignUp ? 'CREATE ACCOUNT' : 'ACCESS DASHBOARD')}
                   </Button>
                 </>
               )}

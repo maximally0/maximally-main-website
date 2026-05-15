@@ -1,9 +1,8 @@
 // Simple judge profile route - no dependencies on judge_events
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 
 export function registerSimpleJudgeRoutes(app: Express) {
-  const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+  const supabaseAdmin = app.locals.supabaseAdmin as any;
 
   // Simple judge profile endpoint
   app.get("/api/judges/:username", async (req, res) => {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase, getStoredSession } from '@/lib/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -85,8 +85,7 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
   // Invite new organizer mutation
   const inviteMutation = useMutation({
     mutationFn: async ({ email, role }: { email: string; role: string }) => {
-      // Use the API to create invite and send email (handles token generation server-side)
-      const { data: { session } } = await supabase.auth.getSession();
+      const session = getStoredSession();
       if (!session?.access_token) {
         throw new Error('Not authenticated');
       }
@@ -110,12 +109,14 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
         throw new Error(data.message || 'Failed to send invitation');
       }
       
-      return { email };
+      return data;
     },
     onSuccess: (result) => {
       toast({
         title: 'Invitation sent!',
-        description: `An invitation email has been sent to ${result.email}.`,
+        description: result?.emailSent === false 
+          ? `Invite created for ${inviteEmail}. Email delivery may be delayed.`
+          : `An invitation email has been sent to ${inviteEmail}.`,
       });
       setInviteEmail('');
       queryClient.invalidateQueries({ queryKey: ['hackathon-organizers', hackathonId] });
@@ -132,12 +133,15 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
   // Update organizer role mutation
   const updateRoleMutation = useMutation({
     mutationFn: async ({ organizerId, role }: { organizerId: string; role: string }) => {
-      const { error } = await (supabase as any)
-        .from('hackathon_organizers')
-        .update({ role, updated_at: new Date().toISOString() })
-        .eq('id', organizerId);
-
-      if (error) throw error;
+      const session = getStoredSession();
+      if (!session?.access_token) throw new Error('Not authenticated');
+      const res = await fetch(`/api/organizer/hackathons/${hackathonId}/team/${organizerId}/role`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+        body: JSON.stringify({ role }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to update role');
     },
     onSuccess: () => {
       toast({ title: 'Role updated successfully' });
@@ -151,12 +155,14 @@ export function MultiOrganizerManager({ hackathonId, isOwner }: MultiOrganizerMa
   // Remove organizer mutation
   const removeMutation = useMutation({
     mutationFn: async (organizerId: string) => {
-      const { error } = await (supabase as any)
-        .from('hackathon_organizers')
-        .update({ status: 'removed', updated_at: new Date().toISOString() })
-        .eq('id', organizerId);
-
-      if (error) throw error;
+      const session = getStoredSession();
+      if (!session?.access_token) throw new Error('Not authenticated');
+      const res = await fetch(`/api/organizer/hackathons/${hackathonId}/team/${organizerId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${session.access_token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to remove organizer');
     },
     onSuccess: () => {
       toast({ title: 'Organizer removed' });

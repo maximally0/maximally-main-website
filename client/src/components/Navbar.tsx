@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X, Terminal, Mail, User, LogOut, Trophy, ChevronDown, ChevronRight, ExternalLink } from "lucide-react";
+import { Menu, X, Terminal, Mail, User, LogOut, Trophy, ChevronDown, ChevronRight, ExternalLink, Users, Shield, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "@/lib/supabaseClient";
 import { useAuth } from "@/contexts/AuthContext";
@@ -8,6 +8,8 @@ import { useJudgeUnreadCount } from "@/hooks/useJudgeUnreadCount";
 import { useOrganizerUnreadCount } from "@/hooks/useOrganizerUnreadCount";
 import { getAuthHeaders } from "@/lib/auth";
 import { NavDropdown } from "./NavDropdown";
+import { getAdminPanelBaseUrl } from "@/lib/adminPanelUrl";
+import { useMyMentor } from "@/hooks/useMyMentor";
 
 const PixelUserIcon = ({ className = "w-6 h-6" }: { className?: string }) => (
   <svg fill="currentColor" viewBox="0 0 22 22" className={className} xmlns="http://www.w3.org/2000/svg">
@@ -24,8 +26,9 @@ const dropdownMenus = {
   Platform: [
     { title: "Host an Event", description: "Launch your hackathon on Maximally infrastructure.", href: "/host-hackathon" },
     { title: "Event Infrastructure", description: "Submissions, judging, team formation, and more.", href: "/platform" },
-    { title: "Payments Infrastructure", description: "Sponsorships, prizes, and ticketing.", href: "/platform" },
+    { title: "Payments Infrastructure", description: "Sponsorships, prizes, and ticketing.", href: "/platform/payments" },
     { title: "Organizer Dashboard", description: "Manage events, analytics, and participants.", href: "/organizer/dashboard" },
+    { title: "Mentor Gallery", description: "Browse mentors and request help for your hackathon team.", href: "/mentors" },
   ],
   Network: [
     { title: "Senior Council", description: "Operators selected for documented extraordinary achievement.", href: "/senior-council" },
@@ -33,9 +36,9 @@ const dropdownMenus = {
   ],
   Resources: [
     { title: "Blog", description: "Articles on building, organizing, and the ecosystem.", href: "/blog" },
-    { title: "Podcasts", description: "Conversations with builders and operators.", href: "/resources" },
-    { title: "Interviews", description: "Deep dives with people shaping the ecosystem.", href: "/resources" },
-    { title: "Builder Stories", description: "Profiles of builders who shipped through Maximally.", href: "/resources" },
+    { title: "Podcasts", description: "Conversations with builders and operators.", href: "/resources/podcasts" },
+    { title: "Interviews", description: "Deep dives with people shaping the ecosystem.", href: "/resources/interviews" },
+    { title: "Builder Stories", description: "Profiles of builders who shipped through Maximally.", href: "/resources/stories" },
   ],
 };
 
@@ -139,6 +142,7 @@ const Navbar = () => {
   const { user, profile, loading, refreshProfile } = useAuth();
   const { unreadCount } = useJudgeUnreadCount();
   const { unreadCount: organizerUnreadCount } = useOrganizerUnreadCount();
+  const { hasMentor, mentorName } = useMyMentor(user?.id);
 
   /* scroll hide/show */
   useEffect(() => {
@@ -168,6 +172,9 @@ const Navbar = () => {
   const isLoggedIn = !!user && !loading && isProfileLoaded;
   const profileUrl = profile?.username ? `/profile/${profile.username}` : "/profile";
   const isOrganizer = (profile?.role as string) === "organizer";
+  const isMentor = (profile?.role as string) === "mentor" || (profile?.role as string) === "admin";
+  const isAdmin = (profile?.role as string) === "admin";
+  const adminPanelBase = getAdminPanelBaseUrl();
 
   useEffect(() => { if (user && !loading) refreshProfile(); }, [user?.id]);
 
@@ -249,6 +256,35 @@ const Navbar = () => {
                     </Link>
                   </>
                 )}
+                {isMentor && (
+                  <>
+                    <Link
+                      to="/mentor/dashboard"
+                      className="relative font-space text-sm font-medium px-3 py-2 text-orange-400 hover:text-orange-300 transition-all duration-200"
+                      data-testid="button-mentor-dashboard"
+                    >
+                      Mentor
+                    </Link>
+                    <Link
+                      to="/mentors"
+                      className="relative font-space text-sm font-medium px-2 py-2 text-gray-300 hover:text-orange-300 transition-all duration-200"
+                      data-testid="link-mentor-gallery-nav"
+                    >
+                      Gallery
+                    </Link>
+                  </>
+                )}
+                {isAdmin && adminPanelBase && (
+                  <a
+                    href={`${adminPanelBase}/dashboard`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative font-space text-sm font-medium px-2 py-2 text-amber-400/90 hover:text-amber-300 transition-all duration-200"
+                    data-testid="button-admin-panel-external"
+                  >
+                    Admin
+                  </a>
+                )}
                 <div className="relative" ref={profileDropdownRef}>
                   <button onClick={() => setProfileDropdownOpen(!profileDropdownOpen)} className="group relative" data-testid="button-profile-dropdown" aria-label="User profile">
                     {profile?.avatar_url ? (
@@ -275,6 +311,39 @@ const Navbar = () => {
                         <Link to={profileUrl} className="flex items-center space-x-3 px-5 py-3 font-space text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-150 group" onClick={() => setProfileDropdownOpen(false)}>
                           <User className="h-4 w-4 text-gray-500 group-hover:text-white transition-all" /><span>My Profile</span>
                         </Link>
+                        {hasMentor && (
+                          <Link
+                            to="/my-mentor"
+                            className="flex items-center space-x-3 px-5 py-3 font-space text-sm text-orange-300 hover:bg-orange-500/10 hover:text-orange-200 transition-all duration-150 group"
+                            onClick={() => setProfileDropdownOpen(false)}
+                          >
+                            <Users className="h-4 w-4 text-orange-400 group-hover:text-orange-300 transition-all" />
+                            <span>My Mentor{mentorName ? ` · ${mentorName.split(' ')[0]}` : ''}</span>
+                            <span className="ml-auto w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                          </Link>
+                        )}
+                        {isMentor && (
+                          <Link
+                            to="/mentor/dashboard"
+                            className="flex items-center space-x-3 px-5 py-3 font-space text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-150 group"
+                            onClick={() => setProfileDropdownOpen(false)}
+                          >
+                            <LayoutDashboard className="h-4 w-4 text-gray-500 group-hover:text-white transition-all" />
+                            <span>Mentor Dashboard</span>
+                          </Link>
+                        )}
+                        {isAdmin && adminPanelBase && (
+                          <a
+                            href={`${adminPanelBase}/dashboard`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-3 px-5 py-3 font-space text-sm text-amber-400/90 hover:bg-white/5 hover:text-amber-300 transition-all duration-150 group"
+                            onClick={() => setProfileDropdownOpen(false)}
+                          >
+                            <Shield className="h-4 w-4 text-amber-500 group-hover:text-amber-300 transition-all" />
+                            <span>Admin panel</span>
+                          </a>
+                        )}
                         {!isOrganizer && (
                           <Link to="/my-hackathons" className="flex items-center space-x-3 px-5 py-3 font-space text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-all duration-150 group" onClick={() => setProfileDropdownOpen(false)}>
                             <Trophy className="h-4 w-4 text-gray-500 group-hover:text-white transition-all" /><span>My Hackathons</span>
@@ -420,6 +489,38 @@ const Navbar = () => {
                           </Link>
                         </>
                       )}
+                      {isMentor && (
+                        <>
+                          <Link
+                            to="/mentor/dashboard"
+                            onClick={closeMobileMenu}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-orange-500/10 border border-orange-500/20 active:bg-orange-500/15 transition-colors"
+                          >
+                            <LayoutDashboard className="h-4 w-4 text-orange-400" />
+                            <span className="font-space text-sm font-medium text-orange-400">Mentor Dashboard</span>
+                          </Link>
+                          <Link
+                            to="/mentors"
+                            onClick={closeMobileMenu}
+                            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-white/[0.03] border border-gray-800/60 active:bg-white/[0.06] transition-colors"
+                          >
+                            <Users className="h-4 w-4 text-gray-400" />
+                            <span className="font-space text-sm font-medium text-gray-300">Mentor Gallery</span>
+                          </Link>
+                        </>
+                      )}
+                      {isAdmin && adminPanelBase && (
+                        <a
+                          href={`${adminPanelBase}/dashboard`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={closeMobileMenu}
+                          className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25 active:bg-amber-500/15 transition-colors"
+                        >
+                          <Shield className="h-4 w-4 text-amber-400" />
+                          <span className="font-space text-sm font-medium text-amber-300">Admin panel</span>
+                        </a>
+                      )}
                       <Link
                         to={profileUrl}
                         onClick={closeMobileMenu}
@@ -429,6 +530,19 @@ const Navbar = () => {
                         <span className="font-space text-sm font-medium text-gray-300">My Profile</span>
                         <ChevronRight className="h-4 w-4 text-gray-600 ml-auto" />
                       </Link>
+                      {hasMentor && (
+                        <Link
+                          to="/my-mentor"
+                          onClick={closeMobileMenu}
+                          className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-orange-500/10 border border-orange-500/20 active:bg-orange-500/15 transition-colors"
+                        >
+                          <Users className="h-4 w-4 text-orange-400" />
+                          <span className="font-space text-sm font-medium text-orange-300">
+                            My Mentor{mentorName ? ` · ${mentorName.split(' ')[0]}` : ''}
+                          </span>
+                          <span className="ml-auto w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                        </Link>
+                      )}
                       {!isOrganizer && (
                         <Link
                           to="/my-hackathons"

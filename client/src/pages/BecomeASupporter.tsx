@@ -513,8 +513,7 @@ const BecomeASupporter = () => {
       <SEO
         title="Become a Supporter — Back Builder Infrastructure | Maximally"
         description="Support the infrastructure powering serious builders. Help fund events, tools, and the ecosystem that builders and organizers rely on."
-        keywords="support builders, sponsor hackathons, builder ecosystem, Maximally supporter, hackathon sponsorship"
-        keywords="support maximally, builder ecosystem, serious builders, hackathon ecosystem"
+        keywords="support builders, sponsor hackathons, builder ecosystem, Maximally supporter, hackathon sponsorship, support maximally, serious builders, hackathon ecosystem"
       />
       
       <div className="bg-black min-h-screen">

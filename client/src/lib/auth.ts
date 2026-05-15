@@ -1,10 +1,9 @@
-import { supabase } from './supabaseClient';
+import { ensureSessionFresh } from './supabaseClient';
 
 // Auth utility functions
 export const getAuthToken = async (): Promise<string | null> => {
   try {
-    if (!supabase) return null;
-    const { data: { session } } = await supabase.auth.getSession();
+    const session = await ensureSessionFresh();
     return session?.access_token || null;
   } catch (error) {
     console.error('Error getting auth token:', error);

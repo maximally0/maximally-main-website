@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 import { sendAnnouncement, sendBulkEmails, sendOrganizerTeamInviteEmail } from "../services/email";
 
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
@@ -325,7 +324,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
       const { data, error } = await supabaseAdmin
         .from('hackathon_announcements')
         .insert({
-          hackathon_id: hackathonId,
+          hackathon_id: parseInt(hackathonId),
           title,
           content,
           announcement_type: announcement_type || 'general',
@@ -1081,7 +1080,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
       const frontendUrl = process.env.FRONTEND_URL || 'https://maximally.in';
       const inviteUrl = `${frontendUrl}/organizer/invite/${inviteToken}`;
 
-      // Send the invite email
+      // Send the invite email (best-effort — don't fail the invite if email fails)
       const emailResult = await sendOrganizerTeamInviteEmail({
         email: inviteeEmail,
         inviteeName,
@@ -1094,19 +1093,102 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
 
       if (!emailResult.success) {
         console.error('Failed to send team invite email:', emailResult.error);
-        return res.status(500).json({ 
-          success: false, 
-          message: 'Failed to send invite email',
-          error: emailResult.error 
+        // Still return success — the invite record exists, email is best-effort
+        return res.json({ 
+          success: true, 
+          message: `Invite created for ${inviteeEmail}. Email delivery may be delayed.`,
+          emailSent: false
         });
       }
 
       return res.json({ 
         success: true, 
-        message: `Invite email sent to ${inviteeEmail}` 
+        message: `Invite email sent to ${inviteeEmail}`,
+        emailSent: true
       });
     } catch (error: any) {
       console.error('Error sending team invite email:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Update organizer role
+  app.patch("/api/organizer/hackathons/:hackathonId/team/:organizerId/role", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      const { hackathonId, organizerId } = req.params;
+      const { role } = req.body;
+
+      if (!role || !['co-organizer', 'admin', 'viewer'].includes(role)) {
+        return res.status(400).json({ success: false, message: 'Invalid role' });
+      }
+
+      // Only owner can change roles
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon || hackathon.organizer_id !== userId) {
+        return res.status(403).json({ success: false, message: 'Only the hackathon owner can change roles' });
+      }
+
+      const { error } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .update({ role, updated_at: new Date().toISOString() })
+        .eq('id', organizerId)
+        .eq('hackathon_id', hackathonId);
+
+      if (error) throw error;
+
+      return res.json({ success: true, message: 'Role updated successfully' });
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  // Remove organizer from team
+  app.delete("/api/organizer/hackathons/:hackathonId/team/:organizerId", async (req, res) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      const { hackathonId, organizerId } = req.params;
+
+      // Only owner can remove organizers
+      const { data: hackathon } = await supabaseAdmin
+        .from('organizer_hackathons')
+        .select('organizer_id')
+        .eq('id', hackathonId)
+        .single();
+
+      if (!hackathon || hackathon.organizer_id !== userId) {
+        return res.status(403).json({ success: false, message: 'Only the hackathon owner can remove organizers' });
+      }
+
+      const { error } = await supabaseAdmin
+        .from('hackathon_organizers')
+        .update({ status: 'removed', updated_at: new Date().toISOString() })
+        .eq('id', organizerId)
+        .eq('hackathon_id', hackathonId);
+
+      if (error) throw error;
+
+      return res.json({ success: true, message: 'Organizer removed successfully' });
+    } catch (error: any) {
       return res.status(500).json({ success: false, message: error.message });
     }
   });

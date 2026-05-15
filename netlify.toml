@@ -4,45 +4,44 @@
   functions = "netlify/functions"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
 
 [dev]
   command = "npm run dev"
   port = 8888
-  targetPort = 5002
+  targetPort = 5000
   publish = "dist/public"
   functions = "netlify/functions"
 
 # Function configuration
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["@supabase/supabase-js"]
+  included_files = ["server/**"]
 
-# Headers for CORS
+# Headers for CORS and security
 [[headers]]
-  for = "/.netlify/functions/*"
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+
+[[headers]]
+  for = "/api/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Headers = "Content-Type, Authorization"
-    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization, X-Admin-Invite-Token"
+    Access-Control-Allow-Methods = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
 
-# Redirects for SPA (exclude function routes)
+# API redirect MUST come before the SPA catch-all
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api"
+  status = 200
+  force = true
+
+# SPA catch-all (after API redirect)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
   force = false
-
-# API redirects (for production)
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
-# Environment variables (these will be set in Netlify dashboard)
-# SUPABASE_URL
-# SUPABASE_SERVICE_ROLE_KEY
-# RESEND_API_KEY
-# RECAPTCHA_SECRET_KEY
-# SESSION_SECRET
-# SCHEDULER_SECRET

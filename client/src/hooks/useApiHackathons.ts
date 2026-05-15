@@ -53,7 +53,8 @@ export function useHackathons(options: UseHackathonsOptions = {}) {
         setHackathons(result.data.hackathons);
         setTotal(result.data.total || 0);
       } else {
-        setError(result.error || 'Failed to fetch hackathons');
+        const errMsg = typeof result.error === 'string' ? result.error : result.error?.message || 'Failed to fetch hackathons';
+        setError(errMsg);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch hackathons');

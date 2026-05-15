@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 
 // Helper to get user ID from bearer token
 async function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {

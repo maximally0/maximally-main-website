@@ -4,7 +4,6 @@
  * These routes are for admin panel use only
  */
 import type { Express, Request, Response } from "express";
-import { createClient } from "@supabase/supabase-js";
 import { Resend } from 'resend';
 
 export function registerAdminOrganizerApplicationRoutes(app: Express) {
@@ -58,6 +57,15 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
 
       const { id } = req.params;
 
+      // Get admin user from auth header
+      let adminUserId: string | null = null;
+      const authHeader = req.headers['authorization'];
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.slice('Bearer '.length);
+        const { data: { user } } = await supabaseAdmin.auth.getUser(token);
+        adminUserId = user?.id || null;
+      }
+
       // Get the application
       const { data: application, error: fetchError } = await supabaseAdmin
         .from('organizer_applications')
@@ -72,12 +80,15 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
         });
       }
 
+      const now = new Date().toISOString();
+
       // Update application status
       const { error: updateError } = await supabaseAdmin
         .from('organizer_applications')
         .update({ 
           status: 'approved',
-          reviewed_at: new Date().toISOString()
+          reviewed_at: now,
+          reviewed_by: adminUserId
         })
         .eq('id', id);
 
@@ -97,6 +108,74 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
           .update({ role: 'organizer' })
           .eq('id', application.user_id);
       }
+
+      // Create organizer_profiles entry so the organizer shows up in Organizer Oversight
+      if (application.user_id) {
+        const { error: profileError } = await supabaseAdmin
+          .from('organizer_profiles')
+          .upsert({
+            user_id: application.user_id,
+            display_name: application.full_name,
+            organization_name: application.organization_name || null,
+            organization_type: application.organization_type || null,
+            email: application.email,
+            location: application.location || null,
+            linkedin: application.linkedin || null,
+            twitter: application.twitter || null,
+            instagram: application.instagram || null,
+            website: application.organization_website || null,
+            verified_organizer: true,
+            verification_status: 'verified',
+            verified_at: now,
+            verified_by: adminUserId,
+            is_published: true,
+            created_at: now,
+            updated_at: now,
+          }, { onConflict: 'user_id' });
+
+        if (profileError) {
+          console.error('Error creating organizer profile:', profileError);
+          // Don't fail — application is already approved
+        }
+      }
+
+      // Write to admin_audit_logs
+      await supabaseAdmin
+        .from('admin_audit_logs')
+        .insert({
+          admin_id: adminUserId,
+          admin_email: application.email, // will be overwritten below if we can get admin email
+          action_type: 'organizer_approved',
+          target_type: 'organizer_application',
+          target_id: String(id),
+          reason: `Approved organizer application for ${application.full_name}`,
+          after_state: {
+            applicant_name: application.full_name,
+            applicant_email: application.email,
+            organization_name: application.organization_name || null,
+            user_id: application.user_id || null,
+          },
+          created_at: now,
+        });
+
+      // Write to admin_activity_feed
+      await supabaseAdmin
+        .from('admin_activity_feed')
+        .insert({
+          activity_type: 'organizer_approved',
+          actor_id: adminUserId,
+          target_type: 'organizer_application',
+          target_id: String(id),
+          target_name: application.full_name,
+          action: `Organizer application approved for ${application.full_name} (${application.email})`,
+          severity: 'info',
+          metadata: {
+            applicant_name: application.full_name,
+            applicant_email: application.email,
+            organization_name: application.organization_name || null,
+          },
+          created_at: now,
+        });
 
       // Send approval email
       if (resend && application.email) {
@@ -147,6 +226,15 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
       const { id } = req.params;
       const { reason } = req.body;
 
+      // Get admin user from auth header
+      let adminUserId: string | null = null;
+      const authHeader = req.headers['authorization'];
+      if (authHeader?.startsWith('Bearer ')) {
+        const token = authHeader.slice('Bearer '.length);
+        const { data: { user } } = await supabaseAdmin.auth.getUser(token);
+        adminUserId = user?.id || null;
+      }
+
       // Get the application
       const { data: application, error: fetchError } = await supabaseAdmin
         .from('organizer_applications')
@@ -161,13 +249,16 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
         });
       }
 
+      const now = new Date().toISOString();
+
       // Update application status
       const { error: updateError } = await supabaseAdmin
         .from('organizer_applications')
         .update({ 
           status: 'rejected',
           rejection_reason: reason || 'Application did not meet requirements',
-          reviewed_at: new Date().toISOString()
+          reviewed_at: now,
+          reviewed_by: adminUserId
         })
         .eq('id', id);
 
@@ -179,6 +270,43 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
           error: updateError.message 
         });
       }
+
+      // Write to admin_audit_logs
+      await supabaseAdmin
+        .from('admin_audit_logs')
+        .insert({
+          admin_id: adminUserId,
+          admin_email: application.email,
+          action_type: 'organizer_rejected',
+          target_type: 'organizer_application',
+          target_id: String(id),
+          reason: reason || 'Application did not meet requirements',
+          after_state: {
+            applicant_name: application.full_name,
+            applicant_email: application.email,
+            rejection_reason: reason || 'Application did not meet requirements',
+          },
+          created_at: now,
+        });
+
+      // Write to admin_activity_feed
+      await supabaseAdmin
+        .from('admin_activity_feed')
+        .insert({
+          activity_type: 'organizer_rejected',
+          actor_id: adminUserId,
+          target_type: 'organizer_application',
+          target_id: String(id),
+          target_name: application.full_name,
+          action: `Organizer application rejected for ${application.full_name} (${application.email})`,
+          severity: 'warning',
+          metadata: {
+            applicant_name: application.full_name,
+            applicant_email: application.email,
+            rejection_reason: reason || null,
+          },
+          created_at: now,
+        });
 
       // Send rejection email
       if (resend && application.email) {

@@ -13,7 +13,6 @@
  */
 
 import type { Express, Request, Response } from 'express';
-import { createClient } from '@supabase/supabase-js';
 import { generateSecureToken } from '../../shared/judgeToken';
 import { sendJudgeScoringLinkEmail } from '../services/email';
 

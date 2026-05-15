@@ -22,7 +22,8 @@ export const useBlogs = (page = 1, pageSize = 10, search = '') => {
               total: result.data.total || 0,
             };
           } else {
-            throw new Error(result.error || 'Failed to fetch blogs');
+            const errMsg = typeof result.error === 'string' ? result.error : result.error?.message || 'Failed to fetch blogs';
+            throw new Error(errMsg);
           }
         } catch (error) {
           throw new Error(error instanceof Error ? error.message : 'Failed to fetch blogs');
@@ -69,10 +70,11 @@ export const useBlog = (slug: string) => {
           if (result.success) {
             return result.data.blog || null;
           } else {
-            if (result.error === 'Blog not found') {
+            const errMsg = typeof result.error === 'string' ? result.error : result.error?.message || 'Failed to fetch blog';
+            if (errMsg === 'Blog not found') {
               return null;
             }
-            throw new Error(result.error || 'Failed to fetch blog');
+            throw new Error(errMsg);
           }
         } catch (error) {
           if (error instanceof Error && error.message === 'Blog not found') {

@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 import { sendCertificateEmail } from "../services/email";
 import { queueEmail, getQueueStats, createBatch, getBatchProgress } from "../services/emailQueue";
 
@@ -59,6 +58,16 @@ function generateCertificateId(): string {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
+}
+
+/**
+ * Map client/API certificate type to Postgres `certificate_type` enum.
+ * UI uses "participant"; DB enum value is "participation" (see supabase_setup.sql).
+ */
+function toDbCertificateType(type: string | undefined): string {
+  const t = (type || '').trim();
+  if (t === 'participant') return 'participation';
+  return t;
 }
 
 export function registerCertificateRoutes(app: Express) {
@@ -127,6 +136,10 @@ export function registerCertificateRoutes(app: Express) {
       const { hackathonId } = req.params;
       const { recipients, hackathon_name, send_email } = req.body;
 
+      if (!Array.isArray(recipients) || recipients.length === 0) {
+        return res.status(400).json({ success: false, message: 'recipients array is required' });
+      }
+
       // Verify access (owner or co-organizer)
       const access = await checkHackathonAccess(supabaseAdmin, hackathonId, userId);
       if (!access.hasAccess) {
@@ -157,13 +170,15 @@ export function registerCertificateRoutes(app: Express) {
       // Process each recipient
       for (const recipient of recipients) {
         try {
+          const dbType = toDbCertificateType(recipient.type);
+
           // Delete existing certificate for this person + hackathon + type combination
           const { data: existingCerts } = await supabaseAdmin
             .from('certificates')
             .select('id, certificate_id')
             .eq('hackathon_name', eventName)
             .eq('participant_email', recipient.email)
-            .eq('type', recipient.type);
+            .eq('type', dbType);
           
           if (existingCerts && existingCerts.length > 0) {
             const { error: deleteError } = await supabaseAdmin
@@ -200,7 +215,7 @@ export function registerCertificateRoutes(app: Express) {
             participant_name: recipient.name,
             participant_email: recipient.email,
             hackathon_name: eventName,
-            type: recipient.type,
+            type: dbType,
             position: recipient.position || null,
             status: 'active',
             generated_by: userId,
@@ -319,7 +334,7 @@ export function registerCertificateRoutes(app: Express) {
       
       // Check for existing certificates
       const emails = recipients.map((r: any) => r.email).filter(Boolean);
-      const types = [...new Set(recipients.map((r: any) => r.type))];
+      const types = [...new Set(recipients.map((r: any) => toDbCertificateType(r.type)))];
       
       const { data: existingCerts, error } = await supabaseAdmin
         .from('certificates')
@@ -571,8 +586,9 @@ export function registerCertificateRoutes(app: Express) {
 
       // Map recipients to their certificate status
       const recipientStatus = recipients.map((r: any) => {
+        const dbType = toDbCertificateType(r.type);
         const cert = (certificates || []).find(
-          (c: any) => c.participant_email === r.email && c.type === r.type
+          (c: any) => c.participant_email === r.email && c.type === dbType
         );
         return {
           ...r,

@@ -19,8 +19,9 @@
 
 import express, { type Request, Response, NextFunction } from "express";
 import serverless from "serverless-http";
-import { createClient } from "@supabase/supabase-js";
 import { Resend } from 'resend';
+import { db } from "../../server/db";
+import { getSupabaseAdmin } from "../../server/supabaseAdmin";
 import { registerCoreRoutes } from "../../server/routes/core-routes";
 import { registerOrganizerRoutes } from "../../server/routes/organizer";
 import { registerOrganizerApplicationRoutes } from "../../server/routes/organizer-applications";
@@ -50,6 +51,15 @@ import { registerEdgeCaseTestRoutes } from "../../server/routes/edge-case-tests"
 import { registerDocsRoutes } from "../../server/routes/docs";
 import { registerNewsletterRoutes } from "../../server/routes/newsletter";
 import { registerAdminNewsletterRoutes } from "../../server/routes/admin-newsletter";
+import { registerDbProxyRoutes } from "../../server/routes/db-proxy";
+// Role-based profiles routes
+import { registerBlogRoutes } from "../../server/routes/blogs";
+import { registerMentorRoutes } from "../../server/routes/mentors";
+import { registerMentorshipRoutes } from "../../server/routes/mentorship";
+import { registerJudgeEvaluationRoutes } from "../../server/routes/judge-evaluations";
+import { registerRoleRoutes } from "../../server/routes/roles";
+import { registerProfileRoutes } from "../../server/routes/profiles";
+import { registerOAuthCallbackRoutes } from "../../server/routes/oauth-callback";
 
 const app = express();
 app.use(express.json());
@@ -59,10 +69,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use((_req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = [
     'http://localhost:5173',
+    'http://localhost:5174',
     'http://localhost:5002',
     'http://localhost:5001',
     'https://maximally.in',
     'https://www.maximally.in',
+    'https://maximally.org',
+    'https://www.maximally.org',
+    'https://maximally.netlify.app',
     'https://maximally-admin-panel.vercel.app'
   ];
 
@@ -82,19 +96,11 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// Initialize Supabase - support both VITE_ prefixed and non-prefixed env vars
-const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+// Initialize Supabase admin client
+let supabaseAdmin: any;
 
-let supabaseAdmin: ReturnType<typeof createClient> | undefined;
-
-if (supabaseUrl && supabaseServiceKey) {
-  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  app.locals.supabaseAdmin = supabaseAdmin;
-}
+supabaseAdmin = getSupabaseAdmin();
+app.locals.supabaseAdmin = supabaseAdmin;
 
 // Initialize Resend for emails
 let resend: Resend | null = null;
@@ -199,32 +205,20 @@ async function sendWelcomeEmail(data: { email: string; userName: string }) {
   } catch {}
 }
 
+// bearerUserId: validates JWT via Neon Auth
 async function bearerUserId(supabase: any, token: string): Promise<string | null> {
-  try { 
-    // Validate inputs
-    if (!supabaseUrl || !supabaseAnonKey) {
-      console.error('Missing Supabase configuration for auth');
-      return null;
+  try {
+    // Check if this is a Neon Auth admin client (has custom getUser method)
+    if (supabase.auth && typeof supabase.auth.getUser === 'function') {
+      const { data: { user }, error } = await supabase.auth.getUser(token);
+      return error || !user ? null : user.id;
     }
     
-    // Create a temporary client with the user's JWT token to validate it
-    const tempClient = createClient(
-      supabaseUrl,
-      supabaseAnonKey, // Use anon key, not service role
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      }
-    );
-    
-    // Try to get the user with their own token
-    const { data: { user }, error } = await tempClient.auth.getUser();
-    return error || !user ? null : user.id; 
-  } catch { 
-    return null; 
+    // Fallback for regular Supabase client
+    const { data: { user }, error } = await supabase.auth.getUser(token);
+    return error || !user ? null : user.id;
+  } catch {
+    return null;
   }
 }
 
@@ -235,9 +229,8 @@ app.get("/api/health", (_req, res) => res.json({
   ok: true,
   timestamp: new Date().toISOString(),
   config: {
-    supabaseUrl: !!supabaseUrl,
-    supabaseAnonKey: !!supabaseAnonKey,
-    supabaseServiceKey: !!supabaseServiceKey,
+    neonAuthUrl: !!process.env.NEON_AUTH_URL,
+    databaseUrl: !!process.env.DATABASE_URL,
     supabaseAdmin: !!supabaseAdmin
   }
 }));
@@ -317,6 +310,109 @@ app.post("/api/auth/signup-request-otp", async (req, res) => {
     if (!emailResult.success) { await deleteOtp(supabaseAdmin, normalizedEmail); return res.status(500).json({ success: false, message: 'Failed to send verification email' }); }
     return res.json({ success: true, message: 'Verification code sent', email: normalizedEmail });
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+app.post("/api/auth/signup-direct", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    
+    const { email, password, name, username } = req.body;
+    
+    // Validate input
+    if (!email || !password || !name || !username) {
+      return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+    
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: 'Password must be at least 8 characters' });
+    }
+    
+    if (name.trim().length < 2) {
+      return res.status(400).json({ success: false, message: 'Name must be at least 2 characters' });
+    }
+    
+    if (username.trim().length < 3) {
+      return res.status(400).json({ success: false, message: 'Username must be at least 3 characters' });
+    }
+    
+    const normalizedEmail = email.toLowerCase().trim();
+    const emailValidation = validateEmailQuick(normalizedEmail);
+    if (!emailValidation.isValid) {
+      return res.status(400).json({ success: false, message: emailValidation.issues[0] });
+    }
+    
+    // Check if email already exists
+    const { data: existingUsers } = await (supabaseAdmin as any).auth.admin.listUsers();
+    if (existingUsers?.users?.some((u: any) => u.email?.toLowerCase() === normalizedEmail)) {
+      return res.status(409).json({ success: false, message: 'Account already exists' });
+    }
+    
+    // Check if username already exists
+    const { data: existingProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('username')
+      .eq('username', username.trim())
+      .single();
+    
+    if (existingProfile) {
+      return res.status(400).json({ success: false, message: 'Username is already taken' });
+    }
+    
+    // Create user account with auto-confirmation
+    const { data: userData, error: createError } = await (supabaseAdmin as any).auth.admin.createUser({
+      email: normalizedEmail,
+      password,
+      email_confirm: true, // Auto-confirm email
+      user_metadata: {
+        full_name: name.trim(),
+        username: username.trim(),
+        signup_method: 'direct',
+        otp_verified: false // No OTP used
+      }
+    });
+    
+    if (createError) {
+      console.error('Direct signup error:', createError);
+      return res.status(400).json({ success: false, message: createError.message });
+    }
+    
+    // Create profile record
+    if (userData.user) {
+      const { error: profileError } = await supabaseAdmin
+        .from('profiles')
+        .insert({
+          id: userData.user.id,
+          email: userData.user.email,
+          username: username.trim(),
+          full_name: name.trim(),
+          role: 'participant', // Default role
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        });
+      
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
+        // Try to clean up the user if profile creation fails
+        await (supabaseAdmin as any).auth.admin.deleteUser(userData.user.id);
+        return res.status(500).json({ success: false, message: 'Failed to create user profile' });
+      }
+    }
+    
+    return res.status(201).json({
+      success: true,
+      user: {
+        id: userData.user.id,
+        email: userData.user.email,
+        username: username.trim(),
+        full_name: name.trim()
+      },
+      message: 'Account created successfully'
+    });
+    
+  } catch (error) {
+    console.error('Direct signup function error:', error);
+    return res.status(500).json({ success: false, message: 'Internal server error' });
+  }
 });
 
 app.post("/api/auth/signup-verify-otp", async (req, res) => {
@@ -405,6 +501,55 @@ app.post("/api/auth/change-password", async (req, res) => {
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
 
+app.post("/api/auth/ensure-profile", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Missing token' });
+    const token = authHeader.toString().slice(7);
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    if (authError || !user?.id) return res.status(401).json({ success: false, message: 'Invalid token' });
+    console.log(`Ensuring profile exists for user: ${user.id}`);
+    const { data: existingProfile } = await supabaseAdmin.from('profiles').select('*').eq('id', user.id).maybeSingle();
+    if (existingProfile) {
+      console.log(`Profile already exists for user: ${user.id}`);
+      return res.json({ success: true, profile: existingProfile, created: false });
+    }
+    try {
+      console.log(`Creating auth.users record for user: ${user.id}`);
+      const { error: authUserError } = await supabaseAdmin.from('auth.users').upsert({
+        id: user.id, email: user.email || null, created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
+        raw_user_meta_data: { full_name: user.name || null, name: user.name || null, avatar_url: user.image || null }
+      }, { onConflict: 'id' });
+      if (authUserError) console.error('Error creating auth.users record:', authUserError);
+      else console.log(`Auth.users record created successfully for user: ${user.id}`);
+    } catch (authError) { console.error('Auth users table error:', authError); }
+    let username = user.username;
+    if (!username && (user.name || user.email)) {
+      const baseName = user.name || user.email?.split('@')[0] || 'user';
+      username = baseName.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 20);
+      if (username.length < 3) username = 'user' + username;
+      const randomSuffix = Math.random().toString(36).slice(2, 6);
+      username = username + randomSuffix;
+    }
+    console.log(`Creating profile record for user: ${user.id} with avatar: ${user.image || user.picture}`);
+    const { data: profile, error: profileError } = await supabaseAdmin.from('profiles').upsert({
+      id: user.id, email: user.email || null, full_name: user.name || null, username: username || null,
+      avatar_url: user.image || user.picture || null, // Check both image and picture fields
+      role: 'user', created_at: new Date().toISOString(), updated_at: new Date().toISOString()
+    }, { onConflict: 'id' }).select().maybeSingle();
+    if (profileError) {
+      console.error('Error creating profile:', profileError);
+      return res.status(500).json({ success: false, message: profileError.message });
+    }
+    console.log(`Profile created successfully for user: ${user.id}`);
+    return res.json({ success: true, profile: profile, created: true });
+  } catch (e: any) {
+    console.error('Ensure profile error:', e);
+    return res.status(500).json({ success: false, message: e.message });
+  }
+});
+
 
 // ============================================
 // ACCOUNT ROUTES
@@ -444,6 +589,60 @@ app.post("/api/admin/invite", async (req, res) => {
 // ============================================
 // PROFILE ROUTES
 // ============================================
+// Profile: Create (called after Neon Auth signup)
+app.post("/api/profile/create", async (req, res) => {
+  try {
+    const { id, email, full_name, username, role } = req.body;
+    if (!id) return res.status(400).json({ success: false, message: "id required" });
+    
+    // Check if profile already exists
+    const { data: existing } = await supabaseAdmin.from('profiles').select('id').eq('id', id).maybeSingle();
+    if (existing) {
+      // Profile already exists, return it
+      const { data: profile } = await supabaseAdmin.from('profiles').select('*').eq('id', id).single();
+      return res.json({ success: true, data: profile });
+    }
+    
+    // First, ensure the user exists in auth.users (required for foreign key constraint)
+    const { error: authUserError } = await supabaseAdmin.from('auth.users').upsert({
+      id,
+      email: email || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      raw_user_meta_data: {
+        full_name: full_name || null,
+        name: full_name || null
+      }
+    }, { onConflict: 'id' });
+    
+    if (authUserError) {
+      console.error('Error creating auth.users record:', authUserError);
+      // Continue anyway, as the auth.users table might be managed differently
+    }
+    
+    // Now create the profile
+    const { data, error } = await supabaseAdmin.from('profiles').upsert({
+      id, 
+      email: email || null, 
+      full_name: full_name || null,
+      username: username || null, 
+      role: role || 'user',
+      created_at: new Date().toISOString(), 
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' }).select().maybeSingle();
+    
+    if (error) {
+      console.error('Error creating profile:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+    
+    return res.json({ success: true, data });
+  } catch (e: any) { 
+    console.error('Profile creation error:', e);
+    return res.status(500).json({ success: false, message: e.message }); 
+  }
+});
+
 app.post("/api/profile/update", async (req, res) => {
   try {
     if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
@@ -483,6 +682,40 @@ app.get("/api/user/export-data", async (req, res) => {
     const { data: certificates } = await (supabaseAdmin as any).from('certificates').select('*').eq('participant_email', profile?.email);
     return res.json({ success: true, data: { profile, registrations: registrations || [], submissions: submissions || [], certificates: certificates || [], exported_at: new Date().toISOString() } });
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Profile: Get by userId (missing endpoint that client is calling)
+app.get("/api/profiles", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const { userId, username } = req.query;
+    
+    if (!userId && !username) {
+      return res.status(400).json({ success: false, message: "userId or username parameter required" });
+    }
+
+    let query = supabaseAdmin.from('profiles').select('*');
+    
+    if (userId) {
+      query = query.eq('id', userId as string);
+    } else if (username) {
+      query = query.eq('username', username as string);
+    }
+
+    const { data: profile, error } = await query.maybeSingle();
+    
+    if (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+
+    if (!profile) {
+      return res.status(404).json({ success: false, message: "Profile not found" });
+    }
+
+    return res.json({ success: true, data: profile });
+  } catch (e: any) { 
+    return res.status(500).json({ success: false, message: e.message }); 
+  }
 });
 
 
@@ -915,6 +1148,7 @@ app.get("/api/projects/:source/:projectId", async (req, res) => {
 // All API routes are handled by these route modules
 // IMPORTANT: Core routes must be registered FIRST (contains auth, health, etc.)
 registerCoreRoutes(app);
+registerOAuthCallbackRoutes(app); // OAuth callback handling for profile creation
 registerOrganizerRoutes(app);
 registerOrganizerApplicationRoutes(app);
 registerAdminOrganizerApplicationRoutes(app);
@@ -943,6 +1177,15 @@ registerEdgeCaseTestRoutes(app);
 registerDocsRoutes(app);
 registerNewsletterRoutes(app);
 registerAdminNewsletterRoutes(app);
+registerDbProxyRoutes(app); // DB proxy for admin panel frontend
+registerBlogRoutes(app);
+
+// Role-based profiles routes
+registerProfileRoutes(app);
+registerMentorRoutes(app);
+registerMentorshipRoutes(app);
+registerJudgeEvaluationRoutes(app);
+registerRoleRoutes(app);
 
 // ============================================
 // CATCH-ALL ROUTE (MUST BE LAST)

@@ -913,14 +913,14 @@ function OverviewTab({
                 <button
                   onClick={() => onToggleAutoPublish(!hackathon.auto_publish_gallery)}
                   disabled={hackathon.gallery_public}
-                  className={`relative w-14 h-7 rounded-full transition-colors ${
+                  className={`relative inline-flex items-center w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none flex-shrink-0 ${
                     hackathon.auto_publish_gallery 
-                      ? 'bg-green-600' 
+                      ? 'bg-green-500' 
                       : 'bg-gray-600'
                   } ${hackathon.gallery_public ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 >
-                  <span className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${
-                    hackathon.auto_publish_gallery ? 'translate-x-8' : 'translate-x-1'
+                  <span className={`inline-block w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${
+                    hackathon.auto_publish_gallery ? 'translate-x-7' : 'translate-x-1'
                   }`} />
                 </button>
               </div>

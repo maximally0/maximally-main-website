@@ -1,5 +1,4 @@
 import type { Express, Request, Response } from "express";
-import { createClient } from "@supabase/supabase-js";
 
 function bearerUserId(supabaseAdmin: any, token: string): Promise<string | null> {
   return supabaseAdmin.auth.getUser(token).then((r: any) => (r?.data?.user?.id ? r.data.user.id : null));
@@ -28,7 +27,7 @@ async function logAuditAction(
 }
 
 export function registerFeaturedContentRoutes(app: Express) {
-  const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+  const supabaseAdmin = app.locals.supabaseAdmin as any;
 
   if (!supabaseAdmin) {
     console.error("Supabase admin client not available");

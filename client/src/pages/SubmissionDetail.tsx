@@ -17,6 +17,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { getAuthToken } from '@/lib/auth';
 import SubmissionComments from '@/components/SubmissionComments';
 import SubmissionMilestones from '@/components/SubmissionMilestones';
 
@@ -57,7 +58,7 @@ interface Submission {
 
 export default function SubmissionDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -113,7 +114,7 @@ export default function SubmissionDetail() {
         const base64Data = reader.result as string;
 
         // Upload to API
-        const token = localStorage.getItem('token');
+        const token = await getAuthToken();
         const response = await fetch(`/api/submissions/${submission.id}/upload-logo`, {
           method: 'POST',
           headers: {
@@ -326,7 +327,7 @@ export default function SubmissionDetail() {
               <CardContent>
                 <SubmissionComments 
                   submissionId={submission.id}
-                  userRole={user?.role}
+                  userRole={profile?.role}
                 />
               </CardContent>
             </Card>

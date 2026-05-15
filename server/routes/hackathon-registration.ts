@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 import crypto from 'crypto';
 import { 
   sendRegistrationConfirmation, 
@@ -224,7 +223,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       const { data, error } = await supabaseAdmin
         .from('hackathon_registrations')
         .insert({
-          hackathon_id: hackathonId,
+          hackathon_id: parseInt(hackathonId),
           user_id: userId,
           username: profile?.username || userData.user.email?.split('@')[0],
           email: profile?.email || userData.user.email,
@@ -362,7 +361,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       // Get hackathon details for validation
       const { data: hackathon } = await supabaseAdmin
         .from('organizer_hackathons')
-        .select('max_team_size, status, end_date')
+        .select('team_size_max, team_size_min, status, end_date')
         .eq('id', hackathonId)
         .single();
 
@@ -382,7 +381,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       }
 
       // Validate team creation
-      const maxTeamSize = hackathon.max_team_size || 5;
+      const maxTeamSize = hackathon.team_size_max || 5;
       const teamValidation = validateTeamCreation(team_name, maxTeamSize, userId);
       
       if (!teamValidation.isValid) {
@@ -465,8 +464,6 @@ export function registerHackathonRegistrationRoutes(app: Express) {
           team_name: String(team_name).trim(),
           team_leader_id: userId,
           team_code: teamCode,
-          max_size: maxTeamSize,
-          current_size: 1,
           status: 'active'
         });
 
@@ -477,7 +474,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
       // Get the created team data
       const { data: createdTeam, error: fetchError } = await supabaseAdmin
         .from('hackathon_teams')
-        .select('id, team_name, hackathon_id, team_leader_id, team_code, max_size, current_size, created_at')
+        .select('id, team_name, hackathon_id, team_leader_id, team_code, created_at')
         .eq('team_leader_id', userId)
         .eq('hackathon_id', parseInt(hackathonId))
         .order('created_at', { ascending: false })

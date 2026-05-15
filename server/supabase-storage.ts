@@ -1,80 +1,46 @@
 // @ts-nocheck
-import { createClient } from "@supabase/supabase-js";
+import { neon } from "@neondatabase/serverless";
 import { type User, type InsertUser, type Judge, type InsertJudge, type JudgeEvent, type InsertJudgeEvent } from "@shared/schema";
 import type { IStorage } from "./storage";
 
 export class SupabaseStorage implements IStorage {
-  private supabase: ReturnType<typeof createClient>;
+  private sql: ReturnType<typeof neon>;
 
   constructor() {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-    if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error('Missing Supabase environment variables');
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) {
+      throw new Error('Missing DATABASE_URL environment variable');
     }
-
-    this.supabase = createClient(supabaseUrl, supabaseServiceKey);
+    this.sql = neon(databaseUrl);
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    const { data, error } = await this.supabase
-      .from('users')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error || !data) return undefined;
-    return data as User;
+    const rows = await this.sql`SELECT * FROM users WHERE id = ${id} LIMIT 1`;
+    return rows[0] as User | undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const { data, error } = await this.supabase
-      .from('users')
-      .select('*')
-      .eq('username', username)
-      .single();
-
-    if (error || !data) return undefined;
-    return data as User;
+    const rows = await this.sql`SELECT * FROM users WHERE username = ${username} LIMIT 1`;
+    return rows[0] as User | undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const { data, error } = await (this.supabase as any)
-      .from('users')
-      .insert(insertUser)
-      .select()
-      .single();
-
-    if (error) throw new Error(`Failed to create user: ${error.message}`);
-    return data as User;
+    const rows = await this.sql`
+      INSERT INTO users (username, password) VALUES (${insertUser.username}, ${insertUser.password})
+      RETURNING *`;
+    return rows[0] as User;
   }
 
   async getJudges(): Promise<Judge[]> {
-    const { data, error } = await this.supabase
-      .from('judges')
-      .select('*')
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: false });
-
-    if (error) throw new Error(`Failed to fetch judges: ${error.message}`);
-    return (data || []).map(this.mapDatabaseToJudge);
+    const rows = await this.sql`SELECT * FROM judges ORDER BY sort_order ASC, created_at DESC`;
+    return rows.map(this.mapDatabaseToJudge);
   }
 
   async getPublishedJudges(): Promise<Judge[]> {
-    const { data, error } = await this.supabase
-      .from('judges')
-      .select('*')
-      .eq('is_published', true)
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: false })
-      .order('tier', { ascending: false }) // Legacy first, then Chief, Senior, etc.
-      .order('total_events_judged', { ascending: false });
-
-    if (error) throw new Error(`Failed to fetch published judges: ${error.message}`);
-
-    // Map database columns to TypeScript interface
-    return (data || []).map(this.mapDatabaseToJudge);
+    const rows = await this.sql`
+      SELECT * FROM judges WHERE is_published = true
+      ORDER BY sort_order ASC, tier DESC, total_events_judged DESC`;
+    return rows.map(this.mapDatabaseToJudge);
   }
 
   private mapDatabaseToJudge(dbJudge: any): Judge {
@@ -125,117 +91,60 @@ export class SupabaseStorage implements IStorage {
   }
 
   async getJudgeByUsername(username: string): Promise<Judge | undefined> {
-    const { data, error } = await this.supabase
-      .from('judges')
-      .select('*')
-      .ilike('username', username)
-      .single();
+    const rows = await this.sql`SELECT * FROM judges WHERE LOWER(username) = LOWER(${username}) LIMIT 1`;
+    if (!rows.length) return undefined;
+    const dbJudge = rows[0] as any;
 
-    if (error || !data) return undefined;
+    // Fetch avatar from profiles
+    const profileRows = await this.sql`SELECT avatar_url FROM profiles WHERE LOWER(username) = LOWER(${username}) LIMIT 1`;
+    if (profileRows.length) {
+      dbJudge.profile_photo = (profileRows[0] as any).avatar_url || dbJudge.profile_photo;
+    }
 
-    // Fetch user's avatar from profiles table
-    const { data: profileData } = await (this.supabase as any)
-      .from('profiles')
-      .select('avatar_url')
-      .ilike('username', username)
-      .single();
-
-    // Use profile avatar if available, otherwise use judge's profile_photo
-    const judgeWithAvatar = {
-      ...(data as any),
-      profile_photo: (profileData as any)?.avatar_url || (data as any).profile_photo
-    };
-
-    return this.mapDatabaseToJudge(judgeWithAvatar);
+    return this.mapDatabaseToJudge(dbJudge);
   }
 
   async createJudge(insertJudge: InsertJudge): Promise<Judge> {
-    // Clean the data before inserting
-    const cleanedJudge = {
-      ...insertJudge,
-      // Ensure arrays are properly formatted
-      primary_expertise: insertJudge.primaryExpertise || [],
-      secondary_expertise: insertJudge.secondaryExpertise || [],
-      languages_spoken: insertJudge.languagesSpoken || [],
-      // Map camelCase to snake_case for database
-      full_name: insertJudge.fullName,
-      profile_photo: insertJudge.profilePhoto,
-      short_bio: insertJudge.shortBio,
-      role_title: insertJudge.currentRole,
-      judge_location: insertJudge.location,
-      total_events_judged: insertJudge.totalEventsJudged || 0,
-      total_teams_evaluated: insertJudge.totalTeamsEvaluated || 0,
-      total_mentorship_hours: insertJudge.totalMentorshipHours || 0,
-      years_of_experience: insertJudge.yearsOfExperience || 0,
-      average_feedback_rating: insertJudge.averageFeedbackRating,
-      events_judged_verified: insertJudge.eventsJudgedVerified || false,
-      teams_evaluated_verified: insertJudge.teamsEvaluatedVerified || false,
-      mentorship_hours_verified: insertJudge.mentorshipHoursVerified || false,
-      feedback_rating_verified: insertJudge.feedbackRatingVerified || false,
-      public_achievements: insertJudge.publicAchievements,
-      mentorship_statement: insertJudge.mentorshipStatement,
-      availability_status: insertJudge.availabilityStatus || 'available',
-      is_published: insertJudge.isPublished || false,
-      proof_of_judging: insertJudge.proofOfJudging,
-      calendar_link: insertJudge.calendarLink,
-      compensation_preference: insertJudge.compensationPreference,
-      conflict_of_interest: insertJudge.conflictOfInterest,
-      agreed_to_nda: insertJudge.agreedToNDA || false,
-      judge_references: insertJudge.references,
-    };
-
-    // Remove the camelCase properties that don't exist in the database
-    const {
-      fullName, profilePhoto, shortBio, currentRole, primaryExpertise, secondaryExpertise,
-      totalEventsJudged, totalTeamsEvaluated, totalMentorshipHours, yearsOfExperience,
-      averageFeedbackRating, eventsJudgedVerified, teamsEvaluatedVerified,
-      mentorshipHoursVerified, feedbackRatingVerified, languagesSpoken,
-      publicAchievements, mentorshipStatement, availabilityStatus, isPublished,
-      proofOfJudging, calendarLink, compensationPreference, conflictOfInterest,
-      agreedToNDA, ...dbJudge
-    } = cleanedJudge;
-
-    const { data, error } = await (this.supabase as any)
-      .from('judges')
-      .insert(dbJudge)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Supabase insert error:', error);
-      throw new Error(`Failed to create judge: ${error.message}`);
-    }
-
-    return this.mapDatabaseToJudge(data);
+    const rows = await this.sql`
+      INSERT INTO judges (
+        username, full_name, profile_photo, headline, short_bio, judge_location,
+        role_title, company, primary_expertise, secondary_expertise,
+        total_events_judged, total_teams_evaluated, total_mentorship_hours,
+        years_of_experience, average_feedback_rating, events_judged_verified,
+        teams_evaluated_verified, mentorship_hours_verified, feedback_rating_verified,
+        linkedin, github, twitter, website, languages_spoken, public_achievements,
+        mentorship_statement, availability_status, tier, is_published, email, phone,
+        resume, proof_of_judging, timezone, calendar_link, compensation_preference,
+        conflict_of_interest, agreed_to_nda, judge_references, address
+      ) VALUES (
+        ${insertJudge.username}, ${insertJudge.fullName}, ${insertJudge.profilePhoto ?? null},
+        ${insertJudge.headline}, ${insertJudge.shortBio ?? null}, ${insertJudge.location ?? null},
+        ${insertJudge.currentRole}, ${insertJudge.company ?? null},
+        ${insertJudge.primaryExpertise || []}, ${insertJudge.secondaryExpertise || []},
+        ${insertJudge.totalEventsJudged || 0}, ${insertJudge.totalTeamsEvaluated || 0},
+        ${insertJudge.totalMentorshipHours || 0}, ${insertJudge.yearsOfExperience || 0},
+        ${insertJudge.averageFeedbackRating ?? null}, ${insertJudge.eventsJudgedVerified || false},
+        ${insertJudge.teamsEvaluatedVerified || false}, ${insertJudge.mentorshipHoursVerified || false},
+        ${insertJudge.feedbackRatingVerified || false}, ${insertJudge.linkedin ?? null},
+        ${insertJudge.github ?? null}, ${insertJudge.twitter ?? null}, ${insertJudge.website ?? null},
+        ${insertJudge.languagesSpoken || []}, ${insertJudge.publicAchievements ?? null},
+        ${insertJudge.mentorshipStatement ?? null}, ${insertJudge.availabilityStatus || 'available'},
+        ${insertJudge.tier || 'starter'}, ${insertJudge.isPublished || false},
+        ${insertJudge.email}, ${insertJudge.phone ?? null}, ${insertJudge.resume ?? null},
+        ${insertJudge.proofOfJudging ?? null}, ${insertJudge.timezone ?? null},
+        ${insertJudge.calendarLink ?? null}, ${insertJudge.compensationPreference ?? null},
+        ${insertJudge.conflictOfInterest ?? null}, ${insertJudge.agreedToNDA || false},
+        ${insertJudge.references ?? null}, ${insertJudge.address ?? null}
+      ) RETURNING *`;
+    return this.mapDatabaseToJudge(rows[0]);
   }
 
   async getJudgeEvents(judgeId: number): Promise<JudgeEvent[]> {
-    // In the current schema, judge_events.judge_id is a UUID that references auth.users(id),
-    // while the judges table uses a numeric id primary key and a separate user_id column.
-    // So we first look up the judge's user_id, then query judge_events by that UUID.
-    const { data: judgeRow, error: judgeError } = await this.supabase
-      .from('judges')
-      .select('user_id')
-      .eq('id', judgeId)
-      .maybeSingle();
-
-    if (judgeError) {
-      throw new Error(`Failed to fetch judge for events: ${judgeError.message}`);
-    }
-    if (!judgeRow || !judgeRow.user_id) {
-      // No associated auth user; just return no events
-      return [];
-    }
-
-    const { data, error } = await this.supabase
-      .from('judge_events')
-      .select('*')
-      .eq('judge_id', judgeRow.user_id)
-      // Column is named "date" in the current schema
-      .order('date', { ascending: false });
-
-    if (error) throw new Error(`Failed to fetch judge events: ${error.message}`);
-    return (data || []).map(this.mapDatabaseToJudgeEvent);
+    const judgeRows = await this.sql`SELECT user_id FROM judges WHERE id = ${judgeId} LIMIT 1`;
+    if (!judgeRows.length || !(judgeRows[0] as any).user_id) return [];
+    const userId = (judgeRows[0] as any).user_id;
+    const rows = await this.sql`SELECT * FROM judge_events WHERE judge_id = ${userId} ORDER BY date DESC`;
+    return rows.map(this.mapDatabaseToJudgeEvent);
   }
 
   private mapDatabaseToJudgeEvent(dbEvent: any): JudgeEvent {
@@ -243,7 +152,6 @@ export class SupabaseStorage implements IStorage {
       id: dbEvent.id,
       judgeId: dbEvent.judge_id,
       eventName: dbEvent.event_name,
-      // Columns are "role" and "date" in the current schema
       role: dbEvent.role,
       date: dbEvent.date,
       link: dbEvent.event_link,
@@ -252,113 +160,11 @@ export class SupabaseStorage implements IStorage {
   }
 
   async createJudgeEvent(insertEvent: InsertJudgeEvent): Promise<JudgeEvent> {
-    // Map camelCase to snake_case
-    const dbEvent = {
-      judge_id: insertEvent.judgeId,
-      event_name: insertEvent.eventName,
-      role: insertEvent.role,
-      date: insertEvent.date,
-      event_link: insertEvent.link,
-      verified: insertEvent.verified || false,
-    };
-
-    const { data, error } = await (this.supabase as any)
-      .from('judge_events')
-      .insert(dbEvent)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Supabase judge event insert error:', error);
-      throw new Error(`Failed to create judge event: ${error.message}`);
-    }
-
-    return this.mapDatabaseToJudgeEvent(data);
-  }
-
-  // Additional helper methods for judge management
-  async updateJudgePublishStatus(judgeId: number, isPublished: boolean): Promise<void> {
-    const { error } = await (this.supabase as any)
-      .from('judges')
-      .update({ is_published: isPublished })
-      .eq('id', judgeId);
-
-    if (error) throw new Error(`Failed to update judge publish status: ${error.message}`);
-  }
-
-  async updateJudgeTier(judgeId: number, tier: 'starter' | 'verified' | 'senior' | 'chief' | 'legacy'): Promise<void> {
-    const { error } = await (this.supabase as any)
-      .from('judges')
-      .update({ tier })
-      .eq('id', judgeId);
-
-    if (error) throw new Error(`Failed to update judge tier: ${error.message}`);
-  }
-
-  async verifyJudgeMetrics(judgeId: number, metrics: {
-    eventsJudgedVerified?: boolean;
-    teamsEvaluatedVerified?: boolean;
-    mentorshipHoursVerified?: boolean;
-    feedbackRatingVerified?: boolean;
-  }): Promise<void> {
-    const updateData: any = {};
-
-    if (metrics.eventsJudgedVerified !== undefined) {
-      updateData.events_judged_verified = metrics.eventsJudgedVerified;
-    }
-    if (metrics.teamsEvaluatedVerified !== undefined) {
-      updateData.teams_evaluated_verified = metrics.teamsEvaluatedVerified;
-    }
-    if (metrics.mentorshipHoursVerified !== undefined) {
-      updateData.mentorship_hours_verified = metrics.mentorshipHoursVerified;
-    }
-    if (metrics.feedbackRatingVerified !== undefined) {
-      updateData.feedback_rating_verified = metrics.feedbackRatingVerified;
-    }
-
-    const { error } = await (this.supabase as any)
-      .from('judges')
-      .update(updateData)
-      .eq('id', judgeId);
-
-    if (error) throw new Error(`Failed to verify judge metrics: ${error.message}`);
-  }
-
-  async searchJudges(query: string, filters?: {
-    tier?: string;
-    expertise?: string;
-    location?: string;
-  }): Promise<Judge[]> {
-    let supabaseQuery = this.supabase
-      .from('judges')
-      .select('*')
-      .eq('is_published', true)
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: false });
-
-    // Add text search
-    if (query) {
-      supabaseQuery = supabaseQuery.or(`full_name.ilike.%${query}%,company.ilike.%${query}%,headline.ilike.%${query}%,judge_location.ilike.%${query}%`);
-    }
-
-    // Add filters
-    if (filters?.tier && filters.tier !== 'all') {
-      supabaseQuery = supabaseQuery.eq('tier', filters.tier);
-    }
-
-    if (filters?.expertise && filters.expertise !== 'all') {
-      supabaseQuery = supabaseQuery.or(`primary_expertise.cs.{${filters.expertise}},secondary_expertise.cs.{${filters.expertise}}`);
-    }
-
-    if (filters?.location) {
-      supabaseQuery = supabaseQuery.ilike('judge_location', `%${filters.location}%`);
-    }
-
-    const { data, error } = await supabaseQuery
-      .order('tier', { ascending: false })
-      .order('total_events_judged', { ascending: false });
-
-    if (error) throw new Error(`Failed to search judges: ${error.message}`);
-    return (data || []) as Judge[];
+    const rows = await this.sql`
+      INSERT INTO judge_events (judge_id, event_name, role, date, event_link, verified)
+      VALUES (${insertEvent.judgeId}, ${insertEvent.eventName}, ${insertEvent.role},
+              ${insertEvent.date}, ${insertEvent.link ?? null}, ${insertEvent.verified || false})
+      RETURNING *`;
+    return this.mapDatabaseToJudgeEvent(rows[0]);
   }
 }

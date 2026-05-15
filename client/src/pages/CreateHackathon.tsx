@@ -98,8 +98,7 @@ export default function CreateHackathon() {
       <SEO
         title="Create Your Hackathon — Builder Event Setup | Maximally"
         description="Set up and launch your hackathon on Maximally infrastructure. Full event management, submissions, judging, and analytics."
-        keywords="create hackathon, launch event, hackathon setup, builder event, Maximally organizer"
-        keywords="create hackathon, host hackathon, organize event"
+        keywords="create hackathon, launch event, hackathon setup, builder event, Maximally organizer, host hackathon, organize event"
       />
 
       <div className="min-h-screen bg-black text-white relative overflow-hidden">

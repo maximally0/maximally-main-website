@@ -14,7 +14,6 @@
 
 // @ts-nocheck
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 import { sendJudgeReminderEmail } from "../services/email";
 
 // Helper to get user ID from bearer token

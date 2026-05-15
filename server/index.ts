@@ -1,9 +1,9 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 import { runAutoMigrations } from "./auto-migrate";
+import { getSupabaseAdmin } from "./supabaseAdmin";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use((_req: Request, res: Response, next: NextFunction) => {
   const allowedOrigins = [
     'http://localhost:5173',
+    'http://localhost:5174',  // Added for admin panel
     'http://localhost:5002',
     'http://localhost:5001',
     'https://maximally.in',
@@ -65,22 +66,15 @@ app.get('/vibe', (_req: Request, res: Response) => {
   res.redirect(301, 'https://vibe-a-thon.devpost.com');
 });
 
-// Initialize Supabase service-role client on the server only.
-// Required env vars: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+// Initialize Supabase admin client
 (() => {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
-    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    app.locals.supabaseAdmin = supabaseAdmin;
-    log("Supabase admin client initialized");
-    
-    // Run auto-migrations
-    runAutoMigrations(supabaseAdmin);
-  } else {
-    log("Supabase admin client NOT initialized: missing env SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+  try {
+    app.locals.supabaseAdmin = getSupabaseAdmin();
+    log("✓ Supabase admin client initialized successfully");
+    runAutoMigrations();
+  } catch (error: any) {
+    log(`✗ Failed to initialize Supabase admin client: ${error.message}`);
+    throw error;
   }
 })();
 

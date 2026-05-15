@@ -1,5 +1,4 @@
 import type { Express, Request, Response, NextFunction } from 'express';
-import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { generateNewsletterEmail, generateUnsubscribeUrl } from '../utils/email-templates';
 import { 
@@ -15,26 +14,17 @@ import { rateLimiters } from '../middleware/rateLimiter';
 interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
-    email?: string;
+    email: string;
     [key: string]: any;
   };
 }
 
 export function registerAdminNewsletterRoutes(app: Express) {
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.error('Missing Supabase configuration for admin newsletter routes');
+  const supabase = app.locals.supabaseAdmin;
+  if (!supabase) {
+    console.error('Missing DB adapter for admin newsletter routes');
     return;
   }
-  
-  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  });
 
   const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
   const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@maximally.in';

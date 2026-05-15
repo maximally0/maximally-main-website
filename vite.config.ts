@@ -28,14 +28,7 @@ export default defineConfig(async ({ mode }) => {
       outDir: path.resolve(import.meta.dirname, "dist/public"),
       emptyOutDir: true,
     },
-    server: {
-      host: "0.0.0.0",
-      port: 5000,
-      strictPort: true,
-      hmr: {
-        overlay: false,
-      },
-    },
+    // Remove server config since we're using middleware mode
     envDir: path.resolve(import.meta.dirname),
   };
 });

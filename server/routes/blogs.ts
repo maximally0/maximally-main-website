@@ -1,10 +1,9 @@
 import type { Express, Request, Response } from "express";
-import { createClient } from "@supabase/supabase-js";
 
 export function registerBlogRoutes(app: Express) {
   app.get("/api/blogs", async (req: Request, res: Response) => {
     try {
-      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      const supabaseAdmin = app.locals.supabaseAdmin as any;
       if (!supabaseAdmin) {
         return res.status(500).json({ success: false, message: "Supabase not configured" });
       }
@@ -47,7 +46,7 @@ export function registerBlogRoutes(app: Express) {
 
   app.get("/api/blogs/:slug", async (req: Request, res: Response) => {
     try {
-      const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient> | undefined;
+      const supabaseAdmin = app.locals.supabaseAdmin as any;
       if (!supabaseAdmin) {
         return res.status(500).json({ success: false, message: "Supabase not configured" });
       }

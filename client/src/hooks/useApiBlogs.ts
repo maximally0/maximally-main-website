@@ -48,7 +48,8 @@ export function useBlogs(options: UseBlogsOptions = {}) {
         setBlogs(result.data.blogs);
         setTotal(result.data.total || 0);
       } else {
-        setError(result.error || 'Failed to fetch blogs');
+        const errMsg = typeof result.error === 'string' ? result.error : result.error?.message || 'Failed to fetch blogs';
+        setError(errMsg);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch blogs');
@@ -89,7 +90,8 @@ export function useBlog(slug: string) {
       if (result.success) {
         setBlog(result.data.blog);
       } else {
-        setError(result.error || 'Blog not found');
+        const errMsg = typeof result.error === 'string' ? result.error : result.error?.message || 'Blog not found';
+        setError(errMsg);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch blog');

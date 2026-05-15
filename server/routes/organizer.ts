@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { Express } from "express";
-import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { sendWinnerNotification } from "../services/email";
 import { validateHackathonDates, validateDateUpdate } from "../../shared/dateValidation";

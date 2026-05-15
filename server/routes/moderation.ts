@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { Express, Request, Response } from "express";
-import { createClient } from "@supabase/supabase-js";
 
 // Rate limiter helper
 const rateBuckets = new Map<string, { tokens: number; last: number }>();

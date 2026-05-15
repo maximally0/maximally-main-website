@@ -8,7 +8,6 @@
  */
 
 import type { Express, Request, Response } from 'express';
-import { createClient } from '@supabase/supabase-js';
 import { generateSecureToken } from '../../shared/judgeToken';
 import { sendJudgeScoringLinkEmail } from '../services/email';
 
@@ -52,7 +51,7 @@ async function checkHackathonAccess(
 }
 
 export function registerSimplifiedJudgesRoutes(app: Express) {
-  const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
+  const supabaseAdmin = app.locals.supabaseAdmin as any;
 
   if (!supabaseAdmin) {
     console.warn('Simplified judges routes not registered: Supabase admin client not available');
@@ -104,6 +103,78 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
       return res.json({ success: true, data: data || [] });
     } catch (error: any) {
       console.error('Error in GET judges:', error);
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  /**
+   * GET /api/organizer/hackathons/:hackathonId/judge-scoring-links
+   *
+   * Returns each judge with their current scoring token (if any), without rotating tokens or sending email.
+   * Used by the organizer UI to show copyable links before resending emails.
+   */
+  app.get('/api/organizer/hackathons/:hackathonId/judge-scoring-links', async (req: Request, res: Response) => {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+      }
+
+      const token = authHeader.slice('Bearer '.length);
+      const userId = await bearerUserId(supabaseAdmin, token);
+      if (!userId) {
+        return res.status(401).json({ success: false, message: 'Invalid token' });
+      }
+
+      const { hackathonId } = req.params;
+      const access = await checkHackathonAccess(supabaseAdmin, hackathonId, userId);
+      if (!access.hasAccess) {
+        return res.status(403).json({ success: false, message: 'Not authorized' });
+      }
+
+      const hid = parseInt(hackathonId, 10);
+      if (Number.isNaN(hid)) {
+        return res.status(400).json({ success: false, message: 'Invalid hackathon id' });
+      }
+
+      const { data: judges, error: judgesError } = await supabaseAdmin
+        .from('hackathon_judges')
+        .select('id, name, email')
+        .eq('hackathon_id', hid)
+        .order('created_at', { ascending: true });
+
+      if (judgesError) {
+        console.error('Error fetching judges for scoring links:', judgesError);
+        return res.status(500).json({ success: false, message: 'Failed to fetch judges' });
+      }
+
+      const { data: tokenRows, error: tokensError } = await supabaseAdmin
+        .from('judge_scoring_tokens')
+        .select('judge_id, token, expires_at')
+        .eq('hackathon_id', hid);
+
+      if (tokensError) {
+        console.error('Error fetching judge scoring tokens:', tokensError);
+        return res.status(500).json({ success: false, message: 'Failed to fetch scoring tokens' });
+      }
+
+      const byJudgeId = new Map<string, { token: string; expires_at: string }>();
+      for (const row of tokenRows || []) {
+        const jid = String((row as any).judge_id);
+        byJudgeId.set(jid, { token: (row as any).token, expires_at: (row as any).expires_at });
+      }
+
+      const judgesPayload = (judges || []).map((j: any) => ({
+        judgeId: String(j.id),
+        name: j.name,
+        email: j.email,
+        token: byJudgeId.get(String(j.id))?.token ?? null,
+        expiresAt: byJudgeId.get(String(j.id))?.expires_at ?? null
+      }));
+
+      return res.json({ success: true, judges: judgesPayload });
+    } catch (error: any) {
+      console.error('Error in GET judge-scoring-links:', error);
       return res.status(500).json({ success: false, message: error.message });
     }
   });
@@ -373,6 +444,7 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
 
       let emailsSent = 0;
       const errors: string[] = [];
+      const judgeTokens: { name: string; email: string; token: string }[] = [];
 
       for (const judge of judges) {
         try {
@@ -411,6 +483,13 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
           // Send email
           const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/judge/${tokenValue}`;
           
+          // Always collect the token for display
+          judgeTokens.push({
+            name: (judge as any).name,
+            email: (judge as any).email,
+            token: tokenValue
+          });
+
           const emailResult = await sendJudgeScoringLinkEmail({
             email: (judge as any).email,
             judgeName: (judge as any).name,
@@ -435,6 +514,7 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
         message: `Scoring links sent to ${emailsSent}/${judges.length} judges`,
         emailsSent,
         totalJudges: judges.length,
+        judgeTokens,
         errors: errors.length > 0 ? errors : undefined
       });
     } catch (error: any) {

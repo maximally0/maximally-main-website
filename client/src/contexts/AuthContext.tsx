@@ -1,22 +1,22 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import type { User, Session } from '@supabase/supabase-js';
 import { 
-  supabase, 
+  getUser, 
+  getSession, 
   signInWithEmailPassword, 
-  signUpWithEmailPassword,
-  signInWithGoogle,
-  signUpWithGoogle,
-  signInWithGitHub,
-  signUpWithGitHub,
+  signUp as supabaseSignUp, 
+  signInWithGoogle, 
+  signInWithGitHub, 
   signOut as supabaseSignOut,
   getCurrentUserWithProfile,
   getUserModerationStatus,
+  isUserBanned,
+  isUserMuted,
+  type User,
+  type Session,
   type Profile,
-  type SignUpPayload,
-  type ModerationStatus
+  type ModerationStatus,
+  type SignUpPayload
 } from '@/lib/supabaseClient';
-import { apiClient } from '@/lib/apiClient';
-import { USE_API } from '@/lib/featureFlags';
 
 interface AuthContextType {
   user: User | null;
@@ -38,338 +38,200 @@ interface AuthContextType {
   refreshModerationStatus: () => Promise<void>;
 }
 
+// Types imported from supabaseClient
+export type { User, Session, Profile, ModerationStatus } from '@/lib/supabaseClient';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
+  return ctx;
 }
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [moderationStatus, setModerationStatus] = useState<ModerationStatus | null>(null);
 
-  // Computed moderation flags
   const isBanned = moderationStatus?.is_banned ?? false;
   const isMuted = moderationStatus?.is_muted ?? false;
   const isSuspended = moderationStatus?.is_suspended ?? false;
 
-  const refreshModerationStatus = async () => {
-    try {
-      if (user) {
-        const status = await getUserModerationStatus(user.id);
-        setModerationStatus(status);
+  // Load user session on mount
+  useEffect(() => {
+    const initSession = async () => {
+      try {
+        setLoading(true);
+        
+        // Get current user and profile using supabaseClient
+        const result = await getCurrentUserWithProfile();
+        
+        if (!result) {
+          setLoading(false);
+          return;
+        }
+
+        setUser(result.user);
+        setProfile(result.profile);
+        
+        // Get session
+        const session = await getSession();
+        setSession(session);
+
+        // Load moderation status
+        if (result.user?.id) {
+          try {
+            const moderationStatus = await getUserModerationStatus(result.user.id);
+            setModerationStatus(moderationStatus);
+          } catch (moderationError) {
+            console.error('Failed to load moderation status:', moderationError);
+          }
+        }
+        
+      } catch (error) {
+        console.error('[AuthContext] Error initializing session:', error);
+      } finally {
+        setLoading(false);
       }
+    };
+
+    initSession();
+  }, []);
+
+  const refreshModerationStatus = async () => {
+    if (!user) return;
+    try {
+      const moderationStatus = await getUserModerationStatus(user.id);
+      setModerationStatus(moderationStatus);
     } catch (error) {
-      console.error('Error refreshing moderation status:', error);
+      console.error('Failed to refresh moderation status:', error);
     }
   };
 
   const refreshProfile = async () => {
+    if (!user) return;
     try {
-      if (user) {
-        const result = await getCurrentUserWithProfile();
-        if (result) {
-          setProfile(result.profile);
-        }
-        // Also refresh moderation status
-        await refreshModerationStatus();
+      const result = await getCurrentUserWithProfile();
+      if (result) {
+        setUser(result.user);
+        setProfile(result.profile);
       }
+      await refreshModerationStatus();
     } catch (error) {
-      console.error('Error refreshing profile:', error);
+      console.error('Failed to refresh profile:', error);
     }
   };
 
   const signIn = async (email: string, password: string) => {
-    let timeoutId: NodeJS.Timeout | undefined;
-    
     try {
       setLoading(true);
+      const user = await signInWithEmailPassword(email, password);
       
-      // Set a backup timeout to clear loading state
-      timeoutId = setTimeout(() => {
-        // Sign in timeout - clearing loading state
-        setLoading(false);
-      }, 3000); // 3 second max wait
-      
-      // Use API client if feature flag is enabled
-      if (USE_API) {
-        console.log('🔄 Using Netlify Functions for authentication...');
-        try {
-          const result = await apiClient.login(email, password);
-          
-          if (result.success && result.data) {
-            const { user: userData, session: sessionData, profile: profileData } = result.data;
-            
-            // Set the auth state manually since we're bypassing Supabase client
-            setUser(userData);
-            setSession(sessionData);
-            setProfile(profileData);
-            
-            // Store session data for persistence
-            localStorage.setItem('sb-session', JSON.stringify(sessionData));
-            
-            if (timeoutId) clearTimeout(timeoutId);
-            return { error: null };
-          } else {
-            throw new Error(result.error || 'Authentication failed');
-          }
-        } catch (apiError) {
-          console.error('❌ Netlify Functions auth failed:', apiError);
-          throw apiError;
-        }
-      } else {
-        // Fallback to direct Supabase client
-        const user = await signInWithEmailPassword(email, password);
+      // Get updated profile
+      const result = await getCurrentUserWithProfile();
+      if (result) {
+        setUser(result.user);
+        setProfile(result.profile);
         
-        // Sign in successful
-        // Clear the timeout since sign in was successful
-        if (timeoutId) clearTimeout(timeoutId);
-        
-        // The auth state change listener will handle setting user/profile
-        return { error: null };
+        // Get session
+        const session = await getSession();
+        setSession(session);
       }
+      
+      return { error: null };
     } catch (error: any) {
-      console.error('❌ Sign in error:', error.message || error);
-      if (timeoutId) clearTimeout(timeoutId);
-      return { error };
+      return { error: { message: error.message || 'Sign in failed' } };
     } finally {
-      // Always ensure loading is cleared after a short delay
-      setTimeout(() => {
-        // Final clearing of sign in loading state
-        setLoading(false);
-      }, 100);
+      setTimeout(() => setLoading(false), 100);
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, username: string) => {
+  const signUpHandler = async (email: string, password: string, name: string, username: string) => {
     try {
       setLoading(true);
-      // Starting sign up (logging removed)
+      const payload: SignUpPayload = { email, password, name, username };
+      const user = await supabaseSignUp(payload);
       
-      // Use API client if feature flag is enabled
-      if (USE_API) {
-        console.log('🔄 Using Netlify Functions for sign up...');
-        try {
-          const result = await apiClient.signup(email, password, username, name);
-          
-          if (result.success && result.data) {
-            const { user: userData, session: sessionData } = result.data;
-            
-            // Set the auth state manually
-            setUser(userData);
-            setSession(sessionData);
-            
-            // Store session data for persistence
-            if (sessionData) {
-              localStorage.setItem('sb-session', JSON.stringify(sessionData));
-            }
-            
-            return { error: null };
-          } else {
-            throw new Error(result.error || 'Sign up failed');
-          }
-        } catch (apiError) {
-          console.error('❌ Netlify Functions sign up failed:', apiError);
-          throw apiError;
+      if (user) {
+        // Get updated profile
+        const result = await getCurrentUserWithProfile();
+        if (result) {
+          setUser(result.user);
+          setProfile(result.profile);
         }
-      } else {
-        // Fallback to direct Supabase client
-        const payload: SignUpPayload = { email, password, name, username };
-        const user = await signUpWithEmailPassword(payload);
-        
-        // Sign up successful
-        // Waiting for auth state change to load profile
-        // The auth state change listener will handle setting user/profile
         return { error: null };
       }
+      
+      return { error: { message: 'Sign up failed' } };
     } catch (error: any) {
-      console.error('❌ Sign up error:', error.message || error);
-      return { error };
+      return { error: { message: error.message || 'Sign up failed' } };
     } finally {
-      // Add a shorter delay and ensure loading is always cleared
-      setTimeout(() => {
-        // Clearing sign up loading state
-        setLoading(false);
-      }, 300);
+      setTimeout(() => setLoading(false), 300);
     }
   };
 
-  const signInWithGoogleHandler = async () => {
-    try {
-      await signInWithGoogle();
-      return { error: null };
-    } catch (error: any) {
-      return { error };
-    }
-  };
-
-  const signUpWithGoogleHandler = async () => {
-    try {
-      await signUpWithGoogle();
-      return { error: null };
-    } catch (error: any) {
-      return { error };
-    }
-  };
-
-  const signInWithGitHubHandler = async () => {
-    try {
-      await signInWithGitHub();
-      return { error: null };
-    } catch (error: any) {
-      return { error };
-    }
-  };
-
-  const signUpWithGitHubHandler = async () => {
-    try {
-      await signUpWithGitHub();
-      return { error: null };
-    } catch (error: any) {
-      return { error };
-    }
-  };
-
-  const signOut = async () => {
+  const handleSignOut = async () => {
     try {
       setLoading(true);
       await supabaseSignOut();
       setUser(null);
       setProfile(null);
       setSession(null);
+      setModerationStatus(null);
+      window.location.href = '/';
     } catch (error) {
       console.error('Sign out error:', error);
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      setModerationStatus(null);
+      window.location.href = '/';
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (!supabase) {
-      console.warn('Supabase not initialized');
-      setLoading(false);
-      return;
-    }
-
-    // Fallback: If loading state persists for too long, clear it
-    const loadingTimeout = setTimeout(() => {
-      console.warn('⚠️ Auth loading state timeout - forcing clear');
-      setLoading(false);
-    }, 8000); // 8 seconds timeout
-
-    // Get initial session
-    const getInitialSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase!.auth.getSession();
-        
-        if (error) {
-          console.error('Error getting session:', error);
-        } else if (session) {
-          setSession(session);
-          setUser(session.user);
-          
-          // Fetch profile and moderation status in parallel for faster loading
-          const [profileResult, modStatus] = await Promise.all([
-            getCurrentUserWithProfile(),
-            getUserModerationStatus(session.user.id)
-          ]);
-          
-          if (profileResult) {
-            setProfile(profileResult.profile);
-          }
-          setModerationStatus(modStatus);
-        }
-      } catch (error) {
-        console.error('Error in getInitialSession:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getInitialSession();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      // Auth state changed (logging removed)
-      
-      // Update session and user immediately
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        // Get user profile and moderation status in parallel with timeout protection
-        try {
-          const timeoutMs = 10000; // 10 seconds timeout for faster feedback
-          
-          const profilePromise = getCurrentUserWithProfile();
-          const modStatusPromise = getUserModerationStatus(session.user.id);
-          const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Profile loading timeout')), timeoutMs)
-          );
-          
-          // Fetch both in parallel with timeout
-          const [result, modStatus] = await Promise.race([
-            Promise.all([profilePromise, modStatusPromise]),
-            timeoutPromise.then(() => [null, null])
-          ]) as [{ user: any; profile: any } | null, any];
-          
-          if (result && result.profile) {
-            setProfile(result.profile);
-          } else {
-            console.warn('⚠️ No profile found for user, will retry on next interaction');
-          }
-          
-          if (modStatus) {
-            setModerationStatus(modStatus);
-          }
-        } catch (error: any) {
-          console.error('❌ Error getting profile after auth change:', error.message || error);
-        }
-      } else {
-        // User signed out, clearing profile and moderation status
-        setProfile(null);
-        setModerationStatus(null);
-      }
-
-      // Always ensure loading is false after state change
-      setLoading(false);
-    });
-
-    return () => {
-      subscription.unsubscribe();
-      clearTimeout(loadingTimeout);
-    };
-  }, []);
-
   const value: AuthContextType = {
-    user,
-    profile,
-    session,
-    loading,
-    moderationStatus,
-    isBanned,
-    isMuted,
-    isSuspended,
+    user, profile, session, loading, moderationStatus,
+    isBanned, isMuted, isSuspended,
     signIn,
-    signUp,
-    signInWithGoogle: signInWithGoogleHandler,
-    signUpWithGoogle: signUpWithGoogleHandler,
-    signInWithGitHub: signInWithGitHubHandler,
-    signUpWithGitHub: signUpWithGitHubHandler,
-    signOut,
+    signUp: signUpHandler,
+    signInWithGoogle: async () => { 
+      try { 
+        await signInWithGoogle(); 
+        return { error: null }; 
+      } catch (e: any) { 
+        return { error: e }; 
+      } 
+    },
+    signUpWithGoogle: async () => { 
+      try { 
+        await signInWithGoogle(); 
+        return { error: null }; 
+      } catch (e: any) { 
+        return { error: e }; 
+      } 
+    },
+    signInWithGitHub: async () => { 
+      try { 
+        await signInWithGitHub(); 
+        return { error: null }; 
+      } catch (e: any) { 
+        return { error: e }; 
+      } 
+    },
+    signUpWithGitHub: async () => { 
+      try { 
+        await signInWithGitHub(); 
+        return { error: null }; 
+      } catch (e: any) { 
+        return { error: e }; 
+      } 
+    },
+    signOut: handleSignOut,
     refreshProfile,
     refreshModerationStatus,
   };

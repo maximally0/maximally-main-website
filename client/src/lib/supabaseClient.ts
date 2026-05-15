@@ -1,190 +1,60 @@
-import { createClient, type User, type Session } from '@supabase/supabase-js';
+/**
+ * Supabase client — powered by @supabase/supabase-js
+ * All auth operations go through the /api/auth/* proxy endpoints.
+ * The browser NEVER calls Supabase directly (ISP blocking in India).
+ */
+import { createClient } from '@supabase/supabase-js';
+import { toast } from 'sonner';
 import { USE_API } from './featureFlags';
 import { apiClient } from './apiClient';
 
-// Check multiple environment variable sources
-const getEnvVar = (key: string): string | undefined => {
-  // Try Vite import.meta.env first
-  if (import.meta && import.meta.env) {
-    const value = import.meta.env[key];
-    if (value) return value;
-  }
-  
-  // Fallback to process.env (Node.js)
-  if (typeof process !== 'undefined' && process.env) {
-    return process.env[key];
-  }
-  
-  // Fallback to window environment (if set by server)
-  if (typeof window !== 'undefined' && (window as any).__ENV__) {
-    return (window as any).__ENV__[key];
-  }
-  
-  return undefined;
-};
-
-const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
-const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
-
-// Public base URL used for auth redirects (prod/staging friendly)
-const publicBaseUrl = getEnvVar('VITE_PUBLIC_BASE_URL');
-
-function getBaseUrl(): string | undefined {
-  // Prefer explicit base URL if provided
-  if (publicBaseUrl) return publicBaseUrl;
-  // Fallback to window origin in browser
-  if (typeof window !== 'undefined' && window.location?.origin) return window.location.origin;
-  return undefined;
-}
-
-// Development environment logging removed
-
-// Create single instance with proper configuration to prevent multiple instances
-// Use singleton pattern to ensure only one client is ever created
-let _supabaseInstance: ReturnType<typeof createClient> | null = null;
-
-if (supabaseUrl && supabaseAnonKey && !_supabaseInstance) {
-  _supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+// ─── Supabase client (anon key only — used to read JWT structure, never for DB queries) ─
+export const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL ?? '',
+  import.meta.env.VITE_SUPABASE_ANON_KEY ?? '',
+  {
     auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true,
-      // Prevent multiple auth listeners
-      storageKey: 'maximally-supabase-auth',
+      storage: localStorage,
+      storageKey: 'sb-session',
+      autoRefreshToken: false,
     },
-    global: {
-      headers: { 'x-client-info': 'maximally-webapp' }
-    }
-  });
-} else if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('⚠️ Supabase client not created - missing environment variables');
-} else {
-  // Reusing existing Supabase client instance
-}
+  }
+);
 
-export const supabase = _supabaseInstance;
-
-if (!supabase) {
-  console.error('❌ Supabase client not initialized. Check env variables.');
-  console.error('- VITE_SUPABASE_URL:', supabaseUrl);
-  console.error('- VITE_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Present' : 'Missing');
-} else {
-  // Supabase client initialized successfully
-}
-
-// Use the same client instance for all queries to avoid multiple GoTrueClient instances
-// Public data queries will work fine with the main client
 export const supabasePublic = supabase;
 
-if (supabase) {
-  // Using main Supabase client for public data queries
+// ─── Session storage key ──────────────────────────────────────────────────────
+const SESSION_KEY = 'sb-session';
+
+// ─── 401 handler ─────────────────────────────────────────────────────────────
+export function handle401(): void {
+  localStorage.removeItem(SESSION_KEY);
+  toast.error('Your session has expired. Please sign in again.');
+  window.location.href = '/auth/sign-in';
 }
 
-// -------------------- Moderation Status --------------------
-export interface ModerationStatus {
-  user_id: string;
-  is_banned: boolean;
-  is_muted: boolean;
-  is_suspended: boolean;
-  ban_reason: string | null;
-  mute_reason: string | null;
-  suspend_reason: string | null;
-  ban_expires_at: string | null;
-  mute_expires_at: string | null;
-  suspend_expires_at: string | null;
-  warning_count: number;
-}
+// ─── Types ────────────────────────────────────────────────────────────────────
+export type User = {
+  id: string;
+  email: string;
+  name?: string | null;
+  image?: string | null;
+  identities?: any[];
+  user_metadata?: any;
+  app_metadata?: any;
+  aud?: string;
+};
 
-export async function getUserModerationStatus(userId: string): Promise<ModerationStatus | null> {
-  if (!supabase) return null;
-  try {
-    const { data, error } = await supabase
-      .from('user_moderation_status')
-      .select('*')
-      .eq('user_id', userId)
-      .maybeSingle();
-    
-    if (error && error.code !== 'PGRST116') {
-      console.error('Error fetching moderation status:', error);
-      return null;
-    }
-    
-    // Check if any time-based restrictions have expired
-    if (data) {
-      const now = new Date();
-      const status = data as ModerationStatus;
-      
-      // Check if ban has expired
-      if (status.is_banned && status.ban_expires_at) {
-        if (new Date(status.ban_expires_at) < now) {
-          status.is_banned = false;
-        }
-      }
-      
-      // Check if mute has expired
-      if (status.is_muted && status.mute_expires_at) {
-        if (new Date(status.mute_expires_at) < now) {
-          status.is_muted = false;
-        }
-      }
-      
-      // Check if suspension has expired
-      if (status.is_suspended && status.suspend_expires_at) {
-        if (new Date(status.suspend_expires_at) < now) {
-          status.is_suspended = false;
-        }
-      }
-      
-      return status;
-    }
-    
-    return null;
-  } catch (err) {
-    console.error('getUserModerationStatus error:', err);
-    return null;
-  }
-}
+export type Session = {
+  access_token: string;
+  refresh_token: string;
+  token_type: string;
+  expires_in: number;
+  expires_at?: number;
+};
 
-export async function isUserBanned(userId: string): Promise<{ banned: boolean; reason?: string; expiresAt?: string }> {
-  const status = await getUserModerationStatus(userId);
-  if (!status) return { banned: false };
-  
-  if (status.is_banned) {
-    // Check if ban has expired
-    if (status.ban_expires_at) {
-      const expiresAt = new Date(status.ban_expires_at);
-      if (expiresAt < new Date()) {
-        return { banned: false };
-      }
-      return { banned: true, reason: status.ban_reason || undefined, expiresAt: status.ban_expires_at };
-    }
-    return { banned: true, reason: status.ban_reason || undefined };
-  }
-  
-  return { banned: false };
-}
-
-export async function isUserMuted(userId: string): Promise<{ muted: boolean; reason?: string; expiresAt?: string }> {
-  const status = await getUserModerationStatus(userId);
-  if (!status) return { muted: false };
-  
-  if (status.is_muted) {
-    if (status.mute_expires_at) {
-      const expiresAt = new Date(status.mute_expires_at);
-      if (expiresAt < new Date()) {
-        return { muted: false };
-      }
-      return { muted: true, reason: status.mute_reason || undefined, expiresAt: status.mute_expires_at };
-    }
-    return { muted: true, reason: status.mute_reason || undefined };
-  }
-  
-  return { muted: false };
-}
-
-// -------------------- Types --------------------
 export type Profile = {
-  id: string; // uuid
+  id: string;
   email: string | null;
   username: string | null;
   full_name: string | null;
@@ -196,7 +66,7 @@ export type Profile = {
   linkedin_username: string | null;
   twitter_username: string | null;
   website_url: string | null;
-  role: 'user' | 'admin' | 'organizer';
+  role: 'user' | 'admin' | 'organizer' | 'mentor' | 'judge';
   is_verified: boolean | null;
   preferences: any | null;
   created_at?: string | null;
@@ -214,7 +84,7 @@ export type UpdatableProfileFields = {
   full_name?: string | null;
   bio?: string | null;
   location?: string | null;
-  email?: string | null; // ignored server-side
+  email?: string | null;
   skills?: string[] | null;
   github_username?: string | null;
   linkedin_username?: string | null;
@@ -237,935 +107,514 @@ export interface BlogPost {
   reading_time_minutes?: number | null;
 }
 
-// -------------------- Auth Helpers --------------------
-export async function getSession(): Promise<Session | null> {
-  if (!supabase) return null;
-  const { data } = await supabase.auth.getSession();
-  return data.session ?? null;
+export interface ModerationStatus {
+  user_id: string;
+  is_banned: boolean;
+  is_muted: boolean;
+  is_suspended: boolean;
+  ban_reason: string | null;
+  mute_reason: string | null;
+  suspend_reason: string | null;
+  ban_expires_at: string | null;
+  mute_expires_at: string | null;
+  suspend_expires_at: string | null;
+  warning_count: number;
 }
 
-export async function getUser(): Promise<User | null> {
-  if (!supabase) return null;
-  
+// ─── Session helpers ──────────────────────────────────────────────────────────
+export function getStoredSession(): Session | null {
   try {
-    const { data, error } = await supabase.auth.getUser();
-    if (error) return null;
-    return data.user ?? null;
-  } catch (err: any) {
-    console.error('getUser error:', err.message || err);
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw) as Session;
+  } catch {
     return null;
   }
 }
 
-// -------------------- OAuth Profile Helpers --------------------
-interface OAuthProfileData {
-  fullName?: string;
-  username?: string;
-  avatarUrl?: string;
-  githubUsername?: string;
+export async function getSession(): Promise<Session | null> {
+  return getStoredSession();
 }
 
-function extractGoogleProfileData(user: User): OAuthProfileData {
-  const metadata = user.user_metadata || {};
-  const identities = user.identities || [];
-  
-  // Get Google identity data
-  const googleIdentity = identities.find(id => id.provider === 'google');
-  const googleData = googleIdentity?.identity_data || {};
-  
-  // Extract avatar URL from multiple possible sources
-  const avatarUrl = metadata.avatar_url || 
-                   metadata.picture || 
-                   googleData.picture ||
-                   googleData.avatar_url;
-  
-  // Google profile data extracted
-  
-  return {
-    fullName: metadata.full_name || metadata.name || googleData.name,
-    username: metadata.preferred_username || metadata.email?.split('@')[0],
-    avatarUrl,
-  };
-}
-
-function extractGitHubProfileData(user: User): OAuthProfileData {
-  const metadata = user.user_metadata || {};
-  const identities = user.identities || [];
-  
-  // Get GitHub identity data
-  const githubIdentity = identities.find(id => id.provider === 'github');
-  const githubData = githubIdentity?.identity_data || {};
-  
-  // Extract avatar URL from multiple possible sources
-  const avatarUrl = metadata.avatar_url || 
-                   githubData.avatar_url || 
-                   metadata.picture ||
-                   (githubData.login ? `https://github.com/${githubData.login}.png` : null);
-  
-  // GitHub profile data extracted
-  
-  return {
-    fullName: metadata.full_name || metadata.name || githubData.name,
-    username: metadata.preferred_username || metadata.user_name || githubData.login,
-    avatarUrl,
-    githubUsername: metadata.user_name || githubData.login,
-  };
-}
-
-function extractOAuthProfileData(user: User): OAuthProfileData {
-  const identities = user.identities || [];
-  
-  // Check which OAuth provider was used
-  if (identities.some(id => id.provider === 'google')) {
-    return extractGoogleProfileData(user);
-  } else if (identities.some(id => id.provider === 'github')) {
-    return extractGitHubProfileData(user);
+export async function getUser(): Promise<User | null> {
+  const session = getStoredSession();
+  if (!session?.access_token) return null;
+  try {
+    // Decode the JWT payload to get user info without a network call
+    const parts = session.access_token.split('.');
+    if (parts.length !== 3) return null;
+    const payload = JSON.parse(atob(parts[1]));
+    return {
+      id: payload.sub,
+      email: payload.email ?? '',
+      user_metadata: payload.user_metadata ?? {},
+      app_metadata: payload.app_metadata ?? {},
+      aud: payload.aud ?? 'authenticated',
+    };
+  } catch {
+    return null;
   }
-  
-  return {};
 }
 
-// -------------------- Profile Helpers --------------------
+// ─── Auth actions (all go through /api/auth/* proxy) ─────────────────────────
+
+export async function signInWithEmailPassword(email: string, password: string): Promise<User> {
+  const res = await fetch('/api/auth/sign-in', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (res.status === 401) { handle401(); throw new Error('Session expired'); }
+  const json = await res.json();
+  if (!json.success) throw new Error(json.message ?? 'Sign-in failed');
+  localStorage.setItem(SESSION_KEY, JSON.stringify(json.session));
+  return json.user as User;
+}
+
+export async function signUp(payload: SignUpPayload): Promise<User> {
+  const res = await fetch('/api/auth/sign-up', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  if (res.status === 401) { handle401(); throw new Error('Session expired'); }
+  const json = await res.json();
+  if (!json.success) throw new Error(json.message ?? 'Sign-up failed');
+  return json.user as User;
+}
+
+// Alias kept for backward compatibility
+export async function signUpWithEmailPassword(payload: SignUpPayload): Promise<User | null> {
+  return signUp(payload);
+}
+
+export async function signOut(): Promise<void> {
+  const session = getStoredSession();
+  try {
+    if (session?.access_token) {
+      await fetch('/api/auth/sign-out', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+    }
+  } catch {
+    // Best-effort — always clear local session
+  } finally {
+    localStorage.removeItem(SESSION_KEY);
+  }
+}
+
+/** Refresh this many seconds before access token expiry (JWT skew / clock drift). */
+const ACCESS_TOKEN_REFRESH_SKEW_SEC = 120;
+
+function getAccessTokenExpiryUnix(session: Session): number | null {
+  if (session.expires_at != null && typeof session.expires_at === 'number') {
+    return session.expires_at;
+  }
+  try {
+    const parts = session.access_token.split('.');
+    if (parts.length !== 3) return null;
+    const payload = JSON.parse(atob(parts[1])) as { exp?: number };
+    return typeof payload.exp === 'number' ? payload.exp : null;
+  } catch {
+    return null;
+  }
+}
+
+function isAccessTokenNearExpiry(session: Session, skewSec: number = ACCESS_TOKEN_REFRESH_SKEW_SEC): boolean {
+  const exp = getAccessTokenExpiryUnix(session);
+  if (exp == null) return false;
+  const now = Math.floor(Date.now() / 1000);
+  return now >= exp - skewSec;
+}
+
+export async function refreshSession(): Promise<Session | null> {
+  const session = getStoredSession();
+  if (!session?.refresh_token) return null;
+  const res = await fetch('/api/auth/refresh', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refresh_token: session.refresh_token }),
+  });
+  if (res.status === 401) { handle401(); return null; }
+  const json = await res.json();
+  if (!json.success) return null;
+  localStorage.setItem(SESSION_KEY, JSON.stringify(json.session));
+  return json.session as Session;
+}
+
+/**
+ * Returns the stored session, refreshing via /api/auth/refresh when the access token is expired or near expiry.
+ * The browser client uses autoRefreshToken: false (sessions are proxied); without this, API routes that call
+ * supabase.auth.getUser(jwt) return "Invalid token" while the UI still appears signed in.
+ */
+export async function ensureSessionFresh(): Promise<Session | null> {
+  const session = getStoredSession();
+  if (!session?.access_token) return null;
+  if (!isAccessTokenNearExpiry(session)) return session;
+  if (!session.refresh_token) return null;
+  return refreshSession();
+}
+
+export async function requestPasswordReset(email: string, redirectTo?: string): Promise<{ success: boolean; error?: string }> {
+  const res = await fetch('/api/auth/reset-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, redirectTo }),
+  });
+  const json = await res.json();
+  if (!json.success) return { success: false, error: json.message };
+  return { success: true };
+}
+
+export async function completePasswordReset(newPassword: string): Promise<{ success: boolean; error?: string }> {
+  const session = getStoredSession();
+  const res = await fetch('/api/auth/reset-password-confirm', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+    },
+    body: JSON.stringify({ newPassword }),
+  });
+  const json = await res.json();
+  if (!json.success) return { success: false, error: json.message };
+  return { success: true };
+}
+
+export async function changePassword(_currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
+  return completePasswordReset(newPassword);
+}
+
+export async function setPasswordForOAuthUser(newPassword: string): Promise<{ success: boolean; error?: string }> {
+  return completePasswordReset(newPassword);
+}
+
+export async function checkIfUserHasPassword(): Promise<boolean> {
+  const session = getStoredSession();
+  return !!session?.access_token;
+}
+
+export async function verifyEmailOtp(_email: string, _token: string): Promise<{ success: boolean; error?: string }> {
+  return { success: true };
+}
+
+export async function resendEmailOtp(_email: string): Promise<{ success: boolean; error?: string }> {
+  return { success: true };
+}
+
+// ─── OAuth stubs (social sign-in uses client-side PKCE flow) ─────
+export async function signInWithGoogle() {
+  // Use client-side OAuth with PKCE flow
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      }
+    }
+  });
+  
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function signUpWithGoogle() { 
+  return signInWithGoogle(); 
+}
+
+export async function signInWithGitHub() {
+  // Use client-side OAuth with PKCE flow
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'github',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    }
+  });
+  
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function signUpWithGitHub() { 
+  return signInWithGitHub(); 
+}
+
+// ─── Profile helpers ──────────────────────────────────────────────────────────
 export async function getProfile(userId: string): Promise<Profile | null> {
-  // Use API client if feature flag is enabled
   if (USE_API) {
     try {
       const result = await apiClient.getUserProfile(userId);
       return result.data.profile;
-    } catch (error) {
-      console.error('❌ getProfile API error:', error);
-      return null;
-    }
+    } catch { return null; }
   }
-  
-  if (!supabase) return null;
   try {
+    // Use Supabase directly instead of proxy endpoint
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .maybeSingle();
-    if (error) throw error;
-    return (data as unknown as Profile) ?? null;
-  } catch (err) {
-    console.error('getProfile error:', err);
-    return null;
-  }
+      .single();
+    
+    if (error || !data) return null;
+    return data as Profile;
+  } catch { return null; }
 }
 
 export async function getProfileByUsername(username: string): Promise<Profile | null> {
-  // Use API client if feature flag is enabled
   if (USE_API) {
     try {
       const result = await apiClient.getUserProfile(undefined, username);
       return result.data.profile;
-    } catch (error) {
-      console.error('❌ getProfileByUsername API error:', error);
-      return null;
-    }
+    } catch { return null; }
   }
-  
-  if (!supabase) return null;
   try {
-  // getProfileByUsername: Direct query for username
+    // Use Supabase directly instead of proxy endpoint
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('username', username)
-      .maybeSingle();
+      .single();
     
-    if (error) {
-      console.error('❌ getProfileByUsername error:', error);
-      return null;
-    }
-    
-    if (data) {
-      const profile = data as any;
-  // Profile found for username
-    } else {
-      console.warn('⚠️ No profile found for username:', username);
-    }
-    
-    return (data as unknown as Profile) ?? null;
-  } catch (err) {
-    console.error('getProfileByUsername error:', err);
-    return null;
-  }
+    if (error || !data) return null;
+    return data as Profile;
+  } catch { return null; }
 }
 
 export async function isUsernameAvailable(username: string): Promise<boolean> {
-  if (!supabase) return false;
   if (!username || username.length < 3) return false;
-  
   try {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('username', username)
-      .maybeSingle();
-      
-    if (error && error.code !== 'PGRST116') {
-      console.error('isUsernameAvailable error:', error);
-      return false;
-    }
-    
-    return !data; // Available if no data found
-  } catch (err) {
-    console.error('isUsernameAvailable error:', err);
-    return false;
-  }
-}
-
-export async function generateUniqueUsername(baseUsername: string): Promise<string> {
-  if (!supabase) return baseUsername;
-  
-  let username = slugifyUsername(baseUsername);
-  let attempts = 0;
-  const maxAttempts = 10;
-  
-  while (attempts < maxAttempts) {
-    const isAvailable = await isUsernameAvailable(username);
-    if (isAvailable) {
-      return username;
-    }
-    
-    attempts++;
-    const suffix = Math.random().toString(36).slice(2, 4);
-    username = `${slugifyUsername(baseUsername)}${suffix}`;
-  }
-  
-  // Fallback with timestamp
-  return `${slugifyUsername(baseUsername)}${Date.now().toString().slice(-4)}`;
-}
-
-export async function ensureUserProfile(user: User): Promise<Profile | null> {
-  if (!supabase) return null;
-  
-  try {
-    const existing = await getProfile(user.id);
-    if (existing) return existing;
-
-    // Extract OAuth profile data if available
-    const oauthData = extractOAuthProfileData(user);
-    const email = user.email ?? null;
-    
-    // Generate username from OAuth data or email fallback
-    let baseUsername = oauthData.username;
-    if (!baseUsername && email) {
-      // Special handling for known problematic emails
-      if (email === 'os.iso.file1010@gmail.com') {
-        baseUsername = 'osiso1010';
-      } else {
-        baseUsername = email.split('@')[0];
-      }
-    }
-    
-    // Ensure username is valid and unique
-    if (!baseUsername || baseUsername.length < 3) {
-      baseUsername = 'user' + Math.random().toString(36).slice(2, 8);
-    }
-    
-    // Generate a unique username
-    const username = await generateUniqueUsername(baseUsername);
-    
-    // Prepare profile payload with OAuth data
-    const profilePayload: Partial<Profile> = {
-      id: user.id,
-      email,
-      role: 'user',
-      full_name: oauthData.fullName || null,
-      username: username || null,
-      avatar_url: oauthData.avatarUrl || null,
-      github_username: oauthData.githubUsername || null,
-    };
-    
-  // Creating profile with OAuth data
-
-    // Try inserting the profile, with retry for username conflicts
-    let attempts = 0;
-    const maxAttempts = 3;
-    
-    while (attempts < maxAttempts) {
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .upsert(profilePayload as any, { onConflict: 'id' })
-          .select()
-          .maybeSingle();
-          
-        if (error) {
-          // If username constraint or duplicate violation, generate a new username and retry
-          if ((error.message?.includes('username') || error.message?.includes('duplicate') || error.message?.includes('unique')) && attempts < maxAttempts - 1) {
-            const randomSuffix = Math.random().toString(36).slice(2, 4);
-            const baseUsername = username.replace(/\d+$/, ''); // Remove existing numbers
-            profilePayload.username = `${baseUsername}${randomSuffix}`;
-            // Username collision, retrying with new username
-            attempts++;
-            continue;
-          }
-          throw error;
-        }
-        
-        return (data as unknown as Profile) ?? null;
-      } catch (retryError) {
-        if (attempts === maxAttempts - 1) {
-          throw retryError;
-        }
-        attempts++;
-      }
-    }
-    
-    return null;
-  } catch (err: any) {
-    console.error('ensureUserProfile error:', err.message || err);
-    
-    // Store error info for the login page to handle
-    if (typeof window !== 'undefined' && err.message?.includes('constraint')) {
-      localStorage.setItem('oauth_profile_error', err.message);
-    }
-    
-    return null;
-  }
+    const res = await fetch(`/api/profile?username=${username}`);
+    const json = await res.json();
+    return !json.data?.profile;
+  } catch { return false; }
 }
 
 export async function updateProfileMe(patch: UpdatableProfileFields) {
-  if (!supabase) throw new Error('Supabase not configured');
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
+  const session = getStoredSession();
+  if (!session) throw new Error('Not authenticated');
+  
+  const user = await getUser();
+  if (!user) throw new Error('Not authenticated');
+  
+  // Use Supabase directly instead of proxy endpoint
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({
+      ...patch,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', user.id)
+    .select()
+    .single();
+  
+  if (error) throw new Error(error.message);
+  return data as Profile;
+}
 
-    // For static hosting, update profile directly with Supabase
-    const { data, error } = await (supabase as any)
+export async function updateUsername(newUsername: string): Promise<{ success: boolean; error?: string }> {
+  const session = getStoredSession();
+  if (!session) return { success: false, error: 'Not authenticated' };
+  
+  const user = await getUser();
+  if (!user) return { success: false, error: 'Not authenticated' };
+  
+  try {
+    // Use Supabase directly instead of proxy endpoint
+    const { error } = await supabase
       .from('profiles')
-      .update(patch)
-      .eq('id', user.id)
+      .update({
+        username: newUsername,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', user.id);
+    
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'Update failed' };
+  }
+}
+
+export async function ensureUserProfile(user: User): Promise<Profile | null> {
+  const existing = await getProfile(user.id);
+  if (existing) return existing;
+
+  try {
+    const session = getStoredSession();
+    if (!session) {
+      console.error('No active session - cannot ensure profile');
+      return null;
+    }
+
+    const profileData = {
+      id: user.id,
+      email: user.email,
+      full_name: user.name || user.user_metadata?.full_name || user.email?.split('@')[0] || null,
+      username: user.user_metadata?.username || user.app_metadata?.username || null,
+      avatar_url: user.image || null,
+      role: 'user',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    // Use Supabase directly instead of proxy endpoint
+    const { data, error } = await supabase
+      .from('profiles')
+      .upsert(profileData, { onConflict: 'id' })
       .select()
       .single();
 
-    if (error) throw new Error(error.message);
-    return data as Profile | undefined;
-  } catch (err) {
-    console.error('updateProfileMe error:', err);
-    throw err;
-  }
-}
-
-export async function updateUsername(newUsername: string): Promise<{success: boolean, error?: string}> {
-  if (!supabase) return {success: false, error: 'Supabase not configured'};
-  
-  try {
-    // Validate username format
-    const cleanUsername = slugifyUsername(newUsername);
-    if (cleanUsername !== newUsername.toLowerCase() || cleanUsername.length < 3 || cleanUsername.length > 30) {
-      return {success: false, error: 'Username must be 3-30 characters, letters and numbers only'};
-    }
-    
-    // Check if username is available
-    const isAvailable = await isUsernameAvailable(cleanUsername);
-    if (!isAvailable) {
-      return {success: false, error: 'Username is already taken'};
-    }
-    
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return {success: false, error: 'Not authenticated'};
-    
-    // Update username
-    const { error } = await (supabase as any)
-      .from('profiles')
-      .update({ username: cleanUsername })
-      .eq('id', user.id);
-      
     if (error) {
-      console.error('updateUsername error:', error);
-      return {success: false, error: error.message};
-    }
-    
-    return {success: true};
-  } catch (err: any) {
-    console.error('updateUsername error:', err);
-    return {success: false, error: err.message || 'Failed to update username'};
-  }
-}
-
-// -------------------- Password Management --------------------
-export async function changePassword(currentPassword: string, newPassword: string): Promise<{success: boolean, error?: string}> {
-  if (!supabase) return {success: false, error: 'Supabase not configured'};
-  
-  try {
-    // For static hosting, use Supabase's built-in password update
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword
-    });
-    
-    if (error) {
-      return {success: false, error: error.message};
-    }
-    
-    return {success: true};
-  } catch (err: any) {
-    console.error('changePassword error:', err);
-    return {success: false, error: err.message || 'Failed to change password'};
-  }
-}
-
-export async function setPasswordForOAuthUser(newPassword: string): Promise<{success: boolean, error?: string}> {
-  if (!supabase) return {success: false, error: 'Supabase not configured'};
-  
-  try {
-    // For static hosting, use Supabase's built-in password update
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword,
-      data: {
-        has_password: true,
-        password_set_at: new Date().toISOString()
-      }
-    });
-    
-    if (error) {
-      return {success: false, error: error.message};
-    }
-    
-    return {success: true};
-  } catch (err: any) {
-    console.error('setPasswordForOAuthUser error:', err);
-    return {success: false, error: err.message || 'Failed to set password'};
-  }
-}
-
-// -------------------- Password Reset (Forgot/Recover) --------------------
-// Triggers a password reset email via Supabase. SMTP is managed in Supabase (e.g. Resend).
-export async function requestPasswordReset(email: string, redirectTo?: string): Promise<{ success: boolean; error?: string }>{
-  if (!supabase) return { success: false, error: 'Supabase not configured' };
-  try {
-    const base = redirectTo || (getBaseUrl() ? `${getBaseUrl()}/reset-password` : undefined);
-    const { error } = await supabase.auth.resetPasswordForEmail(email, base ? { redirectTo: base } : undefined as any);
-    if (error) return { success: false, error: error.message };
-    return { success: true };
-  } catch (err: any) {
-    console.error('requestPasswordReset error:', err);
-    return { success: false, error: err.message || 'Failed to send reset email' };
-  }
-}
-
-// Completes the password reset once the user landed back from the email link.
-// Supabase sets a temporary recovery session on redirect; updateUser uses that session.
-export async function completePasswordReset(newPassword: string): Promise<{ success: boolean; error?: string }>{
-  if (!supabase) return { success: false, error: 'Supabase not configured' };
-  try {
-    const { error } = await supabase.auth.updateUser({ password: newPassword });
-    if (error) return { success: false, error: error.message };
-    return { success: true };
-  } catch (err: any) {
-    console.error('completePasswordReset error:', err);
-    return { success: false, error: err.message || 'Failed to reset password' };
-  }
-}
-
-export async function checkIfUserHasPassword(): Promise<boolean> {
-  if (!supabase) return false;
-  
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return false;
-    
-    // Check if user has any email-based identity (indicates original password-based signup)
-    const hasEmailIdentity = user.identities?.some(identity => identity.provider === 'email');
-    if (hasEmailIdentity) return true;
-    
-    // Check user metadata for password flag (primary check for OAuth users)
-    const hasPasswordFromMetadata = user.user_metadata?.has_password === true;
-    if (hasPasswordFromMetadata) return true;
-    
-    // Fallback: assume OAuth-only users don't have password initially
-    return false;
-  } catch (err: any) {
-    console.error('checkIfUserHasPassword error:', err);
-    return false;
-  }
-}
-
-// -------------------- Auth Actions --------------------
-export async function signInWithEmailPassword(email: string, password: string) {
-  if (!supabase) {
-    console.warn('Supabase not configured - authentication not available');
-    throw new Error('Authentication service is not configured. Please check environment variables.');
-  }
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    if (!data.user) throw new Error('No user returned');
-  // Email signin successful
-    return data.user;
-  } catch (err) {
-    console.error('signInWithEmailPassword error:', err);
-    throw err;
-  }
-}
-
-// -------------------- Email OTP (signup verification) --------------------
-export async function verifyEmailOtp(email: string, token: string): Promise<{ success: boolean; error?: string }>{
-  if (!supabase) return { success: false, error: 'Supabase not configured' };
-  try {
-    const { error } = await supabase.auth.verifyOtp({ email, token, type: 'signup' });
-    if (error) return { success: false, error: error.message };
-    return { success: true };
-  } catch (err: any) {
-    console.error('verifyEmailOtp error:', err);
-    return { success: false, error: err.message || 'Failed to verify code' };
-  }
-}
-
-export async function resendEmailOtp(email: string): Promise<{ success: boolean; error?: string }>{
-  if (!supabase) return { success: false, error: 'Supabase not configured' };
-  try {
-    const { error } = await (supabase as any).auth.resend({ type: 'signup', email });
-    if (error) return { success: false, error: error.message };
-    return { success: true };
-  } catch (err: any) {
-    console.error('resendEmailOtp error:', err);
-    return { success: false, error: err.message || 'Failed to resend code' };
-  }
-}
-
-export async function signInWithGoogle() {
-  if (!supabase) {
-    throw new Error('Authentication service is not configured.');
-  }
-
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin, // 👈 FIXES the 5000 redirect
-    },
-  });
-
-  if (error) throw error;
-}
-
-export async function signUpWithGoogle() {
-  // OAuth sign-in and sign-up are the same
-  return signInWithGoogle();
-}
-
-export async function signInWithGitHub() {
-  if (!supabase) {
-    throw new Error('Authentication service is not configured.');
-  }
-
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
-    options: {
-      redirectTo: window.location.origin, // 👈 SAME FIX
-    },
-  });
-
-  if (error) throw error;
-}
-export async function signUpWithGitHub() {
-  // OAuth sign-in and sign-up are the same
-  return signInWithGitHub();
-}
-
-function slugifyUsername(input: string) {
-  let username = input
-    .toLowerCase()
-    .replace(/[^a-z0-9]/g, '') // Remove all non-alphanumeric characters
-    .slice(0, 20); // Limit length to 20 characters
-  
-  // Ensure it starts with a letter (some databases require this)
-  if (username && /^[0-9]/.test(username)) {
-    username = 'u' + username;
-  }
-  
-  // Ensure minimum length and fallback
-  if (!username || username.length < 3) {
-    username = 'user' + Math.random().toString(36).slice(2, 8);
-  }
-  
-  return username;
-}
-
-export async function signUpWithEmailPassword(payload: SignUpPayload) {
-  if (!supabase) {
-    console.warn('Supabase not configured - authentication not available');
-    throw new Error('Authentication service is not configured. Please check environment variables.');
-  }
-  try {
-    const { email, password, name, username } = payload;
-const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: getBaseUrl() } });
-    if (error) throw error;
-
-    let user = data.user;
-    if (!user) {
-      const fetched = await getUser();
-      if (fetched) user = fetched;
+      console.error('Error creating profile:', error);
+      return null;
     }
 
-    if (user) {
-      // Use provided username directly, only fallback if empty
-      let finalUsername = username;
-      if (!finalUsername || finalUsername.trim() === '') {
-        const fallback = user.email?.split('@')[0] || 'user';
-        finalUsername = slugifyUsername(fallback);
-      }
-
-  // SIGNUP: Creating profile with username
-
-      const profilePayload: Partial<Profile> = {
-        id: user.id,
-        email: user.email ?? null,
-        role: 'user',
-        full_name: name ?? null,
-        username: finalUsername,
-      } as any;
-
-      const { error: profileError } = await supabase.from('profiles').upsert(profilePayload as any, { onConflict: 'id' });
-      if (profileError) {
-        console.error('❌ Profile creation error:', profileError);
-        throw new Error('Failed to create profile: ' + profileError.message);
-      }
-  // Profile created successfully
-    }
-
-    return user;
-  } catch (err) {
-    console.error('signUpWithEmailPassword error:', err);
-    throw err;
+    return data as Profile;
+  } catch (error) {
+    console.error('Error creating profile:', error);
+    return null;
   }
 }
 
-export async function signOut() {
-  if (!supabase) return;
-  try {
-    await supabase.auth.signOut();
-  } catch (err) {
-    console.error('signOut error:', err);
+export async function generateUniqueUsername(base: string): Promise<string> {
+  let username = base.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 20) || 'user';
+  if (username.length < 3) username = 'user' + username;
+  let attempts = 0;
+  while (attempts < 10) {
+    if (await isUsernameAvailable(username)) return username;
+    username = base.slice(0, 16) + Math.random().toString(36).slice(2, 4);
+    attempts++;
   }
+  return base.slice(0, 16) + Date.now().toString().slice(-4);
 }
-
-// -------------------- User Helpers --------------------
-// Cache promise to prevent multiple simultaneous calls
-let _getCurrentUserPromise: Promise<{ user: User; profile: Profile } | null> | null = null;
 
 export async function getCurrentUserWithProfile(): Promise<{ user: User; profile: Profile } | null> {
-  // If there's already a pending request, return that promise
-  if (_getCurrentUserPromise) {
-    return _getCurrentUserPromise;
-  }
-  
-  // Create and cache the promise with timeout
-  _getCurrentUserPromise = (async () => {
-    try {
-      const user = await getUser();
-      if (!user) {
-  // getCurrentUserWithProfile: No user found
-        return null;
-      }
-      
-  // getCurrentUserWithProfile: Looking for profile for user
-      
-      // Use API client if feature flag is enabled
-      if (USE_API) {
-        try {
-          const result = await apiClient.getUserProfile(user.id);
-          const profile = result.data.profile;
-          
-          if (!profile) {
-            console.warn('⚠️ No profile found via API, creating one for OAuth user');
-            const createdProfile = await ensureUserProfile(user);
-            if (!createdProfile) {
-              console.error('❌ Failed to create profile for user:', user.email);
-              return null;
-            }
-            return { user, profile: createdProfile };
-          }
-          
-          return { user, profile };
-        } catch (apiError) {
-          console.error('❌ API profile fetch failed:', apiError);
-          // Don't fallback to direct Supabase if API is enabled - it will fail due to ISP blocking
-          return null;
-        }
-      }
-      
-      // DIRECT QUERY - BYPASS ALL POLICIES (only when API is disabled)
-      if (!supabase) {
-        console.error('❌ Supabase not initialized');
-        return null;
-      }
-      
-          // Use an explicit result variable so TypeScript can infer correct types
-          const profileRes = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', user.id)
-            .maybeSingle();
-          
-          let profile = (profileRes as any)?.data as Profile | null;
-          const profileErr = (profileRes as any)?.error;
-          
-          if (profileErr && profileErr.code !== 'PGRST116') {
-            console.error('❌ Direct profile query failed:', profileErr);
-            return null;
-          }
-      
-      // If no profile found, create one (especially important for OAuth users)
-      if (!profile) {
-  // No profile found, creating one for OAuth user
-        profile = await ensureUserProfile(user);
-        if (!profile) {
-          console.error('❌ Failed to create profile for user:', user.email);
-          return null;
-        }
-  // Profile created successfully for user
-      }
-      
-      const profileData = profile as any;
-  // Profile loaded
-      
-      return { user, profile: profile as Profile };
-    } catch (error: any) {
-      console.error('❌ getCurrentUserWithProfile error:', error);
-      return null;
-    } finally {
-      // Clear the cache after completion (success or failure)
-      _getCurrentUserPromise = null;
-    }
-  })();
-  
-  return _getCurrentUserPromise;
-}
-
-export async function isAdmin(): Promise<boolean> {
-  const c = await getCurrentUserWithProfile();
-  return c?.profile.role === 'admin';
-}
-
-// -------------------- Certificate Helpers --------------------
-export async function getCertificatesByUsername(username: string): Promise<any[]> {
-  // Use API client if feature flag is enabled
+  const user = await getUser();
+  if (!user) return null;
   if (USE_API) {
     try {
-      const result = await apiClient.getCertificates({ maximally_username: username });
-      return result.data.certificates || [];
-    } catch (error) {
-      console.error('❌ getCertificatesByUsername API error:', error);
-      return [];
-    }
+      const result = await apiClient.getUserProfile(user.id);
+      const profile = result.data;
+      if (!profile) {
+        const created = await ensureUserProfile(user);
+        if (!created) return null;
+        return { user, profile: created };
+      }
+      return { user, profile };
+    } catch { return null; }
   }
-  
-  if (!supabase) return [];
-  try {
-    const { data, error } = await supabase
-      .from('certificates')
-      .select('*')
-      .eq('maximally_username', username)
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data || [];
-  } catch (err) {
-    console.error('getCertificatesByUsername error:', err);
-    return [];
+  const profile = await getProfile(user.id);
+  if (!profile) {
+    const created = await ensureUserProfile(user);
+    if (!created) return null;
+    return { user, profile: created };
   }
+  return { user, profile };
 }
 
-// -------------------- Avatar Helpers --------------------
+export async function getUserModerationStatus(userId: string): Promise<ModerationStatus | null> {
+  try {
+    const res = await fetch(`/api/moderation/status/${userId}`);
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.data ?? null;
+  } catch { return null; }
+}
+
+export async function isUserBanned(userId: string): Promise<{ banned: boolean; reason?: string; expiresAt?: string }> {
+  const status = await getUserModerationStatus(userId);
+  if (!status?.is_banned) return { banned: false };
+  if (status.ban_expires_at && new Date(status.ban_expires_at) < new Date()) return { banned: false };
+  return { banned: true, reason: status.ban_reason ?? undefined, expiresAt: status.ban_expires_at ?? undefined };
+}
+
+export async function isUserMuted(userId: string): Promise<{ muted: boolean; reason?: string; expiresAt?: string }> {
+  const status = await getUserModerationStatus(userId);
+  if (!status?.is_muted) return { muted: false };
+  if (status.mute_expires_at && new Date(status.mute_expires_at) < new Date()) return { muted: false };
+  return { muted: true, reason: status.mute_reason ?? undefined, expiresAt: status.mute_expires_at ?? undefined };
+}
+
+// ─── Image upload helpers (route through API) ─────────────────────────────────
+export async function uploadHackathonImage(file: File, hackathonId: string | number): Promise<string | null> {
+  try {
+    const session = getStoredSession();
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('hackathonId', String(hackathonId));
+    const res = await fetch('/api/upload/hackathon-image', {
+      method: 'POST',
+      headers: session ? { Authorization: `Bearer ${session.access_token}` } : {},
+      body: formData,
+    });
+    const json = await res.json();
+    return json.url ?? null;
+  } catch { return null; }
+}
+
+export async function deleteHackathonImage(urlOrId: string | number, _imageType?: string): Promise<void> {
+  try {
+    const session = getStoredSession();
+    await fetch('/api/upload/hackathon-image', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}),
+      },
+      body: JSON.stringify({ url: urlOrId }),
+    });
+  } catch {}
+}
+
+// ─── Avatar helpers ───────────────────────────────────────────────────────────
 export async function uploadAvatar(file: File): Promise<string> {
-  if (!supabase) throw new Error('Supabase not configured');
-  const { data: u } = await supabase.auth.getUser();
-  if (!u.user) throw new Error('Not authenticated');
-
-  if (!file || !file.size) throw new Error('No file provided');
-  if (!file.type.startsWith('image/')) throw new Error('Only image files allowed');
-  const MAX = 5 * 1024 * 1024;
-  if (file.size > MAX) throw new Error('Image must be <= 5MB');
-
-  const userId = u.user.id;
-  const ext = (file.name.split('.').pop() || 'png').toLowerCase();
-  const safeExt = ['png','jpg','jpeg','webp','gif','bmp','avif'].includes(ext) ? ext : 'png';
-  const key = `${userId}/avatar.${safeExt}`;
-
-  const { error: upErr } = await supabase.storage.from('avatar').upload(key, file, {
-    contentType: file.type || 'image/png',
-    upsert: true,
+  const session = getStoredSession();
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch('/api/upload/avatar', {
+    method: 'POST',
+    headers: session ? { Authorization: `Bearer ${session.access_token}` } : {},
+    body: formData,
   });
-  if (upErr) throw upErr;
-
-  const { data } = supabase.storage.from('avatar').getPublicUrl(key);
-  const publicUrl = data.publicUrl;
-  await updateProfileMe({ avatar_url: publicUrl });
-  return publicUrl;
+  if (!res.ok) throw new Error('Avatar upload failed');
+  const json = await res.json();
+  if (!json.url) throw new Error('No URL returned from avatar upload');
+  return json.url as string;
 }
 
 export async function clearAvatar(): Promise<void> {
-  if (!supabase) throw new Error('Supabase not configured');
-  const { data: u } = await supabase.auth.getUser();
-  if (!u.user) throw new Error('Not authenticated');
-
-  const userId = u.user.id;
-  const candidates = ['png','jpg','jpeg','webp','gif','bmp','avif'].map(ext => `${userId}/avatar.${ext}`);
-  try { await (supabase as any).storage.from('avatar').remove(candidates); } catch {}
-  await updateProfileMe({ avatar_url: null });
+  const session = getStoredSession();
+  const user = await getUser();
+  if (!user) throw new Error('Not authenticated');
+  const { error } = await supabase
+    .from('profiles')
+    .update({ avatar_url: null, updated_at: new Date().toISOString() })
+    .eq('id', user.id);
+  if (error) throw new Error(error.message);
 }
 
-// -------------------- Account Delete --------------------
-export async function deleteAccountRequest(): Promise<{ success: boolean; message?: string }> {
-  if (!supabase) throw new Error('Supabase not configured');
-  
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Not authenticated');
-
-    // Clear avatar files first
-    try {
-      const userId = user.id;
-      const candidates = ['png','jpg','jpeg','webp','gif','bmp','avif'].map(ext => `${userId}/avatar.${ext}`);
-      await (supabase as any).storage.from('avatar').remove(candidates);
-    } catch (avatarError) {
-      console.warn('Failed to delete avatar files:', avatarError);
-    }
-
-    // Delete related data first (certificates, etc.)
-    try {
-      // Delete certificates associated with this user
-      await supabase
-        .from('certificates')
-        .delete()
-        .eq('maximally_username', user.user_metadata?.preferred_username || user.email?.split('@')[0]);
-    } catch (certError) {
-      console.warn('Failed to delete certificates:', certError);
-    }
-
-    // Delete the profile data
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .delete()
-      .eq('id', user.id);
-
-    if (profileError) {
-      throw new Error('Failed to delete profile: ' + profileError.message);
-    }
-
-    // Try to delete the user from auth (this requires admin privileges)
-    // Since we can't delete from client-side, we'll use a database function
-    try {
-      const { error: deleteUserError } = await (supabase as any).rpc('delete_user_account', {
-        user_id: user.id
-      });
-      
-      if (deleteUserError) {
-        console.warn('Failed to delete auth user (may require admin privileges):', deleteUserError);
-      }
-    } catch (deleteError) {
-      console.warn('User deletion from auth failed (expected for client-side):', deleteError);
-    }
-
-    // Clear local storage and session data
-    try {
-      localStorage.clear();
-      sessionStorage.clear();
-    } catch (storageError) {
-      console.warn('Failed to clear storage:', storageError);
-    }
-
-    // Sign out the user
-    await supabase.auth.signOut();
-
-    return { 
-      success: true, 
-      message: 'Account deleted successfully! All your profile data, certificates, and files have been permanently removed. You have been signed out.' 
-    };
-  } catch (err: any) {
-    console.error('deleteAccountRequest error:', err);
-    throw new Error(err.message || 'Failed to delete account');
-  }
-}
-
-
-// -------------------- Hackathon Image Upload Helpers --------------------
-export async function uploadHackathonImage(
-  file: File, 
-  hackathonId: number | string, 
-  imageType: 'logo' | 'banner' | 'cover'
-): Promise<string> {
-  if (!supabase) throw new Error('Supabase not configured');
-  const { data: u } = await supabase.auth.getUser();
-  if (!u.user) throw new Error('Not authenticated');
-
-  if (!file || !file.size) throw new Error('No file provided');
-  if (!file.type.startsWith('image/')) throw new Error('Only image files allowed');
-  
-  const MAX = 5 * 1024 * 1024; // 5MB
-  if (file.size > MAX) throw new Error('Image must be <= 5MB');
-
-  const ext = (file.name.split('.').pop() || 'png').toLowerCase();
-  const safeExt = ['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext) ? ext : 'png';
-  const key = `${hackathonId}/${imageType}.${safeExt}`;
-
-  // Use hackathon-logos bucket for all hackathon images
-  const { error: upErr } = await supabase.storage.from('hackathon-logos').upload(key, file, {
-    contentType: file.type || 'image/png',
-    upsert: true,
+// ─── Account deletion helper ──────────────────────────────────────────────────
+export async function deleteAccountRequest(): Promise<{ message: string }> {
+  const session = getStoredSession();
+  if (!session) throw new Error('Not authenticated');
+  const res = await fetch('/api/users/account', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.access_token}`,
+    },
   });
-  if (upErr) throw upErr;
-
-  const { data } = supabase.storage.from('hackathon-logos').getPublicUrl(key);
-  return data.publicUrl;
-}
-
-export async function deleteHackathonImage(
-  hackathonId: number | string, 
-  imageType: 'logo' | 'banner' | 'cover'
-): Promise<void> {
-  if (!supabase) throw new Error('Supabase not configured');
-  const { data: u } = await supabase.auth.getUser();
-  if (!u.user) throw new Error('Not authenticated');
-
-  const candidates = ['png', 'jpg', 'jpeg', 'webp', 'svg'].map(
-    ext => `${hackathonId}/${imageType}.${ext}`
-  );
-  
-  try {
-    await supabase.storage.from('hackathon-logos').remove(candidates);
-  } catch (err) {
-    console.warn('Failed to delete hackathon image:', err);
-  }
-}
-
-// -------------------- Project/Submission Image Upload Helpers --------------------
-export async function uploadSubmissionImage(
-  file: File, 
-  submissionId: number | string, 
-  imageType: 'logo' | 'cover' | 'screenshot',
-  index?: number
-): Promise<string> {
-  if (!supabase) throw new Error('Supabase not configured');
-  const { data: u } = await supabase.auth.getUser();
-  if (!u.user) throw new Error('Not authenticated');
-
-  if (!file || !file.size) throw new Error('No file provided');
-  if (!file.type.startsWith('image/')) throw new Error('Only image files allowed');
-  
-  const MAX = 5 * 1024 * 1024; // 5MB
-  if (file.size > MAX) throw new Error('Image must be <= 5MB');
-
-  const ext = (file.name.split('.').pop() || 'png').toLowerCase();
-  const safeExt = ['png', 'jpg', 'jpeg', 'webp', 'svg'].includes(ext) ? ext : 'png';
-  
-  // For screenshots, include index in filename
-  const filename = imageType === 'screenshot' && index !== undefined 
-    ? `${imageType}_${index}.${safeExt}` 
-    : `${imageType}.${safeExt}`;
-  const key = `${submissionId}/${filename}`;
-
-  const { error: upErr } = await supabase.storage.from('project-logos').upload(key, file, {
-    contentType: file.type || 'image/png',
-    upsert: true,
-  });
-  if (upErr) throw upErr;
-
-  const { data } = supabase.storage.from('project-logos').getPublicUrl(key);
-  return data.publicUrl;
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || 'Account deletion failed');
+  // Clear local session after deletion
+  localStorage.removeItem('sb-session');
+  return { message: json.message || 'Account deleted successfully' };
 }

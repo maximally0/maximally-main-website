@@ -1,6 +1,5 @@
 // @ts-nocheck
 import type { Express, Request, Response } from "express";
-import { createClient } from "@supabase/supabase-js";
 
 export function registerOrganizerApplicationRoutes(app: Express) {
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
