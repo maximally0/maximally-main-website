@@ -18,6 +18,9 @@
   node_bundler = "esbuild"
   included_files = ["server/**"]
 
+[functions."api"]
+  timeout = 30
+
 # Headers for CORS and security
 [[headers]]
   for = "/*"
