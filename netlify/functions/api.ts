@@ -234,7 +234,10 @@ app.get("/api/health", (_req, res) => res.json({
   config: {
     neonAuthUrl: !!process.env.NEON_AUTH_URL,
     databaseUrl: !!process.env.DATABASE_URL,
-    supabaseAdmin: !!supabaseAdmin
+    supabaseAdmin: !!supabaseAdmin,
+    hasSupabaseUrl: !!process.env.SUPABASE_URL,
+    hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+    supabaseUrlPrefix: process.env.SUPABASE_URL?.substring(0, 30) || 'NOT SET'
   }
 }));
 
