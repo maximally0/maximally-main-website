@@ -1,6 +1,6 @@
 [build]
   publish = "dist/public"
-  command = "npm run build"
+  command = "vite build"
   functions = "netlify/functions"
 
 [build.environment]
@@ -13,13 +13,12 @@
   publish = "dist/public"
   functions = "netlify/functions"
 
-# Function configuration
+# Function configuration - esbuild bundles everything inline
 [functions]
   node_bundler = "esbuild"
-  included_files = ["server/**"]
 
 [functions."api"]
-  timeout = 30
+  timeout = 26
 
 # Headers for CORS and security
 [[headers]]
