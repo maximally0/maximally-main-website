@@ -233,11 +233,35 @@ app.get("/api/organizers", async (_req, res) => {
     if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
     const { data, error } = await (supabaseAdmin as any)
       .from('profiles')
-      .select('id, username, full_name, avatar_url, bio, location, website_url, organizer_status, events_organized, total_participants_managed, organizer_tier')
+      .select('id, username, full_name, avatar_url, bio, location, website_url, created_at')
       .eq('role', 'organizer')
-      .order('events_organized', { ascending: false });
+      .order('created_at', { ascending: false });
     if (error) return res.status(500).json({ success: false, message: error.message });
-    return res.json(data ?? []);
+
+    // Get organizer_profiles for extra stats
+    const { data: orgProfiles } = await (supabaseAdmin as any)
+      .from('organizer_profiles')
+      .select('user_id, total_hackathons_hosted, total_participants_reached, tier');
+
+    const orgMap = new Map((orgProfiles || []).map((o: any) => [o.user_id, o]));
+
+    const result = (data ?? []).map((p: any) => {
+      const op = orgMap.get(p.id) as any;
+      return {
+        id: p.id,
+        username: p.username,
+        full_name: p.full_name,
+        avatar_url: p.avatar_url,
+        bio: p.bio,
+        location: p.location,
+        website_url: p.website_url,
+        organizer_status: 'active',
+        events_organized: op?.total_hackathons_hosted ?? 0,
+        total_participants_managed: op?.total_participants_reached ?? 0,
+        organizer_tier: op?.tier ?? null,
+      };
+    });
+    return res.json(result);
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
 
@@ -775,19 +799,58 @@ app.get("/api/user/:username/certificates", async (req, res) => {
 app.get("/api/judges", async (_req, res) => {
   try {
     if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
-    const { data: judges, error } = await (supabaseAdmin as any).from('judges').select('*').eq('is_published', true).order('sort_order', { ascending: true }).order('created_at', { ascending: false });
+    // Get all profiles with role=judge, joined with judges table for extra data
+    const { data: profiles, error } = await (supabaseAdmin as any)
+      .from('profiles')
+      .select('id, username, full_name, avatar_url, bio, location, skills, github_username, linkedin_username, twitter_username, website_url, total_events_judged, total_teams_evaluated, total_mentorship_hours, is_verified, created_at')
+      .eq('role', 'judge')
+      .order('total_events_judged', { ascending: false });
     if (error) return res.status(500).json({ success: false, message: error.message });
-    const judgesList = (judges || []).map((j: any) => ({
-      id: j.id, username: j.username, fullName: j.full_name, profilePhoto: j.profile_photo, headline: j.headline, shortBio: j.short_bio,
-      location: j.judge_location, currentRole: j.role_title, company: j.company, primaryExpertise: j.primary_expertise || [],
-      secondaryExpertise: j.secondary_expertise || [], totalEventsJudged: j.total_events_judged || 0, totalTeamsEvaluated: j.total_teams_evaluated || 0,
-      totalMentorshipHours: j.total_mentorship_hours || 0, yearsOfExperience: j.years_of_experience || 0, averageFeedbackRating: j.average_feedback_rating,
-      eventsJudgedVerified: j.events_judged_verified || false, teamsEvaluatedVerified: j.teams_evaluated_verified || false,
-      mentorshipHoursVerified: j.mentorship_hours_verified || false, feedbackRatingVerified: j.feedback_rating_verified || false,
-      linkedin: j.linkedin, github: j.github, twitter: j.twitter, website: j.website, languagesSpoken: j.languages_spoken || [],
-      publicAchievements: j.public_achievements, mentorshipStatement: j.mentorship_statement, availabilityStatus: j.availability_status || 'available',
-      tier: j.tier || 'starter', isPublished: j.is_published || false, createdAt: j.created_at
-    }));
+
+    // Get judges table data for tier/category info
+    const { data: judgesData } = await (supabaseAdmin as any)
+      .from('judges')
+      .select('user_id, assigned_category, evaluation_status, hackathons_judged, is_active');
+
+    const judgesMap = new Map((judgesData || []).map((j: any) => [j.user_id, j]));
+
+    const judgesList = (profiles || []).map((p: any) => {
+      const jd = judgesMap.get(p.id) as any;
+      return {
+        id: p.id,
+        username: p.username,
+        fullName: p.full_name,
+        profilePhoto: p.avatar_url,
+        headline: null,
+        shortBio: p.bio,
+        location: p.location,
+        currentRole: null,
+        company: null,
+        primaryExpertise: p.skills ?? [],
+        secondaryExpertise: [],
+        totalEventsJudged: p.total_events_judged ?? 0,
+        totalTeamsEvaluated: p.total_teams_evaluated ?? 0,
+        totalMentorshipHours: p.total_mentorship_hours ?? 0,
+        yearsOfExperience: 0,
+        averageFeedbackRating: null,
+        eventsJudgedVerified: p.is_verified ?? false,
+        teamsEvaluatedVerified: p.is_verified ?? false,
+        mentorshipHoursVerified: false,
+        feedbackRatingVerified: false,
+        linkedin: p.linkedin_username ? `https://linkedin.com/in/${p.linkedin_username}` : null,
+        github: p.github_username ? `https://github.com/${p.github_username}` : null,
+        twitter: p.twitter_username ? `https://twitter.com/${p.twitter_username}` : null,
+        website: p.website_url,
+        languagesSpoken: [],
+        publicAchievements: null,
+        mentorshipStatement: null,
+        availabilityStatus: jd?.is_active ? 'available' : 'unavailable',
+        tier: 'starter',
+        isPublished: true,
+        createdAt: p.created_at,
+        topEventsJudged: jd?.hackathons_judged ?? [],
+      };
+    });
     return res.json(judgesList);
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
@@ -796,21 +859,28 @@ app.get("/api/judges/:username", async (req, res) => {
   try {
     if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
     const { username } = req.params;
-    const { data: judge, error } = await (supabaseAdmin as any).from('judges').select('*').ilike('username', username).eq('is_published', true).single();
-    if (error || !judge) return res.status(404).json({ success: false, message: 'Judge not found' });
-    const { data: events } = await (supabaseAdmin as any).from('judge_events').select('*').eq('judge_id', judge.id).order('event_date', { ascending: false }).limit(5);
+    const { data: profile, error } = await (supabaseAdmin as any)
+      .from('profiles')
+      .select('id, username, full_name, avatar_url, bio, location, skills, github_username, linkedin_username, twitter_username, website_url, total_events_judged, total_teams_evaluated, total_mentorship_hours, is_verified, created_at')
+      .eq('username', username)
+      .eq('role', 'judge')
+      .maybeSingle();
+    if (error || !profile) return res.status(404).json({ success: false, message: 'Judge not found' });
+    const { data: jd } = await (supabaseAdmin as any).from('judges').select('assigned_category, hackathons_judged, is_active').eq('user_id', profile.id).maybeSingle();
     return res.json({
-      id: judge.id, username: judge.username, fullName: judge.full_name, profilePhoto: judge.profile_photo, headline: judge.headline, shortBio: judge.short_bio,
-      location: judge.judge_location, currentRole: judge.role_title, company: judge.company, primaryExpertise: judge.primary_expertise || [],
-      secondaryExpertise: judge.secondary_expertise || [], totalEventsJudged: judge.total_events_judged || 0, totalTeamsEvaluated: judge.total_teams_evaluated || 0,
-      totalMentorshipHours: judge.total_mentorship_hours || 0, yearsOfExperience: judge.years_of_experience || 0, averageFeedbackRating: judge.average_feedback_rating,
-      eventsJudgedVerified: judge.events_judged_verified || false, teamsEvaluatedVerified: judge.teams_evaluated_verified || false,
-      mentorshipHoursVerified: judge.mentorship_hours_verified || false, feedbackRatingVerified: judge.feedback_rating_verified || false,
-      linkedin: judge.linkedin, github: judge.github, twitter: judge.twitter, website: judge.website, email: judge.email, phone: judge.phone,
-      address: judge.address, timezone: judge.timezone, compensationPreference: judge.compensation_preference, languagesSpoken: judge.languages_spoken || [],
-      publicAchievements: judge.public_achievements, mentorshipStatement: judge.mentorship_statement, availabilityStatus: judge.availability_status || 'available',
-      tier: judge.tier || 'starter', isPublished: judge.is_published || false,
-      topEventsJudged: (events || []).map((e: any) => ({ eventName: e.event_name, role: e.event_role, date: e.event_date, link: e.event_link, verified: e.verified || false }))
+      id: profile.id, username: profile.username, fullName: profile.full_name, profilePhoto: profile.avatar_url,
+      headline: null, shortBio: profile.bio, location: profile.location, currentRole: null, company: null,
+      primaryExpertise: profile.skills ?? [], secondaryExpertise: [],
+      totalEventsJudged: profile.total_events_judged ?? 0, totalTeamsEvaluated: profile.total_teams_evaluated ?? 0,
+      totalMentorshipHours: profile.total_mentorship_hours ?? 0, yearsOfExperience: 0, averageFeedbackRating: null,
+      eventsJudgedVerified: profile.is_verified ?? false, teamsEvaluatedVerified: profile.is_verified ?? false,
+      mentorshipHoursVerified: false, feedbackRatingVerified: false,
+      linkedin: profile.linkedin_username ? `https://linkedin.com/in/${profile.linkedin_username}` : null,
+      github: profile.github_username ? `https://github.com/${profile.github_username}` : null,
+      twitter: profile.twitter_username ? `https://twitter.com/${profile.twitter_username}` : null,
+      website: profile.website_url, languagesSpoken: [], publicAchievements: null, mentorshipStatement: null,
+      availabilityStatus: (jd as any)?.is_active ? 'available' : 'unavailable', tier: 'starter',
+      topEventsJudged: (jd as any)?.hackathons_judged ?? [],
     });
   } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
 });
