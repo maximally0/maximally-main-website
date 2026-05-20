@@ -29,6 +29,8 @@ const dropdownMenus = {
     { title: "Payments Infrastructure", description: "Sponsorships, prizes, and ticketing.", href: "/platform/payments" },
     { title: "Organizer Dashboard", description: "Manage events, analytics, and participants.", href: "/organizer/dashboard" },
     { title: "Mentor Gallery", description: "Browse mentors and request help for your hackathon team.", href: "/mentors" },
+    { title: "Judge Gallery", description: "Meet the expert judges on the Maximally platform.", href: "/judges" },
+    { title: "Organizers", description: "The builders behind Maximally hackathons and events.", href: "/organizers" },
   ],
   Network: [
     { title: "Senior Council", description: "Operators selected for documented extraordinary achievement.", href: "/senior-council" },
