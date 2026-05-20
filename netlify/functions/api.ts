@@ -226,6 +226,22 @@ async function bearerUserId(supabase: any, token: string): Promise<string | null
 }
 
 // ============================================
+// ORGANIZERS PUBLIC DIRECTORY
+// ============================================
+app.get("/api/organizers", async (_req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const { data, error } = await (supabaseAdmin as any)
+      .from('profiles')
+      .select('id, username, full_name, avatar_url, bio, location, website_url, organizer_status, events_organized, total_participants_managed, organizer_tier')
+      .eq('role', 'organizer')
+      .order('events_organized', { ascending: false });
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json(data ?? []);
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// ============================================
 // HEALTH & UTILITY ROUTES
 // ============================================
 app.get("/api/health", (_req, res) => res.json({ 

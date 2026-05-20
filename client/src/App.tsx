@@ -77,6 +77,9 @@ import PlatformAnalytics from './pages/PlatformAnalytics';
 import AuthCallback from './pages/AuthCallback';
 import MentorGallery from './pages/MentorGallery';
 import MentorPublicProfile from './pages/MentorPublicProfile';
+import JudgeGallery from './pages/JudgeGallery';
+import JudgePublicProfile from './pages/JudgePublicProfile';
+import OrganizersGallery from './pages/OrganizersGallery';
 import MyMentor from './pages/MyMentor';
 import JudgeEvaluationView from './pages/JudgeEvaluationView';
 
@@ -195,6 +198,9 @@ const AppContent = () => {
         } />
         <Route path="/mentors/:mentorId" element={<MentorPublicProfile />} />
         <Route path="/mentors" element={<MentorGallery />} />
+        <Route path="/judges/:username" element={<JudgePublicProfile />} />
+        <Route path="/judges" element={<JudgeGallery />} />
+        <Route path="/organizers" element={<OrganizersGallery />} />
         <Route path="/my-mentor" element={
           <ProtectedRoute>
             <MyMentor />
