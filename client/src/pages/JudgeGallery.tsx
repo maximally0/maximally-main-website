@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Star, Award, Users, ExternalLink, Shield } from 'lucide-react';
+import { Search, Star, Award, Users, Shield } from 'lucide-react';
 import SEO from '../components/SEO';
 
 interface Judge {
