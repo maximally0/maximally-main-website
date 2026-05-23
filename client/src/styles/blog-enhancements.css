@@ -5,7 +5,7 @@
   width: 0%;
   height: 3px;
   background: linear-gradient(90deg, #f97316, #ea580c);
-  z-index: 1000;
+  z-index: 49;
   transition: width 0.25s ease;
 }
 
