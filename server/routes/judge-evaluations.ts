@@ -183,137 +183,6 @@ async function submitEvaluation(req: Request, res: Response) {
 }
 
 /**
- * GET /api/judges — Public list of all judges
- * This handler is needed because app.use('/api/judges', router) intercepts
- * all /api/judges* requests, including the bare GET /api/judges list endpoint.
- */
-router.get('/', async (req: Request, res: Response) => {
-  try {
-    const supabaseAdmin = req.app.locals.supabaseAdmin
-    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' })
-
-    const { data: profiles, error } = await supabaseAdmin
-      .from('profiles')
-      .select('id, username, full_name, avatar_url, bio, location, skills, github_username, linkedin_username, twitter_username, website_url, total_events_judged, total_teams_evaluated, total_mentorship_hours, is_verified, created_at')
-      .eq('role', 'judge')
-      .order('total_events_judged', { ascending: false })
-
-    if (error) return res.status(500).json({ success: false, message: error.message })
-
-    const { data: judgesData } = await supabaseAdmin
-      .from('judges')
-      .select('user_id, assigned_category, evaluation_status, hackathons_judged, is_active')
-
-    const judgesMap = new Map((judgesData || []).map((j: any) => [j.user_id, j]))
-
-    const judgesList = (profiles || []).map((p: any) => {
-      const jd = judgesMap.get(p.id) as any
-      return {
-        id: p.id,
-        username: p.username,
-        fullName: p.full_name,
-        profilePhoto: p.avatar_url,
-        headline: null,
-        shortBio: p.bio,
-        location: p.location,
-        currentRole: null,
-        company: null,
-        primaryExpertise: p.skills ?? [],
-        secondaryExpertise: [],
-        totalEventsJudged: p.total_events_judged ?? 0,
-        totalTeamsEvaluated: p.total_teams_evaluated ?? 0,
-        totalMentorshipHours: p.total_mentorship_hours ?? 0,
-        yearsOfExperience: 0,
-        averageFeedbackRating: null,
-        eventsJudgedVerified: p.is_verified ?? false,
-        teamsEvaluatedVerified: p.is_verified ?? false,
-        mentorshipHoursVerified: false,
-        feedbackRatingVerified: false,
-        linkedin: p.linkedin_username ? `https://linkedin.com/in/${p.linkedin_username}` : null,
-        github: p.github_username ? `https://github.com/${p.github_username}` : null,
-        twitter: p.twitter_username ? `https://twitter.com/${p.twitter_username}` : null,
-        website: p.website_url,
-        languagesSpoken: [],
-        publicAchievements: null,
-        mentorshipStatement: null,
-        availabilityStatus: jd?.is_active ? 'available' : 'unavailable',
-        tier: 'starter',
-        isPublished: true,
-        createdAt: p.created_at,
-        topEventsJudged: jd?.hackathons_judged ?? [],
-      }
-    })
-    return res.json(judgesList)
-  } catch (e: any) {
-    return res.status(500).json({ success: false, message: e.message })
-  }
-})
-
-/**
- * GET /api/judges/:username — Public judge profile by username
- * NOTE: This must be AFTER /:judgeId/assignments and /:judgeId/evaluations
- * to avoid intercepting those routes.
- */
-router.get('/:username([^/]+)', async (req: Request, res: Response) => {
-  const { username } = req.params
-  // Don't handle sub-path routes here — they have their own handlers above
-  try {
-    const supabaseAdmin = req.app.locals.supabaseAdmin
-    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' })
-
-    const { data: profile, error } = await supabaseAdmin
-      .from('profiles')
-      .select('id, username, full_name, avatar_url, bio, location, skills, github_username, linkedin_username, twitter_username, website_url, total_events_judged, total_teams_evaluated, total_mentorship_hours, is_verified, created_at')
-      .eq('username', username)
-      .eq('role', 'judge')
-      .maybeSingle()
-
-    if (error || !profile) return res.status(404).json({ success: false, message: 'Judge not found' })
-
-    const { data: jd } = await supabaseAdmin
-      .from('judges')
-      .select('assigned_category, hackathons_judged, is_active')
-      .eq('user_id', profile.id)
-      .maybeSingle()
-
-    return res.json({
-      id: profile.id,
-      username: profile.username,
-      fullName: profile.full_name,
-      profilePhoto: profile.avatar_url,
-      headline: null,
-      shortBio: profile.bio,
-      location: profile.location,
-      currentRole: null,
-      company: null,
-      primaryExpertise: profile.skills ?? [],
-      secondaryExpertise: [],
-      totalEventsJudged: profile.total_events_judged ?? 0,
-      totalTeamsEvaluated: profile.total_teams_evaluated ?? 0,
-      totalMentorshipHours: profile.total_mentorship_hours ?? 0,
-      yearsOfExperience: 0,
-      averageFeedbackRating: null,
-      eventsJudgedVerified: profile.is_verified ?? false,
-      teamsEvaluatedVerified: profile.is_verified ?? false,
-      mentorshipHoursVerified: false,
-      feedbackRatingVerified: false,
-      linkedin: profile.linkedin_username ? `https://linkedin.com/in/${profile.linkedin_username}` : null,
-      github: profile.github_username ? `https://github.com/${profile.github_username}` : null,
-      twitter: profile.twitter_username ? `https://twitter.com/${profile.twitter_username}` : null,
-      website: profile.website_url,
-      languagesSpoken: [],
-      publicAchievements: null,
-      mentorshipStatement: null,
-      availabilityStatus: jd?.is_active ? 'available' : 'unavailable',
-      tier: 'starter',
-      topEventsJudged: jd?.hackathons_judged ?? [],
-    })
-  } catch (e: any) {
-    return res.status(500).json({ success: false, message: e.message })
-  }
-})
-
-/**
  * Get judge assignments
  * GET /api/judges/:judgeId/assignments
  */
@@ -607,13 +476,42 @@ router.post('/evaluations/:evaluationId/draft', async (req: Request, res: Respon
 })
 
 export function registerJudgeEvaluationRoutes(app: Express): void {
-  // New judging portal endpoints (task 15.1) — registered FIRST so they take
-  // priority over the legacy wildcard router mounted at /api below.
+  // New judging portal endpoints (task 15.1)
   app.get('/api/judging/assignments', getJudgingAssignments)
   app.post('/api/judging/evaluations/:evaluationId/save', saveEvaluation)
   app.post('/api/judging/evaluations/:evaluationId/submit', submitEvaluation)
 
-  // Legacy routes (existing judge management endpoints)
-  app.use('/api/judges', router)
+  // Judge sub-routes — registered directly on app to avoid intercepting GET /api/judges
+  app.get('/api/judges/:judgeId/assignments', async (req: Request, res: Response) => {
+    try {
+      const { judgeId } = req.params
+      const supabaseAdmin = req.app.locals.supabaseAdmin
+      if (!supabaseAdmin) return res.status(500).json({ error: 'Database connection not available' })
+      const { data: assignments, error } = await supabaseAdmin
+        .from('judge_hackathon_evaluations')
+        .select('*, hackathon:organizer_hackathons(id, name, start_date, end_date)')
+        .eq('judge_id', judgeId)
+        .order('assigned_at', { ascending: false })
+      if (error) return res.status(500).json({ error: 'Failed to fetch judge assignments' })
+      return res.json({ success: true, data: assignments || [] })
+    } catch (e: any) { return res.status(500).json({ error: 'Internal server error' }) }
+  })
+
+  app.get('/api/judges/:judgeId/evaluations', async (req: Request, res: Response) => {
+    try {
+      const { judgeId } = req.params
+      const supabaseAdmin = req.app.locals.supabaseAdmin
+      if (!supabaseAdmin) return res.status(500).json({ error: 'Database connection not available' })
+      const { data: evaluations, error } = await supabaseAdmin
+        .from('judge_submission_evaluations')
+        .select('*, submission:hackathon_submissions(id, project_name, team_name, submission_url, github_url, description), hackathon:organizer_hackathons(id, name)')
+        .eq('judge_id', judgeId)
+        .order('created_at', { ascending: false })
+      if (error) return res.status(500).json({ error: 'Failed to fetch judge evaluations' })
+      return res.json({ success: true, data: evaluations || [] })
+    } catch (e: any) { return res.status(500).json({ error: 'Internal server error' }) }
+  })
+
+  // Legacy evaluation/hackathon routes via router (mounted at /api only, not /api/judges)
   app.use('/api', router)
 }
