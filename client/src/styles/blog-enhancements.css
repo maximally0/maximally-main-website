@@ -1,12 +1,13 @@
 .reading-progress {
   position: fixed;
-  top: 0;
+  top: 100%;
   left: 0;
   width: 0%;
   height: 3px;
   background: linear-gradient(90deg, #f97316, #ea580c);
-  z-index: 49;
+  z-index: 50;
   transition: width 0.25s ease;
+  transform: translateY(-100%);
 }
 
 @keyframes fadeInUp {
