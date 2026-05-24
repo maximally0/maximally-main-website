@@ -62,7 +62,7 @@ function StatCard({ label, value, verified }: { label: string; value: number | s
       <div className="text-2xl font-bold text-white mb-1">{value}</div>
       <div className="text-xs text-gray-400 flex items-center justify-center gap-1">
         {label}
-        {verified && <Shield className="h-3 w-3 text-green-400" title="Verified" />}
+        {verified && <Shield className="h-3 w-3 text-green-400" aria-label="Verified" />}
       </div>
     </div>
   );
@@ -205,7 +205,7 @@ export default function JudgePublicProfile() {
                       <div>
                         <p className="text-sm font-medium text-white flex items-center gap-2">
                           {ev.eventName}
-                          {ev.verified && <Shield className="h-3.5 w-3.5 text-green-400" title="Verified" />}
+                          {ev.verified && <Shield className="h-3.5 w-3.5 text-green-400" aria-label="Verified" />}
                         </p>
                         <p className="text-xs text-gray-400">{ev.role} · {ev.date}</p>
                       </div>
