@@ -1715,6 +1715,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })
         .eq('id', id);
 
+      if (updateError) {
+        return res.status(500).json({ message: `Failed to update application status: ${updateError.message}` });
+      }
+
       return res.json({
         message: `Application approved successfully! User ${cleanUsername} has been promoted to judge role.`,
         judgeId: judgeData2.id,
