@@ -29,9 +29,9 @@ const SESSION_KEY = 'sb-session';
 // ─── 401 handler ─────────────────────────────────────────────────────────────
 export function handle401(): void {
   localStorage.removeItem(SESSION_KEY);
-  toast.error('Your session has expired. Please sign in again.');
-  // Don't redirect if already on login page
-  if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/auth')) {
+  const onLoginPage = window.location.pathname.includes('/login') || window.location.pathname.includes('/auth');
+  if (!onLoginPage) {
+    toast.error('Your session has expired. Please sign in again.');
     window.location.href = '/login';
   }
 }
@@ -167,9 +167,9 @@ export async function signInWithEmailPassword(email: string, password: string): 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  if (res.status === 401) { handle401(); throw new Error('Session expired'); }
   const json = await res.json();
-  if (!json.success) throw new Error(json.message ?? 'Sign-in failed');
+  // 401 from sign-in means wrong credentials, NOT expired session — don't call handle401
+  if (!res.ok || !json.success) throw new Error(json.message ?? 'Invalid email or password');
   localStorage.setItem(SESSION_KEY, JSON.stringify(json.session));
   return json.user as User;
 }
@@ -180,9 +180,8 @@ export async function signUp(payload: SignUpPayload): Promise<User> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  if (res.status === 401) { handle401(); throw new Error('Session expired'); }
   const json = await res.json();
-  if (!json.success) throw new Error(json.message ?? 'Sign-up failed');
+  if (!res.ok || !json.success) throw new Error(json.message ?? 'Sign-up failed');
   return json.user as User;
 }
 
