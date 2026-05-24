@@ -907,6 +907,136 @@ app.get("/api/judge/messages", (_req, res) => res.json({ items: [], total: 0 }))
 app.get("/api/judge/messages/unread-count", (_req, res) => res.json({ unread: 0 }));
 app.post("/api/judge/messages/:id/read", (_req, res) => res.json({ success: true, message: 'Feature deprecated' }));
 
+// GET /api/judge/scoring-links - get tokenized scoring links for the authenticated judge
+app.get("/api/judge/scoring-links", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const { data: { user }, error: authError } = await (supabaseAdmin as any).auth.getUser(token);
+    if (authError || !user) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+    // Get profile email
+    const { data: profile } = await (supabaseAdmin as any).from('profiles').select('email').eq('id', user.id).single();
+    if (!profile?.email) return res.json({ success: true, data: [] });
+
+    // Find hackathon_judges entries by email
+    const { data: judgeEntries } = await (supabaseAdmin as any)
+      .from('hackathon_judges')
+      .select('id, name, email, hackathon_id')
+      .eq('email', profile.email);
+
+    if (!judgeEntries?.length) return res.json({ success: true, data: [] });
+
+    const judgeIds = judgeEntries.map((j: any) => j.id);
+
+    // Get scoring tokens
+    const { data: tokens } = await (supabaseAdmin as any)
+      .from('judge_scoring_tokens')
+      .select('judge_id, token, expires_at, created_at')
+      .in('judge_id', judgeIds);
+
+    const tokenMap = new Map((tokens || []).map((t: any) => [t.judge_id, t]));
+
+    // Get hackathon names
+    const hackathonIds = [...new Set(judgeEntries.map((j: any) => j.hackathon_id))];
+    const { data: hackathons } = await (supabaseAdmin as any)
+      .from('organizer_hackathons')
+      .select('id, hackathon_name, slug')
+      .in('id', hackathonIds);
+
+    const hackathonMap = new Map((hackathons || []).map((h: any) => [h.id, h]));
+
+    const result = judgeEntries.map((j: any) => {
+      const t = tokenMap.get(j.id) as any;
+      const h = hackathonMap.get(j.hackathon_id) as any;
+      return {
+        judge_id: j.id,
+        hackathon_id: j.hackathon_id,
+        hackathon_name: h?.hackathon_name ?? `Hackathon #${j.hackathon_id}`,
+        hackathon_slug: h?.slug ?? null,
+        token: t?.token ?? null,
+        expires_at: t?.expires_at ?? null,
+        scoring_url: t?.token ? `${process.env.FRONTEND_URL || 'https://maximally.org'}/judge/${t.token}` : null,
+      };
+    });
+
+    return res.json({ success: true, data: result });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// GET /api/judge/requests - get judge invitations and requests for the authenticated judge
+app.get("/api/judge/requests", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+    const { data, error } = await (supabaseAdmin as any)
+      .from('judge_requests')
+      .select(`
+        id, hackathon_id, request_type, status, message, created_at,
+        hackathon:organizer_hackathons(id, hackathon_name, start_date, end_date)
+      `)
+      .eq('judge_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      // Table may not exist yet — return empty gracefully
+      return res.json({ success: true, data: [] });
+    }
+    return res.json({ success: true, data: data || [] });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// POST /api/judge-requests/:id/accept - accept a judge invitation
+app.post("/api/judge-requests/:id/accept", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+    const { id } = req.params;
+    const { error } = await (supabaseAdmin as any)
+      .from('judge_requests')
+      .update({ status: 'accepted', updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .eq('judge_id', userId);
+
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json({ success: true, message: 'Invitation accepted' });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// POST /api/judge-requests/:id/reject - decline a judge invitation
+app.post("/api/judge-requests/:id/reject", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Server not configured" });
+    const authHeader = req.headers['authorization'];
+    if (!authHeader?.toString().startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+    const token = authHeader.toString().slice(7);
+    const userId = await bearerUserId(supabaseAdmin, token);
+    if (!userId) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+    const { id } = req.params;
+    const { error } = await (supabaseAdmin as any)
+      .from('judge_requests')
+      .update({ status: 'rejected', updated_at: new Date().toISOString() })
+      .eq('id', id)
+      .eq('judge_id', userId);
+
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json({ success: true, message: 'Invitation declined' });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
 
 app.post("/api/judges/apply", async (req, res) => {
   try {
