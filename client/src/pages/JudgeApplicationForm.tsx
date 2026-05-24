@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -114,7 +113,15 @@ const JudgeApplicationForm = () => {
         agreedToNDA: formData.agreedToNDA,
       };
 
-      await apiRequest('/api/judges/apply', { method: 'POST', body: JSON.stringify(submitData) });
+      await fetch('/api/judges/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submitData),
+      }).then(async r => {
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.message || 'Failed to submit application');
+        return data;
+      });
       toast({ title: 'Application Submitted!', description: "We'll review your application and get back to you soon." });
       setTimeout(() => navigate('/judges'), 2000);
     } catch (error: any) {

@@ -940,6 +940,61 @@ app.post("/api/judges/apply", async (req, res) => {
   } catch (e: any) { return res.status(500).json({ message: e.message }); }
 });
 
+// Admin: get all judge applications
+app.get("/api/admin/judge-applications", async (_req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { data, error } = await (supabaseAdmin as any)
+      .from('judge_applications')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json(data || []);
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Admin: approve judge application → promote user to judge role
+app.post("/api/admin/judge-applications/:id/approve", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { id } = req.params;
+    const { data: app, error: fetchErr } = await (supabaseAdmin as any)
+      .from('judge_applications').select('*').eq('id', id).single();
+    if (fetchErr || !app) return res.status(404).json({ success: false, message: 'Application not found' });
+    await (supabaseAdmin as any).from('judge_applications')
+      .update({ status: 'approved', reviewed_at: new Date().toISOString() }).eq('id', id);
+    // Promote user to judge role by email
+    const { error: profileErr } = await (supabaseAdmin as any).from('profiles')
+      .update({ role: 'judge', updated_at: new Date().toISOString() }).eq('email', app.email);
+    if (profileErr) console.error('[judge-approve] profile update error:', profileErr);
+    return res.json({ success: true, message: 'Application approved and user promoted to judge.' });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Admin: reject judge application
+app.post("/api/admin/judge-applications/:id/reject", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { id } = req.params;
+    const { notes } = req.body;
+    const { error } = await (supabaseAdmin as any).from('judge_applications')
+      .update({ status: 'rejected', admin_notes: notes || null, reviewed_at: new Date().toISOString() }).eq('id', id);
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json({ success: true, message: 'Application rejected.' });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Admin: delete judge application
+app.delete("/api/admin/judge-applications/:id", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { id } = req.params;
+    const { error } = await (supabaseAdmin as any).from('judge_applications').delete().eq('id', id);
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json({ success: true });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
 // ============================================
 // MENTOR APPLICATION ROUTE
 // ============================================

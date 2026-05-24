@@ -72,6 +72,7 @@ export default function JudgePublicProfile() {
   const { username } = useParams<{ username: string }>();
   const { profile: authProfile } = useAuth();
   const isAdmin = authProfile?.role === 'admin';
+  const isSelf = authProfile?.username === username;
 
   const [judge, setJudge] = useState<JudgeProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -266,11 +267,13 @@ export default function JudgePublicProfile() {
           </div>
 
           {/* Admin-only private data */}
-          {isAdmin && (judge.email || judge.phone || judge.address || judge.timezone || judge.compensationPreference) && (
+          {(isAdmin || isSelf) && (judge.email || judge.phone || judge.address || judge.timezone || judge.compensationPreference) && (
             <div className="bg-amber-900/10 border border-amber-700/30 rounded-xl p-6">
               <div className="flex items-center gap-2 mb-4">
                 <Shield className="h-4 w-4 text-amber-400" />
-                <h2 className="text-sm font-semibold text-amber-400 uppercase tracking-wider">Admin Only — Private Data</h2>
+                <h2 className="text-sm font-semibold text-amber-400 uppercase tracking-wider">
+                  {isAdmin ? 'Admin Only — Private Data' : 'Your Private Data'}
+                </h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                 {judge.email && <div><span className="text-gray-500">Email:</span> <span className="text-white">{judge.email}</span></div>}

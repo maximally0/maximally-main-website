@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -104,7 +103,15 @@ const MentorApplicationForm = () => {
         agreed_to_terms: formData.agreed_to_terms,
       };
 
-      await apiRequest('/api/mentor/apply', { method: 'POST', body: JSON.stringify(submitData) });
+      await fetch('/api/mentor/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submitData),
+      }).then(async r => {
+        const data = await r.json();
+        if (!r.ok) throw new Error(data.message || 'Failed to submit application');
+        return data;
+      });
       toast({ title: 'Application Submitted!', description: "We'll review your application and get back to you soon." });
       setTimeout(() => navigate('/mentors'), 2000);
     } catch (error: any) {
