@@ -308,7 +308,7 @@ const Navbar = () => {
                     )}
                   </button>
                   {profileDropdownOpen && (
-                    <div className="absolute right-0 mt-3 w-56 border border-gray-700 shadow-2xl z-50 overflow-hidden bg-gray-950/98 backdrop-blur-xl rounded-lg">
+                    <div className="absolute right-0 mt-3 w-56 shadow-2xl z-50 overflow-hidden rounded-lg bg-black/40 backdrop-blur-lg border border-white/10">
                       <div className="px-5 py-4 border-b border-gray-800">
                         <p className="font-space text-xs text-gray-500 mb-1">Signed in as</p>
                         <p className="font-space text-sm font-medium text-white truncate">@{profile?.username || "user"}</p>
