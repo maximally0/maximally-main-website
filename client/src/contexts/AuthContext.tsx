@@ -70,6 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const result = await getCurrentUserWithProfile();
         
         if (!result) {
+          // No valid session — clear any stale data silently
+          localStorage.removeItem('sb-session');
           setLoading(false);
           return;
         }
@@ -87,12 +89,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             const moderationStatus = await getUserModerationStatus(result.user.id);
             setModerationStatus(moderationStatus);
           } catch (moderationError) {
-            console.error('Failed to load moderation status:', moderationError);
+            // Non-fatal — moderation status is optional
           }
         }
         
       } catch (error) {
-        console.error('[AuthContext] Error initializing session:', error);
+        // Clear stale session on any error — don't redirect, just reset state
+        localStorage.removeItem('sb-session');
       } finally {
         setLoading(false);
       }

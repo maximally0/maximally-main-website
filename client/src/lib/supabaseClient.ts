@@ -30,7 +30,10 @@ const SESSION_KEY = 'sb-session';
 export function handle401(): void {
   localStorage.removeItem(SESSION_KEY);
   toast.error('Your session has expired. Please sign in again.');
-  window.location.href = '/login';
+  // Don't redirect if already on login page
+  if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/auth')) {
+    window.location.href = '/login';
+  }
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -234,16 +237,27 @@ function isAccessTokenNearExpiry(session: Session, skewSec: number = ACCESS_TOKE
 export async function refreshSession(): Promise<Session | null> {
   const session = getStoredSession();
   if (!session?.refresh_token) return null;
-  const res = await fetch('/api/auth/refresh', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refresh_token: session.refresh_token }),
-  });
-  if (res.status === 401) { handle401(); return null; }
-  const json = await res.json();
-  if (!json.success) return null;
-  localStorage.setItem(SESSION_KEY, JSON.stringify(json.session));
-  return json.session as Session;
+  try {
+    const res = await fetch('/api/auth/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: session.refresh_token }),
+    });
+    if (res.status === 401 || res.status === 400) {
+      // Stale refresh token — clear silently, don't redirect
+      localStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+    const json = await res.json();
+    if (!json.success) {
+      localStorage.removeItem(SESSION_KEY);
+      return null;
+    }
+    localStorage.setItem(SESSION_KEY, JSON.stringify(json.session));
+    return json.session as Session;
+  } catch {
+    return null;
+  }
 }
 
 /**
