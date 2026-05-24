@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Star, Award, Users, Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 
 interface Judge {
@@ -136,9 +137,16 @@ export default function JudgeGallery() {
           {/* Header */}
           <div className="text-center mb-10">
             <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">Meet Our Judges</h1>
-            <p className="text-gray-400 max-w-xl mx-auto">
+            <p className="text-gray-400 max-w-xl mx-auto mb-5">
               Industry experts who evaluate hackathon submissions and mentor builders.
             </p>
+            <Link
+              to="/judge/apply"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              <Award className="h-4 w-4" />
+              Apply to Become a Judge
+            </Link>
           </div>
 
           {/* Filters */}

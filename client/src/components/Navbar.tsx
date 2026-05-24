@@ -29,7 +29,9 @@ const dropdownMenus = {
     { title: "Payments Infrastructure", description: "Sponsorships, prizes, and ticketing.", href: "/platform/payments" },
     { title: "Organizer Dashboard", description: "Manage events, analytics, and participants.", href: "/organizer/dashboard" },
     { title: "Mentor Gallery", description: "Browse mentors and request help for your hackathon team.", href: "/mentors" },
+    { title: "Become a Mentor", description: "Apply to mentor hackathon participants.", href: "/mentor/apply" },
     { title: "Judge Gallery", description: "Meet the expert judges on the Maximally platform.", href: "/judges" },
+    { title: "Become a Judge", description: "Apply to evaluate hackathon submissions.", href: "/judge/apply" },
     { title: "Organizers", description: "The builders behind Maximally hackathons and events.", href: "/organizers" },
   ],
   Network: [
@@ -257,6 +259,11 @@ const Navbar = () => {
                       )}
                     </Link>
                   </>
+                )}
+                {(profile?.role as string) === 'judge' && (
+                  <Link to="/judging/dashboard" className="relative font-space text-sm font-medium px-3 py-2 text-orange-400 hover:text-orange-300 transition-all duration-200" data-testid="button-judge-dashboard">
+                    Judge Dashboard
+                  </Link>
                 )}
                 {isMentor && (
                   <>
@@ -510,6 +517,16 @@ const Navbar = () => {
                             <span className="font-space text-sm font-medium text-gray-300">Mentor Gallery</span>
                           </Link>
                         </>
+                      )}
+                      {(profile?.role as string) === 'judge' && (
+                        <Link
+                          to="/judging/dashboard"
+                          onClick={closeMobileMenu}
+                          className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-orange-500/10 border border-orange-500/20 active:bg-orange-500/15 transition-colors"
+                        >
+                          <Trophy className="h-4 w-4 text-orange-400" />
+                          <span className="font-space text-sm font-medium text-orange-400">Judge Dashboard</span>
+                        </Link>
                       )}
                       {isAdmin && adminPanelBase && (
                         <a

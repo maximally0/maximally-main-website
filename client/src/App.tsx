@@ -82,6 +82,8 @@ import JudgePublicProfile from './pages/JudgePublicProfile';
 import OrganizersGallery from './pages/OrganizersGallery';
 import MyMentor from './pages/MyMentor';
 import JudgeEvaluationView from './pages/JudgeEvaluationView';
+import JudgeApplicationForm from './pages/JudgeApplicationForm';
+import MentorApplicationForm from './pages/MentorApplicationForm';
 
 const queryClient = new QueryClient();
 
@@ -198,8 +200,10 @@ const AppContent = () => {
         } />
         <Route path="/mentors/:mentorId" element={<MentorPublicProfile />} />
         <Route path="/mentors" element={<MentorGallery />} />
+        <Route path="/mentor/apply" element={<MentorApplicationForm />} />
         <Route path="/judges/:username" element={<JudgePublicProfile />} />
         <Route path="/judges" element={<JudgeGallery />} />
+        <Route path="/judge/apply" element={<JudgeApplicationForm />} />
         <Route path="/organizers" element={<OrganizersGallery />} />
         <Route path="/my-mentor" element={
           <ProtectedRoute>

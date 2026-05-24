@@ -941,6 +941,125 @@ app.post("/api/judges/apply", async (req, res) => {
 });
 
 // ============================================
+// MENTOR APPLICATION ROUTE
+// ============================================
+app.post("/api/mentor/apply", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const body = req.body;
+    if (!body.username || !body.full_name || !body.email) {
+      return res.status(400).json({ success: false, message: 'Missing required fields: username, full_name, email' });
+    }
+    // Check for duplicate application
+    const { data: existing } = await (supabaseAdmin as any)
+      .from('mentor_applications')
+      .select('id, status')
+      .eq('email', body.email)
+      .maybeSingle();
+    if (existing) {
+      if (existing.status === 'pending') return res.status(400).json({ success: false, message: 'You already have a pending mentor application.' });
+      if (existing.status === 'approved') return res.status(400).json({ success: false, message: 'You are already an approved mentor.' });
+    }
+    // Check if already a mentor
+    const { data: existingMentor } = await (supabaseAdmin as any)
+      .from('profiles')
+      .select('role')
+      .eq('email', body.email)
+      .maybeSingle();
+    if (existingMentor?.role === 'mentor') {
+      return res.status(400).json({ success: false, message: 'You are already a mentor.' });
+    }
+    const { data: application, error } = await (supabaseAdmin as any)
+      .from('mentor_applications')
+      .upsert({
+        user_id: body.user_id || null,
+        username: body.username,
+        email: body.email,
+        full_name: body.full_name,
+        bio: body.bio || null,
+        location: body.location || null,
+        skills: body.skills || [],
+        expertise_areas: body.expertise_areas || [],
+        years_of_experience: body.years_of_experience || 0,
+        why_mentor: body.why_mentor || null,
+        availability: body.availability || null,
+        max_mentees: body.max_mentees || 3,
+        linkedin: body.linkedin || null,
+        github: body.github || null,
+        twitter: body.twitter || null,
+        website: body.website || null,
+        phone: body.phone || null,
+        timezone: body.timezone || null,
+        agreed_to_terms: body.agreed_to_terms || false,
+        status: 'pending',
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'email' })
+      .select()
+      .single();
+    if (error) return res.status(500).json({ success: false, message: `Failed to submit: ${error.message}` });
+    return res.status(201).json({ success: true, message: 'Mentor application submitted successfully!', applicationId: application.id });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Admin: get all mentor applications
+app.get("/api/admin/mentor-applications", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { data, error } = await (supabaseAdmin as any)
+      .from('mentor_applications')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json(data || []);
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Admin: approve mentor application
+app.post("/api/admin/mentor-applications/:id/approve", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { id } = req.params;
+    const { data: app, error: fetchErr } = await (supabaseAdmin as any)
+      .from('mentor_applications').select('*').eq('id', id).single();
+    if (fetchErr || !app) return res.status(404).json({ success: false, message: 'Application not found' });
+    // Update application status
+    await (supabaseAdmin as any).from('mentor_applications').update({ status: 'approved', reviewed_at: new Date().toISOString() }).eq('id', id);
+    // Promote user to mentor role
+    if (app.user_id) {
+      await (supabaseAdmin as any).from('profiles').update({ role: 'mentor', updated_at: new Date().toISOString() }).eq('id', app.user_id);
+    } else {
+      // Try to find by email
+      await (supabaseAdmin as any).from('profiles').update({ role: 'mentor', updated_at: new Date().toISOString() }).eq('email', app.email);
+    }
+    return res.json({ success: true, message: 'Mentor application approved and user promoted to mentor.' });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Admin: reject mentor application
+app.post("/api/admin/mentor-applications/:id/reject", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { id } = req.params;
+    const { notes } = req.body;
+    const { error } = await (supabaseAdmin as any).from('mentor_applications')
+      .update({ status: 'rejected', admin_notes: notes || null, reviewed_at: new Date().toISOString() }).eq('id', id);
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json({ success: true, message: 'Application rejected.' });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// Admin: delete mentor application
+app.delete("/api/admin/mentor-applications/:id", async (req, res) => {
+  try {
+    if (!supabaseAdmin) return res.status(500).json({ success: false, message: 'Server not configured' });
+    const { id } = req.params;
+    const { error } = await (supabaseAdmin as any).from('mentor_applications').delete().eq('id', id);
+    if (error) return res.status(500).json({ success: false, message: error.message });
+    return res.json({ success: true });
+  } catch (e: any) { return res.status(500).json({ success: false, message: e.message }); }
+});
+
+// ============================================
 // HACKATHON ROUTES
 // ============================================
 app.get("/api/hackathons/:slug", async (req, res) => {

@@ -1,17 +1,15 @@
 /**
  * JudgeDashboard page — Requirements 9.1, 9.3, 9.9
  *
- * Fetches GET /api/judging/assignments on mount.
- * Displays each submission with a traffic-light status indicator:
- *   🔴 not_started  🟡 in_progress  🟢 submitted
- * Displays a "Hackathons Judged" section listing hackathons where the judge
- * has at least one submitted evaluation.
- * Links each submission row to /judging/evaluate/:evaluationId.
+ * Shows:
+ * - Pending invitations from organizers + judge's own requests
+ * - Assigned submissions grouped by hackathon with traffic-light status
+ * - "Hackathons Judged" section
  */
 
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Trophy, ChevronRight, AlertCircle, Loader2 } from 'lucide-react';
+import { Trophy, ChevronRight, AlertCircle, Loader2, Bell, CheckCircle, XCircle, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import SEO from '@/components/SEO';
 import { getStoredSession } from '@/lib/supabaseClient';
@@ -43,6 +41,17 @@ interface Evaluation {
   updated_at: string;
   submission: Submission;
   hackathon: Hackathon;
+}
+
+interface JudgeRequest {
+  id: string;
+  hackathon_id: number;
+  request_type: 'organizer_invite' | 'judge_request';
+  status: 'pending' | 'accepted' | 'rejected';
+  message: string | null;
+  created_at: string;
+  hackathon?: { id: number; hackathon_name: string; start_date: string; end_date: string };
+  organizer?: { username: string; full_name: string; avatar_url: string };
 }
 
 // ─── Traffic-light status indicator ──────────────────────────────────────────
@@ -89,59 +98,80 @@ const JudgeDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
+  const [requests, setRequests] = useState<JudgeRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [respondingTo, setRespondingTo] = useState<string | null>(null);
 
-  // ── Fetch assignments on mount ────────────────────────────────────────────
+  const getToken = () => getStoredSession()?.access_token;
+
+  // ── Fetch assignments and requests on mount ───────────────────────────────
   useEffect(() => {
-    const fetchAssignments = async () => {
+    const fetchData = async () => {
       setLoading(true);
       setError(null);
 
-      const session = getStoredSession();
-      if (!session?.access_token) {
+      const token = getToken();
+      if (!token) {
         toast.error('Please sign in to access the judge dashboard.');
         navigate('/auth/sign-in');
         return;
       }
 
       try {
-        const res = await fetch('/api/judging/assignments', {
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
-        });
+        const [assignRes, reqRes] = await Promise.all([
+          fetch('/api/judging/assignments', { headers: { Authorization: `Bearer ${token}` } }),
+          fetch('/api/judge/requests', { headers: { Authorization: `Bearer ${token}` } }),
+        ]);
 
-        if (res.status === 401) {
-          toast.error('Your session has expired. Please sign in again.');
-          navigate('/auth/sign-in');
-          return;
-        }
-
-        if (res.status === 403) {
+        if (assignRes.status === 401 || assignRes.status === 403) {
           toast.error("You don't have permission to access this page.");
           navigate('/');
           return;
         }
 
-        if (!res.ok) {
-          throw new Error(`Failed to load assignments (${res.status})`);
+        if (assignRes.ok) {
+          const json = await assignRes.json();
+          setEvaluations(json.evaluations ?? json.data ?? []);
         }
 
-        const json = await res.json();
-        const list: Evaluation[] = json.evaluations ?? json.data ?? [];
-        setEvaluations(list);
+        if (reqRes.ok) {
+          const json = await reqRes.json();
+          setRequests(json.data ?? []);
+        }
       } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Failed to load assignments';
+        const msg = err instanceof Error ? err.message : 'Failed to load data';
         setError(msg);
-        console.error('[JudgeDashboard] fetch error:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAssignments();
+    fetchData();
   }, [navigate]);
+
+  const handleRespond = async (requestId: string, action: 'accept' | 'reject') => {
+    const token = getToken();
+    if (!token) return;
+    setRespondingTo(requestId);
+    try {
+      const res = await fetch(`/api/judge-requests/${requestId}/${action}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        toast.error(err.message || `Failed to ${action} request`);
+        return;
+      }
+      toast.success(action === 'accept' ? 'Invitation accepted!' : 'Invitation declined.');
+      setRequests(prev => prev.map(r => r.id === requestId ? { ...r, status: action === 'accept' ? 'accepted' : 'rejected' } : r));
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setRespondingTo(null);
+    }
+  };
 
   // ── Derived: hackathons with at least one submitted evaluation ────────────
   /**
@@ -219,6 +249,60 @@ const JudgeDashboard: React.FC = () => {
 
           {!loading && !error && (
             <>
+              {/* ── Invitations & Requests ── */}
+              {requests.length > 0 && (
+                <section className="mb-8">
+                  <h2 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
+                    <Bell className="h-5 w-5 text-orange-400" />
+                    Invitations & Requests
+                    {requests.filter(r => r.status === 'pending').length > 0 && (
+                      <span className="ml-1 bg-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                        {requests.filter(r => r.status === 'pending').length}
+                      </span>
+                    )}
+                  </h2>
+                  <div className="space-y-3">
+                    {requests.map(req => (
+                      <div key={req.id} className="bg-gray-900 rounded-xl border border-gray-800 p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-white">
+                              {req.request_type === 'organizer_invite' ? '📨 Organizer Invitation' : '📤 Your Request'}
+                            </p>
+                            <p className="text-sm text-gray-400 mt-0.5">
+                              {req.hackathon?.hackathon_name ?? `Hackathon #${req.hackathon_id}`}
+                            </p>
+                            {req.message && <p className="text-xs text-gray-500 mt-1 italic">"{req.message}"</p>}
+                            <div className="flex items-center gap-2 mt-2">
+                              {req.status === 'pending' && <span className="inline-flex items-center gap-1 text-xs text-yellow-400 bg-yellow-900/20 border border-yellow-800 px-2 py-0.5 rounded-full"><Clock className="h-3 w-3" />Pending</span>}
+                              {req.status === 'accepted' && <span className="inline-flex items-center gap-1 text-xs text-green-400 bg-green-900/20 border border-green-800 px-2 py-0.5 rounded-full"><CheckCircle className="h-3 w-3" />Accepted</span>}
+                              {req.status === 'rejected' && <span className="inline-flex items-center gap-1 text-xs text-red-400 bg-red-900/20 border border-red-800 px-2 py-0.5 rounded-full"><XCircle className="h-3 w-3" />Declined</span>}
+                            </div>
+                          </div>
+                          {req.status === 'pending' && req.request_type === 'organizer_invite' && (
+                            <div className="flex gap-2 shrink-0">
+                              <button
+                                onClick={() => handleRespond(req.id, 'accept')}
+                                disabled={respondingTo === req.id}
+                                className="px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
+                              >
+                                Accept
+                              </button>
+                              <button
+                                onClick={() => handleRespond(req.id, 'reject')}
+                                disabled={respondingTo === req.id}
+                                className="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-white text-xs font-medium rounded-lg transition-colors disabled:opacity-50"
+                              >
+                                Decline
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
               {/* ── Hackathons Judged section — Requirement 9.9 ── */}
               {hackathonsJudged.length > 0 && (
                 <section className="mb-8" aria-labelledby="hackathons-judged-heading">
