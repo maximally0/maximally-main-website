@@ -7,6 +7,7 @@ import {
   SeniorCouncilSection,
   PlatformInfraSection,
   JoinEcosystemCTA,
+  JoinAsMentorJudgeSection,
 } from "@/components/landing";
 
 const Index = () => {
@@ -31,6 +32,7 @@ const Index = () => {
         <HeroSection />
         <UpcomingHackathonsSection />
         <SeniorCouncilSection />
+        <JoinAsMentorJudgeSection />
         <PlatformInfraSection />
         <JoinEcosystemCTA />
         <Footer />

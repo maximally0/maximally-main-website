@@ -21,3 +21,4 @@ export { PlatformInfraSection } from "./sections/PlatformInfraSection";
 export { CompetitionMarqueeSection } from "./sections/CompetitionMarqueeSection";
 export { WhyBuildersJoinSection } from "./sections/WhyBuildersJoinSection";
 export { JoinEcosystemCTA } from "./sections/JoinEcosystemCTA";
+export { JoinAsMentorJudgeSection } from "./sections/JoinAsMentorJudgeSection";

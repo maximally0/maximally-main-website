@@ -81,8 +81,8 @@ export function BecomeJudgeSection() {
 
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
           <Link
-            to="/people/judges"
-            className="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white font-space font-bold text-[10px] sm:text-xs transition-all duration-300"
+            to="/judges"
+            className="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-gray-800/30 to-gray-900/20 border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white font-space font-bold text-[10px] sm:text-xs transition-all duration-300"
             data-testid="button-view-judges"
           >
             <Users className="w-4 h-4" />
@@ -91,8 +91,8 @@ export function BecomeJudgeSection() {
           </Link>
           
           <Link
-            to="/judges"
-            className="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-gray-800/30 to-gray-900/20 border border-gray-800 hover:border-gray-700 text-gray-300 hover:text-white font-space font-bold text-[10px] sm:text-xs transition-all duration-300"
+            to="/judge/apply"
+            className="group flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-600/20 to-orange-500/10 border border-orange-500/30 hover:border-orange-500 text-orange-400 hover:text-orange-300 font-space font-bold text-[10px] sm:text-xs transition-all duration-300"
             data-testid="button-apply-judge"
           >
             <Star className="w-4 h-4" />

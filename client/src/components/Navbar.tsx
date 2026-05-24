@@ -26,12 +26,9 @@ const dropdownMenus = {
   Platform: [
     { title: "Host an Event", description: "Launch your hackathon on Maximally infrastructure.", href: "/host-hackathon" },
     { title: "Event Infrastructure", description: "Submissions, judging, team formation, and more.", href: "/platform" },
-    { title: "Payments Infrastructure", description: "Sponsorships, prizes, and ticketing.", href: "/platform/payments" },
     { title: "Organizer Dashboard", description: "Manage events, analytics, and participants.", href: "/organizer/dashboard" },
     { title: "Mentor Gallery", description: "Browse mentors and request help for your hackathon team.", href: "/mentors" },
-    { title: "Become a Mentor", description: "Apply to mentor hackathon participants.", href: "/mentor/apply" },
     { title: "Judge Gallery", description: "Meet the expert judges on the Maximally platform.", href: "/judges" },
-    { title: "Become a Judge", description: "Apply to evaluate hackathon submissions.", href: "/judge/apply" },
     { title: "Organizers", description: "The builders behind Maximally hackathons and events.", href: "/organizers" },
   ],
   Network: [
