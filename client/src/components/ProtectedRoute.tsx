@@ -19,7 +19,7 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ requiredRole, children }: ProtectedRouteProps) {
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
 
   // Show spinner while auth state is being determined
   if (loading) {
@@ -30,15 +30,21 @@ function ProtectedRoute({ requiredRole, children }: ProtectedRouteProps) {
     );
   }
 
-  // Redirect unauthenticated users to sign-in — Requirement 10.1
-  // The app uses /login as the primary auth route
+  // Redirect unauthenticated users to sign-in
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  // Redirect users whose role doesn't match — Requirement 10.2
+  // Admin can access everything
+  if (profile?.role === 'admin') {
+    return <>{children}</>;
+  }
+
+  // Role mismatch — try refreshing profile once in case it was recently updated
   if (requiredRole && profile?.role !== requiredRole) {
-    toast.error("You don't have permission to access this page.");
+    // Trigger a background refresh so next visit works
+    refreshProfile().catch(() => {});
+    toast.error("You don't have permission to access this page. If you were recently approved, please log out and log back in.");
     return <Navigate to="/" replace />;
   }
 

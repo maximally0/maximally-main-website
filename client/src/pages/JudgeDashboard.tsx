@@ -124,12 +124,13 @@ const JudgeDashboard: React.FC = () => {
           fetch('/api/judge/requests', { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
-        if (assignRes.status === 401 || assignRes.status === 403) {
-          toast.error("You don't have permission to access this page.");
-          navigate('/');
+        if (assignRes.status === 401) {
+          toast.error('Your session has expired. Please sign in again.');
+          navigate('/login');
           return;
         }
 
+        // 403 means judge role but no assignments yet — show empty state, don't redirect
         if (assignRes.ok) {
           const json = await assignRes.json();
           setEvaluations(json.evaluations ?? json.data ?? []);
