@@ -30,7 +30,7 @@ const SESSION_KEY = 'sb-session';
 export function handle401(): void {
   localStorage.removeItem(SESSION_KEY);
   toast.error('Your session has expired. Please sign in again.');
-  window.location.href = '/auth/sign-in';
+  window.location.href = '/login';
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────

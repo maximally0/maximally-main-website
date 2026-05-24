@@ -114,7 +114,7 @@ const JudgeDashboard: React.FC = () => {
       const token = getToken();
       if (!token) {
         toast.error('Please sign in to access the judge dashboard.');
-        navigate('/auth/sign-in');
+        navigate('/login');
         return;
       }
 

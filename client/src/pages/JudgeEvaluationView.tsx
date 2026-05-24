@@ -116,7 +116,7 @@ const JudgeEvaluationView: React.FC = () => {
     const session = getStoredSession();
     if (!session?.access_token) {
       toast.error('Please sign in to access this page.');
-      navigate('/auth/sign-in');
+      navigate('/login');
       return;
     }
 
@@ -129,7 +129,7 @@ const JudgeEvaluationView: React.FC = () => {
 
       if (res.status === 401) {
         toast.error('Your session has expired. Please sign in again.');
-        navigate('/auth/sign-in');
+        navigate('/login');
         return;
       }
 
