@@ -22,3 +22,5 @@ export { CompetitionMarqueeSection } from "./sections/CompetitionMarqueeSection"
 export { WhyBuildersJoinSection } from "./sections/WhyBuildersJoinSection";
 export { JoinEcosystemCTA } from "./sections/JoinEcosystemCTA";
 export { JoinAsMentorJudgeSection } from "./sections/JoinAsMentorJudgeSection";
+export { BecomeJudgeSectionNew } from "./sections/BecomeJudgeSectionNew";
+export { BecomeMentorSection } from "./sections/BecomeMentorSection";
