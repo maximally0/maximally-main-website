@@ -1,6 +1,6 @@
 [build]
   publish = "dist/public"
-  command = "npm install --include=dev && npx vite build"
+  command = "npm install && npx vite build"
   functions = "netlify/functions"
 
 [build.environment]
