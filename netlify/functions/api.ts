@@ -59,6 +59,7 @@ import { registerJudgeEvaluationRoutes } from "../../server/routes/judge-evaluat
 import { registerRoleRoutes } from "../../server/routes/roles";
 import { registerProfileRoutes } from "../../server/routes/profiles";
 import { registerOAuthCallbackRoutes } from "../../server/routes/oauth-callback";
+import { registerResourceRoutes } from "../../server/routes/resources";
 
 const app = express();
 app.use(express.json());
@@ -1581,6 +1582,7 @@ registerProfileRoutes(app);
 registerMentorRoutes(app);
 registerMentorshipRoutes(app);
 registerJudgeEvaluationRoutes(app);
+registerResourceRoutes(app);
 registerRoleRoutes(app);
 
 // ============================================
