@@ -10,6 +10,32 @@ export function registerResourceRoutes(app: Express): void {
   const getSupabase = (req: Request) => req.app.locals.supabaseAdmin;
 
   // ═══════════════════════════════════════════
+  // PROFILE LOOKUP (query param format for apiClient compatibility)
+  // ═══════════════════════════════════════════
+
+  app.get('/api/profile', async (req: Request, res: Response) => {
+    const supabase = getSupabase(req);
+    if (!supabase) return res.status(503).json({ success: false, message: 'Server not configured' });
+
+    try {
+      const { userId, username } = req.query as { userId?: string; username?: string };
+      if (!userId && !username) return res.status(400).json({ success: false, message: 'userId or username required' });
+
+      let query = supabase.from('profiles').select('*');
+      if (userId) query = query.eq('id', userId);
+      else if (username) query = query.eq('username', username);
+
+      const { data, error } = await query.maybeSingle();
+      if (error) return res.status(500).json({ success: false, message: error.message });
+      if (!data) return res.status(404).json({ success: false, message: 'Profile not found' });
+
+      return res.json({ success: true, data });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  // ═══════════════════════════════════════════
   // ADMIN: LIST USERS
   // ═══════════════════════════════════════════
 

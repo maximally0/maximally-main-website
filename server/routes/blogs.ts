@@ -78,4 +78,73 @@ export function registerBlogRoutes(app: Express) {
       return res.status(500).json({ success: false, message: err?.message || "Failed to fetch blog" });
     }
   });
+
+  // POST /api/blogs — admin only, create blog
+  app.post("/api/blogs", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as any;
+      if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Supabase not configured" });
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabaseAdmin.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
+
+      const { data, error } = await supabaseAdmin.from('blogs').insert(req.body).select().single();
+      if (error) return res.status(500).json({ success: false, message: error.message });
+
+      return res.status(201).json({ success: true, data });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || "Failed to create blog" });
+    }
+  });
+
+  // PATCH /api/blogs/:id — admin only, update blog
+  app.patch("/api/blogs/:id", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as any;
+      if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Supabase not configured" });
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabaseAdmin.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
+
+      const { data, error } = await supabaseAdmin.from('blogs').update({ ...req.body, updated_at: new Date().toISOString() }).eq('id', req.params.id).select().single();
+      if (error) return res.status(500).json({ success: false, message: error.message });
+
+      return res.json({ success: true, data });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || "Failed to update blog" });
+    }
+  });
+
+  // DELETE /api/blogs/:id — admin only
+  app.delete("/api/blogs/:id", async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = app.locals.supabaseAdmin as any;
+      if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Supabase not configured" });
+
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabaseAdmin.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
+
+      const { error } = await supabaseAdmin.from('blogs').delete().eq('id', req.params.id);
+      if (error) return res.status(500).json({ success: false, message: error.message });
+
+      return res.json({ success: true });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err?.message || "Failed to delete blog" });
+    }
+  });
 }
