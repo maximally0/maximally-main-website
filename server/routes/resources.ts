@@ -10,6 +10,32 @@ export function registerResourceRoutes(app: Express): void {
   const getSupabase = (req: Request) => req.app.locals.supabaseAdmin;
 
   // ═══════════════════════════════════════════
+  // ADMIN: LIST USERS
+  // ═══════════════════════════════════════════
+
+  app.get('/api/admin/users', async (req: Request, res: Response) => {
+    const supabase = getSupabase(req);
+    if (!supabase) return res.status(503).json({ success: false, message: 'Server not configured' });
+
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabase.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
+
+      const { data, error } = await supabase.from('profiles').select('id, username, full_name, email, role, admin_role, avatar_url, created_at').order('created_at', { ascending: false }).limit(200);
+      if (error) return res.status(500).json({ success: false, message: error.message });
+
+      return res.json({ success: true, data: data ?? [] });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  // ═══════════════════════════════════════════
   // PODCASTS
   // ═══════════════════════════════════════════
 

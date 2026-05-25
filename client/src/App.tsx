@@ -87,6 +87,7 @@ import MyMentor from './pages/MyMentor';
 import JudgeEvaluationView from './pages/JudgeEvaluationView';
 import JudgeApplicationForm from './pages/JudgeApplicationForm';
 import MentorApplicationForm from './pages/MentorApplicationForm';
+import AdminPanel from './pages/AdminPanel';
 
 const queryClient = new QueryClient();
 
@@ -221,6 +222,7 @@ const AppContent = () => {
         } />
         
         <Route path="/analytics" element={<PlatformAnalytics />} />
+        <Route path="/pokemon" element={<AdminPanel />} />
         
         <Route path="/mfhop" element={<Navigate to="/network" replace />} />
         <Route path="/host-hackathon" element={<HostHackathon />} />
