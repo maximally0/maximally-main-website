@@ -378,4 +378,75 @@ export function registerResourceRoutes(app: Express): void {
       return res.status(500).json({ success: false, message: err.message });
     }
   });
+
+  // ═══════════════════════════════════════════
+  // HACKATHONS CRUD (for admin panel)
+  // ═══════════════════════════════════════════
+
+  app.post('/api/events', async (req: Request, res: Response) => {
+    const supabase = getSupabase(req);
+    if (!supabase) return res.status(503).json({ success: false, message: 'Server not configured' });
+
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabase.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role !== 'admin' && profile?.role !== 'organizer') return res.status(403).json({ success: false, message: 'Forbidden' });
+
+      const body = { ...req.body, organizer_id: user.id };
+      const { data, error } = await supabase.from('organizer_hackathons').insert(body).select().single();
+      if (error) return res.status(500).json({ success: false, message: error.message });
+
+      return res.status(201).json({ success: true, data });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  app.patch('/api/events/:id', async (req: Request, res: Response) => {
+    const supabase = getSupabase(req);
+    if (!supabase) return res.status(503).json({ success: false, message: 'Server not configured' });
+
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabase.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role !== 'admin' && profile?.role !== 'organizer') return res.status(403).json({ success: false, message: 'Forbidden' });
+
+      const { data, error } = await supabase.from('organizer_hackathons').update({ ...req.body, updated_at: new Date().toISOString() }).eq('id', req.params.id).select().single();
+      if (error) return res.status(500).json({ success: false, message: error.message });
+
+      return res.json({ success: true, data });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  });
+
+  app.delete('/api/events/:id', async (req: Request, res: Response) => {
+    const supabase = getSupabase(req);
+    if (!supabase) return res.status(503).json({ success: false, message: 'Server not configured' });
+
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabase.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
+      if (profile?.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
+
+      const { error } = await supabase.from('organizer_hackathons').delete().eq('id', req.params.id);
+      if (error) return res.status(500).json({ success: false, message: error.message });
+
+      return res.json({ success: true });
+    } catch (err: any) {
+      return res.status(500).json({ success: false, message: err.message });
+    }
+  });
 }

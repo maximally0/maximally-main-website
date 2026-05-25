@@ -117,8 +117,24 @@ function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage }: {
     setLoading(true);
     try {
       const json = await apiFetch(endpoint);
-      const data = json.data ?? json.blogs?.data ?? json.mentors ?? json.users ?? [];
-      setItems(Array.isArray(data) ? data : []);
+      // Handle various response formats from different endpoints
+      let data: any[] = [];
+      if (Array.isArray(json.data)) {
+        data = json.data;
+      } else if (json.data?.blogs && Array.isArray(json.data.blogs)) {
+        data = json.data.blogs;
+      } else if (Array.isArray(json.mentors)) {
+        data = json.mentors;
+      } else if (Array.isArray(json.organizer)) {
+        // /api/events returns { admin: [], organizer: [] }
+        data = [...(json.organizer || []), ...(json.admin || [])];
+      } else if (Array.isArray(json.users)) {
+        data = json.users;
+      } else if (json.data && typeof json.data === 'object' && !Array.isArray(json.data)) {
+        // Single object response
+        data = [json.data];
+      }
+      setItems(data);
     } catch { toast.error('Failed to load'); }
     finally { setLoading(false); }
   }, [endpoint]);
