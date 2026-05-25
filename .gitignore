@@ -16,6 +16,9 @@ client/.env.local
 server/.env
 server/.env.local
 
+# MCP settings (contains tokens)
+.kiro/settings/mcp.json
+
 create_envs_mainweb.bat
 netlify-env-variables.txt
 # Local Netlify folder

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, BookOpen, Mic, Users, Newspaper } from "lucide-react";
+import { ArrowRight, BookOpen, Mic, Users, Newspaper, Video } from "lucide-react";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 
@@ -7,7 +7,7 @@ const contentTypes = [
   {
     icon: BookOpen,
     title: "Blog",
-    description: "Articles on building, organizing events, and the builder ecosystem.",
+    description: "Practical articles on building, organizing, and shipping products that matter.",
     url: "/blog",
     cta: "Read the Blog",
     available: true,
@@ -15,23 +15,23 @@ const contentTypes = [
   {
     icon: Mic,
     title: "Podcasts",
-    description: "Conversations with builders, organizers, and operators in the ecosystem.",
+    description: "Long-form conversations with the people building, shipping, and scaling real products.",
     url: "/resources/podcasts",
     cta: "Browse Episodes",
     available: true,
   },
   {
-    icon: Users,
+    icon: Video,
     title: "Interviews",
-    description: "In-depth conversations with people shaping the ecosystem.",
+    description: "In-depth conversations with builders, operators, and thinkers driving meaningful change.",
     url: "/resources/interviews",
     cta: "Watch Interviews",
     available: true,
   },
   {
-    icon: Newspaper,
+    icon: Users,
     title: "Builder Stories",
-    description: "Profiles of builders who shipped real products through Maximally events.",
+    description: "Real stories from the builders behind the products. Lessons, challenges, and wins.",
     url: "/resources/stories",
     cta: "Read Stories",
     available: true,

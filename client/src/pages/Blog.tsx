@@ -1,320 +1,241 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Search, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, ChevronLeft, ChevronRight, ArrowRight, BookOpen, Folder, Tag } from 'lucide-react';
 import Footer from '@/components/Footer';
-import BlogCard, { BlogCardProps } from '@/components/BlogCard';
 import { useBlogs, generateExcerpt, calculateReadTime, formatReadingTime } from '@/hooks/useBlog';
 import { format } from 'date-fns';
+import SEO from '@/components/SEO';
 
-// Debounce hook
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
+interface BlogPost {
+  title: string;
+  excerpt: string;
+  date: string;
+  readTime: string;
+  category: string;
+  link: string;
+  coverImage?: string;
+  authorName?: string;
 }
 
-// Static blog posts array removed - now using only Supabase blogs
-const blogPosts: any[] = [];
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 8;
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+}
 
 const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeCategory, setActiveCategory] = useState('All');
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { data: dynamicBlogData, isLoading: dynamicLoading, error: dynamicError } = useBlogs(1, 1000, '');
+  const { data: dynamicBlogData, isLoading, error } = useBlogs(1, 1000, '');
 
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const allPosts = useMemo(() => {
-    const staticPosts: BlogCardProps[] = blogPosts.map(post => ({
-      title: post.title,
-      excerpt: post.excerpt,
-      date: format(new Date(post.date), 'MMMM d, yyyy'),
-      readTime: post.readTime,
-      category: post.category || 'Blog',
-      // BlogCardProps requires a string link — ensure fallback string
-      link: post.link || '#',
-      // static posts have no cover image or author by design
-      coverImage: undefined,
-      authorName: undefined,
-    }));
-
-    const dynamicPosts: BlogCardProps[] = (dynamicBlogData?.data || []).map(post => ({
+  const allPosts: BlogPost[] = useMemo(() => {
+    const posts: BlogPost[] = (dynamicBlogData?.data || []).map((post: any) => ({
       title: post.title,
       excerpt: generateExcerpt(post.content || ''),
-      date: format(new Date(post.created_at || ''), 'MMMM d, yyyy'),
+      date: format(new Date(post.created_at || ''), 'MMM d, yyyy'),
       readTime: formatReadingTime(post.reading_time_minutes ?? null, post.content || ''),
-      // Normalize tags which may be jsonb (array or string) into a single string category
-      category: Array.isArray(post.tags) ? (post.tags[0] || 'AI Hackathons') : (typeof post.tags === 'string' ? post.tags : 'AI Hackathons'),
+      category: Array.isArray(post.tags) ? (post.tags[0] || 'Building') : (typeof post.tags === 'string' ? post.tags : 'Building'),
       link: `/blog/${post.slug ?? ''}`,
-      // convert null cover_image to undefined so it matches BlogCardProps optional string
       coverImage: post.cover_image ?? undefined,
       authorName: post.author_name ?? undefined,
     }));
-
-    // Combine and sort by date (most recent first)
-    const combined = [...dynamicPosts, ...staticPosts];
-    return combined.sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      return dateB - dateA;
-    });
+    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [dynamicBlogData]);
 
+  // Derive categories with counts
+  const categories = useMemo(() => {
+    const map = new Map<string, number>();
+    allPosts.forEach(p => map.set(p.category, (map.get(p.category) || 0) + 1));
+    return [{ name: 'All', count: allPosts.length }, ...Array.from(map.entries()).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count)];
+  }, [allPosts]);
+
+  // Popular topics (top tags)
+  const popularTopics = useMemo(() => {
+    const tags = new Set<string>();
+    allPosts.forEach(p => { if (p.category) tags.add(p.category); });
+    return Array.from(tags).slice(0, 8);
+  }, [allPosts]);
+
   const filteredPosts = useMemo(() => {
-    if (!debouncedSearchTerm.trim()) return allPosts;
+    return allPosts.filter(post => {
+      const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
+      const matchesSearch = !debouncedSearchTerm || post.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) || post.excerpt.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [allPosts, activeCategory, debouncedSearchTerm]);
 
-    const searchLower = debouncedSearchTerm.toLowerCase();
-    return allPosts.filter(post =>
-      post.title.toLowerCase().includes(searchLower) ||
-      post.excerpt.toLowerCase().includes(searchLower) ||
-      post.category.toLowerCase().includes(searchLower)
-    );
-  }, [allPosts, debouncedSearchTerm]);
-
-  // Pagination logic
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
   const paginatedPosts = useMemo(() => {
-    const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-    return filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+    const start = (currentPage - 1) * POSTS_PER_PAGE;
+    return filteredPosts.slice(start, start + POSTS_PER_PAGE);
   }, [filteredPosts, currentPage]);
 
-  // Reset to page 1 when search term changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [debouncedSearchTerm]);
+  useEffect(() => { setCurrentPage(1); }, [debouncedSearchTerm, activeCategory]);
 
-  // Handle pagination
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  const handleFirstPage = useCallback(() => {
-    setCurrentPage(1);
-    scrollToTop();
-  }, [scrollToTop]);
-
-  const handlePrevPage = useCallback(() => {
-    setCurrentPage(prev => Math.max(1, prev - 1));
-    scrollToTop();
-  }, [scrollToTop]);
-
-  const handleNextPage = useCallback(() => {
-    setCurrentPage(prev => Math.min(totalPages, prev + 1));
-    scrollToTop();
-  }, [totalPages, scrollToTop]);
-
-  const handleLastPage = useCallback(() => {
-    setCurrentPage(totalPages);
-    scrollToTop();
-  }, [totalPages, scrollToTop]);
-
-  const handlePageClick = useCallback((page: number) => {
-    setCurrentPage(page);
-    scrollToTop();
-  }, [scrollToTop]);
+  const scrollToTop = useCallback(() => window.scrollTo({ top: 0, behavior: 'smooth' }), []);
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(249,115,22,0.08)_0%,transparent_50%)]" />
-      
-      <div className="absolute top-20 left-[5%] w-80 h-80 bg-orange-500/5 rounded-full blur-[100px]" />
-      <div className="absolute top-40 right-[10%] w-60 h-60 bg-orange-500/3 rounded-full blur-[80px]" />
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 md:py-28 relative z-10">
-        <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-orange-500/10 border border-gray-800">
-            <Search className="w-4 h-4 text-orange-400" />
-            <span className="font-space font-semibold text-[10px] sm:text-xs text-orange-400 tracking-wider">
-              INSIGHTS & GUIDES
-            </span>
-          </div>
-          <h1 className="font-space font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-4 leading-tight">
-            <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-              Maximally Blog
-            </span>
-          </h1>
-          <p className="font-space text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
-            Stories, guides, and insights for builders and innovators.
-          </p>
-        </div>
-
-        <div className="max-w-4xl mx-auto">
-          <div className="relative mb-8 sm:mb-12">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
-            <Input
-              type="search"
-              placeholder="Search posts..."
-              className="font-space pl-12 h-12 sm:h-10 text-base sm:text-sm bg-black/50 border-gray-800 text-white placeholder-gray-500 focus:border-orange-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          {/* Loading State */}
-          {dynamicLoading && (
-            <div className="space-y-6 md:space-y-8 mb-8">
-              {[...Array(3)].map((_, index) => (
-                <div key={index} className="bg-gray-900/50 border border-gray-800 p-4 md:p-6 lg:p-8">
-                  <div className="animate-pulse">
-                    {index === 0 && (
-                      <div className="mb-4">
-                        <div className="relative w-full bg-gray-800" style={{ aspectRatio: '16/9' }}></div>
-                      </div>
-                    )}
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
-                      <div className="bg-gray-800 h-6 w-20"></div>
-                      <div className="bg-gray-800 h-4 w-24"></div>
-                      <div className="bg-gray-800 h-4 w-16"></div>
-                    </div>
-                    <div className="bg-gray-800 h-6 w-3/4 mb-3"></div>
-                    <div className="space-y-2 mb-4">
-                      <div className="bg-gray-800 h-4 w-full"></div>
-                      <div className="bg-gray-800 h-4 w-2/3"></div>
-                      <div className="bg-gray-800 h-4 w-1/2"></div>
-                    </div>
-                    <div className="bg-gray-800 h-6 w-24"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Results count */}
-          {!dynamicLoading && (
-            <div className="mb-6 font-space text-sm sm:text-base text-gray-400">
-              {filteredPosts.length > 0 ? (
-                <>
-                  Showing {((currentPage - 1) * POSTS_PER_PAGE) + 1}-{Math.min(currentPage * POSTS_PER_PAGE, filteredPosts.length)} of {filteredPosts.length} posts
-                  {debouncedSearchTerm && ` for "${debouncedSearchTerm}"`}
-                </>
-              ) : (
-                <>No posts found{debouncedSearchTerm && ` for "${debouncedSearchTerm}"`}</>
-              )}
-            </div>
-          )}
-
-          {/* Blog Posts Grid */}
-          <div className="space-y-6 md:space-y-8">
-            {paginatedPosts.map((post, index) => (
-              <BlogCard
-                key={`${post.title}-${index}`}
-                title={post.title}
-                excerpt={post.excerpt}
-                date={post.date}
-                readTime={post.readTime}
-                category={post.category}
-                link={post.link}
-                coverImage={post.coverImage}
-                authorName={post.authorName}
-              />
+    <>
+      <SEO title="Blog — Ideas, Insights, and Lessons | Maximally" description="Practical articles on building, organizing, and shipping products that matter." canonicalUrl="https://maximally.in/blog" />
+      <div className="min-h-screen bg-black text-white pt-20 sm:pt-24">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10 pb-20">
+          {/* Sub-nav */}
+          <div className="flex items-center gap-6 border-b border-gray-800 mb-12 pt-8">
+            {[
+              { label: "Blog", href: "/blog", active: true },
+              { label: "Podcasts", href: "/resources/podcasts" },
+              { label: "Interviews", href: "/resources/interviews" },
+              { label: "Builder Stories", href: "/resources/stories" },
+            ].map(tab => (
+              <Link key={tab.label} to={tab.href} className={`font-space text-sm pb-3 border-b-2 transition-colors ${tab.active ? "text-orange-400 border-orange-400" : "text-gray-500 border-transparent hover:text-gray-300"}`}>
+                {tab.label}
+              </Link>
             ))}
           </div>
 
-          {/* No results message */}
-          {!dynamicLoading && paginatedPosts.length === 0 && (
-            <div className="text-center py-12">
-              <h3 className="font-space font-bold text-lg text-gray-300 mb-4">
-                No posts found
-              </h3>
-              <p className="font-space text-gray-500 mb-6">
-                {debouncedSearchTerm
-                  ? `No posts match your search for "${debouncedSearchTerm}"`
-                  : "No posts available at the moment"}
-              </p>
-              {debouncedSearchTerm && (
-                <Button
-                  onClick={() => setSearchTerm('')}
-                  variant="outline"
-                  className="font-space font-semibold border-orange-500/50 text-orange-400 hover:bg-orange-500/20"
-                >
-                  Clear Search
-                </Button>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
+            {/* Main content */}
+            <div>
+              {/* Header */}
+              <div className="mb-10">
+                <span className="font-space text-sm text-orange-400 tracking-wide uppercase block mb-3">Blog</span>
+                <h1 className="font-space text-3xl sm:text-4xl font-bold text-white mb-4 leading-tight max-w-lg">
+                  Ideas, insights, and lessons from the ecosystem
+                </h1>
+                <p className="font-space text-base text-gray-400 max-w-lg">
+                  Practical articles on building, organizing, and shipping products that matter.
+                </p>
+              </div>
+
+              {/* Search */}
+              <div className="relative max-w-md mb-8">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <input type="text" placeholder="Search articles..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-gray-900 border border-gray-800 text-white font-space text-sm placeholder:text-gray-600 focus:outline-none focus:border-orange-500/50" />
+              </div>
+
+              {/* Loading */}
+              {isLoading && (
+                <div className="space-y-4">
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="p-5 bg-gray-900/40 border border-gray-800 animate-pulse">
+                      <div className="h-4 bg-gray-800 w-20 mb-3" />
+                      <div className="h-5 bg-gray-800 w-3/4 mb-2" />
+                      <div className="h-4 bg-gray-800 w-full mb-1" />
+                      <div className="h-4 bg-gray-800 w-2/3" />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Posts */}
+              {!isLoading && (
+                <div className="space-y-5">
+                  {paginatedPosts.map((post, i) => (
+                    <Link key={i} to={post.link} className="group flex gap-5 p-5 bg-gray-900/40 border border-gray-800 hover:border-orange-500/25 transition-all">
+                      {/* Cover image */}
+                      {post.coverImage && (
+                        <div className="w-40 h-24 bg-gray-800 border border-gray-700 shrink-0 overflow-hidden hidden sm:block">
+                          <img src={post.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                        </div>
+                      )}
+                      {!post.coverImage && (
+                        <div className="w-40 h-24 bg-gray-800 border border-gray-700 shrink-0 hidden sm:flex items-center justify-center">
+                          <BookOpen className="w-5 h-5 text-gray-600" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <span className="font-space text-[10px] text-orange-400 uppercase tracking-wider font-semibold">{post.category}</span>
+                        <h3 className="font-space text-base font-semibold text-white mt-1 group-hover:text-orange-400 transition-colors line-clamp-2">{post.title}</h3>
+                        <p className="font-space text-sm text-gray-400 mt-1 line-clamp-2">{post.excerpt}</p>
+                        <div className="flex items-center gap-3 mt-2 font-space text-xs text-gray-500">
+                          {post.authorName && <span>{post.authorName}</span>}
+                          {post.authorName && <span>•</span>}
+                          <span>{post.date}</span>
+                          <span>•</span>
+                          <span>{post.readTime}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                  {paginatedPosts.length === 0 && !isLoading && (
+                    <div className="text-center py-16">
+                      <BookOpen className="w-10 h-10 text-gray-700 mx-auto mb-3" />
+                      <p className="font-space text-gray-500">No articles found.</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Pagination */}
+              {!isLoading && totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-10">
+                  <button onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); scrollToTop(); }} disabled={currentPage === 1} className="p-2 border border-gray-800 text-gray-400 hover:text-white hover:border-gray-600 disabled:opacity-30 transition-colors">
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(page => (
+                    <button key={page} onClick={() => { setCurrentPage(page); scrollToTop(); }} className={`w-9 h-9 font-space text-sm font-medium border transition-colors ${currentPage === page ? "bg-orange-500/15 border-orange-500/40 text-orange-400" : "border-gray-800 text-gray-500 hover:text-white hover:border-gray-600"}`}>
+                      {page}
+                    </button>
+                  ))}
+                  {totalPages > 5 && <span className="font-space text-gray-600 px-1">…</span>}
+                  {totalPages > 5 && (
+                    <button onClick={() => { setCurrentPage(totalPages); scrollToTop(); }} className={`w-9 h-9 font-space text-sm font-medium border transition-colors ${currentPage === totalPages ? "bg-orange-500/15 border-orange-500/40 text-orange-400" : "border-gray-800 text-gray-500 hover:text-white hover:border-gray-600"}`}>
+                      {totalPages}
+                    </button>
+                  )}
+                  <button onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); scrollToTop(); }} disabled={currentPage === totalPages} className="p-2 border border-gray-800 text-gray-400 hover:text-white hover:border-gray-600 disabled:opacity-30 transition-colors">
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               )}
             </div>
-          )}
 
-          {/* Pagination */}
-          {!dynamicLoading && totalPages > 1 && (
-            <div className="flex flex-col items-center gap-4 sm:gap-6 mt-12 mb-8 pt-8 border-t border-gray-800">
-              <div className="flex items-center justify-center gap-1 sm:gap-2 order-1 sm:order-2 w-full sm:w-auto">
-                <Button
-                  onClick={handleFirstPage}
-                  disabled={currentPage === 1}
-                  variant="outline"
-                  size="sm"
-                  className="font-space font-semibold min-h-[44px] px-3 sm:px-4 text-xs sm:text-sm flex-shrink-0 border-gray-800 text-orange-400 hover:bg-orange-500/20 hover:border-orange-500 transition-colors duration-200 disabled:opacity-30"
-                  title="First page"
-                >
-                  <ChevronsLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">First</span>
-                </Button>
-                <Button
-                  onClick={handlePrevPage}
-                  disabled={currentPage === 1}
-                  variant="outline"
-                  size="sm"
-                  className="font-space font-semibold min-h-[44px] px-3 sm:px-4 text-xs sm:text-sm flex-shrink-0 border-gray-800 text-orange-400 hover:bg-orange-500/20 hover:border-orange-500 transition-colors duration-200 disabled:opacity-30"
-                  title="Previous page"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">Prev</span>
-                </Button>
-                <div className="bg-orange-500/10 border border-orange-500/50 text-orange-400 px-3 sm:px-4 py-2 font-space font-semibold text-xs sm:text-sm min-h-[44px] flex items-center">
-                  <span className="hidden sm:inline">Page </span>
-                  <span className="mx-1 font-bold">{currentPage}</span>
-                  <span className="hidden sm:inline">of {totalPages}</span>
-                  <span className="sm:hidden">/{totalPages}</span>
+            {/* Sidebar */}
+            <aside className="space-y-8">
+              {/* Categories */}
+              <div className="p-5 bg-gray-900/40 border border-gray-800">
+                <h3 className="font-space text-sm font-semibold text-white mb-4">Categories</h3>
+                <div className="space-y-1.5">
+                  {categories.slice(0, 8).map(cat => (
+                    <button key={cat.name} onClick={() => setActiveCategory(cat.name)} className={`w-full flex items-center justify-between px-3 py-2 text-left transition-colors ${activeCategory === cat.name ? "text-orange-400" : "text-gray-400 hover:text-gray-300"}`}>
+                      <div className="flex items-center gap-2">
+                        <Folder className="w-3 h-3" />
+                        <span className="font-space text-xs">{cat.name}</span>
+                      </div>
+                      <span className={`font-space text-xs font-semibold ${activeCategory === cat.name ? "text-orange-400" : "text-gray-600"}`}>{cat.count}</span>
+                    </button>
+                  ))}
                 </div>
-                <Button
-                  onClick={handleNextPage}
-                  disabled={currentPage === totalPages}
-                  variant="outline"
-                  size="sm"
-                  className="font-space font-semibold min-h-[44px] px-3 sm:px-4 text-xs sm:text-sm flex-shrink-0 border-gray-800 text-orange-400 hover:bg-orange-500/20 hover:border-orange-500 transition-colors duration-200 disabled:opacity-30"
-                  title="Next page"
-                >
-                  <span className="hidden sm:inline mr-1">Next</span>
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-                <Button
-                  onClick={handleLastPage}
-                  disabled={currentPage === totalPages}
-                  variant="outline"
-                  size="sm"
-                  className="font-space font-semibold min-h-[44px] px-3 sm:px-4 text-xs sm:text-sm flex-shrink-0 border-gray-800 text-orange-400 hover:bg-orange-500/20 hover:border-orange-500 transition-colors duration-200 disabled:opacity-30"
-                  title="Last page"
-                >
-                  <span className="hidden sm:inline mr-1">Last</span>
-                  <ChevronsRight className="h-4 w-4" />
-                </Button>
               </div>
-            </div>
-          )}
 
-          {/* Spacer before footer */}
-          <div className="mt-16 sm:mt-20 md:mt-24"></div>
+              {/* Popular topics */}
+              {popularTopics.length > 0 && (
+                <div className="p-5 bg-gray-900/40 border border-gray-800">
+                  <h3 className="font-space text-sm font-semibold text-white mb-4">Popular topics</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {popularTopics.map(topic => (
+                      <button key={topic} onClick={() => setActiveCategory(topic)} className={`px-3 py-1.5 font-space text-xs border transition-colors ${activeCategory === topic ? "bg-orange-500/15 border-orange-500/40 text-orange-400" : "border-gray-700 text-gray-400 hover:text-gray-300 hover:border-gray-600"}`}>
+                        {topic}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </aside>
+          </div>
         </div>
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
+    </>
   );
 };
 

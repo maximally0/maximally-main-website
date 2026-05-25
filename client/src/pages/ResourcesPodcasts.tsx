@@ -1,36 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Search, Play, Clock, ArrowRight } from "lucide-react";
+import { Search, Play, Clock } from "lucide-react";
 import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 
-const categories = ["All Episodes", "Building", "Leadership", "Engineering", "Product", "Culture"];
+interface Podcast {
+  id: number;
+  title: string;
+  description: string;
+  guest_name: string;
+  guest_role: string;
+  guest_company: string;
+  guest_avatar: string | null;
+  category: string;
+  duration: string;
+  audio_url: string | null;
+  spotify_url: string | null;
+  published_at: string;
+}
 
-const episodes = [
-  { id: 1, title: "Shipping Under Pressure", guest: "Sahil Lavingia", guestRole: "CEO, Gumroad", category: "Building", duration: "45:12", date: "May 15, 2024", description: "How constraints force better decisions and why most teams overthink before shipping." },
-  { id: 2, title: "Engineering Culture at Scale", guest: "Will Larson", guestRole: "CTO, Carta", category: "Engineering", duration: "52:30", date: "May 8, 2024", description: "Building engineering organizations that maintain velocity as they grow." },
-  { id: 3, title: "Product Intuition vs Data", guest: "Shreyas Doshi", guestRole: "Former PM, Stripe", category: "Product", duration: "38:45", date: "Apr 28, 2024", description: "When to trust your gut and when to let the numbers decide." },
-  { id: 4, title: "The Solo Founder Playbook", guest: "Pieter Levels", guestRole: "Founder, Nomad List", category: "Building", duration: "41:20", date: "Apr 20, 2024", description: "Building multiple profitable products without a team or funding." },
-  { id: 5, title: "Leading Through Ambiguity", guest: "Claire Hughes Johnson", guestRole: "Former COO, Stripe", category: "Leadership", duration: "48:55", date: "Apr 12, 2024", description: "How to make decisions when the path forward isn't clear." },
-  { id: 6, title: "Open Source as a Business", guest: "Mitchell Hashimoto", guestRole: "Co-founder, HashiCorp", category: "Engineering", duration: "55:10", date: "Apr 5, 2024", description: "Building a multi-billion dollar company on open source foundations." },
-];
+const FALLBACK_CATEGORIES = ["All Episodes", "Building", "Leadership", "Engineering", "Product", "Culture"];
 
 export default function ResourcesPodcasts() {
+  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All Episodes");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filtered = episodes.filter(ep => {
-    const matchesCategory = activeCategory === "All Episodes" || ep.category === activeCategory;
-    const matchesSearch = !searchTerm || ep.title.toLowerCase().includes(searchTerm.toLowerCase()) || ep.guest.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  useEffect(() => {
+    const fetchPodcasts = async () => {
+      try {
+        const res = await fetch('/api/podcasts');
+        const json = await res.json();
+        if (json.success) setPodcasts(json.data);
+      } catch (err) {
+        console.error('Failed to fetch podcasts:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPodcasts();
+  }, []);
+
+  const categories = useMemo(() => {
+    if (podcasts.length === 0) return FALLBACK_CATEGORIES;
+    const cats = new Set(podcasts.map(p => p.category));
+    return ["All Episodes", ...Array.from(cats)];
+  }, [podcasts]);
+
+  const filtered = useMemo(() => {
+    return podcasts.filter(ep => {
+      const matchesCategory = activeCategory === "All Episodes" || ep.category === activeCategory;
+      const matchesSearch = !searchTerm || ep.title.toLowerCase().includes(searchTerm.toLowerCase()) || ep.guest_name?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [podcasts, activeCategory, searchTerm]);
+
+  const formatDate = (d: string) => {
+    try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+    catch { return d; }
+  };
 
   return (
     <>
       <SEO title="Podcasts — Conversations with Builders | Maximally" description="Conversations with builders, operators, and founders shaping the ecosystem." canonicalUrl="https://maximally.in/resources/podcasts" />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
-
         <div className="container mx-auto px-4 sm:px-6 relative z-10 pb-20">
           {/* Sub-nav */}
           <div className="flex items-center gap-6 border-b border-gray-800 mb-12 pt-8">
@@ -72,44 +106,54 @@ export default function ResourcesPodcasts() {
             ))}
           </div>
 
-          {/* Episodes list */}
-          <div className="space-y-4">
-            {filtered.map(ep => (
-              <div key={ep.id} className="group flex items-start gap-5 p-5 bg-gray-900/40 border border-gray-800 hover:border-orange-500/25 transition-all">
-                <div className="w-16 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 group-hover:border-orange-500/30 transition-colors">
-                  <Play className="w-5 h-5 text-orange-400" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <span className="font-space text-[10px] text-orange-400 uppercase tracking-wider font-semibold">{ep.category}</span>
-                  <h3 className="font-space text-base font-semibold text-white mt-1 group-hover:text-orange-400 transition-colors">{ep.title}</h3>
-                  <p className="font-space text-sm text-gray-400 mt-1 line-clamp-2">{ep.description}</p>
-                  <div className="flex items-center gap-4 mt-2 font-space text-xs text-gray-500">
-                    <span>{ep.guest}</span>
-                    <span>|</span>
-                    <span>{ep.guestRole}</span>
-                    <span>|</span>
-                    <span>{ep.date}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 text-xs text-gray-500 shrink-0">
-                  <Clock className="w-3 h-3" />
-                  <span className="font-space">{ep.duration}</span>
-                </div>
-              </div>
-            ))}
-            {filtered.length === 0 && (
-              <div className="text-center py-16">
-                <p className="font-space text-gray-500">No episodes found.</p>
-              </div>
-            )}
-          </div>
-
-          {/* Coming soon note */}
-          <div className="mt-16 text-center">
-            <div className="inline-block px-4 py-2 bg-orange-500/10 border border-orange-500/30">
-              <span className="font-space text-xs text-orange-400 font-semibold uppercase tracking-wider">Episodes launching soon — subscribe to get notified</span>
+          {/* Loading */}
+          {loading && (
+            <div className="space-y-4">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="p-5 bg-gray-900/40 border border-gray-800 animate-pulse h-24" />
+              ))}
             </div>
-          </div>
+          )}
+
+          {/* Episodes list */}
+          {!loading && (
+            <div className="space-y-4">
+              {filtered.map(ep => (
+                <div key={ep.id} className="group flex items-start gap-5 p-5 bg-gray-900/40 border border-gray-800 hover:border-orange-500/25 transition-all">
+                  <div className="w-16 h-16 bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 group-hover:border-orange-500/30 transition-colors overflow-hidden">
+                    {ep.guest_avatar ? (
+                      <img src={ep.guest_avatar} alt={ep.guest_name} className="w-full h-full object-cover" />
+                    ) : (
+                      <Play className="w-5 h-5 text-orange-400" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="font-space text-[10px] text-orange-400 uppercase tracking-wider font-semibold">{ep.category}</span>
+                    <h3 className="font-space text-base font-semibold text-white mt-1 group-hover:text-orange-400 transition-colors">{ep.title}</h3>
+                    <p className="font-space text-sm text-gray-400 mt-1 line-clamp-2">{ep.description}</p>
+                    <div className="flex items-center gap-4 mt-2 font-space text-xs text-gray-500">
+                      <span>{ep.guest_name}</span>
+                      {ep.guest_role && <><span>|</span><span>{ep.guest_role}</span></>}
+                      <span>|</span>
+                      <span>{formatDate(ep.published_at)}</span>
+                    </div>
+                  </div>
+                  {ep.duration && (
+                    <div className="flex items-center gap-1 text-xs text-gray-500 shrink-0">
+                      <Clock className="w-3 h-3" />
+                      <span className="font-space">{ep.duration}</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {filtered.length === 0 && !loading && (
+                <div className="text-center py-16">
+                  <Play className="w-10 h-10 text-gray-700 mx-auto mb-3" />
+                  <p className="font-space text-gray-500">{podcasts.length === 0 ? "No episodes yet. Check back soon." : "No episodes found."}</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <Footer />
       </div>

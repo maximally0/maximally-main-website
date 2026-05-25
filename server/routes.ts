@@ -58,6 +58,7 @@ import { registerProfileRoutes } from "./routes/profiles";
 import { registerMentorRoutes } from "./routes/mentors";
 import { registerMentorshipRoutes } from "./routes/mentorship";
 import { registerJudgeEvaluationRoutes } from "./routes/judge-evaluations";
+import { registerResourceRoutes } from "./routes/resources";
 // import { registerNotificationRoutes } from "./routes/notifications"; // REMOVED - Notification system disabled
 import { 
   sendSubmissionConfirmation, 
@@ -4008,6 +4009,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerMentorRoutes(app);
   registerMentorshipRoutes(app);
   registerJudgeEvaluationRoutes(app);
+  registerResourceRoutes(app);
   
   registerOrganizerRoutes(app);
   registerOrganizerApplicationRoutes(app); // Organizer application submission (/api/organizer/apply)
