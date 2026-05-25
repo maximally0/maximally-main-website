@@ -36,7 +36,7 @@ const dropdownMenus = {
     { title: "Builder Community", description: "The live community of Maximally builders on Discord.", href: "https://discord.gg/MpBnYk8qMX", external: true },
   ],
   Resources: [
-    { title: "Blog", description: "Articles on building, organizing, and the ecosystem.", href: "/blog" },
+    { title: "Articles", description: "Ideas, insights, and lessons from the ecosystem.", href: "/blog" },
     { title: "Podcasts", description: "Conversations with builders and operators.", href: "/resources/podcasts" },
     { title: "Interviews", description: "Deep dives with people shaping the ecosystem.", href: "/resources/interviews" },
     { title: "Builder Stories", description: "Profiles of builders who shipped through Maximally.", href: "/resources/stories" },
@@ -447,7 +447,7 @@ const Navbar = () => {
                   {[
                     { label: "Host an Event", path: "/host-hackathon" },
                     { label: "Senior Council", path: "/senior-council" },
-                    { label: "Blog", path: "/blog" },
+                    { label: "Articles", path: "/blog" },
                   ].map((item) => (
                     <Link
                       key={item.path}

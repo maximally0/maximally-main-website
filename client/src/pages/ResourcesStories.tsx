@@ -78,7 +78,7 @@ export default function ResourcesStories() {
           {/* Sub-nav */}
           <div className="flex items-center gap-6 border-b border-gray-800 mb-12 pt-8">
             {[
-              { label: "Blog", href: "/blog" },
+              { label: "Articles", href: "/blog" },
               { label: "Podcasts", href: "/resources/podcasts" },
               { label: "Interviews", href: "/resources/interviews" },
               { label: "Builder Stories", href: "/resources/stories", active: true },

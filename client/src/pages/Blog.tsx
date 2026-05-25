@@ -112,7 +112,7 @@ const Blog = () => {
           {/* Sub-nav */}
           <div className="flex items-center gap-6 border-b border-gray-800 mb-12 pt-8">
             {[
-              { label: "Blog", href: "/blog", active: true },
+              { label: "Articles", href: "/blog", active: true },
               { label: "Podcasts", href: "/resources/podcasts" },
               { label: "Interviews", href: "/resources/interviews" },
               { label: "Builder Stories", href: "/resources/stories" },
@@ -128,7 +128,7 @@ const Blog = () => {
             <div>
               {/* Header */}
               <div className="mb-10">
-                <span className="font-space text-sm text-orange-400 tracking-wide uppercase block mb-3">Blog</span>
+                <span className="font-space text-sm text-orange-400 tracking-wide uppercase block mb-3">Articles</span>
                 <h1 className="font-space text-3xl sm:text-4xl font-bold text-white mb-4 leading-tight max-w-lg">
                   Ideas, insights, and lessons from the ecosystem
                 </h1>

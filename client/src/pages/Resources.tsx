@@ -6,8 +6,8 @@ import Footer from "@/components/Footer";
 const contentTypes = [
   {
     icon: BookOpen,
-    title: "Blog",
-    description: "Practical articles on building, organizing, and shipping products that matter.",
+    title: "Articles",
+    description: "Ideas, insights, and lessons from the builder ecosystem.",
     url: "/blog",
     cta: "Read the Blog",
     available: true,
