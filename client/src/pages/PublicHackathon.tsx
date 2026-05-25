@@ -835,6 +835,132 @@ export default function PublicHackathon() {
                       </div>
                     </div>
                   )}
+
+                  {/* Challenges Section */}
+                  {hackathon.themes && hackathon.themes.length > 0 && (
+                    <div 
+                      className="border p-4 sm:p-6 md:p-8 w-full min-w-0"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${accentColor}15, ${primaryColor}08)`,
+                        borderColor: `${accentColor}40`
+                      }}
+                    >
+                      <h2 
+                        className="font-space font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 break-words"
+                        style={{
+                          background: `linear-gradient(to right, ${accentColor}, ${primaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >CHALLENGES</h2>
+                      <p className="text-gray-400 font-space text-sm mb-4">Explore the themes and problem areas you can build around.</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {hackathon.themes.map((theme: string, i: number) => (
+                          <div 
+                            key={i}
+                            className="border p-4 flex items-center gap-3 transition-all hover:scale-[1.02]"
+                            style={{
+                              background: `linear-gradient(to right, ${[primaryColor, secondaryColor, accentColor][i % 3]}15, transparent)`,
+                              borderColor: `${[primaryColor, secondaryColor, accentColor][i % 3]}30`
+                            }}
+                          >
+                            <div 
+                              className="w-8 h-8 flex items-center justify-center border shrink-0"
+                              style={{
+                                backgroundColor: `${[primaryColor, secondaryColor, accentColor][i % 3]}20`,
+                                borderColor: `${[primaryColor, secondaryColor, accentColor][i % 3]}40`
+                              }}
+                            >
+                              <Zap className="w-4 h-4" style={{ color: [primaryColor, secondaryColor, accentColor][i % 3] }} />
+                            </div>
+                            <span className="font-space text-sm text-gray-200 font-medium">{theme}</span>
+                          </div>
+                        ))}
+                      </div>
+                      {hackathon.open_innovation && (
+                        <div className="mt-4 border border-dashed p-3 flex items-center gap-2" style={{ borderColor: `${primaryColor}40` }}>
+                          <Sparkles className="w-4 h-4" style={{ color: primaryColor }} />
+                          <span className="font-space text-sm text-gray-300">Open Innovation — build anything you want, no theme restrictions!</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Why Join This Event Section */}
+                  <div 
+                    className="border p-4 sm:p-6 md:p-8 w-full min-w-0"
+                    style={{
+                      background: `linear-gradient(to bottom right, ${secondaryColor}15, ${accentColor}08)`,
+                      borderColor: `${secondaryColor}40`
+                    }}
+                  >
+                    <h2 
+                      className="font-space font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 break-words"
+                      style={{
+                        background: `linear-gradient(to right, ${secondaryColor}, ${accentColor})`,
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text'
+                      }}
+                    >WHY JOIN THIS EVENT?</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 flex items-center justify-center border shrink-0" style={{ backgroundColor: `${primaryColor}20`, borderColor: `${primaryColor}40` }}>
+                          <Trophy className="w-4 h-4" style={{ color: primaryColor }} />
+                        </div>
+                        <div>
+                          <h4 className="font-space font-bold text-sm text-white mb-1">Win Prizes</h4>
+                          <p className="font-space text-xs text-gray-400">
+                            {hackathon.total_prize_pool ? `Compete for ${hackathon.total_prize_pool} in prizes` : 'Compete for exciting prizes and rewards'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 flex items-center justify-center border shrink-0" style={{ backgroundColor: `${secondaryColor}20`, borderColor: `${secondaryColor}40` }}>
+                          <Users className="w-4 h-4" style={{ color: secondaryColor }} />
+                        </div>
+                        <div>
+                          <h4 className="font-space font-bold text-sm text-white mb-1">Network</h4>
+                          <p className="font-space text-xs text-gray-400">Connect with like-minded builders, mentors, and industry professionals</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 flex items-center justify-center border shrink-0" style={{ backgroundColor: `${accentColor}20`, borderColor: `${accentColor}40` }}>
+                          <Gem className="w-4 h-4" style={{ color: accentColor }} />
+                        </div>
+                        <div>
+                          <h4 className="font-space font-bold text-sm text-white mb-1">Build Skills</h4>
+                          <p className="font-space text-xs text-gray-400">Push your limits, learn new technologies, and ship a real product</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 flex items-center justify-center border shrink-0" style={{ backgroundColor: `${primaryColor}20`, borderColor: `${primaryColor}40` }}>
+                          <Handshake className="w-4 h-4" style={{ color: primaryColor }} />
+                        </div>
+                        <div>
+                          <h4 className="font-space font-bold text-sm text-white mb-1">Mentorship</h4>
+                          <p className="font-space text-xs text-gray-400">Get guidance from experienced mentors throughout the event</p>
+                        </div>
+                      </div>
+                    </div>
+                    {hackathon.perks && hackathon.perks.length > 0 && (
+                      <div className="mt-6 pt-4 border-t" style={{ borderColor: `${secondaryColor}30` }}>
+                        <h4 className="font-space font-bold text-xs text-gray-400 uppercase tracking-wider mb-3">ADDITIONAL PERKS</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {hackathon.perks.map((perk: string, i: number) => (
+                            <span 
+                              key={i} 
+                              className="px-3 py-1.5 border font-space text-xs text-gray-300"
+                              style={{ borderColor: `${[primaryColor, secondaryColor, accentColor][i % 3]}40`, backgroundColor: `${[primaryColor, secondaryColor, accentColor][i % 3]}10` }}
+                            >
+                              {perk}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
