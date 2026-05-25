@@ -19,6 +19,9 @@ server/.env.local
 # MCP settings (contains tokens)
 .kiro/settings/mcp.json
 
+# Playwright MCP artifacts
+.playwright-mcp/
+
 create_envs_mainweb.bat
 netlify-env-variables.txt
 # Local Netlify folder

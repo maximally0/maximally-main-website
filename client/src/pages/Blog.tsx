@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ChevronLeft, ChevronRight, ArrowRight, BookOpen, Folder, Tag } from 'lucide-react';
 import Footer from '@/components/Footer';
-import { useBlogs, generateExcerpt, calculateReadTime, formatReadingTime } from '@/hooks/useBlog';
+import { generateExcerpt, formatReadingTime } from '@/hooks/useBlog';
 import { format } from 'date-fns';
 import SEO from '@/components/SEO';
 
@@ -32,13 +32,34 @@ const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [activeCategory, setActiveCategory] = useState('All');
+  const [rawPosts, setRawPosts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { data: dynamicBlogData, isLoading, error } = useBlogs(1, 1000, '');
 
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
+  // Fetch blogs directly from /api/blogs
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const res = await fetch('/api/blogs');
+        const json = await res.json();
+        if (json.success) {
+          // Handle both { data: [...] } and { data: { blogs: [...] } } formats
+          const posts = Array.isArray(json.data) ? json.data : (json.data?.blogs || []);
+          setRawPosts(posts);
+        }
+      } catch (err) {
+        console.error('Failed to fetch blogs:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBlogs();
+  }, []);
+
   const allPosts: BlogPost[] = useMemo(() => {
-    const posts: BlogPost[] = (dynamicBlogData?.data || []).map((post: any) => ({
+    const posts: BlogPost[] = rawPosts.map((post: any) => ({
       title: post.title,
       excerpt: generateExcerpt(post.content || ''),
       date: format(new Date(post.created_at || ''), 'MMM d, yyyy'),
@@ -49,7 +70,7 @@ const Blog = () => {
       authorName: post.author_name ?? undefined,
     }));
     return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [dynamicBlogData]);
+  }, [rawPosts]);
 
   // Derive categories with counts
   const categories = useMemo(() => {

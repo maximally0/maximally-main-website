@@ -35,7 +35,7 @@ export function registerBlogRoutes(app: Express) {
 
       return res.json({
         success: true,
-        data: data || [],
+        data: { blogs: data || [], total: count || 0 },
         total: count || 0,
       });
     } catch (err: any) {
@@ -72,7 +72,7 @@ export function registerBlogRoutes(app: Express) {
         return res.status(404).json({ success: false, message: "Blog post not found" });
       }
 
-      return res.json({ success: true, data });
+      return res.json({ success: true, data: { blog: data } });
     } catch (err: any) {
       console.error("Blog fetch error:", err);
       return res.status(500).json({ success: false, message: err?.message || "Failed to fetch blog" });
