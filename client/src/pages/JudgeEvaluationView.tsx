@@ -300,7 +300,7 @@ const JudgeEvaluationView: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <Loader2 className="h-10 w-10 animate-spin text-orange-500" aria-label="Loading evaluation" />
       </div>
     );
@@ -308,10 +308,10 @@ const JudgeEvaluationView: React.FC = () => {
 
   if (error || !evaluation) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-black flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" aria-hidden="true" />
-          <h1 className="text-xl font-semibold text-gray-900 mb-2">Evaluation Not Found</h1>
+          <h1 className="text-xl font-semibold text-white mb-2">Evaluation Not Found</h1>
           <p className="text-gray-500 text-sm mb-6">{error ?? 'This evaluation could not be loaded.'}</p>
           <Link
             to="/judging/dashboard"
@@ -335,13 +335,13 @@ const JudgeEvaluationView: React.FC = () => {
         description="Score and submit your evaluation for this hackathon submission."
       />
 
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen bg-black py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Back link */}
           <Link
             to="/judging/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-orange-600 transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-orange-400 transition-colors mb-6"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
@@ -349,18 +349,18 @@ const JudgeEvaluationView: React.FC = () => {
 
           {/* Hackathon label */}
           {evaluation.hackathon && (
-            <p className="text-xs font-medium text-orange-600 uppercase tracking-wide mb-1">
+            <p className="text-xs font-medium text-orange-400 uppercase tracking-wide mb-1">
               {evaluation.hackathon.title}
             </p>
           )}
 
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          <h1 className="text-2xl font-bold text-white mb-6">
             {evaluation.submission?.project_name ?? 'Submission'}
           </h1>
 
           {/* Submitted banner */}
           {submitted && (
-            <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-xl text-green-700 mb-6">
+            <div className="flex items-center gap-3 p-4 bg-green-900/20 border border-green-800 rounded-xl text-green-400 mb-6">
               <CheckCircle2 className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
               <p className="text-sm font-medium">
                 This evaluation has been submitted
@@ -377,10 +377,10 @@ const JudgeEvaluationView: React.FC = () => {
 
             {/* ── Left column: project submission data ── */}
             <section
-              className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-5"
+              className="bg-gray-900 rounded-xl border border-gray-800 shadow-sm p-6 space-y-5"
               aria-labelledby="submission-heading"
             >
-              <h2 id="submission-heading" className="text-base font-semibold text-gray-900">
+              <h2 id="submission-heading" className="text-base font-semibold text-white">
                 Project Submission
               </h2>
 
@@ -466,10 +466,10 @@ const JudgeEvaluationView: React.FC = () => {
 
             {/* ── Right column: scoring form — Requirement 9.8 ── */}
             <section
-              className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-5"
+              className="bg-gray-900 rounded-xl border border-gray-800 shadow-sm p-6 space-y-5"
               aria-labelledby="scoring-heading"
             >
-              <h2 id="scoring-heading" className="text-base font-semibold text-gray-900">
+              <h2 id="scoring-heading" className="text-base font-semibold text-white">
                 Scoring Form
               </h2>
 

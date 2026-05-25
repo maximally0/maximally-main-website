@@ -48,6 +48,9 @@ import Explore from './pages/Explore';
 import Platform from './pages/Platform';
 import Network from './pages/Network';
 import Resources from './pages/Resources';
+import ResourcesPodcasts from './pages/ResourcesPodcasts';
+import ResourcesInterviews from './pages/ResourcesInterviews';
+import ResourcesStories from './pages/ResourcesStories';
 import CreateHackathon from './pages/CreateHackathon';
 import OrganizerDashboard from './pages/OrganizerDashboard';
 import EditHackathon from './pages/EditHackathon';
@@ -255,6 +258,9 @@ const AppContent = () => {
         <Route path="/platform" element={<Platform />} />
         <Route path="/network" element={<Network />} />
         <Route path="/resources" element={<Resources />} />
+        <Route path="/resources/podcasts" element={<ResourcesPodcasts />} />
+        <Route path="/resources/interviews" element={<ResourcesInterviews />} />
+        <Route path="/resources/stories" element={<ResourcesStories />} />
         <Route path="/explore" element={<Navigate to="/events" replace />} />
 
         <Route path="/blog/:slug" element={<BlogRouter />} />
