@@ -103,9 +103,10 @@ export default function Network() {
 
           {/* Future categories hint */}
           <div className="border-t border-gray-800 pt-12">
-            <p className="font-space text-xs text-gray-600 text-center">
-              More network categories coming soon: Mentors · Judges
-            </p>
+            <div className="flex items-center justify-center gap-6">
+              <Link to="/mentors" className="font-space text-sm text-orange-400 hover:text-orange-300 transition-colors">Browse Mentors →</Link>
+              <Link to="/judges" className="font-space text-sm text-orange-400 hover:text-orange-300 transition-colors">Browse Judges →</Link>
+            </div>
           </div>
         </div>
 

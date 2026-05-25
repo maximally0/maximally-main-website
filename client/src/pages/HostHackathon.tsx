@@ -159,15 +159,6 @@ const HostHackathon = () => {
                 FOR ORGANIZERS
               </motion.span>
 
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-500/30 mb-6"
-              >
-                <span className="font-space text-xs text-orange-400 font-semibold tracking-wider uppercase">Coming Soon</span>
-              </motion.div>
-
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -631,10 +622,10 @@ const HostHackathon = () => {
               className="max-w-3xl mx-auto text-center"
             >
               <h2 className="font-space text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5">
-                We're building this.
+                Launch your competition on Maximally
               </h2>
               <p className="font-space text-base sm:text-lg text-gray-400 max-w-xl mx-auto leading-relaxed mb-12">
-                The platform isn't live yet — but when it launches, this is where you'll run your competition.
+                Infrastructure for serious competitions. Set up in minutes.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

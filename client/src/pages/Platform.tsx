@@ -10,7 +10,6 @@ import {
   Trophy,
   ClipboardList,
   BarChart3,
-  CreditCard,
   Globe,
   Check,
   X,
@@ -49,7 +48,6 @@ const coreModules = [
 const organizerTools = [
   { icon: BarChart3, title: "Analytics", desc: "Real-time metrics on registrations, submissions, engagement, and judge progress." },
   { icon: Globe, title: "Public Pages", desc: "Auto-generated competition pages, result pages, and project galleries." },
-  { icon: CreditCard, title: "Payments", desc: "Sponsorship management, prize distribution, and registration fee collection.", soon: true },
 ];
 
 const competitionTypes = [
@@ -89,14 +87,11 @@ export default function Platform() {
             className="max-w-3xl mx-auto text-center mb-16"
           >
             <span className="font-space text-sm text-orange-400 tracking-[0.2em] font-medium mb-4 block uppercase">Platform</span>
-            <div className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-500/30 mb-6">
-              <span className="font-space text-xs text-orange-400 font-semibold tracking-wider uppercase">Coming Soon</span>
-            </div>
             <h1 className="font-space text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               The infrastructure behind<br />serious competitions
             </h1>
             <p className="font-space text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
-              We're building everything needed to run and participate in high-quality competitions. From applications and submissions to judging and results — launching soon.
+              Everything needed to run and participate in high-quality competitions. From applications and submissions to judging and results.
             </p>
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -249,9 +244,6 @@ export default function Platform() {
                     </div>
                     <h3 className="font-space text-sm font-semibold text-white mb-2 group-hover:text-orange-400 transition-colors duration-200">{tool.title}</h3>
                     <p className="font-space text-xs text-gray-400 leading-relaxed">{tool.desc}</p>
-                    {tool.soon && (
-                      <span className="inline-block mt-3 px-2 py-0.5 bg-gray-800 border border-gray-700 text-[10px] font-space text-gray-500 font-medium">Coming Soon</span>
-                    )}
                   </div>
                 </motion.div>
               ))}
@@ -390,15 +382,15 @@ export default function Platform() {
               className="max-w-3xl mx-auto text-center"
             >
               <h2 className="font-space text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-5">
-                We're building this.
+                Ready to run your competition?
               </h2>
               <p className="font-space text-base sm:text-lg text-gray-400 max-w-xl mx-auto leading-relaxed mb-12">
-                The platform isn't live yet — but it's coming. Get notified when we launch.
+                Infrastructure for serious competitions. Launch in minutes.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link to="/host-hackathon" className="group flex items-center justify-center gap-3 px-8 py-4 sm:py-5 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space text-sm font-semibold transition-all duration-300 shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40">
-                    <span>Get Early Access</span>
+                    <span>Host a Competition</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
