@@ -113,6 +113,9 @@ function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage }: {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedId, setExpandedId] = useState<number | string | null>(null);
 
+  // Strip query params for write operations (POST/PATCH/DELETE use base URL)
+  const writeEndpoint = endpoint.split('?')[0];
+
   const fetchItems = useCallback(async () => {
     setLoading(true);
     try {
@@ -157,7 +160,7 @@ function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage }: {
       if (body.tags && typeof body.tags === 'string') {
         body.tags = body.tags.split(',').map((t: string) => t.trim()).filter(Boolean);
       }
-      const json = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify(body) });
+      const json = await apiFetch(writeEndpoint, { method: 'POST', body: JSON.stringify(body) });
       if (json.success) { toast.success('Created successfully'); setCreating(false); setNewData({}); fetchItems(); }
       else toast.error(json.message || 'Failed to create');
     } catch { toast.error('Failed to create'); }
@@ -171,7 +174,7 @@ function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage }: {
       if (body.tags && typeof body.tags === 'string') {
         body.tags = body.tags.split(',').map((t: string) => t.trim()).filter(Boolean);
       }
-      const json = await apiFetch(`${endpoint}/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
+      const json = await apiFetch(`${writeEndpoint}/${id}`, { method: 'PATCH', body: JSON.stringify(body) });
       if (json.success) { toast.success('Updated'); setEditingId(null); fetchItems(); }
       else toast.error(json.message || 'Failed to update');
     } catch { toast.error('Failed to update'); }
@@ -181,7 +184,7 @@ function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage }: {
   const handleDelete = async (id: number | string) => {
     if (!confirm('Are you sure you want to delete this? This cannot be undone.')) return;
     try {
-      const json = await apiFetch(`${endpoint}/${id}`, { method: 'DELETE' });
+      const json = await apiFetch(`${writeEndpoint}/${id}`, { method: 'DELETE' });
       if (json.success) { toast.success('Deleted'); fetchItems(); }
       else toast.error(json.message || 'Failed to delete');
     } catch { toast.error('Failed to delete'); }
@@ -755,11 +758,11 @@ export default function AdminPanel() {
           <main className="flex-1 lg:ml-56 pt-20 lg:pt-24 pb-12 px-4 sm:px-6 lg:px-8 min-h-screen">
             <div className="max-w-5xl mx-auto mt-12 lg:mt-0">
               {activeTab === 'dashboard' && <DashboardTab />}
-              {activeTab === 'blogs' && <CrudManager endpoint="/api/blogs" columns={blogColumns} title="Blog Posts" icon={BookOpen} />}
+              {activeTab === 'blogs' && <CrudManager endpoint="/api/blogs?all=true" columns={blogColumns} title="Blog Posts" icon={BookOpen} />}
               {activeTab === 'podcasts' && <CrudManager endpoint="/api/podcasts" columns={podcastColumns} title="Podcasts" icon={Mic} />}
               {activeTab === 'interviews' && <CrudManager endpoint="/api/interviews" columns={interviewColumns} title="Interviews" icon={Video} />}
               {activeTab === 'stories' && <CrudManager endpoint="/api/builder-stories" columns={storyColumns} title="Builder Stories" icon={Award} />}
-              {activeTab === 'hackathons' && <CrudManager endpoint="/api/events" columns={hackathonColumns} title="Hackathons" icon={Trophy} />}
+              {activeTab === 'hackathons' && <CrudManager endpoint="/api/events?all=true" columns={hackathonColumns} title="Hackathons" icon={Trophy} />}
               {activeTab === 'mentors' && <CrudManager endpoint="/api/mentors" columns={mentorColumns} title="Mentors" icon={UserCheck} emptyMessage="No mentors registered yet." />}
               {activeTab === 'users' && <UsersManager />}
               {activeTab === 'newsletter' && <CrudManager endpoint="/api/newsletter/subscribers" columns={[

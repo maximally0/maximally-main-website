@@ -15,8 +15,12 @@ export function registerBlogRoutes(app: Express) {
       let query = supabaseAdmin
         .from("blogs")
         .select("*", { count: "exact" })
-        .eq("is_published", true)
         .order("created_at", { ascending: false });
+
+      // Only filter by published if not requesting all (admin panel uses ?all=true)
+      if (req.query.all !== 'true') {
+        query = query.eq("is_published", true);
+      }
 
       if (search.trim()) {
         query = query.or(`title.ilike.%${search}%,content.ilike.%${search}%`);

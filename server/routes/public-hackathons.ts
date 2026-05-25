@@ -392,17 +392,24 @@ export function registerPublicHackathonRoutes(app: Express) {
 
   app.get("/api/events", async (req, res) => {
     try {
+      const showAll = req.query.all === 'true';
+      
+      let orgQuery = supabaseAdmin
+        .from('organizer_hackathons')
+        .select('id,hackathon_name,tagline,start_date,end_date,format,venue,slug,total_prize_pool,themes,status,description,mode,max_participants,prize_pool,is_featured')
+        .order('start_date', { ascending: false });
+      
+      if (!showAll) {
+        orgQuery = orgQuery.eq('status', 'published');
+      }
+
       const [adminResult, organizerResult] = await Promise.all([
         supabaseAdmin
           .from('hackathons')
           .select('id,title,subtitle,start_date,end_date,location,duration,status,focus_areas,devpost_url,devpost_register_url,registration_url,sort_order')
           .eq('is_active', true)
           .order('sort_order', { ascending: true }),
-        supabaseAdmin
-          .from('organizer_hackathons')
-          .select('id,hackathon_name,tagline,start_date,end_date,format,venue,slug,total_prize_pool,themes')
-          .eq('status', 'published')
-          .order('start_date', { ascending: false })
+        orgQuery
       ]);
 
       return res.json({
