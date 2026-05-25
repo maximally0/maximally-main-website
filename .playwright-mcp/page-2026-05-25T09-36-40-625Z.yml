@@ -1,0 +1,115 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e16] [cursor=pointer]: Platform
+        - button "Network" [ref=e18] [cursor=pointer]: Network
+        - button "Resources" [ref=e20] [cursor=pointer]: Resources
+      - generic [ref=e22]: Loading...
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - link "Blog" [ref=e26] [cursor=pointer]:
+          - /url: /blog
+        - link "Podcasts" [ref=e27] [cursor=pointer]:
+          - /url: /resources/podcasts
+        - link "Interviews" [ref=e28] [cursor=pointer]:
+          - /url: /resources/interviews
+        - link "Builder Stories" [ref=e29] [cursor=pointer]:
+          - /url: /resources/stories
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic [ref=e33]: Blog
+            - heading "Ideas, insights, and lessons from the ecosystem" [level=1] [ref=e34]
+            - paragraph [ref=e35]: Practical articles on building, organizing, and shipping products that matter.
+          - generic [ref=e36]:
+            - img [ref=e37]
+            - textbox "Search articles..." [ref=e40]
+        - complementary [ref=e57]:
+          - generic [ref=e58]:
+            - heading "Categories" [level=3] [ref=e59]
+            - button "All 0" [ref=e61] [cursor=pointer]:
+              - generic [ref=e62]:
+                - img [ref=e63]
+                - generic [ref=e65]: All
+              - generic [ref=e66]: "0"
+    - contentinfo [ref=e67]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - generic [ref=e71]:
+            - img [ref=e73]
+            - generic [ref=e75]: MAXIMALLY
+          - heading "Infrastructure for serious builders." [level=2] [ref=e76]
+          - paragraph [ref=e77]: Run events. Compete in events. Ship real products.
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - heading "Events" [level=3] [ref=e81]
+            - list [ref=e82]:
+              - listitem [ref=e83]:
+                - link "Browse Events" [ref=e84] [cursor=pointer]:
+                  - /url: /events
+              - listitem [ref=e85]:
+                - link "Host an Event" [ref=e86] [cursor=pointer]:
+                  - /url: /host-hackathon
+          - generic [ref=e87]:
+            - heading "Platform" [level=3] [ref=e88]
+            - list [ref=e89]:
+              - listitem [ref=e90]:
+                - link "Infrastructure" [ref=e91] [cursor=pointer]:
+                  - /url: /platform
+              - listitem [ref=e92]:
+                - link "Host on Maximally" [ref=e93] [cursor=pointer]:
+                  - /url: /host-hackathon
+              - listitem [ref=e94]:
+                - link "Organizer Dashboard" [ref=e95] [cursor=pointer]:
+                  - /url: /organizer/apply
+          - generic [ref=e96]:
+            - heading "Network" [level=3] [ref=e97]
+            - list [ref=e98]:
+              - listitem [ref=e99]:
+                - link "Senior Council" [ref=e100] [cursor=pointer]:
+                  - /url: /senior-council
+              - listitem [ref=e101]:
+                - link "Builder Community" [ref=e102] [cursor=pointer]:
+                  - /url: https://discord.gg/MpBnYk8qMX
+              - listitem [ref=e103]:
+                - link "View Network" [ref=e104] [cursor=pointer]:
+                  - /url: /network
+          - generic [ref=e105]:
+            - heading "Resources" [level=3] [ref=e106]
+            - list [ref=e107]:
+              - listitem [ref=e108]:
+                - link "Blog" [ref=e109] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e110]:
+                - link "All Resources" [ref=e111] [cursor=pointer]:
+                  - /url: /resources
+              - listitem [ref=e112]:
+                - link "Contact" [ref=e113] [cursor=pointer]:
+                  - /url: /contact
+        - generic [ref=e115]:
+          - generic [ref=e116]:
+            - link "LinkedIn" [ref=e117] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/maximallyedu
+              - img [ref=e118]
+            - link "Instagram" [ref=e122] [cursor=pointer]:
+              - /url: https://www.instagram.com/maximallyhq/
+              - img [ref=e123]
+            - link "Discord" [ref=e126] [cursor=pointer]:
+              - /url: https://discord.gg/MpBnYk8qMX
+              - img [ref=e127]
+          - generic [ref=e129]:
+            - link "Privacy" [ref=e130] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=e131] [cursor=pointer]:
+              - /url: /terms
+            - generic [ref=e132]: © 2026 Maximally

@@ -1,0 +1,17 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e16] [cursor=pointer]: Platform
+        - button "Network" [ref=e18] [cursor=pointer]: Network
+        - button "Resources" [ref=e20] [cursor=pointer]: Resources
+      - generic [ref=e22]: Loading...
+  - img [ref=e24]

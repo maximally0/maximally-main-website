@@ -1,0 +1,78 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e16] [cursor=pointer]: Platform
+        - button "Network" [ref=e18] [cursor=pointer]: Network
+        - button "Resources" [ref=e20] [cursor=pointer]: Resources
+      - generic [ref=e21]:
+        - link "Mentor" [ref=e26] [cursor=pointer]:
+          - /url: /mentor/dashboard
+        - link "Gallery" [ref=e27] [cursor=pointer]:
+          - /url: /mentors
+        - button "User profile" [ref=e29] [cursor=pointer]:
+          - generic [ref=e31]: M
+  - generic [ref=e33]:
+    - complementary [ref=e34]:
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - img [ref=e37]
+          - generic [ref=e39]: Admin
+        - paragraph [ref=e40]: /pokemon
+      - navigation [ref=e41]:
+        - button "Dashboard" [ref=e42] [cursor=pointer]:
+          - img [ref=e43]
+          - text: Dashboard
+        - button "Blogs" [active] [ref=e48] [cursor=pointer]:
+          - img [ref=e49]
+          - text: Blogs
+        - button "Podcasts" [ref=e51] [cursor=pointer]:
+          - img [ref=e52]
+          - text: Podcasts
+        - button "Interviews" [ref=e55] [cursor=pointer]:
+          - img [ref=e56]
+          - text: Interviews
+        - button "Stories" [ref=e59] [cursor=pointer]:
+          - img [ref=e60]
+          - text: Stories
+        - button "Hackathons" [ref=e63] [cursor=pointer]:
+          - img [ref=e64]
+          - text: Hackathons
+        - button "Mentors" [ref=e70] [cursor=pointer]:
+          - img [ref=e71]
+          - text: Mentors
+        - button "Users" [ref=e75] [cursor=pointer]:
+          - img [ref=e76]
+          - text: Users
+        - button "Newsletter" [ref=e78] [cursor=pointer]:
+          - img [ref=e79]
+          - text: Newsletter
+    - main [ref=e82]:
+      - generic [ref=e172]:
+        - generic [ref=e173]:
+          - generic [ref=e174]:
+            - img [ref=e176]
+            - generic [ref=e178]:
+              - heading "Blog Posts" [level=2] [ref=e179]
+              - paragraph [ref=e180]: 0 items
+          - generic [ref=e181]:
+            - button "Refresh" [ref=e182] [cursor=pointer]:
+              - img [ref=e183]
+            - button "Add New" [ref=e188] [cursor=pointer]:
+              - img [ref=e189]
+              - text: Add New
+        - generic [ref=e190]:
+          - img [ref=e191]
+          - textbox "Search blog posts..." [ref=e194]
+        - generic [ref=e195]:
+          - img [ref=e196]
+          - paragraph [ref=e198]: No blog posts yet.
+          - paragraph [ref=e199]: Click "Add New" to create one.

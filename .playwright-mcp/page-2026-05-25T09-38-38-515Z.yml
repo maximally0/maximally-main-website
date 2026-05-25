@@ -1,0 +1,163 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e17] [cursor=pointer]: Platform
+        - button "Network" [ref=e19] [cursor=pointer]: Network
+        - button "Resources" [ref=e21] [cursor=pointer]: Resources
+      - generic [ref=e23]: Loading...
+  - generic [ref=e24]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - img [ref=e32]
+          - generic [ref=e35]: LIVE BUILDER EVENTS
+        - heading "Builder Events" [level=1] [ref=e36]
+        - paragraph [ref=e37]: Live competitions running on Maximally infrastructure. Find hackathons, build sprints, and events where serious builders ship real products.
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - img [ref=e40]
+            - generic [ref=e43]: 0+ HACKATHONS
+          - generic [ref=e44]:
+            - img [ref=e45]
+            - generic [ref=e51]: $100K+ PRIZES
+          - generic [ref=e52]:
+            - img [ref=e53]
+            - generic [ref=e56]: GLOBAL
+      - generic [ref=e58]:
+        - img [ref=e59]
+        - textbox "Search hackathons..." [ref=e62]
+    - generic [ref=e64]:
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - heading "FILTERS" [level=3] [ref=e68]
+          - button "Clear all" [ref=e69] [cursor=pointer]
+        - generic [ref=e70]:
+          - button "FORMAT" [expanded] [ref=e71] [cursor=pointer]:
+            - heading "FORMAT" [level=4] [ref=e72]
+            - img [ref=e73]
+          - generic [ref=e76]:
+            - generic [ref=e77] [cursor=pointer]:
+              - checkbox "online" [ref=e78]
+              - generic [ref=e79]: online
+            - generic [ref=e80] [cursor=pointer]:
+              - checkbox "in-person" [ref=e81]
+              - generic [ref=e82]: in-person
+            - generic [ref=e83] [cursor=pointer]:
+              - checkbox "hybrid" [ref=e84]
+              - generic [ref=e85]: hybrid
+        - generic [ref=e86]:
+          - button "STATUS" [expanded] [ref=e87] [cursor=pointer]:
+            - heading "STATUS" [level=4] [ref=e88]
+            - img [ref=e89]
+          - generic [ref=e92]:
+            - generic [ref=e93] [cursor=pointer]:
+              - checkbox "upcoming" [ref=e94]
+              - generic [ref=e95]: upcoming
+            - generic [ref=e96] [cursor=pointer]:
+              - checkbox "ongoing" [ref=e97]
+              - generic [ref=e98]: ongoing
+            - generic [ref=e99] [cursor=pointer]:
+              - checkbox "completed" [ref=e100]
+              - generic [ref=e101]: completed
+        - button "TOPICS" [ref=e103] [cursor=pointer]:
+          - heading "TOPICS" [level=4] [ref=e104]
+          - img [ref=e105]
+      - generic [ref=e107]:
+        - generic [ref=e109]:
+          - img [ref=e111]
+          - generic [ref=e114]:
+            - heading "HACKATHONS" [level=2] [ref=e115]
+            - paragraph [ref=e116]: 0 events found
+        - generic [ref=e117]:
+          - img [ref=e118]
+          - heading "NO HACKATHONS FOUND" [level=3] [ref=e121]
+          - paragraph [ref=e122]: Try adjusting your filters or search query
+          - button "CLEAR FILTERS" [ref=e123] [cursor=pointer]
+        - generic [ref=e127]:
+          - heading "Want to host your own hackathon?" [level=3] [ref=e128]
+          - paragraph [ref=e129]: Join 1000+ organizers who have launched successful events with Maximally's support.
+          - link "HOST A HACKATHON" [ref=e130] [cursor=pointer]:
+            - /url: /host-hackathon
+            - img [ref=e131]
+            - text: HOST A HACKATHON
+            - img [ref=e136]
+    - contentinfo [ref=e138]:
+      - generic [ref=e140]:
+        - generic [ref=e141]:
+          - generic [ref=e142]:
+            - img [ref=e144]
+            - generic [ref=e146]: MAXIMALLY
+          - heading "Infrastructure for serious builders." [level=2] [ref=e147]
+          - paragraph [ref=e148]: Run events. Compete in events. Ship real products.
+        - generic [ref=e150]:
+          - generic [ref=e151]:
+            - heading "Events" [level=3] [ref=e152]
+            - list [ref=e153]:
+              - listitem [ref=e154]:
+                - link "Browse Events" [ref=e155] [cursor=pointer]:
+                  - /url: /events
+              - listitem [ref=e156]:
+                - link "Host an Event" [ref=e157] [cursor=pointer]:
+                  - /url: /host-hackathon
+          - generic [ref=e158]:
+            - heading "Platform" [level=3] [ref=e159]
+            - list [ref=e160]:
+              - listitem [ref=e161]:
+                - link "Infrastructure" [ref=e162] [cursor=pointer]:
+                  - /url: /platform
+              - listitem [ref=e163]:
+                - link "Host on Maximally" [ref=e164] [cursor=pointer]:
+                  - /url: /host-hackathon
+              - listitem [ref=e165]:
+                - link "Organizer Dashboard" [ref=e166] [cursor=pointer]:
+                  - /url: /organizer/apply
+          - generic [ref=e167]:
+            - heading "Network" [level=3] [ref=e168]
+            - list [ref=e169]:
+              - listitem [ref=e170]:
+                - link "Senior Council" [ref=e171] [cursor=pointer]:
+                  - /url: /senior-council
+              - listitem [ref=e172]:
+                - link "Builder Community" [ref=e173] [cursor=pointer]:
+                  - /url: https://discord.gg/MpBnYk8qMX
+              - listitem [ref=e174]:
+                - link "View Network" [ref=e175] [cursor=pointer]:
+                  - /url: /network
+          - generic [ref=e176]:
+            - heading "Resources" [level=3] [ref=e177]
+            - list [ref=e178]:
+              - listitem [ref=e179]:
+                - link "Blog" [ref=e180] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e181]:
+                - link "All Resources" [ref=e182] [cursor=pointer]:
+                  - /url: /resources
+              - listitem [ref=e183]:
+                - link "Contact" [ref=e184] [cursor=pointer]:
+                  - /url: /contact
+        - generic [ref=e186]:
+          - generic [ref=e187]:
+            - link "LinkedIn" [ref=e188] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/maximallyedu
+              - img [ref=e189]
+            - link "Instagram" [ref=e193] [cursor=pointer]:
+              - /url: https://www.instagram.com/maximallyhq/
+              - img [ref=e194]
+            - link "Discord" [ref=e197] [cursor=pointer]:
+              - /url: https://discord.gg/MpBnYk8qMX
+              - img [ref=e198]
+          - generic [ref=e200]:
+            - link "Privacy" [ref=e201] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=e202] [cursor=pointer]:
+              - /url: /terms
+            - generic [ref=e203]: © 2026 Maximally

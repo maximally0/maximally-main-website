@@ -1,0 +1,121 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e16] [cursor=pointer]: Platform
+        - button "Network" [ref=e18] [cursor=pointer]: Network
+        - button "Resources" [ref=e20] [cursor=pointer]: Resources
+      - link "Sign in" [ref=e23] [cursor=pointer]:
+        - /url: /login
+        - img [ref=e25]
+  - generic [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - link "Blog" [ref=e30] [cursor=pointer]:
+          - /url: /blog
+        - link "Podcasts" [ref=e31] [cursor=pointer]:
+          - /url: /resources/podcasts
+        - link "Interviews" [ref=e32] [cursor=pointer]:
+          - /url: /resources/interviews
+        - link "Builder Stories" [ref=e33] [cursor=pointer]:
+          - /url: /resources/stories
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e37]: Interviews
+            - heading "Conversations with people shaping the ecosystem." [level=1] [ref=e38]
+            - paragraph [ref=e39]: In-depth interviews with builders, operators, and thinkers driving meaningful change.
+          - generic [ref=e40]:
+            - img [ref=e41]
+            - textbox "Search interviews..." [ref=e44]
+          - generic [ref=e45]:
+            - button "All Interviews" [ref=e46] [cursor=pointer]
+            - button "Engineering" [ref=e47] [cursor=pointer]
+            - button "Product" [ref=e48] [cursor=pointer]
+            - button "Leadership" [ref=e49] [cursor=pointer]
+            - button "Operations" [ref=e50] [cursor=pointer]
+            - button "Culture" [ref=e51] [cursor=pointer]
+        - complementary [ref=e56]:
+          - generic [ref=e57]:
+            - heading "About the series" [level=3] [ref=e58]
+            - paragraph [ref=e59]: We go beyond the headlines to explore career journeys, key decisions, hard lessons, and advice for the next generation of builders.
+            - paragraph [ref=e61]: "\"The best insights come from real experiences.\""
+    - contentinfo [ref=e62]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - generic [ref=e66]:
+            - img [ref=e68]
+            - generic [ref=e70]: MAXIMALLY
+          - heading "Infrastructure for serious builders." [level=2] [ref=e71]
+          - paragraph [ref=e72]: Run events. Compete in events. Ship real products.
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - heading "Events" [level=3] [ref=e76]
+            - list [ref=e77]:
+              - listitem [ref=e78]:
+                - link "Browse Events" [ref=e79] [cursor=pointer]:
+                  - /url: /events
+              - listitem [ref=e80]:
+                - link "Host an Event" [ref=e81] [cursor=pointer]:
+                  - /url: /host-hackathon
+          - generic [ref=e82]:
+            - heading "Platform" [level=3] [ref=e83]
+            - list [ref=e84]:
+              - listitem [ref=e85]:
+                - link "Infrastructure" [ref=e86] [cursor=pointer]:
+                  - /url: /platform
+              - listitem [ref=e87]:
+                - link "Host on Maximally" [ref=e88] [cursor=pointer]:
+                  - /url: /host-hackathon
+              - listitem [ref=e89]:
+                - link "Organizer Dashboard" [ref=e90] [cursor=pointer]:
+                  - /url: /organizer/apply
+          - generic [ref=e91]:
+            - heading "Network" [level=3] [ref=e92]
+            - list [ref=e93]:
+              - listitem [ref=e94]:
+                - link "Senior Council" [ref=e95] [cursor=pointer]:
+                  - /url: /senior-council
+              - listitem [ref=e96]:
+                - link "Builder Community" [ref=e97] [cursor=pointer]:
+                  - /url: https://discord.gg/MpBnYk8qMX
+              - listitem [ref=e98]:
+                - link "View Network" [ref=e99] [cursor=pointer]:
+                  - /url: /network
+          - generic [ref=e100]:
+            - heading "Resources" [level=3] [ref=e101]
+            - list [ref=e102]:
+              - listitem [ref=e103]:
+                - link "Blog" [ref=e104] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e105]:
+                - link "All Resources" [ref=e106] [cursor=pointer]:
+                  - /url: /resources
+              - listitem [ref=e107]:
+                - link "Contact" [ref=e108] [cursor=pointer]:
+                  - /url: /contact
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - link "LinkedIn" [ref=e112] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/maximallyedu
+              - img [ref=e113]
+            - link "Instagram" [ref=e117] [cursor=pointer]:
+              - /url: https://www.instagram.com/maximallyhq/
+              - img [ref=e118]
+            - link "Discord" [ref=e121] [cursor=pointer]:
+              - /url: https://discord.gg/MpBnYk8qMX
+              - img [ref=e122]
+          - generic [ref=e124]:
+            - link "Privacy" [ref=e125] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=e126] [cursor=pointer]:
+              - /url: /terms
+            - generic [ref=e127]: © 2026 Maximally

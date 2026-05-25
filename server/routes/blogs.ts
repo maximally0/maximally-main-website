@@ -15,7 +15,7 @@ export function registerBlogRoutes(app: Express) {
       let query = supabaseAdmin
         .from("blogs")
         .select("*", { count: "exact" })
-        .eq("status", "published")
+        .eq("is_published", true)
         .order("created_at", { ascending: false });
 
       if (search.trim()) {
@@ -60,7 +60,7 @@ export function registerBlogRoutes(app: Express) {
         .from("blogs")
         .select("*")
         .eq("slug", slug)
-        .eq("status", "published")
+        .eq("is_published", true)
         .maybeSingle();
 
       if (error) {

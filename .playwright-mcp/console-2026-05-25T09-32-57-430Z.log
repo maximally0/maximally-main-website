@@ -1,0 +1,4 @@
+[     306ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:5000/@fs/C:/Users/rishh/OneDrive/Desktop/Projects/maximally-main-website/node_modules/.vite/deps/chunk-276SZO74.js?v=16231aab:21550
+[     355ms] [LOG] ConfirmProvider render, isOpen: false @ http://localhost:5000/src/components/ui/confirm-modal.tsx:51
+[     474ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ http://localhost:5000/login:0
+[   37685ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5000/api/participant/hackathons:0

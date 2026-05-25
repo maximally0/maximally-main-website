@@ -1,0 +1,46 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e16] [cursor=pointer]: Platform
+        - button "Network" [ref=e18] [cursor=pointer]: Network
+        - button "Resources" [ref=e20] [cursor=pointer]: Resources
+      - link "Sign in" [ref=e22] [cursor=pointer]:
+        - /url: /login
+        - img [ref=e24]
+  - generic [ref=e32]:
+    - generic [ref=e33]:
+      - img [ref=e35]
+      - heading "WELCOME BACK" [level=1] [ref=e37]
+      - paragraph [ref=e38]: Access your dashboard
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]: EMAIL ADDRESS
+        - textbox "EMAIL ADDRESS" [ref=e43]:
+          - /placeholder: hacker@example.com
+      - generic [ref=e44]:
+        - generic [ref=e45]: PASSWORD
+        - generic [ref=e47]:
+          - textbox "PASSWORD" [ref=e48]:
+            - /placeholder: ••••••••
+          - button [ref=e49] [cursor=pointer]:
+            - img [ref=e50]
+        - button "Forgot password?" [ref=e56] [cursor=pointer]
+      - button "ACCESS DASHBOARD" [ref=e57] [cursor=pointer]
+    - generic [ref=e62]: or connect with
+    - generic [ref=e63]:
+      - button "GOOGLE" [ref=e64] [cursor=pointer]:
+        - img
+        - generic [ref=e65]: GOOGLE
+      - button "GITHUB" [ref=e66] [cursor=pointer]:
+        - img
+        - generic [ref=e67]: GITHUB
+    - button "New user? Create account" [ref=e69] [cursor=pointer]

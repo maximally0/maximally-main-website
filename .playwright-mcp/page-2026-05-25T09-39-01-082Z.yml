@@ -1,0 +1,285 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e16] [cursor=pointer]: Platform
+        - button "Network" [ref=e18] [cursor=pointer]: Network
+        - button "Resources" [ref=e20] [cursor=pointer]: Resources
+      - generic [ref=e22]: Loading...
+  - generic [ref=e23]:
+    - generic [ref=e29]:
+      - generic [ref=e30]: Senior Council
+      - heading "The Maximally Senior Council." [level=1] [ref=e31]:
+        - text: The Maximally
+        - text: Senior Council.
+      - paragraph [ref=e32]: A council of operators who evaluate, mentor, and set the standard across Maximally programs.
+      - paragraph [ref=e33]: The Senior Council brings together founders, researchers, engineers, product leaders, and builders with documented extraordinary achievement in their fields.
+    - generic [ref=e36]:
+      - generic [ref=e37]:
+        - heading "What is the Senior Council?" [level=2] [ref=e38]
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: The Senior Council is Maximally's network of globally recognized operators. Members include founders, research scientists, engineers, product leaders, and open source builders whose work has produced meaningful impact in technology, research, or entrepreneurship.
+          - paragraph [ref=e41]: They bring real operating experience to Maximally programs — evaluating products, mentoring teams, and helping define what serious building looks like.
+          - paragraph [ref=e42]: The council is intentionally selective. Membership is granted only to individuals who demonstrate documented evidence of exceptional contribution to their field.
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - heading "Council Directory" [level=2] [ref=e45]
+          - paragraph [ref=e46]: Search council members
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - img [ref=e49]
+            - textbox "Search council members..." [ref=e52]
+          - generic [ref=e53]:
+            - img [ref=e54]
+            - button "All" [ref=e56] [cursor=pointer]
+            - button "AI" [ref=e57] [cursor=pointer]
+            - button "Engineering" [ref=e58] [cursor=pointer]
+            - button "Product" [ref=e59] [cursor=pointer]
+            - button "Startups" [ref=e60] [cursor=pointer]
+            - button "Biotech" [ref=e61] [cursor=pointer]
+            - button "Open Source" [ref=e62] [cursor=pointer]
+            - button "Computer Science" [ref=e63] [cursor=pointer]
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - generic [ref=e68]: CS
+              - generic [ref=e69]:
+                - heading "Coming Soon" [level=3] [ref=e70]
+                - paragraph [ref=e71]: AI Research Lead
+                - paragraph [ref=e72]: Top technology company
+            - generic [ref=e73]:
+              - generic [ref=e74]: AI
+              - generic [ref=e75]: CS
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e79]: CS
+              - generic [ref=e80]:
+                - heading "Coming Soon" [level=3] [ref=e81]
+                - paragraph [ref=e82]: Founding Engineer
+                - paragraph [ref=e83]: YC-backed startup
+            - generic [ref=e84]:
+              - generic [ref=e85]: Engineering
+              - generic [ref=e86]: CS
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - generic [ref=e90]: CS
+              - generic [ref=e91]:
+                - heading "Coming Soon" [level=3] [ref=e92]
+                - paragraph [ref=e93]: Product Director
+                - paragraph [ref=e94]: Fortune 500 technology company
+            - generic [ref=e95]:
+              - generic [ref=e96]: Product
+              - generic [ref=e97]: CS
+          - generic [ref=e98]:
+            - generic [ref=e99]:
+              - generic [ref=e101]: CS
+              - generic [ref=e102]:
+                - heading "Coming Soon" [level=3] [ref=e103]
+                - paragraph [ref=e104]: Serial Founder
+                - paragraph [ref=e105]: Multiple venture-backed companies
+            - generic [ref=e106]:
+              - generic [ref=e107]: Startups
+              - generic [ref=e108]: CS
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e112]: CS
+              - generic [ref=e113]:
+                - heading "Coming Soon" [level=3] [ref=e114]
+                - paragraph [ref=e115]: Biotech Researcher
+                - paragraph [ref=e116]: Leading research institution
+            - generic [ref=e118]: Biotech
+          - generic [ref=e119]:
+            - generic [ref=e120]:
+              - generic [ref=e122]: CS
+              - generic [ref=e123]:
+                - heading "Coming Soon" [level=3] [ref=e124]
+                - paragraph [ref=e125]: Open Source Maintainer
+                - paragraph [ref=e126]: Major open source infrastructure project
+            - generic [ref=e128]: Open Source
+    - generic [ref=e132]:
+      - generic [ref=e133]:
+        - generic [ref=e134]: The Standard
+        - heading "Admission Criteria" [level=2] [ref=e135]
+        - paragraph [ref=e136]: Senior Council membership is reserved for operators who have demonstrated extraordinary ability and impact in their domain. Admission is based on documented achievements and evidence of contribution at scale.
+        - paragraph [ref=e137]: Applicants typically meet multiple indicators of exceptional ability. No single metric guarantees admission. Each candidate is evaluated based on the total impact of their work.
+      - generic [ref=e138]:
+        - generic [ref=e139]:
+          - generic [ref=e140]:
+            - img [ref=e142]
+            - heading "Leadership in Building or Shipping Products" [level=3] [ref=e147]
+          - list [ref=e148]:
+            - listitem [ref=e149]:
+              - generic [ref=e151]: Founder or early employee of a venture-backed startup
+            - listitem [ref=e152]:
+              - generic [ref=e154]: Founding engineer or technical lead at a high-growth technology company
+            - listitem [ref=e155]:
+              - generic [ref=e157]: Built a product used by 10,000+ users
+            - listitem [ref=e158]:
+              - generic [ref=e160]: Led development of a product generating $100k+ in annual revenue
+            - listitem [ref=e161]:
+              - generic [ref=e163]: Created widely adopted developer tools, APIs, or platforms
+        - generic [ref=e164]:
+          - generic [ref=e165]:
+            - img [ref=e167]
+            - heading "Recognized Technical or Research Contributions" [level=3] [ref=e169]
+          - list [ref=e170]:
+            - listitem [ref=e171]:
+              - generic [ref=e173]: Author of peer-reviewed research papers
+            - listitem [ref=e174]:
+              - generic [ref=e176]: Published work in recognized conferences or journals
+            - listitem [ref=e177]:
+              - generic [ref=e179]: Contributions to major open source projects
+            - listitem [ref=e180]:
+              - generic [ref=e182]: Maintainer of repositories with 5,000+ stars
+            - listitem [ref=e183]:
+              - generic [ref=e185]: Developer of infrastructure or frameworks widely used by builders
+        - generic [ref=e186]:
+          - generic [ref=e187]:
+            - img [ref=e189]
+            - heading "Major Competition or Hackathon Achievement" [level=3] [ref=e192]
+          - list [ref=e193]:
+            - listitem [ref=e194]:
+              - generic [ref=e196]: Winner or finalist in major international hackathons
+            - listitem [ref=e197]:
+              - generic [ref=e199]: Top placements in recognized engineering competitions
+            - listitem [ref=e200]:
+              - generic [ref=e202]: Creator of projects that gained significant adoption during hackathons
+            - listitem [ref=e203]:
+              - generic [ref=e205]: Organizer or judge for large-scale global competitions
+        - generic [ref=e206]:
+          - generic [ref=e207]:
+            - img [ref=e209]
+            - heading "Industry Recognition or Thought Leadership" [level=3] [ref=e214]
+          - list [ref=e215]:
+            - listitem [ref=e216]:
+              - generic [ref=e218]: Invited speaker at major technical conferences
+            - listitem [ref=e219]:
+              - generic [ref=e221]: Featured in credible media or industry publications
+            - listitem [ref=e222]:
+              - generic [ref=e224]: Published technical writing with large developer readership
+            - listitem [ref=e225]:
+              - generic [ref=e227]: Recognized community leadership in engineering or startup ecosystems
+        - generic [ref=e228]:
+          - generic [ref=e229]:
+            - img [ref=e231]
+            - heading "Investment, Funding, or Startup Success" [level=3] [ref=e236]
+          - list [ref=e237]:
+            - listitem [ref=e238]:
+              - generic [ref=e240]: Founder of a company that raised venture funding
+            - listitem [ref=e241]:
+              - generic [ref=e243]: Successful acquisition or exit
+            - listitem [ref=e244]:
+              - generic [ref=e246]: Angel investor or advisor to multiple startups
+            - listitem [ref=e247]:
+              - generic [ref=e249]: Builder of profitable technology businesses
+        - generic [ref=e250]:
+          - generic [ref=e251]:
+            - img [ref=e253]
+            - heading "Mentorship and Ecosystem Contribution" [level=3] [ref=e255]
+          - list [ref=e256]:
+            - listitem [ref=e257]:
+              - generic [ref=e259]: Mentor or judge in major hackathons
+            - listitem [ref=e260]:
+              - generic [ref=e262]: Contributor to technical communities or accelerators
+            - listitem [ref=e263]:
+              - generic [ref=e265]: Operator supporting early-stage founders
+            - listitem [ref=e266]:
+              - generic [ref=e268]: Creator of educational or developer resources used by builders
+    - generic [ref=e272]:
+      - generic [ref=e273]:
+        - heading "Participation Expectations" [level=3] [ref=e274]
+        - generic [ref=e275]:
+          - paragraph [ref=e276]: Senior Council members actively contribute to the Maximally ecosystem. Members are expected to participate in at least one Maximally program per quarter as a judge, mentor, or evaluator.
+          - paragraph [ref=e277]: The council is designed to remain active, operational, and closely connected to the builders participating in Maximally programs.
+      - generic [ref=e278]:
+        - heading "Selection Process" [level=3] [ref=e279]
+        - generic [ref=e280]:
+          - paragraph [ref=e281]: Applications are reviewed periodically by the Maximally team and existing council members. Admission is granted only to individuals whose work demonstrates clear and documented impact in their field.
+          - paragraph [ref=e282]: Not all qualified applicants are admitted. Selectivity is intentional. The Senior Council exists to maintain the standard of evaluation across Maximally programs.
+    - generic [ref=e288]:
+      - generic [ref=e289]: Apply for Review
+      - heading "Submit your profile for review." [level=2] [ref=e290]
+      - paragraph [ref=e291]: If your work meets the criteria for exceptional contribution, you may submit your profile for review. Applications are reviewed quarterly. Not all qualified applicants are admitted — selectivity is intentional.
+      - link "Apply for Senior Council Review" [ref=e293] [cursor=pointer]:
+        - /url: https://tally.so/r/wvRYrv
+        - generic [ref=e294]: Apply for Senior Council Review
+        - img [ref=e295]
+    - contentinfo [ref=e298]:
+      - generic [ref=e300]:
+        - generic [ref=e301]:
+          - generic [ref=e302]:
+            - img [ref=e304]
+            - generic [ref=e306]: MAXIMALLY
+          - heading "Infrastructure for serious builders." [level=2] [ref=e307]
+          - paragraph [ref=e308]: Run events. Compete in events. Ship real products.
+        - generic [ref=e310]:
+          - generic [ref=e311]:
+            - heading "Events" [level=3] [ref=e312]
+            - list [ref=e313]:
+              - listitem [ref=e314]:
+                - link "Browse Events" [ref=e315] [cursor=pointer]:
+                  - /url: /events
+              - listitem [ref=e316]:
+                - link "Host an Event" [ref=e317] [cursor=pointer]:
+                  - /url: /host-hackathon
+          - generic [ref=e318]:
+            - heading "Platform" [level=3] [ref=e319]
+            - list [ref=e320]:
+              - listitem [ref=e321]:
+                - link "Infrastructure" [ref=e322] [cursor=pointer]:
+                  - /url: /platform
+              - listitem [ref=e323]:
+                - link "Host on Maximally" [ref=e324] [cursor=pointer]:
+                  - /url: /host-hackathon
+              - listitem [ref=e325]:
+                - link "Organizer Dashboard" [ref=e326] [cursor=pointer]:
+                  - /url: /organizer/apply
+          - generic [ref=e327]:
+            - heading "Network" [level=3] [ref=e328]
+            - list [ref=e329]:
+              - listitem [ref=e330]:
+                - link "Senior Council" [ref=e331] [cursor=pointer]:
+                  - /url: /senior-council
+              - listitem [ref=e332]:
+                - link "Builder Community" [ref=e333] [cursor=pointer]:
+                  - /url: https://discord.gg/MpBnYk8qMX
+              - listitem [ref=e334]:
+                - link "View Network" [ref=e335] [cursor=pointer]:
+                  - /url: /network
+          - generic [ref=e336]:
+            - heading "Resources" [level=3] [ref=e337]
+            - list [ref=e338]:
+              - listitem [ref=e339]:
+                - link "Blog" [ref=e340] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e341]:
+                - link "All Resources" [ref=e342] [cursor=pointer]:
+                  - /url: /resources
+              - listitem [ref=e343]:
+                - link "Contact" [ref=e344] [cursor=pointer]:
+                  - /url: /contact
+        - generic [ref=e346]:
+          - generic [ref=e347]:
+            - link "LinkedIn" [ref=e348] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/maximallyedu
+              - img [ref=e349]
+            - link "Instagram" [ref=e353] [cursor=pointer]:
+              - /url: https://www.instagram.com/maximallyhq/
+              - img [ref=e354]
+            - link "Discord" [ref=e357] [cursor=pointer]:
+              - /url: https://discord.gg/MpBnYk8qMX
+              - img [ref=e358]
+          - generic [ref=e360]:
+            - link "Privacy" [ref=e361] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=e362] [cursor=pointer]:
+              - /url: /terms
+            - generic [ref=e363]: © 2026 Maximally

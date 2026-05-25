@@ -1,0 +1,457 @@
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - link "MAXIMALLY" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - img [ref=e9]
+        - generic [ref=e11]: MAXIMALLY
+      - generic [ref=e12]:
+        - button "Events" [ref=e14] [cursor=pointer]: Events
+        - button "Platform" [ref=e16] [cursor=pointer]: Platform
+        - button "Network" [ref=e18] [cursor=pointer]: Network
+        - button "Resources" [ref=e20] [cursor=pointer]: Resources
+      - generic [ref=e21]:
+        - link "Mentor" [ref=e70] [cursor=pointer]:
+          - /url: /mentor/dashboard
+        - link "Gallery" [ref=e71] [cursor=pointer]:
+          - /url: /mentors
+        - button "User profile" [ref=e73] [cursor=pointer]:
+          - generic [ref=e75]: M
+  - generic [ref=e76]:
+    - generic [ref=e84]:
+      - generic [ref=e85]: MAXIMALLY
+      - heading "Serious competitions for builders.|" [level=1] [ref=e86]:
+        - generic [ref=e87]: Serious competitions
+        - generic [ref=e88]:
+          - text: for
+          - generic [ref=e89]: builders.|
+      - paragraph [ref=e90]: Where builders compete, ship real products, and get evaluated by top operators.
+      - generic [ref=e91]:
+        - link "Explore Events" [ref=e93] [cursor=pointer]:
+          - /url: /events
+          - generic [ref=e94]: Explore Events
+          - img [ref=e95]
+        - link "Host a Competition" [ref=e98] [cursor=pointer]:
+          - /url: /host-hackathon
+          - generic [ref=e99]: Host a Competition
+        - link "Find Mentors" [ref=e101] [cursor=pointer]:
+          - /url: /mentors
+          - img [ref=e102]
+          - generic [ref=e107]: Find Mentors
+      - generic [ref=e108]:
+        - paragraph [ref=e109]: Judges, mentors, and partners from
+        - generic [ref=e111]:
+          - generic [ref=e113]:
+            - generic [ref=e115]:
+              - generic [ref=e116]: Google
+              - generic [ref=e117]: •
+            - generic [ref=e119]:
+              - generic [ref=e120]: Microsoft
+              - generic [ref=e121]: •
+            - generic [ref=e123]:
+              - generic [ref=e124]: Meta
+              - generic [ref=e125]: •
+            - generic [ref=e127]:
+              - generic [ref=e128]: OpenAI
+              - generic [ref=e129]: •
+            - generic [ref=e131]:
+              - generic [ref=e132]: DeepMind
+              - generic [ref=e133]: •
+            - generic [ref=e135]:
+              - generic [ref=e136]: Y Combinator
+              - generic [ref=e137]: •
+            - generic [ref=e139]:
+              - generic [ref=e140]: AWS
+              - generic [ref=e141]: •
+            - generic [ref=e143]:
+              - generic [ref=e144]: Intuit
+              - generic [ref=e145]: •
+            - generic [ref=e147]:
+              - generic [ref=e148]: Visa
+              - generic [ref=e149]: •
+            - generic [ref=e151]:
+              - generic [ref=e152]: Salesforce
+              - generic [ref=e153]: •
+            - generic [ref=e155]:
+              - generic [ref=e156]: Atlassian
+              - generic [ref=e157]: •
+            - generic [ref=e159]:
+              - generic [ref=e160]: Replit
+              - generic [ref=e161]: •
+          - generic [ref=e162]:
+            - generic [ref=e164]:
+              - generic [ref=e165]: Google
+              - generic [ref=e166]: •
+            - generic [ref=e168]:
+              - generic [ref=e169]: Microsoft
+              - generic [ref=e170]: •
+            - generic [ref=e172]:
+              - generic [ref=e173]: Meta
+              - generic [ref=e174]: •
+            - generic [ref=e176]:
+              - generic [ref=e177]: OpenAI
+              - generic [ref=e178]: •
+            - generic [ref=e180]:
+              - generic [ref=e181]: DeepMind
+              - generic [ref=e182]: •
+            - generic [ref=e184]:
+              - generic [ref=e185]: Y Combinator
+              - generic [ref=e186]: •
+            - generic [ref=e188]:
+              - generic [ref=e189]: AWS
+              - generic [ref=e190]: •
+            - generic [ref=e192]:
+              - generic [ref=e193]: Intuit
+              - generic [ref=e194]: •
+            - generic [ref=e196]:
+              - generic [ref=e197]: Visa
+              - generic [ref=e198]: •
+            - generic [ref=e200]:
+              - generic [ref=e201]: Salesforce
+              - generic [ref=e202]: •
+            - generic [ref=e204]:
+              - generic [ref=e205]: Atlassian
+              - generic [ref=e206]: •
+            - generic [ref=e208]:
+              - generic [ref=e209]: Replit
+              - generic [ref=e210]: •
+    - generic [ref=e215]:
+      - generic [ref=e216]:
+        - generic [ref=e217]: LIVE NOW
+        - heading "Live Builder Events" [level=2] [ref=e218]
+        - paragraph [ref=e219]: Active and upcoming events for serious builders. Apply, build, and ship.
+      - generic [ref=e220]:
+        - img [ref=e221]
+        - paragraph [ref=e224]: No live events right now. Check back soon.
+      - link "Browse All Events" [ref=e226] [cursor=pointer]:
+        - /url: /events
+        - generic [ref=e227]: Browse All Events
+        - img [ref=e228]
+    - generic [ref=e235]:
+      - generic [ref=e236]:
+        - generic [ref=e237]: The Network
+        - heading "Evaluated by operators with documented achievement" [level=2] [ref=e238]
+        - paragraph [ref=e239]: Founders, researchers, engineers, and product leaders selected for extraordinary contribution to their fields. They set the standard across every Maximally program.
+        - generic [ref=e240]:
+          - link "Senior Council A selective network of operators with documented extraordinary achievement." [ref=e241] [cursor=pointer]:
+            - /url: /senior-council
+            - img [ref=e243]
+            - generic [ref=e245]:
+              - generic [ref=e246]: Senior Council
+              - text: A selective network of operators with documented extraordinary achievement.
+            - img [ref=e247]
+          - link "Builder Community The live community of Maximally builders. Share progress, find teammates, get feedback, and stay close to new events." [ref=e249] [cursor=pointer]:
+            - /url: https://discord.gg/MpBnYk8qMX
+            - img [ref=e251]
+            - generic [ref=e253]:
+              - generic [ref=e254]: Builder Community
+              - text: The live community of Maximally builders. Share progress, find teammates, get feedback, and stay close to new events.
+            - img [ref=e255]
+        - link "View the full Network" [ref=e257] [cursor=pointer]:
+          - /url: /network
+          - generic [ref=e258]: View the full Network
+          - img [ref=e259]
+      - generic [ref=e261]:
+        - generic [ref=e262]:
+          - generic [ref=e264]: CS
+          - heading "Coming Soon" [level=3] [ref=e265]
+          - paragraph [ref=e266]: AI Research Lead
+          - paragraph [ref=e267]: Top Tech Company
+          - generic [ref=e268]: AI
+        - generic [ref=e269]:
+          - generic [ref=e271]: CS
+          - heading "Coming Soon" [level=3] [ref=e272]
+          - paragraph [ref=e273]: Founding Engineer
+          - paragraph [ref=e274]: YC-Backed Startup
+          - generic [ref=e275]: Engineering
+        - generic [ref=e276]:
+          - generic [ref=e278]: CS
+          - heading "Coming Soon" [level=3] [ref=e279]
+          - paragraph [ref=e280]: Product Director
+          - paragraph [ref=e281]: Fortune 500
+          - generic [ref=e282]: Product
+        - generic [ref=e283]:
+          - generic [ref=e285]: CS
+          - heading "Coming Soon" [level=3] [ref=e286]
+          - paragraph [ref=e287]: Serial Founder
+          - paragraph [ref=e288]: Multiple Exits
+          - generic [ref=e289]: Startups
+    - generic [ref=e298]:
+      - generic [ref=e299]:
+        - generic [ref=e300]:
+          - img [ref=e301]
+          - generic [ref=e307]: For Experts
+        - heading "Become a Judge" [level=2] [ref=e308]:
+          - text: Become a
+          - text: Judge
+        - paragraph [ref=e309]: Evaluate hackathon submissions from builders worldwide. Provide structured feedback, score projects, and help determine winners. Your expertise shapes what gets built.
+        - list [ref=e310]:
+          - listitem [ref=e311]:
+            - img [ref=e312]
+            - generic [ref=e315]: Evaluate real hackathon submissions
+          - listitem [ref=e316]:
+            - img [ref=e317]
+            - generic [ref=e320]: Flexible time commitment — pick your events
+          - listitem [ref=e321]:
+            - img [ref=e322]
+            - generic [ref=e325]: Verified judge badge & public profile
+          - listitem [ref=e326]:
+            - img [ref=e327]
+            - generic [ref=e330]: Access to judge dashboard & organizer invitations
+          - listitem [ref=e331]:
+            - img [ref=e332]
+            - generic [ref=e335]: Build reputation in the builder ecosystem
+        - generic [ref=e336]:
+          - link "APPLY TO JUDGE" [ref=e337] [cursor=pointer]:
+            - /url: /judge/apply
+            - img [ref=e338]
+            - text: APPLY TO JUDGE
+            - img [ref=e340]
+          - link "VIEW JUDGES" [ref=e342] [cursor=pointer]:
+            - /url: /judges
+            - img [ref=e343]
+            - text: VIEW JUDGES
+      - generic [ref=e348]:
+        - generic [ref=e349]:
+          - img [ref=e354]
+          - heading "Judge Profile" [level=3] [ref=e357]
+          - paragraph [ref=e358]: What you get after approval
+          - generic [ref=e359]:
+            - generic [ref=e360]:
+              - generic [ref=e361]: ✓
+              - paragraph [ref=e362]: Verified Badge
+            - generic [ref=e363]:
+              - generic [ref=e364]: 👤
+              - paragraph [ref=e365]: Public Profile
+            - generic [ref=e366]:
+              - generic [ref=e367]: ⚡
+              - paragraph [ref=e368]: Dashboard
+          - paragraph [ref=e369]: Judge Tiers
+          - generic [ref=e370]:
+            - generic [ref=e371]: Starter
+            - generic [ref=e372]: Rising
+            - generic [ref=e373]: Established
+            - generic [ref=e374]: Expert
+            - generic [ref=e375]: Legend
+        - generic [ref=e377]:
+          - img [ref=e378]
+          - generic [ref=e380]: Applications reviewed in 3–5 days
+    - generic [ref=e388]:
+      - generic [ref=e389]:
+        - generic [ref=e390]:
+          - img [ref=e395]
+          - heading "Mentor Profile" [level=3] [ref=e397]
+          - paragraph [ref=e398]: What you get after approval
+          - generic [ref=e399]:
+            - generic [ref=e400]:
+              - generic [ref=e401]: 🌟
+              - paragraph [ref=e402]: Gallery Listing
+            - generic [ref=e403]:
+              - generic [ref=e404]: 📅
+              - paragraph [ref=e405]: Session Mgmt
+            - generic [ref=e406]:
+              - generic [ref=e407]: 🏅
+              - paragraph [ref=e408]: Mentor Badge
+          - paragraph [ref=e409]: Availability Options
+          - generic [ref=e410]:
+            - generic [ref=e411]: Weekends
+            - generic [ref=e412]: Evenings
+            - generic [ref=e413]: Flexible
+            - generic [ref=e414]: Limited
+          - generic [ref=e415]:
+            - paragraph [ref=e416]: How you'll appear
+            - generic [ref=e417]:
+              - generic [ref=e419]: "Y"
+              - generic [ref=e420]:
+                - paragraph [ref=e421]: Your Name
+                - paragraph [ref=e422]: Your expertise · Available
+              - generic [ref=e423]: Online
+        - generic [ref=e425]:
+          - img [ref=e426]
+          - generic [ref=e428]: Make a real impact on builders
+      - generic [ref=e429]:
+        - generic [ref=e430]:
+          - img [ref=e431]
+          - generic [ref=e433]: For Practitioners
+        - heading "Become a Mentor" [level=2] [ref=e434]:
+          - text: Become a
+          - text: Mentor
+        - paragraph [ref=e435]: Guide hackathon participants through technical challenges, product decisions, and execution. Your experience helps builders ship faster and learn more.
+        - list [ref=e436]:
+          - listitem [ref=e437]:
+            - img [ref=e438]
+            - generic [ref=e441]: 1-on-1 mentorship sessions with builders
+          - listitem [ref=e442]:
+            - img [ref=e443]
+            - generic [ref=e446]: Choose your own availability & schedule
+          - listitem [ref=e447]:
+            - img [ref=e448]
+            - generic [ref=e451]: Featured in the public mentor gallery
+          - listitem [ref=e452]:
+            - img [ref=e453]
+            - generic [ref=e456]: Help teams ship faster and learn more
+          - listitem [ref=e457]:
+            - img [ref=e458]
+            - generic [ref=e461]: Build your reputation as a thought leader
+        - generic [ref=e462]:
+          - link "APPLY TO MENTOR" [ref=e463] [cursor=pointer]:
+            - /url: /mentor/apply
+            - img [ref=e464]
+            - text: APPLY TO MENTOR
+            - img [ref=e466]
+          - link "VIEW MENTORS" [ref=e468] [cursor=pointer]:
+            - /url: /mentors
+            - img [ref=e469]
+            - text: VIEW MENTORS
+    - generic [ref=e479]:
+      - generic [ref=e480]:
+        - generic [ref=e481]: Infrastructure
+        - generic [ref=e482]: Coming Soon
+        - heading "The infrastructure behind serious competitions" [level=2] [ref=e483]
+        - paragraph [ref=e484]: Everything needed to run and participate in high-quality competitions. We're building this right now.
+      - generic [ref=e485]:
+        - generic [ref=e486]:
+          - generic [ref=e487]: Competition
+          - generic [ref=e488]: →
+        - generic [ref=e489]:
+          - generic [ref=e490]: Participants
+          - generic [ref=e491]: →
+        - generic [ref=e492]:
+          - generic [ref=e493]: Submissions
+          - generic [ref=e494]: →
+        - generic [ref=e495]:
+          - generic [ref=e496]: Evaluation
+          - generic [ref=e497]: →
+        - generic [ref=e499]: Results
+      - generic [ref=e500]:
+        - generic [ref=e502]:
+          - img [ref=e504]
+          - heading "Competition Pages" [level=3] [ref=e507]
+          - paragraph [ref=e508]: Structured pages with tracks, rules, eligibility, and schedules.
+        - generic [ref=e510]:
+          - img [ref=e512]
+          - heading "Applications & Registrations" [level=3] [ref=e515]
+          - paragraph [ref=e516]: Collect participant applications and manage teams or individuals.
+        - generic [ref=e518]:
+          - img [ref=e520]
+          - heading "Artifact Submissions" [level=3] [ref=e523]
+          - paragraph [ref=e524]: Submit projects, pitch decks, designs, or research papers.
+        - generic [ref=e526]:
+          - img [ref=e528]
+          - heading "Evaluation Engine" [level=3] [ref=e532]
+          - paragraph [ref=e533]: Structured judging with rubrics and score aggregation.
+        - generic [ref=e535]:
+          - img [ref=e537]
+          - heading "Multi-Stage Workflows" [level=3] [ref=e541]
+          - paragraph [ref=e542]: Run competitions with multiple rounds and advancement.
+        - generic [ref=e544]:
+          - img [ref=e546]
+          - heading "Results & Leaderboards" [level=3] [ref=e552]
+          - paragraph [ref=e553]: Automatic rankings, winners, and public result pages.
+        - generic [ref=e555]:
+          - img [ref=e557]
+          - heading "Participant Management" [level=3] [ref=e562]
+          - paragraph [ref=e563]: Manage builders, teams, startups, and organizations.
+        - generic [ref=e565]:
+          - img [ref=e567]
+          - heading "Organizer Dashboard" [level=3] [ref=e572]
+          - paragraph [ref=e573]: Track submissions, judging progress, and results.
+      - generic [ref=e574]:
+        - paragraph [ref=e575]: Competitions powered by Maximally
+        - generic [ref=e576]:
+          - generic [ref=e577]: Hackathons
+          - generic [ref=e578]: Startup Competitions
+          - generic [ref=e579]: Innovation Challenges
+          - generic [ref=e580]: Design Contests
+          - generic [ref=e581]: Research Competitions
+          - generic [ref=e582]: Developer Challenges
+          - generic [ref=e583]: Student Competitions
+          - generic [ref=e584]: Grant Programs
+      - link "Explore the Platform" [ref=e586] [cursor=pointer]:
+        - /url: /platform
+        - generic [ref=e587]: Explore the Platform
+        - img [ref=e588]
+    - generic [ref=e596]:
+      - heading "Ready to build and compete?" [level=2] [ref=e597]
+      - paragraph [ref=e598]: Join serious competitions, ship real projects, and get evaluated by top operators.
+      - generic [ref=e599]:
+        - link "Explore Events" [ref=e601] [cursor=pointer]:
+          - /url: /events
+          - generic [ref=e602]: Explore Events
+          - img [ref=e603]
+        - link "Host a Competition" [ref=e606] [cursor=pointer]:
+          - /url: /host-hackathon
+    - contentinfo [ref=e608]:
+      - generic [ref=e610]:
+        - generic [ref=e611]:
+          - generic [ref=e612]:
+            - img [ref=e614]
+            - generic [ref=e616]: MAXIMALLY
+          - heading "Infrastructure for serious builders." [level=2] [ref=e617]
+          - paragraph [ref=e618]: Run events. Compete in events. Ship real products.
+        - generic [ref=e620]:
+          - generic [ref=e621]:
+            - heading "Events" [level=3] [ref=e622]
+            - list [ref=e623]:
+              - listitem [ref=e624]:
+                - link "Browse Events" [ref=e625] [cursor=pointer]:
+                  - /url: /events
+              - listitem [ref=e626]:
+                - link "Host an Event" [ref=e627] [cursor=pointer]:
+                  - /url: /host-hackathon
+          - generic [ref=e628]:
+            - heading "Platform" [level=3] [ref=e629]
+            - list [ref=e630]:
+              - listitem [ref=e631]:
+                - link "Infrastructure" [ref=e632] [cursor=pointer]:
+                  - /url: /platform
+              - listitem [ref=e633]:
+                - link "Host on Maximally" [ref=e634] [cursor=pointer]:
+                  - /url: /host-hackathon
+              - listitem [ref=e635]:
+                - link "Organizer Dashboard" [ref=e636] [cursor=pointer]:
+                  - /url: /organizer/apply
+          - generic [ref=e637]:
+            - heading "Network" [level=3] [ref=e638]
+            - list [ref=e639]:
+              - listitem [ref=e640]:
+                - link "Senior Council" [ref=e641] [cursor=pointer]:
+                  - /url: /senior-council
+              - listitem [ref=e642]:
+                - link "Builder Community" [ref=e643] [cursor=pointer]:
+                  - /url: https://discord.gg/MpBnYk8qMX
+              - listitem [ref=e644]:
+                - link "View Network" [ref=e645] [cursor=pointer]:
+                  - /url: /network
+          - generic [ref=e646]:
+            - heading "Resources" [level=3] [ref=e647]
+            - list [ref=e648]:
+              - listitem [ref=e649]:
+                - link "Blog" [ref=e650] [cursor=pointer]:
+                  - /url: /blog
+              - listitem [ref=e651]:
+                - link "All Resources" [ref=e652] [cursor=pointer]:
+                  - /url: /resources
+              - listitem [ref=e653]:
+                - link "Contact" [ref=e654] [cursor=pointer]:
+                  - /url: /contact
+        - generic [ref=e656]:
+          - generic [ref=e657]:
+            - link "LinkedIn" [ref=e658] [cursor=pointer]:
+              - /url: https://www.linkedin.com/company/maximallyedu
+              - img [ref=e659]
+            - link "Instagram" [ref=e663] [cursor=pointer]:
+              - /url: https://www.instagram.com/maximallyhq/
+              - img [ref=e664]
+            - link "Discord" [ref=e667] [cursor=pointer]:
+              - /url: https://discord.gg/MpBnYk8qMX
+              - img [ref=e668]
+          - generic [ref=e670]:
+            - link "Privacy" [ref=e671] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=e672] [cursor=pointer]:
+              - /url: /terms
+            - generic [ref=e673]: © 2026 Maximally
