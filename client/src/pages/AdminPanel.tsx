@@ -12,9 +12,12 @@ import {
   LayoutDashboard, BookOpen, Mic, Video, Users, Trophy, Shield,
   Plus, Trash2, Edit2, Save, X, Loader2, RefreshCw, Search,
   Eye, EyeOff, Star, Clock, TrendingUp, UserCheck, Zap,
-  ChevronDown, ChevronRight, Mail, Globe, Award
+  ChevronDown, ChevronRight, Mail, Globe, Award, Scale, Link as LinkIcon, Image
 } from 'lucide-react';
 import SEO from '@/components/SEO';
+import { getAuthHeaders } from '@/lib/auth';
+import JudgeProfilesManager from '@/components/admin/JudgeProfilesManager';
+import HackathonEditor from '@/components/admin/HackathonEditor';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -674,6 +677,68 @@ const mentorColumns: Column[] = [
   { key: 'is_active', label: 'Active', type: 'boolean' },
 ];
 
+// ─── Hackathons Tab with Manage functionality ────────────────────────────────
+
+function HackathonsTab() {
+  const [managingHackathon, setManagingHackathon] = useState<{ id: number; name: string } | null>(null);
+  const [hackathons, setHackathons] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => { fetchHackathons(); }, []);
+
+  const fetchHackathons = async () => {
+    try {
+      const headers = await getAuthHeaders();
+      const res = await fetch('/api/events?all=true', { headers });
+      const json = await res.json();
+      if (json.success !== false) {
+        setHackathons(json.organizer || []);
+      }
+    } catch (err) { console.error(err); }
+    finally { setLoading(false); }
+  };
+
+  if (managingHackathon) {
+    return (
+      <HackathonEditor
+        hackathonId={managingHackathon.id}
+        hackathonName={managingHackathon.name}
+        onBack={() => setManagingHackathon(null)}
+      />
+    );
+  }
+
+  if (loading) {
+    return <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-orange-400" /></div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3 mb-6">
+        <Trophy className="w-5 h-5 text-orange-400" />
+        <h2 className="font-space font-bold text-lg text-white">Hackathons</h2>
+        <span className="font-space text-xs text-gray-500">({hackathons.length})</span>
+      </div>
+      <div className="space-y-2">
+        {hackathons.map((h: any) => (
+          <div key={h.id} className="flex items-center gap-4 px-4 py-3 border border-gray-800 bg-gray-900/40 hover:border-gray-700 transition-colors">
+            <div className="flex-1 min-w-0">
+              <p className="font-space text-sm text-white font-medium truncate">{h.hackathon_name}</p>
+              <p className="font-space text-[10px] text-gray-500">{h.status} • {h.format} • {h.start_date ? new Date(h.start_date).toLocaleDateString() : 'No date'}</p>
+            </div>
+            <button
+              onClick={() => setManagingHackathon({ id: h.id, name: h.hackathon_name })}
+              className="px-3 py-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-400 font-space text-[10px] font-bold hover:bg-orange-500/20 transition-colors"
+            >
+              MANAGE
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Admin Panel Component ───────────────────────────────────────────────
 
 export default function AdminPanel() {
@@ -700,6 +765,7 @@ export default function AdminPanel() {
     { id: 'stories', label: 'Stories', icon: Award },
     { id: 'hackathons', label: 'Hackathons', icon: Trophy },
     { id: 'mentors', label: 'Mentors', icon: UserCheck },
+    { id: 'judges', label: 'Judges', icon: Scale },
     { id: 'users', label: 'Users', icon: Shield },
     { id: 'newsletter', label: 'Newsletter', icon: Mail },
   ];
@@ -762,8 +828,9 @@ export default function AdminPanel() {
               {activeTab === 'podcasts' && <CrudManager endpoint="/api/podcasts" columns={podcastColumns} title="Podcasts" icon={Mic} />}
               {activeTab === 'interviews' && <CrudManager endpoint="/api/interviews" columns={interviewColumns} title="Interviews" icon={Video} />}
               {activeTab === 'stories' && <CrudManager endpoint="/api/builder-stories" columns={storyColumns} title="Builder Stories" icon={Award} />}
-              {activeTab === 'hackathons' && <CrudManager endpoint="/api/events?all=true" columns={hackathonColumns} title="Hackathons" icon={Trophy} />}
+              {activeTab === 'hackathons' && <HackathonsTab />}
               {activeTab === 'mentors' && <CrudManager endpoint="/api/mentors" columns={mentorColumns} title="Mentors" icon={UserCheck} emptyMessage="No mentors registered yet." />}
+              {activeTab === 'judges' && <JudgeProfilesManager />}
               {activeTab === 'users' && <UsersManager />}
               {activeTab === 'newsletter' && <CrudManager endpoint="/api/newsletter/subscribers" columns={[
                 { key: 'email', label: 'Email', required: true },

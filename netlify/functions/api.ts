@@ -42,6 +42,7 @@ import { registerCustomQuestionsRoutes } from "../../server/routes/custom-questi
 import { registerJudgeReminderRoutes } from "../../server/routes/judge-reminders";
 import { registerJudgeScoringRoutes } from "../../server/routes/judge-scoring";
 import { registerSimplifiedJudgesRoutes } from "../../server/routes/simplified-judges";
+import { registerJudgeProfileRoutes } from "../../server/routes/judge-profiles";
 import { registerAutoPublishGalleryRoutes } from "../../server/routes/auto-publish-gallery";
 import { registerCertificateRoutes } from "../../server/routes/certificates";
 import { registerSubmissionModerationRoutes } from "../../server/routes/submission-moderation";
@@ -1566,6 +1567,7 @@ registerCustomQuestionsRoutes(app);
 registerJudgeReminderRoutes(app);
 registerJudgeScoringRoutes(app);
 registerSimplifiedJudgesRoutes(app);
+registerJudgeProfileRoutes(app);
 registerAutoPublishGalleryRoutes(app);
 registerCertificateRoutes(app);
 registerSubmissionModerationRoutes(app);

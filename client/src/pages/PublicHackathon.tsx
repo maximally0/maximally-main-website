@@ -107,6 +107,7 @@ export default function PublicHackathon() {
   const [userRegistration, setUserRegistration] = useState<any>(null);
   const [winners, setWinners] = useState<any[]>([]);
   const [isOrganizer, setIsOrganizer] = useState(false);
+  const [judgeProfiles, setJudgeProfiles] = useState<any[]>([]);
   
   // Scroll behavior for hackathon navbar
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -171,6 +172,12 @@ export default function PublicHackathon() {
   useEffect(() => {
     if (hackathon?.winners_announced) {
       fetchWinners();
+    }
+  }, [hackathon]);
+
+  useEffect(() => {
+    if (hackathon) {
+      fetchJudgeProfiles();
     }
   }, [hackathon]);
 
@@ -261,6 +268,18 @@ export default function PublicHackathon() {
       }
     } catch (error) {
       console.error('Error fetching winners:', error);
+    }
+  };
+
+  const fetchJudgeProfiles = async () => {
+    try {
+      const response = await fetch(`/api/hackathons/${hackathon?.id}/judge-profiles`);
+      const data = await response.json();
+      if (data.success) {
+        setJudgeProfiles(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching judge profiles:', error);
     }
   };
 
@@ -961,6 +980,55 @@ export default function PublicHackathon() {
                       </div>
                     )}
                   </div>
+
+                  {/* Judges Section */}
+                  {judgeProfiles.length > 0 && (
+                    <div 
+                      className="border p-4 sm:p-6 md:p-8 w-full min-w-0"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${primaryColor}12, ${accentColor}08)`,
+                        borderColor: `${primaryColor}30`
+                      }}
+                    >
+                      <h2 
+                        className="font-space font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-6 break-words"
+                        style={{
+                          background: `linear-gradient(to right, ${primaryColor}, ${accentColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >JUDGES</h2>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {judgeProfiles.map((judge: any) => (
+                          <div key={judge.id} className="flex flex-col items-center text-center group">
+                            {/* Avatar */}
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 mb-3 transition-colors group-hover:border-orange-400" style={{ borderColor: `${primaryColor}50` }}>
+                              {judge.profile_photo ? (
+                                <img src={judge.profile_photo} alt={judge.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white font-space font-bold text-xl">
+                                  {judge.name[0].toUpperCase()}
+                                </div>
+                              )}
+                            </div>
+                            {/* Name */}
+                            <h4 className="font-space font-bold text-xs sm:text-sm text-white mb-0.5 line-clamp-1">{judge.name}</h4>
+                            {/* Title */}
+                            {judge.title && (
+                              <p className="font-space text-[10px] sm:text-xs text-gray-400 line-clamp-2 leading-tight">{judge.title}</p>
+                            )}
+                            {/* Link */}
+                            {judge.link && (
+                              <a href={judge.link} target="_blank" rel="noopener noreferrer" className="mt-1.5 text-gray-500 hover:text-orange-400 transition-colors">
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
