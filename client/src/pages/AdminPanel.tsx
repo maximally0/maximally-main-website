@@ -103,8 +103,8 @@ function FormField({ col, value, onChange }: { col: Column; value: any; onChange
 
 // ─── CRUD Manager ─────────────────────────────────────────────────────────────
 
-function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage }: {
-  endpoint: string; columns: Column[]; title: string; icon: React.ElementType; emptyMessage?: string;
+function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage, extraAction }: {
+  endpoint: string; columns: Column[]; title: string; icon: React.ElementType; emptyMessage?: string; extraAction?: (item: any) => React.ReactNode;
 }) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -357,6 +357,7 @@ function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage }: {
                     <button onClick={() => handleDelete(item.id)} className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Delete">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
+                    {extraAction && extraAction(item)}
                   </div>
                 </div>
               )}
@@ -681,22 +682,6 @@ const mentorColumns: Column[] = [
 
 function HackathonsTab() {
   const [managingHackathon, setManagingHackathon] = useState<{ id: number; name: string } | null>(null);
-  const [hackathons, setHackathons] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => { fetchHackathons(); }, []);
-
-  const fetchHackathons = async () => {
-    try {
-      const headers = await getAuthHeaders();
-      const res = await fetch('/api/events?all=true', { headers });
-      const json = await res.json();
-      if (json.success !== false) {
-        setHackathons(json.organizer || []);
-      }
-    } catch (err) { console.error(err); }
-    finally { setLoading(false); }
-  };
 
   if (managingHackathon) {
     return (
@@ -708,33 +693,23 @@ function HackathonsTab() {
     );
   }
 
-  if (loading) {
-    return <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-orange-400" /></div>;
-  }
-
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3 mb-6">
-        <Trophy className="w-5 h-5 text-orange-400" />
-        <h2 className="font-space font-bold text-lg text-white">Hackathons</h2>
-        <span className="font-space text-xs text-gray-500">({hackathons.length})</span>
-      </div>
-      <div className="space-y-2">
-        {hackathons.map((h: any) => (
-          <div key={h.id} className="flex items-center gap-4 px-4 py-3 border border-gray-800 bg-gray-900/40 hover:border-gray-700 transition-colors">
-            <div className="flex-1 min-w-0">
-              <p className="font-space text-sm text-white font-medium truncate">{h.hackathon_name}</p>
-              <p className="font-space text-[10px] text-gray-500">{h.status} • {h.format} • {h.start_date ? new Date(h.start_date).toLocaleDateString() : 'No date'}</p>
-            </div>
-            <button
-              onClick={() => setManagingHackathon({ id: h.id, name: h.hackathon_name })}
-              className="px-3 py-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-400 font-space text-[10px] font-bold hover:bg-orange-500/20 transition-colors"
-            >
-              MANAGE
-            </button>
-          </div>
-        ))}
-      </div>
+    <div className="space-y-6">
+      {/* CRUD for editing hackathon fields (description, dates, etc.) */}
+      <CrudManager 
+        endpoint="/api/events?all=true" 
+        columns={hackathonColumns} 
+        title="Hackathons" 
+        icon={Trophy}
+        extraAction={(item: any) => (
+          <button
+            onClick={(e) => { e.stopPropagation(); setManagingHackathon({ id: item.id, name: item.hackathon_name || item.title }); }}
+            className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/30 text-orange-400 font-space text-[10px] font-bold hover:bg-orange-500/20 transition-colors"
+          >
+            MANAGE
+          </button>
+        )}
+      />
     </div>
   );
 }
