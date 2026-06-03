@@ -419,6 +419,31 @@ export function registerResourceRoutes(app: Express): void {
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).maybeSingle();
       if (profile?.role !== 'admin' && profile?.role !== 'organizer') return res.status(403).json({ success: false, message: 'Forbidden' });
 
+      if (profile?.role !== 'admin') {
+        const { data: hackathon, error: hackathonError } = await supabase
+          .from('organizer_hackathons')
+          .select('organizer_id')
+          .eq('id', req.params.id)
+          .maybeSingle();
+
+        if (hackathonError) return res.status(500).json({ success: false, message: hackathonError.message });
+        if (!hackathon) return res.status(404).json({ success: false, message: 'Hackathon not found' });
+
+        let hasAccess = hackathon.organizer_id === user.id;
+        if (!hasAccess) {
+          const { data: coOrganizer } = await supabase
+            .from('hackathon_organizers')
+            .select('id')
+            .eq('hackathon_id', req.params.id)
+            .eq('user_id', user.id)
+            .eq('status', 'accepted')
+            .maybeSingle();
+          hasAccess = !!coOrganizer;
+        }
+
+        if (!hasAccess) return res.status(403).json({ success: false, message: 'Forbidden' });
+      }
+
       const { data, error } = await supabase.from('organizer_hackathons').update({ ...req.body, updated_at: new Date().toISOString() }).eq('id', req.params.id).select().single();
       if (error) return res.status(500).json({ success: false, message: error.message });
 

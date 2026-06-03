@@ -13,7 +13,8 @@ import {
   FileText,
   Sparkles,
   Gem,
-  Handshake
+  Handshake,
+  UserCheck
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -29,6 +30,16 @@ import RequestToJudge from '@/components/RequestToJudge';
 import HackathonTracks from '@/components/HackathonTracks';
 import HackathonSponsors from '@/components/HackathonSponsors';
 import HackathonFeedback from '@/components/HackathonFeedback';
+
+interface MentorDisplay {
+  id?: string | number;
+  name: string;
+  email?: string;
+  title?: string;
+  profile_photo?: string;
+  link?: string;
+  type?: string;
+}
 
 interface Hackathon {
   id: number;
@@ -108,6 +119,7 @@ export default function PublicHackathon() {
   const [winners, setWinners] = useState<any[]>([]);
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [judgeProfiles, setJudgeProfiles] = useState<any[]>([]);
+  const [mentorProfiles, setMentorProfiles] = useState<MentorDisplay[]>([]);
   
   // Scroll behavior for hackathon navbar
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
@@ -123,10 +135,10 @@ export default function PublicHackathon() {
 
   // Auto-switch to winners tab if winners are announced and no tab specified
   useEffect(() => {
-    if (hackathon?.winners_announced && !searchParams.get('tab')) {
+    if ((hackathon?.winners_announced || winners.length > 0) && !searchParams.get('tab')) {
       setActiveTab('winners');
     }
-  }, [hackathon?.winners_announced]);
+  }, [hackathon?.winners_announced, winners.length, searchParams]);
 
   // Scroll behavior for hackathon navbar
   useEffect(() => {
@@ -170,7 +182,7 @@ export default function PublicHackathon() {
   }, [user, hackathon, profile]);
 
   useEffect(() => {
-    if (hackathon?.winners_announced) {
+    if (hackathon?.id) {
       fetchWinners();
     }
   }, [hackathon]);
@@ -178,6 +190,7 @@ export default function PublicHackathon() {
   useEffect(() => {
     if (hackathon) {
       fetchJudgeProfiles();
+      fetchMentorProfiles();
     }
   }, [hackathon]);
 
@@ -283,6 +296,18 @@ export default function PublicHackathon() {
     }
   };
 
+  const fetchMentorProfiles = async () => {
+    try {
+      const response = await fetch(`/api/hackathons/${hackathon?.id}/mentor-profiles`);
+      const data = await response.json();
+      if (data.success) {
+        setMentorProfiles(data.data || []);
+      }
+    } catch (error) {
+      console.error('Error fetching mentor profiles:', error);
+    }
+  };
+
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
@@ -359,7 +384,8 @@ export default function PublicHackathon() {
       return [];
     }
   })();
-
+  const winnersPublished = Boolean(hackathon.winners_announced || winners.length > 0);
+  const winnerAnnouncementDate = hackathon.winners_announced_at || winners[0]?.created_at;
   // All dates are stored and compared in UTC
   // No timezone conversion needed
   const parseAsUTC = (dateStr: string) => {
@@ -375,7 +401,7 @@ export default function PublicHackathon() {
     // PRIORITY 0: Check if hackathon has ended FIRST (before any other checks)
     if (now > end) {
       // Check if winners have been announced
-      if (hackathon.winners_announced) {
+      if (winnersPublished) {
         return { label: '🏆 WINNERS ANNOUNCED', color: 'text-amber-300', bgColor: 'bg-gradient-to-r from-amber-500/20 to-yellow-500/10', borderColor: 'border-amber-500/50' };
       }
       return { label: 'COMPLETED', color: 'text-gray-300', bgColor: 'bg-gradient-to-r from-gray-500/20 to-gray-600/10', borderColor: 'border-gray-500/50' };
@@ -684,8 +710,8 @@ export default function PublicHackathon() {
                       status={hackathon.status}
                       hackathon_status={hackathon.hackathon_status}
                       end_date={hackathon.end_date}
-                      winnersAnnounced={hackathon.winners_announced}
-                      winnersAnnouncedAt={hackathon.winners_announced_at}
+                      winnersAnnounced={winnersPublished}
+                      winnersAnnouncedAt={winnerAnnouncementDate}
                       onRegistrationChange={fetchHackathon}
                       onViewWinners={() => setActiveTab('winners')}
                       primaryColor={primaryColor}
@@ -790,7 +816,7 @@ export default function PublicHackathon() {
                   { id: 'rules', label: 'RULES' },
                   ...(hackathon.tracks ? [{ id: 'tracks', label: 'TRACKS' }] : []),
                   { id: 'projects', label: 'PROJECTS' },
-                  ...(hackathon.winners_announced ? [{ id: 'winners', label: '🏆 WINNERS' }] : []),
+                  ...(winnersPublished ? [{ id: 'winners', label: '🏆 WINNERS' }] : []),
                   ...(hackathon.sponsors && hackathon.sponsors.length > 0 ? [{ id: 'sponsors', label: 'SPONSORS' }] : []),
                   ...((() => { try { return hackathon.faqs && JSON.parse(hackathon.faqs || '[]').length > 0; } catch { return false; } })() ? [{ id: 'faqs', label: 'FAQS' }] : []),
                   { id: 'feedback', label: 'FEEDBACK' },
@@ -831,14 +857,14 @@ export default function PublicHackathon() {
                 <div className="space-y-6 sm:space-y-8 w-full min-w-0">
                   {/* About Section - Use branding colors */}
                   {hackathon.description && (
-                    <div 
+                    <div
                       className="border p-4 sm:p-6 md:p-8 w-full min-w-0"
                       style={{
                         background: `linear-gradient(to bottom right, ${primaryColor}20, ${secondaryColor}10)`,
                         borderColor: `${primaryColor}40`
                       }}
                     >
-                      <h2 
+                      <h2
                         className="font-space font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 break-words"
                         style={{
                           background: `linear-gradient(to right, ${primaryColor}, ${secondaryColor})`,
@@ -857,14 +883,14 @@ export default function PublicHackathon() {
 
                   {/* Challenges Section */}
                   {hackathon.themes && hackathon.themes.length > 0 && (
-                    <div 
+                    <div
                       className="border p-4 sm:p-6 md:p-8 w-full min-w-0"
                       style={{
                         background: `linear-gradient(to bottom right, ${accentColor}15, ${primaryColor}08)`,
                         borderColor: `${accentColor}40`
                       }}
                     >
-                      <h2 
+                      <h2
                         className="font-space font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-4 sm:mb-6 break-words"
                         style={{
                           background: `linear-gradient(to right, ${accentColor}, ${primaryColor})`,
@@ -1021,6 +1047,54 @@ export default function PublicHackathon() {
                             {/* Link */}
                             {judge.link && (
                               <a href={judge.link} target="_blank" rel="noopener noreferrer" className="mt-1.5 text-gray-500 hover:text-orange-400 transition-colors">
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Mentors Section */}
+                  {mentorProfiles.length > 0 && (
+                    <div
+                      className="border p-4 sm:p-6 md:p-8 w-full min-w-0"
+                      style={{
+                        background: `linear-gradient(to bottom right, ${secondaryColor}12, ${primaryColor}08)`,
+                        borderColor: `${secondaryColor}30`
+                      }}
+                    >
+                      <h2
+                        className="font-space font-bold text-base sm:text-lg md:text-xl lg:text-2xl mb-6 break-words flex items-center gap-2"
+                        style={{
+                          background: `linear-gradient(to right, ${secondaryColor}, ${primaryColor})`,
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          backgroundClip: 'text'
+                        }}
+                      >
+                        <UserCheck className="w-5 h-5" style={{ color: secondaryColor, WebkitTextFillColor: secondaryColor }} />
+                        MENTORS
+                      </h2>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {mentorProfiles.map((mentor, index) => (
+                          <div key={mentor.id || `${mentor.name}-${index}`} className="flex flex-col items-center text-center group">
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 mb-3 transition-colors group-hover:border-orange-400" style={{ borderColor: `${secondaryColor}50` }}>
+                              {mentor.profile_photo ? (
+                                <img src={mentor.profile_photo} alt={mentor.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center text-white font-space font-bold text-xl">
+                                  {mentor.name[0]?.toUpperCase()}
+                                </div>
+                              )}
+                            </div>
+                            <h4 className="font-space font-bold text-xs sm:text-sm text-white mb-0.5 line-clamp-1">{mentor.name}</h4>
+                            {mentor.title && (
+                              <p className="font-space text-[10px] sm:text-xs text-gray-400 line-clamp-2 leading-tight">{mentor.title}</p>
+                            )}
+                            {mentor.link && (
+                              <a href={mentor.link} target="_blank" rel="noopener noreferrer" className="mt-1.5 text-gray-500 hover:text-orange-400 transition-colors">
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </a>
                             )}
@@ -2037,7 +2111,7 @@ export default function PublicHackathon() {
               )}
 
               {/* Winners Tab */}
-              {activeTab === 'winners' && hackathon.winners_announced && (
+              {activeTab === 'winners' && winnersPublished && (
                 <div className="space-y-8">
                   <div>
                     <h2 
@@ -2049,9 +2123,9 @@ export default function PublicHackathon() {
                         backgroundClip: 'text'
                       }}
                     >🏆 WINNERS_ANNOUNCED</h2>
-                    {hackathon.winners_announced_at && (
+                    {winnerAnnouncementDate && (
                       <p className="text-gray-400 font-space text-sm mb-6">
-                        Announced on {new Date(hackathon.winners_announced_at).toLocaleDateString('en-US', {
+                        Announced on {new Date(winnerAnnouncementDate).toLocaleDateString('en-US', {
                           month: 'long',
                           day: 'numeric',
                           year: 'numeric'
@@ -2115,20 +2189,20 @@ export default function PublicHackathon() {
                               </div>
                               
                               <h3 className="font-space font-bold text-xl text-white mb-2">
-                                {winner.submission?.project_name || 'Unknown Project'}
+                                {winner.project_title || winner.project_name || winner.submission?.project_name || 'Unknown Project'}
                               </h3>
                               
-                              {winner.submission?.tagline && (
+                              {(winner.description || winner.submission?.tagline) && (
                                 <p className="text-gray-400 font-space italic mb-3">
-                                  "{winner.submission.tagline}"
+                                  "{winner.description || winner.submission?.tagline}"
                                 </p>
                               )}
                               
                               <p className="text-gray-500 font-space text-sm mb-3">
                                 By: {winner.team_name || winner.submission?.user_name || 'Anonymous'}
-                                {winner.submission?.track && (
+                                {(winner.track || winner.submission?.track) && (
                                   <span className="ml-2 px-2 py-0.5 bg-gray-800 text-gray-300 border border-gray-700 rounded text-xs">
-                                    {winner.submission.track}
+                                    {winner.track || winner.submission?.track}
                                   </span>
                                 )}
                               </p>
@@ -2142,9 +2216,9 @@ export default function PublicHackathon() {
                                     <ExternalLink className="h-4 w-4" /> View Project
                                   </Link>
                                 )}
-                                {winner.submission?.github_repo && (
+                                {(winner.github_url || winner.submission?.github_repo) && (
                                   <a 
-                                    href={winner.submission.github_repo} 
+                                    href={winner.github_url || winner.submission?.github_repo}
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-blue-400 hover:text-blue-300 font-space text-sm flex items-center gap-1"
@@ -2152,9 +2226,9 @@ export default function PublicHackathon() {
                                     <ExternalLink className="h-4 w-4" /> GitHub
                                   </a>
                                 )}
-                                {winner.submission?.demo_url && (
+                                {(winner.demo_url || winner.submission?.demo_url) && (
                                   <a 
-                                    href={winner.submission.demo_url} 
+                                    href={winner.demo_url || winner.submission?.demo_url}
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-green-400 hover:text-green-300 font-space text-sm flex items-center gap-1"
@@ -2177,7 +2251,7 @@ export default function PublicHackathon() {
                 <div>
                   <HackathonFeedback 
                     hackathonId={hackathon.id} 
-                    winnersAnnounced={hackathon.winners_announced}
+                    winnersAnnounced={winnersPublished}
                     isParticipant={!!userRegistration}
                     primaryColor={primaryColor}
                     secondaryColor={secondaryColor}
@@ -2365,7 +2439,7 @@ export default function PublicHackathon() {
         </section>
 
         {/* Bottom CTA - Hide when hackathon has ended */}
-        {!hackathon.winners_announced && (
+        {!winnersPublished && (
           <section 
             className="py-8 sm:py-12 md:py-16 border-t-2 sm:border-t-4"
             style={{
@@ -2395,8 +2469,8 @@ export default function PublicHackathon() {
                     status={hackathon.status}
                     hackathon_status={hackathon.hackathon_status}
                     end_date={hackathon.end_date}
-                    winnersAnnounced={hackathon.winners_announced}
-                    winnersAnnouncedAt={hackathon.winners_announced_at}
+                    winnersAnnounced={winnersPublished}
+                    winnersAnnouncedAt={winnerAnnouncementDate}
                     onRegistrationChange={fetchHackathon}
                     onViewWinners={() => setActiveTab('winners')}
                     primaryColor={primaryColor}
@@ -2414,6 +2488,3 @@ export default function PublicHackathon() {
     </>
   );
 }
-
-
-

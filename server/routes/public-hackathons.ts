@@ -6,6 +6,16 @@ async function bearerUserId(supabaseAdmin: any, token: string): Promise<string |
   return data?.user?.id || null;
 }
 
+function isMissingWinnersSchema(error: any): boolean {
+  const message = String(error?.message || '');
+  return (
+    message.includes('hackathon_winners') &&
+    (message.includes('schema cache') ||
+      message.includes('does not exist') ||
+      message.includes('Could not find the table'))
+  );
+}
+
 export function registerPublicHackathonRoutes(app: Express) {
   const supabaseAdmin = app.locals.supabaseAdmin as ReturnType<typeof createClient>;
 
@@ -286,53 +296,74 @@ export function registerPublicHackathonRoutes(app: Express) {
 
       const { data, error } = await supabaseAdmin
         .from('hackathon_winners')
-        .select(`
-          *,
-          submission:hackathon_submissions(
-            id,
-            project_name,
-            description,
-            tagline,
-            github_repo,
-            demo_url,
-            video_url,
-            cover_image,
-            project_logo,
-            user_id,
-            team_id
-          )
-        `)
+        .select('*')
         .eq('hackathon_id', hackathonIdNum)
+        .eq('status', 'published')
         .order('position', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        if (isMissingWinnersSchema(error)) {
+          return res.json({ success: true, data: [], schemaMissing: true });
+        }
+        throw error;
+      }
+
+      const submissionIds = (data || [])
+        .map((winner: any) => winner.submission_id)
+        .filter(Boolean);
+
+      let submissionMap = new Map();
+      if (submissionIds.length > 0) {
+        const { data: submissions } = await supabaseAdmin
+          .from('hackathon_submissions')
+          .select('*')
+          .in('id', submissionIds);
+        submissionMap = new Map((submissions || []).map((submission: any) => [submission.id, submission]));
+      }
 
       // Enrich with user names and team names
       const enrichedData = await Promise.all((data || []).map(async (winner: any) => {
+        const submission = winner.submission_id ? submissionMap.get(winner.submission_id) : null;
         let userName = 'Anonymous';
-        let teamName = null;
+        let teamName = winner.team_name || null;
 
-        if (winner.submission?.user_id) {
+        if (submission?.user_id) {
           const { data: profile } = await supabaseAdmin
             .from('profiles')
             .select('username, full_name')
-            .eq('id', winner.submission.user_id)
+            .eq('id', submission.user_id)
             .single();
           userName = profile?.full_name || profile?.username || 'Anonymous';
         }
-        if (winner.submission?.team_id) {
+        if (!teamName && submission?.team_id) {
           const { data: team } = await supabaseAdmin
             .from('hackathon_teams')
             .select('team_name')
-            .eq('id', winner.submission.team_id)
+            .eq('id', submission.team_id)
             .single();
           teamName = team?.team_name;
         }
 
+        const projectTitle = winner.project_title || submission?.project_name || winner.prize_name || 'Winner';
+        const description = winner.description || submission?.description || submission?.project_description || null;
+        const demoUrl = winner.demo_url || submission?.demo_url || null;
+        const githubUrl = winner.github_url || submission?.github_repo || submission?.github_url || submission?.repo_url || null;
+
         return {
           ...winner,
-          submission: winner.submission ? {
-            ...winner.submission,
+          project_title: projectTitle,
+          project_name: projectTitle,
+          description,
+          demo_url: demoUrl,
+          github_url: githubUrl,
+          prize_position: winner.prize_position || winner.prize_name || `#${winner.position || 1}`,
+          submission: submission ? {
+            ...submission,
+            project_name: projectTitle,
+            description,
+            demo_url: demoUrl,
+            github_repo: githubUrl,
+            track: winner.track || submission.track,
             user_name: userName,
             team: teamName ? { team_name: teamName } : null
           } : null,

@@ -23,6 +23,16 @@ async function checkHackathonAccess(
   hackathonId: string | number,
   userId: string
 ): Promise<{ hasAccess: boolean; isOwner: boolean }> {
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('role')
+    .eq('id', userId)
+    .maybeSingle();
+
+  if (profile?.role === 'admin') {
+    return { hasAccess: true, isOwner: true };
+  }
+
   // Check if user is the owner
   const { data: hackathon } = await supabaseAdmin
     .from('organizer_hackathons')

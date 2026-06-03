@@ -21,6 +21,17 @@ async function isAdmin(supabaseAdmin: any, userId: string): Promise<boolean> {
   return data?.role === 'admin';
 }
 
+function isMissingWinnersSchema(error: any): boolean {
+  const message = String(error?.message || '');
+  return (
+    message.includes('hackathon_winners') &&
+    (message.includes('schema cache') ||
+      message.includes('does not exist') ||
+      message.includes('Could not find the table') ||
+      message.includes('column'))
+  );
+}
+
 // Validation schemas
 const createHackathonSchema = z.object({
   hackathonName: z.string().min(3),
@@ -1022,6 +1033,14 @@ export function registerOrganizerRoutes(app: Express) {
         .order('created_at', { ascending: true });
 
       if (error) {
+        if (isMissingWinnersSchema(error)) {
+          return res.json({
+            success: true,
+            data: [],
+            schemaMissing: true,
+            message: 'Winners CMS needs the hackathon_winners database migration.',
+          });
+        }
         console.error('Error fetching winners:', error);
         return res.status(500).json({ success: false, message: 'Failed to fetch winners' });
       }
@@ -1136,6 +1155,13 @@ export function registerOrganizerRoutes(app: Express) {
         .select();
 
       if (error) {
+        if (isMissingWinnersSchema(error)) {
+          return res.status(501).json({
+            success: false,
+            schemaMissing: true,
+            message: 'Run server/migrations/20260603_hackathon_winners.sql in Supabase before announcing winners.',
+          });
+        }
         console.error('Error announcing winners:', error);
         return res.status(500).json({ success: false, message: 'Failed to announce winners' });
       }

@@ -12,7 +12,7 @@ import {
   LayoutDashboard, BookOpen, Mic, Video, Users, Trophy, Shield,
   Plus, Trash2, Edit2, Save, X, Loader2, RefreshCw, Search,
   Eye, EyeOff, Star, Clock, TrendingUp, UserCheck, Zap,
-  ChevronDown, ChevronRight, Mail, Globe, Award, Scale, Link as LinkIcon, Image
+  ChevronDown, ChevronRight, Mail, Globe, Award, Scale, Link as LinkIcon, Image, Copy
 } from 'lucide-react';
 import SEO from '@/components/SEO';
 import { getAuthHeaders } from '@/lib/auth';
@@ -104,7 +104,12 @@ function FormField({ col, value, onChange }: { col: Column; value: any; onChange
 // ─── CRUD Manager ─────────────────────────────────────────────────────────────
 
 function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage, extraAction }: {
-  endpoint: string; columns: Column[]; title: string; icon: React.ElementType; emptyMessage?: string; extraAction?: (item: any) => React.ReactNode;
+  endpoint: string;
+  columns: Column[];
+  title: string;
+  icon: React.ElementType;
+  emptyMessage?: string;
+  extraAction?: (item: any, helpers: { refresh: () => void }) => React.ReactNode;
 }) {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -357,7 +362,7 @@ function CrudManager({ endpoint, columns, title, icon: Icon, emptyMessage, extra
                     <button onClick={() => handleDelete(item.id)} className="p-2 text-gray-500 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Delete">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
-                    {extraAction && extraAction(item)}
+                    {extraAction && extraAction(item, { refresh: fetchItems })}
                   </div>
                 </div>
               )}
@@ -682,6 +687,27 @@ const mentorColumns: Column[] = [
 
 function HackathonsTab() {
   const [managingHackathon, setManagingHackathon] = useState<{ id: number; name: string } | null>(null);
+  const [duplicatingId, setDuplicatingId] = useState<number | null>(null);
+
+  const duplicateHackathon = async (item: any, refresh: () => void) => {
+    const name = item.hackathon_name || item.title || item.name || `#${item.id}`;
+    if (!confirm(`Create a draft copy of "${name}"?`)) return;
+
+    setDuplicatingId(item.id);
+    try {
+      const json = await apiFetch(`/api/admin/hackathons/${item.id}/duplicate`, { method: 'POST' });
+      if (json.success) {
+        toast.success('Hackathon duplicated as draft');
+        refresh();
+      } else {
+        toast.error(json.message || 'Failed to duplicate hackathon');
+      }
+    } catch {
+      toast.error('Failed to duplicate hackathon');
+    } finally {
+      setDuplicatingId(null);
+    }
+  };
 
   if (managingHackathon) {
     return (
@@ -701,13 +727,24 @@ function HackathonsTab() {
         columns={hackathonColumns} 
         title="Hackathons" 
         icon={Trophy}
-        extraAction={(item: any) => (
-          <button
-            onClick={(e) => { e.stopPropagation(); setManagingHackathon({ id: item.id, name: item.hackathon_name || item.title }); }}
-            className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/30 text-orange-400 font-space text-[10px] font-bold hover:bg-orange-500/20 transition-colors"
-          >
-            MANAGE
-          </button>
+        extraAction={(item: any, { refresh }) => (
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); duplicateHackathon(item, refresh); }}
+              disabled={duplicatingId === item.id}
+              className="flex items-center gap-1 px-2.5 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-300 font-space text-[10px] font-bold hover:bg-blue-500/20 transition-colors disabled:opacity-50"
+              title="Duplicate as draft"
+            >
+              {duplicatingId === item.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Copy className="w-3 h-3" />}
+              COPY
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setManagingHackathon({ id: item.id, name: item.hackathon_name || item.title }); }}
+              className="px-2.5 py-1 bg-orange-500/10 border border-orange-500/30 text-orange-400 font-space text-[10px] font-bold hover:bg-orange-500/20 transition-colors"
+            >
+              MANAGE
+            </button>
+          </>
         )}
       />
     </div>

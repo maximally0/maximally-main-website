@@ -181,6 +181,8 @@ CREATE TABLE IF NOT EXISTS organizer_hackathons (
   eligibility TEXT,
   schedule JSONB DEFAULT '[]',
   sponsors JSONB DEFAULT '[]',
+  winners_announced BOOLEAN DEFAULT FALSE,
+  winners_announced_at TIMESTAMPTZ,
   is_featured BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -213,9 +215,35 @@ CREATE TABLE IF NOT EXISTS hackathon_submissions (
   team_name TEXT,
   description TEXT,
   track TEXT,
+  prize_won TEXT,
   status TEXT DEFAULT 'submitted',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 10b. Hackathon Winners
+CREATE TABLE IF NOT EXISTS hackathon_winners (
+  id BIGSERIAL PRIMARY KEY,
+  hackathon_id INT NOT NULL REFERENCES organizer_hackathons(id) ON DELETE CASCADE,
+  submission_id INT REFERENCES hackathon_submissions(id) ON DELETE SET NULL,
+  user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  team_id INT,
+  position INT NOT NULL DEFAULT 1,
+  prize_name TEXT,
+  prize_position TEXT NOT NULL,
+  prize_amount TEXT,
+  score NUMERIC,
+  team_name TEXT,
+  project_title TEXT,
+  description TEXT,
+  demo_url TEXT,
+  github_url TEXT,
+  track TEXT,
+  winner_type TEXT NOT NULL DEFAULT 'overall',
+  status TEXT NOT NULL DEFAULT 'published',
+  announced_by UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- 11. Blogs
@@ -314,6 +342,8 @@ CREATE INDEX IF NOT EXISTS idx_judges_user_id ON judges(user_id);
 CREATE INDEX IF NOT EXISTS idx_judge_evaluations_judge ON judge_evaluations(judge_id);
 CREATE INDEX IF NOT EXISTS idx_hackathons_slug ON organizer_hackathons(slug);
 CREATE INDEX IF NOT EXISTS idx_hackathons_organizer ON organizer_hackathons(organizer_id);
+CREATE INDEX IF NOT EXISTS idx_hackathon_winners_hackathon ON hackathon_winners(hackathon_id, position);
+CREATE INDEX IF NOT EXISTS idx_hackathon_winners_submission ON hackathon_winners(submission_id);
 CREATE INDEX IF NOT EXISTS idx_submissions_hackathon ON hackathon_submissions(hackathon_id);
 CREATE INDEX IF NOT EXISTS idx_blogs_slug ON blogs(slug);
 CREATE INDEX IF NOT EXISTS idx_blogs_published ON blogs(is_published);
