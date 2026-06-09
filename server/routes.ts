@@ -38,7 +38,7 @@ import { registerCustomQuestionsRoutes } from "./routes/custom-questions";
 import { registerJudgeReminderRoutes } from "./routes/judge-reminders";
 import { registerJudgeScoringRoutes } from "./routes/judge-scoring";
 import { registerSimplifiedJudgesRoutes } from "./routes/simplified-judges";
-import { registerJudgeProfileRoutes } from "./routes/judge-profiles";
+import { registerJudgeProfilesRoutes } from "./routes/judge-profiles";
 import { registerAutoPublishGalleryRoutes } from "./routes/auto-publish-gallery";
 import { registerCertificateRoutes } from "./routes/certificates";
 import { registerSubmissionModerationRoutes } from "./routes/submission-moderation";
@@ -4031,7 +4031,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerJudgeReminderRoutes(app); // Judge reminder emails and progress tracking
   registerJudgeScoringRoutes(app); // Token-based judge scoring (no login required)
   registerSimplifiedJudgesRoutes(app); // Simplified judges management for organizers
-  registerJudgeProfileRoutes(app); // Global judge profiles pool + hackathon assignments
+  registerJudgeProfilesRoutes(app); // Global judge profiles pool + hackathon assignments
   registerAutoPublishGalleryRoutes(app); // Auto-publish gallery when hackathon ends
   registerSubmissionModerationRoutes(app); // Submission moderation (disqualify) for organizers
   registerCertificateRoutes(app); // Certificate generation for organizers

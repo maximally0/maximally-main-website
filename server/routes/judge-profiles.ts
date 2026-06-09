@@ -14,7 +14,7 @@ async function requireAdmin(supabaseAdmin: any, req: Request): Promise<string | 
   return user.id;
 }
 
-export function registerJudgeProfileRoutes(app: Express) {
+export function registerJudgeProfilesRoutes(app: Express) {
   const supabaseAdmin = app.locals.supabaseAdmin as any;
   if (!supabaseAdmin) return;
 

@@ -129,7 +129,11 @@ const AppContent = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/test-email" element={<TestEmailValidation />} />
+        <Route path="/test-email" element={
+          <WithRoleProtection requiredRoles={['admin', 'super_admin']}>
+            <TestEmailValidation />
+          </WithRoleProtection>
+        } />
         <Route path="/certificates/verify/:certificate_id" element={<CertificateVerification />} />
         <Route path="/profile" element={<MyProfileRedirect />} />
         <Route path="/profile/:username" element={<Profile />} />
@@ -221,8 +225,16 @@ const AppContent = () => {
           </ProtectedRoute>
         } />
         
-        <Route path="/analytics" element={<PlatformAnalytics />} />
-        <Route path="/pokemon" element={<AdminPanel />} />
+        <Route path="/analytics" element={
+          <WithRoleProtection requiredRoles={['admin', 'super_admin']}>
+            <PlatformAnalytics />
+          </WithRoleProtection>
+        } />
+        <Route path="/pokemon" element={
+          <WithRoleProtection requiredRoles={['admin', 'super_admin']}>
+            <AdminPanel />
+          </WithRoleProtection>
+        } />
         
         <Route path="/mfhop" element={<Navigate to="/network" replace />} />
         <Route path="/host-hackathon" element={<HostHackathon />} />
