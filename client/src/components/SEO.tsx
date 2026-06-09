@@ -37,15 +37,15 @@ const SEO = ({
   const seo = {
     title: title || "Maximally — Infrastructure for Serious Builders",
     description: description || "Infrastructure for serious builders. Run events, compete in hackathons, ship real products, and earn reputation in the builder ecosystem.",
-    image: image || "https://maximally.in/og-thumbnail.png",
-    url: canonicalUrl || `https://maximally.in${pathname}`,
+    image: image || "https://maximally.org/og-thumbnail.png",
+    url: canonicalUrl || `https://maximally.org${pathname}`,
     keywords: keywords || "builder infrastructure, hackathons, builder events, event platform, ship products, builder ecosystem, hackathon platform"
   };
 
   // Ensure absolute URL for image
   const absoluteImageUrl = seo.image.startsWith('http') 
     ? seo.image 
-    : `https://maximally.in${seo.image}`;
+    : `https://maximally.org${seo.image}`;
 
   // Generate breadcrumb structured data
   const breadcrumbStructuredData = breadcrumbs && breadcrumbs.length > 0 ? {
@@ -55,7 +55,7 @@ const SEO = ({
       "@type": "ListItem",
       "position": index + 1,
       "name": crumb.name,
-      "item": crumb.url.startsWith('http') ? crumb.url : `https://maximally.in${crumb.url}`
+      "item": crumb.url.startsWith('http') ? crumb.url : `https://maximally.org${crumb.url}`
     }))
   } : null;
 
@@ -92,8 +92,8 @@ const SEO = ({
       
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@maximally_in" />
-      <meta name="twitter:creator" content="@maximally_in" />
+      <meta name="twitter:site" content="@maximally_org" />
+      <meta name="twitter:creator" content="@maximally_org" />
       <meta name="twitter:url" content={seo.url} />
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
@@ -131,22 +131,22 @@ const SEO = ({
           "@context": "https://schema.org",
           "@type": "Organization",
           "name": "Maximally",
-          "alternateName": "Maximally.in",
+          "alternateName": "maximally.org",
           "description": "Infrastructure for serious builders. Run events, compete in hackathons, ship real products, and earn reputation.",
-          "url": "https://maximally.in",
-          "logo": "https://maximally.in/og-thumbnail.png",
+          "url": "https://maximally.org",
+          "logo": "https://maximally.org/og-thumbnail.png",
           "foundingDate": "2023",
           "sameAs": [
             "https://www.instagram.com/maximallyhq/",
-            "https://twitter.com/maximally_in",
+            "https://twitter.com/maximally_org",
             "https://www.linkedin.com/company/maximallyedu",
             "https://discord.gg/maximally"
           ],
           "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "customer service",
-            "email": "support@maximally.in",
-            "url": "https://maximally.in/contact",
+            "email": "support@maximally.org",
+            "url": "https://maximally.org/contact",
             "availableLanguage": ["English"]
           }
         })}

@@ -63,7 +63,7 @@ export default function ResourcesPodcasts() {
 
   return (
     <>
-      <SEO title="Podcasts — Conversations with Builders | Maximally" description="Conversations with builders, operators, and founders shaping the ecosystem." canonicalUrl="https://maximally.in/resources/podcasts" />
+      <SEO title="Podcasts — Conversations with Builders | Maximally" description="Conversations with builders, operators, and founders shaping the ecosystem." canonicalUrl="https://maximally.org/resources/podcasts" />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24">
         <div className="container mx-auto px-4 sm:px-6 relative z-10 pb-20">
           {/* Sub-nav */}

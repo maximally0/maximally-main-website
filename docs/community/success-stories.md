@@ -160,11 +160,11 @@ Regular participation in local hackathons provides excellent preparation for int
 
 **Professional Development Pathway:**
 
-1. **[Register for upcoming hackathons](https://maximally.in/makeathon)** - Begin your participation journey
-2. **[Complete your professional profile](https://maximally.in/profile)** - Showcase your technical capabilities
+1. **[Register for upcoming hackathons](https://maximally.org/makeathon)** - Begin your participation journey
+2. **[Complete your professional profile](https://maximally.org/profile)** - Showcase your technical capabilities
 3. **[Join the community](https://discord.gg/maximally)** - Access peer learning and networking opportunities
 4. **[Engage in team formation](https://discord.gg/maximally)** - Collaborate with complementary skill sets
-5. **[Participate in development](https://maximally.in/makeathon)** - Apply your skills to real-world challenges
+5. **[Participate in development](https://maximally.org/makeathon)** - Apply your skills to real-world challenges
 
 **Professional Growth Principles:** Continuous learning and skill development form the foundation of career advancement. Successful professionals begin as learners, innovative companies start with concepts, and career transformations begin with decisive action.
 
@@ -172,4 +172,4 @@ Your professional development story awaits. What solutions will you create?
 
 ---
 
-*Want to share your own success story? We'd love to feature your journey! Contact us at [stories@maximally.in](mailto:stories@maximally.in) or share in our [Discord community](https://discord.gg/maximally).*
+*Want to share your own success story? We'd love to feature your journey! Contact us at [stories@maximally.org](mailto:stories@maximally.org) or share in our [Discord community](https://discord.gg/maximally).*

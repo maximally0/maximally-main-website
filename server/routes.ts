@@ -2350,7 +2350,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       for (const judge of judgesData) {
         // Calculate tier for each judge
-        const response = await fetch(`http://maximally.in/api/admin/judges/${judge.id}/calculate-tier`, {
+        const response = await fetch(`http://maximally.org/api/admin/judges/${judge.id}/calculate-tier`, {
           method: 'POST'
         });
 

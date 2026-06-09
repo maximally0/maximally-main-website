@@ -47,7 +47,7 @@ Discovering the right hackathons can make the difference between a frustrating e
 ### Browsing Events
 
 **Main Events Page**
-Visit [maximally.in/makeathon](https://maximally.in/makeathon) to see:
+Visit [maximally.org/makeathon](https://maximally.org/makeathon) to see:
 
 **Active Events** - Currently running competitions you can still join
 **Upcoming Hackathons** - Events accepting registrations
@@ -259,6 +259,6 @@ Get notified about:
 
 ---
 
-**Ready to find your next hackathon?** [Browse current events](https://maximally.in/makeathon) or [set up your profile](https://maximally.in/profile) to get personalized recommendations!
+**Ready to find your next hackathon?** [Browse current events](https://maximally.org/makeathon) or [set up your profile](https://maximally.org/profile) to get personalized recommendations!
 
 *The most effective hackathon experience occurs when participants focus on learning, networking, and building meaningful solutions rather than solely pursuing recognition.*

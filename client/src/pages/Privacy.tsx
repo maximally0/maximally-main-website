@@ -33,7 +33,7 @@ const Privacy = () => {
             <section className="bg-gradient-to-br from-orange-500/5 to-orange-500/5 border border-gray-800 p-6">
               <h2 className="font-space font-bold text-sm mb-3 text-orange-400">1. Introduction</h2>
               <p className="leading-relaxed text-gray-300">
-                We at Maximally recognise the importance of your privacy and are committed to protecting the personal data you share with us. This Privacy Policy explains how we collect, use, process, disclose and protect your personal data when you visit maximally.in (the "Website") and use our Services.
+                We at Maximally recognise the importance of your privacy and are committed to protecting the personal data you share with us. This Privacy Policy explains how we collect, use, process, disclose and protect your personal data when you visit maximally.org (the "Website") and use our Services.
               </p>
             </section>
 
@@ -167,7 +167,7 @@ const Privacy = () => {
                 If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us at:
               </p>
               <p className="leading-relaxed mt-2 text-gray-300">
-                Email: <a href="mailto:support@maximally.in" className="text-orange-400 hover:text-orange-400 transition-colors">support@maximally.in</a>
+                Email: <a href="mailto:support@maximally.org" className="text-orange-400 hover:text-orange-400 transition-colors">support@maximally.org</a>
               </p>
             </section>
           </div>

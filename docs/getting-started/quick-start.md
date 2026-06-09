@@ -19,7 +19,7 @@ This comprehensive guide provides essential information for first-time participa
 ## Step 1: Event Selection
 
 ### Available Event Categories
-Access current opportunities at [maximally.in/makeathon](https://maximally.in/makeathon):
+Access current opportunities at [maximally.org/makeathon](https://maximally.org/makeathon):
 
 **Active Events** - Currently accepting participants
 **Upcoming Events** - Future hackathons with open registration  
@@ -256,6 +256,6 @@ For participants without pre-formed teams:
 
 ---
 
-**To begin participation:** [Review upcoming events](https://maximally.in/makeathon) and complete the registration process.
+**To begin participation:** [Review upcoming events](https://maximally.org/makeathon) and complete the registration process.
 
 *For technical support and community access, join our [Discord server](https://discord.gg/maximally) where experienced participants provide guidance to newcomers.*

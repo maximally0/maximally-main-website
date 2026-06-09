@@ -90,14 +90,14 @@ export default async (req: Request, context: Context) => {
       for (const subscriber of subscribers) {
         try {
           const { generateNewsletterEmail, generateUnsubscribeUrl } = await import('../../server/utils/email-templates');
-          const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email, 'https://maximally.in');
+          const unsubscribeUrl = generateUnsubscribeUrl(subscriber.email, 'https://maximally.org');
           const emailHtml = generateNewsletterEmail({ subject: newsletter.subject, htmlContent: newsletter.html_content, unsubscribeUrl });
 
           if (process.env.RESEND_API_KEY) {
             const { Resend } = await import('resend');
             const resend = new Resend(process.env.RESEND_API_KEY);
             await resend.emails.send({
-              from: `Maximally Newsletter <${process.env.FROM_EMAIL || 'noreply@maximally.in'}>`,
+              from: `Maximally Newsletter <${process.env.FROM_EMAIL || 'noreply@maximally.org'}>`,
               to: subscriber.email,
               subject: newsletter.subject,
               html: emailHtml,

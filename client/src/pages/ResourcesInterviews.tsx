@@ -72,7 +72,7 @@ export default function ResourcesInterviews() {
 
   return (
     <>
-      <SEO title="Interviews — Conversations with People Shaping the Ecosystem | Maximally" description="In-depth interviews with builders, operators, and thinkers driving meaningful change." canonicalUrl="https://maximally.in/resources/interviews" />
+      <SEO title="Interviews — Conversations with People Shaping the Ecosystem | Maximally" description="In-depth interviews with builders, operators, and thinkers driving meaningful change." canonicalUrl="https://maximally.org/resources/interviews" />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24">
         <div className="container mx-auto px-4 sm:px-6 relative z-10 pb-20">
           {/* Sub-nav */}

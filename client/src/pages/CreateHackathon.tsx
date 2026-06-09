@@ -179,7 +179,7 @@ export default function CreateHackathon() {
                     </label>
                     <div className="flex items-center gap-3 mb-2">
                       <span className="font-space text-sm text-gray-400 whitespace-nowrap">
-                        maximally.in/hackathon/
+                        maximally.org/hackathon/
                       </span>
                       <input
                         type="text"

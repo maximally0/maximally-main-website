@@ -27,8 +27,8 @@ export function registerAdminNewsletterRoutes(app: Express) {
   }
 
   const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-  const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@maximally.in';
-  const PLATFORM_URL = process.env.PLATFORM_URL || 'https://maximally.in';
+  const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@maximally.org';
+  const PLATFORM_URL = process.env.PLATFORM_URL || 'https://maximally.org';
 
   // Test endpoint to verify connection
   app.get('/api/admin/newsletter/test', async (req: Request, res: Response) => {

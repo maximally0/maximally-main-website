@@ -168,7 +168,7 @@ export function registerAutoPublishGalleryRoutes(app: Express) {
               }
 
               // Send email with scoring link
-              const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/judge/${tokenValue}`;
+              const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.org'}/judge/${tokenValue}`;
               
               const emailResult = await sendJudgeScoringLinkEmail({
                 email: judge.email,

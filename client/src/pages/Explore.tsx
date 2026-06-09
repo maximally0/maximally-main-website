@@ -46,7 +46,7 @@ const Explore = () => {
         title="Explore — Builder Ecosystem | Maximally"
         description="Explore the Maximally ecosystem. Events, Senior Council operators, platform infrastructure, and builder tools."
         keywords="builder ecosystem, hackathons, Senior Council, platform tools, Maximally explore, serious builders"
-        canonicalUrl="https://maximally.in/explore"
+        canonicalUrl="https://maximally.org/explore"
       />
 
       <div className="min-h-screen bg-black text-white pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 relative overflow-x-hidden">

@@ -481,7 +481,7 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
           }
 
           // Send email
-          const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/judge/${tokenValue}`;
+          const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.org'}/judge/${tokenValue}`;
           
           // Always collect the token for display
           judgeTokens.push({
@@ -637,7 +637,7 @@ export function registerSimplifiedJudgesRoutes(app: Express) {
         tokenResults.push({ judgeId: (judge as any).id, token: tokenValue });
 
         // Send email with scoring link
-        const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/judge/${tokenValue}`;
+        const scoringUrl = `${process.env.FRONTEND_URL || 'https://maximally.org'}/judge/${tokenValue}`;
         
         try {
           const emailResult = await sendJudgeScoringLinkEmail({

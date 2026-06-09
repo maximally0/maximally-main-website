@@ -181,7 +181,7 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
       if (resend && application.email) {
         try {
           await resend.emails.send({
-            from: process.env.FROM_EMAIL || 'noreply@maximally.in',
+            from: process.env.FROM_EMAIL || 'noreply@maximally.org',
             to: application.email,
             subject: 'Your Maximally Organizer Application Has Been Approved!',
             html: `
@@ -189,7 +189,7 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
                 <h2>Congratulations, ${application.full_name}!</h2>
                 <p>Your application to become a Maximally organizer has been approved.</p>
                 <p>You can now start creating and managing hackathons on the platform.</p>
-                <a href="${process.env.PLATFORM_URL || 'https://maximally.in'}" 
+                <a href="${process.env.PLATFORM_URL || 'https://maximally.org'}" 
                    style="display: inline-block; background: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0;">
                   Get Started
                 </a>
@@ -312,7 +312,7 @@ export function registerAdminOrganizerApplicationRoutes(app: Express) {
       if (resend && application.email) {
         try {
           await resend.emails.send({
-            from: process.env.FROM_EMAIL || 'noreply@maximally.in',
+            from: process.env.FROM_EMAIL || 'noreply@maximally.org',
             to: application.email,
             subject: 'Update on Your Maximally Organizer Application',
             html: `

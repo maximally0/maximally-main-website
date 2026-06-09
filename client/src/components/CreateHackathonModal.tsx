@@ -126,7 +126,7 @@ export default function CreateHackathonModal({ isOpen, onClose }: CreateHackatho
               URL SLUG *
             </label>
             <div className="flex items-center gap-2">
-              <span className="font-space text-sm text-gray-400">maximally.in/hackathon/</span>
+              <span className="font-space text-sm text-gray-400">maximally.org/hackathon/</span>
               <input
                 type="text"
                 name="slug"

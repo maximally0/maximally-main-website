@@ -1,6 +1,6 @@
 /**
  * Separate admin SPA (`admin-panel` repo), not routes on this site.
- * Set `VITE_ADMIN_PANEL_URL` (no trailing slash), e.g. https://admin.maximally.in
+ * Set `VITE_ADMIN_PANEL_URL` (no trailing slash), e.g. https://admin.maximally.org
  */
 
 export function getAdminPanelBaseUrl(): string {

@@ -7,7 +7,7 @@
  *   MENTOR_REQUEST_SLACK_WEBHOOK_URL — Slack Incoming Webhook URL
  *   RESEND_API_KEY — Resend API key (same as platform email)
  *   FROM_EMAIL or MENTOR_NOTIFICATION_FROM_EMAIL — verified sender (MENTOR_* overrides)
- *   PUBLIC_APP_URL — base URL for links in emails (default https://maximally.in)
+ *   PUBLIC_APP_URL — base URL for links in emails (default https://maximally.org)
  */
 
 import { Resend } from 'resend';
@@ -111,7 +111,7 @@ export async function notifyMentorHelpRequest(input: MentorHelpRequestNotifyInpu
     requesterEmail,
   } = input;
 
-  const base = process.env.PUBLIC_APP_URL || process.env.PLATFORM_URL || 'https://maximally.in';
+  const base = process.env.PUBLIC_APP_URL || process.env.PLATFORM_URL || 'https://maximally.org';
   const dashboardUrl = `${base.replace(/\/$/, '')}/mentor/dashboard`;
 
   const lines = [

@@ -132,7 +132,7 @@ const HostHackathon = () => {
         title="The Operating System for Competitions — Maximally"
         description="Run hackathons, startup competitions, design contests, and innovation challenges on one platform. Applications, submissions, judging, and results — all in one system."
         keywords="competition platform, hackathon infrastructure, startup competition, innovation challenge, judging platform, competition management"
-        canonicalUrl="https://maximally.in/host-hackathon"
+        canonicalUrl="https://maximally.org/host-hackathon"
       />
 
       <div className="min-h-screen bg-black text-white relative">

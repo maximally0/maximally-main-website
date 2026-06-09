@@ -28,7 +28,7 @@ const { data: { session } } = await supabase.auth.getSession();
 const token = session?.access_token;
 
 // Use token in API requests
-const response = await fetch('https://maximally.in/api/hackathons', {
+const response = await fetch('https://maximally.org/api/hackathons', {
   headers: {
     'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ const response = await fetch('https://maximally.in/api/hackathons', {
 
 **Implementation:**
 ```javascript
-const response = await fetch('https://maximally.in/api/hackathons', {
+const response = await fetch('https://maximally.org/api/hackathons', {
   headers: {
     'X-API-Key': 'your-api-key-here',
     'Content-Type': 'application/json'
@@ -79,14 +79,14 @@ const response = await fetch('https://maximally.in/api/hackathons', {
 
 **OAuth Endpoints:**
 ```
-Authorization: https://maximally.in/oauth/authorize
-Token: https://maximally.in/oauth/token
-Revoke: https://maximally.in/oauth/revoke
+Authorization: https://maximally.org/oauth/authorize
+Token: https://maximally.org/oauth/token
+Revoke: https://maximally.org/oauth/revoke
 ```
 
 **Example Authorization URL:**
 ```
-https://maximally.in/oauth/authorize?
+https://maximally.org/oauth/authorize?
   response_type=code&
   client_id=your_client_id&
   redirect_uri=https://yourapp.com/callback&
@@ -364,7 +364,7 @@ All API errors follow a consistent format:
 
 ```typescript
 class MaximallyAPI {
-  private baseURL = 'https://maximally.in/api';
+  private baseURL = 'https://maximally.org/api';
   private token: string | null = null;
 
   constructor(token?: string) {
@@ -421,7 +421,7 @@ from typing import Optional, Dict, Any
 
 class MaximallyAPI:
     def __init__(self, token: Optional[str] = None, api_key: Optional[str] = None):
-        self.base_url = 'https://maximally.in/api'
+        self.base_url = 'https://maximally.org/api'
         self.session = requests.Session()
         
         if token:
@@ -457,14 +457,14 @@ hackathons = api.get_hackathons()
 
 **Get hackathons with Bearer token:**
 ```bash
-curl -X GET "https://maximally.in/api/hackathons" \
+curl -X GET "https://maximally.org/api/hackathons" \
   -H "Authorization: Bearer your_jwt_token_here" \
   -H "Content-Type: application/json"
 ```
 
 **Create project with API key:**
 ```bash
-curl -X POST "https://maximally.in/api/hackathons/123/projects" \
+curl -X POST "https://maximally.org/api/hackathons/123/projects" \
   -H "X-API-Key: your_api_key_here" \
   -H "Content-Type: application/json" \
   -d '{
@@ -521,7 +521,7 @@ X-API-Key: your_api_key_here
 
 We provide a comprehensive Postman collection for testing all authentication methods:
 
-**Download:** [Maximally API Postman Collection](https://maximally.in/api/postman-collection.json)
+**Download:** [Maximally API Postman Collection](https://maximally.org/api/postman-collection.json)
 
 **Includes:**
 - Pre-configured authentication methods
@@ -565,11 +565,11 @@ This will log:
 
 ### Support
 
-**Documentation:** [https://docs.maximally.in](https://docs.maximally.in)
-**API Status:** [https://status.maximally.in](https://status.maximally.in)
-**Support Email:** [api-support@maximally.in](mailto:api-support@maximally.in)
+**Documentation:** [https://docs.maximally.org](https://docs.maximally.org)
+**API Status:** [https://status.maximally.org](https://status.maximally.org)
+**Support Email:** [api-support@maximally.org](mailto:api-support@maximally.org)
 **Discord:** [#api-support channel](https://discord.gg/maximally)
 
 ---
 
-**Ready to start building?** Get your API credentials from your [profile settings](https://maximally.in/profile) and start integrating with the Maximally platform! 🚀
+**Ready to start building?** Get your API credentials from your [profile settings](https://maximally.org/profile) and start integrating with the Maximally platform! 🚀

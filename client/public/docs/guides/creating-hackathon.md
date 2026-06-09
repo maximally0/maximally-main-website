@@ -28,7 +28,7 @@ Organizing a hackathon is an exciting way to bring together talented individuals
 ### Becoming an Approved Organizer
 
 **Application Process:**
-1. **Submit Application**: Complete the organizer application at [maximally.in/organizer/apply](https://maximally.in/organizer/apply)
+1. **Submit Application**: Complete the organizer application at [maximally.org/organizer/apply](https://maximally.org/organizer/apply)
 2. **Provide Information**:
    - Personal background and experience
    - Event concept and vision
@@ -649,6 +649,6 @@ Define clear, weighted criteria such as:
 
 ---
 
-**Ready to organize your first hackathon?** [Apply to become an organizer](https://maximally.in/organizer/apply) and start building your event today! 🚀
+**Ready to organize your first hackathon?** [Apply to become an organizer](https://maximally.org/organizer/apply) and start building your event today! 🚀
 
 **Need guidance?** Join our [organizer community](https://discord.gg/maximally-organizers) where experienced event organizers share tips, resources, and support each other in creating amazing hackathons.

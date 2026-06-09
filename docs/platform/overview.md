@@ -313,6 +313,6 @@ Maximally is India's premier hackathon platform designed to connect students, or
 
 ---
 
-**Ready to explore the platform?** [Create your account](https://maximally.in/login) and start your hackathon journey today! 🚀
+**Ready to explore the platform?** [Create your account](https://maximally.org/login) and start your hackathon journey today! 🚀
 
 **Questions about features?** Join our [Discord community](https://discord.gg/maximally) or check our [FAQ](../reference/faq.md) for more information.

@@ -172,7 +172,7 @@ export function generateNewsletterEmail(options: NewsletterEmailOptions): string
       <div class="social-links">
         <a href="https://www.instagram.com/maximallyhq/" target="_blank">Instagram</a>
         <a href="https://www.linkedin.com/company/maximallyedu" target="_blank">LinkedIn</a>
-        <a href="https://twitter.com/maximally_in" target="_blank">X</a>
+        <a href="https://twitter.com/maximally_org" target="_blank">X</a>
         <a href="https://discord.gg/WmSXVzDYuq" target="_blank">Discord</a>
       </div>
 
@@ -182,7 +182,7 @@ export function generateNewsletterEmail(options: NewsletterEmailOptions): string
       
       <p style="margin-top: 10px;">
         <a href="${unsubscribeUrl}" style="color: #666;">Unsubscribe</a> | 
-        <a href="https://maximally.in/privacy" style="color: #666;">Privacy Policy</a>
+        <a href="https://maximally.org/privacy" style="color: #666;">Privacy Policy</a>
       </p>
       
       <p style="margin-top: 15px; font-size: 12px; color: #444;">
@@ -199,7 +199,7 @@ export function generateNewsletterEmail(options: NewsletterEmailOptions): string
 /**
  * Generate unsubscribe URL with email parameter
  */
-export function generateUnsubscribeUrl(email: string, baseUrl: string = 'https://maximally.in'): string {
+export function generateUnsubscribeUrl(email: string, baseUrl: string = 'https://maximally.org'): string {
   return `${baseUrl}/newsletter/unsubscribe?email=${encodeURIComponent(email)}`;
 }
 

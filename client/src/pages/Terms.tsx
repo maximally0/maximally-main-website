@@ -33,7 +33,7 @@ const Terms = () => {
             <section className="bg-gradient-to-br from-orange-500/5 to-orange-500/5 border border-gray-800 p-6">
               <h2 className="font-space font-bold text-sm mb-3 text-orange-400">1. Introduction</h2>
               <p className="leading-relaxed text-gray-300">
-                Welcome to maximally.in (the "Website"). These Terms & Conditions ("Terms") govern your access to and use of the Website, operated by Maximally ("we", "us", "our"). By accessing or using the Website, you agree to be bound by these Terms. If you do not agree, please do not use the Website.
+                Welcome to maximally.org (the "Website"). These Terms & Conditions ("Terms") govern your access to and use of the Website, operated by Maximally ("we", "us", "our"). By accessing or using the Website, you agree to be bound by these Terms. If you do not agree, please do not use the Website.
               </p>
             </section>
 
@@ -157,7 +157,7 @@ const Terms = () => {
                 If you have questions about these Terms, please contact us at:
               </p>
               <p className="leading-relaxed mt-2 text-gray-300">
-                Email: <a href="mailto:support@maximally.in" className="text-orange-400 hover:text-orange-400 transition-colors">support@maximally.in</a>
+                Email: <a href="mailto:support@maximally.org" className="text-orange-400 hover:text-orange-400 transition-colors">support@maximally.org</a>
               </p>
             </section>
           </div>

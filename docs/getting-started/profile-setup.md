@@ -247,7 +247,7 @@ Clear goals help others understand how to collaborate with you:
 
 Ready to create your profile? Here's how:
 
-1. **[Sign up for Maximally](https://maximally.in/login)** if you haven't already
+1. **[Sign up for Maximally](https://maximally.org/login)** if you haven't already
 2. **Go to your profile settings** and start filling out each section
 3. **Upload a professional photo** and write a compelling bio
 4. **Add your skills** honestly and comprehensively

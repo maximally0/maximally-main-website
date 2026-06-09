@@ -18,7 +18,7 @@ export default function Network() {
       <SEO
         title="Network — Senior Council & Builder Community | Maximally"
         description="The network behind Maximally. Senior Council operators with documented extraordinary achievement, and the builder community powering the ecosystem."
-        canonicalUrl="https://maximally.in/network"
+        canonicalUrl="https://maximally.org/network"
       />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24 relative">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />

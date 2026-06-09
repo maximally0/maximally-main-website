@@ -72,7 +72,7 @@ export default function ResourcesStories() {
 
   return (
     <>
-      <SEO title="Builder Stories — Profiles of Builders Who Shipped | Maximally" description="Real stories from the builders behind the products. Lessons, challenges, and wins from the journey." canonicalUrl="https://maximally.in/resources/stories" />
+      <SEO title="Builder Stories — Profiles of Builders Who Shipped | Maximally" description="Real stories from the builders behind the products. Lessons, challenges, and wins from the journey." canonicalUrl="https://maximally.org/resources/stories" />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24">
         <div className="container mx-auto px-4 sm:px-6 relative z-10 pb-20">
           {/* Sub-nav */}

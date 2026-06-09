@@ -1399,7 +1399,7 @@ export function registerHackathonRegistrationRoutes(app: Express) {
 
       if (hackathonDetails) {
         // Use team code in the invite URL
-        const inviteUrl = `${process.env.FRONTEND_URL || 'https://maximally.in'}/team/join/${team.team_code}`;
+        const inviteUrl = `${process.env.FRONTEND_URL || 'https://maximally.org'}/team/join/${team.team_code}`;
         sendTeamInvitationEmail({
           email: email,
           inviteeName: email.split('@')[0], // Use email prefix as name

@@ -37,14 +37,14 @@ export async function autoPublishGalleries(): Promise<{ processed: number; publi
               email: judge.email, judgeName: judge.name,
               hackathonName: hackathon.hackathon_name, hackathonSlug: hackathon.slug,
               organizerName: hackathon.organizer_email,
-              invitationLink: `https://maximally.in/judge/${hackathon.slug}`
+              invitationLink: `https://maximally.org/judge/${hackathon.slug}`
             });
           } catch (e: any) { errors.push(`Email failed for ${judge.email}: ${e.message}`); }
         }
 
         await dbQuery(`
           INSERT INTO admin_activity_feed (activity_type, actor_username, actor_email, target_type, target_id, target_name, action, metadata, severity)
-          VALUES ('hackathon_gallery_auto_published', 'system', 'system@maximally.in', 'hackathon', $1, $2, 'auto_publish_gallery', $3, 'info')
+          VALUES ('hackathon_gallery_auto_published', 'system', 'system@maximally.org', 'hackathon', $1, $2, 'auto_publish_gallery', $3, 'info')
         `, [hackathon.id.toString(), hackathon.hackathon_name, JSON.stringify({ hackathon_slug: hackathon.slug, judges_notified: judges.length })]);
 
       } catch (e: any) { errors.push(`Error processing ${hackathon.slug}: ${e.message}`); }
@@ -124,7 +124,7 @@ export async function runScheduledTasks() {
   try {
     await dbQuery(`
       INSERT INTO admin_activity_feed (activity_type, actor_username, actor_email, target_type, target_id, target_name, action, metadata, severity)
-      VALUES ('scheduled_tasks_completed', 'system', 'system@maximally.in', 'system', 'scheduled_tasks', 'Scheduled Tasks', 'run_all_tasks', $1, $2)
+      VALUES ('scheduled_tasks_completed', 'system', 'system@maximally.org', 'system', 'scheduled_tasks', 'Scheduled Tasks', 'run_all_tasks', $1, $2)
     `, [JSON.stringify({ auto_publish: autoPublish, deadline_reminders: deadlineReminders, cleanup, total_errors: totalErrors }), totalErrors > 0 ? 'warning' : 'info']);
   } catch (e) { console.error('Failed to log tasks summary:', e); }
 

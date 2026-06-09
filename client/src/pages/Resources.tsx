@@ -44,7 +44,7 @@ export default function Resources() {
       <SEO
         title="Resources — Blog, Podcasts & Builder Stories | Maximally"
         description="Knowledge from the builder ecosystem. Blog articles, podcasts, builder stories, and updates from the Maximally infrastructure community."
-        canonicalUrl="https://maximally.in/resources"
+        canonicalUrl="https://maximally.org/resources"
       />
       <div className="min-h-screen bg-black text-white pt-20 sm:pt-24 relative">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />

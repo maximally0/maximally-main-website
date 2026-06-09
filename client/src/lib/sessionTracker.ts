@@ -116,7 +116,7 @@ export class SessionTracker {
 
   private constructor() {
     this.apiBase = import.meta.env.PROD
-      ? 'https://maximally.in/.netlify/functions'
+      ? 'https://maximally.org/.netlify/functions'
       : 'http://localhost:5002'
   }
 

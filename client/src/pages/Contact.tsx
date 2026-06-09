@@ -164,7 +164,7 @@ const Contact = () => {
                 { name: "Instagram", url: "https://instagram.com/maximallyhq", handle: "@maximallyhq", icon: Instagram },
                 { name: "LinkedIn", url: "https://linkedin.com/company/maximallyedu", handle: "Maximally", icon: Linkedin },
                 { name: "Discord", url: "https://discord.gg/MpBnYk8qMX", handle: "Join Community", icon: MessageCircle },
-                { name: "Website", url: "https://maximally.in", handle: "maximally.in", icon: Terminal },
+                { name: "Website", url: "https://maximally.org", handle: "maximally.org", icon: Terminal },
               ].map((channel, index) => (
                 <a
                   key={index}

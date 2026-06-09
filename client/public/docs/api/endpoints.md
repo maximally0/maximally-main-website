@@ -12,7 +12,7 @@ This comprehensive reference covers all available endpoints in the Maximally API
 ## Base URL
 
 ```
-Production: https://maximally.in/api
+Production: https://maximally.org/api
 Development: http://localhost:5002/api
 ```
 
@@ -575,7 +575,7 @@ Form data with `file` field containing the image.
 {
   "success": true,
   "data": {
-    "url": "https://storage.maximally.in/images/uuid.jpg",
+    "url": "https://storage.maximally.org/images/uuid.jpg",
     "filename": "uuid.jpg",
     "size": 1024000,
     "type": "image/jpeg"
@@ -712,7 +712,7 @@ Official SDKs available for:
 Use our test environment for development:
 
 ```
-Base URL: https://api-test.maximally.in
+Base URL: https://api-test.maximally.org
 ```
 
 Test data is reset daily. Contact support for test accounts.
@@ -720,9 +720,9 @@ Test data is reset daily. Contact support for test accounts.
 ## Support
 
 For API support:
-- **Documentation**: [maximally.in/docs](https://maximally.in/docs)
+- **Documentation**: [maximally.org/docs](https://maximally.org/docs)
 - **Discord**: [discord.gg/maximally](https://discord.gg/maximally)
-- **Email**: api@maximally.in
+- **Email**: api@maximally.org
 
 ## Changelog
 

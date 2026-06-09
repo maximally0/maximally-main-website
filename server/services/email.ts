@@ -22,9 +22,9 @@ function getResend(): Resend | null {
 // Initialize resend on first import
 getResend();
 
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@maximally.in';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@maximally.org';
 const PLATFORM_NAME = 'Maximally';
-const PLATFORM_URL = process.env.PLATFORM_URL || 'https://maximally.in';
+const PLATFORM_URL = process.env.PLATFORM_URL || 'https://maximally.org';
 
 // Brand colors matching the new cosmic UI
 const BRAND_COLORS = {

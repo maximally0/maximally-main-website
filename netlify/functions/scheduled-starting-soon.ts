@@ -2,7 +2,7 @@ import type { Config, Context } from "@netlify/functions";
 
 // This function runs every hour to send "hackathon starting soon" emails
 export default async (req: Request, context: Context) => {
-  const PLATFORM_URL = process.env.PLATFORM_URL || process.env.URL || 'https://maximally.in';
+  const PLATFORM_URL = process.env.PLATFORM_URL || process.env.URL || 'https://maximally.org';
   const SCHEDULER_SECRET = process.env.SCHEDULER_SECRET;
 
   try {

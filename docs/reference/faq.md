@@ -49,7 +49,7 @@ Maximally is India's premier hackathon platform that connects students, organize
 
 ### How do I find hackathons to join?
 
-1. **Browse Events**: Visit [maximally.in/makeathon](https://maximally.in/makeathon)
+1. **Browse Events**: Visit [maximally.org/makeathon](https://maximally.org/makeathon)
 2. **Filter by Interest**: Use tags like "AI", "Web Dev", "Mobile", "Beginner-Friendly"
 3. **Check Dates**: Find events that fit your schedule
 4. **Read Requirements**: Ensure you meet any prerequisites
@@ -236,7 +236,7 @@ Maximally is India's premier hackathon platform that connects students, organize
 - **Community**: Existing network or ability to promote the event
 
 **Application Process:**
-1. **Apply**: Fill out organizer application at [maximally.in/organizer/apply](https://maximally.in/organizer/apply)
+1. **Apply**: Fill out organizer application at [maximally.org/organizer/apply](https://maximally.org/organizer/apply)
 2. **Interview**: 30-minute call with our team
 3. **Approval**: Usually within 3-5 business days
 4. **Onboarding**: Training session on platform tools
@@ -338,7 +338,7 @@ Maximally is India's premier hackathon platform that connects students, organize
 4. **Account Suspension**: Contact support if account was suspended
 
 **Still Having Issues?**
-- Email: [support@maximally.in](mailto:support@maximally.in)
+- Email: [support@maximally.org](mailto:support@maximally.org)
 - Discord: @MaximallySupport
 - Response time: Usually within 2 hours
 
@@ -376,13 +376,13 @@ Maximally is India's premier hackathon platform that connects students, organize
 
 **Immediate Support:**
 - **Discord**: [discord.gg/maximally](https://discord.gg/maximally) (fastest response)
-- **Email**: [support@maximally.in](mailto:support@maximally.in)
+- **Email**: [support@maximally.org](mailto:support@maximally.org)
 - **Phone**: +91-XXXX-XXXX-XX (emergency only)
 
 **Business Inquiries:**
-- **Partnerships**: [partnerships@maximally.in](mailto:partnerships@maximally.in)
-- **Sponsorship**: [sponsors@maximally.in](mailto:sponsors@maximally.in)
-- **Media**: [press@maximally.in](mailto:press@maximally.in)
+- **Partnerships**: [partnerships@maximally.org](mailto:partnerships@maximally.org)
+- **Sponsorship**: [sponsors@maximally.org](mailto:sponsors@maximally.org)
+- **Media**: [press@maximally.org](mailto:press@maximally.org)
 
 **Response Times:**
 - **Discord**: Usually within 30 minutes during events

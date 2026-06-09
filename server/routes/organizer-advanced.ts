@@ -1077,7 +1077,7 @@ export function registerOrganizerAdvancedRoutes(app: Express) {
       const inviterName = inviterProfile?.full_name || inviterProfile?.username || 'A hackathon organizer';
 
       // Generate the invite URL with token
-      const frontendUrl = process.env.FRONTEND_URL || 'https://maximally.in';
+      const frontendUrl = process.env.FRONTEND_URL || 'https://maximally.org';
       const inviteUrl = `${frontendUrl}/organizer/invite/${inviteToken}`;
 
       // Send the invite email (best-effort — don't fail the invite if email fails)

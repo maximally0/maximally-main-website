@@ -53,7 +53,7 @@ export interface JudgePortalData {
 // ─── API Base ─────────────────────────────────────────────────────────────────
 
 const API_BASE = import.meta.env.PROD
-  ? 'https://maximally.in/.netlify/functions'
+  ? 'https://maximally.org/.netlify/functions'
   : 'http://localhost:5002'
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {

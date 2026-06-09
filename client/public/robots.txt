@@ -1,4 +1,4 @@
-# Maximally.in Robots.txt
+# maximally.org Robots.txt
 # Updated: 2026-03-09
 
 User-agent: *
@@ -37,7 +37,7 @@ Allow: /*.webp$
 Crawl-delay: 1
 
 # Sitemaps
-Sitemap: https://maximally.in/sitemap.xml
+Sitemap: https://maximally.org/sitemap.xml
 
 # Specific bot instructions
 User-agent: Googlebot

@@ -69,8 +69,8 @@ Participants in Maximally hackathons have achieved significant career and entrep
 
 To begin participating in Maximally hackathons:
 
-1. **[Create your account](https://maximally.in/login)** - Complete registration process
-2. **[Browse upcoming hackathons](https://maximally.in/makeathon)** - Review available events and requirements
+1. **[Create your account](https://maximally.org/login)** - Complete registration process
+2. **[Browse upcoming hackathons](https://maximally.org/makeathon)** - Review available events and requirements
 3. **[Join our Discord](https://discord.gg/maximally)** - Access community resources and support
 4. **Begin participation** - Apply to events that align with your interests and skill level
 

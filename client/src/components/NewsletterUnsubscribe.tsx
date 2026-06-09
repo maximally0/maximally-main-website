@@ -115,8 +115,8 @@ export default function NewsletterUnsubscribe() {
           <p className="font-space text-gray-500 text-sm">
             <Mail className="inline w-4 h-4 mr-1" />
             Need help? Contact us at{' '}
-            <a href="mailto:support@maximally.in" className="text-orange-400 hover:underline">
-              support@maximally.in
+            <a href="mailto:support@maximally.org" className="text-orange-400 hover:underline">
+              support@maximally.org
             </a>
           </p>
         </div>

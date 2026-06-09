@@ -69,7 +69,7 @@ export default function Platform() {
       <SEO
         title="Platform — Competition Infrastructure | Maximally"
         description="The infrastructure behind serious competitions. From applications and submissions to judging and results — everything needed to run high-quality competitions."
-        canonicalUrl="https://maximally.in/platform"
+        canonicalUrl="https://maximally.org/platform"
       />
 
       <div className="min-h-screen bg-black text-white relative">

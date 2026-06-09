@@ -146,7 +146,7 @@ const SeniorCouncil = () => {
         title="Senior Council — Operators with Documented Extraordinary Achievement | Maximally"
         description="The Maximally Senior Council is a selective network of founders, researchers, engineers, and product leaders who evaluate, mentor, and set the standard across Maximally programs."
         keywords="senior council, extraordinary operators, hackathon judges, builder mentors, Maximally council"
-        canonicalUrl="https://maximally.in/senior-council"
+        canonicalUrl="https://maximally.org/senior-council"
       />
 
       <div className="min-h-screen bg-black text-white">

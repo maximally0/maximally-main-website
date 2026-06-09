@@ -2,7 +2,7 @@
 
 The platform powering competitions, mentorship, and evaluation for the builder ecosystem.
 
-**Live:** [maximally.in](https://maximally.in)  
+**Live:** [maximally.org](https://maximally.org)  
 **Stack:** React 18 + TypeScript + Vite 5 + Tailwind CSS (frontend) | Express 4 + Supabase PostgreSQL (backend) | Netlify (deployment)
 
 ---
