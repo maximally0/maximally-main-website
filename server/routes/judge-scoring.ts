@@ -101,7 +101,7 @@ export function registerJudgeScoringRoutes(app: Express): void {
             project_name,
             description,
             demo_url,
-            github_repo,
+            github_url,
             video_url,
             created_at,
             updated_at
