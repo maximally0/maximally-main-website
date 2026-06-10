@@ -60,20 +60,18 @@ export async function verifyCaptcha(token: string | null): Promise<CaptchaVerifi
  * In development, you might want to skip CAPTCHA for easier testing
  */
 export function isCaptchaRequired(): boolean {
-  // Always require CAPTCHA in production
-  if (import.meta.env.PROD) {
-    return true;
+  // Only require CAPTCHA if site key is actually configured
+  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+  if (!siteKey) {
+    return false;
   }
   
-  // In development, check if CAPTCHA keys are configured
-  const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  
-  // Allow disabling CAPTCHA in development with environment variable
+  // In development, allow disabling
   if (import.meta.env.VITE_DISABLE_CAPTCHA === 'true') {
     return false;
   }
   
-  return !!siteKey;
+  return true;
 }
 
 /**
