@@ -139,6 +139,13 @@ export function registerJudgeScoringRoutes(app: Express): void {
           score: scoresMap.get(submission.id) || null,
         }));
 
+        // Get judging criteria for this hackathon
+        const { data: criteria } = await supabaseAdmin
+          .from('hackathon_judging_criteria')
+          .select('id, name, description, max_score, weight, sort_order')
+          .eq('hackathon_id', hackathonId)
+          .order('sort_order', { ascending: true });
+
         return res.json({
           success: true,
           hackathon: {
@@ -150,6 +157,7 @@ export function registerJudgeScoringRoutes(app: Express): void {
             id: judge.id,
             name: judge.name,
           },
+          criteria: criteria || [],
           submissions: submissionsWithScores,
           stats: {
             total: submissionsWithScores.length,
@@ -283,6 +291,7 @@ export function registerJudgeScoringRoutes(app: Express): void {
             .update({
               score: roundedScore,
               notes: notes || null,
+              criteria_scores: criteria_scores || {},
               scored_at: new Date().toISOString(),
             })
             .eq('id', existingScore.id)
@@ -298,6 +307,7 @@ export function registerJudgeScoringRoutes(app: Express): void {
               submission_id,
               score: roundedScore,
               notes: notes || null,
+              criteria_scores: criteria_scores || {},
               scored_at: new Date().toISOString(),
             })
             .select()
@@ -392,6 +402,47 @@ export function registerJudgeScoringRoutes(app: Express): void {
           success: false,
           message: 'Server error',
         });
+      }
+    }
+  );
+
+  /**
+   * PUT /api/judge/:token/draft
+   * 
+   * Auto-save a draft score (debounced from frontend).
+   * Saves without finalizing — judge can continue editing.
+   */
+  app.put(
+    '/api/judge/:token/draft',
+    judgeAuth,
+    async (req: JudgeAuthenticatedRequest, res: Response) => {
+      try {
+        const { hackathonId, judgeId } = req.judgeAuth!;
+        const { submission_id, score, notes, criteria_scores } = req.body;
+
+        if (!submission_id) return res.status(400).json({ success: false, message: 'submission_id required' });
+
+        const { data: existing } = await supabaseAdmin
+          .from('judge_scores')
+          .select('id')
+          .eq('judge_id', judgeId)
+          .eq('submission_id', submission_id)
+          .single();
+
+        if (existing) {
+          await supabaseAdmin.from('judge_scores').update({
+            score: score || 0, notes: notes || null, criteria_scores: criteria_scores || {},
+          }).eq('id', existing.id);
+        } else {
+          await supabaseAdmin.from('judge_scores').insert({
+            hackathon_id: hackathonId, judge_id: judgeId, submission_id,
+            score: score || 0, notes: notes || null, criteria_scores: criteria_scores || {},
+          });
+        }
+
+        return res.json({ success: true, message: 'Draft saved' });
+      } catch (error) {
+        return res.status(500).json({ success: false, message: 'Failed to save draft' });
       }
     }
   );

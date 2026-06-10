@@ -90,6 +90,7 @@ import MentorApplicationForm from './pages/MentorApplicationForm';
 import AdminPanel from './pages/AdminPanel';
 import Outcomes from './pages/Outcomes';
 import Showcase from './pages/Showcase';
+import ExpertCabinet from './pages/ExpertCabinet';
 
 const queryClient = new QueryClient();
 
@@ -279,6 +280,11 @@ const AppContent = () => {
         <Route path="/resources/stories" element={<ResourcesStories />} />
         <Route path="/outcomes" element={<Outcomes />} />
         <Route path="/showcase" element={<Showcase />} />
+        <Route path="/cabinet" element={
+          <ProtectedRoute>
+            <ExpertCabinet />
+          </ProtectedRoute>
+        } />
         <Route path="/explore" element={<Navigate to="/events" replace />} />
 
         <Route path="/blog/:slug" element={<BlogRouter />} />
