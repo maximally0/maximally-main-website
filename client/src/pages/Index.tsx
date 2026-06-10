@@ -9,6 +9,7 @@ import {
   JoinEcosystemCTA,
   BecomeJudgeSectionNew,
   BecomeMentorSection,
+  CommunityStatsSection,
 } from "@/components/landing";
 
 const Index = () => {
@@ -31,6 +32,7 @@ const Index = () => {
       <div className="min-h-screen bg-black text-white">
         <MyHackathonsQuickAccess />
         <HeroSection />
+        <CommunityStatsSection />
         <UpcomingHackathonsSection />
         <SeniorCouncilSection />
         <BecomeJudgeSectionNew />

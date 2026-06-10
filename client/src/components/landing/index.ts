@@ -24,3 +24,4 @@ export { JoinEcosystemCTA } from "./sections/JoinEcosystemCTA";
 export { JoinAsMentorJudgeSection } from "./sections/JoinAsMentorJudgeSection";
 export { BecomeJudgeSectionNew } from "./sections/BecomeJudgeSectionNew";
 export { BecomeMentorSection } from "./sections/BecomeMentorSection";
+export { default as CommunityStatsSection } from "./sections/CommunityStatsSection";

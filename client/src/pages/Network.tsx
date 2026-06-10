@@ -1,116 +1,120 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Users, Shield, MessageSquare } from "lucide-react";
-import SEO from "@/components/SEO";
-import Footer from "@/components/Footer";
+import { useEffect, useState } from 'react';
+import { Activity, Trophy, Users, Rocket, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import Footer from '@/components/Footer';
+import SEO from '@/components/SEO';
 
-const councilMembers = [
-  { name: "Coming Soon", role: "AI Research Lead", org: "Top Tech Company", initials: "CS", domain: "AI" },
-  { name: "Coming Soon", role: "Founding Engineer", org: "YC-Backed Startup", initials: "CS", domain: "Engineering" },
-  { name: "Coming Soon", role: "Product Director", org: "Fortune 500", initials: "CS", domain: "Product" },
-  { name: "Coming Soon", role: "Serial Founder", org: "Multiple Exits", initials: "CS", domain: "Startups" },
-  { name: "Coming Soon", role: "Biotech Researcher", org: "Research Institution", initials: "CS", domain: "Biotech" },
-  { name: "Coming Soon", role: "Open Source Maintainer", org: "Major OSS Project", initials: "CS", domain: "Open Source" },
-];
+interface FeedEntry {
+  id: number;
+  action_type: string;
+  metadata: any;
+  created_at: string;
+  profiles: { full_name: string; username: string; avatar_url?: string; reputation_tier: string };
+}
+
+const actionIcons: Record<string, React.ElementType> = {
+  project_submitted: Rocket, project_placed: Trophy, mentorship_completed: Users,
+  event_announced: Star, tier_promoted: Activity,
+};
+const actionLabels: Record<string, string> = {
+  project_submitted: 'submitted a project', project_placed: 'placed in a hackathon',
+  mentorship_completed: 'completed a mentorship session', event_announced: 'announced an event',
+  tier_promoted: 'was promoted to Veteran',
+};
 
 export default function Network() {
+  const [entries, setEntries] = useState<FeedEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [stats, setStats] = useState<any>(null);
+
+  useEffect(() => {
+    fetch(`/api/feed?page=${page}`).then(r => r.json()).then(j => {
+      if (j.success) { setEntries(j.data); setTotal(j.total); }
+    }).finally(() => setLoading(false));
+  }, [page]);
+
+  useEffect(() => {
+    fetch('/api/platform-stats').then(r => r.json()).then(j => { if (j.success) setStats(j.data); });
+  }, []);
+
+  const totalPages = Math.ceil(total / 20);
+
   return (
     <>
-      <SEO
-        title="Network — Senior Council & Builder Community | Maximally"
-        description="The network behind Maximally. Senior Council operators with documented extraordinary achievement, and the builder community powering the ecosystem."
-        canonicalUrl="https://maximally.org/network"
-      />
-      <div className="min-h-screen bg-black text-white pt-20 sm:pt-24 relative">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
-
-        <div className="container mx-auto px-4 sm:px-6 relative z-10 pb-20">
-          {/* Header */}
-          <div className="max-w-3xl mx-auto text-center pt-12 sm:pt-16 mb-20">
-            <span className="font-space text-sm text-orange-400 tracking-[0.2em] font-medium mb-4 block uppercase">Network</span>
-            <h1 className="font-space text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-              The people behind<br />the ecosystem
-            </h1>
-            <p className="font-space text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              Operators with documented achievement. Organizers running serious programs. Builders who ship. The network that powers Maximally.
-            </p>
-          </div>
-
-          {/* Senior Council */}
-          <div className="mb-24">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2 bg-orange-500/10 border border-orange-500/20">
-                <Shield className="w-5 h-5 text-orange-400" />
-              </div>
-              <div>
-                <h2 className="font-space text-xl sm:text-2xl font-bold text-white">Senior Council</h2>
-                <p className="font-space text-sm text-gray-400">A selective network of operators selected for documented extraordinary achievement.</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-              {councilMembers.map((member, i) => (
-                <div key={i} className="p-4 bg-gray-900/60 border border-gray-800 text-center">
-                  <div className="w-12 h-12 mx-auto mb-3 bg-gray-800 border border-gray-700 flex items-center justify-center rounded-full">
-                    <span className="font-space text-sm font-bold text-gray-400">{member.initials}</span>
-                  </div>
-                  <h3 className="font-space text-xs font-semibold text-white mb-0.5">{member.name}</h3>
-                  <p className="font-space text-[10px] text-gray-400">{member.role}</p>
-                  <span className="inline-block mt-2 px-1.5 py-0.5 bg-gray-800 border border-gray-700 text-[9px] font-space text-gray-400">{member.domain}</span>
+      <SEO title="Network — Builder Activity Feed | Maximally" description="Real-time activity from the Maximally builder ecosystem." />
+      <div className="min-h-screen bg-black text-white pt-24 pb-16">
+        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+          {/* Platform Stats Strip */}
+          {stats && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
+              {[
+                { v: stats.total_active_builders, l: 'Active Builders' },
+                { v: stats.total_events_run, l: 'Events Run' },
+                { v: stats.total_projects_submitted, l: 'Projects Submitted' },
+                { v: stats.total_countries_represented, l: 'Countries' },
+              ].map((s, i) => (
+                <div key={i} className="border border-gray-800 bg-gray-900/40 p-4 text-center">
+                  <p className="font-space text-2xl font-bold text-orange-400">{s.v}</p>
+                  <p className="font-space text-[10px] text-gray-500 mt-1">{s.l}</p>
                 </div>
               ))}
             </div>
+          )}
 
-            <Link to="/senior-council" className="group inline-flex items-center gap-2 font-space text-sm text-gray-400 hover:text-orange-400 transition-colors">
-              <span>View the full Senior Council</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
+          <div className="mb-8">
+            <span className="font-space text-xs text-orange-400 uppercase tracking-wider">Builder Network</span>
+            <h1 className="font-space font-bold text-3xl sm:text-4xl text-white mt-2 mb-3">Activity Feed</h1>
+            <p className="font-space text-sm text-gray-400">Notable actions from the Maximally ecosystem. No likes, no comments — just signal.</p>
+            <p className="font-space text-xs text-gray-600 mt-2">Maximally is built for junior and mid-level developers between 14 and 26 — people actively building, not people who have already arrived.</p>
           </div>
 
-          {/* Builder Community */}
-          <div className="mb-16">
-            <div className="flex flex-col max-w-2xl">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-orange-500/10 border border-orange-500/20">
-                  <MessageSquare className="w-5 h-5 text-orange-400" />
-                </div>
-                <div>
-                  <h2 className="font-space text-xl sm:text-2xl font-bold text-white">Builder Community</h2>
-                  <p className="font-space text-sm text-gray-400">The live community of Maximally builders on Discord.</p>
-                </div>
-              </div>
-
-              <div className="bg-gray-900/40 border border-gray-800 p-6 sm:p-8 flex-1 flex flex-col">
-                <p className="font-space text-sm text-gray-300 leading-relaxed mb-4">
-                  The live community of Maximally builders. Share progress, find teammates, get feedback, and stay close to new events.
-                </p>
-                <p className="font-space text-sm text-gray-400 leading-relaxed mb-6">
-                  Whether you're looking for a co-founder, need feedback on your project, or want to stay plugged into what's happening across the ecosystem — this is where builders hang out.
-                </p>
-                <div className="mt-auto">
-                  <a
-                    href="https://discord.gg/MpBnYk8qMX"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center justify-center gap-3 px-5 py-3 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-space text-sm font-semibold transition-all duration-300"
-                  >
-                    <span>Join the Discord</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </a>
-                </div>
-              </div>
+          {/* Feed */}
+          {loading ? (
+            <div className="space-y-3">{[1,2,3,4,5].map(i => <div key={i} className="h-16 bg-gray-900 animate-pulse border border-gray-800" />)}</div>
+          ) : entries.length === 0 ? (
+            <div className="text-center py-16 border border-gray-800 bg-gray-900/40">
+              <Activity className="w-8 h-8 text-gray-700 mx-auto mb-3" />
+              <p className="font-space text-sm text-gray-500">No activity yet. Actions will appear here as builders submit projects, complete mentorships, and earn placements.</p>
             </div>
-          </div>
-
-          {/* Future categories hint */}
-          <div className="border-t border-gray-800 pt-12">
-            <div className="flex items-center justify-center gap-6">
-              <Link to="/mentors" className="font-space text-sm text-orange-400 hover:text-orange-300 transition-colors">Browse Mentors →</Link>
-              <Link to="/judges" className="font-space text-sm text-orange-400 hover:text-orange-300 transition-colors">Browse Judges →</Link>
+          ) : (
+            <div className="space-y-2">
+              {entries.map(entry => {
+                const Icon = actionIcons[entry.action_type] || Activity;
+                return (
+                  <div key={entry.id} className="flex items-center gap-4 px-4 py-3 border border-gray-800 bg-gray-900/40 hover:border-gray-700 transition-colors">
+                    <div className="w-9 h-9 rounded-full bg-orange-500/10 border border-orange-500/30 flex items-center justify-center shrink-0">
+                      <Icon className="w-4 h-4 text-orange-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-space text-sm text-white">
+                        <span className="font-medium">{entry.profiles?.full_name || entry.profiles?.username}</span>
+                        {' '}<span className="text-gray-400">{actionLabels[entry.action_type] || entry.action_type}</span>
+                        {entry.metadata?.event_name && <span className="text-gray-500"> · {entry.metadata.event_name}</span>}
+                        {entry.metadata?.project_name && <span className="text-gray-500"> · {entry.metadata.project_name}</span>}
+                      </p>
+                    </div>
+                    <span className="font-space text-[10px] text-gray-600 shrink-0">{new Date(entry.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                  </div>
+                );
+              })}
             </div>
-          </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-3 mt-8">
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="p-2 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 transition-colors">
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <span className="font-space text-xs text-gray-500">Page {page} of {totalPages}</span>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="p-2 border border-gray-800 text-gray-400 hover:text-white disabled:opacity-30 transition-colors">
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
-
-        <Footer />
+        <div className="mt-16"><Footer /></div>
       </div>
     </>
   );
