@@ -313,6 +313,15 @@ export default function JudgeScoring() {
                       submission={submission}
                       index={index + 1}
                       onScoreSubmit={handleScoreSubmit}
+                      onDraftSave={async (submissionId, score, notes) => {
+                        try {
+                          await fetch(`/api/judge/${token}/draft`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ submission_id: submissionId, score, notes }),
+                          });
+                        } catch {}
+                      }}
                     />
                   ))}
                 </div>

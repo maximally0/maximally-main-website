@@ -42,12 +42,14 @@ interface JudgeSubmissionCardProps {
   submission: Submission;
   index: number;
   onScoreSubmit: (submissionId: number, score: number, notes?: string) => Promise<boolean>;
+  onDraftSave?: (submissionId: number, score: number, notes?: string) => Promise<void>;
 }
 
 export default function JudgeSubmissionCard({ 
   submission, 
   index, 
-  onScoreSubmit 
+  onScoreSubmit,
+  onDraftSave
 }: JudgeSubmissionCardProps) {
   const [isExpanded, setIsExpanded] = useState(!submission.score);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -229,6 +231,7 @@ export default function JudgeSubmissionCard({
               initialScore={submission.score?.score}
               initialNotes={submission.score?.notes}
               onSubmit={handleScoreSubmit}
+              onDraftSave={onDraftSave ? (score, notes) => onDraftSave(submission.id, score, notes) : undefined}
               isSubmitting={isSubmitting}
             />
           </div>

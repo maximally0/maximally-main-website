@@ -41,6 +41,7 @@ import { registerSimplifiedJudgesRoutes } from "./routes/simplified-judges";
 import { registerJudgeProfilesRoutes } from "./routes/judge-profiles";
 import { registerReputationRoutes } from "./routes/reputation";
 import { registerPortfolioRoutes } from "./routes/portfolio";
+import { registerExpertSubmissionsRoutes } from "./routes/expert-submissions";
 import { registerAutoPublishGalleryRoutes } from "./routes/auto-publish-gallery";
 import { registerCertificateRoutes } from "./routes/certificates";
 import { registerSubmissionModerationRoutes } from "./routes/submission-moderation";
@@ -4036,6 +4037,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   registerJudgeProfilesRoutes(app); // Global judge profiles pool + hackathon assignments
   registerReputationRoutes(app); // Reputation, outcomes, showcase, activity feed, peer reviews
   registerPortfolioRoutes(app); // Public profile portfolio + export
+  registerExpertSubmissionsRoutes(app); // Expert resource submissions + review
   registerAutoPublishGalleryRoutes(app); // Auto-publish gallery when hackathon ends
   registerSubmissionModerationRoutes(app); // Submission moderation (disqualify) for organizers
   registerCertificateRoutes(app); // Certificate generation for organizers

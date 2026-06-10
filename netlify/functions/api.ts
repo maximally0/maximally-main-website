@@ -45,6 +45,7 @@ import { registerSimplifiedJudgesRoutes } from "../../server/routes/simplified-j
 import { registerJudgeProfilesRoutes } from "../../server/routes/judge-profiles";
 import { registerReputationRoutes } from "../../server/routes/reputation";
 import { registerPortfolioRoutes } from "../../server/routes/portfolio";
+import { registerExpertSubmissionsRoutes } from "../../server/routes/expert-submissions";
 import { registerAutoPublishGalleryRoutes } from "../../server/routes/auto-publish-gallery";
 import { registerCertificateRoutes } from "../../server/routes/certificates";
 import { registerSubmissionModerationRoutes } from "../../server/routes/submission-moderation";
@@ -1572,6 +1573,7 @@ registerSimplifiedJudgesRoutes(app);
 registerJudgeProfilesRoutes(app);
 registerReputationRoutes(app);
 registerPortfolioRoutes(app);
+registerExpertSubmissionsRoutes(app);
 registerAutoPublishGalleryRoutes(app);
 registerCertificateRoutes(app);
 registerSubmissionModerationRoutes(app);

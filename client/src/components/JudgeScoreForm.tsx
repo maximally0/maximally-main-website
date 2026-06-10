@@ -2,13 +2,13 @@
  * Judge Score Form Component
  * 
  * Simple 1-10 score submission form with optional notes.
- * Used by judges to score hackathon submissions.
+ * Auto-saves drafts as judge types (debounced).
  * 
  * Requirements: 9.4
  */
 
-import { useState } from 'react';
-import { Loader2, Send } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Loader2, Send, Check } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,7 @@ interface JudgeScoreFormProps {
   initialScore?: number;
   initialNotes?: string;
   onSubmit: (score: number, notes?: string) => Promise<boolean>;
+  onDraftSave?: (score: number, notes?: string) => Promise<void>;
   isSubmitting?: boolean;
 }
 
@@ -24,10 +25,32 @@ export default function JudgeScoreForm({
   initialScore,
   initialNotes,
   onSubmit,
+  onDraftSave,
   isSubmitting = false,
 }: JudgeScoreFormProps) {
   const [score, setScore] = useState<number>(initialScore ?? 5);
   const [notes, setNotes] = useState<string>(initialNotes ?? '');
+  const [draftStatus, setDraftStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  const initialRender = useRef(true);
+
+  // Debounced auto-save draft
+  useEffect(() => {
+    if (initialRender.current) { initialRender.current = false; return; }
+    if (!onDraftSave) return;
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      setDraftStatus('saving');
+      try {
+        await onDraftSave(score, notes.trim() || undefined);
+        setDraftStatus('saved');
+        setTimeout(() => setDraftStatus('idle'), 2000);
+      } catch { setDraftStatus('idle'); }
+    }, 1500);
+
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [score, notes]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,23 +143,27 @@ export default function JudgeScoreForm({
       </div>
 
       {/* Submit Button */}
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white font-space font-bold text-xs py-3 h-auto"
-      >
-        {isSubmitting ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            SAVING...
-          </>
-        ) : (
-          <>
-            <Send className="h-4 w-4 mr-2" />
-            {initialScore !== undefined ? 'UPDATE_SCORE' : 'SUBMIT_SCORE'}
-          </>
-        )}
-      </Button>
+      <div className="flex items-center gap-3">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="flex-1 bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-500 text-white font-space font-bold text-xs py-3 h-auto"
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              SAVING...
+            </>
+          ) : (
+            <>
+              <Send className="h-4 w-4 mr-2" />
+              {initialScore !== undefined ? 'UPDATE_SCORE' : 'SUBMIT_SCORE'}
+            </>
+          )}
+        </Button>
+        {draftStatus === 'saving' && <span className="font-space text-[10px] text-gray-500 flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" />Saving draft...</span>}
+        {draftStatus === 'saved' && <span className="font-space text-[10px] text-green-400 flex items-center gap-1"><Check className="w-3 h-3" />Draft saved</span>}
+      </div>
     </form>
   );
 }

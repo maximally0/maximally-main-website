@@ -89,21 +89,46 @@ async function getMentors(req: Request, res: Response) {
     }
 
     // Shape the response (PRD: skills, availability, hours, booking, max concurrent, public identity)
-    const result = mentors.map((m: any) => ({
-      id: m.id,
-      user_id: m.user_id,
-      name: m.profiles?.full_name ?? null,
-      username: m.profiles?.username ?? null,
-      location: m.profiles?.location ?? null,
-      avatar_url: m.profiles?.avatar_url ?? null,
-      bio: m.profiles?.bio ?? null,
-      skills: m.skills ?? [],
-      status: m.status,
-      availability: m.availability ?? [],
-      total_mentorship_hours: m.total_mentorship_hours ?? 0,
-      booking_url: m.booking_url ?? null,
-      max_concurrent_teams: m.max_concurrent_teams ?? 3,
-    }));
+    const now = new Date();
+    const currentDay = now.getDay();
+    const currentTime = now.toTimeString().slice(0, 5);
+
+    // Fetch all availability slots in one query for all mentors
+    const mentorIds = mentors.map((m: any) => m.user_id);
+    const { data: allSlots } = await supabaseAdmin
+      .from('mentor_availability_slots')
+      .select('mentor_id, day_of_week, start_time, end_time')
+      .in('mentor_id', mentorIds.length > 0 ? mentorIds : ['none']);
+
+    const slotsByMentor = new Map<string, any[]>();
+    (allSlots || []).forEach((s: any) => {
+      if (!slotsByMentor.has(s.mentor_id)) slotsByMentor.set(s.mentor_id, []);
+      slotsByMentor.get(s.mentor_id)!.push(s);
+    });
+
+    const result = mentors.map((m: any) => {
+      const mentorSlots = slotsByMentor.get(m.user_id) || [];
+      const isAvailableNow = m.status === 'available' || mentorSlots.some((slot: any) =>
+        slot.day_of_week === currentDay && currentTime >= slot.start_time.slice(0, 5) && currentTime <= slot.end_time.slice(0, 5)
+      );
+
+      return {
+        id: m.id,
+        user_id: m.user_id,
+        name: m.profiles?.full_name ?? null,
+        username: m.profiles?.username ?? null,
+        location: m.profiles?.location ?? null,
+        avatar_url: m.profiles?.avatar_url ?? null,
+        bio: m.profiles?.bio ?? null,
+        skills: m.skills ?? [],
+        status: m.status,
+        is_available_now: isAvailableNow,
+        availability: m.availability ?? [],
+        total_mentorship_hours: m.total_mentorship_hours ?? 0,
+        booking_url: m.booking_url ?? null,
+        max_concurrent_teams: m.max_concurrent_teams ?? 3,
+      };
+    });
 
     return res.json({ success: true, mentors: result });
   } catch (err: any) {
@@ -936,5 +961,68 @@ export function registerMentorRoutes(app: Express): void {
     } catch (err: any) {
       return res.status(500).json({ success: false, message: err.message });
     }
+  });
+
+  // ═══ AVAILABILITY SLOTS ═══
+
+  // GET /api/mentors/:mentorId/availability-slots
+  app.get('/api/mentors/:mentorId/availability-slots', async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = req.app.locals.supabaseAdmin;
+      const { data, error } = await supabaseAdmin
+        .from('mentor_availability_slots')
+        .select('*')
+        .eq('mentor_id', req.params.mentorId)
+        .order('day_of_week', { ascending: true });
+      if (error) return res.status(500).json({ success: false, message: error.message });
+      return res.json({ success: true, data: data || [] });
+    } catch (err: any) { return res.status(500).json({ success: false, message: err.message }); }
+  });
+
+  // PUT /api/mentors/current/availability-slots — set all slots for current mentor
+  app.put('/api/mentors/current/availability-slots', async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = req.app.locals.supabaseAdmin;
+      const authHeader = req.headers['authorization'];
+      if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ success: false, message: 'Unauthorized' });
+      const { data: { user } } = await supabaseAdmin.auth.getUser(authHeader.slice(7));
+      if (!user) return res.status(401).json({ success: false, message: 'Invalid token' });
+
+      const { slots } = req.body; // Array of { day_of_week, start_time, end_time, timezone }
+      if (!Array.isArray(slots)) return res.status(400).json({ success: false, message: 'slots array required' });
+
+      // Delete existing slots and insert new ones
+      await supabaseAdmin.from('mentor_availability_slots').delete().eq('mentor_id', user.id);
+      if (slots.length > 0) {
+        const rows = slots.map((s: any) => ({ mentor_id: user.id, day_of_week: s.day_of_week, start_time: s.start_time, end_time: s.end_time, timezone: s.timezone || 'Asia/Kolkata' }));
+        await supabaseAdmin.from('mentor_availability_slots').insert(rows);
+      }
+      return res.json({ success: true });
+    } catch (err: any) { return res.status(500).json({ success: false, message: err.message }); }
+  });
+
+  // GET /api/mentors/:mentorId/is-available-now — compute if mentor is available based on time slots
+  app.get('/api/mentors/:mentorId/is-available-now', async (req: Request, res: Response) => {
+    try {
+      const supabaseAdmin = req.app.locals.supabaseAdmin;
+      const { data: slots } = await supabaseAdmin
+        .from('mentor_availability_slots')
+        .select('day_of_week, start_time, end_time, timezone')
+        .eq('mentor_id', req.params.mentorId);
+
+      if (!slots || slots.length === 0) {
+        return res.json({ success: true, available: false, reason: 'no_slots_configured' });
+      }
+
+      const now = new Date();
+      const currentDay = now.getDay(); // 0=Sun, 6=Sat
+      const currentTime = now.toTimeString().slice(0, 5); // HH:MM
+
+      const isAvailable = slots.some((slot: any) => {
+        return slot.day_of_week === currentDay && currentTime >= slot.start_time.slice(0, 5) && currentTime <= slot.end_time.slice(0, 5);
+      });
+
+      return res.json({ success: true, available: isAvailable });
+    } catch (err: any) { return res.status(500).json({ success: false, message: err.message }); }
   });
 }
