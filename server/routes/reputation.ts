@@ -216,10 +216,8 @@ export function registerReputationRoutes(app: Express) {
       if (error) return res.status(500).json({ success: false, message: error.message });
 
       // Increment reviewer's peer_reviews_given
-      await supabaseAdmin.rpc('increment_peer_reviews', { user_id: userId }).catch(() => {
-        // Fallback if RPC doesn't exist
-        supabaseAdmin.from('profiles').update({ peer_reviews_given: supabaseAdmin.raw('peer_reviews_given + 1') }).eq('id', userId);
-      });
+      const { data: currentProfile } = await supabaseAdmin.from('profiles').select('peer_reviews_given').eq('id', userId).single();
+      await supabaseAdmin.from('profiles').update({ peer_reviews_given: (currentProfile?.peer_reviews_given || 0) + 1 }).eq('id', userId);
 
       return res.status(201).json({ success: true, data });
     } catch (err: any) { return res.status(500).json({ success: false, message: err.message }); }
