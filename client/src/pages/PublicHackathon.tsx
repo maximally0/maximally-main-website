@@ -29,6 +29,11 @@ import RequestToJudge from '@/components/RequestToJudge';
 import HackathonTracks from '@/components/HackathonTracks';
 import HackathonSponsors from '@/components/HackathonSponsors';
 import HackathonFeedback from '@/components/HackathonFeedback';
+import CountdownTimer from '@/components/hackathon/CountdownTimer';
+import SpotsProgressBar from '@/components/hackathon/SpotsProgressBar';
+import SubmissionChecklist from '@/components/hackathon/SubmissionChecklist';
+import EventTimeline from '@/components/hackathon/EventTimeline';
+import ShareUtilities from '@/components/hackathon/ShareUtilities';
 
 interface Hackathon {
   id: number;
@@ -2358,6 +2363,35 @@ export default function PublicHackathon() {
                       </div>
                     )}
                   </div>
+
+                  {/* Countdown Timer */}
+                  {hackathon.end_date && new Date(hackathon.end_date) > new Date() && (
+                    <div className="border border-gray-800 bg-gray-900/40 p-4">
+                      <CountdownTimer targetDate={hackathon.registration_deadline || hackathon.end_date} label={hackathon.registration_deadline ? 'Registration closes in' : 'Event ends in'} />
+                    </div>
+                  )}
+
+                  {/* Spots Progress Bar */}
+                  {hackathon.max_participants && (
+                    <div className="border border-gray-800 bg-gray-900/40 p-4">
+                      <SpotsProgressBar registered={hackathon.registrations_count || 0} maxParticipants={hackathon.max_participants} />
+                    </div>
+                  )}
+
+                  {/* Submission Checklist */}
+                  <SubmissionChecklist />
+
+                  {/* Event Timeline */}
+                  <EventTimeline phases={[
+                    { label: 'Registration Opens', date: hackathon.start_date, note: 'Applications accepted' },
+                    ...(hackathon.registration_deadline ? [{ label: 'Registration Closes', date: hackathon.registration_deadline }] : []),
+                    { label: 'Hacking Begins', date: hackathon.start_date },
+                    { label: 'Submissions Due', date: hackathon.end_date },
+                    ...(hackathon.end_date ? [{ label: 'Winners Announced', date: new Date(new Date(hackathon.end_date).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(), note: 'Results published' }] : []),
+                  ]} />
+
+                  {/* Share Utilities */}
+                  <ShareUtilities hackathonName={hackathon.hackathon_name} startDate={hackathon.start_date} endDate={hackathon.end_date} />
                 </div>
               </div>
             </div>
