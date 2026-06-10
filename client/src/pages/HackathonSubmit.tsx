@@ -610,12 +610,15 @@ function SubmissionForm({ hackathonId, hackathonName, hackathonSlug, tracks, sub
 export default function HackathonSubmit() {
   const { slug } = useParams();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [hackathon, setHackathon] = useState<Hackathon | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking user
+    if (authLoading) return;
+
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -629,7 +632,7 @@ export default function HackathonSubmit() {
     if (slug) {
       fetchHackathon();
     }
-  }, [slug, user]);
+  }, [slug, user, authLoading]);
 
   const fetchHackathon = async () => {
     try {
