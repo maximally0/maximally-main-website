@@ -55,6 +55,7 @@ import CreateHackathon from './pages/CreateHackathon';
 import OrganizerDashboard from './pages/OrganizerDashboard';
 import EditHackathon from './pages/EditHackathon';
 import PublicHackathon from './pages/PublicHackathon';
+import PublicHackathonV2 from './pages/PublicHackathonV2';
 import OrganizerProfile from './pages/OrganizerProfile';
 import HackathonRegistrations from './pages/HackathonRegistrations';
 import HackathonSubmit from './pages/HackathonSubmit';
@@ -268,6 +269,7 @@ const AppContent = () => {
         } />
         <Route path="/organizer/:username" element={<OrganizerProfile />} />
         <Route path="/hackathon/:slug" element={<PublicHackathon />} />
+        <Route path="/event/:slug" element={<PublicHackathonV2 />} />
         <Route path="/hackathon/:slug/submit" element={<HackathonSubmit />} />
         <Route path="/team/join/:token" element={<JoinTeam />} />
 
