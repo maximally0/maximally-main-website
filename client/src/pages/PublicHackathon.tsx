@@ -34,6 +34,11 @@ import SpotsProgressBar from '@/components/hackathon/SpotsProgressBar';
 import SubmissionChecklist from '@/components/hackathon/SubmissionChecklist';
 import EventTimeline from '@/components/hackathon/EventTimeline';
 import ShareUtilities from '@/components/hackathon/ShareUtilities';
+import JudgingRubric from '@/components/hackathon/JudgingRubric';
+import WinnersPodium from '@/components/hackathon/WinnersPodium';
+import Breadcrumb from '@/components/hackathon/Breadcrumb';
+import OrganizerCard from '@/components/hackathon/OrganizerCard';
+import MentorsRoster from '@/components/hackathon/MentorsRoster';
 
 interface Hackathon {
   id: number;
@@ -622,6 +627,15 @@ export default function PublicHackathon() {
           </div>
         )}
 
+        {/* Breadcrumb */}
+        <div className="container mx-auto px-3 sm:px-4 md:px-6 max-w-7xl relative z-20 pt-20">
+          <Breadcrumb items={[
+            { label: 'Maximally', href: '/' },
+            { label: 'Events', href: '/events' },
+            { label: hackathon.hackathon_name },
+          ]} />
+        </div>
+
         {/* Hero Section */}
         <section className={`${hackathon.banner_image ? 'pt-72 sm:pt-80 md:pt-96 lg:pt-[28rem]' : 'pt-24 sm:pt-32'} pb-8 sm:pb-12 relative overflow-hidden`}>
           {/* Floating Pixels - Use branding colors */}
@@ -1034,6 +1048,17 @@ export default function PublicHackathon() {
                       </div>
                     </div>
                   )}
+
+                  {/* Winners Podium (for completed hackathons) */}
+                  {hackathon.winners_announced && winners.length > 0 && (
+                    <WinnersPodium winners={winners} />
+                  )}
+
+                  {/* Judging Rubric (publicly visible) */}
+                  <JudgingRubric hackathonId={hackathon.id} />
+
+                  {/* Mentors Roster */}
+                  <MentorsRoster mentors={[]} hackathonSlug={hackathon.slug} />
                 </div>
               )}
 
@@ -2389,6 +2414,9 @@ export default function PublicHackathon() {
                     { label: 'Submissions Due', date: hackathon.end_date },
                     ...(hackathon.end_date ? [{ label: 'Winners Announced', date: new Date(new Date(hackathon.end_date).getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(), note: 'Results published' }] : []),
                   ]} />
+
+                  {/* Organizer Card */}
+                  <OrganizerCard name={hackathon.hackathon_name.split(' ')[0] || 'Organizer'} eventsCount={1} description="Community organizer on Maximally" />
 
                   {/* Share Utilities */}
                   <ShareUtilities hackathonName={hackathon.hackathon_name} startDate={hackathon.start_date} endDate={hackathon.end_date} />
